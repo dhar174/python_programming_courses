@@ -3133,7 +3133,7 @@ Score each category 0–3. Suggested pass threshold: 8/12 (adjust to your progra
 | --- | --- |
 | Correctness | Meets the functional requirements; produces correct output for typical test cases. |
 | Required concepts | Uses the concepts targeted for that checkpoint (e.g., lists, loops) in an appropriate way. |
-| Readability | Clear variable names, consistent formatting (4-space indent), f-strings for output, and brief comments/run instructions where needed. |
+| Readability | • Clear variable names<br>• Consistent formatting (4-space indent)<br>• f-strings for output<br>• Brief comments/run instructions where needed. |
 | Robustness (Basics) | Handles at least a few invalid/missing inputs gracefully; avoids obvious crashes. |
 
 ## Capstone rubric (final)
