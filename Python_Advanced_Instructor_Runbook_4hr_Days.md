@@ -11,6 +11,18 @@ This runbook is an hour-by-hour teaching companion for a 48-hour Advanced Python
 
 Pacing note for 4-hour sessions: plan one 10-minute break around the midpoint, plus a 3–5 minute micro-break as needed. The hour blocks below are instructional hours.
 
+## Courseware alignment note (LogicalOps 094032 + LogicalLabs)
+
+This Advanced runbook is designed to align with the Logical Operations course "Advanced Programming Techniques with Python® (Second Edition)" (Course 094032), delivered through LogicalLabs (CHOICE remote lab) where applicable.
+
+Because our delivery is **48 hours (12×4h)** rather than a short intensive format, we:
+
+* Spend more time on **capstone scaffolding, checkpoints, and quality gates**.  
+* Reinforce core skills via **repeat exposure** (client → API → secure API → client again).  
+* Keep "volatile" topics (production auth systems, deployment) explicitly optional.
+
+Instructor note: The order of units may differ from a typical 3-day outline, but the competencies are the same (OOP/patterns, GUI, DB, web/services + security basics, data analysis, testing, packaging).
+
 # Prerequisites (expected learner baseline)
 
 Comfortable with variables, types, data structures (list/dict/set/tuple).
@@ -55,6 +67,18 @@ Decide GUI framework to use (default Tkinter for reliability; PyQt only if lab s
 
 Decide how learners submit work (Git repo preferred) and how you’ll do code reviews (pair demos + rubrics).
 
+Confirm **CHOICE + LogicalLabs** access for instructor and learners:  
+  * Test redemption using a **non-instructor** account (or a fresh learner account).  
+  * Verify labs open in a new tab and that browser pop-ups aren't blocked.
+
+Verify learners know the difference between **saving files** vs **saving the lab state**:  
+  * Files persist if saved normally, but running sessions/processes may not.  
+  * "Save and Suspend" should be used for longer breaks and end-of-day.
+
+Run a "first-10-min preflight" script in the lab image:  
+  * `python --version`, `pip --version`, `python -c "import sqlite3"`, IDE opens, workspace permissions OK.  
+  * Confirm key packages import successfully (at minimum: `requests`, `flask`, `pytest`, `pandas`, `matplotlib`).
+
 # Session delivery rhythm (recommended)
 
 Start-of-session (5–10 min): recap + warm-up (predict output / quick fix).
@@ -66,6 +90,40 @@ Demo (5–10 min): live-code with narration; have learners predict results befor
 Lab (25–35 min): guided -> independent; circulate; require frequent runs/tests.
 
 Debrief (5 min): 2–3 learners show solutions; capture 3 rules-of-thumb on a shared doc.
+
+## LogicalLabs / CHOICE Quickstart (required for delivery)
+
+**Keys you may see:**
+
+* **Training Key** (for the CHOICE course access)  
+* **Lab Access Key** (for the LogicalLabs environment)
+
+**Redeeming a Training Key (CHOICE)**
+
+1. Log into CHOICE.  
+2. Go to **My Training**.  
+3. Click **Access a Course**.  
+4. Enter the access key and redeem.
+
+**Launching a lab**
+
+* Open the course, then select the exercise/lab item.  
+* The lab typically opens in a **new browser tab**.  
+* If it doesn't open: allow pop-ups, allow new tabs, and retry.
+
+**Persistence vs volatility (how not to lose work)**
+
+* Saving a file (Ctrl+S) writes it to disk.  
+* The lab session itself can be paused/stopped; running apps may terminate.  
+* For breaks **> 15 minutes** or end-of-day, use **Save and Suspend**:  
+  * Choose **Suspend** to preserve your session state.  
+  * Resume later from the course/lab launcher.
+
+**Instructor "Day 0" test (do this before first cohort session)**
+
+* Complete one lab launch end-to-end.  
+* Create a file, save it, then **Save and Suspend**, resume, and confirm the file is still present.  
+* Confirm one learner account can do the same.
 
 # Capstone approach (runs throughout)
 
@@ -90,6 +148,21 @@ Automated tests for core logic (pytest) + basic coverage report
 Packaging: requirements + run instructions; optional executable build
 
 # Session overviews (quick schedule)
+
+## LogicalOps 094032 crosswalk (for alignment + instructor pacing)
+
+| LogicalOps 094032 Lesson | Topic cluster | Where it appears in our runbook |
+| --- | --- | --- |
+| Lesson 1–2 | OOP approach + classes + built-ins + Factory | Sessions 1–3 (Hours 1–12) |
+| Lesson 5 (client concepts) | Network/client fundamentals | Session 4 (Hours 13–16) |
+| Lesson 3 | Desktop GUI | Sessions 5–6 (Hours 17–24) |
+| Lesson 4 | Data-driven apps (DB) | Sessions 7–8 (Hours 25–32) |
+| Lesson 5 (API + security + client) | REST services + secure basics + client | Sessions 9–10 (Hours 33–40) |
+| Lesson 6 | Data science (clean → viz → regression) | Session 11 (Hours 41–44) |
+| Lesson 7 | Exceptions + unit testing | Session 12 (Hours 45–46) |
+| Lesson 8 | Packaging + executables | Session 12 (Hours 47–48) |
+
+Instructor note: We intentionally revisit web topics twice (client first, then API + client) to improve retention and capstone readiness.
 
 ## Session 1 overview (Hours 1–4)
 
@@ -223,7 +296,19 @@ Advanced expectations: readability, structure, and testing mindset.
 
 Git basics for the course: clone/pull/commit/push; branching optional.
 
+How labs launch (new tab) and what to do if pop-ups are blocked.
+
+The difference between saving files and saving the lab session state.
+
+When to use **Save and Suspend** (end of day; breaks > 15 minutes).
+
 Live demo (5–10 min)
+
+Launch the lab from CHOICE, confirm it opens in a new tab.
+
+Create a file, save it, then demonstrate where it exists in the workspace.
+
+Show where **Save and Suspend** is and explain when learners must use it.
 
 Create repo folder and initialize Git.
 
@@ -234,6 +319,12 @@ Commit initial state: 'chore: initial setup'.
 Hands-on lab (25–35 min)
 
 Lab: Setup + Diagnostic
+
+- Learners create `course_preflight.txt`, write today's date/time + their name, save it.
+
+- Learners confirm the file is visible after closing/reopening the editor pane.
+
+- Instructor calls out: "If you're stepping away, Save & Suspend."
 
 - Create a project folder with src/, tests/, data/, reports/.
 
@@ -939,6 +1030,14 @@ JSON parsing and error cases.
 
 Timeouts and status codes (practical).
 
+Always set a timeout (`timeout=5` or `timeout=(3,10)`).
+
+Prefer `response.raise_for_status()` and handle `requests.HTTPError`.
+
+Treat JSON as a contract: validate required keys and types before use.
+
+Use a small "client wrapper" function to avoid repeating request logic.
+
 Live demo (5–10 min)
 
 Demo: call a public sample API (or provided local endpoint).
@@ -955,6 +1054,13 @@ Lab: API consumer
 
 - Handle non-200 status codes with a friendly message.
 
+- Add: `timeout=...` to every request.
+
+- Add: structured error handling:  
+  * network errors → "service unreachable"  
+  * 4xx/5xx → show status + safe message  
+  * bad JSON → fallback message + logging
+
 ```
 Completion criteria
 ```
@@ -962,6 +1068,10 @@ Completion criteria
 Successful request and parsed output.
 
 Graceful handling of failure cases.
+
+Client does not hang indefinitely.
+
+Client prints a friendly message for at least: timeout, 404, 500, invalid JSON.
 
 ```
 Common pitfalls to watch for
@@ -1013,6 +1123,12 @@ Lab: Secure-ish configuration
 
 - Do not hard-code the key in code or commits.
 
+- Create `.env.example` with placeholder values (NO real secrets).
+
+- Update `.gitignore` to exclude `.env` and any local secret files.
+
+- Add a README note: "Set environment variables before running admin actions."
+
 ```
 Completion criteria
 ```
@@ -1032,6 +1148,8 @@ Confusing hashing with encryption.
 Optional extensions (stay in Advanced scope)
 
 Add a .env template file (without real secrets).
+
+Instructor note: This course does **not** require implementing OAuth/JWT flows—keep advanced auth as optional discussion only.
 
 ```
 Quick check / exit ticket
@@ -1679,6 +1797,13 @@ Schema draft exists.
 
 Repository methods defined.
 
+**DB Quality Gate**
+
+* All SQL uses parameter placeholders (`?`) — no string concatenation.  
+* DB writes are committed via context manager or explicit `commit()`.  
+* Every table has a stable primary key; update/delete always use IDs.  
+* Print/log the target ID before UPDATE/DELETE during early development.
+
 ```
 Common pitfalls to watch for
 ```
@@ -1796,6 +1921,13 @@ Lab: Implement get/update/delete
 ```
 Completion criteria
 ```
+
+Quality requirements (DB reminder):
+
+* All SQL uses parameter placeholders (`?`) — no string concatenation.  
+* DB writes are committed via context manager or explicit `commit()`.  
+* Every table has a stable primary key; update/delete always use IDs.  
+* Print/log the target ID before UPDATE/DELETE during early development.
 
 CRUD repo methods complete.
 
@@ -2125,6 +2257,11 @@ REST basics: resources, verbs, status codes.
 
 Flask app structure and run modes.
 
+Standardize error responses:  
+  * `{"error": {"code": "...", "message": "...", "request_id": "..."}}`
+
+Use a simple request_id (uuid4 or random token) to correlate logs and client errors.
+
 Live demo (5–10 min)
 
 Demo: /health returns JSON.
@@ -2140,6 +2277,10 @@ Lab: Flask starter
 - Add /health that returns {'status':'ok'}.
 
 - Run and test with browser or curl.
+
+- Implement an `error_response(code, message, request_id)` helper.
+
+- Ensure every error path returns JSON with the same structure.
 
 ```
 Completion criteria
@@ -2606,6 +2747,8 @@ Compute basic summaries and clean common issues.
 
 Instructor talk points (10–20 min)
 
+**Instructor note:** Use the *same dataset* for cleaning → visualization → regression so learners experience a full pipeline, not disconnected demos.
+
 CSV import/export.
 
 Selecting columns, filtering rows.
@@ -2635,6 +2778,10 @@ Completion criteria
 Data loads successfully.
 
 Summary metrics computed and saved.
+
+One dataset file is used end-to-end.
+
+Learner can explain 1–2 cleaning decisions and how they changed results.
 
 ```
 Common pitfalls to watch for
@@ -2839,6 +2986,15 @@ Arrange/Act/Assert.
 
 Fixtures for sample records and temp DB.
 
+**Quick mapping (if learners have seen unittest before)**
+
+* `unittest.TestCase` → plain test functions or classes in pytest  
+* `self.assertEqual(a,b)` → `assert a == b`  
+* `setUp/tearDown` → pytest fixtures  
+* `python -m unittest` → `pytest -q`
+
+(If your LogicalLabs guide or courseware references unittest, this mapping prevents confusion; you still teach/grade pytest.)
+
 Live demo (5–10 min)
 
 Demo: test_validation_error, test_add_and_get, using tmp_path fixture.
@@ -2937,71 +3093,92 @@ Quick check / exit ticket
 
 Quick check: Why can high coverage still miss bugs?
 
-## Hour 47: Packaging and delivery: requirements + runnable app + optional executable
+## Hour 47: Packaging + distribution (modern "ship it" recipe)
 
 Outcomes
 
-Create a reproducible run setup.
+Produce a runnable deliverable with clear install/run steps.
 
-Optionally build an executable for the GUI or API.
+Create a distributable artifact (wheel) OR an executable (optional).
+
+Ensure the deliverable runs from a clean environment.
 
 Instructor talk points (10–20 min)
 
-venv creation, requirements.txt, pip install -r.
+"Shipping" is mostly: **repeatable install** + **repeatable run**.
 
-Entry points: python -m ...
+Two deliverable tiers:  
+  1. **Runnable source release** (requirements + README + entrypoint)  
+  2. **Wheel** (installable package) and optional **executable** (PyInstaller)
 
-Optional: PyInstaller overview.
+Avoid magic: pin/record dependencies; document environment variables.
 
 Live demo (5–10 min)
 
-Demo: create venv, install requirements, run app from clean environment.
-
-```
-Optional: pyinstaller --onefile for GUI.
-```
+1. Demo: create/update `requirements.txt` (or `requirements-dev.txt` for pytest/tools).  
+2. Demo: add `README.md` "Quickstart" section:  
+   * create venv  
+   * install requirements  
+   * run app (CLI/GUI/API)  
+3. Demo (wheel path, if allowed): `python -m pip install build` then `python -m build`  
+4. Demo (optional executable path): `pyinstaller -F -n tracker_app path/to/entry.py`
 
 Hands-on lab (25–35 min)
 
-Lab: Ship it
+Lab: Ship your capstone
 
-- Create requirements.txt (pip freeze or curated list).
+Required:
 
-- Write clear run instructions in README.
+* Add/update:  
+  * `README.md` with exact run steps  
+  * `requirements.txt` (runtime deps)  
+  * `requirements-dev.txt` (pytest/coverage tooling) if you separate dev deps  
+  * `.gitignore` for env/outputs (`.venv/`, `dist/`, `build/`, `__pycache__/`)
 
-- Demonstrate running from a clean venv.
+* Create a **fresh-run test**:  
+  * new folder OR new venv  
+  * install from requirements  
+  * run the app following README
 
-- Optional: build an executable (GUI) or a packaged run script (API).
+* Capture evidence:  
+  * screenshot or terminal output showing clean install + run
+
+Optional (if policy allows installs/tools):
+
+* Build a wheel with `python -m build`  
+* Build an executable with PyInstaller
 
 ```
 Completion criteria
 ```
 
-Project runs from fresh environment.
+A reviewer can follow README and run the app without guessing.
 
-README has clear steps.
+Dependencies are complete (no missing imports on fresh run).
 
-Optional deliverable produced if time.
+Basic tests run (`pytest`) or at minimum the smoke-run script passes.
 
 ```
 Common pitfalls to watch for
 ```
 
-OS-specific paths in README.
+Missing dependency in requirements.
 
-Missing dependencies.
+Relative file paths that break outside the IDE.
 
-Executable builds failing due to hidden imports.
+Packaging the wrong entrypoint (GUI vs API server vs CLI script).
 
 Optional extensions (stay in Advanced scope)
 
-Add a 'make_report' command or script.
+Add `Makefile` or simple `scripts/` helpers (`run_api.sh`, `run_gui.sh`, etc.)
+
+Add a version string and changelog note.
 
 ```
 Quick check / exit ticket
 ```
 
-Quick check: If a teammate cloned your repo, what are the exact 3 commands they’d run to use it?
+What's the difference between "it runs on my machine" and "it ships"?
 
 ## Hour 48: Final: capstone demo + certification-style review + retrospective
 
@@ -3018,6 +3195,10 @@ Demo rubric and timeboxing.
 PCAP-style review: OOP, exceptions, modules, files, data handling, code comprehension.
 
 Retrospective: what to practice next.
+
+"Clean-room demo": run from a new venv or a fresh folder to ensure README + requirements are complete.
+
+Demo rubric includes: run reliability, clarity of explanation, and tradeoff reasoning.
 
 Live demo (5–10 min)
 
@@ -3114,6 +3295,9 @@ Score each category 0–3. Suggested pass threshold: 10/15 (adjust to your progr
 
 | Symptom | Fast fix |
 | --- | --- |
+| LogicalLabs won't open / nothing happens when clicking lab | Allow pop-ups/new tabs; retry in a fresh browser session; confirm you're logged into CHOICE. |
+| Work "disappeared" after disconnect | Confirm whether files were saved to disk. Use **Save and Suspend** for breaks/end-of-day so the session state is preserved. |
+| Lab session is slow / stuck | Save files, then "Save and Suspend" → resume; close extra tabs; avoid running heavy installs during class time. |
 | ModuleNotFoundError / import issues | Confirm you’re running from the project root; prefer 'python -m <package>' for packages; avoid naming files after stdlib modules. |
 | pip install fails | Check whether installs are allowed; confirm correct venv; try upgrading pip; use cached wheels if policy requires. |
 | GUI freezes | Don’t run long tasks on the UI thread; keep callbacks short; add status updates; avoid blocking network calls in callbacks. |
