@@ -11,6 +11,16 @@ This runbook is a teaching companion for a 48-hour Python Basics course delivere
 
 Pacing note for 4-hour sessions: plan one 10-minute break around the midpoint, plus a 3–5 minute micro-break as needed. The hour blocks below are instructional hours.
 
+# Courseware alignment note (Logical Operations + our 48-hour format)
+
+This course aligns to the Logical Operations "Introduction to Programming with Python (Second Edition)" topic scope, but is delivered as 48 instructional hours to support:
+• More guided practice time per topic (demo → guided lab → independent lab).
+• Five checkpoints plus a structured capstone build sprint.
+• Dedicated remediation time (debugging habits, code reading, and fundamentals reinforcement).
+• Certification-style review and individual feedback without introducing Advanced-only topics.
+
+This added time is intentional: it increases practice density and lowers learner drop-off while staying within the Python Basics scope.
+
 # Course outcomes (Basic)
 
 Set up a Python 3 development environment and run scripts.
@@ -25,13 +35,33 @@ Write and organize code with functions and modules; introduce basic classes.
 
 Read/write files (text and JSON) and handle common errors with exceptions.
 
+List directory contents and manage basic file/directory operations using pathlib.
+
+Apply basic Python style standards (readable naming, indentation, and consistent formatting).
+
 Build and present a small command-line capstone project.
+
+# Delivery environment standard (LogicalCHOICE + LogicalLabs)
+
+Primary delivery environment: LogicalCHOICE is the "home base" for course content and provides the tile used to launch LogicalLabs in a new browser tab. Students complete hands-on work inside the remote lab VM. Pop-up blockers can prevent the lab from launching.
+
+Credentialing note (two-key process): Students may have separate access keys for the course content (CHOICE) vs the lab VM (LogicalLab / Lab Access Key). Instructors must explicitly guide students to redeem the Lab Access Key from the Current Training page via "Redeem Training Key" so they can launch the VM.
+
+Operational norm: Establish a "Save and Suspend" culture before breaks longer than ~15 minutes (Save All in IDE; relaunch from the LogicalCHOICE tile if the VM disconnects).
+
+*(Grounding: CHOICE as content hub + lab gateway, two-key redemption, new tab / pop-up blockers, and save/suspend expectations are called out as frequent friction points.)*
 
 # Pre-course instructor checklist
 
-Confirm lab access and credentials for all learners; test logins from a non-instructor account.
+Verify LogicalCHOICE access for all learners and confirm the lab tile launches LogicalLabs in a new browser tab (test with pop-up blockers on/off).
+
+Confirm learners understand the two-key process: CHOICE Key unlocks courseware; Lab Access Key provisions the VM. Verify students can find "Redeem Training Key" in Current Training.
+
+Validate workstation/browser requirements: Chrome/Firefox/Safari supported; ensure JavaScript is enabled and aggressive blockers aren't interfering.
 
 Verify Python 3 is available in the lab image/VM; confirm VS Code (or editor) launches cleanly.
+
+Confirm the "workspace path" learners should use (where files persist) and test persistence: create a file → Save All → disconnect/relaunch → confirm file remains.
 
 Open a sample project folder and run a simple script to confirm permissions and file paths work.
 
@@ -41,7 +71,9 @@ Prepare a shared class repo or zip of starter files (blank templates + checkpoin
 
 Decide how you will collect labs (screenshare, LMS upload, Git, or file submission).
 
-Post the ‘common errors’ quick sheet (indentation, type conversion, file paths).
+Post the ‘common errors’ quick sheet (indentation, type conversion, file paths, working directory).
+
+*(Grounding: two-key redemption + new tab/popup blocker + JS/browser dependency are highlighted as operational needs.)*
 
 # Session delivery rhythm (recommended)
 
@@ -181,22 +213,29 @@ Create a workspace folder and run a first script.
 
 Instructor talk points (10–15 min)
 
+Platform quick start (LogicalCHOICE → LogicalLabs):
+  - LogicalLabs opens in a new browser tab; allow pop-ups for the LogicalCHOICE domain.
+  - Two-key reminder: course content key does not equal lab key; Lab Access Key must be redeemed from Current Training → Redeem Training Key.
+  - Save and Suspend culture: Save All before breaks; if disconnected, relaunch from the tile—files persist even if session state resets.
+
+Workspace standard: all course work goes in a single course folder (and a /data subfolder later) to avoid path/import issues.
+
 Course workflow: lecture → demo → lab.
 
 How Python executes: interpreter vs script file.
 
 Where files live in the lab; naming and folders.
 
+*(Grounding: tile launches lab in new tab and pop-ups may block; two-key redemption; save/suspend.)*
+
 Live demo (5–10 min)
 
-Open terminal / IDE.
-
-```
-Run: python --version
-Create folder: python_basics/
-```
-
-Create hello_course.py and run it.
+1. Launch LogicalLabs from the LogicalCHOICE course tile (confirm it opens in a new tab).
+2. In the lab VM, open terminal / IDE.
+3. Run: python --version
+4. Create folder: python_basics/
+5. Create hello_course.py and run it.
+6. Save file, close it, then re-open it to confirm you can find it again (file location awareness).
 
 Hands-on lab (25–35 min)
 
@@ -215,6 +254,10 @@ Completion criteria
 Script runs without errors from both terminal and IDE.
 
 Learner can find the output and locate the file on disk.
+
+Learner can explain where their course folder is located in the lab environment.
+
+Learner confirms they can relaunch the lab (if needed) and still find their saved file.
 
 ```
 Common pitfalls to watch for
@@ -253,6 +296,12 @@ print() and string literals.
 Comments (#) and why we comment.
 
 Common beginner errors: missing quotes, parentheses, typos.
+
+**Style standard (Basics)**
+• 4-space indentation (no tabs).
+• Descriptive variable/function names (snake_case).
+• Prefer f-strings for readable output.
+• Comments explain "why," not "what," except for quick headers/run instructions.
 
 Live demo (5–10 min)
 
@@ -838,9 +887,17 @@ Common errors: NameError, TypeError, ValueError, IndexError.
 
 Using small test inputs.
 
+Platform-specific debugging:
+  - "Where am I?": print working directory; ensure you're running from project folder.
+  - Common issue: imports fail because wrong working directory (will be explored more in modules session).
+
 Live demo (5–10 min)
 
 Demo: purposely break a script; add print statements to isolate where it fails.
+
+**Optional note (5–10 min, if learners encounter old snippets online)**
+• Python 2 vs 3 quick differences: print is a function, unicode defaults, integer division behavior.
+Purpose: help learners interpret legacy code without teaching Python 2.
 
 Hands-on lab (25–35 min)
 
@@ -2230,9 +2287,13 @@ Common standard libs: math, random, datetime (light tour).
 
 Avoid circular imports (mention only).
 
+**Important:** Do not name files like stdlib modules (random.py, json.py, pathlib.py, etc.) — this causes import conflicts.
+
 Live demo (5–10 min)
 
 Demo: create utils.py with 2 helper functions and import into main.py.
+
+Show "running wrong file / wrong folder" causing import issues; fix by running main.py from project root.
 
 Hands-on lab (25–35 min)
 
@@ -2634,6 +2695,8 @@ Use pathlib to build reliable paths.
 
 Create a data directory if needed.
 
+List directory contents (iterdir / glob) to discover available files.
+
 Instructor talk points (10–15 min)
 
 Relative vs absolute.
@@ -2642,9 +2705,21 @@ Path.cwd() and Path('data')
 
 mkdir(exist_ok=True).
 
+Listing folders:
+  - Path('data').iterdir()
+  - Path('data').glob('*.json')
+
+Why we list directories: "discover save files" and avoid hardcoding file names.
+
+**Path best practice (portable)**
+• Use a project-relative base directory derived from your script location (or project root) and join into data/.
+• Avoid hardcoded Downloads/Desktop paths.
+
 Live demo (5–10 min)
 
 Demo: create data/ folder and write file into it using pathlib.
+
+Demo: list contents of data/ and print found JSON files (if any). If none exist, print "No save files found."
 
 Hands-on lab (25–35 min)
 
@@ -2656,6 +2731,10 @@ Lab: Data folder
 
 - Make sure your program runs regardless of where the terminal starts (within reason).
 
+- Print the names of all files in data/.
+
+- If multiple JSON files exist, select one (first match is fine) and display which file you will load/save.
+
 ```
 Completion criteria
 ```
@@ -2663,6 +2742,8 @@ Completion criteria
 Uses pathlib or os.path to target data/.
 
 Folder is created safely.
+
+Learner successfully lists directory contents and can identify the JSON file path being used.
 
 ```
 Common pitfalls to watch for
@@ -2947,6 +3028,15 @@ Instructor talk points (10–15 min)
 
 Review key topics: types, structures, flow, functions, modules, classes, files, exceptions.
 
+**Domains checklist (use as the review agenda)**
+• Types + conversions
+• Strings + formatting
+• Data structures (list/tuple/set/dict)
+• Conditionals + loops
+• Functions + modules + basic class usage
+• Files (text + JSON) + paths (pathlib) + directory listing
+• Exceptions (ValueError, FileNotFoundError, JSONDecodeError)
+
 Exam-style question patterns (conceptual + code reading).
 
 Live demo (5–10 min)
@@ -2960,6 +3050,18 @@ Final (60–75 min)
 1) Capstone demo + rubric scoring
 
 2) Short written/quiz review (15–20 min)
+
+**Code reading set (10 prompts, no new topics)**
+1) Predict output: string slicing + len()
+2) Predict output: f-string with numeric conversion
+3) Find bug: off-by-one loop with range()
+4) Find bug: list index error (guard with len())
+5) Find bug: dict key access (use in / get)
+6) Trace: function return vs print
+7) Trace: import from utils.py (working directory reminder)
+8) Trace: JSON load with missing file (handle FileNotFoundError)
+9) Trace: JSONDecodeError recovery to defaults
+10) Explain: why pathlib avoids hardcoded paths
 
 3) Individual feedback: strengths + what to practice next
 
@@ -3031,7 +3133,7 @@ Score each category 0–3. Suggested pass threshold: 8/12 (adjust to your progra
 | --- | --- |
 | Correctness | Meets the functional requirements; produces correct output for typical test cases. |
 | Required concepts | Uses the concepts targeted for that checkpoint (e.g., lists, loops) in an appropriate way. |
-| Readability | Clear variable names, consistent formatting, helpful comments where needed. |
+| Readability | • Clear variable names<br>• Consistent formatting (4-space indent)<br>• f-strings for output<br>• Brief comments/run instructions where needed. |
 | Robustness (Basics) | Handles at least a few invalid/missing inputs gracefully; avoids obvious crashes. |
 
 ## Capstone rubric (final)
@@ -3041,13 +3143,18 @@ Score each category 0–3. Suggested pass threshold: 8/12 (adjust to your progra
 | Requirements met | Menu loop, functions split into modules, at least one class, JSON persistence, exception handling. |
 | User experience | Clear prompts, confirmations, and readable output. |
 | Code organization | Logical file structure; functions/classes have clear responsibility. |
-| Data persistence | Save/load works across runs; handles missing/corrupt file gracefully. |
+| Data persistence | Save/load works across runs; handles missing/corrupt file gracefully; uses data/ folder with pathlib (no hardcoded absolute paths). |
 | Demo & explanation | Learner can explain their approach and show key features in <3 minutes. |
+| Optional polish (bonus) | Directory listing feature: displays available save files if multiple exist. |
 
 # Troubleshooting quick guide (Basics)
 
 | Symptom | Fast fix |
 | --- | --- |
+| Lab won't launch / blank tab | Pop-up blocker blocked the new-tab launch; allow pop-ups for LogicalCHOICE and try again. |
+| Can't type / cursor drift / lag | Network latency; close heavy apps/tabs; stable connection matters more than bandwidth. |
+| Disconnected after break | Save All before breaks; relaunch from the LogicalCHOICE tile; files persist even if session resets. |
+| Has book access but no lab access | Lab Access Key not redeemed; Current Training → Redeem Training Key; redeem the LogicalLab key (not just CHOICE). |
 | IndentationError | Check inconsistent tabs/spaces; reindent the block with spaces (4). |
 | NameError | Variable misspelling or used before assignment; check exact casing. |
 | TypeError (can’t add str + int) | Convert input to int/float before math; use f-strings for output. |
@@ -3078,3 +3185,76 @@ Testing frameworks (pytest), coverage tooling
 Packaging/distribution (wheels, publishing), deployment
 
 Data science stack (numpy/pandas/matplotlib/ML)
+
+# Appendices
+
+## Appendix A: Student Quick Start (LogicalCHOICE + LogicalLabs)
+
+### 1) Access & keys
+• CHOICE Key unlocks the course tile and digital materials.
+• Lab Access Key (LogicalLab Key) provisions your VM. If you can read the book but can't open the lab, redeem your Lab Access Key.
+
+### 2) Redeem your Lab Access Key (required)
+• Go to Current Training → click "Redeem Training Key" → enter your Lab Access Key.
+
+### 3) Launching the lab
+• Click the course tile; the lab opens in a NEW browser tab.
+• If nothing happens, allow pop-ups for the LogicalCHOICE domain.
+
+### 4) Browser requirements
+• Use Chrome, Firefox, or Safari.
+• JavaScript must be enabled; aggressive blockers/corporate browser policies can break the lab stream.
+
+### 5) Saving your work
+• Always work inside your course folder (python_basics/).
+• Before breaks longer than ~15 minutes: "Save All."
+• If disconnected: relaunch from the tile—your files persist even if the session state resets.
+
+*(Grounding: two-key redemption, redeem training key, new tab pop-up behavior, JS dependency, save/suspend.)*
+
+## Appendix B: Basics Style Guide (minimum viable)
+
+### Indentation
+• 4 spaces (no tabs).
+
+### Naming
+• variables/functions: snake_case
+• constants: UPPER_SNAKE_CASE
+• classes: PascalCase
+
+### Strings/output
+• Prefer f-strings for clarity.
+
+### Comments
+• Short "why" comments; add a run-instructions header at top of scripts when helpful.
+
+### File organization
+• Keep main.py as entry point; utilities in utils.py.
+• **Important:** Avoid naming conflicts with stdlib modules (json.py, random.py, pathlib.py, etc.).
+
+## Appendix C: Python 2 vs 3 (reference only)
+
+### Key differences
+• `print` is a function: `print("hi")` not `print "hi"`
+• Division: `3 / 2` is `1.5` in Python 3
+• Strings/unicode: Python 3 uses Unicode strings by default
+
+### Goal
+Help learners interpret legacy examples; we only write Python 3.
+
+## Appendix D: Logical Operations Intro-to-Python crosswalk (high level)
+
+This table maps Logical Operations "Introduction to Programming with Python" lesson themes to the 48-hour runbook sessions:
+
+| LO Lesson Theme | Runbook Sessions/Hours |
+| --- | --- |
+| Setup + simple app | Session 1 |
+| Simple data types (strings/numbers) | Sessions 1–3 |
+| Data structures | Sessions 4–6 |
+| Conditionals + loops | Sessions 7–8 |
+| Functions + modules + intro classes | Sessions 9–10 |
+| Files + directories | Session 11 (Hours 41–43) |
+| Exceptions | Session 11 (Hour 44) |
+| Final review / assessment | Session 12 (Hour 48) |
+
+*(Grounding: your runbook's session overviews and Hour 41–44 structure.)*
