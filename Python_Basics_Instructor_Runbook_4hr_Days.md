@@ -215,7 +215,7 @@ Instructor talk points (10–15 min)
 
 Platform quick start (LogicalCHOICE → LogicalLabs):
   - LogicalLabs opens in a new browser tab; allow pop-ups for the LogicalCHOICE domain.
-  - Two-key reminder: course content key ≠ lab key; Lab Access Key must be redeemed from Current Training → Redeem Training Key.
+  - Two-key reminder: course content key does not equal lab key; Lab Access Key must be redeemed from Current Training → Redeem Training Key.
   - Save and Suspend culture: Save All before breaks; if disconnected, relaunch from the tile—files persist even if session state resets.
 
 Workspace standard: all course work goes in a single course folder (and a /data subfolder later) to avoid path/import issues.
