@@ -71,9 +71,7 @@ Prepare a shared class repo or zip of starter files (blank templates + checkpoin
 
 Decide how you will collect labs (screenshare, LMS upload, Git, or file submission).
 
-Post the ‘common errors’ quick sheet (indentation, type conversion, file paths, working directory).
-
-*(Grounding: two-key redemption + new tab/popup blocker + JS/browser dependency are highlighted as operational needs.)*
+Post the ‘common errors’ quick sheet (indentation, type conversion, file paths).
 
 # Session delivery rhythm (recommended)
 
@@ -213,29 +211,22 @@ Create a workspace folder and run a first script.
 
 Instructor talk points (10–15 min)
 
-Platform quick start (LogicalCHOICE → LogicalLabs):
-  - LogicalLabs opens in a new browser tab; allow pop-ups for the LogicalCHOICE domain.
-  - Two-key reminder: course content key ≠ lab key; Lab Access Key must be redeemed from Current Training → Redeem Training Key.
-  - Save and Suspend culture: Save All before breaks; if disconnected, relaunch from the tile—files persist even if session state resets.
-
-Workspace standard: all course work goes in a single course folder (and a /data subfolder later) to avoid path/import issues.
-
 Course workflow: lecture → demo → lab.
 
 How Python executes: interpreter vs script file.
 
 Where files live in the lab; naming and folders.
 
-*(Grounding: tile launches lab in new tab and pop-ups may block; two-key redemption; save/suspend.)*
-
 Live demo (5–10 min)
 
-1. Launch LogicalLabs from the LogicalCHOICE course tile (confirm it opens in a new tab).
-2. In the lab VM, open terminal / IDE.
-3. Run: python --version
-4. Create folder: python_basics/
-5. Create hello_course.py and run it.
-6. Save file, close it, then re-open it to confirm you can find it again (file location awareness).
+Open terminal / IDE.
+
+```
+Run: python --version
+Create folder: python_basics/
+```
+
+Create hello_course.py and run it.
 
 Hands-on lab (25–35 min)
 
@@ -254,10 +245,6 @@ Completion criteria
 Script runs without errors from both terminal and IDE.
 
 Learner can find the output and locate the file on disk.
-
-Learner can explain where their course folder is located in the lab environment.
-
-Learner confirms they can relaunch the lab (if needed) and still find their saved file.
 
 ```
 Common pitfalls to watch for
@@ -296,12 +283,6 @@ print() and string literals.
 Comments (#) and why we comment.
 
 Common beginner errors: missing quotes, parentheses, typos.
-
-**Style standard (Basics)**
-• 4-space indentation (no tabs).
-• Descriptive variable/function names (snake_case).
-• Prefer f-strings for readable output.
-• Comments explain "why," not "what," except for quick headers/run instructions.
 
 Live demo (5–10 min)
 
@@ -887,17 +868,9 @@ Common errors: NameError, TypeError, ValueError, IndexError.
 
 Using small test inputs.
 
-Platform-specific debugging:
-  - "Where am I?": print working directory; ensure you're running from project folder.
-  - Common issue: imports fail because wrong working directory (will be explored more in modules session).
-
 Live demo (5–10 min)
 
 Demo: purposely break a script; add print statements to isolate where it fails.
-
-**Optional note (5–10 min, if learners encounter old snippets online)**
-• Python 2 vs 3 quick differences: print is a function, unicode defaults, integer division behavior.
-Purpose: help learners interpret legacy code without teaching Python 2.
 
 Hands-on lab (25–35 min)
 
@@ -2287,13 +2260,9 @@ Common standard libs: math, random, datetime (light tour).
 
 Avoid circular imports (mention only).
 
-**Important:** Do not name files like stdlib modules (random.py, json.py, pathlib.py, etc.) — this causes import conflicts.
-
 Live demo (5–10 min)
 
 Demo: create utils.py with 2 helper functions and import into main.py.
-
-Show "running wrong file / wrong folder" causing import issues; fix by running main.py from project root.
 
 Hands-on lab (25–35 min)
 
@@ -2695,8 +2664,6 @@ Use pathlib to build reliable paths.
 
 Create a data directory if needed.
 
-List directory contents (iterdir / glob) to discover available files.
-
 Instructor talk points (10–15 min)
 
 Relative vs absolute.
@@ -2705,21 +2672,9 @@ Path.cwd() and Path('data')
 
 mkdir(exist_ok=True).
 
-Listing folders:
-  - Path('data').iterdir()
-  - Path('data').glob('*.json')
-
-Why we list directories: "discover save files" and avoid hardcoding file names.
-
-**Path best practice (portable)**
-• Use a project-relative base directory derived from your script location (or project root) and join into data/.
-• Avoid hardcoded Downloads/Desktop paths.
-
 Live demo (5–10 min)
 
 Demo: create data/ folder and write file into it using pathlib.
-
-Demo: list contents of data/ and print found JSON files (if any). If none exist, print "No save files found."
 
 Hands-on lab (25–35 min)
 
@@ -2731,10 +2686,6 @@ Lab: Data folder
 
 - Make sure your program runs regardless of where the terminal starts (within reason).
 
-- Print the names of all files in data/.
-
-- If multiple JSON files exist, select one (first match is fine) and display which file you will load/save.
-
 ```
 Completion criteria
 ```
@@ -2742,8 +2693,6 @@ Completion criteria
 Uses pathlib or os.path to target data/.
 
 Folder is created safely.
-
-Learner successfully lists directory contents and can identify the JSON file path being used.
 
 ```
 Common pitfalls to watch for
@@ -3028,15 +2977,6 @@ Instructor talk points (10–15 min)
 
 Review key topics: types, structures, flow, functions, modules, classes, files, exceptions.
 
-**Domains checklist (use as the review agenda)**
-• Types + conversions
-• Strings + formatting
-• Data structures (list/tuple/set/dict)
-• Conditionals + loops
-• Functions + modules + basic class usage
-• Files (text + JSON) + paths (pathlib) + directory listing
-• Exceptions (ValueError, FileNotFoundError, JSONDecodeError)
-
 Exam-style question patterns (conceptual + code reading).
 
 Live demo (5–10 min)
@@ -3050,18 +2990,6 @@ Final (60–75 min)
 1) Capstone demo + rubric scoring
 
 2) Short written/quiz review (15–20 min)
-
-**Code reading set (10 prompts, no new topics)**
-1) Predict output: string slicing + len()
-2) Predict output: f-string with numeric conversion
-3) Find bug: off-by-one loop with range()
-4) Find bug: list index error (guard with len())
-5) Find bug: dict key access (use in / get)
-6) Trace: function return vs print
-7) Trace: import from utils.py (working directory reminder)
-8) Trace: JSON load with missing file (handle FileNotFoundError)
-9) Trace: JSONDecodeError recovery to defaults
-10) Explain: why pathlib avoids hardcoded paths
 
 3) Individual feedback: strengths + what to practice next
 
