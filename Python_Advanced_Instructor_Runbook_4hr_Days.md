@@ -1797,7 +1797,7 @@ Schema draft exists.
 
 Repository methods defined.
 
-**DB Quality Gate (add)**
+**DB Quality Gate**
 
 * All SQL uses parameter placeholders (`?`) — no string concatenation.  
 * DB writes are committed via context manager or explicit `commit()`.  
