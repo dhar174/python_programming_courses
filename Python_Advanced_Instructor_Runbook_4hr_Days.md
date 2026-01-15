@@ -152,7 +152,7 @@ Packaging: requirements + run instructions; optional executable build
 ## LogicalOps 094032 crosswalk (for alignment + instructor pacing)
 
 | LogicalOps 094032 Lesson | Topic cluster | Where it appears in our runbook |
-| ----- | ----- | ----- |
+| --- | --- | --- |
 | Lesson 1–2 | OOP approach + classes + built-ins + Factory | Sessions 1–3 (Hours 1–12) |
 | Lesson 5 (client concepts) | Network/client fundamentals | Session 4 (Hours 13–16) |
 | Lesson 3 | Desktop GUI | Sessions 5–6 (Hours 17–24) |
