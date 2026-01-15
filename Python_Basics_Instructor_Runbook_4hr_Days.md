@@ -3133,7 +3133,7 @@ Score each category 0–3. Suggested pass threshold: 8/12 (adjust to your progra
 | --- | --- |
 | Correctness | Meets the functional requirements; produces correct output for typical test cases. |
 | Required concepts | Uses the concepts targeted for that checkpoint (e.g., lists, loops) in an appropriate way. |
-| Readability | Clear variable names, consistent formatting, helpful comments where needed. |
+| Readability | Clear variable names, consistent formatting (4-space indent), f-strings for output, and brief comments/run instructions where needed. |
 | Robustness (Basics) | Handles at least a few invalid/missing inputs gracefully; avoids obvious crashes. |
 
 ## Capstone rubric (final)
@@ -3143,13 +3143,18 @@ Score each category 0–3. Suggested pass threshold: 8/12 (adjust to your progra
 | Requirements met | Menu loop, functions split into modules, at least one class, JSON persistence, exception handling. |
 | User experience | Clear prompts, confirmations, and readable output. |
 | Code organization | Logical file structure; functions/classes have clear responsibility. |
-| Data persistence | Save/load works across runs; handles missing/corrupt file gracefully. |
+| Data persistence | Save/load works across runs; handles missing/corrupt file gracefully; uses data/ folder with pathlib (no hardcoded absolute paths). |
 | Demo & explanation | Learner can explain their approach and show key features in <3 minutes. |
+| Optional polish (bonus) | Directory listing feature: displays available save files if multiple exist. |
 
 # Troubleshooting quick guide (Basics)
 
 | Symptom | Fast fix |
 | --- | --- |
+| Lab won't launch / blank tab | Pop-up blocker blocked the new-tab launch; allow pop-ups for LogicalCHOICE and try again. |
+| Can't type / cursor drift / lag | Network latency; close heavy apps/tabs; stable connection matters more than bandwidth. |
+| Disconnected after break | Save All before breaks; relaunch from the LogicalCHOICE tile; files persist even if session resets. |
+| Has book access but no lab access | Lab Access Key not redeemed; Current Training → Redeem Training Key; redeem the LogicalLab key (not just CHOICE). |
 | IndentationError | Check inconsistent tabs/spaces; reindent the block with spaces (4). |
 | NameError | Variable misspelling or used before assignment; check exact casing. |
 | TypeError (can’t add str + int) | Convert input to int/float before math; use f-strings for output. |
@@ -3180,3 +3185,76 @@ Testing frameworks (pytest), coverage tooling
 Packaging/distribution (wheels, publishing), deployment
 
 Data science stack (numpy/pandas/matplotlib/ML)
+
+# Appendices
+
+## Appendix A: Student Quick Start (LogicalCHOICE + LogicalLabs)
+
+### 1) Access & keys
+• CHOICE Key unlocks the course tile and digital materials.
+• Lab Access Key (LogicalLab Key) provisions your VM. If you can read the book but can't open the lab, redeem your Lab Access Key.
+
+### 2) Redeem your Lab Access Key (required)
+• Go to Current Training → click "Redeem Training Key" → enter your Lab Access Key.
+
+### 3) Launching the lab
+• Click the course tile; the lab opens in a NEW browser tab.
+• If nothing happens, allow pop-ups for the LogicalCHOICE domain.
+
+### 4) Browser requirements
+• Use Chrome, Firefox, or Safari.
+• JavaScript must be enabled; aggressive blockers/corporate browser policies can break the lab stream.
+
+### 5) Saving your work
+• Always work inside your course folder (python_basics/).
+• Before breaks longer than ~15 minutes: "Save All."
+• If disconnected: relaunch from the tile—your files persist even if the session state resets.
+
+*(Grounding: two-key redemption, redeem training key, new tab pop-up behavior, JS dependency, save/suspend.)*
+
+## Appendix B: Basics Style Guide (minimum viable)
+
+### Indentation
+• 4 spaces (no tabs).
+
+### Naming
+• variables/functions: snake_case
+• constants: UPPER_SNAKE_CASE
+• classes: PascalCase
+
+### Strings/output
+• Prefer f-strings for clarity.
+
+### Comments
+• Short "why" comments; add a run-instructions header at top of scripts when helpful.
+
+### File organization
+• Keep main.py as entry point; utilities in utils.py.
+• **Important:** Avoid naming conflicts with stdlib modules (json.py, random.py, pathlib.py, etc.).
+
+## Appendix C: Python 2 vs 3 (reference only)
+
+### Key differences
+• `print` is a function: `print("hi")` not `print "hi"`
+• Division: `3 / 2` is `1.5` in Python 3
+• Strings/unicode: Python 3 uses Unicode strings by default
+
+### Goal
+Help learners interpret legacy examples; we only write Python 3.
+
+## Appendix D: Logical Operations Intro-to-Python crosswalk (high level)
+
+This table maps Logical Operations "Introduction to Programming with Python" lesson themes to the 48-hour runbook sessions:
+
+| LO Lesson Theme | Runbook Sessions/Hours |
+| --- | --- |
+| Setup + simple app | Session 1 |
+| Simple data types (strings/numbers) | Sessions 1–3 |
+| Data structures | Sessions 4–6 |
+| Conditionals + loops | Sessions 7–8 |
+| Functions + modules + intro classes | Sessions 9–10 |
+| Files + directories | Session 11 (Hours 41–43) |
+| Exceptions | Session 11 (Hour 44) |
+| Final review / assessment | Session 12 (Hour 48) |
+
+*(Grounding: your runbook's session overviews and Hour 41–44 structure.)*
