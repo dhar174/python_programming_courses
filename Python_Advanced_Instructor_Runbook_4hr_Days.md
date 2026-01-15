@@ -1922,7 +1922,7 @@ Lab: Implement get/update/delete
 Completion criteria
 ```
 
-**DB Quality Gate (reminder)**
+Quality requirements (DB reminder):
 
 * All SQL uses parameter placeholders (`?`) — no string concatenation.  
 * DB writes are committed via context manager or explicit `commit()`.  
