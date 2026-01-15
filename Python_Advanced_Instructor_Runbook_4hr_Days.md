@@ -11,6 +11,18 @@ This runbook is an hour-by-hour teaching companion for a 48-hour Advanced Python
 
 Pacing note for 4-hour sessions: plan one 10-minute break around the midpoint, plus a 3–5 minute micro-break as needed. The hour blocks below are instructional hours.
 
+## Courseware alignment note (LogicalOps 094032 + LogicalLabs)
+
+This Advanced runbook is designed to align with the Logical Operations course "Advanced Programming Techniques with Python® (Second Edition)" (Course 094032), delivered through LogicalLabs (CHOICE remote lab) where applicable.
+
+Because our delivery is **48 hours (12×4h)** rather than a short intensive format, we:
+
+* Spend more time on **capstone scaffolding, checkpoints, and quality gates**.  
+* Reinforce core skills via **repeat exposure** (client → API → secure API → client again).  
+* Keep "volatile" topics (production auth systems, deployment) explicitly optional.
+
+Instructor note: The order of units may differ from a typical 3-day outline, but the competencies are the same (OOP/patterns, GUI, DB, web/services + security basics, data analysis, testing, packaging).
+
 # Prerequisites (expected learner baseline)
 
 Comfortable with variables, types, data structures (list/dict/set/tuple).
@@ -55,6 +67,18 @@ Decide GUI framework to use (default Tkinter for reliability; PyQt only if lab s
 
 Decide how learners submit work (Git repo preferred) and how you’ll do code reviews (pair demos + rubrics).
 
+Confirm **CHOICE + LogicalLabs** access for instructor and learners:  
+  * Test redemption using a **non-instructor** account (or a fresh learner account).  
+  * Verify labs open in a new tab and that browser pop-ups aren't blocked.
+
+Verify learners know the difference between **saving files** vs **saving the lab state**:  
+  * Files persist if saved normally, but running sessions/processes may not.  
+  * "Save and Suspend" should be used for longer breaks and end-of-day.
+
+Run a "first-10-min preflight" script in the lab image:  
+  * `python --version`, `pip --version`, `python -c "import sqlite3"`, IDE opens, workspace permissions OK.  
+  * Confirm key packages import successfully (at minimum: `requests`, `flask`, `pytest`, `pandas`, `matplotlib`).
+
 # Session delivery rhythm (recommended)
 
 Start-of-session (5–10 min): recap + warm-up (predict output / quick fix).
@@ -66,6 +90,40 @@ Demo (5–10 min): live-code with narration; have learners predict results befor
 Lab (25–35 min): guided -> independent; circulate; require frequent runs/tests.
 
 Debrief (5 min): 2–3 learners show solutions; capture 3 rules-of-thumb on a shared doc.
+
+## LogicalLabs / CHOICE Quickstart (required for delivery)
+
+**Keys you may see:**
+
+* **Training Key** (for the CHOICE course access)  
+* **Lab Access Key** (for the LogicalLabs environment)
+
+**Redeeming a Training Key (CHOICE)**
+
+1. Log into CHOICE.  
+2. Go to **My Training**.  
+3. Click **Access a Course**.  
+4. Enter the access key and redeem.
+
+**Launching a lab**
+
+* Open the course, then select the exercise/lab item.  
+* The lab typically opens in a **new browser tab**.  
+* If it doesn't open: allow pop-ups, allow new tabs, and retry.
+
+**Persistence vs volatility (how not to lose work)**
+
+* Saving a file (Ctrl+S) writes it to disk.  
+* The lab session itself can be paused/stopped; running apps may terminate.  
+* For breaks **> 15 minutes** or end-of-day, use **Save and Suspend**:  
+  * Choose **Suspend** to preserve your session state.  
+  * Resume later from the course/lab launcher.
+
+**Instructor "Day 0" test (do this before first cohort session)**
+
+* Complete one lab launch end-to-end.  
+* Create a file, save it, then **Save and Suspend**, resume, and confirm the file is still present.  
+* Confirm one learner account can do the same.
 
 # Capstone approach (runs throughout)
 
@@ -90,6 +148,21 @@ Automated tests for core logic (pytest) + basic coverage report
 Packaging: requirements + run instructions; optional executable build
 
 # Session overviews (quick schedule)
+
+## LogicalOps 094032 crosswalk (for alignment + instructor pacing)
+
+| LogicalOps 094032 Lesson | Topic cluster | Where it appears in our runbook |
+| ----- | ----- | ----- |
+| Lesson 1–2 | OOP approach + classes + built-ins + Factory | Sessions 1–3 (Hours 1–12) |
+| Lesson 5 (client concepts) | Network/client fundamentals | Session 4 (Hours 13–16) |
+| Lesson 3 | Desktop GUI | Sessions 5–6 (Hours 17–24) |
+| Lesson 4 | Data-driven apps (DB) | Sessions 7–8 (Hours 25–32) |
+| Lesson 5 (API + security + client) | REST services + secure basics + client | Sessions 9–10 (Hours 33–40) |
+| Lesson 6 | Data science (clean → viz → regression) | Session 11 (Hours 41–44) |
+| Lesson 7 | Exceptions + unit testing | Session 12 (Hours 45–46) |
+| Lesson 8 | Packaging + executables | Session 12 (Hours 47–48) |
+
+Instructor note: We intentionally revisit web topics twice (client first, then API + client) to improve retention and capstone readiness.
 
 ## Session 1 overview (Hours 1–4)
 
@@ -3114,6 +3187,9 @@ Score each category 0–3. Suggested pass threshold: 10/15 (adjust to your progr
 
 | Symptom | Fast fix |
 | --- | --- |
+| LogicalLabs won't open / nothing happens when clicking lab | Allow pop-ups/new tabs; retry in a fresh browser session; confirm you're logged into CHOICE. |
+| Work "disappeared" after disconnect | Confirm whether files were saved to disk. Use **Save and Suspend** for breaks/end-of-day so the session state is preserved. |
+| Lab session is slow / stuck | Save files, then "Save and Suspend" → resume; close extra tabs; avoid running heavy installs during class time. |
 | ModuleNotFoundError / import issues | Confirm you’re running from the project root; prefer 'python -m <package>' for packages; avoid naming files after stdlib modules. |
 | pip install fails | Check whether installs are allowed; confirm correct venv; try upgrading pip; use cached wheels if policy requires. |
 | GUI freezes | Don’t run long tasks on the UI thread; keep callbacks short; add status updates; avoid blocking network calls in callbacks. |
