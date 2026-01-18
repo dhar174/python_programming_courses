@@ -1,0 +1,93 @@
+/* @theme python-light */
+@import 'gaia';
+
+/* Color system */
+:root {
+  --bg: #ffffff;
+  --fg: #1f2328;
+  --muted: #57606a;
+  --accent: #1f6feb;
+  --accent-contrast: #ffffff;
+
+  --code-bg: #f6f8fa;
+  --code-fg: #0d1117;
+  --code-border: #d0d7de;
+
+  --table-border: #d0d7de;
+  --blockquote-bg: #f6f8fa;
+  --blockquote-border: #d0d7de;
+}
+
+section {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Headings: clear hierarchy for lectures */
+section h1 { font-size: 1.9em; margin-bottom: 0.4em; }
+section h2 { font-size: 1.5em; margin-top: 0.8em; }
+section h3 { font-size: 1.25em; color: var(--muted); }
+
+/* Links */
+section a { color: var(--accent); }
+
+/* Code blocks */
+section pre code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  line-height: 1.4;
+  font-size: 0.9em;
+}
+
+/* Inline code */
+section code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  border: 1px solid var(--code-border);
+}
+
+/* Tables */
+section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.6rem 0;
+}
+section th, section td {
+  border: 1px solid var(--table-border);
+  padding: 0.5rem 0.6rem;
+}
+section th {
+  background: #eef2f7;
+  text-align: left;
+}
+
+/* Blockquotes -> callout boxes (useful for Notes/Exercises) */
+section blockquote {
+  background: var(--blockquote-bg);
+  border-left: 4px solid var(--blockquote-border);
+  padding: 0.8rem 1rem;
+  margin: 0.8rem 0;
+}
+
+/* Accent pill for slide titles or labels */
+section .pill {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8em;
+}
+
+/* List spacing for readability */
+section ul, section ol { line-height: 1.5; }
+
+/* Optional footer area (if you use the `footer:` directive) */
+section::after {
+  /* Gaia renders footer via CSS variable; the base theme handles placement */
+}
