@@ -86,8 +86,8 @@ Repo conventions you must follow
   * presentations/decks/<deck-name>/assets/
 * Build outputs (CI artifacts):
 
-  * presentations/dist//marp/slides.md|slides.html|slides.pdf|slides.pptx
-  * presentations/dist//slidev/slides.md|site/**|slides.pdf|slides.pptx|export.md
+  * presentations/dist/<deck-name>/marp/slides.md|slides.html|slides.pdf|slides.pptx
+  * presentations/dist/<deck-name>/slidev/slides.md|site/**|slides.pdf|slides.pptx|export.md
 
 * How to build locally (for validation)
 - From /presentations:
