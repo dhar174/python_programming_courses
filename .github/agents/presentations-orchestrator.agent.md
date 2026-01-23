@@ -115,9 +115,6 @@ Repo conventions you must follow
   - A 1-slide outline (agenda)
   - A consistent narrative arc (problem → approach → example → takeaway)
   - A final “Key takeaways” slide (3–6 bullets)
-- Keep slides scannable: ~3–6 bullets max per slide, avoid walls of text.
-- Use speaker notes (Slidev notes) when detail is needed.
-
 ### Build/publish policy
 
 * Do not commit generated binaries by default.
