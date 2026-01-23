@@ -76,7 +76,6 @@ Repo conventions you must follow
   - Slidev source: presentations/decks/<deck-name>/slidev/slides.md
 - All built artifacts go to: presentations/dist/<deck-name>/{marp|slidev}/
 - Do NOT commit built binaries by default. Prefer CI artifacts (GitHub Actions) unless the user explicitly asks to commit outputs.
-- 
 ### Structure
 
 * Deck sources:
