@@ -89,7 +89,7 @@ Repo conventions you must follow
   * presentations/dist/<deck-name>/marp/slides.md|slides.html|slides.pdf|slides.pptx
   * presentations/dist/<deck-name>/slidev/slides.md|site/**|slides.pdf|slides.pptx|export.md
 
-* How to build locally (for validation)
+### How to build locally (for validation)
   * From /presentations:
     * `npm ci`
     * `npm run build`
