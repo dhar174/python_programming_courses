@@ -132,9 +132,9 @@ Repo conventions you must follow
 * Run the build and ensure exports succeed for BOTH Marp and Slidev.
 * Each time you need help from specialized agents:
   - Invoke a specialized agent via the custom-agent tool:
-    - presentations-marp-writer
-    - presentations-slidev-writer
-    - presentations-build-engineer
+    - presentations-marp
+    - presentations-slidev
+    - presentations-build
     - presentations-qa
 ## Definition of done
 * The pipeline produces FOUR output types: .md, .html, .pdf, .pptx with repo-accurate content.
