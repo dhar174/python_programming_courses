@@ -81,9 +81,9 @@ Repo conventions you must follow
 
 * Deck sources:
 
-  * presentations/decks//marp/slides.md
-  * presentations/decks//slidev/slides.md
-  * presentations/decks//assets/
+  * presentations/decks/<deck-name>/marp/slides.md
+  * presentations/decks/<deck-name>/slidev/slides.md
+  * presentations/decks/<deck-name>/assets/
 * Build outputs (CI artifacts):
 
   * presentations/dist//marp/slides.md|slides.html|slides.pdf|slides.pptx
