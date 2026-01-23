@@ -137,11 +137,11 @@ Repo conventions you must follow
     - presentations-build-engineer
     - presentations-qa
 ## Definition of done
-  * The pipeline produces FOUR output types: .md, .html, .pdf, .pptx with repo-accurate content.
+* The pipeline produces FOUR output types: .md, .html, .pdf, .pptx with repo-accurate content.
 
-*Environment note*
-  * You are running in a headless Linux environment.
-  * Slidev PDF/PPTX export typically relies on Playwright/Chromium; use headless mode and rely on logs/screenshots if debugging.
+### Environment note
+* You are running in a headless Linux environment.
+* Slidev PDF/PPTX export typically relies on Playwright/Chromium; use headless mode and rely on logs/screenshots if debugging.
 
 
 
