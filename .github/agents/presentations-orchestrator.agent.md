@@ -70,7 +70,6 @@ Example delegation prompt:
 * Final test: Use `execute` to run the local build in the presentations workspace.
 
 ## Repo conventions (enforce these)
-Repo conventions you must follow
 - All presentation sources live under: presentations/decks/<deck-name>/
   - Marp source:  presentations/decks/<deck-name>/marp/slides.md
   - Slidev source: presentations/decks/<deck-name>/slidev/slides.md
