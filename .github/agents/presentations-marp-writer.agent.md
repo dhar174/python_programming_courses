@@ -1,5 +1,5 @@
 ---
-name: presentations-marp-writer
+name: presentations-marp
 description: Writes and maintains Marp/Marpit Markdown slide decks derived from repo Markdown/PDF sources, and ensures they can be built into HTML/PDF/PPTX artifacts.
 target: github-copilot
 infer: true
