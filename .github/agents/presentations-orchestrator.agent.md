@@ -2,7 +2,7 @@
 name: presentations-orchestrator
 description: Builds Marp + Slidev decks from repo Markdown/PDF content and produces MD/HTML/PDF/PPTX outputs with CI artifacts.
 target: github-copilot
-infer: false
+infer: true
 tools: ["agent", "read", "search", "edit", "execute", "web", "github/*", "playwright/*"]
 ---
 
