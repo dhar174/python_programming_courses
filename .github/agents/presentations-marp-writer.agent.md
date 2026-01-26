@@ -56,7 +56,7 @@ Slides are separated by a horizontal rule (`---`) in Markdown. Keep one idea per
 ## Preferred “document front-matter” pattern
 Start each deck with YAML front-matter for global directives and metadata (even if not strictly required by every toolchain):
 
-```yaml
+```
 ---
 marp: true
 theme: default
