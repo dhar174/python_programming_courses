@@ -1,6 +1,11 @@
 name: Publish example slides to GitHub Pages
 on:
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "**.md"
+      - ".marprc.yml"
 
 permissions:
   contents: read
@@ -15,28 +20,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
           
       - name: Convert Markdown into HTML and PDF
         uses: KoharaKazuya/marp-cli-action@v4
         with:
           config-file: ./.marprc.yml
-
-      - name: Convert Markdown into HTML and PDF (ja)
-        uses: KoharaKazuya/marp-cli-action@v4
-        with:
-          config-file: ./.marprc.yml
-          
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -55,26 +47,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-  publish:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Convert Markdown into HTML and PDF
-        uses: KoharaKazuya/marp-cli-action@v4
-
-      - name: Upload static files as artifact
-        id: upload
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
