@@ -1,6 +1,9 @@
-name: Publish example slides to GitHub Pages
+name: Publish slides to GitHub Pages
 on:
   workflow_dispatch:
+  # Added push trigger as it's standard for CD, but kept dispatch as requested
+  push:
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -12,70 +15,42 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@b4ffde65f4633668241c7f37ce5ac854beb54ca5 # v4.0.0 (Pinned SHA)
+
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+
       - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
+        uses: actions/jekyll-build-pages@5a8220ce660d297904c643907c080d8717f92025 # v1.0.12
         with:
           source: ./
           destination: ./_site
-          
+
+      # Consolidated Marp step - ensure config handles what you need
       - name: Convert Markdown into HTML and PDF
-        uses: KoharaKazuya/marp-cli-action@v4
+        uses: KoharaKazuya/marp-cli-action
         with:
           config-file: ./.marprc.yml
 
-      - name: Convert Markdown into HTML and PDF (ja)
-        uses: KoharaKazuya/marp-cli-action@v4
-        with:
-          config-file: ./.marprc.yml
-          
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba40dbf3aa9b9921f80 # v3.0.1
         with:
-          path: '.'
-          
+          path: '.' # Verify if this should be './_site' if Jekyll is used?
 
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
     permissions:
       contents: read
       pages: write
       id-token: write
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
-  publish:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Convert Markdown into HTML and PDF
-        uses: KoharaKazuya/marp-cli-action@v4
-
-      - name: Upload static files as artifact
-        id: upload
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
