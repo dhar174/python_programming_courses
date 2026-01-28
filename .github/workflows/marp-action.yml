@@ -21,20 +21,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
         
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+        with: 
+          token: ${{ secrets.GH_PAT }}
           
       - name: Convert Markdown into HTML and PDF
         uses: KoharaKazuya/marp-cli-action@v4
         with:
           config-file: ./.marprc.yml
+          token: ${{ secrets.GH_PAT }}
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './Basics/lessons'
+          token: ${{ secrets.GH_PAT }}
           
 
   deploy:
@@ -47,8 +53,11 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
         
