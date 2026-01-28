@@ -17,16 +17,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Convert Markdown into HTML and PDF
-        uses: ./
-        with:
-          config-file: /.marprc.yml
-
-      - name: Convert Markdown into HTML and PDF (ja)
-        uses: ./
+        uses: KoharaKazuya/marp-cli-action@v4
         with:
           config-file: ./.marprc.yml
 
-      - name: Uploade artifact
+      - name: Convert Markdown into HTML and PDF (ja)
+        uses: KoharaKazuya/marp-cli-action@v4
+        with:
+          config-file: ./.marprc.yml
+
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./examples
