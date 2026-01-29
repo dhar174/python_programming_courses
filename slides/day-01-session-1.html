@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics Day 1 — Session 1 (Hours 1–4)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Basics Day 1 — Session 1 (Hours 1–4)</h1>
+            <div class="subtitle">Python Programming (Basic) • Orientation through Numbers &amp; Operators</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 1 Overview</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Topics Covered Today</h1>
+            <ul>
+  <li>Hour 1: Orientation + environment readiness</li>
+  <li>Hour 2: First scripts: print(), comments, and reading errors</li>
+  <li>Hour 3: Variables + basic types</li>
+  <li>Hour 4: Numbers + operators</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 1: Orientation + Environment Readiness</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Access the lab/VM and run Python</li>
+  <li>Create a workspace folder and run a first script</li>
+  <li>Understand the lab environment and file persistence</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Platform Quick Start</h1>
+            <h3>LogicalCHOICE → LogicalLabs</h3>
+<ul>
+  <li>LogicalLabs opens in a <strong>new browser tab</strong></li>
+  <li>Allow pop-ups for the LogicalCHOICE domain</li>
+  <li><strong>Two-key reminder</strong>: Course content key ≠ lab key</li>
+  <li>Lab Access Key must be redeemed from <strong>Current Training → Redeem Training Key</strong></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Save and Suspend Culture</h1>
+            <h3>Best Practices</h3>
+<ul>
+  <li><strong>Save All</strong> before breaks</li>
+  <li>If disconnected, relaunch from the tile</li>
+  <li>Files persist even if session state resets</li>
+</ul>
+<h3>Workspace Standard</h3>
+<p>All course work goes in a <strong>single course folder</strong></p>
+<ul>
+  <li>Create <code>/data</code> subfolder later for data files</li>
+  <li>Avoids path/import issues</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Course Workflow</h1>
+            <pre><code>Lecture → Demo → Lab</code></pre>
+<h3>How Python Executes</h3>
+<ul>
+  <li><strong>Interpreter mode</strong>: interactive testing</li>
+  <li><strong>Script file</strong>: save and run programs</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Environment Setup</h1>
+            <h3>Steps</h3>
+<ol>
+  <li>Launch LogicalLabs from LogicalCHOICE course tile</li>
+  <li>Open terminal / IDE in the lab VM</li>
+  <li>Run: <code>python --version</code></li>
+  <li>Create folder: <code>python_basics/</code></li>
+  <li>Create <code>hello_course.py</code> and run it</li>
+  <li>Save file, close it, re-open to confirm location</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Environment Check + First Run</h1>
+            <h3>Tasks</h3>
+<ul>
+  <li>Create a folder for the course</li>
+  <li>Create <code>hello_course.py</code> that prints your name and today&#x27;s date</li>
+  <li>Run it from terminal AND from the IDE</li>
+</ul>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Script runs without errors from both terminal and IDE</p>
+<p><span class="check">✓</span> Learner can find the output and locate the file on disk</p>
+<p><span class="check">✓</span> Learner can explain where course folder is located</p>
+<p><span class="check">✓</span> Learner confirms files persist after relaunch</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 1)</h1>
+            <p><strong>⚠️</strong> Wrong interpreter selected in IDE</p>
+<p><strong>⚠️</strong> Saving file outside workspace</p>
+<p><strong>⚠️</strong> Confusing terminal path vs file path</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add a second script that imports <code>datetime</code> and prints formatted date</li>
+  <li>Add a &#x27;run instructions&#x27; comment header</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What&#x27;s the difference between running in the REPL and running a <code>.py</code> file?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 2: First Scripts — print(), Comments, and Reading Errors</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Use <code>print()</code> to produce output</li>
+  <li>Explain indentation and syntax rules at a basic level</li>
+  <li>Read and fix common beginner errors</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>The print() Function</h1>
+            <h3>Basic Usage</h3>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)
+print(&quot;Welcome to Python Basics&quot;)</code></pre>
+<h3>Multiple Arguments</h3>
+<pre data-lang="python"><code>print(&quot;Hello&quot;, &quot;Python&quot;, &quot;learners&quot;)
+# Output: Hello Python learners</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Comments in Python</h1>
+            <h3>Single-line Comments</h3>
+<pre data-lang="python"><code># This is a comment
+print(&quot;This is code&quot;)  # Comment after code</code></pre>
+<h3>Why We Comment</h3>
+<ul>
+  <li><strong>Explain &quot;why&quot;</strong>, not &quot;what&quot;</li>
+  <li>Add headers/run instructions</li>
+  <li>Document tricky logic</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Python Style Standards (Basics)</h1>
+            <h3>Key Rules</h3>
+<ul>
+  <li><strong>4-space indentation</strong> (no tabs)</li>
+  <li><strong>Descriptive names</strong> (snake_case)</li>
+  <li><strong>Prefer f-strings</strong> for readable output</li>
+  <li>Comments explain &quot;why,&quot; not &quot;what&quot;</li>
+</ul>
+<pre data-lang="python"><code># Good
+user_name = &quot;Alice&quot;
+total_count = 42
+
+# Avoid
+x = &quot;Alice&quot;
+tc = 42</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Common Beginner Errors</h1>
+            <h3>Missing Quotes</h3>
+<pre data-lang="python"><code># ❌ Error
+print(Hello)
+
+# ✓ Fixed
+print(&quot;Hello&quot;)</code></pre>
+<h3>Missing Parentheses</h3>
+<pre data-lang="python"><code># ❌ Error
+print &quot;Hello&quot;
+
+# ✓ Fixed
+print(&quot;Hello&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Reading Error Messages</h1>
+            <h3>Example Error</h3>
+<pre><code>Traceback (most recent call last):
+  File &quot;script.py&quot;, line 3
+    print(Hello)
+          ^^^^^
+NameError: name &#x27;Hello&#x27; is not defined</code></pre>
+<h3>What to Look For</h3>
+<ol>
+  <li><strong>File name</strong> and <strong>line number</strong></li>
+  <li><strong>Error type</strong> (NameError, SyntaxError, etc.)</li>
+  <li><strong>Error message</strong> description</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: 5 Common Mistakes</h1>
+            <p>Live-code these errors and fix them:</p>
+<ol>
+  <li>Missing closing quote</li>
+  <li>Missing closing parenthesis</li>
+  <li>Typo in function name</li>
+  <li>Using smart quotes (from copy/paste)</li>
+  <li>Wrong indentation</li>
+</ol>
+<p><strong>Goal</strong>: Fix each in &lt; 30 seconds</p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Greeter</h1>
+            <h3>Tasks</h3>
+<ul>
+  <li>Write a program that prints a 3-line greeting</li>
+  <li>Add a comment describing what the program does</li>
+  <li>Intentionally create a syntax error, read the message, then fix it</li>
+</ul>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Output prints 3 lines correctly</p>
+<p><span class="check">✓</span> Learner can describe what changed when fixing the error</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 2)</h1>
+            <p><strong>⚠️</strong> Using smart quotes from copy/paste</p>
+<p><strong>⚠️</strong> Missing closing parentheses/quotes</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Print a simple ASCII box around the greeting using <code>\n</code> and spacing</li>
+</ul>
+<pre data-lang="python"><code>print(&quot;*&quot; * 30)
+print(&quot;*  Welcome to Python!      *&quot;)
+print(&quot;*&quot; * 30)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: Why is whitespace/indentation important in Python?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 3: Variables + Basic Types</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Create variables and assign values</li>
+  <li>Use <code>type()</code> to inspect values</li>
+  <li>Understand basic data types</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>What is a Variable?</h1>
+            <h3>Assignment</h3>
+<pre data-lang="python"><code>message = &quot;Hello&quot;
+count = 42
+price = 19.99
+is_active = True</code></pre>
+<h3>Reading Assignment Right to Left</h3>
+<pre data-lang="python"><code>x = 5  # 5 is assigned TO x</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Naming Rules</h1>
+            <h3>Valid Identifiers</h3>
+<pre data-lang="python"><code>user_name = &quot;Alice&quot;
+total_count = 100
+max_score_2024 = 95</code></pre>
+<h3>Invalid Identifiers</h3>
+<pre data-lang="python"><code># ❌ These don&#x27;t work
+2nd_place = &quot;Bob&quot;     # starts with number
+user-name = &quot;Alice&quot;   # uses hyphen
+class = &quot;Python&quot;      # reserved keyword</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Basic Data Types</h1>
+            <h3>Strings (str)</h3>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+city = &#x27;New York&#x27;</code></pre>
+<h3>Numbers</h3>
+<pre data-lang="python"><code>age = 25           # int
+price = 19.99      # float</code></pre>
+<h3>Booleans</h3>
+<pre data-lang="python"><code>is_student = True
+has_graduated = False</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>The type() Function</h1>
+            <h3>Checking Types</h3>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+age = 25
+price = 19.99
+is_active = True
+
+print(type(name))      # &lt;class &#x27;str&#x27;&gt;
+print(type(age))       # &lt;class &#x27;int&#x27;&gt;
+print(type(price))     # &lt;class &#x27;float&#x27;&gt;
+print(type(is_active)) # &lt;class &#x27;bool&#x27;&gt;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Variable Reassignment</h1>
+            <h3>Changing Values</h3>
+<pre data-lang="python"><code>count = 10
+print(count)  # 10
+
+count = 20
+print(count)  # 20</code></pre>
+<h3>Changing Types</h3>
+<pre data-lang="python"><code>value = 42        # int
+value = &quot;Hello&quot;   # now str</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Profile Card</h1>
+            <p>Build a small profile card with variables:</p>
+<pre data-lang="python"><code>name = &quot;Alice Smith&quot;
+city = &quot;Seattle&quot;
+favorite_number = 7
+likes_python = True
+
+print(&quot;Profile Card&quot;)
+print(&quot;Name:&quot;, name)
+print(&quot;City:&quot;, city)
+print(&quot;Favorite Number:&quot;, favorite_number)
+print(&quot;Likes Python:&quot;, likes_python)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Profile Card</h1>
+            <h3>Tasks</h3>
+<ul>
+  <li>Store: name, city, favorite number, and a boolean (e.g., <code>likes_python</code>)</li>
+  <li>Print a formatted &#x27;card&#x27; showing all values</li>
+  <li>Use <code>type()</code> for each value and print the result</li>
+</ul>
+<h3>Example Output</h3>
+<pre><code>=== Profile Card ===
+Name: Alice Smith (type: &lt;class &#x27;str&#x27;&gt;)
+City: Seattle (type: &lt;class &#x27;str&#x27;&gt;)
+Favorite Number: 7 (type: &lt;class &#x27;int&#x27;&gt;)
+Likes Python: True (type: &lt;class &#x27;bool&#x27;&gt;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Completion Criteria (Hour 3)</h1>
+            <p><span class="check">✓</span> Program prints values and types correctly</p>
+<p><span class="check">✓</span> Learner uses clear variable names</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 3)</h1>
+            <p><strong>⚠️</strong> Overwriting variable with a different type accidentally</p>
+<p><strong>⚠️</strong> NameError from typos</p>
+<p><strong>⚠️</strong> Using reserved keywords as variable names</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add a computed value (favorite number + 10)</li>
+  <li>Add user input for one field using <code>input()</code></li>
+</ul>
+<pre data-lang="python"><code>name = input(&quot;Enter your name: &quot;)
+print(&quot;Hello,&quot;, name)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What&#x27;s the difference between <code>&#x27;5&#x27;</code> and <code>5</code>?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 4: Numbers + Operators</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Use arithmetic operators and understand precedence</li>
+  <li>Explain integer vs float results</li>
+  <li>Build simple calculations</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Arithmetic Operators</h1>
+            <h3>Basic Operations</h3>
+<pre data-lang="python"><code># Addition
+result = 10 + 5      # 15
+
+# Subtraction
+result = 10 - 5      # 5
+
+# Multiplication
+result = 10 * 5      # 50
+
+# Division (always returns float)
+result = 10 / 5      # 2.0</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>More Operators</h1>
+            <h3>Floor Division</h3>
+<pre data-lang="python"><code>result = 10 // 3     # 3 (integer division)
+result = 10 / 3      # 3.333...</code></pre>
+<h3>Modulo (Remainder)</h3>
+<pre data-lang="python"><code>result = 10 % 3      # 1 (remainder)
+result = 10 % 2      # 0 (even number check)</code></pre>
+<h3>Exponentiation</h3>
+<pre data-lang="python"><code>result = 2 ** 3      # 8 (2 to the power of 3)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Order of Operations</h1>
+            <h3>PEMDAS</h3>
+<pre data-lang="python"><code>result = 2 + 3 * 4        # 14 (not 20)
+result = (2 + 3) * 4      # 20 (parentheses first)
+result = 2 ** 3 * 4       # 32 (exponent first)</code></pre>
+<h3>Best Practice</h3>
+<p>Use parentheses for clarity:</p>
+<pre data-lang="python"><code># Less clear
+total = price * 1.08 + shipping
+
+# More clear
+total = (price * 1.08) + shipping</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Integer vs Float Division</h1>
+            <h3>Division Always Returns Float</h3>
+<pre data-lang="python"><code>result = 10 / 2      # 2.0 (not 2)
+result = 9 / 3       # 3.0 (not 3)</code></pre>
+<h3>Floor Division Returns Integer</h3>
+<pre data-lang="python"><code>result = 10 // 3     # 3
+result = 10 // 2     # 5</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Rounding Numbers</h1>
+            <h3>The round() Function</h3>
+<pre data-lang="python"><code>value = 3.14159
+rounded = round(value, 2)    # 3.14
+
+# For display, not storage
+price = 19.999
+display_price = round(price, 2)  # 20.0</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Mini Calculator</h1>
+            <h3>Show Division Differences</h3>
+<pre data-lang="python"><code>print(&quot;Regular division:&quot;)
+print(10 / 3)        # 3.333...
+
+print(&quot;Floor division:&quot;)
+print(10 // 3)       # 3
+
+print(&quot;Modulo (remainder):&quot;)
+print(10 % 3)        # 1</code></pre>
+<h3>Even/Odd Check</h3>
+<pre data-lang="python"><code>number = 7
+if number % 2 == 0:
+    print(&quot;Even&quot;)
+else:
+    print(&quot;Odd&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Tip Calculator</h1>
+            <h3>Tasks</h3>
+<ul>
+  <li>Ask for bill total and tip percent</li>
+  <li>Compute tip amount and final total</li>
+  <li>Display results to 2 decimals using <code>round()</code> or formatting</li>
+</ul>
+<h3>Example Interaction</h3>
+<pre><code>Enter bill total: 50.00
+Enter tip percent (e.g., 15 for 15%): 18
+
+Tip amount: $9.00
+Final total: $59.00</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Sample Solution Structure</h1>
+            <pre data-lang="python"><code># Get input
+bill = float(input(&quot;Enter bill total: &quot;))
+tip_percent = float(input(&quot;Enter tip percent: &quot;))
+
+# Calculate
+tip = bill * (tip_percent / 100)
+total = bill + tip
+
+# Display
+print(f&quot;Tip amount: ${tip:.2f}&quot;)
+print(f&quot;Final total: ${total:.2f}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Completion Criteria (Hour 4)</h1>
+            <p><span class="check">✓</span> Correct totals for sample inputs</p>
+<p><span class="check">✓</span> Uses float conversion where needed</p>
+<p><span class="check">✓</span> Displays amounts with 2 decimal places</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 4)</h1>
+            <p><strong>⚠️</strong> Forgetting to convert <code>input()</code> to float</p>
+<p><strong>⚠️</strong> Integer division surprises (using <code>/</code> vs <code>//</code>)</p>
+<p><strong>⚠️</strong> Rounding too early in calculations</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add split count (divide by number of people)</li>
+  <li>Add sales tax as an extra percent</li>
+  <li>Handle $0 bill gracefully</li>
+</ul>
+<pre data-lang="python"><code># Split bill
+num_people = int(input(&quot;Split among how many people? &quot;))
+per_person = total / num_people
+print(f&quot;Per person: ${per_person:.2f}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What does the <code>%</code> (modulo) operator return and when is it useful?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Session 1 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>What We Covered Today</h1>
+            <h3>Hour 1: Orientation</h3>
+<ul>
+  <li>Lab environment setup</li>
+  <li>File persistence and workspace organization</li>
+</ul>
+<h3>Hour 2: First Scripts</h3>
+<ul>
+  <li><code>print()</code> function</li>
+  <li>Comments and error reading</li>
+</ul>
+<h3>Hour 3: Variables</h3>
+<ul>
+  <li>Variable assignment and naming</li>
+  <li>Basic types: str, int, float, bool</li>
+</ul>
+<h3>Hour 4: Operators</h3>
+<ul>
+  <li>Arithmetic operations</li>
+  <li>Division types and modulo</li>
+  <li>Building a tip calculator</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrail Reminder</h1>
+            <h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> Core syntax and basic types</p>
+<p><span class="check">✓</span> Simple calculations and string operations</p>
+<p><span class="check">✓</span> Clear variable names and comments</p>
+<h3>Not Yet (Advanced Topics)</h3>
+<p><span class="cross">✗</span> List comprehensions</p>
+<p><span class="cross">✗</span> Lambda functions</p>
+<p><span class="cross">✗</span> Decorators</p>
+<p><span class="cross">✗</span> Generators</p>
+<p><span class="cross">✗</span> Advanced OOP patterns</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework / Practice</h1>
+            <h3>Recommended Exercises</h3>
+<ol>
+  <li>Create a program that calculates area of different shapes</li>
+  <li>Build a simple currency converter</li>
+  <li>Create a BMI calculator with formatted output</li>
+  <li>Practice fixing syntax errors deliberately</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Next Session Preview</h1>
+            <h3>Session 2 (Hours 5–8)</h3>
+<ul>
+  <li>Hour 5: String indexing and slicing</li>
+  <li>Hour 6: String methods (normalize, search, replace)</li>
+  <li>Hour 7: Input/output + type conversion</li>
+  <li>Hour 8: Checkpoint 1 (mini-assessment)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Questions?</h1>
+            <p><strong>Remember</strong>:</p>
+<ul>
+  <li>Save your work frequently</li>
+  <li>Practice reading error messages</li>
+  <li>Use clear, descriptive variable names</li>
+  <li>Comment your code when helpful</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Thank You!</h1>
+            <p>See you in Session 2!</p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

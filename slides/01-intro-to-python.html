@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro to Python</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Intro to Python</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Your first program</h1>
+            <pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<blockquote>Tip: Use the arrow keys or space/shift+space to navigate.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Variables</h1>
+            <pre data-lang="python"><code>message = &quot;Hi&quot;
+count = 3
+pi = 3.14159</code></pre>
+<p>Notes:</p>
+<ul>
+  <li>Presenter notes go here; export to PDF with <code>--pdf-notes</code> or <code>pdfNotes: true</code> in config</li>
+</ul>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
