@@ -74,7 +74,7 @@ Every lesson should follow this proven structure:
 
 All code examples must be:
 
-- **Modern**: Use current Python 3.10+ features
+- **Modern**: Use current Python 3.11+ features
 - **Runnable**: Complete, tested examples that work out of the box
 - **Best Practice**: Follow PEP 8 style guidelines
 - **Readable**: Include meaningful variable names and clear logic
