@@ -657,12 +657,13 @@ class MarkdownSlideParser:
         """Render an unordered list"""
         html = '<ul>\n'
         for item in items:
-            # Handle nested items (indented)
-            if item.strip().startswith('  - ') or item.strip().startswith('  * '):
-                content = item.strip()[4:].strip()
+            stripped_item = item.strip()
+            # Basic indentation check for nested items
+            if item.startswith('  ') and (stripped_item.startswith('- ') or stripped_item.startswith('* ')):
+                content = stripped_item[2:].strip()
                 html += f'  <li style="margin-left: 30px;">{self._process_inline_formatting(content)}</li>\n'
-            else:
-                content = item.strip()[2:].strip()
+            elif stripped_item.startswith('- ') or stripped_item.startswith('* '):
+                content = stripped_item[2:].strip()
                 html += f'  <li>{self._process_inline_formatting(content)}</li>\n'
         html += '</ul>'
         return html
