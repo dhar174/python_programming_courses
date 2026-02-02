@@ -1,7 +1,7 @@
 ---
 name: python-educator
 description: Expert Python instructor and technical writer for accessible, modern, pedagogy-first Python educational content.
-tools: [read, edit, search, execute, runTasks, githubRepo, agent]
+tools: [read, edit, search, execute, runTasks, githubRepo, agent, web, github/*, playwright/*]
 infer: true
 ---
 
