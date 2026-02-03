@@ -1,0 +1,28 @@
+name: Autograder
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Run autograder
+        uses: webtech-network/autograder@main
+        with:
+          template_preset: 'io'
+          feedback-type: 'default'
+          include-feedback: 'true'
