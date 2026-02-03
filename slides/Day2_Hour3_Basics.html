@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2, Hour 3: Working with Text – split() and join()</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Day 2, Hour 3: Working with Text – split() and join()</h1>
+            <div class="subtitle">**Python Programming Basics – Session 3**</div>
+        </section>
+
+        <section class="slide">
+            <h1>Timing Overview</h1>
+            <p><strong>Total Time:</strong> 60 minutes</p>
+<ul>
+  <li>Recap &amp; Transition from Hour 10: 3 minutes</li>
+  <li>String Methods Overview: 5 minutes</li>
+  <li>The split() Method: 10-12 minutes</li>
+  <li>The join() Method: 8-10 minutes</li>
+  <li>Practical Text Processing Patterns: 5 minutes</li>
+  <li>Live Demo (Word Count and Rebuild): 5-10 minutes</li>
+  <li>Hands-On Lab (Sentence Stats): 25-35 minutes</li>
+  <li>Debrief &amp; Exit Ticket: 5 minutes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes for This Hour</h1>
+            <p>By the end of this hour, you will be able to:</p>
+<ol>
+  <li>Use <code>.split()</code> to break strings into lists of words</li>
+  <li>Understand how <code>.split()</code> handles whitespace by default</li>
+  <li>Use <code>.join()</code> to combine list elements into a single string</li>
+  <li>Count words in a sentence programmatically</li>
+  <li>Find the longest word in a text string</li>
+  <li>Rebuild strings with custom separators</li>
+  <li>Recognize and handle edge cases (empty input, punctuation)</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Section 1: Recap &amp; Transition from Hour 10 (3 minutes)</h1>
+            <h3>Quick Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome back! In Hour 10, we learned f-strings and made our program output look professional. You upgraded the Tip Calculator to display currency with proper formatting using <code>.2f</code>.</p>
+<p>Quick check: <strong>Who&#x27;s now using f-strings in all their output instead of concatenation?</strong></p>
+<p>[Wait for responses]</p>
+<p>Excellent! Once you start using f-strings, you&#x27;ll never want to go back to <code>+</code> concatenation.</p>
+<h3>From Formatting to Processing</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>So far, we&#x27;ve been <strong>displaying</strong> strings. Now we&#x27;re going to learn how to <strong>process</strong> them—how to break text apart, analyze it, and put it back together in new ways.</p>
+<p><strong>Real-world examples where this matters:</strong></p>
+<ul>
+  <li><strong>Parsing user input:</strong> &quot;First Last&quot; → split into first and last name</li>
+  <li><strong>Word counting:</strong> Count words in a document or tweet</li>
+  <li><strong>Data cleaning:</strong> &quot;New York&quot; → &quot;new_york&quot; for a filename</li>
+  <li><strong>CSV processing:</strong> &quot;John,Doe,25&quot; → extract individual fields</li>
+  <li><strong>Text analysis:</strong> Find the most common words in a file</li>
+</ul>
+<p><strong>Hour 11 (right now)</strong> is about two essential string methods: <strong><code>split()</code></strong> and <strong><code>join()</code></strong>. These are the foundation of text processing.</p>
+<p>Let&#x27;s dive in!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 2: String Methods Overview (5 minutes)</h1>
+            <h3>What Are String Methods?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>We&#x27;ve already used a few string methods:</p>
+<pre data-lang="python"><code>text = &quot;Hello&quot;
+print(text.upper())      # &quot;HELLO&quot;
+print(text.lower())      # &quot;hello&quot;</code></pre>
+<p><strong>Reminder:</strong> A <strong>method</strong> is a function that belongs to an object. Strings are objects, and they come with built-in methods we can call using the dot <code>.</code> notation.</p>
+<p><strong>The pattern:</strong></p>
+<pre data-lang="python"><code>string_variable.method_name()</code></pre>
+<h3>Key String Methods We&#x27;ll Use Today</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Today we&#x27;re focusing on two methods that work together:</p>
+<ol>
+  <li><strong><code>.split()</code></strong> — Breaks a string into a list of substrings</li>
+  <li><strong><code>.join()</code></strong> — Combines a list of strings into a single string</li>
+</ol>
+<p><strong>The relationship:</strong></p>
+<pre data-lang="python"><code>sentence = &quot;Python is awesome&quot;
+
+words = sentence.split()        # Break apart
+# words is now: [&#x27;Python&#x27;, &#x27;is&#x27;, &#x27;awesome&#x27;]
+
+rebuilt = &quot; &quot;.join(words)       # Put back together
+# rebuilt is now: &quot;Python is awesome&quot;</code></pre>
+<p>Think of them as opposites:</p>
+<ul>
+  <li><code>split()</code>: string → list</li>
+  <li><code>join()</code>: list → string</li>
+</ul>
+<p>Let&#x27;s explore each in detail.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 3: The split() Method (10-12 minutes)</h1>
+            <h3>Basic Usage: Splitting on Whitespace</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The most common use of <code>.split()</code> is to break a sentence into words:</p>
+<pre data-lang="python"><code>sentence = &quot;Python is awesome&quot;
+
+words = sentence.split()
+print(words)</code></pre>
+<p><strong>Output:</strong></p>
+<pre data-lang="python"><code>[&#x27;Python&#x27;, &#x27;is&#x27;, &#x27;awesome&#x27;]</code></pre>
+<p><strong>What happened?</strong></p>
+<ul>
+  <li><code>.split()</code> with no arguments splits on <strong>whitespace</strong> (spaces, tabs, newlines)</li>
+  <li>It returns a <strong>list</strong> of strings</li>
+  <li>Each word becomes an element in the list</li>
+</ul>
+<p><strong>[Key insight]:</strong> Notice the return type changes from <code>str</code> to <code>list</code>. This is important.</p>
+<h3>Checking the Type</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s verify:</p>
+<pre data-lang="python"><code>sentence = &quot;Hello world&quot;
+
+words = sentence.split()
+
+print(type(sentence))    # &lt;class &#x27;str&#x27;&gt;
+print(type(words))       # &lt;class &#x27;list&#x27;&gt;
+print(words)             # [&#x27;Hello&#x27;, &#x27;world&#x27;]</code></pre>
+<p><strong>Why does this matter?</strong> Because now you can use list operations:</p>
+<pre data-lang="python"><code>words = sentence.split()
+
+print(len(words))        # 2 (number of words)
+print(words[0])          # &#x27;Hello&#x27; (first word)
+print(words[1])          # &#x27;world&#x27; (second word)</code></pre>
+<h3>Whitespace Handling</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><code>.split()</code> is smart about whitespace—it strips leading/trailing spaces and handles multiple spaces:</p>
+<pre data-lang="python"><code># Multiple spaces
+text = &quot;Hello    world&quot;
+print(text.split())      # [&#x27;Hello&#x27;, &#x27;world&#x27;]
+
+# Leading/trailing spaces
+text = &quot;  Python  &quot;
+print(text.split())      # [&#x27;Python&#x27;]
+
+# Mix of spaces and tabs
+text = &quot;one\ttwo\tthree&quot;
+print(text.split())      # [&#x27;one&#x27;, &#x27;two&#x27;, &#x27;three&#x27;]</code></pre>
+<p><strong>[Key point]:</strong> When you call <code>.split()</code> without arguments, Python splits on <strong>any whitespace</strong> and ignores empty strings in the result.</p>
+<h3>Quick Check #1</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre data-lang="python"><code>text = &quot;Learn Python today&quot;
+words = text.split()
+
+print(len(words))
+print(words[0])
+print(words[-1])</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>3
+Learn
+today</code></pre>
+<ul>
+  <li><code>len(words)</code> is 3 (three words in the list)</li>
+  <li><code>words[0]</code> is the first word: <code>&#x27;Learn&#x27;</code></li>
+  <li><code>words[-1]</code> is the last word: <code>&#x27;today&#x27;</code> (negative indexing!)</li>
+</ul>
+<h3>Splitting on a Specific Delimiter</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You can also split on a <strong>specific character</strong> by passing it as an argument:</p>
+<pre data-lang="python"><code># Splitting on commas (CSV format)
+data = &quot;John,Doe,25,Engineer&quot;
+fields = data.split(&quot;,&quot;)
+print(fields)
+# [&#x27;John&#x27;, &#x27;Doe&#x27;, &#x27;25&#x27;, &#x27;Engineer&#x27;]
+
+# Splitting on hyphens
+phone = &quot;555-123-4567&quot;
+parts = phone.split(&quot;-&quot;)
+print(parts)
+# [&#x27;555&#x27;, &#x27;123&#x27;, &#x27;4567&#x27;]
+
+# Splitting on pipes
+items = &quot;apple|banana|cherry&quot;
+fruits = items.split(&quot;|&quot;)
+print(fruits)
+# [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</code></pre>
+<p><strong>When you specify a delimiter:</strong></p>
+<ul>
+  <li>Python splits <strong>only</strong> on that character</li>
+  <li>Multiple consecutive delimiters create empty strings</li>
+</ul>
+<pre data-lang="python"><code>text = &quot;a,,b&quot;
+parts = text.split(&quot;,&quot;)
+print(parts)         # [&#x27;a&#x27;, &#x27;&#x27;, &#x27;b&#x27;]</code></pre>
+<p>Notice the empty string <code>&#x27;&#x27;</code> in the middle—that&#x27;s because there&#x27;s nothing between the two commas.</p>
+<h3>Practical Pattern: Extracting Name Parts</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A common use case:</p>
+<pre data-lang="python"><code>full_name = input(&quot;Enter your full name: &quot;)
+# User types: &quot;Alice Johnson&quot;
+
+parts = full_name.split()
+first_name = parts[0]
+last_name = parts[1]
+
+print(f&quot;First: {first_name}&quot;)
+print(f&quot;Last: {last_name}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>First: Alice
+Last: Johnson</code></pre>
+<p><strong>[Warning]:</strong> This assumes the user enters exactly two words. In production code, you&#x27;d check the length of <code>parts</code> first to avoid an <code>IndexError</code>.</p>
+<h3>Counting Words</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The simplest way to count words:</p>
+<pre data-lang="python"><code>sentence = input(&quot;Enter a sentence: &quot;)
+word_count = len(sentence.split())
+
+print(f&quot;Word count: {word_count}&quot;)</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>Enter a sentence: Python is easy to learn
+Word count: 5</code></pre>
+<p><strong>Why this works:</strong> <code>sentence.split()</code> creates a list of words, and <code>len()</code> tells us how many items are in that list.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 4: The join() Method (8-10 minutes)</h1>
+            <h3>Basic Usage: Joining a List into a String</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><code>.join()</code> is the opposite of <code>.split()</code>. It takes a list of strings and combines them into a single string.</p>
+<p><strong>The syntax is a bit unusual:</strong></p>
+<pre data-lang="python"><code>separator.join(list_of_strings)</code></pre>
+<p><strong>Not:</strong> ~~<code>list.join(separator)</code>~~</p>
+<p><strong>The separator comes first, then you call <code>.join()</code> on it, passing the list.</strong></p>
+<p>Let&#x27;s see it in action:</p>
+<pre data-lang="python"><code>words = [&#x27;Python&#x27;, &#x27;is&#x27;, &#x27;awesome&#x27;]
+
+sentence = &quot; &quot;.join(words)
+print(sentence)
+# &quot;Python is awesome&quot;</code></pre>
+<p><strong>Breaking this down:</strong></p>
+<ul>
+  <li><code>&quot; &quot;</code> is the separator (a space)</li>
+  <li><code>.join(words)</code> combines the words with that separator between each</li>
+</ul>
+<h3>Different Separators</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You can use any string as the separator:</p>
+<pre data-lang="python"><code>words = [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]
+
+# Join with spaces
+print(&quot; &quot;.join(words))           # &quot;apple banana cherry&quot;
+
+# Join with commas
+print(&quot;,&quot;.join(words))            # &quot;apple,banana,cherry&quot;
+
+# Join with comma and space
+print(&quot;, &quot;.join(words))           # &quot;apple, banana, cherry&quot;
+
+# Join with newlines
+print(&quot;\n&quot;.join(words))
+# Output:
+# apple
+# banana
+# cherry
+
+# Join with nothing (concatenate)
+print(&quot;&quot;.join(words))             # &quot;applebananacherry&quot;
+
+# Join with hyphens
+print(&quot;-&quot;.join(words))            # &quot;apple-banana-cherry&quot;
+
+# Join with pipes
+print(&quot; | &quot;.join(words))          # &quot;apple | banana | cherry&quot;</code></pre>
+<h3>Quick Check #2</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre data-lang="python"><code>items = [&#x27;Python&#x27;, &#x27;Java&#x27;, &#x27;JavaScript&#x27;]
+result = &quot; and &quot;.join(items)
+
+print(result)</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>Python and Java and JavaScript</code></pre>
+<p>The separator <code>&quot; and &quot;</code> is inserted <strong>between</strong> each element.</p>
+<h3>The Split-Process-Join Pattern</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A common pattern in text processing:</p>
+<ol>
+  <li><strong>Split</strong> the string into parts</li>
+  <li><strong>Process</strong> the parts (filter, transform, etc.)</li>
+  <li><strong>Join</strong> them back together</li>
+</ol>
+<p><strong>Example: Convert sentence to hyphen-separated:</strong></p>
+<pre data-lang="python"><code>sentence = &quot;Learn Python today&quot;
+
+# Split into words
+words = sentence.split()        # [&#x27;Learn&#x27;, &#x27;Python&#x27;, &#x27;today&#x27;]
+
+# Process: convert to lowercase
+words_lower = [word.lower() for word in words]  # [&#x27;learn&#x27;, &#x27;python&#x27;, &#x27;today&#x27;]
+
+# Join with hyphens
+result = &quot;-&quot;.join(words_lower)  # &#x27;learn-python-today&#x27;
+
+print(result)</code></pre>
+<p><strong>[Note]:</strong> The list comprehension <code>[word.lower() for word in words]</code> is a preview of concepts we&#x27;ll cover later. For now, understand that we&#x27;re transforming each word.</p>
+<p><strong>Simplified version for now:</strong></p>
+<pre data-lang="python"><code>sentence = &quot;Learn Python today&quot;
+
+words = sentence.split()
+result = &quot;-&quot;.join(words)
+
+print(result)        # &quot;Learn-Python-today&quot;</code></pre>
+<h3>Common Use Case: Building File Paths or URLs</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<pre data-lang="python"><code># Building a URL-friendly string
+words = [&#x27;Python&#x27;, &#x27;Programming&#x27;, &#x27;Basics&#x27;]
+url_slug = &quot;-&quot;.join(words).lower()
+
+print(url_slug)      # &quot;python-programming-basics&quot;</code></pre>
+<p>This is how many websites generate URLs from titles.</p>
+<h3>Why join() Requires a List of Strings</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><code>.join()</code> only works with lists (or other iterables) of <strong>strings</strong>. If you have numbers, you must convert them first:</p>
+<pre data-lang="python"><code># WRONG - This will error
+numbers = [1, 2, 3]
+result = &quot;,&quot;.join(numbers)      # TypeError!
+
+# RIGHT - Convert to strings first
+numbers = [1, 2, 3]
+result = &quot;,&quot;.join([str(n) for n in numbers])
+print(result)                   # &quot;1,2,3&quot;</code></pre>
+<p><strong>Or more simply:</strong></p>
+<pre data-lang="python"><code>numbers = [1, 2, 3]
+result = &quot;,&quot;.join(str(n) for n in numbers)
+print(result)        # &quot;1,2,3&quot;</code></pre>
+<p><strong>[For now]:</strong> Just remember that <code>.join()</code> expects strings. If you see a <code>TypeError</code>, check that all elements are strings.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 5: Practical Text Processing Patterns (5 minutes)</h1>
+            <h3>Pattern 1: Word Count</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<pre data-lang="python"><code>text = input(&quot;Enter text: &quot;)
+word_count = len(text.split())
+
+print(f&quot;Words: {word_count}&quot;)</code></pre>
+<p><strong>Simple and effective.</strong> This works for most cases.</p>
+<h3>Pattern 2: Finding the Longest Word</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<pre data-lang="python"><code>sentence = &quot;Python is an amazing programming language&quot;
+
+words = sentence.split()
+longest = max(words, key=len)
+
+print(f&quot;Longest word: {longest}&quot;)
+# &quot;programming&quot;</code></pre>
+<p><strong>Breaking this down:</strong></p>
+<ul>
+  <li><code>max(words, key=len)</code> finds the word with the maximum length</li>
+  <li><code>key=len</code> tells Python to compare words by their length</li>
+</ul>
+<p><strong>Alternative (more beginner-friendly):</strong></p>
+<pre data-lang="python"><code>words = sentence.split()
+longest = &quot;&quot;
+
+for word in words:
+    if len(word) &gt; len(longest):
+        longest = word
+
+print(f&quot;Longest word: {longest}&quot;)</code></pre>
+<p><strong>We&#x27;ll cover loops in detail later</strong>, but this pattern is worth seeing now.</p>
+<h3>Pattern 3: Reversing Word Order</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<pre data-lang="python"><code>sentence = &quot;I love Python&quot;
+
+words = sentence.split()
+words.reverse()                  # Reverse the list in place
+reversed_sentence = &quot; &quot;.join(words)
+
+print(reversed_sentence)
+# &quot;Python love I&quot;</code></pre>
+<p><strong>Or more concisely:</strong></p>
+<pre data-lang="python"><code>sentence = &quot;I love Python&quot;
+reversed_sentence = &quot; &quot;.join(sentence.split()[::-1])
+
+print(reversed_sentence)
+# &quot;Python love I&quot;</code></pre>
+<p><strong>The <code>[::-1]</code> is slice notation for &quot;reverse the list&quot;.</strong> We&#x27;ll cover slicing in detail later.</p>
+<h3>Pattern 4: Removing Extra Spaces</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<pre data-lang="python"><code>messy_text = &quot;  Hello    world   &quot;
+
+# Split removes extra spaces, join rebuilds cleanly
+clean_text = &quot; &quot;.join(messy_text.split())
+
+print(f&quot;&#x27;{clean_text}&#x27;&quot;)
+# &#x27;Hello world&#x27;</code></pre>
+<p><strong>Why this works:</strong> <code>.split()</code> breaks on any whitespace and ignores empties, <code>.join()</code> rebuilds with single spaces.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 6: Live Demo – Word Count and Rebuild (5-10 minutes)</h1>
+            <h3>Demo Script: Sentence Statistics</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now I&#x27;m going to build a small program that:</p>
+<ol>
+  <li>Takes a sentence as input</li>
+  <li>Counts the words</li>
+  <li>Finds the longest word</li>
+  <li>Rebuilds the sentence with a custom separator</li>
+</ol>
+<p>Watch how I use <code>split()</code> and <code>join()</code> together.</p>
+<p><strong>[Open editor and create <code>sentence_stats.py</code>]</strong></p>
+<p><strong>[Instructor types and speaks:]</strong></p>
+<pre data-lang="python"><code># sentence_stats.py
+# Purpose: Analyze and transform a sentence
+
+print(&quot;=== Sentence Statistics ===\n&quot;)
+
+# Get user input
+sentence = input(&quot;Enter a sentence: &quot;)
+
+# Split into words
+words = sentence.split()
+
+# Calculate statistics
+word_count = len(words)
+
+# Find longest word
+longest = &quot;&quot;
+for word in words:
+    if len(word) &gt; len(longest):
+        longest = word
+
+# Rebuild with different separators
+hyphenated = &quot;-&quot;.join(words)
+piped = &quot; | &quot;.join(words)
+
+# Display results
+print(&quot;\n--- Statistics ---&quot;)
+print(f&quot;Word count: {word_count}&quot;)
+print(f&quot;Longest word: &#x27;{longest}&#x27; ({len(longest)} characters)&quot;)
+
+print(&quot;\n--- Transformations ---&quot;)
+print(f&quot;Hyphenated: {hyphenated}&quot;)
+print(f&quot;Piped: {piped}&quot;)</code></pre>
+<p><strong>[Run the program]</strong></p>
+<pre><code>=== Sentence Statistics ===
+
+Enter a sentence: Python programming is incredibly powerful
+
+--- Statistics ---
+Word count: 5
+Longest word: &#x27;programming&#x27; (11 characters)
+
+--- Transformations ---
+Hyphenated: Python-programming-is-incredibly-powerful
+Piped: Python | programming | is | incredibly | powerful</code></pre>
+<p><strong>[Instructor explains the key parts:]</strong></p>
+<ol>
+  <li><strong>Line 8:</strong> Get the sentence from the user</li>
+  <li><strong>Line 11:</strong> Split into a list of words</li>
+  <li><strong>Line 14:</strong> Count words using <code>len()</code> on the list</li>
+  <li><strong>Lines 17-20:</strong> Loop through to find the longest word (we&#x27;ll cover loops formally later)</li>
+  <li><strong>Lines 23-24:</strong> Rebuild the sentence with different separators using <code>.join()</code></li>
+</ol>
+<p><strong>[Key teaching moment]:</strong> Notice how <code>.split()</code> and <code>.join()</code> let us transform text easily. We broke it apart, analyzed it, and put it back together in different ways.</p>
+<h3>Handling Edge Cases</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s test with edge cases:</p>
+<p><strong>Test 1: Empty input</strong></p>
+<pre><code>Enter a sentence: 
+
+--- Statistics ---
+Word count: 0
+Longest word: &#x27;&#x27; (0 characters)</code></pre>
+<p><strong>Test 2: Single word</strong></p>
+<pre><code>Enter a sentence: Hello
+
+--- Statistics ---
+Word count: 1
+Longest word: &#x27;Hello&#x27; (5 characters)
+
+--- Transformations ---
+Hyphenated: Hello
+Piped: Hello</code></pre>
+<p><strong>Test 3: Extra spaces</strong></p>
+<pre><code>Enter a sentence:   Hello    world  
+
+--- Statistics ---
+Word count: 2
+Longest word: &#x27;Hello&#x27; (5 characters)</code></pre>
+<p><strong>Notice:</strong> <code>.split()</code> handles extra spaces gracefully.</p>
+<p><strong>[Important note]:</strong> In a production program, you&#x27;d add validation to check if the input is empty before processing. For now, we&#x27;ll trust the user to provide valid input.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 7: Hands-On Lab – Sentence Stats (25-35 minutes)</h1>
+            <h3>Lab Overview</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now it&#x27;s your turn! You&#x27;re going to build a sentence statistics program that analyzes text input.</p>
+<p><strong>Lab Goal:</strong> Create a program that splits, analyzes, and transforms user input.</p>
+<h3>Lab Instructions: Sentence Stats</h3>
+<p><strong>Scenario:</strong> You&#x27;re building a text analysis tool that provides statistics and transformations for user input.</p>
+<p><strong>Requirements:</strong></p>
+<p>Create a Python script called <code>sentence_analyzer.py</code> that:</p>
+<ol>
+  <li><strong>Prompts the user for a sentence</strong></li>
+</ol>
+<ol>
+  <li><strong>Calculates and displays:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Total word count</li>
+  <li style="margin-left: 30px;">The longest word in the sentence</li>
+  <li style="margin-left: 30px;">The length of the longest word</li>
+</ul>
+<ol>
+  <li><strong>Shows transformations:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Original sentence</li>
+  <li style="margin-left: 30px;">Words joined with pipes: <code>word1 | word2 | word3</code></li>
+  <li style="margin-left: 30px;">Words joined with hyphens: <code>word1-word2-word3</code></li>
+</ul>
+<ol>
+  <li><strong>Uses <code>.split()</code> and <code>.join()</code> appropriately</strong></li>
+</ol>
+<h3>Starter Template</h3>
+<pre data-lang="python"><code># sentence_analyzer.py
+# Purpose: Analyze and transform text input
+
+print(&quot;=== Sentence Analyzer ===\n&quot;)
+
+# Get user input
+sentence = input(&quot;Enter a sentence: &quot;)
+
+# Split into words
+words = sentence.split()
+
+# Calculate statistics
+word_count = len(words)
+
+# TODO: Find the longest word
+longest_word = &quot;&quot;
+# Your code here to find longest word
+
+# TODO: Create transformations
+piped_version = &quot;&quot;  # Join with &quot; | &quot;
+hyphenated_version = &quot;&quot;  # Join with &quot;-&quot;
+
+# Display results
+print(&quot;\n--- Statistics ---&quot;)
+print(f&quot;Word count: {word_count}&quot;)
+print(f&quot;Longest word: {longest_word}&quot;)
+print(f&quot;Length of longest word: {len(longest_word)}&quot;)
+
+print(&quot;\n--- Transformations ---&quot;)
+print(f&quot;Original: {sentence}&quot;)
+print(f&quot;Piped: {piped_version}&quot;)
+print(f&quot;Hyphenated: {hyphenated_version}&quot;)</code></pre>
+<h3>Example Output</h3>
+<p><strong>Test Case 1:</strong></p>
+<pre><code>=== Sentence Analyzer ===
+
+Enter a sentence: The quick brown fox jumps
+
+--- Statistics ---
+Word count: 5
+Longest word: brown
+Length of longest word: 5
+
+--- Transformations ---
+Original: The quick brown fox jumps
+Piped: The | quick | brown | fox | jumps
+Hyphenated: The-quick-brown-fox-jumps</code></pre>
+<p><strong>Test Case 2:</strong></p>
+<pre><code>=== Sentence Analyzer ===
+
+Enter a sentence: Python programming is amazing
+
+--- Statistics ---
+Word count: 4
+Longest word: programming
+Length of longest word: 11
+
+--- Transformations ---
+Original: Python programming is amazing
+Piped: Python | programming | is | amazing
+Hyphenated: Python-programming-is-amazing</code></pre>
+<h3>Completion Criteria</h3>
+<p>Your solution must:</p>
+<ul>
+  <li>✅ Use <code>.split()</code> to break the sentence into words</li>
+  <li>✅ Correctly count the number of words</li>
+  <li>✅ Identify the longest word in the sentence</li>
+  <li>✅ Use <code>.join()</code> to create both transformations (piped and hyphenated)</li>
+  <li>✅ Display output in a clear, formatted way</li>
+  <li>✅ Run without errors</li>
+</ul>
+<h3>Common Pitfalls to Watch For</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you work, watch out for these common mistakes:</p>
+<ol>
+  <li><strong>Forgetting to assign the result of split():</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - split() doesn&#x27;t modify the original string
+   sentence.split()
+   word_count = len(sentence)    # This counts characters, not words!
+   
+   # RIGHT - save the result
+   words = sentence.split()
+   word_count = len(words)</code></pre>
+<ol>
+  <li><strong>Using join() incorrectly:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - trying to call join on the list
+   result = words.join(&quot; | &quot;)    # AttributeError!
+   
+   # RIGHT - call join on the separator
+   result = &quot; | &quot;.join(words)</code></pre>
+<ol>
+  <li><strong>Comparing word lengths as strings:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # This works, but for the wrong reason
+   longest = max(words)  # Finds alphabetically last, not longest!
+   
+   # Correct comparison by length
+   longest = max(words, key=len)</code></pre>
+<ol>
+  <li><strong>Punctuation attached to words:</strong></li>
+</ol>
+<pre data-lang="python"><code>   sentence = &quot;Hello, world!&quot;
+   words = sentence.split()      # [&#x27;Hello,&#x27;, &#x27;world!&#x27;]
+   # The comma and exclamation are part of the words</code></pre>
+<p><strong>For this lab, don&#x27;t worry about stripping punctuation.</strong> We&#x27;ll cover that in future lessons.</p>
+<h3>Optional Extensions</h3>
+<p>If you finish early, try these:</p>
+<ol>
+  <li><strong>Strip Punctuation:</strong> Remove common punctuation marks (<code>,</code>, <code>.</code>, <code>!</code>, <code>?</code>) from words before analysis</li>
+</ol>
+<ol>
+  <li><strong>Average Word Length:</strong> Calculate and display the average length of words</li>
+</ol>
+<ol>
+  <li><strong>Reverse Word Order:</strong> Show the sentence with words in reverse order</li>
+</ol>
+<ol>
+  <li><strong>Title Case Transformation:</strong> Show the sentence with the first letter of each word capitalized</li>
+</ol>
+<p><strong>Example of Optional Extension #2:</strong></p>
+<pre data-lang="python"><code># Average word length
+total_characters = sum(len(word) for word in words)
+average_length = total_characters / word_count
+print(f&quot;Average word length: {average_length:.1f} characters&quot;)</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, you have 25-35 minutes. Remember:</p>
+<ul>
+  <li><code>.split()</code> returns a list</li>
+  <li><code>.join()</code> is called on the separator, not the list</li>
+  <li>Test with different sentences, including ones with extra spaces</li>
+  <li>Read error messages—they&#x27;ll guide you to the fix</li>
+</ul>
+<p>Let&#x27;s analyze some text!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 8: Debrief &amp; Exit Ticket (5 minutes)</h1>
+            <h3>Solution Walkthrough</h3>
+<p><strong>[Instructor shares solution:]</strong></p>
+<pre data-lang="python"><code># sentence_analyzer.py
+# Purpose: Analyze and transform text input
+
+print(&quot;=== Sentence Analyzer ===\n&quot;)
+
+# Get user input
+sentence = input(&quot;Enter a sentence: &quot;)
+
+# Split into words
+words = sentence.split()
+
+# Calculate statistics
+word_count = len(words)
+
+# Find the longest word
+longest_word = &quot;&quot;
+for word in words:
+    if len(word) &gt; len(longest_word):
+        longest_word = word
+
+# Alternative using max()
+# longest_word = max(words, key=len) if words else &quot;&quot;
+
+# Create transformations
+piped_version = &quot; | &quot;.join(words)
+hyphenated_version = &quot;-&quot;.join(words)
+
+# Display results
+print(&quot;\n--- Statistics ---&quot;)
+print(f&quot;Word count: {word_count}&quot;)
+print(f&quot;Longest word: {longest_word}&quot;)
+print(f&quot;Length of longest word: {len(longest_word)}&quot;)
+
+print(&quot;\n--- Transformations ---&quot;)
+print(f&quot;Original: {sentence}&quot;)
+print(f&quot;Piped: {piped_version}&quot;)
+print(f&quot;Hyphenated: {hyphenated_version}&quot;)</code></pre>
+<p><strong>[Key points to highlight:]</strong></p>
+<ol>
+  <li><strong>Line 11:</strong> <code>.split()</code> with no arguments splits on whitespace</li>
+  <li><strong>Line 14:</strong> <code>len(words)</code> counts the words (not characters)</li>
+  <li><strong>Lines 17-20:</strong> Loop to find the longest word (or use <code>max(words, key=len)</code>)</li>
+  <li><strong>Lines 25-26:</strong> <code>.join()</code> is called on the separator string</li>
+  <li><strong>The pattern:</strong> Split → Analyze → Join back together</li>
+</ol>
+<h3>Common Issues Students Encountered</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me address a few things I saw as I walked around:</p>
+<p>[Adjust based on actual student work, but common issues include:]</p>
+<ol>
+  <li><strong>Calling join on the list:</strong> Remember, it&#x27;s <code>&quot; | &quot;.join(words)</code>, not <code>words.join(&quot; | &quot;)</code></li>
+  <li><strong>Forgetting to save the split result:</strong> You must assign <code>sentence.split()</code> to a variable</li>
+  <li><strong>Empty input:</strong> If the user presses Enter without typing, <code>words</code> is an empty list, which can cause issues when finding the longest word</li>
+</ol>
+<h3>Extensions Showcase</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If anyone completed the extensions, let&#x27;s see what you built!</p>
+<p>[Call on 1-2 students who finished extensions to share their screen briefly]</p>
+<p>Great work! The punctuation stripping and average word length are useful additions.</p>
+<h3>Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>Before we wrap up Hour 11, answer this in your notes or in the chat:</p>
+<p><strong>Question:</strong> What type does <code>.split()</code> return, and why does that matter?</p>
+<p><strong>Expected answer:</strong> <code>.split()</code> returns a <code>list</code> of strings. This matters because it allows us to use list operations like <code>len()</code> (to count words), indexing (to access specific words), and iteration (to process each word).</p>
+        </section>
+
+        <section class="slide">
+            <h1>Recap: What We Accomplished</h1>
+            <p>In this hour, you:</p>
+<p>✅ Learned <code>.split()</code> to break strings into lists of words</p>
+<p>✅ Used <code>.split()</code> with and without delimiters</p>
+<p>✅ Learned <code>.join()</code> to combine lists back into strings</p>
+<p>✅ Counted words programmatically using <code>len()</code> on split results</p>
+<p>✅ Found the longest word in a sentence</p>
+<p>✅ Transformed sentences with custom separators</p>
+<p>✅ Handled edge cases like extra whitespace</p>
+<p><strong>This is powerful text processing knowledge.</strong> You can now take user input, break it apart, analyze it, and transform it. These patterns show up everywhere—parsing data files, cleaning text, building search features, and more.</p>
+<p>In Hour 12, we&#x27;ll focus on <strong>debugging habits</strong>—how to read error messages, use print-debugging effectively, and troubleshoot like a pro.</p>
+<p><strong>Great work! Take a quick 5-minute break.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Reference Card (for students)</h1>
+            <p><strong>split() Method:</strong></p>
+<pre data-lang="python"><code># Split on whitespace (default)
+words = sentence.split()
+
+# Split on specific character
+fields = data.split(&quot;,&quot;)
+
+# Examples
+&quot;Hello world&quot;.split()           # [&#x27;Hello&#x27;, &#x27;world&#x27;]
+&quot;a,b,c&quot;.split(&quot;,&quot;)              # [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;]
+&quot;  extra  spaces  &quot;.split()     # [&#x27;extra&#x27;, &#x27;spaces&#x27;]</code></pre>
+<p><strong>join() Method:</strong></p>
+<pre data-lang="python"><code># Syntax: separator.join(list)
+words = [&#x27;Python&#x27;, &#x27;is&#x27;, &#x27;awesome&#x27;]
+
+&quot; &quot;.join(words)                 # &#x27;Python is awesome&#x27;
+&quot;-&quot;.join(words)                 # &#x27;Python-is-awesome&#x27;
+&quot;, &quot;.join(words)                # &#x27;Python, is, awesome&#x27;
+&quot; | &quot;.join(words)               # &#x27;Python | is | awesome&#x27;
+&quot;&quot;.join(words)                  # &#x27;Pythonisawesome&#x27;</code></pre>
+<p><strong>Common Patterns:</strong></p>
+<pre data-lang="python"><code># Word count
+word_count = len(text.split())
+
+# Find longest word
+longest = max(words, key=len)
+
+# Clean extra spaces
+clean = &quot; &quot;.join(messy.split())
+
+# Split-Process-Join
+words = sentence.split()
+result = &quot;-&quot;.join(words)</code></pre>
+<p><strong>Remember:</strong></p>
+<ul>
+  <li><code>.split()</code> returns a list</li>
+  <li><code>.join()</code> is called on the separator: <code>separator.join(list)</code></li>
+  <li><code>.join()</code> only works with lists of strings</li>
+  <li><code>.split()</code> with no arguments handles any whitespace</li>
+</ul>
+<p><strong>End of Hour 11 Script</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

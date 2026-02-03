@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 1, Hour 2: First Scripts – print(), Comments, and Reading Errors</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Day 1, Hour 2: First Scripts – print(), Comments, and Reading Errors</h1>
+            <div class="subtitle">**Python Programming Basics – Session 1**</div>
+        </section>
+
+        <section class="slide">
+            <h1>Timing Overview</h1>
+            <p><strong>Total Time:</strong> 60 minutes</p>
+<ul>
+  <li>Recap &amp; Transition from Hour 1: 3 minutes</li>
+  <li>Core Concepts (print, comments, syntax): 10-15 minutes</li>
+  <li>Style Standards Introduction: 5 minutes</li>
+  <li>Live Demo (Common Mistakes): 5-10 minutes</li>
+  <li>Hands-On Lab (Greeter): 25-35 minutes</li>
+  <li>Debrief &amp; Exit Ticket: 5 minutes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes for This Hour</h1>
+            <p>By the end of this hour, you will be able to:</p>
+<ol>
+  <li>Use <code>print()</code> to produce output with string literals</li>
+  <li>Write comments using <code>#</code> and explain when and why to use them</li>
+  <li>Recognize and read common Python error messages</li>
+  <li>Apply basic Python style standards (indentation, naming, f-strings)</li>
+  <li>Deliberately create a syntax error, read the message, and fix it</li>
+  <li>Explain why whitespace and indentation matter in Python</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Section 1: Recap &amp; Transition from Hour 1 (3 minutes)</h1>
+            <h3>Quick Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome back! In Hour 1, we got our environment set up, navigated the lab platform, and ran our very first Python script. You should now have:</p>
+<ul>
+  <li>A working lab environment with your <code>python_basics</code> folder</li>
+  <li>The ability to open and run <code>.py</code> files</li>
+  <li>An understanding of the difference between the REPL and script files</li>
+</ul>
+<p>Quick show of hands: <strong>Who successfully ran their <code>hello_course.py</code> script and saw output?</strong></p>
+<p>[Wait for responses]</p>
+<p>Great! And if you didn&#x27;t quite get there—that&#x27;s okay. Stay after this hour and we&#x27;ll troubleshoot together.</p>
+<h3>What We&#x27;re Building Toward</h3>
+<p>In Hour 1, we ran code that was basically handed to us. Starting now, <strong>you&#x27;re going to write your own</strong>. And here&#x27;s something important to know upfront:</p>
+<p><strong>You will make mistakes. Everyone does. I do. Every professional programmer does—daily.</strong></p>
+<p>The difference between a beginner and an experienced programmer isn&#x27;t that experienced programmers don&#x27;t make errors. It&#x27;s that <strong>they know how to read error messages and fix them quickly.</strong></p>
+<p>So this hour is about three core skills:</p>
+<ol>
+  <li><strong>Writing simple output</strong> with <code>print()</code></li>
+  <li><strong>Documenting your code</strong> with comments</li>
+  <li><strong>Reading and fixing errors</strong> like a pro</li>
+</ol>
+<p>By the end of this hour, errors won&#x27;t scare you anymore. They&#x27;ll be your helpful assistants.</p>
+<p>Let&#x27;s get started.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 2: Core Concepts – print(), Strings, and Comments (10-15 minutes)</h1>
+            <h3>The print() Function</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s talk about <code>print()</code>. You&#x27;ve already used it in Hour 1, but let&#x27;s understand it properly.</p>
+<p><strong>What is <code>print()</code>?</strong></p>
+<p><code>print()</code> is a <strong>built-in function</strong> in Python. Its job is simple: take whatever you give it and display it to the screen (technically, to &quot;standard output,&quot; which is usually your terminal or console).</p>
+<p>Here&#x27;s the anatomy of a print statement:</p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p>Let&#x27;s break this down:</p>
+<ul>
+  <li><strong><code>print</code></strong>: The function name</li>
+  <li><strong><code>(</code></strong>: Opening parenthesis—this starts the argument list</li>
+  <li><strong><code>&quot;Hello, world!&quot;</code></strong>: The argument—what we want to display</li>
+  <li><strong><code>)</code></strong>: Closing parenthesis—this ends the argument list</li>
+</ul>
+<p><strong>[Key point]:</strong> The parentheses are <strong>required</strong>. You can&#x27;t just write <code>print &quot;Hello&quot;</code> (that was valid in Python 2, but we&#x27;re using Python 3). If you forget them, Python will give you an error.</p>
+<h3>String Literals</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Notice those quotation marks around <code>&quot;Hello, world!&quot;</code>? That&#x27;s how we tell Python: &quot;This is text, not code.&quot;</p>
+<p>In Python, text is called a <strong>string</strong>. A string is a sequence of characters—letters, numbers, spaces, punctuation—anything you can type.</p>
+<p><strong>You can use either single quotes or double quotes:</strong></p>
+<pre data-lang="python"><code>print(&quot;This works!&quot;)
+print(&#x27;This also works!&#x27;)</code></pre>
+<p>Both are perfectly valid. Python doesn&#x27;t care which you use, as long as you&#x27;re consistent.</p>
+<p><strong>When do you choose one over the other?</strong></p>
+<ul>
+  <li>If your text contains an apostrophe, use double quotes:</li>
+</ul>
+<pre data-lang="python"><code>  print(&quot;It&#x27;s a beautiful day!&quot;)</code></pre>
+<ul>
+  <li>If your text contains double quotes, use single quotes:</li>
+</ul>
+<pre data-lang="python"><code>  print(&#x27;She said, &quot;Hello!&quot;&#x27;)</code></pre>
+<ul>
+  <li>Otherwise, <strong>be consistent</strong>. In this course, we&#x27;ll generally use double quotes unless we have a reason not to.</li>
+</ul>
+<h3>Printing Multiple Things</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You can pass multiple items to <code>print()</code> separated by commas:</p>
+<pre data-lang="python"><code>print(&quot;Hello&quot;, &quot;world&quot;, &quot;from&quot;, &quot;Python&quot;)</code></pre>
+<p><strong>What do you think this will output?</strong></p>
+<p>[Pause for student predictions]</p>
+<p>It prints:</p>
+<pre><code>Hello world from Python</code></pre>
+<p>Notice that Python automatically adds <strong>spaces between the items</strong>. That&#x27;s convenient!</p>
+<p>You can also print numbers without quotes:</p>
+<pre data-lang="python"><code>print(&quot;I am&quot;, 25, &quot;years old&quot;)</code></pre>
+<p>Output:</p>
+<pre><code>I am 25 years old</code></pre>
+<p>When you don&#x27;t use quotes around a number, Python treats it as an actual numeric value, not text. We&#x27;ll dive deeper into the difference next hour.</p>
+<h3>Empty Lines and print()</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>What if you just want to print a blank line to space things out?</p>
+<pre data-lang="python"><code>print()</code></pre>
+<p>Just <code>print()</code> with nothing inside the parentheses prints an empty line. This is useful for making your output more readable:</p>
+<pre data-lang="python"><code>print(&quot;Welcome to my program!&quot;)
+print()
+print(&quot;Let&#x27;s get started.&quot;)</code></pre>
+<p>Output:</p>
+<pre><code>Welcome to my program!
+
+Let&#x27;s get started.</code></pre>
+<p>See that blank line in the middle? That makes the output easier to read.</p>
+<h3>Comments: Talking to Humans (Not Python)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now let&#x27;s talk about comments. A comment is a line (or part of a line) that <strong>Python completely ignores</strong>. Comments are for <strong>humans</strong>—they explain what your code does, why you wrote it a certain way, or what you&#x27;re planning to do next.</p>
+<p><strong>How to write a comment:</strong></p>
+<pre data-lang="python"><code># This is a comment
+print(&quot;This is code&quot;)  # This is also a comment (after the code)</code></pre>
+<p>Anything after a <code>#</code> symbol on that line is a comment. Python skips right over it.</p>
+<p><strong>Why do we write comments?</strong></p>
+<p>Let me give you a few scenarios:</p>
+<ol>
+  <li><strong>Explaining intent:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # Ask the user for their name (we&#x27;ll learn input() later)
+   # For now, we&#x27;ll just print a greeting
+   print(&quot;Hello, student!&quot;)</code></pre>
+<ol>
+  <li><strong>Documenting assumptions:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # This assumes the file is in the same directory
+   # and uses UTF-8 encoding</code></pre>
+<ol>
+  <li><strong>Leaving notes for yourself:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # TODO: Add error handling here
+   print(&quot;Processing data...&quot;)</code></pre>
+<ol>
+  <li><strong>Explaining &quot;why,&quot; not &quot;what&quot;:</strong></li>
+</ol>
+<p><strong>Bad comment (states the obvious):</strong></p>
+<pre data-lang="python"><code>   # Print hello world
+   print(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>Good comment (explains context):</strong></p>
+<pre data-lang="python"><code>   # Display welcome message to confirm the program started
+   print(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>[Important principle]:</strong> Good code should be readable without comments. <strong>Comments explain &quot;why&quot; you did something</strong>, especially when it&#x27;s not obvious. They don&#x27;t just repeat what the code already says.</p>
+<h3>When Should Beginners Use Comments?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you&#x27;re learning, I recommend commenting more than you might need to. It helps you:</p>
+<ul>
+  <li>Organize your thoughts before you code</li>
+  <li>Remember what you were trying to do when you come back later</li>
+  <li>Communicate with instructors and peers when asking for help</li>
+</ul>
+<p>In this course, we&#x27;ll ask you to include:</p>
+<ol>
+  <li><strong>A header comment</strong> at the top of each file:</li>
+</ol>
+<pre data-lang="python"><code>   # Greeter program
+   # Prints a personalized greeting message
+   # Author: [Your Name]</code></pre>
+<ol>
+  <li><strong>Section comments</strong> if your script has distinct parts:</li>
+</ol>
+<pre data-lang="python"><code>   # Display welcome message
+   print(&quot;Welcome!&quot;)
+   
+   # Show instructions
+   print(&quot;Follow the prompts below.&quot;)</code></pre>
+<ol>
+  <li><strong>Explanatory comments</strong> when you try something new or tricky</li>
+</ol>
+<p><strong>Don&#x27;t comment the obvious, but do comment the &quot;why.&quot;</strong></p>
+<h3>Multi-Line Comments (Bonus Tip)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Python doesn&#x27;t have a special syntax for multi-line comments, but there are two common approaches:</p>
+<p><strong>Option 1: Multiple # symbols</strong></p>
+<pre data-lang="python"><code># This is a longer explanation
+# that spans multiple lines
+# to describe something complex
+print(&quot;Hello!&quot;)</code></pre>
+<p><strong>Option 2: Triple-quoted strings (unofficial)</strong></p>
+<pre data-lang="python"><code>&quot;&quot;&quot;
+This is technically a string, not a comment.
+But if it&#x27;s not assigned to anything, Python ignores it.
+Some people use this for multi-line documentation.
+&quot;&quot;&quot;
+print(&quot;Hello!&quot;)</code></pre>
+<p>The triple-quote approach is more commonly used for <strong>docstrings</strong> (documentation strings) at the start of functions, which we&#x27;ll cover later. For now, stick with <code>#</code> for comments.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 3: Python Syntax Rules &amp; Style Standards (5 minutes)</h1>
+            <h3>Understanding Syntax vs. Style</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Before we start making mistakes (intentionally!), let&#x27;s talk about two different kinds of rules in Python:</p>
+<p><strong>1. Syntax Rules (You MUST follow these)</strong></p>
+<p>These are the rules that make Python able to understand your code. Break these, and Python will give you an error. Examples:</p>
+<ul>
+  <li>String literals must have matching quotes: <code>&quot;hello&quot;</code> not <code>&quot;hello&#x27;</code></li>
+  <li>Functions need parentheses: <code>print()</code> not <code>print</code></li>
+  <li>Indentation must be consistent (more on this in a moment)</li>
+</ul>
+<p><strong>2. Style Rules (You SHOULD follow these)</strong></p>
+<p>These are conventions that make your code readable and professional. Break these, and Python will still run your code—but other programmers (including future you) will have a harder time reading it. Examples:</p>
+<ul>
+  <li>Use 4 spaces for indentation (not 2, not tabs)</li>
+  <li>Use descriptive variable names: <code>user_name</code> not <code>x</code></li>
+  <li>Add comments to explain non-obvious decisions</li>
+</ul>
+<h3>The Style Standard for This Course</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s establish our style standard now. These rules will apply to everything you write in this course:</p>
+<h4>1. Indentation: 4 Spaces (No Tabs)</h4>
+<p>Python uses indentation to group code (unlike languages that use braces like <code>{}</code>). This means <strong>whitespace matters</strong> in Python.</p>
+<p><strong>Our rule:</strong> Use <strong>4 spaces</strong> for each level of indentation. Do not use Tab characters.</p>
+<p><strong>Why?</strong> Tab characters can display differently in different editors. Four spaces is the Python community standard (PEP 8).</p>
+<p><strong>[Practical tip]:</strong> Most modern code editors can be configured to insert 4 spaces when you press the Tab key. Check your editor&#x27;s settings.</p>
+<p>Right now, you won&#x27;t need indentation yet (that comes with functions and loops), but start the habit early.</p>
+<h4>2. Naming: snake_case and Descriptive</h4>
+<p>When you name things in Python (variables, functions, files), use <strong>lowercase letters with underscores</strong> between words:</p>
+<p><strong>Good:</strong></p>
+<pre data-lang="python"><code>user_name
+calculate_average
+my_first_program.py</code></pre>
+<p><strong>Avoid:</strong></p>
+<pre data-lang="python"><code>UserName      # This is camelCase (used in some other languages)
+username      # Not wrong, but harder to read if it&#x27;s multi-word
+my-program.py # Hyphens cause problems (Python sees them as subtraction)</code></pre>
+<p><strong>Be descriptive.</strong> Names should tell you what something is or does:</p>
+<ul>
+  <li><code>count</code> is better than <code>c</code></li>
+  <li><code>total_price</code> is better than <code>tp</code></li>
+  <li><code>greeting_message</code> is better than <code>msg</code></li>
+</ul>
+<p>Exception: In very small examples, short names like <code>i</code>, <code>x</code>, or <code>n</code> are acceptable when the context is obvious.</p>
+<h4>3. Output: Prefer f-strings for Readability</h4>
+<p>When you need to mix text and values, use <strong>f-strings</strong> (formatted string literals):</p>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+age = 30
+
+# f-string (preferred)
+print(f&quot;My name is {name} and I am {age} years old.&quot;)
+
+# Alternative (also works, but less readable)
+print(&quot;My name is&quot;, name, &quot;and I am&quot;, age, &quot;years old.&quot;)</code></pre>
+<p><strong>Why f-strings?</strong> They&#x27;re more readable and flexible. We&#x27;ll use them throughout the course.</p>
+<p><strong>Note:</strong> f-strings require Python 3.6+, which you have in the lab.</p>
+<h4>4. Comments: Explain &quot;Why,&quot; Not &quot;What&quot;</h4>
+<p>We already covered this, but to reiterate:</p>
+<p><strong>Good comment:</strong></p>
+<pre data-lang="python"><code># Use lowercase to match database format
+name = name.lower()</code></pre>
+<p><strong>Unnecessary comment:</strong></p>
+<pre data-lang="python"><code># Convert name to lowercase
+name = name.lower()</code></pre>
+<p>The code already says &quot;convert to lowercase.&quot; The good comment explains <strong>why</strong> we&#x27;re doing it.</p>
+<p><strong>[Action item]:</strong> Bookmark or write down these style rules. We&#x27;ll reinforce them every time you write code.</p>
+<h3>Why Indentation and Whitespace Matter in Python</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me emphasize something unique about Python: <strong>indentation is part of the syntax</strong>.</p>
+<p>In many programming languages, indentation is just for human readability. In Python, <strong>it actually changes how the code runs</strong>.</p>
+<p>Here&#x27;s a preview (you&#x27;ll see this in action when we learn functions and loops):</p>
+<p><strong>Example (you don&#x27;t need to understand this fully yet):</strong></p>
+<pre data-lang="python"><code># Correctly indented
+if True:
+    print(&quot;This will run&quot;)
+    print(&quot;This will also run&quot;)</code></pre>
+<pre data-lang="python"><code># Incorrectly indented (ERROR!)
+if True:
+    print(&quot;This will run&quot;)
+  print(&quot;This will NOT run - indentation error!&quot;)</code></pre>
+<p>The second example will crash because the indentation is inconsistent.</p>
+<p><strong>Why does Python do this?</strong> It forces you to write clean, readable code. You can&#x27;t be sloppy with structure in Python—the language won&#x27;t let you.</p>
+<p><strong>For now:</strong> You don&#x27;t need to indent anything yet (we&#x27;re writing simple scripts). But when we get to functions and control flow, indentation will be critical.</p>
+<p><strong>[Quick check]:</strong> Can anyone tell me: if Python uses 4 spaces for indentation, what happens if you use 2 spaces on one line and 4 on another?</p>
+<p>[Wait for answers]</p>
+<p>Right—Python will give you an <code>IndentationError</code>. Consistency is key.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 4: Live Demo – Common Mistakes and How to Read Errors (5-10 minutes)</h1>
+            <h3>The Safe Space for Errors</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, this is my favorite part of Hour 2. We&#x27;re going to <strong>deliberately break things</strong> and learn to read the error messages.</p>
+<p>I want you to shift your mindset right now: <strong>errors are not failures. Errors are feedback.</strong></p>
+<p>When Python gives you an error, it&#x27;s trying to help you. It tells you:</p>
+<ol>
+  <li><strong>What</strong> went wrong</li>
+  <li><strong>Where</strong> it went wrong (file and line number)</li>
+  <li>Often, <strong>why</strong> it went wrong</li>
+</ol>
+<p>Let&#x27;s make some mistakes together.</p>
+<h3>Mistake #1: Missing Closing Quote</h3>
+<p><strong>[Instructor live-codes this:]</strong></p>
+<pre data-lang="python"><code>print(&quot;Hello, world!)</code></pre>
+<p><strong>[Run it]</strong></p>
+<p>Error message:</p>
+<pre><code>  File &quot;demo.py&quot;, line 1
+    print(&quot;Hello, world!)
+          ^
+SyntaxError: unterminated string literal (detected at line 1)</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Okay, let&#x27;s read this error message together:</p>
+<ul>
+  <li><strong><code>File &quot;demo.py&quot;, line 1</code></strong>: It&#x27;s telling us the file and line number where the error occurred.</li>
+  <li><strong>The caret (<code>^</code>)</strong>: Python is pointing to where it got confused.</li>
+  <li><strong><code>SyntaxError: unterminated string literal</code></strong>: This is the error type and description.</li>
+</ul>
+<p><strong>&quot;Unterminated string literal&quot;</strong> means: &quot;You started a string with a quote, but you never closed it.&quot;</p>
+<p><strong>How to fix it:</strong> Add the closing double quote:</p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>[Run it]</strong> – Now it works!</p>
+<p><strong>[Key lesson]:</strong> When you see <code>SyntaxError: unterminated string literal</code>, <strong>look for mismatched quotes</strong>.</p>
+<h3>Mistake #2: Mismatched Quotes</h3>
+<p><strong>[Instructor live-codes this:]</strong></p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&#x27;)</code></pre>
+<p><strong>[Run it]</strong></p>
+<p>Error message:</p>
+<pre><code>  File &quot;demo.py&quot;, line 1
+    print(&quot;Hello, world!&#x27;)
+          ^
+SyntaxError: unterminated string literal (detected at line 1)</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Same error message! Python started reading a string with a double quote (<code>&quot;</code>), so it&#x27;s looking for another double quote to close it. When it hits the single quote (<code>&#x27;</code>), it doesn&#x27;t recognize it as the closing quote.</p>
+<p><strong>How to fix it:</strong> Make sure your opening and closing quotes match:</p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p>Or:</p>
+<pre data-lang="python"><code>print(&#x27;Hello, world!&#x27;)</code></pre>
+<p>Both are fine—just be consistent.</p>
+<h3>Mistake #3: Missing Parentheses</h3>
+<p><strong>[Instructor live-codes this:]</strong></p>
+<pre data-lang="python"><code>print &quot;Hello, world!&quot;</code></pre>
+<p><strong>[Run it]</strong></p>
+<p>Error message:</p>
+<pre><code>  File &quot;demo.py&quot;, line 1
+    print &quot;Hello, world!&quot;
+          ^
+SyntaxError: Missing parentheses in call to &#x27;print&#x27;. Did you mean print(...)?</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is a <strong>fantastic</strong> error message! Python is literally telling us what to do: <strong>&quot;Did you mean print(...)?</strong>&quot;</p>
+<p>In Python 2 (which is now obsolete), you could write <code>print &quot;Hello&quot;</code> without parentheses. But in Python 3, <code>print</code> is a function, and functions <strong>require</strong> parentheses.</p>
+<p><strong>How to fix it:</strong></p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>[Key lesson]:</strong> If you see <code>Missing parentheses in call to &#x27;print&#x27;</code>, add parentheses around your argument.</p>
+<h3>Mistake #4: Typo in the Function Name</h3>
+<p><strong>[Instructor live-codes this:]</strong></p>
+<pre data-lang="python"><code>pritn(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>[Run it]</strong></p>
+<p>Error message:</p>
+<pre><code>  File &quot;demo.py&quot;, line 1
+    pritn(&quot;Hello, world!&quot;)
+    ^^^^^
+NameError: name &#x27;pritn&#x27; is not defined. Did you mean: &#x27;print&#x27;?</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Another helpful error! Python is saying: <strong>&quot;I don&#x27;t know what &#x27;pritn&#x27; is. Did you mean &#x27;print&#x27;?&quot;</strong></p>
+<p><code>NameError: name &#x27;X&#x27; is not defined</code> means Python encountered a word it doesn&#x27;t recognize. Usually this is:</p>
+<ul>
+  <li>A typo (like here)</li>
+  <li>A variable you forgot to create</li>
+  <li>A function you forgot to import</li>
+</ul>
+<p><strong>How to fix it:</strong> Correct the typo:</p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>[Pro tip]:</strong> Modern editors often highlight syntax errors as you type. If you see a red underline, hover over it—it might tell you what&#x27;s wrong before you even run the code.</p>
+<h3>Mistake #5: Smart Quotes (Copy/Paste Error)</h3>
+<p><strong>[Instructor live-codes this—may need to copy/paste from a Word doc or web page:]</strong></p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p>Wait, that <strong>looks</strong> fine, right?</p>
+<p><strong>[Run it]</strong></p>
+<p>Error message:</p>
+<pre><code>  File &quot;demo.py&quot;, line 1
+    print(&quot;Hello, world!&quot;)
+          ^
+SyntaxError: invalid character &#x27;&quot;&#x27; (U+201C)</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Aha! See that error? <strong><code>invalid character</code></strong>. The issue is that those quotes aren&#x27;t the &quot;straight quotes&quot; Python expects—they&#x27;re &quot;curly quotes&quot; or &quot;smart quotes&quot; that word processors and some websites use.</p>
+<p><strong>How to identify this:</strong> Look closely at the quotes. If they&#x27;re curved (<code>&quot;</code> and <code>&quot;</code> instead of straight <code>&quot;</code>), that&#x27;s the problem.</p>
+<p><strong>How to fix it:</strong> Retype the quotes inside your code editor (don&#x27;t copy/paste from Word, Google Docs, or web pages):</p>
+<pre data-lang="python"><code>print(&quot;Hello, world!&quot;)</code></pre>
+<p><strong>[Key lesson]:</strong> Always write code in a <strong>plain text editor or IDE</strong>, never in a word processor. If you copy code from the web, be careful of smart quotes.</p>
+<h3>Systematic Error Reading</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me give you a <strong>process</strong> for reading error messages. Use this every time you hit an error:</p>
+<p><strong>Step 1: Find the line number</strong></p>
+<ul>
+  <li>Look for <code>File &quot;filename&quot;, line X</code></li>
+  <li>Go to that line in your code</li>
+</ul>
+<p><strong>Step 2: Read the error type</strong></p>
+<ul>
+  <li><code>SyntaxError</code>: Something about how you wrote the code is wrong</li>
+  <li><code>NameError</code>: Python doesn&#x27;t recognize a name you used</li>
+  <li><code>TypeError</code>: You&#x27;re using the wrong type of data</li>
+  <li><code>IndentationError</code>: Your spacing is inconsistent</li>
+</ul>
+<p><strong>Step 3: Read the description</strong></p>
+<ul>
+  <li>Python often tells you exactly what&#x27;s wrong: &quot;unterminated string literal,&quot; &quot;missing parentheses,&quot; etc.</li>
+</ul>
+<p><strong>Step 4: Look at the caret (^)</strong></p>
+<ul>
+  <li>The <code>^</code> points to where Python got confused. The actual mistake might be <strong>just before</strong> this spot.</li>
+</ul>
+<p><strong>Step 5: Fix one thing at a time</strong></p>
+<ul>
+  <li>Don&#x27;t try to fix multiple errors at once</li>
+  <li>Fix the first error, save, and run again</li>
+  <li>Repeat</li>
+</ul>
+<p><strong>[Key mindset]:</strong> Errors are not punishments. They&#x27;re <strong>helpful feedback</strong>. Python is on your side.</p>
+<h3>Demo Recap</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>In the last 10 minutes, we deliberately made five common mistakes:</p>
+<ol>
+  <li><strong>Missing closing quote</strong> → <code>SyntaxError: unterminated string literal</code></li>
+  <li><strong>Mismatched quotes</strong> → Same error</li>
+  <li><strong>Missing parentheses</strong> → <code>SyntaxError: Missing parentheses in call to &#x27;print&#x27;</code></li>
+  <li><strong>Typo in function name</strong> → <code>NameError: name &#x27;pritn&#x27; is not defined</code></li>
+  <li><strong>Smart quotes</strong> → <code>SyntaxError: invalid character</code></li>
+</ol>
+<p>You&#x27;ll make all of these errors (and more) as you learn. That&#x27;s normal. The difference now is <strong>you know how to read the feedback and fix it</strong>.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 5: Hands-On Lab – Greeter Program (25-35 minutes)</h1>
+            <h3>Lab Overview</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now it&#x27;s your turn. You&#x27;re going to write a program called <strong>Greeter</strong> that:</p>
+<ol>
+  <li>Prints a 3-line greeting message</li>
+  <li>Includes a comment at the top describing what the program does</li>
+  <li><strong>Intentionally creates a syntax error</strong>, reads the message, and fixes it</li>
+</ol>
+<p>This last part is key: <strong>you&#x27;re going to make a mistake on purpose and practice debugging it</strong>. This is a safe space to fail and learn.</p>
+<h3>Lab Instructions</h3>
+<p><strong>[Display these on screen or provide them in writing:]</strong></p>
+<h4>Part 1: Create the File</h4>
+<ol>
+  <li>In your lab environment, navigate to your <code>python_basics</code> folder.</li>
+  <li>Create a new file called <code>greeter.py</code>.</li>
+  <li>Open it in your text editor.</li>
+</ol>
+<h4>Part 2: Write the Greeting (10 minutes)</h4>
+<p>Write a Python script that:</p>
+<ol>
+  <li><strong>Starts with a header comment</strong> (3-4 lines) that includes:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">The program name</li>
+  <li style="margin-left: 30px;">A brief description of what it does</li>
+  <li style="margin-left: 30px;">Your name</li>
+</ul>
+<ol>
+  <li><strong>Prints a 3-line greeting.</strong> The greeting should be friendly and personalized. For example:</li>
+</ol>
+<pre><code>   Welcome to Python Basics!
+   I&#x27;m excited to learn with you.
+   Let&#x27;s write some code together!</code></pre>
+<p>You can write anything you want, but it must be <strong>three separate print statements</strong> (not one multi-line string).</p>
+<ol>
+  <li><strong>Add a blank line</strong> between the header comment and the code for readability.</li>
+</ol>
+<p><strong>Expected output when you run it:</strong></p>
+<pre><code>Welcome to Python Basics!
+I&#x27;m excited to learn with you.
+Let&#x27;s write some code together!</code></pre>
+<p><strong>[Instructor note]:</strong> Walk around and check on progress. Common issues:</p>
+<ul>
+  <li>Forgetting quotes around strings</li>
+  <li>Forgetting parentheses on <code>print()</code></li>
+  <li>Using smart quotes (if copying from somewhere)</li>
+</ul>
+<h4>Part 3: Intentional Error Practice (10 minutes)</h4>
+<p>Now here&#x27;s the debugging practice:</p>
+<ol>
+  <li><strong>Deliberately introduce a syntax error.</strong> Pick one:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Remove a closing quote</li>
+  <li style="margin-left: 30px;">Remove a closing parenthesis</li>
+  <li style="margin-left: 30px;">Misspell <code>print</code></li>
+  <li style="margin-left: 30px;">Mix single and double quotes</li>
+</ul>
+<ol>
+  <li><strong>Save the file and try to run it.</strong></li>
+</ol>
+<ol>
+  <li><strong>Read the error message carefully.</strong> Write down (on paper or in a comment):</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">What type of error it is (e.g., SyntaxError)</li>
+  <li style="margin-left: 30px;">What line number it points to</li>
+  <li style="margin-left: 30px;">What the description says</li>
+</ul>
+<ol>
+  <li><strong>Fix the error</strong> based on what the message tells you.</li>
+</ol>
+<ol>
+  <li><strong>Run it again</strong> to confirm it works.</li>
+</ol>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The goal here is to <strong>get comfortable with failure</strong>. In real programming, you&#x27;ll run your code dozens of times while fixing little issues. This is normal workflow.</p>
+<h4>Part 4: Style Check (5 minutes)</h4>
+<p>Before you consider yourself done, check these style requirements:</p>
+<ul>
+  <li>✅ Your file is named <code>greeter.py</code> (lowercase, underscore, <code>.py</code> extension)</li>
+  <li>✅ You have a header comment at the top</li>
+  <li>✅ Your code uses <strong>double quotes</strong> for strings (consistent style)</li>
+  <li>✅ You have <strong>no trailing whitespace</strong> (extra spaces at the end of lines)</li>
+  <li>✅ Your code is readable and properly spaced</li>
+</ul>
+<p><strong>[Instructor note]:</strong> Emphasize that &quot;done&quot; doesn&#x27;t just mean &quot;it runs.&quot; It means &quot;it runs AND it&#x27;s clean.&quot;</p>
+<h3>Completion Criteria</h3>
+<p>You&#x27;re done with the lab when:</p>
+<ol>
+  <li>✅ Your program prints <strong>exactly 3 lines</strong> of output</li>
+  <li>✅ You have a <strong>header comment</strong> that describes the program</li>
+  <li>✅ You successfully <strong>created and fixed</strong> a syntax error</li>
+  <li>✅ You can <strong>explain</strong> what the error was and how you fixed it</li>
+</ol>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When you&#x27;re done, <strong>don&#x27;t close your file yet</strong>. We&#x27;re going to do a quick debrief and talk about what you learned.</p>
+<h3>Optional Extensions (For Fast Finishers)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If you finish early and want an extra challenge, try these extensions. These are <strong>completely optional</strong>—if you&#x27;re still working on the main lab, stay focused on that.</p>
+<h4>Extension 1: ASCII Box Around Your Greeting</h4>
+<p>Use print statements to create a simple text-based box around your greeting:</p>
+<p><strong>Example output:</strong></p>
+<pre><code>*********************************
+* Welcome to Python Basics!     *
+* I&#x27;m excited to learn with you.*
+* Let&#x27;s write some code!        *
+*********************************</code></pre>
+<p><strong>Hint:</strong> You&#x27;ll need to manually count spaces to align the text. Don&#x27;t worry about making it perfect—just experiment!</p>
+<h4>Extension 2: Add More Information</h4>
+<p>Add two more lines to your greeting that print:</p>
+<ul>
+  <li>The current Python version (you can hard-code &quot;Python 3.11&quot; or whatever version you have)</li>
+  <li>The course name</li>
+</ul>
+<p>Example:</p>
+<pre><code>Welcome to Python Basics!
+I&#x27;m excited to learn with you.
+Let&#x27;s write some code together!
+You are using Python 3.11.
+This is the Basics course from LogicalChoice.</code></pre>
+<h4>Extension 3: Use f-strings (Preview)</h4>
+<p>If you&#x27;re feeling adventurous, try using an <strong>f-string</strong> to include a variable in your output.</p>
+<p>Example:</p>
+<pre data-lang="python"><code># Greeter with f-string
+# Demonstrates formatted output
+
+course_name = &quot;Python Basics&quot;
+
+print(f&quot;Welcome to {course_name}!&quot;)
+print(&quot;I&#x27;m excited to learn with you.&quot;)
+print(&quot;Let&#x27;s write some code together!&quot;)</code></pre>
+<p><strong>Note:</strong> We&#x27;ll cover variables formally in Hour 3. For now, just try copying this pattern and see what happens!</p>
+<h3>Common Pitfalls &amp; Troubleshooting</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you work, here are the most common issues I&#x27;ll be helping you with:</p>
+<h4>Issue 1: &quot;My file won&#x27;t run&quot;</h4>
+<p><strong>Symptoms:</strong></p>
+<ul>
+  <li>Terminal says &quot;No such file or directory&quot;</li>
+  <li>OR you&#x27;re running it but seeing old output</li>
+</ul>
+<p><strong>Likely causes:</strong></p>
+<ul>
+  <li>You&#x27;re not in the <code>python_basics</code> folder. Check with <code>pwd</code> and navigate with <code>cd</code>.</li>
+  <li>You didn&#x27;t save the file. Save (Ctrl+S or Cmd+S) and try again.</li>
+  <li>You named the file something other than <code>greeter.py</code>. Check with <code>ls</code>.</li>
+</ul>
+<p><strong>How to check:</strong></p>
+<pre data-lang="bash"><code>pwd               # Where am I?
+ls                # What files are here?
+python greeter.py # Run the file</code></pre>
+<h4>Issue 2: &quot;I get an error but I don&#x27;t see any mistakes&quot;</h4>
+<p><strong>Symptoms:</strong></p>
+<ul>
+  <li>Code looks right but Python disagrees</li>
+</ul>
+<p><strong>Likely causes:</strong></p>
+<ul>
+  <li><strong>Smart quotes</strong> (curly instead of straight)</li>
+  <li><strong>Trailing/leading spaces</strong> where they shouldn&#x27;t be</li>
+  <li><strong>Invisible characters</strong> from copy/paste</li>
+</ul>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Retype the quotes manually inside your editor</li>
+  <li>Delete and retype the entire line</li>
+  <li>Don&#x27;t copy/paste from Word, Google Docs, or web browsers</li>
+</ul>
+<h4>Issue 3: &quot;Python is printing weird characters&quot;</h4>
+<p><strong>Symptoms:</strong></p>
+<ul>
+  <li>Output has strange symbols or boxes</li>
+</ul>
+<p><strong>Likely causes:</strong></p>
+<ul>
+  <li>File encoding issue (rare in the lab, but possible)</li>
+</ul>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Make sure your editor is set to save files as <strong>UTF-8 encoding</strong></li>
+  <li>Avoid using emoji or special symbols in your code (for now)</li>
+</ul>
+<h4>Issue 4: &quot;I intentionally broke it but now I can&#x27;t fix it&quot;</h4>
+<p><strong>Symptoms:</strong></p>
+<ul>
+  <li>You introduced an error for Part 3, but now you&#x27;re stuck</li>
+</ul>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Read the error message line by line (use the 5-step process from the demo)</li>
+  <li>If you&#x27;re really stuck, look at your working code from Part 2 and compare</li>
+  <li>Ask for help! That&#x27;s what I&#x27;m here for</li>
+</ul>
+<p><strong>[Reassurance]:</strong> Everyone gets stuck sometimes. Learning to ask for help clearly is a skill too.</p>
+<h3>Instructor Circulation Notes</h3>
+<p><strong>[For instructors—don&#x27;t read this aloud, but keep it in mind:]</strong></p>
+<p>While students are working, circulate and watch for:</p>
+<ol>
+  <li><strong>Incorrect file location</strong>: Students saving files outside <code>python_basics/</code>.</li>
+  <li><strong>Not saving before running</strong>: A super common mistake.</li>
+  <li><strong>Confusion between the editor and terminal</strong>: Some students try to run code in the editor&#x27;s text area.</li>
+  <li><strong>Copy/paste from outside sources</strong>: Leading to smart quotes or formatting issues.</li>
+  <li><strong>Perfectionism paralysis</strong>: Students stuck on &quot;what should my greeting say?&quot; Encourage them to just write anything and move on.</li>
+</ol>
+<p><strong>Common questions you&#x27;ll get:</strong></p>
+<ul>
+  <li><strong>&quot;Can I print more than 3 lines?&quot;</strong> → Yes, but meet the minimum first.</li>
+  <li><strong>&quot;Does my greeting have to be about Python?&quot;</strong> → Nope, any greeting is fine.</li>
+  <li><strong>&quot;Can I use single quotes?&quot;</strong> → Yes, but be consistent. We prefer double quotes in this course.</li>
+  <li><strong>&quot;What if I can&#x27;t think of an error to create?&quot;</strong> → Suggest removing a quote or parenthesis—simple and fast.</li>
+</ul>
+<p><strong>Praise specifically:</strong></p>
+<ul>
+  <li>&quot;Great job reading that error message!&quot;</li>
+  <li>&quot;I love how descriptive your comment is!&quot;</li>
+  <li>&quot;Nice, clean formatting!&quot;</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Section 6: Debrief &amp; Exit Ticket (5 minutes)</h1>
+            <h3>Group Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, let&#x27;s come back together. Hopefully your greeter is working and you&#x27;ve successfully broken and fixed something!</p>
+<p><strong>Let&#x27;s do a quick share-out.</strong> I want to hear:</p>
+<ol>
+  <li><strong>What error did you create?</strong></li>
+  <li><strong>What did the error message say?</strong></li>
+  <li><strong>How did you fix it?</strong></li>
+</ol>
+<p>[Call on 3-4 volunteers to share. Affirm their answers and clarify if needed.]</p>
+<p><strong>[After a few shares, say:]</strong></p>
+<p>Thank you for sharing! Notice a pattern here? <strong>Different errors, but all fixable.</strong> And Python told you what was wrong in every case.</p>
+<p>This is the core skill you&#x27;re building: <strong>run code → read feedback → fix → repeat</strong>. That cycle is programming.</p>
+<h3>Key Takeaways from Hour 2</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me recap what we covered this hour:</p>
+<ol>
+  <li><strong><code>print()</code> is your main tool for output.</strong> It takes strings (text in quotes) and displays them.</li>
+</ol>
+<ol>
+  <li><strong>Comments use <code>#</code> and are for humans, not Python.</strong> Use them to explain your intent, especially the &quot;why&quot; behind your code.</li>
+</ol>
+<ol>
+  <li><strong>Python has strict syntax rules:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Strings need matching quotes</li>
+  <li style="margin-left: 30px;">Functions need parentheses</li>
+  <li style="margin-left: 30px;">Indentation must be consistent (we&#x27;ll see this more in future hours)</li>
+</ul>
+<ol>
+  <li><strong>Error messages are your friends.</strong> They tell you:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">What went wrong</li>
+  <li style="margin-left: 30px;">Where it happened</li>
+  <li style="margin-left: 30px;">Often, how to fix it</li>
+</ul>
+<ol>
+  <li><strong>Style matters.</strong> Use 4 spaces, descriptive names, consistent quotes, and clear comments.</li>
+</ol>
+<p><strong>[Key mindset shift]:</strong> You are now comfortable making mistakes, reading errors, and fixing them. That&#x27;s huge!</p>
+<h3>Exit Ticket: Quick Check</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Before we wrap up, one quick check. I want you to think about this question (you can answer mentally, or write it down if you prefer):</p>
+<p><strong>&quot;Why is whitespace and indentation important in Python?&quot;</strong></p>
+<p>[Pause for 10 seconds]</p>
+<p>Here&#x27;s the answer: <strong>In Python, indentation is part of the syntax.</strong> It tells Python how to group statements together. Unlike other languages where indentation is just for humans, in Python, <strong>it changes how the code runs</strong>.</p>
+<p>Right now, you&#x27;re writing simple scripts without indentation, but when we get to functions, loops, and conditionals, indentation will be critical. Inconsistent indentation will cause errors.</p>
+<p><strong>[Key principle]:</strong> Python forces you to write clean, readable code. That&#x27;s by design, and it&#x27;s one of the reasons Python code is so easy to read compared to other languages.</p>
+<h3>Looking Ahead to Hour 3</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Next hour, we&#x27;re going to level up. We&#x27;ll learn about <strong>variables</strong>—how to store data and reuse it—and we&#x27;ll explore the main <strong>data types</strong> in Python: strings, numbers, and booleans.</p>
+<p>By the end of Hour 3, you&#x27;ll be able to write programs that:</p>
+<ul>
+  <li>Store and manipulate information</li>
+  <li>Perform calculations</li>
+  <li>Make decisions based on data types</li>
+</ul>
+<p>But for now, take a break! Stretch, get some water, and come back ready to build on what you learned today.</p>
+<p><strong>Great work, everyone!</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Appendix: Quick Reference for Instructors</h1>
+            <h3>Hour 2 Learning Objectives (Checklist)</h3>
+<p>By the end of Hour 2, students should be able to:</p>
+<ul>
+  <li>✅ Write a <code>print()</code> statement with a string literal</li>
+  <li>✅ Use both single and double quotes correctly</li>
+  <li>✅ Write a single-line comment using <code>#</code></li>
+  <li>✅ Explain when and why to write comments</li>
+  <li>✅ Identify common syntax errors from error messages</li>
+  <li>✅ Follow the 5-step process for reading error messages</li>
+  <li>✅ Apply basic style standards (4-space indentation, snake_case, consistent quotes)</li>
+  <li>✅ Deliberately create and fix a syntax error</li>
+</ul>
+<h3>Common Student Misconceptions to Address</h3>
+<ol>
+  <li><strong>&quot;Errors mean I&#x27;m bad at this.&quot;</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Correction:</strong> Errors are feedback, not failure. Professionals get errors constantly.</li>
+</ul>
+<ol>
+  <li><strong>&quot;I need to memorize all the syntax.&quot;</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Correction:</strong> You&#x27;ll internalize syntax through practice. For now, focus on understanding the patterns.</li>
+</ul>
+<ol>
+  <li><strong>&quot;Comments slow me down.&quot;</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Correction:</strong> Comments save time later when you (or others) read your code.</li>
+</ul>
+<ol>
+  <li><strong>&quot;Python is picky about spaces.&quot;</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Reality check:</strong> Yes, Python is strict about indentation. But this is a feature, not a bug—it keeps code clean.</li>
+</ul>
+<ol>
+  <li><strong>&quot;If my code runs, it&#x27;s correct.&quot;</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Correction:</strong> Code can run and still be poorly written. Aim for code that&#x27;s correct, readable, and maintainable.</li>
+</ul>
+<h3>Troubleshooting: Most Common Lab Issues</h3>
+<p>| <strong>Symptom</strong> | <strong>Likely Cause</strong> | <strong>Fix</strong> |</p>
+<p>|-------------|-----------------|---------|</p>
+<p>| <code>No such file or directory</code> | Not in the right folder, or file not saved | Check with <code>pwd</code>, navigate with <code>cd python_basics</code>, save file |</p>
+<p>| <code>SyntaxError: unterminated string literal</code> | Missing or mismatched quote | Add closing quote or match opening quote |</p>
+<p>| <code>SyntaxError: invalid character</code> | Smart quotes from copy/paste | Retype quotes in editor |</p>
+<p>| <code>NameError: name &#x27;X&#x27; is not defined</code> | Typo, or forgot quotes around a string | Check spelling, or add quotes if it&#x27;s text |</p>
+<p>| <code>SyntaxError: Missing parentheses in call to &#x27;print&#x27;</code> | Forgot parentheses on print() | Add parentheses: <code>print(&quot;text&quot;)</code> |</p>
+<p>| Output doesn&#x27;t match what student expected | Logic issue, or didn&#x27;t save before running | Review code logic, ensure file is saved |</p>
+<h3>Timing Adjustments</h3>
+<p>If you&#x27;re running behind:</p>
+<ul>
+  <li><strong>Shorten the live demo</strong> to 3 mistakes instead of 5 (keep #1, #3, and #4)</li>
+  <li><strong>Skip the optional extensions</strong> (or mention them as homework)</li>
+  <li><strong>Reduce debrief time</strong> to 3 minutes with just 1-2 share-outs</li>
+</ul>
+<p>If you&#x27;re ahead of schedule:</p>
+<ul>
+  <li><strong>Expand the live demo</strong> with an additional error (e.g., missing colon later when relevant)</li>
+  <li><strong>Do a live code review</strong> of a student&#x27;s greeter with their permission</li>
+  <li><strong>Introduce the concept of escape characters</strong> briefly (<code>\n</code>, <code>\t</code>, <code>\\</code>, <code>\&quot;</code>)</li>
+</ul>
+<h3>Additional Resources for Students</h3>
+<p><strong>For further reading (optional):</strong></p>
+<ul>
+  <li>Python&#x27;s official style guide (PEP 8): <a href="https://pep8.org">https://pep8.org</a></li>
+  <li>Built-in functions documentation: <a href="https://docs.python.org/3/library/functions.html">https://docs.python.org/3/library/functions.html</a></li>
+  <li>Real Python&#x27;s guide to print(): <a href="https://realpython.com/python-print/">https://realpython.com/python-print/</a></li>
+</ul>
+<p><strong>Practice exercises (for after class):</strong></p>
+<ol>
+  <li>Write a program that prints a simple ASCII art picture (a smiley face, a house, etc.)</li>
+  <li>Create a program with 10 different print statements, then add comments to group them logically</li>
+  <li>Deliberately create 5 different types of errors, screenshot the error messages, and fix them</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>End of Hour 2 Lecture Script</h1>
+            <p><strong>Total Word Count:</strong> ~5,000 words</p>
+<p><strong>Instructor Note:</strong> This script is designed to be read verbatim or adapted to your teaching style. The timing suggestions are approximate—adjust based on your class&#x27;s pace and engagement level. Prioritize student understanding over covering every word.</p>
+<p><strong>Remember:</strong> The goal of Hour 2 is not perfection. The goal is for students to feel <strong>comfortable with the basics</strong> and <strong>confident that errors are fixable</strong>. If they leave this hour thinking, &quot;I can write a simple program and debug it,&quot; you&#x27;ve succeeded.</p>
+<p><strong>[END OF LECTURE SCRIPT]</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

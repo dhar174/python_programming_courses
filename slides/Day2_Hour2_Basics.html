@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2, Hour 2: String Formatting with F-Strings</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Day 2, Hour 2: String Formatting with F-Strings</h1>
+            <div class="subtitle">**Python Programming Basics – Session 3**</div>
+        </section>
+
+        <section class="slide">
+            <h1>Timing Overview</h1>
+            <p><strong>Total Time:</strong> 60 minutes</p>
+<ul>
+  <li>Recap &amp; Transition from Hour 9: 3 minutes</li>
+  <li>Introduction to F-Strings: 10-12 minutes</li>
+  <li>Formatting Numbers (Decimals, Width, Alignment): 8-10 minutes</li>
+  <li>Why F-Strings Beat Concatenation: 3-5 minutes</li>
+  <li>Live Demo (Tip Calculator Upgrade): 5-10 minutes</li>
+  <li>Hands-On Lab (Upgrade Tip Calculator): 25-35 minutes</li>
+  <li>Debrief &amp; Exit Ticket: 5 minutes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes for This Hour</h1>
+            <p>By the end of this hour, you will be able to:</p>
+<ol>
+  <li>Use f-strings to create formatted string output with variables</li>
+  <li>Format floating-point numbers to a fixed number of decimal places</li>
+  <li>Apply width and alignment specifiers for columnar output</li>
+  <li>Explain why f-strings are more readable than string concatenation</li>
+  <li>Upgrade existing code to use f-string formatting</li>
+  <li>Create professional-looking program output with consistent formatting</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Section 1: Recap &amp; Transition from Hour 9 (3 minutes)</h1>
+            <h3>Quick Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome back! In Hour 9, we learned how to make decisions using comparison operators and boolean logic. You built an eligibility checker that combined multiple conditions with <code>and</code> and <code>or</code>.</p>
+<p>Quick check: <strong>Who successfully got their eligibility checker working with all the boundary values correct?</strong></p>
+<p>[Wait for responses]</p>
+<p>Great! Those comparison skills are going to show up in almost every program you write from now on.</p>
+<h3>The Output Problem</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now, let me show you something. Here&#x27;s output from a typical beginner program:</p>
+<pre data-lang="python"><code>bill = 87.5
+tip_percent = 18
+tip = bill * tip_percent / 100
+total = bill + tip
+
+print(&quot;Bill: $&quot; + str(bill))
+print(&quot;Tip (&quot; + str(tip_percent) + &quot;%): $&quot; + str(tip))
+print(&quot;Total: $&quot; + str(total))</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Bill: $87.5
+Tip (18%): $15.75
+Total: $103.25</code></pre>
+<p>This works, but look at the code. It&#x27;s <strong>clunky</strong>:</p>
+<ul>
+  <li>We have to convert numbers to strings manually with <code>str()</code></li>
+  <li>We have to remember where to put spaces and punctuation</li>
+  <li>It&#x27;s hard to read and easy to make mistakes</li>
+  <li>The dollar amounts aren&#x27;t consistently formatted (87.5 vs 15.75)</li>
+</ul>
+<p><strong>There&#x27;s a better way.</strong> It&#x27;s called <strong>f-strings</strong> (formatted string literals), and it&#x27;s going to make your output beautiful and your code readable.</p>
+<p>Let&#x27;s learn it!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 2: Introduction to F-Strings (10-12 minutes)</h1>
+            <h3>What Is an F-String?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>An <strong>f-string</strong> is a string literal that lets you <strong>embed expressions directly inside</strong> the string using curly braces <code>{}</code>.</p>
+<p>Here&#x27;s the basic syntax:</p>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+age = 25
+
+# Old way (concatenation)
+print(&quot;My name is &quot; + name + &quot; and I am &quot; + str(age) + &quot; years old&quot;)
+
+# New way (f-string)
+print(f&quot;My name is {name} and I am {age} years old&quot;)</code></pre>
+<p><strong>Both produce the same output:</strong></p>
+<pre><code>My name is Alice and I am 25 years old</code></pre>
+<p><strong>Notice the <code>f</code> before the quote?</strong> That tells Python: &quot;This is an f-string. Evaluate anything inside <code>{}</code>.&quot;</p>
+<h3>Why F-Strings Are Better</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s break down the advantages:</p>
+<ol>
+  <li><strong>No manual type conversion needed</strong></li>
+</ol>
+<pre data-lang="python"><code>   age = 25
+   
+   # Old way - must convert to string
+   print(&quot;Age: &quot; + str(age))
+   
+   # F-string - Python handles it
+   print(f&quot;Age: {age}&quot;)</code></pre>
+<ol>
+  <li><strong>Variables go right where they belong in the sentence</strong></li>
+</ol>
+<pre data-lang="python"><code>   name = &quot;Bob&quot;
+   score = 95
+   
+   # Old way - hard to see the final sentence structure
+   print(name + &quot; scored &quot; + str(score) + &quot; points&quot;)
+   
+   # F-string - reads like the output
+   print(f&quot;{name} scored {score} points&quot;)</code></pre>
+<ol>
+  <li><strong>You can put expressions inside the curly braces</strong></li>
+</ol>
+<pre data-lang="python"><code>   width = 10
+   height = 5
+   
+   # Calculate inside the f-string!
+   print(f&quot;The area is {width * height} square meters&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>   The area is 50 square meters</code></pre>
+<h3>F-String Basics: The Anatomy</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s look at the parts of an f-string:</p>
+<pre data-lang="python"><code>name = &quot;Charlie&quot;
+age = 30
+
+message = f&quot;Hello, {name}! You are {age} years old.&quot;</code></pre>
+<p>Breaking it down:</p>
+<ul>
+  <li><strong><code>f</code></strong> before the opening quote: marks this as an f-string</li>
+  <li><strong><code>&quot;Hello, ...&quot;</code></strong>: regular string content</li>
+  <li><strong><code>{name}</code></strong>: placeholder that gets replaced with the value of <code>name</code></li>
+  <li><strong><code>{age}</code></strong>: placeholder that gets replaced with the value of <code>age</code></li>
+</ul>
+<p><strong>The curly braces are signals:</strong> &quot;Insert this variable&#x27;s value here.&quot;</p>
+<h3>Quick Check #1</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre data-lang="python"><code>city = &quot;New York&quot;
+temperature = 72
+
+print(f&quot;The temperature in {city} is {temperature}°F&quot;)</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>The temperature in New York is 72°F</code></pre>
+<p>The variables <code>city</code> and <code>temperature</code> get inserted exactly where they appear in the curly braces.</p>
+<h3>Using Expressions in F-Strings</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You&#x27;re not limited to just variable names. You can put <strong>any valid Python expression</strong> inside the curly braces:</p>
+<pre data-lang="python"><code>price = 19.99
+quantity = 3
+
+print(f&quot;Total: ${price * quantity}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Total: $59.97</code></pre>
+<p>You can even call methods:</p>
+<pre data-lang="python"><code>name = &quot;alice&quot;
+
+print(f&quot;Hello, {name.upper()}!&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Hello, ALICE!</code></pre>
+<p><strong>[Key insight]:</strong> Python evaluates the expression inside <code>{}</code>, converts the result to a string, and inserts it.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 3: Formatting Numbers – Decimals, Width, Alignment (8-10 minutes)</h1>
+            <h3>The Problem: Ugly Number Output</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s say we&#x27;re working with money:</p>
+<pre data-lang="python"><code>price = 19.5
+tax = 1.625
+total = price + tax
+
+print(f&quot;Price: ${price}&quot;)
+print(f&quot;Tax: ${tax}&quot;)
+print(f&quot;Total: ${total}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Price: $19.5
+Tax: $1.625
+Total: $21.125</code></pre>
+<p>This looks unprofessional:</p>
+<ul>
+  <li>Currency should always show 2 decimal places ($19.50, not $19.5)</li>
+  <li>We can&#x27;t actually charge $21.125—that&#x27;s not a valid amount</li>
+  <li>The numbers don&#x27;t align nicely</li>
+</ul>
+<p><strong>F-strings have a solution:</strong> format specifiers.</p>
+<h3>Format Specifier Syntax: {value:format}</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Inside the curly braces, you can add a colon <code>:</code> followed by a format specifier:</p>
+<pre data-lang="python"><code>{variable:format_spec}</code></pre>
+<p>The most common format specs for numbers:</p>
+<p><strong>1. Fixed decimal places: <code>.Nf</code></strong></p>
+<pre data-lang="python"><code>price = 19.5
+
+print(f&quot;Price: ${price:.2f}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Price: $19.50</code></pre>
+<p><strong>Breaking down <code>.2f</code>:</strong></p>
+<ul>
+  <li><strong><code>.2</code></strong>: show exactly 2 digits after the decimal point</li>
+  <li><strong><code>f</code></strong>: format as a floating-point number</li>
+</ul>
+<p><strong>More examples:</strong></p>
+<pre data-lang="python"><code>pi = 3.14159265
+
+print(f&quot;Pi to 2 decimals: {pi:.2f}&quot;)
+print(f&quot;Pi to 4 decimals: {pi:.4f}&quot;)
+print(f&quot;Pi to 0 decimals: {pi:.0f}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Pi to 2 decimals: 3.14
+Pi to 4 decimals: 3.1416
+Pi to 0 decimals: 3</code></pre>
+<p><strong>[Important note]:</strong> The <code>.2f</code> format rounds, it doesn&#x27;t truncate:</p>
+<pre data-lang="python"><code>value = 1.625
+
+print(f&quot;{value:.2f}&quot;)    # 1.62 (rounds down)
+
+value = 1.626
+print(f&quot;{value:.2f}&quot;)    # 1.63 (rounds up)</code></pre>
+<h3>Format Specifier: Width and Alignment</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Sometimes you want to create columnar output—like a receipt where the dollar amounts line up on the right.</p>
+<p><strong>Width specifier: <code>N</code> (where N is the total width)</strong></p>
+<pre data-lang="python"><code>print(f&#x27;{&quot;Item&quot;:&lt;20} {&quot;Price&quot;:&gt;10}&#x27;)
+print(f&#x27;{&quot;Coffee&quot;:&lt;20} {&quot;$3.50&quot;:&gt;10}&#x27;)
+print(f&#x27;{&quot;Sandwich&quot;:&lt;20} {&quot;$8.75&quot;:&gt;10}&#x27;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Item                      Price
+Coffee                    $3.50
+Sandwich                  $8.75</code></pre>
+<p><strong>Breaking down the format spec:</strong></p>
+<ul>
+  <li><strong><code>&lt;</code></strong>: left-align</li>
+  <li><strong><code>&gt;</code></strong>: right-align</li>
+  <li><strong><code>^</code></strong>: center-align</li>
+  <li><strong>Number</strong>: total width in characters</li>
+</ul>
+<p><strong>Combined with decimal formatting:</strong></p>
+<pre data-lang="python"><code>item = &quot;Latte&quot;
+price = 4.5
+
+print(f&quot;{item:&lt;15} ${price:&gt;6.2f}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Latte           $  4.50</code></pre>
+<p><strong>Breaking this down:</strong></p>
+<ul>
+  <li><strong><code>{item:&lt;15}</code></strong>: left-align <code>item</code> in a 15-character field</li>
+  <li><strong><code>{price:&gt;6.2f}</code></strong>: right-align <code>price</code> in a 6-character field, with 2 decimal places</li>
+</ul>
+<h3>Quick Check #2</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+score = 87.6789
+
+print(f&quot;{name} scored {score:.1f} points&quot;)</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>Alice scored 87.7 points</code></pre>
+<p>The format spec <code>.1f</code> rounds the score to 1 decimal place.</p>
+<h3>Common Format Specifiers Reference</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here&#x27;s a quick reference you&#x27;ll want to bookmark:</p>
+<pre data-lang="python"><code>value = 1234.5678
+
+# Fixed decimals
+print(f&quot;{value:.2f}&quot;)        # 1234.57
+
+# Width and alignment
+print(f&quot;{value:&gt;10.2f}&quot;)     # &quot;   1234.57&quot; (right-aligned, 10 chars wide)
+print(f&quot;{value:&lt;10.2f}&quot;)     # &quot;1234.57   &quot; (left-aligned)
+
+# Thousands separator
+print(f&quot;{value:,.2f}&quot;)       # 1,234.57
+
+# Percentage
+percentage = 0.875
+print(f&quot;{percentage:.1%}&quot;)   # 87.5%</code></pre>
+<p><strong>For now, focus on <code>.2f</code> for money.</strong> That&#x27;s the one you&#x27;ll use most often.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 4: Why F-Strings Beat Concatenation (3-5 minutes)</h1>
+            <h3>The Concatenation Mess</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me show you the same output three different ways:</p>
+<p><strong>Method 1: Concatenation (the old way)</strong></p>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+age = 25
+balance = 1234.56
+
+print(&quot;Customer: &quot; + name + &quot;, Age: &quot; + str(age) + &quot;, Balance: $&quot; + str(balance))</code></pre>
+<p><strong>Problems:</strong></p>
+<ul>
+  <li>You have to call <code>str()</code> on every non-string</li>
+  <li>Hard to see where spaces and punctuation go</li>
+  <li>Easy to make mistakes</li>
+</ul>
+<p><strong>Method 2: str.format() (also old)</strong></p>
+<pre data-lang="python"><code>print(&quot;Customer: {}, Age: {}, Balance: ${}&quot;.format(name, age, balance))</code></pre>
+<p><strong>Better, but:</strong></p>
+<ul>
+  <li>Variables are separated from where they appear</li>
+  <li>Still hard to read for complex strings</li>
+</ul>
+<p><strong>Method 3: F-strings (the modern way)</strong></p>
+<pre data-lang="python"><code>print(f&quot;Customer: {name}, Age: {age}, Balance: ${balance:.2f}&quot;)</code></pre>
+<p><strong>Advantages:</strong></p>
+<ul>
+  <li>Variables are right where they belong</li>
+  <li>No manual type conversion</li>
+  <li>Format specifiers inline</li>
+  <li>Reads like the output you&#x27;ll see</li>
+</ul>
+<p><strong>[Key teaching moment]:</strong> F-strings were added in Python 3.6 (2016) because developers were so tired of concatenation and <code>.format()</code>. This is now the <strong>preferred way</strong> to format strings in Python.</p>
+<h3>When NOT to Use F-Strings</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>F-strings are great, but there are times to avoid them:</p>
+<ol>
+  <li><strong>When the string is used multiple times with different values:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # Use str.format() for templates
+   template = &quot;Hello, {name}! Your score is {score}.&quot;
+   print(template.format(name=&quot;Alice&quot;, score=95))
+   print(template.format(name=&quot;Bob&quot;, score=87))</code></pre>
+<ol>
+  <li><strong>When treating user input as a format template:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # Dangerous: user input as a template
+   template = input(&quot;Enter a template (use {name}): &quot;)  # User types: &quot;Hello, {name}!&quot;
+   print(template.format(name=&quot;Alice&quot;))  # Works: &quot;Hello, Alice!&quot;
+   
+   # Pitfall: if user enters unknown placeholders
+   # template = &quot;Hello {name} and {friend}&quot;
+   # print(template.format(name=&quot;Alice&quot;))  # KeyError: &#x27;friend&#x27;</code></pre>
+<p><strong>For this course, use f-strings for output. They&#x27;re simpler and more readable.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 5: Live Demo – Tip Calculator Upgrade (5-10 minutes)</h1>
+            <h3>Demo Script: Making Output Professional</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Remember the Tip Calculator from yesterday? Let&#x27;s take it and upgrade the output using f-strings.</p>
+<p><strong>[Open editor and create <code>tip_calculator_formatted.py</code>]</strong></p>
+<p><strong>[Instructor types and speaks:]</strong></p>
+<pre data-lang="python"><code># tip_calculator_formatted.py
+# Purpose: Calculate tip and total, with professional formatting
+
+print(&quot;=== Tip Calculator ===\n&quot;)
+
+# Get user input
+bill_input = input(&quot;Enter the bill amount: $&quot;)
+tip_percent_input = input(&quot;Enter tip percentage (e.g., 18): &quot;)
+
+# Convert to numbers
+bill = float(bill_input)
+tip_percent = float(tip_percent_input)
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+# Display results with formatting
+print(&quot;\n--- Receipt ---&quot;)
+print(f&quot;Bill:        ${bill:.2f}&quot;)
+print(f&quot;Tip ({tip_percent:.0f}%):   ${tip_amount:.2f}&quot;)
+print(f&quot;-&quot; * 25)
+print(f&quot;Total:       ${total:.2f}&quot;)
+print(&quot;\nThank you!&quot;)</code></pre>
+<p><strong>[Run the program]</strong></p>
+<pre><code>=== Tip Calculator ===
+
+Enter the bill amount: $87.50
+Enter tip percentage (e.g., 18): 20
+
+--- Receipt ---
+Bill:        $87.50
+Tip (20%):   $17.50
+-------------------------
+Total:       $105.00
+
+Thank you!</code></pre>
+<p><strong>[Instructor explains the formatting:]</strong></p>
+<p>Let&#x27;s look at what makes this output professional:</p>
+<ol>
+  <li><strong>Line 19:</strong> <code>${bill:.2f}</code> ensures bill always shows 2 decimals</li>
+  <li><strong>Line 20:</strong> <code>{tip_percent:.0f}</code> shows percentage without decimals (20, not 20.0)</li>
+  <li><strong>Line 20:</strong> <code>${tip_amount:.2f}</code> formats tip amount as currency</li>
+  <li><strong>Line 22:</strong> <code>${total:.2f}</code> formats total consistently</li>
+  <li><strong>Line 21:</strong> <code>&quot;-&quot; * 25</code> creates a separator line (not f-string related, but nice!)</li>
+</ol>
+<p><strong>Notice how readable the code is?</strong> You can see exactly what the output will look like just by reading the f-strings.</p>
+<h3>Adding Alignment</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now let&#x27;s make it even better with alignment:</p>
+<pre data-lang="python"><code># Display results with better alignment
+print(&quot;\n--- Receipt ---&quot;)
+print(f&quot;{&#x27;Bill:&#x27;:&lt;15} ${bill:&gt;8.2f}&quot;)
+print(f&quot;{&#x27;Tip (&#x27; + str(int(tip_percent)) + &#x27;%):&#x27;:&lt;15} ${tip_amount:&gt;8.2f}&quot;)
+print(&quot;-&quot; * 26)
+print(f&quot;{&#x27;Total:&#x27;:&lt;15} ${total:&gt;8.2f}&quot;)
+print(&quot;\nThank you!&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>--- Receipt ---
+Bill:           $   87.50
+Tip (20%):      $   17.50
+--------------------------
+Total:          $  105.00
+
+Thank you!</code></pre>
+<p><strong>[Key points]:</strong></p>
+<ul>
+  <li><strong><code>:&lt;15</code></strong>: left-align labels in a 15-character field</li>
+  <li><strong><code>:&gt;8.2f</code></strong>: right-align dollar amounts in an 8-character field with 2 decimals</li>
+  <li>The dollar amounts now line up beautifully</li>
+</ul>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The aligned version is more complex, so <strong>don&#x27;t worry if you don&#x27;t use alignment in your lab today</strong>. Just getting comfortable with <code>.2f</code> for money is the main goal.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 6: Hands-On Lab – Upgrade Tip Calculator (25-35 minutes)</h1>
+            <h3>Lab Overview</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now it&#x27;s your turn! You&#x27;re going to take the Tip Calculator and upgrade it with f-string formatting.</p>
+<p><strong>Lab Goal:</strong> Rewrite output using f-strings with proper decimal formatting.</p>
+<h3>Lab Instructions: Upgrade Tip Calculator</h3>
+<p><strong>Scenario:</strong> You have a working Tip Calculator, but the output looks unprofessional. Your job is to format it beautifully using f-strings.</p>
+<p><strong>Requirements:</strong></p>
+<p>Create a Python script called <code>tip_calculator_pro.py</code> that:</p>
+<ol>
+  <li><strong>Prompts the user for:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Bill amount (as a float)</li>
+  <li style="margin-left: 30px;">Tip percentage (as a float)</li>
+</ul>
+<ol>
+  <li><strong>Calculates:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Tip amount (bill × tip percentage / 100)</li>
+  <li style="margin-left: 30px;">Total amount (bill + tip)</li>
+</ul>
+<ol>
+  <li><strong>Displays a formatted receipt with:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">All dollar amounts showing exactly 2 decimal places</li>
+  <li style="margin-left: 30px;">Clear labels for each line</li>
+  <li style="margin-left: 30px;">A separator line between the calculations and the total</li>
+  <li style="margin-left: 30px;">A thank you message</li>
+</ul>
+<ol>
+  <li><strong>Uses f-strings exclusively</strong> (no string concatenation with <code>+</code>)</li>
+</ol>
+<h3>Starter Template</h3>
+<pre data-lang="python"><code># tip_calculator_pro.py
+# Purpose: Calculate tip with professional formatting
+
+print(&quot;=== Professional Tip Calculator ===\n&quot;)
+
+# Get user input
+bill_input = input(&quot;Enter the bill amount: $&quot;)
+tip_percent_input = input(&quot;Enter tip percentage (e.g., 15, 18, 20): &quot;)
+
+# Convert to numbers
+bill = float(bill_input)
+tip_percent = float(tip_percent_input)
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+# TODO: Display formatted receipt using f-strings
+print(&quot;\n--- Your Receipt ---&quot;)
+
+# Your formatted output goes here</code></pre>
+<h3>Example Output</h3>
+<p><strong>Test Case 1:</strong></p>
+<pre><code>=== Professional Tip Calculator ===
+
+Enter the bill amount: $45.50
+Enter tip percentage (e.g., 15, 18, 20): 18
+
+--- Your Receipt ---
+Bill:        $45.50
+Tip (18%):   $8.19
+-------------------------
+Total:       $53.69
+
+Thank you for dining with us!</code></pre>
+<p><strong>Test Case 2:</strong></p>
+<pre><code>=== Professional Tip Calculator ===
+
+Enter the bill amount: $123
+Enter tip percentage (e.g., 15, 18, 20): 20
+
+--- Your Receipt ---
+Bill:        $123.00
+Tip (20%):   $24.60
+-------------------------
+Total:       $147.60
+
+Thank you for dining with us!</code></pre>
+<p><strong>Notice:</strong></p>
+<ul>
+  <li>Even though the input was <code>123</code> (no decimals), the output shows <code>$123.00</code></li>
+  <li>All dollar amounts consistently show 2 decimal places</li>
+  <li>The percentage in the tip line matches what the user entered</li>
+</ul>
+<h3>Completion Criteria</h3>
+<p>Your solution must:</p>
+<ul>
+  <li>✅ Use f-strings for all output (no <code>+</code> concatenation)</li>
+  <li>✅ Format all dollar amounts with exactly 2 decimal places using <code>.2f</code></li>
+  <li>✅ Display the tip percentage in the output</li>
+  <li>✅ Include a separator line (e.g., dashes)</li>
+  <li>✅ Run without errors</li>
+  <li>✅ Handle both integer and decimal inputs correctly</li>
+</ul>
+<h3>Common Pitfalls to Watch For</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you work, watch out for these common mistakes:</p>
+<ol>
+  <li><strong>Forgetting the <code>f</code> before the string:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - This is just a regular string
+   print(&quot;Total: {total:.2f}&quot;)
+   
+   # RIGHT - The f makes it work
+   print(f&quot;Total: {total:.2f}&quot;)</code></pre>
+<ol>
+  <li><strong>Using concatenation inside f-strings unnecessarily:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # AWKWARD - mixing styles
+   print(f&quot;Bill: $&quot; + str(bill))
+   
+   # BETTER - pure f-string
+   print(f&quot;Bill: ${bill:.2f}&quot;)</code></pre>
+<ol>
+  <li><strong>Wrong format specifier:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - .2 without the f
+   print(f&quot;${total:.2}&quot;)     # This won&#x27;t work
+   
+   # RIGHT
+   print(f&quot;${total:.2f}&quot;)</code></pre>
+<ol>
+  <li><strong>Forgetting curly braces:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - variable name appears literally
+   print(f&quot;Total: $total&quot;)
+   
+   # RIGHT
+   print(f&quot;Total: ${total}&quot;)</code></pre>
+<h3>Optional Extensions</h3>
+<p>If you finish early, try these:</p>
+<ol>
+  <li><strong>Split Bill Calculator:</strong> Add a third input asking how many people are splitting the bill, then show the per-person amount</li>
+</ol>
+<ol>
+  <li><strong>Alignment:</strong> Use width and alignment specifiers to make labels and amounts line up in columns</li>
+</ol>
+<ol>
+  <li><strong>Multiple Tip Options:</strong> Calculate and display three different tip amounts (15%, 18%, 20%) so the user can choose</li>
+</ol>
+<p><strong>Example of Optional Extension #3:</strong></p>
+<pre><code>--- Tip Options ---
+15%:  $45.50 + $6.83 = $52.33
+18%:  $45.50 + $8.19 = $53.69
+20%:  $45.50 + $9.10 = $54.60</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, you have 25-35 minutes. Remember:</p>
+<ul>
+  <li>The key pattern is <code>{variable:.2f}</code> for money</li>
+  <li>Test with different amounts to verify your formatting works</li>
+  <li>Read error messages—they&#x27;ll tell you if you forgot the <code>f</code> or have a syntax error</li>
+</ul>
+<p>Let&#x27;s make some beautiful output!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 7: Debrief &amp; Exit Ticket (5 minutes)</h1>
+            <h3>Solution Walkthrough</h3>
+<p><strong>[Instructor shares solution:]</strong></p>
+<pre data-lang="python"><code># tip_calculator_pro.py
+# Purpose: Calculate tip with professional formatting
+
+print(&quot;=== Professional Tip Calculator ===\n&quot;)
+
+# Get user input
+bill_input = input(&quot;Enter the bill amount: $&quot;)
+tip_percent_input = input(&quot;Enter tip percentage (e.g., 15, 18, 20): &quot;)
+
+# Convert to numbers
+bill = float(bill_input)
+tip_percent = float(tip_percent_input)
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+# Display formatted receipt
+print(&quot;\n--- Your Receipt ---&quot;)
+print(f&quot;Bill:        ${bill:.2f}&quot;)
+print(f&quot;Tip ({tip_percent:.0f}%):   ${tip_amount:.2f}&quot;)
+print(&quot;-&quot; * 25)
+print(f&quot;Total:       ${total:.2f}&quot;)
+print(&quot;\nThank you for dining with us!&quot;)</code></pre>
+<p><strong>[Key points to highlight:]</strong></p>
+<ol>
+  <li><strong>Line 19:</strong> <code>.2f</code> ensures the bill always displays as currency</li>
+  <li><strong>Line 20:</strong> <code>.0f</code> shows tip_percent as a whole number (18, not 18.0)</li>
+  <li><strong>Line 20:</strong> <code>.2f</code> formats the tip amount with 2 decimals</li>
+  <li><strong>Line 22:</strong> <code>.2f</code> formats the total consistently</li>
+  <li><strong>No <code>str()</code> conversions needed</strong>—f-strings handle it automatically</li>
+</ol>
+<h3>Common Issues Students Encountered</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me address a few things I saw as I walked around:</p>
+<p>[Adjust based on actual student work, but common issues include:]</p>
+<ol>
+  <li><strong>Forgetting the leading <code>f</code>:</strong> Most common mistake—the string needs that <code>f</code> prefix</li>
+  <li><strong>Using <code>.2</code> instead of <code>.2f</code>:</strong> You need the <code>f</code> at the end for floating-point format</li>
+  <li><strong>Mixing concatenation and f-strings:</strong> Pick one style and stick with it—f-strings are cleaner</li>
+</ol>
+<h3>Extensions Showcase</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If anyone completed the extensions, let&#x27;s see what you built!</p>
+<p>[Call on 1-2 students who finished extensions to share their screen briefly]</p>
+<p>Great creativity! The split-bill calculator is especially practical.</p>
+<h3>Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>Before we wrap up Hour 10, answer this in your notes or in the chat:</p>
+<p><strong>Question:</strong> Why is f-string formatting usually better than <code>+</code> concatenation for building output strings?</p>
+<p><strong>Expected answer:</strong> F-strings are more readable (variables go where they appear in output), don&#x27;t require manual <code>str()</code> conversions, allow inline formatting (like <code>.2f</code>), and are less error-prone.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Recap: What We Accomplished</h1>
+            <p>In this hour, you:</p>
+<p>✅ Learned f-string syntax with the <code>f&quot;&quot;</code> prefix and <code>{}</code> placeholders</p>
+<p>✅ Used <code>.2f</code> format specifier to display numbers with 2 decimal places</p>
+<p>✅ Applied f-strings to make program output clean and professional</p>
+<p>✅ Understood why f-strings are better than concatenation</p>
+<p>✅ Upgraded the Tip Calculator with proper currency formatting</p>
+<p>✅ Explored width and alignment specifiers (optional)</p>
+<p><strong>This is a game-changer for your code.</strong> From now on, every program you write can have clean, professional output. No more messy concatenation with <code>+</code> and <code>str()</code> everywhere.</p>
+<p>In Hour 11, we&#x27;ll learn how to work with text data—splitting sentences into words and joining words back together.</p>
+<p><strong>Great work! Take a quick 5-minute break.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Reference Card (for students)</h1>
+            <p><strong>F-String Basics:</strong></p>
+<pre data-lang="python"><code># Basic syntax
+name = &quot;Alice&quot;
+print(f&quot;Hello, {name}!&quot;)
+
+# With expressions
+width = 5
+height = 3
+print(f&quot;Area: {width * height}&quot;)</code></pre>
+<p><strong>Number Formatting:</strong></p>
+<pre data-lang="python"><code>price = 19.5
+
+# Fixed decimals (most common for money)
+print(f&quot;${price:.2f}&quot;)          # $19.50
+
+# Different decimal places
+print(f&quot;{pi:.4f}&quot;)              # 3.1416
+
+# No decimals
+print(f&quot;{age:.0f}&quot;)             # 25</code></pre>
+<p><strong>Alignment (Optional):</strong></p>
+<pre data-lang="python"><code># Left, right, center
+print(f&quot;{&#x27;Left&#x27;:&lt;10}&quot;)          # &#x27;Left      &#x27;
+print(f&quot;{&#x27;Right&#x27;:&gt;10}&quot;)         # &#x27;     Right&#x27;
+print(f&quot;{&#x27;Center&#x27;:^10}&quot;)        # &#x27;  Center  &#x27;
+
+# Combined with decimals
+print(f&quot;${price:&gt;8.2f}&quot;)        # &#x27;   19.50&#x27;</code></pre>
+<p><strong>Common Format Specifiers:</strong></p>
+<ul>
+  <li><code>.2f</code> — 2 decimal places (money)</li>
+  <li><code>.0f</code> — no decimal places (whole numbers)</li>
+  <li><code>:&gt;10</code> — right-align in 10-character field</li>
+  <li><code>:&lt;10</code> — left-align in 10-character field</li>
+  <li><code>:,</code> — thousands separator (1,234.56)</li>
+</ul>
+<p><strong>Remember:</strong></p>
+<ul>
+  <li>Put <code>f</code> before the opening quote: <code>f&quot;text {var}&quot;</code></li>
+  <li>Variables go in curly braces: <code>{variable}</code></li>
+  <li>Format with colon: <code>{variable:.2f}</code></li>
+  <li>No <code>str()</code> conversion needed!</li>
+</ul>
+<p><strong>End of Hour 10 Script</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
