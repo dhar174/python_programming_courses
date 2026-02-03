@@ -5,7 +5,6 @@ Converts Markdown lessons to standalone HTML presentations
 """
 
 import re
-import os
 from pathlib import Path
 from html import escape
 
@@ -774,7 +773,9 @@ def process_markdown_file(input_path, output_dir):
 
 def main():
     """Main execution function"""
-    repo_root = Path('/home/runner/work/python_programming_courses/python_programming_courses')
+    # Dynamically determine repository root
+    script_dir = Path(__file__).parent.resolve()
+    repo_root = script_dir
     output_dir = repo_root / 'slides'
     
     # Create output directory

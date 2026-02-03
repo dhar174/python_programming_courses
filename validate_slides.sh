@@ -66,8 +66,8 @@ for html_file in "$slides_dir"/*.html; do
         fi
         
         # Check for no external dependencies
-        external_deps=$(grep -c -E "(https?://|<link|<script src)" "$html_file")
-        if [ $external_deps -eq 0 ]; then
+        external_deps=$(grep -o -E "(https?://|<link[^>]*href=|<script[^>]*src=)" "$html_file" 2>/dev/null | wc -l)
+        if [ "$external_deps" -eq 0 ]; then
             echo "  ✓ No external dependencies"
         else
             echo "  ⚠ External dependencies detected: $external_deps"

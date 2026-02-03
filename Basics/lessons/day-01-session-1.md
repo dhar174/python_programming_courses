@@ -72,6 +72,8 @@ Lecture → Demo → Lab
 
 ## Lab: Environment Check + First Run
 
+**Time: 25-35 minutes**
+
 ### Tasks
 - Create a folder for the course
 - Create `hello_course.py` that prints your name and today's date
@@ -221,6 +223,8 @@ Live-code these errors and fix them:
 ---
 
 ## Lab: Greeter
+
+**Time: 25-35 minutes**
 
 ### Tasks
 - Write a program that prints a 3-line greeting
@@ -380,6 +384,8 @@ print("Likes Python:", likes_python)
 ---
 
 ## Lab: Profile Card
+
+**Time: 25-35 minutes**
 
 ### Tasks
 - Store: name, city, favorite number, and a boolean (e.g., `likes_python`)
@@ -556,6 +562,8 @@ else:
 ---
 
 ## Lab: Tip Calculator
+
+**Time: 25-35 minutes**
 
 ### Tasks
 - Ask for bill total and tip percent
