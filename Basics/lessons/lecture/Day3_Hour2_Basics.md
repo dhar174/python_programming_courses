@@ -1,4 +1,4 @@
-# Day 2, Hour 2: String Formatting with F-Strings
+# Day 3, Hour 2: String Formatting with F-Strings
 **Python Programming Basics – Session 3**
 
 ---

@@ -1,4 +1,4 @@
-# Day 2, Hour 3: Working with Text – split() and join()
+# Day 3, Hour 3: Working with Text – split() and join()
 **Python Programming Basics – Session 3**
 
 ---

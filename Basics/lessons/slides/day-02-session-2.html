@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics Day 2 — Session 2 (Hours 5–8)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Basics Day 2 — Session 2 (Hours 5–8)</h1>
+            <div class="subtitle">Python Programming (Basic) • Strings, I/O, and Fundamentals Checkpoint</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 2 Overview</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Topics Covered Today</h1>
+            <ul>
+  <li>Hour 5: String fundamentals – indexing, slicing, len()</li>
+  <li>Hour 6: String methods – normalize, search, replace</li>
+  <li>Hour 7: Input/output + type conversion</li>
+  <li>Hour 8: Checkpoint 1 – Fundamentals mini-assessment</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 5: String Fundamentals — Indexing, Slicing, len()</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Index and slice strings</li>
+  <li>Use len() and basic membership checks</li>
+  <li>Understand negative indexing</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>String Indexing Basics</h1>
+            <h3>Indexing Starts at 0</h3>
+<pre data-lang="python"><code>message = &quot;Python&quot;
+print(message[0])   # &#x27;P&#x27;
+print(message[1])   # &#x27;y&#x27;
+print(message[5])   # &#x27;n&#x27;</code></pre>
+<h3>Think of Indices as Positions</h3>
+<pre><code>P   y   t   h   o   n
+0   1   2   3   4   5</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Negative Indexing</h1>
+            <h3>Counting from the End</h3>
+<pre data-lang="python"><code>message = &quot;Python&quot;
+print(message[-1])  # &#x27;n&#x27; (last character)
+print(message[-2])  # &#x27;o&#x27; (second to last)
+print(message[-6])  # &#x27;P&#x27; (same as [0])</code></pre>
+<h3>Negative Index Reference</h3>
+<pre><code> P    y    t    h    o    n
+ 0    1    2    3    4    5
+-6   -5   -4   -3   -2   -1</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>String Slicing</h1>
+            <h3>Basic Slicing: s[start:end]</h3>
+<pre data-lang="python"><code>message = &quot;Python&quot;
+print(message[0:3])   # &#x27;Pyt&#x27; (start to end-1)
+print(message[2:5])   # &#x27;tho&#x27;
+print(message[1:])    # &#x27;ython&#x27; (start to end)
+print(message[:4])    # &#x27;Pyth&#x27; (beginning to end-1)</code></pre>
+<h3>Remember: End Index is Exclusive</h3>
+<p>The slice <code>s[a:b]</code> includes index <code>a</code> but excludes index <code>b</code>.</p>
+        </section>
+
+        <section class="slide">
+            <h1>The len() Function</h1>
+            <h3>Getting String Length</h3>
+<pre data-lang="python"><code>message = &quot;Hello, World!&quot;
+print(len(message))   # 13
+
+# Useful for bounds checking
+last_index = len(message) - 1
+print(message[last_index])  # &#x27;!&#x27;</code></pre>
+<h3>Empty String Check</h3>
+<pre data-lang="python"><code>user_input = &quot;&quot;
+if len(user_input) == 0:
+    print(&quot;No input provided&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Membership with &#x27;in&#x27;</h1>
+            <h3>Checking for Substrings</h3>
+<pre data-lang="python"><code>message = &quot;Hello, Python!&quot;
+
+# Check if substring exists
+print(&quot;Python&quot; in message)     # True
+print(&quot;python&quot; in message)     # False (case-sensitive)
+print(&quot;Java&quot; in message)       # False
+
+# Use in conditions
+if &quot;Python&quot; in message:
+    print(&quot;Found Python!&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Practical String Operations</h1>
+            <h3>Extract Initials from a Name</h3>
+<pre data-lang="python"><code>full_name = &quot;Alice Smith&quot;
+first_initial = full_name[0]
+# Find space position to get last name initial
+space_index = full_name.find(&quot; &quot;)
+last_initial = full_name[space_index + 1]
+print(f&quot;Initials: {first_initial}.{last_initial}.&quot;)
+# Output: Initials: A.S.</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Extract Domain from Email</h1>
+            <h3>Using Slicing and find()</h3>
+<pre data-lang="python"><code>email = &quot;student@example.com&quot;
+at_position = email.find(&quot;@&quot;)
+domain = email[at_position + 1:]
+print(f&quot;Domain: {domain}&quot;)
+# Output: Domain: example.com</code></pre>
+<h3>Get Last Character</h3>
+<pre data-lang="python"><code>filename = &quot;document.pdf&quot;
+extension = filename[-3:]
+print(f&quot;Extension: {extension}&quot;)
+# Output: Extension: pdf</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Username Builder</h1>
+            <p><strong>Time: 25-35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Input first and last name</li>
+  <li>Build a username: first initial + last name (lowercase)</li>
+  <li>Show username length</li>
+</ul>
+<h3>Example Interaction</h3>
+<pre><code>Enter first name: Alice
+Enter last name: Smith
+Username: asmith
+Length: 6 characters</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Sample Solution Structure</h1>
+            <pre data-lang="python"><code># Get input
+first_name = input(&quot;Enter first name: &quot;)
+last_name = input(&quot;Enter last name: &quot;)
+
+# Build username
+first_initial = first_name[0].lower()
+last_clean = last_name.lower().replace(&quot; &quot;, &quot;&quot;)
+username = first_initial + last_clean
+
+# Display result
+print(f&quot;Username: {username}&quot;)
+print(f&quot;Length: {len(username)} characters&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Completion Criteria (Hour 5)</h1>
+            <p><span class="check">✓</span> Correct username for multi-word last names (strip spaces)</p>
+<p><span class="check">✓</span> Handles at least one realistic name</p>
+<p><span class="check">✓</span> Displays username length correctly</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 5)</h1>
+            <p><strong>⚠️</strong> <strong>IndexError from empty strings</strong></p>
+<pre data-lang="python"><code>name = &quot;&quot;
+first_char = name[0]  # IndexError!
+# Fix: Check length first</code></pre>
+<p><strong>⚠️</strong> <strong>Not normalizing case/spacing</strong></p>
+<pre data-lang="python"><code># Don&#x27;t forget: &quot;Van Halen&quot; → &quot;vanhalen&quot;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add a rule: if username &gt; 12 chars, shorten last name</li>
+  <li>Add a numeric suffix if desired</li>
+</ul>
+<pre data-lang="python"><code># Example extension
+if len(username) &gt; 12:
+    username = username[:12]
+print(f&quot;Username: {username}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What does <code>s[-1]</code> do?</p>
+<p><strong>Answer</strong>: Returns the last character of string <code>s</code> (counting from the end with -1).</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 6: String Methods — Normalize, Search, Replace</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Use common string methods</li>
+  <li>Explain immutability: methods return new strings</li>
+  <li>Apply methods for data cleaning</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Key String Methods</h1>
+            <h3>Case Conversion</h3>
+<pre data-lang="python"><code>text = &quot;Hello World&quot;
+
+print(text.lower())    # &#x27;hello world&#x27;
+print(text.upper())    # &#x27;HELLO WORLD&#x27;
+print(text.title())    # &#x27;Hello World&#x27;</code></pre>
+<h3>Important: Original is Unchanged!</h3>
+<pre data-lang="python"><code>original = &quot;Hello&quot;
+result = original.lower()
+print(original)  # Still &#x27;Hello&#x27;
+print(result)    # &#x27;hello&#x27;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>String Immutability</h1>
+            <h3>Strings Cannot Be Modified In Place</h3>
+<pre data-lang="python"><code>message = &quot;Hello&quot;
+# ❌ This doesn&#x27;t work:
+# message[0] = &quot;h&quot;  # TypeError!
+
+# ✓ Create a new string instead:
+message = message.lower()
+print(message)  # &#x27;hello&#x27;</code></pre>
+<h3>Always Assign the Result Back</h3>
+<pre data-lang="python"><code>name = &quot;  alice  &quot;
+name = name.strip()  # Must assign!
+print(name)  # &#x27;alice&#x27;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>The strip() Method</h1>
+            <h3>Remove Whitespace</h3>
+<pre data-lang="python"><code>user_input = &quot;   hello   &quot;
+
+print(user_input.strip())   # &#x27;hello&#x27; (both sides)
+print(user_input.lstrip())  # &#x27;hello   &#x27; (left only)
+print(user_input.rstrip())  # &#x27;   hello&#x27; (right only)</code></pre>
+<h3>Why This Matters</h3>
+<p>User input often has extra spaces:</p>
+<pre data-lang="python"><code>name = input(&quot;Enter name: &quot;)  # User types &quot;  Alice  &quot;
+name = name.strip()
+print(f&quot;Hello, {name}!&quot;)  # &quot;Hello, Alice!&quot;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>The replace() Method</h1>
+            <h3>Substitute Substrings</h3>
+<pre data-lang="python"><code>message = &quot;I like cats. Cats are great!&quot;
+
+new_message = message.replace(&quot;cats&quot;, &quot;dogs&quot;)
+print(new_message)
+# &#x27;I like dogs. Cats are great!&#x27;
+# Note: case-sensitive!</code></pre>
+<h3>Multiple Replacements</h3>
+<pre data-lang="python"><code>text = &quot;a-b-c-d&quot;
+clean = text.replace(&quot;-&quot;, &quot; &quot;)
+print(clean)  # &#x27;a b c d&#x27;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>The find() Method</h1>
+            <h3>Locate Substrings</h3>
+<pre data-lang="python"><code>message = &quot;Hello, Python!&quot;
+
+position = message.find(&quot;Python&quot;)
+print(position)  # 7
+
+# Returns -1 if not found
+position = message.find(&quot;Java&quot;)
+print(position)  # -1</code></pre>
+<h3>Using find() for Checking</h3>
+<pre data-lang="python"><code>email = &quot;user@example.com&quot;
+if email.find(&quot;@&quot;) != -1:
+    print(&quot;Valid email format&quot;)
+else:
+    print(&quot;Missing @ symbol&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Using &#x27;in&#x27; for Containment</h1>
+            <h3>Simpler Than find() for Checks</h3>
+<pre data-lang="python"><code>message = &quot;Hello, Python!&quot;
+
+# Using &#x27;in&#x27; (preferred for simple checks)
+if &quot;Python&quot; in message:
+    print(&quot;Found it!&quot;)
+
+# Using find()
+if message.find(&quot;Python&quot;) != -1:
+    print(&quot;Found it!&quot;)</code></pre>
+<h3>Best Practice</h3>
+<ul>
+  <li>Use <code>in</code> for True/False checks</li>
+  <li>Use <code>find()</code> when you need the position</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Clean Messy Input</h1>
+            <h3>Before and After Comparison</h3>
+<pre data-lang="python"><code># Messy user input
+raw_input = &quot;   HELLO world   &quot;
+
+# Clean it up
+cleaned = raw_input.strip()      # Remove whitespace
+cleaned = cleaned.lower()        # Lowercase
+# Or chain methods:
+cleaned = raw_input.strip().lower()
+
+print(f&quot;Before: &#x27;{raw_input}&#x27;&quot;)
+print(f&quot;After:  &#x27;{cleaned}&#x27;&quot;)
+# Before: &#x27;   HELLO world   &#x27;
+# After:  &#x27;hello world&#x27;</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: find() Returning -1</h1>
+            <h3>Handle &quot;Not Found&quot; Cases</h3>
+<pre data-lang="python"><code>text = &quot;Python programming&quot;
+
+# Found
+pos = text.find(&quot;prog&quot;)
+print(f&quot;&#x27;prog&#x27; found at position: {pos}&quot;)  # 7
+
+# Not found
+pos = text.find(&quot;java&quot;)
+print(f&quot;&#x27;java&#x27; found at position: {pos}&quot;)  # -1
+
+# Use the result
+if pos == -1:
+    print(&quot;Keyword not found&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Text Sanitizer</h1>
+            <p><strong>Time: 25-35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Input a sentence</li>
+  <li>Strip whitespace, make lowercase</li>
+  <li>Replace multiple spaces with single spaces (basic approach)</li>
+  <li>Report whether a chosen keyword appears</li>
+</ul>
+<h3>Example Interaction</h3>
+<pre><code>Enter a sentence:    Hello   World   
+Enter keyword to find: world
+Cleaned: &#x27;hello world&#x27;
+Keyword &#x27;world&#x27; found: True</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Sample Solution Structure</h1>
+            <pre data-lang="python"><code># Get input
+sentence = input(&quot;Enter a sentence: &quot;)
+keyword = input(&quot;Enter keyword to find: &quot;)
+
+# Clean the sentence
+cleaned = sentence.strip().lower()
+# Basic approach to reduce multiple spaces
+cleaned = cleaned.replace(&quot;  &quot;, &quot; &quot;)
+
+# Check for keyword
+keyword_lower = keyword.lower()
+found = keyword_lower in cleaned
+
+# Display results
+print(f&quot;Cleaned: &#x27;{cleaned}&#x27;&quot;)
+print(f&quot;Keyword &#x27;{keyword}&#x27; found: {found}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Completion Criteria (Hour 6)</h1>
+            <p><span class="check">✓</span> Outputs transformed sentence</p>
+<p><span class="check">✓</span> Correctly reports keyword presence</p>
+<p><span class="check">✓</span> Handles whitespace properly</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 6)</h1>
+            <p><strong>⚠️</strong> <strong>Expecting replace to modify in place</strong></p>
+<pre data-lang="python"><code>text = &quot;hello&quot;
+text.replace(&quot;e&quot;, &quot;a&quot;)  # Returns new string!
+print(text)  # Still &#x27;hello&#x27;
+# Fix: text = text.replace(&quot;e&quot;, &quot;a&quot;)</code></pre>
+<p><strong>⚠️</strong> <strong>Confusing find() results</strong></p>
+<pre data-lang="python"><code>pos = text.find(&quot;xyz&quot;)
+if pos:  # ❌ Wrong! 0 is falsy but valid
+    print(&quot;Found&quot;)
+# ✓ Correct:
+if pos != -1:
+    print(&quot;Found&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add: count occurrences using <code>.count()</code></li>
+  <li>Add: title-case name fields</li>
+</ul>
+<pre data-lang="python"><code>text = &quot;hello hello world&quot;
+count = text.count(&quot;hello&quot;)
+print(f&quot;&#x27;hello&#x27; appears {count} times&quot;)  # 2</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: Why do we assign back after calling a string method?</p>
+<p><strong>Answer</strong>: Because strings are immutable — methods return a <em>new</em> string; the original is unchanged unless we assign the result back to the variable.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 7: Input/Output + Type Conversion</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Collect user input and convert types safely (happy path)</li>
+  <li>Explain why input() returns a string</li>
+  <li>Apply int() and float() for numeric conversions</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>The input() Function</h1>
+            <h3>Always Returns a String</h3>
+<pre data-lang="python"><code>name = input(&quot;Enter your name: &quot;)
+print(f&quot;Hello, {name}!&quot;)
+print(type(name))  # &lt;class &#x27;str&#x27;&gt;
+
+age = input(&quot;Enter your age: &quot;)
+print(type(age))   # &lt;class &#x27;str&#x27;&gt; - NOT int!</code></pre>
+<h3>Why This Matters</h3>
+<pre data-lang="python"><code>age = input(&quot;Enter your age: &quot;)  # User types 25
+# age is &quot;25&quot;, not 25
+next_year = age + 1  # TypeError!</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Type Conversion Functions</h1>
+            <h3>Converting to Numbers</h3>
+<pre data-lang="python"><code># String to integer
+age_str = &quot;25&quot;
+age = int(age_str)
+print(age + 1)  # 26
+
+# String to float
+price_str = &quot;19.99&quot;
+price = float(price_str)
+print(price * 2)  # 39.98</code></pre>
+<h3>Converting Input Directly</h3>
+<pre data-lang="python"><code>age = int(input(&quot;Enter your age: &quot;))
+price = float(input(&quot;Enter price: &quot;))</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Common Conversion Patterns</h1>
+            <h3>Safe Patterns for Numeric Input</h3>
+<pre data-lang="python"><code># Integer input
+quantity = int(input(&quot;How many? &quot;))
+
+# Float input
+temperature = float(input(&quot;Temperature: &quot;))
+
+# Combine operations
+print(f&quot;Double: {quantity * 2}&quot;)</code></pre>
+<h3>When Conversion Fails</h3>
+<pre data-lang="python"><code># If user types &quot;abc&quot; instead of a number:
+# ValueError: invalid literal for int()</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>ValueError Preview</h1>
+            <h3>What Happens with Bad Input</h3>
+<pre data-lang="python"><code># User enters &quot;hello&quot; when asked for a number
+number = int(&quot;hello&quot;)  # ValueError!</code></pre>
+<h3>For Now: Assume Valid Input</h3>
+<ul>
+  <li>In this hour, we practice the &quot;happy path&quot;</li>
+  <li>Full error handling comes later (exceptions)</li>
+  <li>Mention: &quot;We&#x27;ll learn to handle bad input later&quot;</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Simple Converter</h1>
+            <h3>Show Type Conversion in Action</h3>
+<pre data-lang="python"><code># Temperature converter (F to C)
+fahrenheit = input(&quot;Enter temperature in °F: &quot;)
+print(f&quot;Input type: {type(fahrenheit)}&quot;)
+
+# Convert to float for math
+fahrenheit = float(fahrenheit)
+celsius = (fahrenheit - 32) * 5 / 9
+
+print(f&quot;Fahrenheit type: {type(fahrenheit)}&quot;)
+print(f&quot;{fahrenheit}°F = {celsius:.1f}°C&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Show ValueError</h1>
+            <h3>What Happens with Non-Numeric Input</h3>
+<pre data-lang="python"><code># This will crash if user enters text
+number = int(&quot;3.5&quot;)  # ValueError!
+# Can&#x27;t convert &quot;3.5&quot; directly to int
+
+# Correct approach:
+number = int(float(&quot;3.5&quot;))  # 3
+# Or just use float if decimals expected</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Unit Converter</h1>
+            <p><strong>Time: 25-35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Choose: miles→km OR °F→°C</li>
+  <li>Ask user for a number</li>
+  <li>Convert and print formatted output</li>
+</ul>
+<h3>Conversion Formulas</h3>
+<ul>
+  <li>Miles to km: <code>km = miles * 1.60934</code></li>
+  <li>°F to °C: <code>celsius = (fahrenheit - 32) * 5 / 9</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Example Interaction</h1>
+            <h3>Miles to Kilometers</h3>
+<pre><code>=== Miles to Kilometers Converter ===
+Enter distance in miles: 10
+10.0 miles = 16.09 kilometers</code></pre>
+<h3>Fahrenheit to Celsius</h3>
+<pre><code>=== Temperature Converter ===
+Enter temperature in °F: 98.6
+98.6°F = 37.0°C</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Sample Solution Structure</h1>
+            <pre data-lang="python"><code># Miles to Kilometers
+print(&quot;=== Miles to Kilometers Converter ===&quot;)
+miles = float(input(&quot;Enter distance in miles: &quot;))
+
+# Convert
+km = miles * 1.60934
+
+# Display with formatting
+print(f&quot;{miles} miles = {km:.2f} kilometers&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Alternative Solution (Temperature)</h1>
+            <pre data-lang="python"><code># Fahrenheit to Celsius
+print(&quot;=== Temperature Converter ===&quot;)
+fahrenheit = float(input(&quot;Enter temperature in °F: &quot;))
+
+# Convert
+celsius = (fahrenheit - 32) * 5 / 9
+
+# Display with formatting
+print(f&quot;{fahrenheit}°F = {celsius:.1f}°C&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Completion Criteria (Hour 7)</h1>
+            <p><span class="check">✓</span> Correct conversion on sample input</p>
+<p><span class="check">✓</span> Readable output with units</p>
+<p><span class="check">✓</span> Uses proper type conversion</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 7)</h1>
+            <p><strong>⚠️</strong> <strong>ValueError when user types text</strong></p>
+<pre data-lang="python"><code># Remind learners: for now, assume valid input
+# We&#x27;ll handle errors properly later</code></pre>
+<p><strong>⚠️</strong> <strong>Hard-coded constants wrong</strong></p>
+<pre data-lang="python"><code># Double-check your conversion factors!
+# Miles to km: 1.60934
+# F to C: (f - 32) * 5/9</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add a menu to choose conversion type (no loops yet)</li>
+</ul>
+<pre data-lang="python"><code>print(&quot;1. Miles to Kilometers&quot;)
+print(&quot;2. Fahrenheit to Celsius&quot;)
+choice = input(&quot;Choose (1 or 2): &quot;)
+
+if choice == &quot;1&quot;:
+    # miles conversion
+    pass
+elif choice == &quot;2&quot;:
+    # temperature conversion
+    pass</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What happens if you call <code>int()</code> on <code>&#x27;3.5&#x27;</code>?</p>
+<p><strong>Answer</strong>: <code>ValueError</code> — Python cannot convert a string with a decimal point directly to int. Use <code>int(float(&#x27;3.5&#x27;))</code> if you need the integer value (3).</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 8: Checkpoint 1 — Fundamentals Mini-Assessment</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Demonstrate basic script writing, variables, numbers, strings, and input</li>
+  <li>Apply concepts from Hours 1–7 in a practical exercise</li>
+  <li>Self-assess understanding of Python fundamentals</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Checkpoint Overview</h1>
+            <h3>Assessment Format</h3>
+<ul>
+  <li><strong>Open-book</strong>: Notes and slides allowed</li>
+  <li><strong>Individual</strong>: Complete your own work</li>
+  <li><strong>Timeboxed</strong>: 45–60 minutes for the lab</li>
+  <li><strong>Focus</strong>: Correctness first, then formatting</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Instructor Talk Points</h1>
+            <h3>Before Starting</h3>
+<ul>
+  <li>Explain the rules: open-book, individual, timeboxed</li>
+  <li>Remind: focus on <strong>correctness first</strong>, then formatting</li>
+  <li>Encourage: test with sample inputs before submitting</li>
+</ul>
+<h3>During Assessment</h3>
+<ul>
+  <li>Circulate and observe (don&#x27;t solve for them)</li>
+  <li>Note common struggles for debrief</li>
+  <li>Allow questions about requirements, not solutions</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Sample Rubric Walkthrough</h1>
+            <h3>How Submissions Will Be Evaluated</h3>
+<ol>
+  <li><strong>Runs without errors</strong> (40%)</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Program executes end-to-end</li>
+  <li style="margin-left: 30px;">No crashes on valid input</li>
+</ul>
+<ol>
+  <li><strong>Correct calculations</strong> (30%)</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Math is accurate</li>
+  <li style="margin-left: 30px;">Type conversions done properly</li>
+</ul>
+<ol>
+  <li><strong>Readable output</strong> (20%)</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Formatted nicely</li>
+  <li style="margin-left: 30px;">Clear labels for values</li>
+</ul>
+<ol>
+  <li><strong>Code quality</strong> (10%)</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Meaningful variable names</li>
+  <li style="margin-left: 30px;">Appropriate comments</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Checkpoint Lab: Simple Receipt Generator</h1>
+            <p><strong>Time: 45-60 minutes</strong></p>
+<h3>Requirements</h3>
+<ul>
+  <li>Input: item name, quantity, price per item</li>
+  <li>Compute subtotal and total</li>
+  <li>Print a receipt with aligned lines and 2-decimal money formatting</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Receipt Generator: Expected Output</h1>
+            <h3>Example Interaction</h3>
+<pre><code>=== Receipt Generator ===
+Enter item name: Widget
+Enter quantity: 3
+Enter price per item: 9.99
+
+========== RECEIPT ==========
+Item:     Widget
+Quantity: 3
+Price:    $9.99 each
+-----------------------------
+Subtotal: $29.97
+=============================</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Receipt Generator: Sample Solution</h1>
+            <pre data-lang="python"><code># Receipt Generator
+print(&quot;=== Receipt Generator ===&quot;)
+
+# Get input
+item_name = input(&quot;Enter item name: &quot;)
+quantity = int(input(&quot;Enter quantity: &quot;))
+price = float(input(&quot;Enter price per item: &quot;))
+
+# Calculate
+subtotal = quantity * price
+
+# Print receipt
+print()
+print(&quot;=&quot; * 28)
+print(&quot;         RECEIPT&quot;)
+print(&quot;=&quot; * 28)
+print(f&quot;Item:     {item_name}&quot;)
+print(f&quot;Quantity: {quantity}&quot;)
+print(f&quot;Price:    ${price:.2f} each&quot;)
+print(&quot;-&quot; * 28)
+print(f&quot;Subtotal: ${subtotal:.2f}&quot;)
+print(&quot;=&quot; * 28)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Quiz (10 minutes)</h1>
+            <h3>Quick Knowledge Check</h3>
+<p>8–10 questions covering:</p>
+<ul>
+  <li>Variable types (str, int, float, bool)</li>
+  <li>Arithmetic operators</li>
+  <li>String indexing and slicing</li>
+  <li>String methods</li>
+  <li>Type conversion</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Sample Quiz Questions</h1>
+            <h3>Question 1</h3>
+<p>What is the output of <code>print(type(42))</code>?</p>
+<ul>
+  <li>A) <code>int</code></li>
+  <li>B) <code>&lt;class &#x27;int&#x27;&gt;</code></li>
+  <li>C) <code>42</code></li>
+  <li>D) <code>number</code></li>
+</ul>
+<p><strong>Answer</strong>: B</p>
+        </section>
+
+        <section class="slide">
+            <h1>Sample Quiz Questions</h1>
+            <h3>Question 2</h3>
+<p>What does <code>&quot;Python&quot;[2:5]</code> return?</p>
+<ul>
+  <li>A) <code>&quot;Pyt&quot;</code></li>
+  <li>B) <code>&quot;yth&quot;</code></li>
+  <li>C) <code>&quot;tho&quot;</code></li>
+  <li>D) <code>&quot;thon&quot;</code></li>
+</ul>
+<p><strong>Answer</strong>: C (<code>&quot;tho&quot;</code> — indices 2, 3, 4)</p>
+        </section>
+
+        <section class="slide">
+            <h1>Sample Quiz Questions</h1>
+            <h3>Question 3</h3>
+<p>Why does <code>input()</code> always return a string?</p>
+<ul>
+  <li>A) Because keyboards only type text</li>
+  <li>B) To avoid errors with special characters</li>
+  <li>C) Because Python doesn&#x27;t know what type you want</li>
+  <li>D) It&#x27;s a bug in Python</li>
+</ul>
+<p><strong>Answer</strong>: C</p>
+        </section>
+
+        <section class="slide">
+            <h1>Completion Criteria (Hour 8)</h1>
+            <p><span class="check">✓</span> Program runs end-to-end without crashes</p>
+<p><span class="check">✓</span> Correct math and type conversions</p>
+<p><span class="check">✓</span> Output is readable and formatted</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 8)</h1>
+            <p><strong>⚠️</strong> <strong>Forgetting float conversion for price</strong></p>
+<pre data-lang="python"><code>price = input(&quot;Price: &quot;)  # String!
+total = price * 3  # &#x27;9.999.999.99&#x27; not 29.97</code></pre>
+<p><strong>⚠️</strong> <strong>String concatenation vs numeric addition</strong></p>
+<pre data-lang="python"><code># ❌ Wrong
+result = &quot;3&quot; + &quot;5&quot;  # &#x27;35&#x27;
+# ✓ Correct
+result = int(&quot;3&quot;) + int(&quot;5&quot;)  # 8</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions</h1>
+            <ul>
+  <li>Add: discount percent</li>
+  <li>Add: tax percent</li>
+</ul>
+<pre data-lang="python"><code># Extension example
+tax_rate = 0.08  # 8% tax
+tax_amount = subtotal * tax_rate
+total = subtotal + tax_amount
+print(f&quot;Tax (8%): ${tax_amount:.2f}&quot;)
+print(f&quot;Total:    ${total:.2f}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check (Debrief)</h1>
+            <p><strong>Question</strong>: Ask 2–3 learners to explain how they debugged one error.</p>
+<h3>Discussion Points</h3>
+<ul>
+  <li>What error did you encounter?</li>
+  <li>How did you identify the problem?</li>
+  <li>What was your fix?</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Session 2 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>What We Covered Today</h1>
+            <h3>Hour 5: String Fundamentals</h3>
+<ul>
+  <li>Indexing and negative indexing</li>
+  <li>Slicing with <code>s[start:end]</code></li>
+  <li>The <code>len()</code> function</li>
+  <li>Membership with <code>in</code></li>
+</ul>
+<h3>Hour 6: String Methods</h3>
+<ul>
+  <li><code>.lower()</code>, <code>.upper()</code>, <code>.strip()</code></li>
+  <li><code>.replace()</code> and <code>.find()</code></li>
+  <li>String immutability</li>
+</ul>
+<h3>Hour 7: Input/Output</h3>
+<ul>
+  <li><code>input()</code> returns strings</li>
+  <li>Type conversion with <code>int()</code> and <code>float()</code></li>
+  <li>Unit converter exercise</li>
+</ul>
+<h3>Hour 8: Checkpoint 1</h3>
+<ul>
+  <li>Receipt Generator assessment</li>
+  <li>Fundamentals review</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrail Reminder</h1>
+            <h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> Core string operations and methods</p>
+<p><span class="check">✓</span> Simple type conversion</p>
+<p><span class="check">✓</span> Basic input/output patterns</p>
+<p><span class="check">✓</span> Clear variable names and formatting</p>
+<h3>Not Yet (Advanced Topics)</h3>
+<p><span class="cross">✗</span> Regular expressions</p>
+<p><span class="cross">✗</span> String formatting with format()</p>
+<p><span class="cross">✗</span> Advanced string parsing</p>
+<p><span class="cross">✗</span> Exception handling (try/except)</p>
+        </section>
+
+        <section class="slide">
+            <h1>No-Go Topics for Basics Course</h1>
+            <h3>Keep for Advanced</h3>
+<ul>
+  <li>Web frameworks (Flask/Django)</li>
+  <li>Databases/SQL/ORM</li>
+  <li>GUI frameworks (Tkinter/PyQt)</li>
+  <li>Testing frameworks (pytest)</li>
+  <li>Packaging/distribution</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Homework / Practice</h1>
+            <h3>Recommended Exercises</h3>
+<ol>
+  <li>Create a username generator with additional rules</li>
+  <li>Build a simple data cleaner for messy text</li>
+  <li>Create a multi-unit converter (length, weight, temperature)</li>
+  <li>Practice string slicing with different scenarios</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Next Session Preview</h1>
+            <h3>Session 3 (Hours 9–12)</h3>
+<ul>
+  <li>Hour 9: Booleans and comparisons</li>
+  <li>Hour 10: if/elif/else branching</li>
+  <li>Hour 11: Combining conditions</li>
+  <li>Hour 12: Checkpoint 2 – Branching mini-assessment</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Questions?</h1>
+            <p><strong>Remember</strong>:</p>
+<ul>
+  <li>Strings are immutable — always assign back</li>
+  <li><code>input()</code> returns strings — convert when needed</li>
+  <li>Use <code>in</code> for simple membership checks</li>
+  <li>Test with sample data before submitting</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Thank You!</h1>
+            <p>See you in Session 3!</p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

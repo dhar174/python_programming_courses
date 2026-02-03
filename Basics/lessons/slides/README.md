@@ -4,8 +4,9 @@ This directory contains standalone HTML slide presentations generated from the c
 
 ## Generated Files
 
-- **01-intro-to-python.html** - Introduction to Python slides (4 slides)
+- **01-intro-to-python.html** - Introduction to Python slides (3 slides)
 - **day-01-session-1.html** - Basics Day 1 Session 1 comprehensive lesson (59 slides)
+- **day-02-session-2.html** - Basics Day 2 Session 2: Strings, I/O, and Checkpoint 1 (74 slides)
 
 ## Features
 
@@ -130,10 +131,11 @@ This will scan `Basics/lessons/` and `Advanced/lessons/` for any `.md` files and
 These slides were generated from:
 - `Basics/lessons/01-intro-to-python.md`
 - `Basics/lessons/day-01-session-1.md`
+- `Basics/lessons/day-02-session-2.md`
 - `Advanced/lessons/01-intro-to-python.md`
 
 ---
 
-**Generated:** January 29, 2025  
+**Generated:** February 3, 2025  
 **Generator:** generate_slides.py  
 **Style:** Swiss Modern with CSS Variables

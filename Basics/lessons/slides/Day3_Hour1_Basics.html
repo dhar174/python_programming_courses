@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3, Hour 1: Comparisons + Boolean Logic</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Day 3, Hour 1: Comparisons + Boolean Logic</h1>
+            <div class="subtitle">**Python Programming Basics – Session 3**</div>
+        </section>
+
+        <section class="slide">
+            <h1>Timing Overview</h1>
+            <p><strong>Total Time:</strong> 60 minutes</p>
+<ul>
+  <li>Recap &amp; Transition from Day 1: 3 minutes</li>
+  <li>Comparison Operators: 10-12 minutes</li>
+  <li>Boolean Logic (and/or/not): 8-10 minutes</li>
+  <li>Truthy/Falsey Preview: 3-5 minutes</li>
+  <li>Live Demo (Age Gating): 5-10 minutes</li>
+  <li>Hands-On Lab (Eligibility Checker): 25-35 minutes</li>
+  <li>Debrief &amp; Exit Ticket: 5 minutes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes for This Hour</h1>
+            <p>By the end of this hour, you will be able to:</p>
+<ol>
+  <li>Use comparison operators (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) to compare values</li>
+  <li>Explain the critical difference between <code>==</code> (comparison) and <code>=</code> (assignment)</li>
+  <li>Combine conditions using <code>and</code>, <code>or</code>, and <code>not</code></li>
+  <li>Chain comparison operators in Python</li>
+  <li>Apply comparison logic to build eligibility checks and decision rules</li>
+  <li>Identify and avoid common boundary condition mistakes (off-by-one errors)</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Section 1: Recap &amp; Transition from Day 1 (3 minutes)</h1>
+            <h3>Quick Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome to Day 2! Yesterday, we covered a lot of ground. Let&#x27;s do a quick recap:</p>
+<p><strong>Day 1 Highlights:</strong></p>
+<ul>
+  <li><strong>Hour 1-2</strong>: We set up our environment, learned about <code>print()</code>, comments, and reading errors</li>
+  <li><strong>Hour 3</strong>: We introduced variables, data types (int, float, str), and type conversion</li>
+  <li><strong>Hour 4</strong>: We built our first interactive programs with <code>input()</code> and basic if statements</li>
+</ul>
+<p>Quick show of hands: <strong>Who completed the Tip Calculator from yesterday?</strong></p>
+<p>[Wait for responses]</p>
+<p>Excellent! You&#x27;re all now officially writing <strong>programs</strong>, not just scripts. Programs take input, make decisions, and produce output. That&#x27;s a big deal.</p>
+<h3>What We&#x27;re Building Toward Today</h3>
+<p>Today, we&#x27;re going to <strong>strengthen your decision-making logic</strong>. By the end of Day 2, your programs will be able to:</p>
+<ul>
+  <li>Compare values and make complex decisions</li>
+  <li>Format output beautifully with f-strings</li>
+  <li>Process and transform text data</li>
+  <li>Debug errors like a professional</li>
+</ul>
+<p><strong>Hour 9 (right now)</strong> is all about <strong>comparisons and boolean logic</strong>—the foundation of every decision a program makes.</p>
+<p>Let&#x27;s dive in!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 2: Comparison Operators (10-12 minutes)</h1>
+            <h3>The Foundation: What Is a Comparison?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When your program needs to make a decision, it needs to <strong>compare values</strong>. Is this number bigger than that number? Is this string equal to that string? Is the user old enough to access this feature?</p>
+<p>Every comparison in Python produces a <strong>boolean result</strong>: either <code>True</code> or <code>False</code>. Those are the only two possible outcomes.</p>
+<p>Let&#x27;s look at the six comparison operators:</p>
+<h3>The Six Comparison Operators</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<pre data-lang="python"><code># Equality
+x == y    # True if x equals y
+x != y    # True if x is not equal to y
+
+# Ordering
+x &lt; y     # True if x is less than y
+x &gt; y     # True if x is greater than y
+x &lt;= y    # True if x is less than or equal to y
+x &gt;= y    # True if x is greater than or equal to y</code></pre>
+<p>Let me show you these in action:</p>
+<pre data-lang="python"><code>age = 18
+
+print(age == 18)    # True (equality check)
+print(age == 21)    # False
+print(age != 21)    # True (not equal)
+print(age &lt; 21)     # True (less than)
+print(age &gt; 21)     # False (greater than)
+print(age &gt;= 18)    # True (greater than or equal)</code></pre>
+<p><strong>[Key insight]:</strong> Notice that each of these expressions <strong>evaluates to either True or False</strong>. They don&#x27;t print &quot;yes&quot; or &quot;no&quot;—they return a boolean value.</p>
+<h3>The Critical Distinction: == vs =</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is <strong>the most common mistake</strong> beginners make, and many experienced programmers still slip up on it:</p>
+<p><strong><code>=</code> is assignment. <code>==</code> is comparison.</strong></p>
+<p>Let me say that again:</p>
+<ul>
+  <li><strong><code>=</code></strong> means &quot;store this value in this variable&quot;</li>
+  <li><strong><code>==</code></strong> means &quot;are these two values equal?&quot;</li>
+</ul>
+<p>Here&#x27;s the mistake in action:</p>
+<pre data-lang="python"><code>age = 18
+
+# WRONG - This is assignment, not comparison
+if age = 18:
+    print(&quot;You are 18&quot;)</code></pre>
+<p><strong>What happens?</strong> You get a <code>SyntaxError</code>. Python sees you trying to assign a value inside an <code>if</code> statement and knows that&#x27;s not what you meant.</p>
+<p><strong>Correct version:</strong></p>
+<pre data-lang="python"><code>age = 18
+
+# RIGHT - This is comparison
+if age == 18:
+    print(&quot;You are 18&quot;)</code></pre>
+<p><strong>[Memory device]:</strong> Think of <code>==</code> as asking a question: &quot;Are these equal?&quot; Two equal signs = one question.</p>
+<h3>Quick Check #1</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre data-lang="python"><code>score = 85
+
+print(score &gt;= 80)
+print(score == 100)</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>True
+False</code></pre>
+<p>Good! The first comparison checks if 85 is greater than or equal to 80—it is, so <code>True</code>. The second checks if 85 equals 100—it doesn&#x27;t, so <code>False</code>.</p>
+<h3>Comparing Different Data Types</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You can compare numbers to numbers:</p>
+<pre data-lang="python"><code>print(10 &lt; 20)        # True
+print(5.5 &gt; 5.0)      # True</code></pre>
+<p>You can compare strings to strings:</p>
+<pre data-lang="python"><code>print(&quot;apple&quot; == &quot;apple&quot;)    # True
+print(&quot;Apple&quot; == &quot;apple&quot;)    # False (case matters!)</code></pre>
+<p><strong>But here&#x27;s a common pitfall:</strong> comparing a number to a string usually doesn&#x27;t work the way you expect:</p>
+<pre data-lang="python"><code>age = 18
+user_input = &quot;18&quot;
+
+print(age == user_input)    # False!</code></pre>
+<p><strong>Why?</strong> Because <code>18</code> (integer) is not the same as <code>&quot;18&quot;</code> (string). Remember from Day 1: you need to convert types when comparing:</p>
+<pre data-lang="python"><code>age = 18
+user_input = &quot;18&quot;
+
+print(age == int(user_input))    # True!</code></pre>
+<p><strong>[Important note]:</strong> Python 3 won&#x27;t let you compare incompatible types with ordering operators:</p>
+<pre data-lang="python"><code>print(10 &lt; &quot;20&quot;)    # TypeError: &#x27;&lt;&#x27; not supported between int and str</code></pre>
+<p>This is a <strong>good thing</strong>—it prevents silent bugs. If you see this error, check your data types.</p>
+<h3>Chaining Comparisons (Python&#x27;s Special Feature)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here&#x27;s something cool that Python does that many other languages don&#x27;t: <strong>you can chain comparisons</strong>.</p>
+<p>Instead of writing:</p>
+<pre data-lang="python"><code>age = 25
+
+if age &gt;= 18 and age &lt;= 65:
+    print(&quot;Working age&quot;)</code></pre>
+<p>You can write:</p>
+<pre data-lang="python"><code>age = 25
+
+if 18 &lt;= age &lt;= 65:
+    print(&quot;Working age&quot;)</code></pre>
+<p>This reads almost like math notation: &quot;18 is less than or equal to age, and age is less than or equal to 65.&quot;</p>
+<p><strong>Is this required?</strong> No. The first version works fine. But chaining can make your code more readable when checking ranges.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 3: Boolean Logic – and, or, not (8-10 minutes)</h1>
+            <h3>Combining Conditions with Boolean Operators</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Real programs rarely make decisions based on just one condition. You need to combine multiple checks:</p>
+<ul>
+  <li>&quot;Is the user old enough <strong>AND</strong> do they have a valid membership?&quot;</li>
+  <li>&quot;Is it the weekend <strong>OR</strong> is it a holiday?&quot;</li>
+  <li>&quot;The file <strong>NOT</strong> already exists?&quot;</li>
+</ul>
+<p>Python gives us three boolean operators to combine conditions:</p>
+<h3>The `and` Operator</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><code>and</code> requires <strong>both</strong> conditions to be True:</p>
+<pre data-lang="python"><code>age = 25
+has_license = True
+
+if age &gt;= 18 and has_license:
+    print(&quot;You can rent a car&quot;)
+else:
+    print(&quot;Cannot rent a car&quot;)</code></pre>
+<p><strong>Truth table for <code>and</code>:</strong></p>
+<pre><code>True  and True   → True
+True  and False  → False
+False and True   → False
+False and False  → False</code></pre>
+<p><strong>Translation:</strong> &quot;Both must be True for the whole thing to be True.&quot;</p>
+<p><strong>Real-world example:</strong></p>
+<pre data-lang="python"><code>age = 16
+has_permission = True
+
+if age &gt;= 13 and has_permission:
+    print(&quot;You can create a social media account&quot;)</code></pre>
+<p>Even though they have permission, if they&#x27;re under 13, the whole condition is False.</p>
+<h3>The `or` Operator</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><code>or</code> requires <strong>at least one</strong> condition to be True:</p>
+<pre data-lang="python"><code>day = &quot;Saturday&quot;
+
+if day == &quot;Saturday&quot; or day == &quot;Sunday&quot;:
+    print(&quot;It&#x27;s the weekend!&quot;)</code></pre>
+<p><strong>Truth table for <code>or</code>:</strong></p>
+<pre><code>True  or True   → True
+True  or False  → True
+False or True   → True
+False or False  → False</code></pre>
+<p><strong>Translation:</strong> &quot;At least one must be True for the whole thing to be True.&quot;</p>
+<p><strong>Real-world example:</strong></p>
+<pre data-lang="python"><code>payment_method = &quot;credit_card&quot;
+
+if payment_method == &quot;credit_card&quot; or payment_method == &quot;debit_card&quot;:
+    print(&quot;Card payment accepted&quot;)</code></pre>
+<p>If either payment method matches, we accept it.</p>
+<h3>The `not` Operator</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><code>not</code> flips the boolean value:</p>
+<pre data-lang="python"><code>is_raining = False
+
+if not is_raining:
+    print(&quot;Let&#x27;s go for a walk!&quot;)</code></pre>
+<p><strong>Truth table for <code>not</code>:</strong></p>
+<pre><code>not True   → False
+not False  → True</code></pre>
+<p><strong>Translation:</strong> &quot;Reverse the boolean value.&quot;</p>
+<p><strong>Real-world example:</strong></p>
+<pre data-lang="python"><code>file_exists = False
+
+if not file_exists:
+    print(&quot;Creating new file...&quot;)</code></pre>
+<p><strong>[Common pattern]:</strong> Using <code>not</code> with comparisons:</p>
+<pre data-lang="python"><code>age = 16
+
+if not age &gt;= 18:
+    print(&quot;You are a minor&quot;)</code></pre>
+<p>Though usually it&#x27;s clearer to write:</p>
+<pre data-lang="python"><code>if age &lt; 18:
+    print(&quot;You are a minor&quot;)</code></pre>
+<h3>Combining Multiple Operators</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You can combine <code>and</code>, <code>or</code>, and <code>not</code>:</p>
+<pre data-lang="python"><code>age = 25
+is_student = True
+has_coupon = False
+
+if (age &lt; 18 or is_student) and not has_coupon:
+    print(&quot;Discount applies, but you need a coupon&quot;)</code></pre>
+<p><strong>Order of operations:</strong></p>
+<ol>
+  <li>Comparisons (<code>&lt;</code>, <code>==</code>, etc.) happen first</li>
+  <li><code>not</code> happens next</li>
+  <li><code>and</code> happens next</li>
+  <li><code>or</code> happens last</li>
+</ol>
+<p><strong>[Best practice]:</strong> Use parentheses to make your intent clear:</p>
+<pre data-lang="python"><code>if (age &lt; 18 or is_student) and (not has_coupon):
+    print(&quot;Clear and explicit!&quot;)</code></pre>
+<h3>Quick Check #2</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre data-lang="python"><code>temperature = 75
+is_sunny = True
+
+if temperature &gt;= 70 and is_sunny:
+    print(&quot;Perfect beach day!&quot;)
+else:
+    print(&quot;Maybe another day&quot;)</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>Perfect beach day!</code></pre>
+<p>Both conditions are True (75 &gt;= 70, and is_sunny is True), so the <code>and</code> condition is True.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 4: Truthy and Falsey Values – A Preview (3-5 minutes)</h1>
+            <h3>Beyond True and False</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here&#x27;s something that might surprise you: <strong>in Python, every value has a &quot;truthiness&quot;</strong>—it&#x27;s either considered truthy or falsey in a boolean context.</p>
+<p><strong>I&#x27;m not going to go deep on this now</strong>, but I want to introduce it because you&#x27;ll see it in code online.</p>
+<h3>Falsey Values</h3>
+<p>These values are considered <strong>False</strong> in a boolean context:</p>
+<pre data-lang="python"><code># The obvious one
+False
+
+# Empty collections
+&quot;&quot;          # empty string
+[]          # empty list
+{}          # empty dict
+set()       # empty set
+
+# Zero
+0
+0.0
+
+# None (Python&#x27;s &quot;null&quot; value)
+None</code></pre>
+<h3>Truthy Values</h3>
+<p><strong>Everything else</strong> is considered truthy:</p>
+<pre data-lang="python"><code>True
+&quot;any text&quot;
+[1, 2, 3]
+42
+-1
+{&quot;key&quot;: &quot;value&quot;}</code></pre>
+<h3>Why This Matters (Quick Example)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You&#x27;ll see code like this:</p>
+<pre data-lang="python"><code>name = input(&quot;Enter your name: &quot;)
+
+if name:
+    print(f&quot;Hello, {name}!&quot;)
+else:
+    print(&quot;You didn&#x27;t enter a name&quot;)</code></pre>
+<p>This works because an empty string <code>&quot;&quot;</code> is falsey, and any non-empty string is truthy.</p>
+<p><strong>This is equivalent to:</strong></p>
+<pre data-lang="python"><code>if name != &quot;&quot;:
+    print(f&quot;Hello, {name}!&quot;)</code></pre>
+<p><strong>[Important note]:</strong> We&#x27;re not using truthy/falsey extensively in this course yet. I just want you to recognize it when you see it. For now, <strong>stick to explicit comparisons</strong> like <code>name != &quot;&quot;</code> or <code>count &gt; 0</code>—it&#x27;s clearer.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 5: Live Demo – Age Gating (5-10 minutes)</h1>
+            <h3>Demo Script: Age-Based Access Control</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now I&#x27;m going to build a small program that combines everything we&#x27;ve learned. Watch how I:</p>
+<ul>
+  <li>Get user input</li>
+  <li>Convert types</li>
+  <li>Use comparison operators</li>
+  <li>Combine conditions with <code>and</code></li>
+</ul>
+<p>I&#x27;ll narrate my thinking as I go.</p>
+<p><strong>[Open editor and create <code>age_gate.py</code>]</strong></p>
+<p><strong>[Instructor types and speaks:]</strong></p>
+<pre data-lang="python"><code># age_gate.py
+# Purpose: Check if a user meets age and membership requirements
+
+print(&quot;=== Membership Eligibility Checker ===\n&quot;)
+
+# Get user input
+age_input = input(&quot;Enter your age: &quot;)
+has_membership_input = input(&quot;Do you have a membership? (yes/no): &quot;)
+
+# Convert age to integer
+age = int(age_input)
+
+# Convert membership answer to boolean
+has_membership = has_membership_input.lower() == &quot;yes&quot;
+
+# Check eligibility
+print(&quot;\n--- Checking eligibility ---&quot;)
+
+# Rule 1: Must be 18 or older
+if age &gt;= 18 and has_membership:
+    print(&quot;✓ Access granted! Welcome to the premium section.&quot;)
+elif age &gt;= 18 and not has_membership:
+    print(&quot;✗ You are old enough, but you need a membership.&quot;)
+    print(&quot;  Visit our signup page to join!&quot;)
+elif age &gt;= 13:
+    print(&quot;✗ You must be 18 or older for this content.&quot;)
+    print(&quot;  But you can access our teen section!&quot;)
+else:
+    print(&quot;✗ This content requires adult supervision.&quot;)</code></pre>
+<p><strong>[Run the program with several test cases]</strong></p>
+<p><strong>Test 1: Age 25, membership yes</strong></p>
+<pre><code>Enter your age: 25
+Do you have a membership? (yes/no): yes
+
+--- Checking eligibility ---
+✓ Access granted! Welcome to the premium section.</code></pre>
+<p><strong>Test 2: Age 20, membership no</strong></p>
+<pre><code>Enter your age: 20
+Do you have a membership? (yes/no): no
+
+--- Checking eligibility ---
+✗ You are old enough, but you need a membership.
+  Visit our signup page to join!</code></pre>
+<p><strong>Test 3: Age 15, membership yes</strong></p>
+<pre><code>Enter your age: 15
+Do you have a membership? (yes/no): yes
+
+--- Checking eligibility ---
+✗ You must be 18 or older for this content.
+  But you can access our teen section!</code></pre>
+<p><strong>[Instructor explains the logic:]</strong></p>
+<p>Let&#x27;s walk through what&#x27;s happening:</p>
+<ol>
+  <li><strong>Line 7-8</strong>: We get raw input as strings</li>
+  <li><strong>Line 11</strong>: Convert age to an integer so we can compare it numerically</li>
+  <li><strong>Line 14</strong>: This is a nice pattern—we convert &quot;yes&quot;/&quot;no&quot; to a boolean. <code>has_membership_input.lower() == &quot;yes&quot;</code> returns <code>True</code> or <code>False</code></li>
+  <li><strong>Lines 20-28</strong>: We have three conditions checking different scenarios</li>
+</ol>
+<p><strong>Notice the order:</strong> We check the most specific conditions first, then fall back to more general cases.</p>
+<p><strong>[Key teaching moment]:</strong></p>
+<p>Notice how I tested <strong>boundary values</strong>:</p>
+<ul>
+  <li>Age exactly 18 (the threshold)</li>
+  <li>Age 13 (the lower threshold)</li>
+  <li>Ages above and below each threshold</li>
+</ul>
+<p>This is how you verify your logic is correct. We&#x27;ll talk more about this in the debugging hour.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 6: Hands-On Lab – Eligibility Checker (25-35 minutes)</h1>
+            <h3>Lab Overview</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now it&#x27;s your turn! You&#x27;re going to build a similar eligibility checker, but with your own rules.</p>
+<p><strong>Lab Goal:</strong> Create a program that determines eligibility for different age brackets with multiple conditions.</p>
+<h3>Lab Instructions: Eligibility Checker</h3>
+<p><strong>Scenario:</strong> You&#x27;re building a program for a community center that offers different programs based on age and residency status.</p>
+<p><strong>Requirements:</strong></p>
+<p>Create a Python script called <code>eligibility_checker.py</code> that:</p>
+<ol>
+  <li><strong>Prompts the user for:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Their age (as an integer)</li>
+  <li style="margin-left: 30px;">Whether they are a local resident (yes/no)</li>
+</ul>
+<ol>
+  <li><strong>Determines eligibility using these rules:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Children&#x27;s Program</strong>: Age 5-12, any residency status</li>
+  <li style="margin-left: 30px;"><strong>Teen Program</strong>: Age 13-17, any residency status</li>
+  <li style="margin-left: 30px;"><strong>Adult Program</strong>: Age 18-64, must be a local resident</li>
+  <li style="margin-left: 30px;"><strong>Senior Program</strong>: Age 65+, any residency status</li>
+</ul>
+<ol>
+  <li><strong>Provides clear feedback:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">If eligible: Print which program(s) they qualify for</li>
+  <li style="margin-left: 30px;">If not eligible: Explain why and what would make them eligible</li>
+</ul>
+<ol>
+  <li><strong>Handles boundary values correctly:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Age 12 should be children&#x27;s, not teen</li>
+  <li style="margin-left: 30px;">Age 13 should be teen, not children&#x27;s</li>
+  <li style="margin-left: 30px;">Age 18 should be adult, not teen</li>
+  <li style="margin-left: 30px;">Age 65 should be senior, not adult</li>
+</ul>
+<h3>Starter Template</h3>
+<pre data-lang="python"><code># eligibility_checker.py
+# Purpose: Determine community center program eligibility
+
+print(&quot;=== Community Center Eligibility Checker ===\n&quot;)
+
+# Get user input
+age_input = input(&quot;Enter your age: &quot;)
+resident_input = input(&quot;Are you a local resident? (yes/no): &quot;)
+
+# Convert inputs
+age = int(age_input)
+is_resident = resident_input.lower() == &quot;yes&quot;
+
+# Your eligibility logic goes here
+print(&quot;\n--- Checking eligibility ---&quot;)
+
+# TODO: Add your if/elif/else conditions here</code></pre>
+<h3>Example Output</h3>
+<p><strong>Test Case 1:</strong></p>
+<pre><code>=== Community Center Eligibility Checker ===
+
+Enter your age: 8
+Are you a local resident? (yes/no): no
+
+--- Checking eligibility ---
+✓ You qualify for the Children&#x27;s Program!</code></pre>
+<p><strong>Test Case 2:</strong></p>
+<pre><code>=== Community Center Eligibility Checker ===
+
+Enter your age: 30
+Are you a local resident? (yes/no): no
+
+--- Checking eligibility ---
+✗ Sorry, the Adult Program requires local residency.
+  You can apply for residency at City Hall!</code></pre>
+<p><strong>Test Case 3:</strong></p>
+<pre><code>=== Community Center Eligibility Checker ===
+
+Enter your age: 70
+Are you a local resident? (yes/no): yes
+
+--- Checking eligibility ---
+✓ You qualify for the Senior Program!</code></pre>
+<h3>Completion Criteria</h3>
+<p>Your solution must:</p>
+<ul>
+  <li>✅ Correctly identify all four program categories</li>
+  <li>✅ Use comparison operators (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) appropriately</li>
+  <li>✅ Handle boundary values (ages 12, 13, 18, 65) correctly</li>
+  <li>✅ Check residency status for the Adult Program</li>
+  <li>✅ Provide helpful feedback messages</li>
+  <li>✅ Run without errors</li>
+</ul>
+<h3>Common Pitfalls to Watch For</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you work, watch out for these common mistakes:</p>
+<ol>
+  <li><strong>Off-by-one errors:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - Age 18 gets counted as teen
+   if age &lt; 18:
+       print(&quot;Teen program&quot;)
+   
+   # RIGHT - Age 18 is adult
+   if age &lt;= 17:
+       print(&quot;Teen program&quot;)</code></pre>
+<ol>
+  <li><strong>Comparing strings to numbers:</strong></li>
+</ol>
+<pre data-lang="python"><code>   age = &quot;30&quot;    # Oops, forgot to convert
+   if age &gt;= 18:  # TypeError!</code></pre>
+<ol>
+  <li><strong>Case sensitivity in yes/no:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - &quot;Yes&quot; or &quot;YES&quot; won&#x27;t work
+   if resident_input == &quot;yes&quot;:
+   
+   # RIGHT - Convert to lowercase first
+   if resident_input.lower() == &quot;yes&quot;:</code></pre>
+<ol>
+  <li><strong>Forgetting the <code>and</code> operator:</strong></li>
+</ol>
+<pre data-lang="python"><code>   # WRONG - Two separate conditions
+   if age &gt;= 18:
+       if is_resident:
+           print(&quot;Adult program&quot;)
+   
+   # BETTER - Combined condition
+   if age &gt;= 18 and age &lt;= 64 and is_resident:
+       print(&quot;Adult program&quot;)</code></pre>
+<h3>Optional Extensions</h3>
+<p>If you finish early, try these:</p>
+<ol>
+  <li><strong>Multiple Programs:</strong> Allow users to qualify for multiple programs (e.g., a 65-year-old resident qualifies for both Adult and Senior)</li>
+</ol>
+<ol>
+  <li><strong>Add a Membership Level:</strong> Include a third input for membership level (basic/premium) and adjust eligibility</li>
+</ol>
+<ol>
+  <li><strong>Input Validation:</strong> Check that age is positive and residency input is valid</li>
+</ol>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, you have 25-35 minutes. Remember:</p>
+<ul>
+  <li>Test your code with different ages, especially the boundary values</li>
+  <li>Read error messages carefully</li>
+  <li>Ask for help if you&#x27;re stuck</li>
+</ul>
+<p>Let&#x27;s build!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 7: Debrief &amp; Exit Ticket (5 minutes)</h1>
+            <h3>Solution Walkthrough</h3>
+<p><strong>[Instructor shares solution:]</strong></p>
+<pre data-lang="python"><code># eligibility_checker.py
+# Purpose: Determine community center program eligibility
+
+print(&quot;=== Community Center Eligibility Checker ===\n&quot;)
+
+# Get user input
+age_input = input(&quot;Enter your age: &quot;)
+resident_input = input(&quot;Are you a local resident? (yes/no): &quot;)
+
+# Convert inputs
+age = int(age_input)
+is_resident = resident_input.lower() == &quot;yes&quot;
+
+# Determine eligibility
+print(&quot;\n--- Checking eligibility ---&quot;)
+
+if 5 &lt;= age &lt;= 12:
+    print(&quot;✓ You qualify for the Children&#x27;s Program!&quot;)
+elif 13 &lt;= age &lt;= 17:
+    print(&quot;✓ You qualify for the Teen Program!&quot;)
+elif 18 &lt;= age &lt;= 64 and is_resident:
+    print(&quot;✓ You qualify for the Adult Program!&quot;)
+elif 18 &lt;= age &lt;= 64 and not is_resident:
+    print(&quot;✗ Sorry, the Adult Program requires local residency.&quot;)
+    print(&quot;  You can apply for residency at City Hall!&quot;)
+elif age &gt;= 65:
+    print(&quot;✓ You qualify for the Senior Program!&quot;)
+else:
+    print(&quot;✗ Sorry, you must be at least 5 years old for our programs.&quot;)</code></pre>
+<p><strong>[Key points to highlight:]</strong></p>
+<ol>
+  <li><strong>Chained comparisons</strong> make range checks clean: <code>5 &lt;= age &lt;= 12</code></li>
+  <li><strong>Order matters</strong>: Check more specific conditions before general ones</li>
+  <li><strong>The <code>and</code> operator</strong> combines age and residency checks</li>
+  <li><strong>Helpful messages</strong> tell users what to do next</li>
+</ol>
+<h3>Common Issues Students Encountered</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me address a few things I saw as I walked around:</p>
+<p>[Adjust based on actual student work, but common issues include:]</p>
+<ol>
+  <li><strong>Boundary confusion:</strong> Remember <code>&lt;=</code> includes the number, <code>&lt;</code> does not</li>
+  <li><strong>Residency check:</strong> The adult program is the ONLY one that requires residency</li>
+  <li><strong>Elif order:</strong> If you put <code>age &gt;= 18</code> before checking <code>age &gt;= 65</code>, seniors would match the adult condition first</li>
+</ol>
+<h3>Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>Before we wrap up Hour 9, answer this in your notes or in the chat:</p>
+<p><strong>Question:</strong> What&#x27;s the difference between <code>==</code> and <code>=</code>? And why does this matter?</p>
+<p><strong>Expected answer:</strong> <code>=</code> is assignment (storing a value), <code>==</code> is comparison (checking equality). This matters because using <code>=</code> in an <code>if</code> statement causes a syntax error and doesn&#x27;t test the condition you intended.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Recap: What We Accomplished</h1>
+            <p>In this hour, you:</p>
+<p>✅ Learned all six comparison operators (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>)</p>
+<p>✅ Understood the critical difference between <code>==</code> (comparison) and <code>=</code> (assignment)</p>
+<p>✅ Combined conditions using <code>and</code>, <code>or</code>, and <code>not</code></p>
+<p>✅ Saw Python&#x27;s comparison chaining feature</p>
+<p>✅ Built a multi-condition eligibility checker</p>
+<p>✅ Practiced handling boundary values correctly</p>
+<p><strong>This is a major milestone.</strong> You can now write programs that make <strong>complex decisions</strong> based on multiple conditions. This is the foundation of almost every program you&#x27;ll ever write.</p>
+<p>In Hour 10, we&#x27;ll make your output look professional with f-string formatting.</p>
+<p><strong>Great work! Take a quick 5-minute break.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Reference Card (for students)</h1>
+            <p><strong>Comparison Operators:</strong></p>
+<pre data-lang="python"><code>==    # Equal to
+!=    # Not equal to
+&lt;     # Less than
+&gt;     # Greater than
+&lt;=    # Less than or equal to
+&gt;=    # Greater than or equal to</code></pre>
+<p><strong>Boolean Operators:</strong></p>
+<pre data-lang="python"><code>and   # Both conditions must be True
+or    # At least one condition must be True
+not   # Reverses the boolean value</code></pre>
+<p><strong>Common Patterns:</strong></p>
+<pre data-lang="python"><code># Range check
+if 18 &lt;= age &lt;= 65:
+
+# Multiple conditions
+if age &gt;= 18 and has_license:
+
+# Either/or
+if day == &quot;Saturday&quot; or day == &quot;Sunday&quot;:
+
+# Negation
+if not is_raining:</code></pre>
+<p><strong>Remember:</strong></p>
+<ul>
+  <li><code>=</code> assigns, <code>==</code> compares</li>
+  <li>Test boundary values (edges of ranges)</li>
+  <li>Use parentheses for clarity in complex conditions</li>
+  <li>Convert input types before comparing (<code>int()</code>, <code>.lower()</code>)</li>
+</ul>
+<p><strong>End of Hour 9 Script</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
