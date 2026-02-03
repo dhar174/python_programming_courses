@@ -1,4 +1,4 @@
-# Day 2, Hour 1: Comparisons + Boolean Logic
+# Day 3, Hour 1: Comparisons + Boolean Logic
 **Python Programming Basics – Session 3**
 
 ---

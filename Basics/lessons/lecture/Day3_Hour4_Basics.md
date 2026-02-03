@@ -1,4 +1,4 @@
-# Day 2, Hour 4: Debugging Habits (Basics Level)
+# Day 3, Hour 4: Debugging Habits (Basics Level)
 **Python Programming Basics – Session 3**
 
 ---
