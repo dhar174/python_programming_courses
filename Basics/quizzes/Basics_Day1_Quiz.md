@@ -419,7 +419,7 @@ D) Both B and C
 ## Section 1: Environment and Setup
 
 ### Question 1: **D**
-**Explanation:** Both `python --version` and `python -v` work to check the Python version. The double-dash `--version` is more explicit and commonly used, while `-v` is a shorthand. On some systems, you might need to use `python3` instead of `python`.
+**Explanation:** Both `python --version` and `python -V` work to check the Python version. The double-dash `--version` is more explicit and commonly used, while `-V` is a shorthand. On some systems, you might need to use `python3` instead of `python`.
 
 ### Question 2: **C**
 **Explanation:** Python scripts use the `.py` file extension. This tells the operating system and editors that the file contains Python code.
