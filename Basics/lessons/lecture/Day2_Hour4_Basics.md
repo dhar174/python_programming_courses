@@ -827,7 +827,7 @@ print(f"{fahrenheit}°F is {celsius:.1f}°C")
 
 print("=== Average Calculator ===\n")
 
-numbers = [85, 92, 78, 90]
+numbers = [85, 92, 78, 90, 88]
 
 total = sum(numbers)
 average = total / len(numbers)
@@ -845,8 +845,8 @@ print(f"The 5th number is: {fifth_number}")
 **Your tasks:**
 1. Run the script—it works partially then crashes
 2. Read the traceback—what error occurs?
-3. Identify why this error happens (hint: count the elements)
-4. Fix the bug by correcting the index
+3. Identify why this error happens (hint: count the elements and check the index)
+4. Fix the bug by correcting the index (use index 4) or handling the missing element safely
 5. Test and verify all output is correct
 6. **Write 1 sentence explaining what was wrong**
 
@@ -1030,26 +1030,21 @@ fahrenheit = float(input("Enter temperature in Fahrenheit: "))
 
 #### Script 3: List Average
 
-**Bug:** List only has 4 elements (indices 0-3), but we're trying to access index 5.
+**Bug:** List has 5 elements (indices 0-4), but we're trying to access index 5.
 
 **Fixed code:**
 ```python
-fifth_number = numbers[4]  # Wait, there's no 5th element!
-# OR better yet, don't hardcode:
-# if len(numbers) >= 5:
-#     fifth_number = numbers[4]
+fifth_number = numbers[4]  # Access the 5th element at index 4
 ```
 
-**Actually, the list only has 4 numbers, so asking for the 5th doesn't make sense. The bug is a logic error.**
-
-**Better fix:**
+**Or with safety check:**
 ```python
-# Remove or comment out the problematic lines
-# fifth_number = numbers[5]
-# print(f"The 5th number is: {fifth_number}")
+if len(numbers) >= 5:
+    fifth_number = numbers[4]
+    print(f"The 5th number is: {fifth_number}")
 ```
 
-**Explanation:** IndexError occurred because the list has only 4 elements (indices 0-3), and we tried to access index 5.
+**Explanation:** IndexError occurred because the list has 5 elements (indices 0-4), and we tried to access index 5 (off-by-one error).
 
 ---
 
@@ -1135,7 +1130,8 @@ In this hour, you:
 **Debugging Strategies:**
 ```python
 # Print variable values and types
-print(f"DEBUG: {var} (type: {type(var)})")
+value = 42.5
+print(f"DEBUG: value={value} (type: {type(value)})")
 
 # Print checkpoints
 print("DEBUG: Reached checkpoint 1")

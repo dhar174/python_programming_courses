@@ -324,9 +324,9 @@ Sometimes you want to create columnar output—like a receipt where the dollar a
 **Width specifier: `N` (where N is the total width)**
 
 ```python
-print(f"{"Item":<20} {"Price":>10}")
-print(f"{"Coffee":<20} {"$3.50":>10}")
-print(f"{"Sandwich":<20} {"$8.75":>10}")
+print(f'{"Item":<20} {"Price":>10}')
+print(f'{"Coffee":<20} {"$3.50":>10}')
+print(f'{"Sandwich":<20} {"$8.75":>10}')
 ```
 
 **Output:**
@@ -471,11 +471,15 @@ F-strings are great, but there are times to avoid them:
    print(template.format(name="Bob", score=87))
    ```
 
-2. **When you're building strings from user input that might contain `{}`:**
+2. **When treating user input as a format template:**
    ```python
-   # User input might break the f-string
-   user_message = input("Enter a message: ")  # User types: "My code: {name}"
-   # print(f"{user_message}")  # This might cause errors
+   # Dangerous: user input as a template
+   template = input("Enter a template (use {name}): ")  # User types: "Hello, {name}!"
+   print(template.format(name="Alice"))  # Works: "Hello, Alice!"
+   
+   # Pitfall: if user enters unknown placeholders
+   # template = "Hello {name} and {friend}"
+   # print(template.format(name="Alice"))  # KeyError: 'friend'
    ```
 
 **For this course, use f-strings for output. They're simpler and more readable.**
