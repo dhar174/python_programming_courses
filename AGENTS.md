@@ -29,15 +29,21 @@ Module 1 materials (Python Programming - Basic, 48 hours):
 - **[`Basics/Instructor/`](./Basics/Instructor/)** - Instructor resources:
   - [`Python_Basics_Instructor_Runbook_4hr_Days.md`](./Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md) - Detailed instructor runbook with day-by-day, hour-by-hour breakdown of topics, learning objectives, and activities for the Basic module.
   
-- **[`Basics/lessons/`](./Basics/lessons/)** - Markdown source files for Basic module slides:
-  - [`01-intro-to-python.md`](./Basics/lessons/01-intro-to-python.md) - Introduction to Python lesson content.
-  - Additional lesson files should be created here following the naming pattern: `DayX_HourY_Basics.md`
+- **[`Basics/lessons/`](./Basics/lessons/slides/)**
+  - Markdown files here are source files for Basic module slides.
+  - Output directory for locally generated slides (contains placeholder files). This is where completed html, pptx, and pdf slide files will be saved.
+
   
 - **[`Basics/themes/`](./Basics/themes/)** - CSS theme files for Basic module slides:
   - [`python-dark.css`](./Basics/themes/python-dark.css) - Dark theme for slides.
   - [`python-light.css`](./Basics/themes/python-light.css) - Light theme for slides.
   
-- **[`Basics/site/`](./Basics/site/)** - Output directory for locally generated slides (contains placeholder files).
+- **[`Basics/lessons/`](./Basics/lessons/lecture)** - Markdown source files for readable Lecture scripts + notes.
+  - Lesson files should be created here following the naming pattern: `DayX_HourY_Basics.md`
+
+- **[`Basics/lessons/`](./Basics/lessons/assignments)** - IPNYB source files for homework assignment notebooks.
+
+- **[`Basics/lessons/`](./Basics/lessons/quizzes)** - Source files for multiple choice quizzes.
 
 - **Syllabus and Course Materials**:
   - [`Python Basics (48h) Syllabus (12x4h) — Pcep_pcap Aligned.pdf`](./Basics/Python%20Basics%20(48h)%20Syllabus%20(12x4h)%20—%20Pcep_pcap%20Aligned.pdf) - PDF version of the syllabus.
