@@ -99,14 +99,14 @@ GitHub-specific configuration and automation:
 The repository uses Marp (Markdown Presentation Ecosystem) to generate slides from Markdown files. Three configuration files are available:
 
 1. **`.marprc.yml`** (Primary) - YAML configuration used by CI/CD:
-   - Input: `./Basics/lessons`
+   - Input: `./Basics/lessons` (Note: currently only Basics module is configured for automatic builds)
    - Output: `./_site/slides`
    - Formats: HTML, PDF, PPTX, PNG
    - Features: PDF outlines, notes, loose YAML disabled
 
 2. **`marp.config.mjs`** - JavaScript ES module configuration:
    - More flexible configuration options
-   - Theme set location: `./themes`
+   - Theme set locations: `./Basics/themes` and `./Advanced/themes`
    - Browser automation settings
 
 3. **`marp.config.ts`** - TypeScript configuration:
@@ -163,8 +163,8 @@ These runbooks define:
 Each hour receives its own dedicated Markdown file formatted for direct instructor delivery:
 
 1. **Location**:
-   - Basic topics: `Basics/lessons/lecture/DayX_HourY_Basics.md`
-   - Advanced topics: `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
+   - Basic topics: `Basics/lessons/DayX_HourY_Basics.md`
+   - Advanced topics: `Advanced/lessons/DayX_HourY_Advanced.md`
 
 2. **Naming Convention**:
    - `Day1_Hour1_Basics.md` - Day 1, Hour 1 of Basic module
@@ -183,8 +183,8 @@ Each hour receives its own dedicated Markdown file formatted for direct instruct
 Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
 
 1. **Location**: 
-   - `Basics/lessons/lecture/Basics_DayX_homework.ipynb`
-   - `Advanced/lessons/lecture/Advanced_DayX_homework.ipynb`
+   - `Basics/lessons/Basics_DayX_homework.ipynb`
+   - `Advanced/lessons/Advanced_DayX_homework.ipynb`
 
 2. **Content Sources**:
    - Use corresponding runbook for learning objectives
@@ -201,8 +201,8 @@ Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
 Create quiz files to assess understanding:
 
 1. **Location**:
-   - `Basics/lessons/lecture/Basics_DayX_Quiz.md`
-   - `Advanced/lessons/lecture/Advanced_DayX_Quiz.md`
+   - `Basics/lessons/Basics_DayX_Quiz.md`
+   - `Advanced/lessons/Advanced_DayX_Quiz.md`
 
 2. **Requirements**:
    - 20-40 questions per quiz
