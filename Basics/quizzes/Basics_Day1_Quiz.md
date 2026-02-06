@@ -25,7 +25,7 @@ What command would you use in a terminal to check your Python version?
 
 A) `python check version`  
 B) `python --version`  
-C) `python -v`  
+C) `python -V`  
 D) Both B and C
 
 **Your Answer:** ___
@@ -419,7 +419,7 @@ D) Both B and C
 ## Section 1: Environment and Setup
 
 ### Question 1: **D**
-**Explanation:** Both `python --version` and `python -V` work to check the Python version. The double-dash `--version` is more explicit and commonly used, while `-V` is a shorthand. On some systems, you might need to use `python3` instead of `python`.
+**Explanation:** Both `python --version` (option B) and `python -V` (option C, with capital V) are valid commands to check the Python version. The double-dash `--version` is more explicit and commonly used, while `-V` is a shorthand. Note that lowercase `-v` enables verbose mode instead. On some systems, you might need to use `python3` instead of `python`.
 
 ### Question 2: **C**
 **Explanation:** Python scripts use the `.py` file extension. This tells the operating system and editors that the file contains Python code.
@@ -466,7 +466,7 @@ To print on the same line, you'd need to use `print("Python", end=" ")` or conca
 **Explanation:** Variable names in Python can contain letters, numbers, and underscores, but cannot contain hyphens (dashes). `student-name` would be interpreted as `student minus name`. Use `student_name` (snake_case) instead.
 
 ### Question 12: **A**
-**Explanation:** When you assign `y = x`, `y` gets the *value* that `x` currently holds (5). Changing `x` to 10 later doesn't affect `y`. This is because integers are immutable and assignment creates a copy of the value, not a reference.
+**Explanation:** When you assign `y = x`, the name `y` binds to the same object that `x` refers to (the integer 5). When you later reassign `x = 10`, you're binding the name `x` to a different object (the integer 10), but `y` remains bound to the original object (5). The reassignment of `x` doesn't affect `y` because name binding creates independent references.
 
 ### Question 13: **C**
 **Explanation:** `42` is an integer (`int`). Python 3 integers can be arbitrarily large and have no maximum size (unlike some other languages).
@@ -503,13 +503,13 @@ To print on the same line, you'd need to use `print("Python", end=" ")` or conca
 **Explanation:** `17 ÷ 5 = 3` with a remainder of `2`. The modulus operator `%` gives us that remainder: `17 % 5 = 2`.
 
 ### Question 23: **B**
-**Explanation:** In Python 3, `/` always performs "true division" and returns a float (e.g., `10 / 3 = 3.333...`). The `//` operator performs "floor division" and returns an integer (e.g., `10 // 3 = 3`).
+**Explanation:** In Python 3, `/` always performs "true division" and returns a float (e.g., `10 / 3 = 3.333...`). The `//` operator performs floor division, rounding down to the nearest integer. With integer operands, `//` returns an int (e.g., `10 // 3 = 3`); with float operands, it returns a float (e.g., `10.0 // 3 = 3.0`).
 
 ### Question 24: **D**
 **Explanation:** `10 / 3` returns a float: `3.3333333333333335`. Python shows many decimal places. If you want to display fewer, use `round()` or f-string formatting.
 
 ### Question 25: **A**
-**Explanation:** `10 // 3` uses floor division and returns `3` (an integer). It's like regular division but throws away the remainder.
+**Explanation:** `10 // 3` uses floor division and returns `3` (an integer). Floor division rounds down to the nearest whole number. With integer operands like these, the result is an int; with float operands, the result would be a float (e.g., `10.0 // 3 = 3.0`).
 
 ### Question 26: **B**
 **Explanation:** Python uses `**` for exponentiation. For example, `2 ** 3` means "2 to the power of 3". Note that `^` is used for bitwise XOR in Python, not exponentiation.

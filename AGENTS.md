@@ -189,8 +189,8 @@ Each hour receives its own dedicated Markdown file formatted for direct instruct
 Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
 
 1. **Location**: 
-   - `Basics/lessons/Basics_DayX_homework.ipynb`
-   - `Advanced/lessons/Advanced_DayX_homework.ipynb`
+   - `Basics/assignments/Basics_DayX_homework.ipynb`
+   - `Advanced/assignments/Advanced_DayX_homework.ipynb`
 
 2. **Content Sources**:
    - Use corresponding runbook for learning objectives
@@ -207,8 +207,8 @@ Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
 Create quiz files to assess understanding:
 
 1. **Location**:
-   - `Basics/lessons/Basics_DayX_Quiz.md`
-   - `Advanced/lessons/Advanced_DayX_Quiz.md`
+   - `Basics/quizzes/Basics_DayX_Quiz.md`
+   - `Advanced/quizzes/Advanced_DayX_Quiz.md`
 
 2. **Requirements**:
    - 20-40 questions per quiz
