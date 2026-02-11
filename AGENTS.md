@@ -189,8 +189,8 @@ Each hour receives its own dedicated Markdown file formatted for direct instruct
 Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
 
 1. **Location**: 
-   - `Basics/lessons/Basics_DayX_homework.ipynb`
-   - `Advanced/lessons/Advanced_DayX_homework.ipynb`
+   - `Basics/assignments/Basics_DayX_homework.ipynb`
+   - `Advanced/assignments/Advanced_DayX_homework.ipynb`
 
 2. **Content Sources**:
    - Use corresponding runbook for learning objectives
@@ -202,13 +202,53 @@ Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
    - Exercises should progressively build skills
    - Include problem descriptions, starter code, and test cases
 
+### Autograder & GitHub Classroom Integration
+
+Homework notebooks are graded automatically by the **Global Autograder**. Each assignment requires configuration files placed alongside the notebook.
+
+1. **Required files per assignment** (e.g., Day 1):
+   - `Basics/assignments/Basics_Day1_homework.ipynb` — the student notebook
+   - `Basics/assignments/Basics_Day1_homework/criteria.json` — test specifications (command, stdin, expected_stdout, points)
+   - `Basics/assignments/Basics_Day1_homework/setup.json` — dependency install, notebook-to-script conversion, file assertions
+   - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
+
+2. **Workflow overview**:
+   - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`.
+   - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
+   - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
+   - All outputs must be **deterministic** — no randomness, no live date/time, no unseeded state.
+   - Numeric values must match the **exact precision** specified in `criteria.json` (e.g., `85.50`, not `85.5`).
+
+3. **Notebook compatibility**:
+   - Notebooks must be self-contained (no external files or state).
+   - The kernel must be Python 3.x.
+   - The final code cell should contain only standard Python (no IPython magics such as `%%writefile`) so that `nbconvert` can convert it directly into the grading script. If you want to show a `day1.py` example to students, use a Markdown fenced code block in the notebook, not notebook magics.
+
+4. **Local testing**:
+   ```bash
+   # 1. Navigate to the assignment's config directory
+   cd Basics/assignments/Basics_Day1_homework/
+
+   # 2. Install dependencies and convert notebook (mimics setup.json)
+   python -m pip install nbconvert
+   jupyter nbconvert --to script ../Basics_Day1_homework.ipynb --output day1.py
+
+   # 3. Run the script and check output
+   python day1.py
+   Compare output to the canonical strings in `criteria.json`.
+
+5. **Important warnings**:
+   - **Do not rename** the notebook, config files, or move the assignment directory — this will break the autograder workflow.
+   - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
+   - All paths in `setup.json` are relative to the config directory (`Basics/assignments/Basics_Day1_homework/`). The notebook sits one level up, so use `../Basics_Day1_homework.ipynb` to reference it.
+
 ### Writing Multiple Choice Quizzes
 
 Create quiz files to assess understanding:
 
 1. **Location**:
-   - `Basics/lessons/Basics_DayX_Quiz.md`
-   - `Advanced/lessons/Advanced_DayX_Quiz.md`
+   - `Basics/quizzes/Basics_DayX_Quiz.md`
+   - `Advanced/quizzes/Advanced_DayX_Quiz.md`
 
 2. **Requirements**:
    - 20-40 questions per quiz
@@ -559,5 +599,5 @@ For questions or issues:
 
 ---
 
-**Last Updated**: 2026-02-03  
+**Last Updated**: 2026-02-11  
 **Repository**: https://github.com/dhar174/python_programming_courses
