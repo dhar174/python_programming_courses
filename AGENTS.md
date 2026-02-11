@@ -20,6 +20,21 @@ The content is primarily delivered as slides (generated with Marp), lecture scri
 - **[`.marprc.yml`](./.marprc.yml)** - Main configuration file for Marp slide generation. Specifies input directory (`./Basics/lessons`), output directory (`./_site/slides`), and output formats (PDF, PPTX, PNG images).
 - **[`marp.config.mjs`](./marp.config.mjs)** - Alternative Marp configuration in ES module format (JavaScript). Defines settings like `inputDir`, `output`, `themeSet`, PDF options, and browser settings.
 - **[`marp.config.ts`](./marp.config.ts)** - Marp configuration in TypeScript format for type-safe configuration.
+- **[`Prompt.md`](./Prompt.md)** - Memory file for the current goals, specification, and deliverables.
+- **[`Plans.md`](./Plans.md)** - Memory file for milestones and validation steps.
+- **[`Architecture.md`](./Architecture.md)** - Memory file for guiding principles and constraints.
+- **[`Implement.md`](./Implement.md)** - Implementation prompt that references `Plans.md` and `Architecture.md`.
+- **[`Documentation.md`](./Documentation.md)** - Memory file for milestone status updates and key decisions.
+
+### Long-Term Memory Files
+
+Use these files together to keep long-running work coherent across handoffs:
+
+- **Prompt.md**: Capture the mission, goals, specification, and deliverables at the start of an initiative.
+- **Plans.md**: Track milestones plus the validation steps required for each milestone.
+- **Architecture.md**: Record principles and constraints that should not drift.
+- **Implement.md**: Write the active implementation prompt, explicitly referencing Plans.md and Architecture.md.
+- **Documentation.md**: Log milestone status updates and decisions as work progresses.
 
 ### Directories
 
