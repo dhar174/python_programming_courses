@@ -5,7 +5,11 @@ echo "VALIDATING GENERATED HTML SLIDE DECKS"
 echo "==================================================================="
 echo ""
 
-slides_dir="slides"
+# Default to Basics/lessons/slides, but allow override via first argument
+slides_dir="${1:-Basics/lessons/slides}"
+
+echo "Validating slides in: $slides_dir"
+echo ""
 
 for html_file in "$slides_dir"/*.html; do
     if [ -f "$html_file" ]; then

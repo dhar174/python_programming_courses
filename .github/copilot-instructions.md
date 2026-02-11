@@ -69,9 +69,13 @@ npx @marp-team/marp-cli -w -c .marprc.yml
 ### Slide Validation
 
 ```bash
+# Validate locally generated slides (default: Basics/lessons/slides/)
 ./validate_slides.sh
+
+# Or specify a different directory
+./validate_slides.sh _site/slides  # For CI-built slides
 ```
-Checks for proper structure, navigation, CSS variables, and file integrity. Run from repository root.
+Checks for proper structure, navigation, CSS variables, and file integrity. Defaults to `Basics/lessons/slides/` for local development. For CI output, use `_site/slides/`.
 
 ### Autograder Testing
 
@@ -235,8 +239,11 @@ npx @marp-team/marp-cli -c .marprc.yml
 # Watch mode for development
 npx @marp-team/marp-cli -w -c .marprc.yml
 
-# Validate slides
+# Validate slides (defaults to Basics/lessons/slides/)
 ./validate_slides.sh
+
+# Validate CI output (if _site exists)
+./validate_slides.sh _site/slides
 
 # Test assignment locally
 cd Basics/assignments/Basics_Day1_homework/
@@ -270,7 +277,7 @@ Before committing changes:
 1. **For slides**: Build locally with `npx @marp-team/marp-cli -c .marprc.yml`
 2. **For assignments**: Test conversion and run script locally
 3. **For notebooks**: Restart kernel and run all cells
-4. **For any changes**: Run `./validate_slides.sh` if slides were modified
+4. **For slides validation**: Run `./validate_slides.sh` to validate HTML in `Basics/lessons/slides/` (or `./validate_slides.sh _site/slides` for CI output)
 5. **Always**: Check git status and review changes before pushing
 
 ## Custom Agents Available
