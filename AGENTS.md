@@ -23,7 +23,7 @@ The content is primarily delivered as slides (generated with Marp), lecture scri
 - **[`Prompt.md`](./Prompt.md)** - Memory file for the current goals, specification, and deliverables.
 - **[`Plans.md`](./Plans.md)** - Memory file for milestones and validation steps.
 - **[`Architecture.md`](./Architecture.md)** - Memory file for guiding principles and constraints.
-- **[`Implement.md`](./Implement.md)** - Implementation prompt that references the plan.
+- **[`Implement.md`](./Implement.md)** - Implementation prompt that references `Plans.md` and `Architecture.md`.
 - **[`Documentation.md`](./Documentation.md)** - Memory file for milestone status updates and key decisions.
 
 ### Long-Term Memory Files
