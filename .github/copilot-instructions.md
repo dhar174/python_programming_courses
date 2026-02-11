@@ -149,9 +149,13 @@ These define day-by-day (12 days), hour-by-hour (4 hours/day) breakdown, learnin
    - Location: `Basics/lessons/lecture/DayX_HourY_Basics.md` or `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
    - Must be readable verbatim during instruction with minimal paraphrasing
 
-2. **Slides** (Marp Markdown):
+2. **Slides** (Marp-compatible Markdown):
    - Use `---` for slide separators
-   - Front matter: `marp: true` and `theme: default` or custom theme
+   - Front matter is **optional**. When used, prefer fields like:
+     - `title`, `description`, `author`
+     - `theme` (typically `python-light` or `python-dark`)
+     - `size` (e.g., `16:9`) and `paginate: true` as needed
+   - If you need explicit Marp features (e.g., via CLI/GitHub Action), you may also add `marp: true` in the front matter, but existing slides work without it.
    - Themes available: `python-dark`, `python-light` (in respective `themes/` directories)
 
 3. **Homework Assignments** (Jupyter Notebooks):
