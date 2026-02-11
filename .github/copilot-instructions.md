@@ -146,7 +146,7 @@ These define day-by-day (12 days), hour-by-hour (4 hours/day) breakdown, learnin
 ### Content Creation Guidelines
 
 1. **Lecture Scripts** (Markdown files for instructor delivery):
-   - Location: `Basics/lessons/DayX_HourY_Basics.md` or `Advanced/lessons/DayX_HourY_Advanced.md`
+   - Location: `Basics/lessons/lecture/DayX_HourY_Basics.md` or `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
    - Must be readable verbatim during instruction with minimal paraphrasing
 
 2. **Slides** (Marp Markdown):
