@@ -532,6 +532,54 @@ Include:
 - **Browser issues**: Marp requires headless browser for PDF generation
 - **Memory constraints**: Large presentations may timeout
 
+## Autograder & GitHub Classroom Integration
+
+This repository is integrated with the **Global Autograder** for automated grading of Python assignments. The autograder provides automated feedback on student submissions, making it easier to assess homework assignments and exercises.
+
+### Workflow Configuration
+
+The autograder workflow is configured in [`.github/workflows/autograder.yml`](./.github/workflows/autograder.yml) and runs automatically on:
+- Pushes to the `main` branch
+- Pull requests targeting the `main` branch
+
+### How to Use the Autograder
+
+#### Assignment Configuration Files
+
+To use the autograder for your assignments, you need to create configuration files in your assignment directories:
+
+1. **`criteria.json`** (Required): Defines the grading criteria and test cases for the assignment
+2. **`setup.json`** (Optional): Specifies setup commands or environment configuration
+3. **`feedback.json`** (Optional): Customizes the feedback messages provided to students
+
+#### Template Configuration
+
+The workflow is configured with the **`io` template preset** by default, which is ideal for Python scripts that use standard input/output. This template:
+- Tests programs that read from standard input and write to standard output
+- Compares actual output against expected output
+- Provides detailed feedback on test case results
+
+If you need a different testing approach, you can:
+- Modify the `template_preset` value in `.github/workflows/autograder.yml`
+- Use the `custom` template option for complete control over test execution
+
+#### Documentation and Examples
+
+For detailed information on configuring the autograder, including:
+- How to write `criteria.json` files
+- Available template presets
+- Custom template creation
+- Advanced configuration options
+
+Please refer to the **official autograder documentation**:  
+📚 [Global Autograder Getting Started Guide](https://github.com/webtech-network/autograder/blob/main/docs/system/getting_started.md)
+
+### Example Use Cases
+
+- **Homework Assignments**: Automatically grade student submissions from Jupyter notebooks converted to Python scripts
+- **Practice Exercises**: Provide immediate feedback on coding exercises
+- **GitHub Classroom**: Integrate with GitHub Classroom assignments for automated assessment
+
 ## Additional Resources
 
 - **Marp Documentation**: https://marp.app/
@@ -539,6 +587,7 @@ Include:
 - **Python Institute**: https://pythoninstitute.org/
 - **PEP 8 Style Guide**: https://pep8.org/
 - **Markdown Guide**: https://www.markdownguide.org/
+- **Global Autograder**: https://github.com/webtech-network/autograder
 
 ## Support
 
