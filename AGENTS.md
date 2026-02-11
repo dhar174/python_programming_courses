@@ -226,10 +226,15 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 
 4. **Local testing**:
    ```bash
+   # 1. Navigate to the assignment's config directory
+   cd Basics/assignments/Basics_Day1_homework/
+
+   # 2. Install dependencies and convert notebook (mimics setup.json)
    python -m pip install nbconvert
-   jupyter nbconvert --to script Basics_Day1_homework.ipynb --output day1.py
+   jupyter nbconvert --to script ../Basics_Day1_homework.ipynb --output day1.py
+
+   # 3. Run the script and check output
    python day1.py
-   ```
    Compare output to the canonical strings in `criteria.json`.
 
 5. **Important warnings**:
