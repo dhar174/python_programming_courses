@@ -202,6 +202,41 @@ Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
    - Exercises should progressively build skills
    - Include problem descriptions, starter code, and test cases
 
+### Autograder & GitHub Classroom Integration
+
+Homework notebooks are graded automatically by the **Global Autograder**. Each assignment requires configuration files placed alongside the notebook.
+
+1. **Required files per assignment** (e.g., Day 1):
+   - `Basics/assignments/Basics_Day1_homework.ipynb` — the student notebook
+   - `Basics/assignments/Basics_Day1_homework/criteria.json` — test specifications (command, stdin, expected_stdout, points)
+   - `Basics/assignments/Basics_Day1_homework/setup.json` — dependency install, notebook-to-script conversion, file assertions
+   - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
+
+2. **Workflow overview**:
+   - The autograder workflow (`.github/workflows/autograder.yml`) runs on push/PR to `main`.
+   - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
+   - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
+   - All outputs must be **deterministic** — no randomness, no live date/time, no unseeded state.
+   - Numeric values must match the **exact precision** specified in `criteria.json` (e.g., `85.50`, not `85.5`).
+
+3. **Notebook compatibility**:
+   - Notebooks must be self-contained (no external files or state).
+   - The kernel must be Python 3.x.
+   - A helper cell using `%%writefile day1.py` should be included at the end of each notebook to let students preview the canonical grading script.
+
+4. **Local testing**:
+   ```bash
+   python -m pip install nbconvert
+   jupyter nbconvert --to script Basics_Day1_homework.ipynb --output day1.py
+   python day1.py
+   ```
+   Compare output to the canonical strings in `criteria.json`.
+
+5. **Important warnings**:
+   - **Do not rename** the notebook, config files, or move the assignment directory — this will break the autograder workflow.
+   - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
+   - All paths are relative to the assignment directory.
+
 ### Writing Multiple Choice Quizzes
 
 Create quiz files to assess understanding:
@@ -510,5 +545,5 @@ For questions or issues:
 
 ---
 
-**Last Updated**: 2026-02-02  
+**Last Updated**: 2026-02-11  
 **Repository**: https://github.com/dhar174/python_programming_courses
