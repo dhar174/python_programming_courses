@@ -213,7 +213,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
    - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
 
 2. **Workflow overview**:
-   - The autograder workflow (`.github/workflows/autograder.yml`) runs on push/PR to `main`.
+   - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`.
    - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
    - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
    - All outputs must be **deterministic** — no randomness, no live date/time, no unseeded state.
@@ -222,7 +222,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 3. **Notebook compatibility**:
    - Notebooks must be self-contained (no external files or state).
    - The kernel must be Python 3.x.
-   - A helper cell using `%%writefile day1.py` should be included at the end of each notebook to let students preview the canonical grading script.
+   - The final code cell should contain only standard Python (no IPython magics such as `%%writefile`) so that `nbconvert` can convert it directly into the grading script. If you want to show a `day1.py` example to students, use a Markdown fenced code block in the notebook, not notebook magics.
 
 4. **Local testing**:
    ```bash
@@ -235,7 +235,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 5. **Important warnings**:
    - **Do not rename** the notebook, config files, or move the assignment directory — this will break the autograder workflow.
    - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
-   - All paths are relative to the assignment directory.
+   - All paths in `setup.json` are relative to the config directory (`Basics/assignments/Basics_Day1_homework/`). The notebook sits one level up, so use `../Basics_Day1_homework.ipynb` to reference it.
 
 ### Writing Multiple Choice Quizzes
 
