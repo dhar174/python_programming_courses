@@ -19,10 +19,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Prepare autograder configuration
+        run: |
+          mkdir -p submission/.github/autograder
+          cp Basics/assignments/Basics_Day1_homework.ipynb submission/.github/autograder/Basics_Day1_homework.ipynb
+          cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
+          cp Basics/assignments/Basics_Day1_homework/feedback.json submission/.github/autograder/feedback.json
+          cp Basics/assignments/Basics_Day1_homework/setup.json submission/.github/autograder/setup.json
+          sed -i 's#../Basics_Day1_homework.ipynb#Basics_Day1_homework.ipynb#' submission/.github/autograder/setup.json
+          sed -i 's/--output day1.py/--output day1/' submission/.github/autograder/setup.json
       
       - name: Run autograder
         uses: webtech-network/autograder@v1
         with:
           template_preset: 'io'
           feedback-type: 'default'
-          include-feedback: 'true'
