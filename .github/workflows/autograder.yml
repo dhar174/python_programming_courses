@@ -31,6 +31,8 @@ jobs:
           sed -i 's#--output day1.py#--output day1#' submission/.github/autograder/setup.json
           grep -q 'Basics_Day1_homework.ipynb' submission/.github/autograder/setup.json || (echo "Expected notebook path rewrite missing in setup.json" && exit 1)
           grep -q -- '--output day1' submission/.github/autograder/setup.json || (echo "Expected nbconvert output rewrite missing in setup.json" && exit 1)
+          ! grep -q '\.\./Basics_Day1_homework\.ipynb' submission/.github/autograder/setup.json || (echo "Old notebook path still present in setup.json" && exit 1)
+          ! grep -q -- '--output day1.py' submission/.github/autograder/setup.json || (echo "Old nbconvert output value still present in setup.json" && exit 1)
       
       - name: Run autograder
         uses: webtech-network/autograder@v1
