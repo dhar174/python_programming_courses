@@ -27,6 +27,9 @@ jobs:
           cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
           cp Basics/assignments/Basics_Day1_homework/feedback.json submission/.github/autograder/feedback.json
           cp Basics/assignments/Basics_Day1_homework/setup.json submission/.github/autograder/setup.json
+          test -f submission/.github/autograder/criteria.json || (echo "Missing copied criteria.json" && exit 1)
+          test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
+          test -f submission/.github/autograder/setup.json || (echo "Missing copied setup.json" && exit 1)
           sed -i 's#../Basics_Day1_homework.ipynb#Basics_Day1_homework.ipynb#' submission/.github/autograder/setup.json
           sed -i 's#--output day1.py#--output day1#' submission/.github/autograder/setup.json
           grep -q 'Basics_Day1_homework.ipynb' submission/.github/autograder/setup.json || (echo "Expected notebook path rewrite missing in setup.json" && exit 1)
