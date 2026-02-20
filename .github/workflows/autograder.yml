@@ -71,7 +71,9 @@ jobs:
           python - << 'PY'
           import json
           from pathlib import Path
-          json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
-          json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
-          print('Autograder source configuration files are readable JSON.')
+          criteria = json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
+          feedback = json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
+          assert isinstance(criteria.get('tests'), list), "criteria.json must contain a tests array"
+          assert isinstance(feedback, dict), "feedback.json must be a JSON object"
+          print('Autograder source configuration files passed basic JSON structure checks.')
           PY
