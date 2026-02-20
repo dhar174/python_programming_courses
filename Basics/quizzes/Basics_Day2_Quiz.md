@@ -577,7 +577,7 @@ D) Using the `input()` function
 **Explanation:** This pattern chains methods to normalize user input: `.strip()` removes leading/trailing whitespace, then `.lower()` converts to lowercase. This makes comparisons more robust: "Yes", " yes ", and "YES" all become "yes". Method chaining works because each method returns a string, which you can immediately call another method on.
 
 ### Question 29: **C**
-**Explanation:** `max(words, key=len)` finds the word with the maximum length. The `key=len` parameter tells `max()` to compare words by their length rather than alphabetically. Option A (`max(words)`) would return the alphabetically last word ("is" or "great"), not the longest. This is a powerful pattern for finding items based on custom criteria.
+**Explanation:** `max(words, key=len)` finds the word with the maximum length. The `key=len` parameter tells `max()` to compare words by their length rather than alphabetically. Option A (`max(words)`) would return the lexicographically largest word ("is"), not the longest. This is a powerful pattern for finding items based on custom criteria.
 
 ### Question 30: **A**
 **Explanation:** A very common error is trying to concatenate strings and numbers without conversion: `"Age: " + 25` raises a `TypeError`. You must convert first: `"Age: " + str(25)` or use an f-string: `f"Age: {25}"`. Python won't implicitly convert types for string concatenation, which helps catch bugs but requires explicit conversions.
