@@ -14,15 +14,79 @@ permissions:
 
 jobs:
   grade:
+    if: github.event_name == 'push'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Prepare autograder configuration
+        run: |
+          mkdir -p submission/.github/autograder
+          cp Basics/assignments/Basics_Day1_homework.ipynb submission/Basics_Day1_homework.ipynb
+          cp Basics/assignments/Basics_Day1_homework.ipynb submission/.github/autograder/Basics_Day1_homework.ipynb
+          cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
+          cp Basics/assignments/Basics_Day1_homework/feedback.json submission/.github/autograder/feedback.json
+          test -f submission/Basics_Day1_homework.ipynb || (echo "Missing copied submission/Basics_Day1_homework.ipynb" && exit 1)
+          test -f submission/.github/autograder/Basics_Day1_homework.ipynb || (echo "Missing copied Basics_Day1_homework.ipynb" && exit 1)
+          test -f submission/.github/autograder/criteria.json || (echo "Missing copied criteria.json" && exit 1)
+          test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
+          cat << 'EOF' > submission/.github/autograder/setup.json
+          {
+            "file_checks": ["Basics_Day1_homework.ipynb"],
+            "commands": [
+              "python -m pip install --quiet --upgrade pip",
+              "python -m pip install nbconvert",
+              "jupyter nbconvert --to script Basics_Day1_homework.ipynb --output day1",
+              "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
+            ]
+          }
+          EOF
+          test -f submission/.github/autograder/setup.json || (echo "Missing generated setup.json" && exit 1)
       
       - name: Run autograder
-        uses: webtech-network/autograder@main
+        uses: webtech-network/autograder@v1
         with:
           template_preset: 'io'
           feedback-type: 'default'
-          include-feedback: 'true'
+
+  grade_pr:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate autograder source configuration
+        run: |
+          test -f Basics/assignments/Basics_Day1_homework.ipynb
+          test -f Basics/assignments/Basics_Day1_homework/criteria.json
+          test -f Basics/assignments/Basics_Day1_homework/feedback.json
+          python - << 'PY'
+          import json
+          import sys
+          from pathlib import Path
+          try:
+              criteria = json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
+          except json.JSONDecodeError as exc:
+              print(f'criteria.json is invalid JSON: {exc}')
+              sys.exit(1)
+          try:
+              feedback = json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
+          except json.JSONDecodeError as exc:
+              print(f'feedback.json is invalid JSON: {exc}')
+              sys.exit(1)
+          if not isinstance(criteria.get('tests'), list):
+              print('criteria.json must contain a tests array')
+              sys.exit(1)
+          if not isinstance(feedback, dict):
+              print('feedback.json must be a JSON object')
+              sys.exit(1)
+          print('Autograder source configuration files passed basic JSON structure checks.')
+          PY
