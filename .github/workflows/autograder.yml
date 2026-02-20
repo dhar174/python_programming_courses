@@ -52,3 +52,26 @@ jobs:
         with:
           template_preset: 'io'
           feedback-type: 'default'
+
+  grade_pr:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate autograder source configuration
+        run: |
+          test -f Basics/assignments/Basics_Day1_homework.ipynb
+          test -f Basics/assignments/Basics_Day1_homework/criteria.json
+          test -f Basics/assignments/Basics_Day1_homework/feedback.json
+          python - << 'PY'
+          import json
+          from pathlib import Path
+          json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
+          json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
+          print('Autograder source configuration files are readable JSON.')
+          PY
