@@ -70,13 +70,13 @@ jobs:
             exit 0
           fi
 
-          git checkout -b "${BRANCH_NAME}" || { echo "Failed to create branch ${BRANCH_NAME}"; exit 1; }
+          git checkout -b "${BRANCH_NAME}" HEAD || { echo "Failed to create branch ${BRANCH_NAME}"; exit 1; }
           git commit -m "Autograder results on ${DATETIME}" || { echo "Failed to commit autograder outputs"; exit 1; }
           git push origin "${BRANCH_NAME}" || { echo "Failed to push branch ${BRANCH_NAME}"; exit 1; }
           echo "branch_name=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Print autograder results branch
-        if: steps.commit_results.outputs.branch_name != ''
+        if: steps.commit_results.outcome == 'success' && steps.commit_results.outputs.branch_name != ''
         run: |
           echo "Autograder results branch: ${{ steps.commit_results.outputs.branch_name }}"
 
