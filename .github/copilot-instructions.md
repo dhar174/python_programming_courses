@@ -117,11 +117,12 @@ pip install jupyter nbconvert
 
 2. **Autograder** (`.github/workflows/autograder.yml`)
    - **Triggers**: Push/PR to `main`
-   - **Uses**: `webtech-network/autograder@main` with `io` template preset
+   - **Uses**: `webtech-network/autograder@v1` with `io` template preset
    - **Config files per assignment**:
-     - `criteria.json` - Test cases with stdin/stdout expectations
-     - `setup.json` - Notebook conversion and dependency installation
-     - `feedback.json` - Optional custom feedback messages
+      - `criteria.json` - Test cases with stdin/stdout expectations
+      - `setup.json` - Notebook conversion and dependency installation
+      - `feedback.json` - Optional custom feedback messages
+   - **Runtime note**: The workflow prepares `submission/.github/autograder/` at runtime and generates a v1-compatible `setup.json` there. Keep authoring assignment configs in `Basics/assignments/Basics_DayX_homework/`.
 
 ### Configuration Files
 
@@ -213,6 +214,7 @@ Basics/assignments/
 - Do NOT rename notebooks, config files, or move assignment directories
 - All paths in `setup.json` are relative to the config directory
 - Notebooks must be self-contained with no external dependencies
+- Keep the assignment notebook name stable (`Basics_DayX_homework.ipynb`), because workflow pre-flight checks look for that filename under `submission/`.
 
 ## Code Style and Standards
 

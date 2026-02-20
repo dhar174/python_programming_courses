@@ -228,11 +228,13 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
    - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
 
 2. **Workflow overview**:
-   - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`.
-   - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
-   - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
-   - All outputs must be **deterministic** — no randomness, no live date/time, no unseeded state.
-   - Numeric values must match the **exact precision** specified in `criteria.json` (e.g., `85.50`, not `85.5`).
+    - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`.
+    - The workflow uses `webtech-network/autograder@v1`.
+    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks.
+    - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
+    - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
+    - All outputs must be **deterministic** — no randomness, no live date/time, no unseeded state.
+    - Numeric values must match the **exact precision** specified in `criteria.json` (e.g., `85.50`, not `85.5`).
 
 3. **Notebook compatibility**:
    - Notebooks must be self-contained (no external files or state).
@@ -253,9 +255,10 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
    Compare output to the canonical strings in `criteria.json`.
 
 5. **Important warnings**:
-   - **Do not rename** the notebook, config files, or move the assignment directory — this will break the autograder workflow.
-   - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
-   - All paths in `setup.json` are relative to the config directory (`Basics/assignments/Basics_Day1_homework/`). The notebook sits one level up, so use `../Basics_Day1_homework.ipynb` to reference it.
+    - **Do not rename** the notebook, config files, or move the assignment directory — this will break the autograder workflow.
+    - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
+    - All paths in `setup.json` are relative to the config directory (`Basics/assignments/Basics_Day1_homework/`). The notebook sits one level up, so use `../Basics_Day1_homework.ipynb` to reference it.
+    - Keep notebook filenames in the `Basics_DayX_homework.ipynb` / `Advanced_DayX_homework.ipynb` pattern so workflow runtime checks can find them.
 
 ### Writing Multiple Choice Quizzes
 
@@ -556,6 +559,7 @@ This repository is integrated with the **Global Autograder** for automated gradi
 The autograder workflow is configured in [`.github/workflows/autograder.yml`](./.github/workflows/autograder.yml) and runs automatically on:
 - Pushes to the `main` branch
 - Pull requests targeting the `main` branch
+- It uses `webtech-network/autograder@v1` and prepares runtime files under `submission/.github/autograder/` for v1 adapter compatibility.
 
 ### How to Use the Autograder
 
