@@ -228,9 +228,9 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
    - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
 
 2. **Workflow overview**:
-    - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`.
+    - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`, plus manual `workflow_dispatch`.
     - The workflow uses `webtech-network/autograder@v1`.
-    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks.
+    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime, copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks, and commits/pushes autograder output changes to a timestamped `autograder-results-*` branch.
     - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
     - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
     - All outputs must be **deterministic** — no randomness, no live date/time, no unseeded state.
@@ -559,7 +559,8 @@ This repository is integrated with the **Global Autograder** for automated gradi
 The autograder workflow is configured in [`.github/workflows/autograder.yml`](./.github/workflows/autograder.yml) and runs automatically on:
 - Pushes to the `main` branch
 - Pull requests targeting the `main` branch
-- It uses `webtech-network/autograder@v1` and prepares runtime files under `submission/.github/autograder/` for v1 adapter compatibility.
+- Manual `workflow_dispatch` from the Actions UI
+- It uses `webtech-network/autograder@v1`, prepares runtime files under `submission/.github/autograder/` for v1 adapter compatibility, and commits/pushes autograder output changes to timestamped `autograder-results-*` branches.
 
 ### How to Use the Autograder
 
