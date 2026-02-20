@@ -72,8 +72,16 @@ jobs:
           import json
           import sys
           from pathlib import Path
-          criteria = json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
-          feedback = json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
+          try:
+              criteria = json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
+          except json.JSONDecodeError as exc:
+              print(f'criteria.json is invalid JSON: {exc}')
+              sys.exit(1)
+          try:
+              feedback = json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
+          except json.JSONDecodeError as exc:
+              print(f'feedback.json is invalid JSON: {exc}')
+              sys.exit(1)
           if not isinstance(criteria.get('tests'), list):
               print('criteria.json must contain a tests array')
               sys.exit(1)
