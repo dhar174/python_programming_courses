@@ -123,8 +123,8 @@
 
     function formatPrompt(markdownText) {
       let text = escapeHtml(markdownText);
-      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${escapeHtml(code).trimEnd()}</code></pre>`);
-      text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
       return text.replace(/\n/g, '<br />');
     }
 
