@@ -1,28 +1,79 @@
-# Basics Quiz HTML Format (Day 1 & Day 2)
+# Basics Quiz HTML + Autograder Grading Reference (Day 1 & Day 2)
 
-Day 1 and Day 2 quizzes now use interactive HTML files:
+Day 1 and Day 2 quizzes are interactive HTML files:
 
-- `Basics_Day1_Quiz.html`
-- `Basics_Day2_Quiz.html`
+- `Basics/quizzes/Basics_Day1_Quiz.html` (or `Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html`)
+- `Basics/quizzes/Basics_Day2_Quiz.html` (or `Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html`)
 
-## Student usage
+## Student answer export and required filenames
 
 1. Open the quiz HTML file in a browser.
 2. Select one answer per question.
-3. Answers are saved immediately in browser `localStorage` and restored on reload.
-4. Click **Save/Export Answers (JSON)** to download your response file.
-   The download is pre-named to match autograder expectations (e.g., `Basics_Day1_Quiz_answers.json`).
+3. Answers are saved in browser `localStorage`.
+4. Click **Save/Export Answers (JSON)**.
 
-For autograder pickup, keep the exported filename as:
+Keep the exported filename unchanged so the workflow can find it:
 
-- `Basics_Day1_Quiz_answers.json` for Day 1
-- `Basics_Day2_Quiz_answers.json` for Day 2
+- `Basics_Day1_Quiz_answers.json`
+- `Basics_Day2_Quiz_answers.json`
 
-## Autograder compatibility note (`criteria.json`)
+Expected location for grading pickup:
 
-The exported JSON includes:
+- `Basics/quizzes/Basics_Day1_Quiz_answers.json` or next to the Day 1 HTML file
+- `Basics/quizzes/Basics_Day2_Quiz_answers.json` or next to the Day 2 HTML file
 
-- `student_answers` (question -> selected option)
-- `criteria_like_tests` (per-question entries with `name`, `points`, `expected_stdout`, `student_stdout`, and `pass`)
+## Expected exported JSON structure
 
-This mirrors the per-test structure used by autograder `criteria.json` workflows, so maintainers can map each exported question entry to a `tests[]` item for grading pipelines.
+Each quiz export contains metadata plus answer/test data. Example:
+
+```json
+{
+  "quiz_id": "Basics_Day1_Quiz",
+  "title": "Python Basics - Day 1 Quiz",
+  "exported_at": "2026-02-21T00:00:00.000Z",
+  "student_answers": {
+    "1": "D",
+    "2": "C"
+  },
+  "expected_answers": {
+    "1": "D",
+    "2": "C"
+  },
+  "criteria_like_tests": [
+    {
+      "name": "Question 1",
+      "points": 1,
+      "expected_stdout": ["D"],
+      "student_stdout": ["D"],
+      "pass": true
+    }
+  ]
+}
+```
+
+`student_answers` is the field consumed by `.github/workflows/autograder.yml` for score calculation. Question IDs must be numeric string keys.
+
+## How this maps to `criteria.json` and the workflow
+
+- Assignment grading still uses `Basics/assignments/Basics_DayX_homework/criteria.json` + `setup.json`.
+- Quiz grading runs in `.github/workflows/autograder.yml` (`Grade Basics HTML quizzes` step), reads `expectedAnswers` from quiz HTML, and compares to `student_answers` from exported JSON.
+- The workflow writes criteria-style quiz outputs to:
+  - `submission/.github/autograder/Basics_Day1_Quiz_criteria.json`
+  - `submission/.github/autograder/Basics_Day2_Quiz_criteria.json`
+  - `submission/.github/autograder/quiz_grades.json`
+
+Generated quiz criteria files follow the same `tests[]` shape used by `criteria.json`, for example:
+
+```json
+{
+  "tests": [
+    {
+      "name": "Basics_Day1_Quiz Question 1",
+      "points": 1,
+      "expected_stdout": ["D"],
+      "student_stdout": ["D"],
+      "pass": true
+    }
+  ]
+}
+```

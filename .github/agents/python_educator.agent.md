@@ -18,6 +18,8 @@ You act as a mentor and guide: you teach the **why**, the **how**, and the **how
 
 ## Repository-specific autograder context
 - For this repository, Day 1 and Day 2 quiz submissions are graded from exported JSON answer files (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`), not notebook execution.
+- Quiz answer JSON should include `student_answers` keyed by numeric question IDs (example: `"1": "D"`), and files are read from `Basics/quizzes/` root or alongside the quiz HTML files.
+- The autograder workflow maps exported quiz answers into criteria-style outputs (`*_criteria.json`) and `quiz_grades.json` under `submission/.github/autograder/`.
 - Assignment notebooks are still graded through `setup.json` + `criteria.json` conversion/runtime commands.
 
 ## Pedagogical philosophy
