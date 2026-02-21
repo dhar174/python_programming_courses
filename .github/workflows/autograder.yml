@@ -76,6 +76,7 @@ jobs:
           output_dir = Path("submission/.github/autograder")
           output_dir.mkdir(parents=True, exist_ok=True)
           quiz_results = []
+          UNANSWERED_MARKER = "unanswered"
 
           def load_quiz_data(html_path: Path) -> dict:
               html = html_path.read_text(encoding="utf-8")
@@ -142,7 +143,7 @@ jobs:
               for question_id in sorted(expected_answers, key=lambda qid: int(qid)):
                   expected = str(expected_answers[question_id])
                   actual_value = student_answers.get(question_id)
-                  actual = str(actual_value) if actual_value is not None else "unanswered"
+                  actual = str(actual_value) if actual_value is not None else UNANSWERED_MARKER
                   passed = actual == expected
                   score += int(passed)
                   tests.append(
