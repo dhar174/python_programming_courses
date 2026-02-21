@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 1 Quiz</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --border: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+    .header-card, .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0 0 8px; font-size: 1.8rem; }
+    h2 { margin: 8px 0 0; font-size: 1.1rem; color: var(--muted); }
+    ul { margin: 8px 0 0 20px; padding: 0; }
+    .meta { color: var(--muted); font-size: 0.95rem; margin-top: 8px; }
+    .question-number { font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+    .question-prompt { margin-bottom: 12px; white-space: pre-wrap; }
+    .question-prompt code { background: #f1f5f9; padding: 0 4px; border-radius: 4px; }
+    .question-prompt pre { background: #0f172a; color: #e2e8f0; padding: 10px; border-radius: 10px; overflow-x: auto; }
+    .options { display: grid; gap: 8px; }
+    .option-row {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .option-row:hover { border-color: var(--accent); background: #f8fbff; }
+    .option-row input { margin-right: 8px; }
+    .option-row input:checked + span { color: #1d4ed8; font-weight: 600; }
+    .option-row:has(input:checked) { border-color: #93c5fd; background: var(--accent-soft); }
+    .actions { margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    button {
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #1d4ed8; }
+    #status { color: var(--muted); font-size: 0.9rem; }
+    .compat-note { font-size: 0.9rem; color: var(--muted); margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <!-- Autograder integration note: Exported JSON includes criteria_like_tests entries that mirror criteria.json test semantics (expected vs student output) per question. -->
+  <main class="container">
+    <section class="header-card">
+      <h1>Python Basics - Day 1 Quiz</h1>
+      <div class="meta">Total Questions: 30 • Time Estimate: 45-60 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul>
+          <li>Environment orientation and setup</li>
+          <li>First scripts: print(), comments, and reading errors</li>
+          <li>Variables and basic types</li>
+          <li>Numbers and operators</li>
+      </ul>
+      <h2>Instructions</h2>
+      <ul>
+          <li>Answer all questions</li>
+          <li>For multiple choice, select the best answer</li>
+          <li>For code questions, write your answer or predict the output</li>
+          <li>Check your answers at the end</li>
+          <li>Review explanations for any questions you missed</li>
+      </ul>
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download your responses. The file includes <code>student_answers</code> and a <code>criteria_like_tests</code> array so maintainers can map each question to autograder-style checks similar to <code>criteria.json</code> test entries.</p>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="header-card">
+      <div class="actions">
+        <button id="exportBtn" type="button">Save/Export Answers (JSON)</button>
+        <span id="status">Selections are auto-saved in localStorage.</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const QUIZ_DATA = {"quizId": "Basics_Day1_Quiz", "title": "Python Basics - Day 1 Quiz", "questions": [{"number": 1, "prompt": "What command would you use in a terminal to check your Python version?", "options": {"A": "`python check version`", "B": "`python --version`", "C": "`python -V`", "D": "Both B and C"}}, {"number": 2, "prompt": "Which file extension is used for Python scripts?", "options": {"A": "`.python`", "B": "`.pyt`", "C": "`.py`", "D": "`.script`"}}, {"number": 3, "prompt": "What is the difference between running Python code in a REPL (interactive mode) versus running a `.py` file?", "options": {"A": "There is no difference", "B": "REPL executes line-by-line interactively; `.py` files run the entire script", "C": "`.py` files are faster", "D": "REPL only works with Python 2"}}, {"number": 4, "prompt": "Why is it important to save your work in a consistent workspace folder?", "options": {"A": "Python won't run otherwise", "B": "It helps manage imports and file paths consistently", "C": "It's required by PEP 8", "D": "It makes your code run faster"}}, {"number": 5, "prompt": "What should you do before taking a break in a cloud-based lab environment?", "options": {"A": "Close all files", "B": "Restart the VM", "C": "Save all files and suspend the session", "D": "Nothing special"}}, {"number": 6, "prompt": "What is the correct syntax for printing \"Hello, World!\" in Python 3?", "options": {"A": "`print \"Hello, World!\"`", "B": "`print(\"Hello, World!\")`", "C": "`echo(\"Hello, World!\")`", "D": "`console.log(\"Hello, World!\")`"}}, {"number": 7, "prompt": "How do you write a single-line comment in Python?", "options": {"A": "`// This is a comment`", "B": "`/* This is a comment */`", "C": "`# This is a comment`", "D": "`-- This is a comment`"}}, {"number": 8, "prompt": "What will this code output?\n\n```python\nprint(\"Python\")\nprint(\"is\")\nprint(\"awesome!\")\n```", "options": {"A": "`Python is awesome!`", "B": "`Python` `is` `awesome!` (on separate lines)", "C": "An error", "D": "Nothing"}}, {"number": 9, "prompt": "Which of the following will cause a syntax error?", "options": {"A": "`print(\"Hello\")`", "B": "`print('Hello')`", "C": "`print(\"Hello)`", "D": "`print(\"Hello\", \"World\")`"}}, {"number": 10, "prompt": "What information does a Python error message typically provide?", "options": {"A": "Only the error type", "B": "The line number where the error occurred", "C": "A description of what went wrong", "D": "All of the above"}}, {"number": 11, "prompt": "Which of the following is NOT a valid variable name in Python?", "options": {"A": "`student_name`", "B": "`studentName`", "C": "`student-name`", "D": "`student_name_2`"}}, {"number": 12, "prompt": "What will this code print?\n\n```python\nx = 5\ny = x\nx = 10\nprint(y)\n```", "options": {"A": "`5`", "B": "`10`", "C": "`15`", "D": "An error"}}, {"number": 13, "prompt": "What is the data type of `42`?", "options": {"A": "`float`", "B": "`str`", "C": "`int`", "D": "`number`"}}, {"number": 14, "prompt": "What is the data type of `\"42\"`?", "options": {"A": "`float`", "B": "`str`", "C": "`int`", "D": "`number`"}}, {"number": 15, "prompt": "What function can you use to check the data type of a variable?", "options": {"A": "`typeof()`", "B": "`type()`", "C": "`datatype()`", "D": "`check_type()`"}}, {"number": 16, "prompt": "What will this code output?\n\n```python\nname = \"Alice\"\nage = 25\nprint(type(name))\nprint(type(age))\n```", "options": {"A": "`<class 'string'>` and `<class 'integer'>`", "B": "`<class 'str'>` and `<class 'int'>`", "C": "`string` and `integer`", "D": "`str` and `int`"}}, {"number": 17, "prompt": "Which value is a boolean?", "options": {"A": "`\"True\"`", "B": "`1`", "C": "`True`", "D": "`yes`"}}, {"number": 18, "prompt": "What happens if you try to use a variable that hasn't been defined?", "options": {"A": "Python assigns it a default value", "B": "It evaluates to `None`", "C": "You get a `NameError`", "D": "The program continues normally"}}, {"number": 19, "prompt": "What is the result of `10 + 5 * 2`?", "options": {"A": "`30`", "B": "`20`", "C": "`25`", "D": "`17`"}}, {"number": 20, "prompt": "What is the result of `(10 + 5) * 2`?", "options": {"A": "`30`", "B": "`20`", "C": "`25`", "D": "`17`"}}, {"number": 21, "prompt": "What operator would you use to calculate the remainder of a division?", "options": {"A": "`/`", "B": "`//`", "C": "`%`", "D": "`rem`"}}, {"number": 22, "prompt": "What is the result of `17 % 5`?", "options": {"A": "`3`", "B": "`2`", "C": "`3.4`", "D": "`12`"}}, {"number": 23, "prompt": "What is the difference between `/` and `//` in Python 3?", "options": {"A": "There is no difference", "B": "`/` returns a float; `//` returns an integer (floor division)", "C": "`//` is faster", "D": "`/` only works with integers"}}, {"number": 24, "prompt": "What is the result of `10 / 3`?", "options": {"A": "`3`", "B": "`3.0`", "C": "`3.33`", "D": "`3.3333333333333335`"}}, {"number": 25, "prompt": "What is the result of `10 // 3`?", "options": {"A": "`3`", "B": "`3.0`", "C": "`3.33`", "D": "`3.3333333333333335`"}}, {"number": 26, "prompt": "What operator is used for exponentiation (power) in Python?", "options": {"A": "`^`", "B": "`**`", "C": "`pow`", "D": "`exp`"}}, {"number": 27, "prompt": "What is the result of `2 ** 3`?", "options": {"A": "`5`", "B": "`6`", "C": "`8`", "D": "`9`"}}, {"number": 28, "prompt": "What will this code print?\n\n```python\nx = 10\nx = x + 5\nprint(x)\n```", "options": {"A": "`10`", "B": "`15`", "C": "`105`", "D": "An error"}}, {"number": 29, "prompt": "What is a more concise way to write `x = x + 5`?", "options": {"A": "`x + 5`", "B": "`x += 5`", "C": "`x =+ 5`", "D": "`x++5`"}}, {"number": 30, "prompt": "If you want to display a number with exactly 2 decimal places, which approach is most appropriate?", "options": {"A": "`print(x)`", "B": "`print(round(x, 2))`", "C": "`print(f\"{x:.2f}\")`", "D": "Both B and C"}}], "expectedAnswers": {"1": "D", "2": "C", "3": "B", "4": "B", "5": "C", "6": "B", "7": "C", "8": "B", "9": "C", "10": "D", "11": "C", "12": "A", "13": "C", "14": "B", "15": "B", "16": "B", "17": "C", "18": "C", "19": "B", "20": "A", "21": "C", "22": "B", "23": "B", "24": "D", "25": "A", "26": "B", "27": "C", "28": "B", "29": "B", "30": "D"}};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatPrompt(markdownText) {
+      let text = escapeHtml(markdownText);
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      return text.replace(/\n/g, '<br />');
+    }
+
+    function loadAnswers() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers(answers) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+      const status = document.getElementById('status');
+      status.textContent = `Saved ${Object.keys(answers).length}/${QUIZ_DATA.questions.length} answers locally.`;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById('questions');
+      const saved = loadAnswers();
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join('');
+        return `
+          <article class="question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+          </article>
+        `;
+      }).join('');
+
+      container.addEventListener('change', (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        const answers = loadAnswers();
+        const questionNumber = event.target.name.replace('q', '');
+        answers[questionNumber] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const qid = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[qid] || null;
+        const student = studentAnswers[qid] || null;
+        return {
+          name: `Question ${qid}`,
+          points: 1,
+          expected_stdout: [expected],
+          student_stdout: [student],
+          pass: expected !== null && student === expected
+        };
+      });
+
+      const exportPayload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: 'Map each criteria_like_tests item to criteria.json tests entries as needed for automated grading.'
+      };
+
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers);
+    renderQuiz();
+  </script>
+</body>
+</html>
