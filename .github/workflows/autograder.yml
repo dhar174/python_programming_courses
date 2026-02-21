@@ -54,6 +54,138 @@ jobs:
           template_preset: 'io'
           feedback-type: 'default'
 
+      - name: Grade Basics HTML quizzes
+        run: |
+          python - << 'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          QUIZ_HTML_PATHS = {
+              "Basics_Day1_Quiz": [
+                  Path("Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html"),
+                  Path("Basics/quizzes/Basics_Day1_Quiz.html"),
+              ],
+              "Basics_Day2_Quiz": [
+                  Path("Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html"),
+                  Path("Basics/quizzes/Basics_Day2_Quiz.html"),
+              ],
+          }
+
+          output_dir = Path("submission/.github/autograder")
+          output_dir.mkdir(parents=True, exist_ok=True)
+          quiz_results = []
+          UNANSWERED_MARKER = "unanswered"
+
+          def load_quiz_data(html_path: Path) -> dict:
+              html = html_path.read_text(encoding="utf-8")
+              start_marker = "const QUIZ_DATA = "
+              end_marker = ";\n    const STORAGE_KEY"
+              start = html.find(start_marker)
+              end = html.find(end_marker, start if start >= 0 else 0)
+              if start < 0 or end < 0:
+                  raise ValueError(f"Unable to parse QUIZ_DATA from {html_path}")
+              quiz_data_json = html[start + len(start_marker):end]
+              try:
+                  return json.loads(quiz_data_json)
+              except json.JSONDecodeError as exc:
+                  raise ValueError(f"Malformed QUIZ_DATA JSON in {html_path}: {exc}") from exc
+
+          def load_student_answers(quiz_id: str, html_path: Path) -> tuple[dict, str]:
+              candidates = [
+                  html_path.with_name(f"{quiz_id}_answers.json"),
+                  html_path.with_name(f"{quiz_id.lower()}_answers.json"),
+                  Path(f"Basics/quizzes/{quiz_id}_answers.json"),
+              ]
+              for candidate in candidates:
+                  if not candidate.exists():
+                      continue
+                  try:
+                      payload = json.loads(candidate.read_text(encoding="utf-8"))
+                      answers = payload.get("student_answers") if isinstance(payload, dict) else None
+                      if isinstance(answers, dict):
+                          return {str(k): str(v) for k, v in answers.items()}, str(candidate)
+                  except json.JSONDecodeError:
+                      continue
+              return {}, "missing_submission"
+
+          for quiz_id, candidates in QUIZ_HTML_PATHS.items():
+              html_path = next((path for path in candidates if path.exists()), None)
+              if html_path is None:
+                  missing = ", ".join(str(path) for path in candidates)
+                  print(f"Missing HTML quiz file for {quiz_id}. Tried: {missing}")
+                  sys.exit(1)
+
+              try:
+                  quiz_data = load_quiz_data(html_path)
+              except ValueError as exc:
+                  print(f"Failed to load quiz data for {quiz_id} from {html_path}: {exc}")
+                  sys.exit(1)
+              expected_answers = quiz_data.get("expectedAnswers")
+              if not isinstance(expected_answers, dict) or not expected_answers:
+                  print(f"Quiz {quiz_id} is missing expectedAnswers in {html_path}")
+                  sys.exit(1)
+              if not all(str(question_id).isdigit() for question_id in expected_answers):
+                  print(f"Quiz {quiz_id} has non-numeric question IDs in expectedAnswers")
+                  sys.exit(1)
+
+              student_answers, answer_source = load_student_answers(quiz_id, html_path)
+              if not all(str(question_id).isdigit() for question_id in student_answers):
+                  print(f"Quiz {quiz_id} has non-numeric keys in student_answers")
+                  sys.exit(1)
+              unexpected_keys = set(student_answers) - set(expected_answers)
+              if unexpected_keys:
+                  print(f"Quiz {quiz_id} student_answers include unknown question IDs: {sorted(unexpected_keys)}")
+                  sys.exit(1)
+              tests = []
+              score = 0
+              for question_id in sorted(expected_answers, key=lambda qid: int(qid)):
+                  expected = str(expected_answers[question_id])
+                  actual_value = student_answers.get(question_id)
+                  actual = str(actual_value) if actual_value is not None else UNANSWERED_MARKER
+                  passed = actual == expected
+                  score += int(passed)
+                  tests.append(
+                      {
+                          "name": f"{quiz_id} Question {question_id}",
+                          "points": 1,
+                          "expected_stdout": [expected],
+                          "student_stdout": [actual],
+                          "pass": passed,
+                      }
+                  )
+
+              criteria_like = {"tests": tests}
+              (output_dir / f"{quiz_id}_criteria.json").write_text(json.dumps(criteria_like, indent=2), encoding="utf-8")
+
+              quiz_results.append(
+                  {
+                      "quiz_id": quiz_id,
+                      "quiz_html": str(html_path),
+                      "answer_source": answer_source,
+                      "score": score,
+                      "total": len(expected_answers),
+                      "criteria_file": str(output_dir / f"{quiz_id}_criteria.json"),
+                  }
+              )
+
+          results_file = output_dir / "quiz_grades.json"
+          results_file.write_text(json.dumps({"quizzes": quiz_results}, indent=2), encoding="utf-8")
+          print(f"Wrote quiz grading report to {results_file}")
+
+          summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_file:
+              lines = ["## Quiz grading results", "", "| Quiz | Score | Answer source |", "| --- | --- | --- |"]
+              for result in quiz_results:
+                  lines.append(f"| {result['quiz_id']} | {result['score']}/{result['total']} | {result['answer_source']} |")
+              try:
+                  with open(summary_file, "a", encoding="utf-8") as handle:
+                      handle.write("\n".join(lines) + "\n")
+              except OSError as exc:
+                  print(f"Warning: could not write GitHub step summary: {exc}", file=sys.stderr)
+          PY
+
       - name: Commit and push autograder results
         id: commit_results
         if: github.event_name == 'workflow_dispatch'
@@ -100,6 +232,16 @@ jobs:
           import json
           import sys
           from pathlib import Path
+          QUIZ_HTML_PATHS = {
+              "Basics_Day1_Quiz": [
+                  Path("Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html"),
+                  Path("Basics/quizzes/Basics_Day1_Quiz.html"),
+              ],
+              "Basics_Day2_Quiz": [
+                  Path("Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html"),
+                  Path("Basics/quizzes/Basics_Day2_Quiz.html"),
+              ],
+          }
           try:
               criteria = json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
           except json.JSONDecodeError as exc:
@@ -116,5 +258,27 @@ jobs:
           if not isinstance(feedback, dict):
               print('feedback.json must be a JSON object')
               sys.exit(1)
+          for quiz_id, candidates in QUIZ_HTML_PATHS.items():
+              quiz_path = next((candidate for candidate in candidates if candidate.exists()), None)
+              if quiz_path is None:
+                  print(f'Missing HTML quiz for {quiz_id}. Tried: {", ".join(str(path) for path in candidates)}')
+                  sys.exit(1)
+              html = quiz_path.read_text(encoding='utf-8')
+              start_marker = "const QUIZ_DATA = "
+              end_marker = ";\n    const STORAGE_KEY"
+              start = html.find(start_marker)
+              end = html.find(end_marker, start if start >= 0 else 0)
+              if start < 0 or end < 0:
+                  print(f'{quiz_path} must define const QUIZ_DATA')
+                  sys.exit(1)
+              try:
+                  quiz_data = json.loads(html[start + len(start_marker):end])
+              except json.JSONDecodeError as exc:
+                  print(f'{quiz_path} has invalid QUIZ_DATA JSON: {exc}')
+                  sys.exit(1)
+              expected = quiz_data.get('expectedAnswers')
+              if not isinstance(expected, dict) or not expected:
+                  print(f'{quiz_path} must include non-empty expectedAnswers')
+                  sys.exit(1)
           print('Autograder source configuration files passed basic JSON structure checks.')
           PY

@@ -122,7 +122,7 @@ pip install jupyter nbconvert
       - `criteria.json` - Test cases with stdin/stdout expectations
       - `setup.json` - Notebook conversion and dependency installation
       - `feedback.json` - Optional custom feedback messages
-   - **Runtime note**: The workflow prepares `submission/.github/autograder/` at runtime and generates a v1-compatible `setup.json`. When triggered manually via `workflow_dispatch`, it also commits/pushes autograder output changes to a timestamped `autograder-results-*` branch. Keep authoring assignment configs in `Basics/assignments/Basics_DayX_homework/`.
+   - **Runtime note**: The workflow prepares `submission/.github/autograder/` at runtime and generates a v1-compatible `setup.json`. It also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) into autograder-compatible `tests[]` JSON and writes quiz grading results to `submission/.github/autograder/quiz_grades.json`. When triggered manually via `workflow_dispatch`, it also commits/pushes autograder output changes to a timestamped `autograder-results-*` branch. Keep authoring assignment configs in `Basics/assignments/Basics_DayX_homework/`.
 
 ### Configuration Files
 
@@ -165,8 +165,8 @@ These define day-by-day (12 days), hour-by-hour (4 hours/day) breakdown, learnin
    - Must be deterministic (no random values, unseeded state, or live timestamps)
    - Numeric precision must match exactly what's in `criteria.json` (e.g., `85.50` not `85.5`)
 
-4. **Quizzes** (Markdown files):
-   - Location: `Basics/quizzes/Basics_DayX_Quiz.md`
+4. **Quizzes** (Markdown + HTML):
+   - Location: `Basics/quizzes/Basics_DayX_Quiz.md` and `Basics/quizzes/Basics_DayX_Quiz.html` (or `Basics/quizzes/Basics_DayX/Basics_DayX_Quiz.html`)
    - 20-40 questions per quiz, one per day
    - Include correct answers and explanations
 

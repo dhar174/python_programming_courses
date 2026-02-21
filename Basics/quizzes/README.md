@@ -11,6 +11,12 @@ Day 1 and Day 2 quizzes now use interactive HTML files:
 2. Select one answer per question.
 3. Answers are saved immediately in browser `localStorage` and restored on reload.
 4. Click **Save/Export Answers (JSON)** to download your response file.
+   The download is pre-named to match autograder expectations (e.g., `Basics_Day1_Quiz_answers.json`).
+
+For autograder pickup, keep the exported filename as:
+
+- `Basics_Day1_Quiz_answers.json` for Day 1
+- `Basics_Day2_Quiz_answers.json` for Day 2
 
 ## Autograder compatibility note (`criteria.json`)
 
