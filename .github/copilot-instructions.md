@@ -223,14 +223,13 @@ Basics/assignments/
 - Quiz HTML source files: `Basics/quizzes/Basics_Day1_Quiz.html` / `Basics/quizzes/Basics_Day2_Quiz.html` (or subfolder variants)
 - Expected exported answer files: `Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json` (in `Basics/quizzes/` root or next to each quiz HTML file)
 - Minimum consumed JSON shape:
-```json
-{
-  "student_answers": {
-    "1": "D",
-    "2": "C"
+  ```json
+  {
+    "student_answers": {
+      "1": "D",
+      "2": "C"
+    }
   }
-}
-```
 - Generated autograder artifacts:
   - `submission/.github/autograder/Basics_Day1_Quiz_criteria.json`
   - `submission/.github/autograder/Basics_Day2_Quiz_criteria.json`
