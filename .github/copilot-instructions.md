@@ -122,7 +122,7 @@ pip install jupyter nbconvert
       - `criteria.json` - Test cases with stdin/stdout expectations
       - `setup.json` - Notebook conversion and dependency installation
       - `feedback.json` - Optional custom feedback messages
-   - **Runtime note**: The workflow prepares `submission/.github/autograder/` at runtime, generates a v1-compatible `setup.json`, and commits/pushes autograder output changes to a timestamped `autograder-results-*` branch. Keep authoring assignment configs in `Basics/assignments/Basics_DayX_homework/`.
+   - **Runtime note**: The workflow prepares `submission/.github/autograder/` at runtime and generates a v1-compatible `setup.json`. When triggered manually via `workflow_dispatch`, it also commits/pushes autograder output changes to a timestamped `autograder-results-*` branch. Keep authoring assignment configs in `Basics/assignments/Basics_DayX_homework/`.
 
 ### Configuration Files
 
