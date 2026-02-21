@@ -169,6 +169,7 @@ These define day-by-day (12 days), hour-by-hour (4 hours/day) breakdown, learnin
    - Location: `Basics/quizzes/Basics_DayX_Quiz.md` and `Basics/quizzes/Basics_DayX_Quiz.html` (or `Basics/quizzes/Basics_DayX/Basics_DayX_Quiz.html`)
    - 20-40 questions per quiz, one per day
    - Include correct answers and explanations
+   - For Day 1/Day 2 HTML quiz autograding, students export `Basics_Day1_Quiz_answers.json` / `Basics_Day2_Quiz_answers.json`; payload must include `student_answers` keyed by numeric question IDs (e.g., `"1": "D"`).
 
 ### Autograder Configuration Requirements
 
@@ -215,6 +216,25 @@ Basics/assignments/
 - All paths in `setup.json` are relative to the config directory
 - Notebooks must be self-contained with no external dependencies
 - Keep the assignment notebook name stable (`Basics_DayX_homework.ipynb`), because workflow pre-flight checks look for that filename under `submission/`.
+
+### HTML quiz grading data contract
+
+- Workflow reference: `.github/workflows/autograder.yml` (`Grade Basics HTML quizzes` step)
+- Quiz HTML source files: `Basics/quizzes/Basics_Day1_Quiz.html` / `Basics/quizzes/Basics_Day2_Quiz.html` (or subfolder variants)
+- Expected exported answer files: `Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json` (in `Basics/quizzes/` root or next to each quiz HTML file)
+- Minimum consumed JSON shape:
+```json
+{
+  "student_answers": {
+    "1": "D",
+    "2": "C"
+  }
+}
+```
+- Generated autograder artifacts:
+  - `submission/.github/autograder/Basics_Day1_Quiz_criteria.json`
+  - `submission/.github/autograder/Basics_Day2_Quiz_criteria.json`
+  - `submission/.github/autograder/quiz_grades.json`
 
 ## Code Style and Standards
 

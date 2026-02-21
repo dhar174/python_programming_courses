@@ -233,6 +233,8 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
     - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks.
     - The workflow also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) and writes autograder-compatible quiz `tests[]` files plus `submission/.github/autograder/quiz_grades.json`.
     - Quiz submissions are JSON answer exports (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`) rather than notebook/script execution, unlike assignment grading.
+    - Quiz answer exports are discovered from either the quiz subfolder (same directory as the HTML) or `Basics/quizzes/` root and must include `student_answers` with numeric string question IDs.
+    - Exported quiz payloads can include metadata fields (`quiz_id`, `title`, `exported_at`) and `criteria_like_tests`; grading uses `student_answers` mapped against `expectedAnswers` embedded in the HTML quiz.
     - When the workflow is run manually via `workflow_dispatch`, it commits/pushes autograder output changes to a timestamped `autograder-results-*` branch.
     - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
     - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
@@ -602,6 +604,7 @@ Please refer to the **official autograder documentation**:
 - **Homework Assignments**: Automatically grade student submissions from Jupyter notebooks converted to Python scripts
 - **Practice Exercises**: Provide immediate feedback on coding exercises
 - **GitHub Classroom**: Integrate with GitHub Classroom assignments for automated assessment
+- **HTML Quizzes**: Grade Day 1/Day 2 exported answer JSON files and emit criteria-style outputs (`*_criteria.json`) plus `quiz_grades.json`
 
 ## Additional Resources
 
