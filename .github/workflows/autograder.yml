@@ -54,6 +54,113 @@ jobs:
           template_preset: 'io'
           feedback-type: 'default'
 
+      - name: Grade Basics HTML quizzes
+        run: |
+          python - << 'PY'
+          import json
+          import os
+          import re
+          import sys
+          from pathlib import Path
+
+          QUIZ_HTML_PATHS = {
+              "Basics_Day1_Quiz": [
+                  Path("Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html"),
+                  Path("Basics/quizzes/Basics_Day1_Quiz.html"),
+              ],
+              "Basics_Day2_Quiz": [
+                  Path("Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html"),
+                  Path("Basics/quizzes/Basics_Day2_Quiz.html"),
+              ],
+          }
+
+          output_dir = Path("submission/.github/autograder")
+          output_dir.mkdir(parents=True, exist_ok=True)
+          quiz_results = []
+
+          def load_quiz_data(html_path: Path) -> dict:
+              html = html_path.read_text(encoding="utf-8")
+              match = re.search(r"const QUIZ_DATA = (\{.*?\});\s*const STORAGE_KEY", html, re.DOTALL)
+              if not match:
+                  raise ValueError(f"Unable to parse QUIZ_DATA from {html_path}")
+              return json.loads(match.group(1))
+
+          def load_student_answers(quiz_id: str, html_path: Path, expected_answers: dict) -> tuple[dict, str]:
+              candidates = [
+                  html_path.with_name(f"{quiz_id}_answers.json"),
+                  html_path.with_name(f"{quiz_id.lower()}_answers.json"),
+                  Path(f"Basics/quizzes/{quiz_id}_answers.json"),
+              ]
+              for candidate in candidates:
+                  if not candidate.exists():
+                      continue
+                  try:
+                      payload = json.loads(candidate.read_text(encoding="utf-8"))
+                      answers = payload.get("student_answers") if isinstance(payload, dict) else None
+                      if isinstance(answers, dict):
+                          return {str(k): str(v) for k, v in answers.items()}, str(candidate)
+                  except json.JSONDecodeError:
+                      continue
+              return {str(k): str(v) for k, v in expected_answers.items()}, "expected_answer_key"
+
+          for quiz_id, candidates in QUIZ_HTML_PATHS.items():
+              html_path = next((path for path in candidates if path.exists()), None)
+              if html_path is None:
+                  missing = ", ".join(str(path) for path in candidates)
+                  print(f"Missing HTML quiz file for {quiz_id}. Tried: {missing}")
+                  sys.exit(1)
+
+              quiz_data = load_quiz_data(html_path)
+              expected_answers = quiz_data.get("expectedAnswers")
+              if not isinstance(expected_answers, dict) or not expected_answers:
+                  print(f"Quiz {quiz_id} is missing expectedAnswers in {html_path}")
+                  sys.exit(1)
+
+              student_answers, answer_source = load_student_answers(quiz_id, html_path, expected_answers)
+              tests = []
+              score = 0
+              for question_id in sorted(expected_answers, key=lambda value: int(value)):
+                  expected = str(expected_answers[question_id])
+                  actual = str(student_answers.get(question_id)) if question_id in student_answers else None
+                  passed = actual == expected
+                  score += int(passed)
+                  tests.append(
+                      {
+                          "name": f"{quiz_id} Question {question_id}",
+                          "points": 1,
+                          "expected_stdout": [expected],
+                          "student_stdout": [actual],
+                          "pass": passed,
+                      }
+                  )
+
+              criteria_like = {"tests": tests}
+              (output_dir / f"{quiz_id}_criteria.json").write_text(json.dumps(criteria_like, indent=2), encoding="utf-8")
+
+              quiz_results.append(
+                  {
+                      "quiz_id": quiz_id,
+                      "quiz_html": str(html_path),
+                      "answer_source": answer_source,
+                      "score": score,
+                      "total": len(expected_answers),
+                      "criteria_file": str(output_dir / f"{quiz_id}_criteria.json"),
+                  }
+              )
+
+          results_file = output_dir / "quiz_grades.json"
+          results_file.write_text(json.dumps({"quizzes": quiz_results}, indent=2), encoding="utf-8")
+          print(f"Wrote quiz grading report to {results_file}")
+
+          summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_file:
+              lines = ["## Quiz grading results", "", "| Quiz | Score | Answer source |", "| --- | --- | --- |"]
+              for result in quiz_results:
+                  lines.append(f"| {result['quiz_id']} | {result['score']}/{result['total']} | {result['answer_source']} |")
+              with open(summary_file, "a", encoding="utf-8") as handle:
+                  handle.write("\n".join(lines) + "\n")
+          PY
+
       - name: Commit and push autograder results
         id: commit_results
         if: github.event_name == 'workflow_dispatch'
@@ -96,8 +203,11 @@ jobs:
           test -f Basics/assignments/Basics_Day1_homework.ipynb
           test -f Basics/assignments/Basics_Day1_homework/criteria.json
           test -f Basics/assignments/Basics_Day1_homework/feedback.json
+          test -f Basics/quizzes/Basics_Day1_Quiz.html
+          test -f Basics/quizzes/Basics_Day2_Quiz.html
           python - << 'PY'
           import json
+          import re
           import sys
           from pathlib import Path
           try:
@@ -116,5 +226,16 @@ jobs:
           if not isinstance(feedback, dict):
               print('feedback.json must be a JSON object')
               sys.exit(1)
+          for quiz_html in ['Basics/quizzes/Basics_Day1_Quiz.html', 'Basics/quizzes/Basics_Day2_Quiz.html']:
+              html = Path(quiz_html).read_text(encoding='utf-8')
+              match = re.search(r"const QUIZ_DATA = (\{.*?\});\s*const STORAGE_KEY", html, re.DOTALL)
+              if not match:
+                  print(f'{quiz_html} must define const QUIZ_DATA')
+                  sys.exit(1)
+              quiz_data = json.loads(match.group(1))
+              expected = quiz_data.get('expectedAnswers')
+              if not isinstance(expected, dict) or not expected:
+                  print(f'{quiz_html} must include non-empty expectedAnswers')
+                  sys.exit(1)
           print('Autograder source configuration files passed basic JSON structure checks.')
           PY
