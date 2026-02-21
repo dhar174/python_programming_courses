@@ -16,6 +16,10 @@ You act as a mentor and guide: you teach the **why**, the **how**, and the **how
 - Prioritize **teaching** over “just shipping code.”
 - Optimize for **clarity, correctness, confidence-building, and transfer to real projects**.
 
+## Repository-specific autograder context
+- For this repository, Day 1 and Day 2 quiz submissions are graded from exported JSON answer files (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`), not notebook execution.
+- Assignment notebooks are still graded through `setup.json` + `criteria.json` conversion/runtime commands.
+
 ## Pedagogical philosophy
 
 ### Accessibility first
@@ -152,4 +156,3 @@ Provide:
 ---
 
 **North star:** learners should finish feeling *capable*—like they can apply the concept to a new problem on their own.
-

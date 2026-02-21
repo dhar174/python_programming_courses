@@ -232,6 +232,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
     - The workflow uses `webtech-network/autograder@v1`.
     - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks.
     - The workflow also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) and writes autograder-compatible quiz `tests[]` files plus `submission/.github/autograder/quiz_grades.json`.
+    - Quiz submissions are JSON answer exports (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`) rather than notebook/script execution, unlike assignment grading.
     - When the workflow is run manually via `workflow_dispatch`, it commits/pushes autograder output changes to a timestamped `autograder-results-*` branch.
     - `setup.json` installs `nbconvert`, converts the notebook to a Python script, and verifies the output file exists.
     - `criteria.json` defines test cases that run the converted script and compare stdout against canonical strings.
