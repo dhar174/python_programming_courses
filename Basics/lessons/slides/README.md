@@ -131,8 +131,20 @@ This will scan `Basics/lessons/` and `Advanced/lessons/` for any `.md` files and
 These slides were generated from:
 - `Basics/lessons/01-intro-to-python.md`
 - `Basics/lessons/day-01-session-1.md`
-- `Basics/lessons/day-02-session-2.md`
+- `Basics/lessons/day-02-session-2.md` (combined session file — still present for CI/Marp builds)
 - `Advanced/lessons/01-intro-to-python.md`
+
+### Per-Hour Lecture Files (Day 2, Session 2)
+
+The Day 2, Session 2 content has been split into individual per-hour lecture files for easier
+instructional use and agent automation. These files live in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day2_Hour5_Basics.md` (String Fundamentals)
+- `Basics/lessons/lecture/Day2_Hour6_Basics.md` (String Methods)
+- `Basics/lessons/lecture/Day2_Hour7_Basics.md` (Input/Output + Type Conversion)
+- `Basics/lessons/lecture/Day2_Hour8_Basics.md` (Checkpoint 1 + Session Wrap-Up)
+
+The compiled `day-02-session-2.html` slide deck was generated from the combined markdown and
+covers the full session. Future sessions should follow the per-hour file standard.
 
 ---
 
