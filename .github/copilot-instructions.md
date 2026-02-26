@@ -94,7 +94,7 @@ python day1.py
 # Compare output to expected values in criteria.json
 ```
 
-**Critical**: In CI, assignment notebooks are discovered from `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`; filenames must include `Basics_DayX`, end in `.ipynb`, and use only letters, numbers, dots, underscores, and hyphens.
+**Critical**: In CI, assignment notebooks are discovered from `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`; filenames must include `Basics_DayX`, end in `.ipynb`, and use only letters, numbers, dots, underscores, and hyphens. Spaces are not permitted in submission filenames (for example, use `alex_Basics_Day1_homework.ipynb` instead of `Alex Basics Day1 homework.ipynb`).
 
 ### Python Environment
 
