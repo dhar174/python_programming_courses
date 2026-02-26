@@ -67,12 +67,11 @@ jobs:
 
           assignment_results = []
           granular_files = []
-          IGNORED_FILENAMES = {"criteria.json", "feedback.json", "setup.json", "quiz_grades.json", "assignment_grades.json"}
+          ASSIGNMENT_RESULT_GLOB = "*_criteria.json"
+          QUIZ_CRITERIA_MARKER = "_Quiz_"
 
-          for json_path in sorted(output_dir.rglob("*.json")):
-              if json_path.name in IGNORED_FILENAMES:
-                  continue
-              if "_Quiz_" in json_path.name:
+          for json_path in sorted(output_dir.glob(ASSIGNMENT_RESULT_GLOB)):
+              if QUIZ_CRITERIA_MARKER in json_path.name:
                   continue
               try:
                   payload = json.loads(json_path.read_text(encoding="utf-8"))
@@ -111,6 +110,7 @@ jobs:
           results_file.write_text(json.dumps({"assignments": assignment_results}, indent=2), encoding="utf-8")
           print(f"Wrote assignment grading report to {results_file}")
 
+          # Keep only consolidated assignment_grades.json as assignment output artifact.
           for granular_file in granular_files:
               try:
                   granular_file.unlink()
@@ -157,10 +157,7 @@ jobs:
           UNANSWERED_MARKER = "unanswered"
 
           for legacy_file in output_dir.glob("*_Quiz_criteria.json"):
-              try:
-                  legacy_file.unlink()
-              except FileNotFoundError:
-                  pass
+              legacy_file.unlink(missing_ok=True)
 
           def load_quiz_data(html_path: Path) -> dict:
               html = html_path.read_text(encoding="utf-8")

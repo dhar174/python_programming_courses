@@ -60,3 +60,32 @@ Each quiz export contains metadata plus answer/test data. Example:
 - The workflow writes consolidated summary files to:
   - `submission/.github/autograder/assignment_grades.json`
   - `submission/.github/autograder/quiz_grades.json`
+
+## `quiz_grades.json` structure change
+
+The consolidated format now embeds per-question quiz tests directly in each quiz record.
+
+- Previous shape:
+  ```json
+  {
+    "quiz_id": "Basics_Day1_Quiz",
+    "criteria_file": "submission/.github/autograder/Basics_Day1_Quiz_criteria.json"
+  }
+  ```
+- Current shape:
+  ```json
+  {
+    "quiz_id": "Basics_Day1_Quiz",
+    "score": 28,
+    "total": 30,
+    "tests": [
+      {
+        "name": "Basics_Day1_Quiz Question 1",
+        "points": 1,
+        "expected_stdout": ["D"],
+        "student_stdout": ["D"],
+        "pass": true
+      }
+    ]
+  }
+  ```

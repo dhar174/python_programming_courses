@@ -246,7 +246,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
     - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`, plus manual `workflow_dispatch`.
     - The workflow uses `webtech-network/autograder@v1`.
     - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks.
-    - The workflow also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) and writes autograder-compatible quiz `tests[]` files plus `submission/.github/autograder/quiz_grades.json`.
+    - The workflow also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) and writes consolidated grading summaries to `submission/.github/autograder/assignment_grades.json` and `submission/.github/autograder/quiz_grades.json`.
     - Quiz submissions are JSON answer exports (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`) rather than notebook/script execution, unlike assignment grading.
     - Quiz answer exports are discovered from either the quiz subfolder (same directory as the HTML) or `Basics/quizzes/` root and must include `student_answers` with numeric string question IDs.
     - Exported quiz payloads can include metadata fields (`quiz_id`, `title`, `exported_at`) and `criteria_like_tests`; grading uses `student_answers` mapped against `expectedAnswers` embedded in the HTML quiz.
@@ -580,7 +580,7 @@ The autograder workflow is configured in [`.github/workflows/autograder.yml`](./
 - Pushes to the `main` branch
 - Pull requests targeting the `main` branch
 - Manual `workflow_dispatch` from the Actions UI
-- It uses `webtech-network/autograder@v1`, prepares runtime files under `submission/.github/autograder/` for v1 adapter compatibility, parses Day 1/Day 2 quiz HTML into autograder-compatible quiz `tests[]` JSON and `quiz_grades.json`, and commits/pushes autograder output changes to timestamped `autograder-results-*` branches only for manual `workflow_dispatch` runs.
+- It uses `webtech-network/autograder@v1`, prepares runtime files under `submission/.github/autograder/` for v1 adapter compatibility, parses Day 1/Day 2 quiz HTML, writes consolidated grading summaries (`assignment_grades.json`, `quiz_grades.json`), and commits/pushes autograder output changes to timestamped `autograder-results-*` branches only for manual `workflow_dispatch` runs.
 
 ### How to Use the Autograder
 
@@ -619,7 +619,7 @@ Please refer to the **official autograder documentation**:
 - **Homework Assignments**: Automatically grade student submissions from Jupyter notebooks converted to Python scripts
 - **Practice Exercises**: Provide immediate feedback on coding exercises
 - **GitHub Classroom**: Integrate with GitHub Classroom assignments for automated assessment
-- **HTML Quizzes**: Grade Day 1/Day 2 exported answer JSON files and emit criteria-style outputs (`*_criteria.json`) plus `quiz_grades.json`
+- **HTML Quizzes**: Grade Day 1/Day 2 exported answer JSON files and emit consolidated grading summaries (`assignment_grades.json`, `quiz_grades.json`)
 
 ## Additional Resources
 

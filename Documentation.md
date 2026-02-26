@@ -33,9 +33,8 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 - Required answer exports:
   - `Basics_Day1_Quiz_answers.json`
   - `Basics_Day2_Quiz_answers.json`
-- Workflow writes criteria-style outputs to:
-  - `submission/.github/autograder/Basics_Day1_Quiz_criteria.json`
-  - `submission/.github/autograder/Basics_Day2_Quiz_criteria.json`
+- Workflow writes consolidated grading summaries to:
+  - `submission/.github/autograder/assignment_grades.json`
   - `submission/.github/autograder/quiz_grades.json`
 
 ### 3) Alignment evaluation (course intent vs. implementation)
@@ -67,7 +66,7 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
    - Compare output against `Basics/assignments/Basics_Day2_homework/criteria.json`.
 3. **Quizzes (Day 1 & Day 2)**:
    - Export answers from the HTML quiz UI into the required JSON file names.
-   - Re-run workflow dispatch and verify `quiz_grades.json` plus `*_Quiz_criteria.json`.
+   - Re-run workflow dispatch and verify `assignment_grades.json` and `quiz_grades.json`.
 4. **Negative scenarios**:
    - Remove or corrupt an answer export to validate missing/invalid JSON handling.
 
