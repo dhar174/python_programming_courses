@@ -271,7 +271,7 @@
     button#exportBtn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: var(--sp1);
       border: 0;
       border-radius: var(--r-sm);
       background: var(--py-yellow);
@@ -406,6 +406,7 @@
     function renderQuiz() {
       const container = document.getElementById('questions');
       const saved = loadAnswers();
+      const questionsLength = QUIZ_DATA.questions.length;
       container.innerHTML = QUIZ_DATA.questions.map((question) => {
         const optionsHtml = Object.entries(question.options).map(([key, value]) => `
           <label class="option-row">
