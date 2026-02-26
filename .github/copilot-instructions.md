@@ -79,7 +79,7 @@ Checks for proper structure, navigation, CSS variables, and file integrity. Defa
 
 ### Autograder Testing
 
-**Local testing workflow** (mimics CI for assignments):
+**Local testing workflow** (mimics CI staging, but uses the submission path inside the config directory):
 ```bash
 # Navigate to assignment config directory
 cd Basics/assignments/Basics_Day1_homework/
@@ -184,7 +184,7 @@ Basics/assignments/
     └── feedback.json                     # Optional custom feedback
 ```
 
-**setup.json structure**:
+**setup.json structure** (local example; CI generates a setup.json that uses only the copied notebook filename after staging it into `submission/`):
 ```json
 {
   "file_checks": ["submissions/alex_Basics_Day1_homework.ipynb"],
