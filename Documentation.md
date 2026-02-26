@@ -106,7 +106,7 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 - **Checkpoint alignment**: Runbook Hour 8 receipt generator is input-driven; Day 2 homework receipt uses fixed values.
 
 ### 4) Scope drift (topics appearing earlier than runbook)
-- **Day 1 homework**: unit converter exercises (aligned to Hour 7 content) and `==` vs `=` reflection (runbook Hour 9 topic); type hints are also introduced.
+- **Day 1 homework**: unit converter exercises (aligned to Hour 7 content), `==` vs `=` reflection (runbook Hour 9 topic), and explicit type hints (not covered in Hours 1–8).
 - **Day 2 homework/quiz**: runbook Hour 11 string topics are split across Day 2 materials: homework introduces `split()`, `title()`, and `join()`, while the Day 2 quiz covers `split()`, `join()`, and `max(..., key=len)` (no `.title()` question).
 
 ### 5) Structural mismatches
