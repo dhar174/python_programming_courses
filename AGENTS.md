@@ -238,7 +238,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 
 1. **Required files per assignment** (e.g., Day 1):
    - `Basics/assignments/Basics_Day1_homework.ipynb` — blank template notebook
-   - `Basics/assignments/Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` — student submission notebook (filename may be personalized)
+   - `Basics/assignments/Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` — student submission notebook (filename may be personalized, but must use only letters, numbers, dots (`.`), underscores (`_`), and hyphens (`-`); spaces and other special characters are not allowed)
    - `Basics/assignments/Basics_Day1_homework/criteria.json` — test specifications (command, stdin, expected_stdout, points)
    - `Basics/assignments/Basics_Day1_homework/setup.json` — dependency install, notebook-to-script conversion, file assertions
    - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
@@ -267,7 +267,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
    # 1. Navigate to the assignment's config directory
    cd Basics/assignments/Basics_Day1_homework/
 
-   # 2. Install dependencies and convert a submission notebook (mimics setup.json; paths are relative to this config directory when testing locally)
+   # 2. Install dependencies and convert a submission notebook (local testing example from this config directory; CI generates setup.json dynamically from the discovered staged filename)
    python -m pip install nbconvert
    jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output day1.py  # e.g., submissions/alex_Basics_Day1_homework.ipynb
 
