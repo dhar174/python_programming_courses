@@ -107,7 +107,7 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 
 ### 4) Scope drift (topics appearing earlier than runbook)
 - **Day 1 homework**: unit converter exercises (aligned to Hour 7 content) and `==` vs `=` reflection (runbook Hour 9 topic); type hints are also introduced.
-- **Day 2 homework/quiz**: string `split()`, `title()`, `join()`, and `max(..., key=len)` appear (runbook Hour 11 topics).
+- **Day 2 homework/quiz**: runbook Hour 11 string topics are split across Day 2 materials: homework introduces `split()`, `title()`, and `join()`, while the Day 2 quiz covers `split()`, `join()`, and `max(..., key=len)` (no `.title()` question).
 
 ### 5) Structural mismatches
 - **Day 2 lecture structure**: No per-hour lecture scripts in `Basics/lessons/lecture/` for Hours 5–8; content is consolidated in `day-02-session-2.md` without hour-specific lecture files.
