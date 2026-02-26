@@ -4,74 +4,323 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Python Basics - Day 2 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <style>
+    /* ── 8-Point Spatial Grid  ·  Dark IDE Theme  ·  Python Academy ── */
     :root {
-      color-scheme: light;
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #4b5563;
-      --accent: #2563eb;
-      --accent-soft: #dbeafe;
-      --border: #e5e7eb;
+      color-scheme: dark;
+      /* 8-pt grid tokens */
+      --sp1: 8px;  --sp2: 16px; --sp3: 24px;
+      --sp4: 32px; --sp5: 40px; --sp6: 48px;
+      /* Dark IDE palette */
+      --bg:          #1E1E2E;
+      --surface:     #252537;
+      --surface-hi:  #2E2E45;
+      --border:      #313244;
+      /* Python brand accents */
+      --py-blue:     #4B8BBE;
+      --py-yellow:   #FFD43B;
+      --py-blue-dim: rgba(75,139,190,0.18);
+      --py-yellow-dim: rgba(255,212,59,0.15);
+      /* Text hierarchy */
+      --txt:         #CDD6F4;
+      --txt-muted:   #A6ADC8;
+      --txt-code:    #CBA6F7;
+      /* Shadows */
+      --sh-sm: 0 2px 8px rgba(0,0,0,.40);
+      --sh-md: 0 4px 20px rgba(0,0,0,.50);
+      /* Radii – multiples of 8 */
+      --r-sm: 8px; --r-md: 16px; --r-lg: 24px;
+      /* Universal micro-interaction */
+      --t: all 0.2s ease-in-out;
     }
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
+      color: var(--txt);
+      line-height: 1.6;
+      min-height: 100vh;
     }
+    /* Styled scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--py-blue); }
+
     .container {
-      max-width: 980px;
+      max-width: 820px;
       margin: 0 auto;
-      padding: 24px 16px 40px;
+      padding: var(--sp3) var(--sp2) var(--sp6);
     }
-    .header-card, .question-card {
-      background: var(--card);
+
+    /* ── Header card ── */
+    .header-card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(17, 24, 39, 0.05);
-      margin-bottom: 16px;
+      border-top: 4px solid var(--py-yellow);
+      border-radius: var(--r-lg);
+      padding: var(--sp4);
+      box-shadow: var(--sh-md);
+      margin-bottom: var(--sp3);
+      position: relative;
+      overflow: hidden;
     }
-    h1 { margin: 0 0 8px; font-size: 1.8rem; }
-    h2 { margin: 8px 0 0; font-size: 1.1rem; color: var(--muted); }
-    ul { margin: 8px 0 0 20px; padding: 0; }
-    .meta { color: var(--muted); font-size: 0.95rem; margin-top: 8px; }
-    .question-number { font-weight: 700; color: var(--accent); margin-bottom: 8px; }
-    .question-prompt { margin-bottom: 12px; white-space: pre-wrap; }
-    .question-prompt code { background: #f1f5f9; padding: 0 4px; border-radius: 4px; }
-    .question-prompt pre { background: #0f172a; color: #e2e8f0; padding: 10px; border-radius: 10px; overflow-x: auto; }
-    .options { display: grid; gap: 8px; }
-    .option-row {
-      display: block;
+    .header-card::after {
+      content: '';
+      position: absolute;
+      top: -48px; right: -48px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(75,139,190,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--py-yellow);
+      letter-spacing: -0.025em;
+      margin-bottom: var(--sp1);
+    }
+    .quiz-subtitle { color: var(--txt-muted); font-size: 0.9375rem; }
+    .meta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp1);
+      background: var(--surface-hi);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      background: #fff;
-      cursor: pointer;
-      transition: all .15s ease;
+      border-radius: var(--r-sm);
+      padding: var(--sp1) var(--sp2);
+      font-size: 0.875rem;
+      color: var(--txt-muted);
+      margin-top: var(--sp2);
     }
-    .option-row:hover { border-color: var(--accent); background: #f8fbff; }
-    .option-row input { margin-right: 8px; }
-    .option-row input:checked + span { color: #1d4ed8; font-weight: 600; }
-    .option-row:has(input:checked) { border-color: #93c5fd; background: var(--accent-soft); }
-    .actions { margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    button {
-      border: 0;
-      border-radius: 10px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.95rem;
-      padding: 10px 16px;
-      cursor: pointer;
+    h2 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--py-blue);
+      margin-top: var(--sp3);
+      margin-bottom: var(--sp1);
+    }
+    ul { list-style: none; display: grid; gap: var(--sp1); margin-top: var(--sp1); }
+    ul li {
+      padding-left: var(--sp2);
+      position: relative;
+      color: var(--txt-muted);
+      font-size: 0.9375rem;
+    }
+    ul li::before { content: '▸'; position: absolute; left: 0; color: var(--py-blue); }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      margin-top: var(--sp2);
+      display: flex;
+      align-items: center;
+      gap: var(--sp1);
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--py-blue), var(--py-yellow));
+      border-radius: 3px;
+      transition: width 0.3s ease-in-out;
+    }
+    .progress-label {
+      font-size: 0.8125rem;
       font-weight: 600;
+      color: var(--txt-muted);
+      min-width: 48px;
+      text-align: right;
     }
-    button:hover { background: #1d4ed8; }
-    #status { color: var(--muted); font-size: 0.9rem; }
-    .compat-note { font-size: 0.9rem; color: var(--muted); margin-top: 10px; }
+
+    /* ── Question cards ── */
+    .question-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--sp3);
+      box-shadow: var(--sh-sm);
+      margin-bottom: var(--sp2);
+      transition: var(--t);
+    }
+    .question-card:hover {
+      border-color: rgba(75,139,190,0.45);
+      box-shadow: var(--sh-md);
+      transform: translateY(-1px);
+    }
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 var(--sp1);
+      background: var(--py-blue-dim);
+      border: 1.5px solid var(--py-blue);
+      border-radius: var(--r-sm);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--py-blue);
+      margin-bottom: var(--sp2);
+    }
+    .question-prompt {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--txt);
+      margin-bottom: var(--sp2);
+    }
+
+    /* ── Code blocks inside prompts ── */
+    .question-prompt pre {
+      background: #11111B;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--py-yellow);
+      border-radius: var(--r-sm);
+      padding: var(--sp2);
+      margin: var(--sp1) 0;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+    .question-prompt pre code {
+      color: #CDD6F4;
+      background: transparent;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+    }
+    .question-prompt code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+
+    /* ── Answer options ── */
+    .options { display: grid; gap: var(--sp1); }
+    .option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp1);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: var(--sp1) var(--sp2);
+      background: var(--surface-hi);
+      cursor: pointer;
+      transition: var(--t);
+    }
+    .option-row:hover {
+      border-color: var(--py-blue);
+      background: var(--py-blue-dim);
+      box-shadow: 0 0 0 2px rgba(75,139,190,0.2);
+    }
+    .option-row input[type="radio"] {
+      margin-top: 3px;
+      flex-shrink: 0;
+      accent-color: var(--py-blue);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .option-row span {
+      color: var(--txt-muted);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      transition: color 0.2s ease-in-out;
+    }
+    .option-row span code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875em;
+    }
+    .option-row:has(input:checked),
+    .option-row.is-checked {
+      border-color: var(--py-blue);
+      background: rgba(75,139,190,0.2);
+      box-shadow: 0 0 0 2px rgba(75,139,190,0.3);
+    }
+    .option-row:has(input:checked) span,
+    .option-row.is-checked span { color: var(--txt); font-weight: 500; }
+
+    /* ── Action card (footer) ── */
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--sp3);
+      box-shadow: var(--sh-sm);
+      margin-top: var(--sp3);
+    }
+    .actions { display: flex; gap: var(--sp2); align-items: center; flex-wrap: wrap; }
+    button#exportBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp1);
+      border: 0;
+      border-radius: var(--r-sm);
+      background: var(--py-yellow);
+      color: #1E1E2E;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      padding: var(--sp1) var(--sp3);
+      cursor: pointer;
+      transition: var(--t);
+      box-shadow: var(--sh-sm);
+    }
+    button#exportBtn:hover {
+      background: #FFE566;
+      box-shadow: var(--sh-md);
+      transform: translateY(-1px);
+    }
+    button#exportBtn:active { transform: translateY(0); box-shadow: var(--sh-sm); }
+    #status { color: var(--txt-muted); font-size: 0.875rem; }
+
+    /* ── Info / compat note ── */
+    .compat-note {
+      font-size: 0.875rem;
+      color: var(--txt-muted);
+      margin-top: var(--sp2);
+      padding: var(--sp1) var(--sp2);
+      background: var(--py-blue-dim);
+      border: 1px solid rgba(75,139,190,0.3);
+      border-radius: var(--r-sm);
+      line-height: 1.6;
+    }
+    .compat-note code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+    .compat-note strong { color: var(--txt); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      h1 { font-size: 1.5rem; }
+      .container { padding: var(--sp2) var(--sp1) var(--sp5); }
+      .header-card { padding: var(--sp3) var(--sp2); }
+      .question-card { padding: var(--sp2); }
+      .option-row { padding: var(--sp1); }
+    }
   </style>
 </head>
 <body>
@@ -96,13 +345,17 @@
           <li>Review explanations for any questions you missed</li>
       </ul>
       <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download your responses. The file includes <code>student_answers</code> and a <code>criteria_like_tests</code> array so maintainers can map each question to autograder-style checks similar to <code>criteria.json</code> test entries.</p>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
     </section>
 
     <section id="questions"></section>
 
-    <section class="header-card">
+    <section class="action-card">
       <div class="actions">
-        <button id="exportBtn" type="button">Save/Export Answers (JSON)</button>
+        <button id="exportBtn" type="button" aria-label="Save and export your answers as JSON">⬇ Save/Export Answers (JSON)</button>
         <span id="status">Selections are auto-saved in localStorage.</span>
       </div>
     </section>
@@ -137,14 +390,23 @@
     }
 
     function saveAnswers(answers) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([k]) => validIds.has(k)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
       const status = document.getElementById('status');
-      status.textContent = `Saved ${Object.keys(answers).length}/${QUIZ_DATA.questions.length} answers locally.`;
+      status.textContent = `Saved ${count}/${total} answers locally.`;
+      const fill = document.getElementById('progressFill');
+      const label = document.getElementById('progressLabel');
+      if (fill) fill.style.width = `${total > 0 ? Math.min(100, Math.round((count / total) * 100)) : 0}%`;
+      if (label) label.textContent = `${count} / ${total}`;
     }
 
     function renderQuiz() {
       const container = document.getElementById('questions');
       const saved = loadAnswers();
+      const questionsLength = QUIZ_DATA.questions.length;
       container.innerHTML = QUIZ_DATA.questions.map((question) => {
         const optionsHtml = Object.entries(question.options).map(([key, value]) => `
           <label class="option-row">
@@ -163,10 +425,19 @@
 
       container.addEventListener('change', (event) => {
         if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        // Sync .is-checked class for browsers without :has() support
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => {
+          radio.closest('.option-row').classList.toggle('is-checked', radio.checked);
+        });
         const answers = loadAnswers();
         const questionNumber = event.target.name.replace('q', '');
         answers[questionNumber] = event.target.value;
         saveAnswers(answers);
+      });
+
+      // Restore .is-checked class for pre-checked options (from localStorage)
+      container.querySelectorAll('input[type="radio"]:checked').forEach((radio) => {
+        radio.closest('.option-row').classList.add('is-checked');
       });
 
       saveAnswers(saved);
