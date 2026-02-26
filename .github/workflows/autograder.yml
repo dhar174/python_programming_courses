@@ -37,8 +37,19 @@ jobs:
             echo "No Day 1 submission notebook found in ${SUBMISSIONS_DIR}. Expected an .ipynb containing 'Basics_Day1' in the filename."
             exit 1
           fi
+          if [ ${#DAY1_NOTEBOOKS[@]} -gt 1 ]; then
+            echo "Multiple Day 1 submission notebooks found; using the first sorted match: ${DAY1_NOTEBOOKS[0]}"
+          fi
           DAY1_NOTEBOOK="${DAY1_NOTEBOOKS[0]}"
           DAY1_NOTEBOOK_NAME="$(basename "$DAY1_NOTEBOOK")"
+          if [[ ! "$DAY1_NOTEBOOK_NAME" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "Invalid submission filename '$DAY1_NOTEBOOK_NAME'. Use only letters, numbers, dots, underscores, and hyphens."
+            exit 1
+          fi
+          if [[ "$DAY1_NOTEBOOK_NAME" == .* || "$DAY1_NOTEBOOK_NAME" == *..* ]]; then
+            echo "Invalid submission filename '$DAY1_NOTEBOOK_NAME'. Relative path-like names are not allowed."
+            exit 1
+          fi
           cp "$DAY1_NOTEBOOK" "submission/$DAY1_NOTEBOOK_NAME"
           cp "$DAY1_NOTEBOOK" "submission/.github/autograder/$DAY1_NOTEBOOK_NAME"
           cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
@@ -47,17 +58,37 @@ jobs:
           test -f "submission/.github/autograder/$DAY1_NOTEBOOK_NAME" || (echo "Missing copied $DAY1_NOTEBOOK_NAME" && exit 1)
           test -f submission/.github/autograder/criteria.json || (echo "Missing copied criteria.json" && exit 1)
           test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
-          cat << EOF > submission/.github/autograder/setup.json
-          {
-            "file_checks": ["$DAY1_NOTEBOOK_NAME"],
-            "commands": [
-              "python -m pip install --quiet --upgrade pip",
-              "python -m pip install nbconvert",
-              "jupyter nbconvert --to script $DAY1_NOTEBOOK_NAME --output day1",
-              "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
-            ]
+          python - "$DAY1_NOTEBOOK_NAME" << 'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          notebook_name = sys.argv[1]
+          # Defense-in-depth validation before writing shell commands into setup.json.
+          if (
+              not notebook_name.endswith(".ipynb")
+              or "Basics_Day1" not in notebook_name
+              or "/" in notebook_name
+              or "\\" in notebook_name
+              or notebook_name.startswith(".")
+              or ".." in notebook_name
+          ):
+              raise ValueError(f"Unsafe Day 1 notebook filename: {notebook_name}")
+          setup_json = {
+              "file_checks": [notebook_name],
+              "commands": [
+                  "python -m pip install --quiet --upgrade pip",
+                  "python -m pip install nbconvert",
+                  f"jupyter nbconvert --to script {notebook_name} --output day1",
+                  "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi",
+              ],
           }
-          EOF
+
+          Path("submission/.github/autograder/setup.json").write_text(
+              json.dumps(setup_json, indent=2),
+              encoding="utf-8",
+          )
+          PY
           test -f submission/.github/autograder/setup.json || (echo "Missing generated setup.json" && exit 1)
       
       - name: Run autograder

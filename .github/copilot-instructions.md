@@ -86,7 +86,7 @@ cd Basics/assignments/Basics_Day1_homework/
 
 # Install dependencies and convert a submission notebook
 python -m pip install nbconvert
-jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output day1.py
+jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py
 
 # Run converted script
 python day1.py
@@ -94,7 +94,7 @@ python day1.py
 # Compare output to expected values in criteria.json
 ```
 
-**Critical**: In CI, assignment notebooks are discovered from `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`.
+**Critical**: In CI, assignment notebooks are discovered from `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`; filenames must include `Basics_DayX`, end in `.ipynb`, and use only letters, numbers, dots, underscores, and hyphens.
 
 ### Python Environment
 
@@ -187,11 +187,11 @@ Basics/assignments/
 **setup.json structure**:
 ```json
 {
-  "file_checks": ["submissions/<your_Basics_Day1_notebook>.ipynb"],
+  "file_checks": ["submissions/alex_Basics_Day1_homework.ipynb"],
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output day1.py",
+    "jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py",
     "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
   ]
 }
@@ -274,7 +274,7 @@ npx @marp-team/marp-cli -w -c .marprc.yml
 # Test assignment locally
 cd Basics/assignments/Basics_Day1_homework/
 python -m pip install nbconvert
-jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output day1.py
+jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py
 python day1.py
 
 # Check git status with no pager
