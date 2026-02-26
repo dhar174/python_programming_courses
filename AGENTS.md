@@ -237,7 +237,8 @@ Create Jupyter notebooks (`.ipynb`) for hands-on coding assignments:
 Homework notebooks are graded automatically by the **Global Autograder**. Each assignment requires configuration files placed alongside the notebook.
 
 1. **Required files per assignment** (e.g., Day 1):
-   - `Basics/assignments/Basics_Day1_homework.ipynb` — the student notebook
+   - `Basics/assignments/Basics_Day1_homework.ipynb` — blank template notebook
+   - `Basics/assignments/Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` — student submission notebook (filename may be personalized)
    - `Basics/assignments/Basics_Day1_homework/criteria.json` — test specifications (command, stdin, expected_stdout, points)
    - `Basics/assignments/Basics_Day1_homework/setup.json` — dependency install, notebook-to-script conversion, file assertions
    - `Basics/assignments/Basics_Day1_homework/feedback.json` *(optional)* — custom feedback settings
@@ -245,7 +246,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 2. **Workflow overview**:
     - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`, plus manual `workflow_dispatch`.
     - The workflow uses `webtech-network/autograder@v1`.
-    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies `Basics_DayX_homework.ipynb` into `submission/` for pre-flight file checks.
+    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies the matching `Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` notebook into `submission/` for pre-flight file checks.
     - The workflow also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) and writes consolidated grading summaries to `submission/.github/autograder/assignment_grades.json` and `submission/.github/autograder/quiz_grades.json`.
     - Quiz submissions are JSON answer exports (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`) rather than notebook/script execution, unlike assignment grading.
     - Quiz answer exports are discovered from either the quiz subfolder (same directory as the HTML) or `Basics/quizzes/` root and must include `student_answers` with numeric string question IDs.
@@ -266,19 +267,19 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
    # 1. Navigate to the assignment's config directory
    cd Basics/assignments/Basics_Day1_homework/
 
-   # 2. Install dependencies and convert notebook (mimics setup.json)
+   # 2. Install dependencies and convert a submission notebook (mimics setup.json)
    python -m pip install nbconvert
-   jupyter nbconvert --to script ../Basics_Day1_homework.ipynb --output day1.py
+   jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output day1.py
 
    # 3. Run the script and check output
    python day1.py
    Compare output to the canonical strings in `criteria.json`.
 
 5. **Important warnings**:
-    - **Do not rename** the notebook, config files, or move the assignment directory — this will break the autograder workflow.
+    - Keep the blank template notebook in place, and submit completed work under `Basics/assignments/Basics_DayX_homework/submissions/` with `Basics_DayX` in the filename.
     - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
-    - All paths in `setup.json` are relative to the config directory (`Basics/assignments/Basics_Day1_homework/`). The notebook sits one level up, so use `../Basics_Day1_homework.ipynb` to reference it.
-    - Keep notebook filenames in the `Basics_DayX_homework.ipynb` / `Advanced_DayX_homework.ipynb` pattern so workflow runtime checks can find them.
+    - In CI, assignment notebook discovery uses `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`.
+    - Keep template notebook filenames in the `Basics_DayX_homework.ipynb` / `Advanced_DayX_homework.ipynb` pattern.
 
 ### Writing Multiple Choice Quizzes
 

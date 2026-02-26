@@ -27,21 +27,33 @@ jobs:
       - name: Prepare autograder configuration
         run: |
           mkdir -p submission/.github/autograder
-          cp Basics/assignments/Basics_Day1_homework.ipynb submission/Basics_Day1_homework.ipynb
-          cp Basics/assignments/Basics_Day1_homework.ipynb submission/.github/autograder/Basics_Day1_homework.ipynb
+          SUBMISSIONS_DIR="Basics/assignments/Basics_Day1_homework/submissions"
+          if [ ! -d "$SUBMISSIONS_DIR" ]; then
+            echo "Missing submissions directory: $SUBMISSIONS_DIR"
+            exit 1
+          fi
+          mapfile -t DAY1_NOTEBOOKS < <(find "$SUBMISSIONS_DIR" -maxdepth 1 -type f -name "*Basics_Day1*.ipynb" | sort)
+          if [ ${#DAY1_NOTEBOOKS[@]} -eq 0 ]; then
+            echo "No Day 1 submission notebook found in ${SUBMISSIONS_DIR}. Expected an .ipynb containing 'Basics_Day1' in the filename."
+            exit 1
+          fi
+          DAY1_NOTEBOOK="${DAY1_NOTEBOOKS[0]}"
+          DAY1_NOTEBOOK_NAME="$(basename "$DAY1_NOTEBOOK")"
+          cp "$DAY1_NOTEBOOK" "submission/$DAY1_NOTEBOOK_NAME"
+          cp "$DAY1_NOTEBOOK" "submission/.github/autograder/$DAY1_NOTEBOOK_NAME"
           cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
           cp Basics/assignments/Basics_Day1_homework/feedback.json submission/.github/autograder/feedback.json
-          test -f submission/Basics_Day1_homework.ipynb || (echo "Missing copied submission/Basics_Day1_homework.ipynb" && exit 1)
-          test -f submission/.github/autograder/Basics_Day1_homework.ipynb || (echo "Missing copied Basics_Day1_homework.ipynb" && exit 1)
+          test -f "submission/$DAY1_NOTEBOOK_NAME" || (echo "Missing copied submission/$DAY1_NOTEBOOK_NAME" && exit 1)
+          test -f "submission/.github/autograder/$DAY1_NOTEBOOK_NAME" || (echo "Missing copied $DAY1_NOTEBOOK_NAME" && exit 1)
           test -f submission/.github/autograder/criteria.json || (echo "Missing copied criteria.json" && exit 1)
           test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
-          cat << 'EOF' > submission/.github/autograder/setup.json
+          cat << EOF > submission/.github/autograder/setup.json
           {
-            "file_checks": ["Basics_Day1_homework.ipynb"],
+            "file_checks": ["$DAY1_NOTEBOOK_NAME"],
             "commands": [
               "python -m pip install --quiet --upgrade pip",
               "python -m pip install nbconvert",
-              "jupyter nbconvert --to script Basics_Day1_homework.ipynb --output day1",
+              "jupyter nbconvert --to script $DAY1_NOTEBOOK_NAME --output day1",
               "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
             ]
           }
