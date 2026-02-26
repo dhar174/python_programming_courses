@@ -79,14 +79,14 @@ Checks for proper structure, navigation, CSS variables, and file integrity. Defa
 
 ### Autograder Testing
 
-**Local testing workflow** (mimics CI for assignments):
+**Local testing workflow** (mimics CI staging, but uses the submission path inside the config directory):
 ```bash
 # Navigate to assignment config directory
 cd Basics/assignments/Basics_Day1_homework/
 
-# Install dependencies and convert notebook
+# Install dependencies and convert a submission notebook
 python -m pip install nbconvert
-jupyter nbconvert --to script ../Basics_Day1_homework.ipynb --output day1.py
+jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py
 
 # Run converted script
 python day1.py
@@ -94,7 +94,7 @@ python day1.py
 # Compare output to expected values in criteria.json
 ```
 
-**Critical**: All autograder paths in `setup.json` are relative to the config directory. Notebooks are referenced as `../Basics_DayX_homework.ipynb`.
+**Critical**: In CI, assignment notebooks are discovered from `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`; filenames must include `Basics_DayX`, end in `.ipynb`, and use only letters, numbers, dots, underscores, and hyphens. Spaces are not permitted in submission filenames (for example, use `alex_Basics_Day1_homework.ipynb` instead of `Alex Basics Day1 homework.ipynb`).
 
 ### Python Environment
 
@@ -176,21 +176,22 @@ These define day-by-day (12 days), hour-by-hour (4 hours/day) breakdown, learnin
 For each assignment (e.g., Day 1), create:
 ```
 Basics/assignments/
-├── Basics_Day1_homework.ipynb           # Student notebook
+├── Basics_Day1_homework.ipynb           # Blank template notebook
 └── Basics_Day1_homework/                # Config directory
+    ├── submissions/                      # Student submission notebooks
     ├── setup.json                        # Dependency install, conversion
     ├── criteria.json                     # Test specifications
     └── feedback.json                     # Optional custom feedback
 ```
 
-**setup.json structure**:
+**setup.json structure** (local example; CI generates a setup.json that uses only the copied notebook filename after staging it into `submission/`):
 ```json
 {
-  "file_checks": ["../Basics_Day1_homework.ipynb"],
+  "file_checks": ["submissions/alex_Basics_Day1_homework.ipynb"],
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "jupyter nbconvert --to script ../Basics_Day1_homework.ipynb --output day1.py",
+    "jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py",
     "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
   ]
 }
@@ -273,7 +274,7 @@ npx @marp-team/marp-cli -w -c .marprc.yml
 # Test assignment locally
 cd Basics/assignments/Basics_Day1_homework/
 python -m pip install nbconvert
-jupyter nbconvert --to script ../Basics_Day1_homework.ipynb --output day1.py
+jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py
 python day1.py
 
 # Check git status with no pager

@@ -61,7 +61,7 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 **Manual testing steps (current repo, no new workflow yet)**:
 1. **Day 1 assignment**:
    - Use the existing autograder workflow via **Actions → Autograder → Run workflow**.
-   - Ensure `Basics/assignments/Basics_Day1_homework.ipynb` and configs are present.
+   - Ensure at least one submission notebook exists at `Basics/assignments/Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` and configs are present.
 2. **Day 2 assignment (manual run)**:
    - Locally convert/run using `Basics/assignments/Basics_Day2_homework/setup.json` commands.
    - Compare output against `Basics/assignments/Basics_Day2_homework/criteria.json`.
@@ -74,7 +74,8 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 ### 5) Key file locations
 - **Workflow**: `.github/workflows/autograder.yml`
 - **Day 1 assignment**:
-  - `Basics/assignments/Basics_Day1_homework.ipynb`
+  - `Basics/assignments/Basics_Day1_homework.ipynb` (blank template)
+  - `Basics/assignments/Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` (student submission)
   - `Basics/assignments/Basics_Day1_homework/{setup.json,criteria.json,feedback.json}`
 - **Day 2 assignment**:
   - `Basics/assignments/Basics_Day2_homework.ipynb`
