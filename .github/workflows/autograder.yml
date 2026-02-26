@@ -67,10 +67,10 @@ jobs:
 
           assignment_results = []
           granular_files = []
-          ignored_names = {"criteria.json", "feedback.json", "setup.json", "quiz_grades.json", "assignment_grades.json"}
+          IGNORED_FILENAMES = {"criteria.json", "feedback.json", "setup.json", "quiz_grades.json", "assignment_grades.json"}
 
           for json_path in sorted(output_dir.rglob("*.json")):
-              if json_path.name in ignored_names:
+              if json_path.name in IGNORED_FILENAMES:
                   continue
               if "_Quiz_" in json_path.name:
                   continue
@@ -157,7 +157,10 @@ jobs:
           UNANSWERED_MARKER = "unanswered"
 
           for legacy_file in output_dir.glob("*_Quiz_criteria.json"):
-              legacy_file.unlink(missing_ok=True)
+              try:
+                  legacy_file.unlink()
+              except FileNotFoundError:
+                  pass
 
           def load_quiz_data(html_path: Path) -> dict:
               html = html_path.read_text(encoding="utf-8")
