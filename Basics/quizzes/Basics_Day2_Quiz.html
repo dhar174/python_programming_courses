@@ -249,12 +249,14 @@
       font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
       font-size: 0.875em;
     }
-    .option-row:has(input:checked) {
+    .option-row:has(input:checked),
+    .option-row.is-checked {
       border-color: var(--py-blue);
       background: rgba(75,139,190,0.2);
       box-shadow: 0 0 0 2px rgba(75,139,190,0.3);
     }
-    .option-row:has(input:checked) span { color: var(--txt); font-weight: 500; }
+    .option-row:has(input:checked) span,
+    .option-row.is-checked span { color: var(--txt); font-weight: 500; }
 
     /* ── Action card (footer) ── */
     .action-card {
@@ -388,9 +390,10 @@
     }
 
     function saveAnswers(answers) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
       const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
-      const count = Object.keys(answers).filter((k) => validIds.has(k)).length;
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([k]) => validIds.has(k)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
       const total = QUIZ_DATA.questions.length;
       const status = document.getElementById('status');
       status.textContent = `Saved ${count}/${total} answers locally.`;
@@ -421,10 +424,19 @@
 
       container.addEventListener('change', (event) => {
         if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        // Sync .is-checked class for browsers without :has() support
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => {
+          radio.closest('.option-row').classList.toggle('is-checked', radio.checked);
+        });
         const answers = loadAnswers();
         const questionNumber = event.target.name.replace('q', '');
         answers[questionNumber] = event.target.value;
         saveAnswers(answers);
+      });
+
+      // Restore .is-checked class for pre-checked options (from localStorage)
+      container.querySelectorAll('input[type="radio"]:checked').forEach((radio) => {
+        radio.closest('.option-row').classList.add('is-checked');
       });
 
       saveAnswers(saved);
