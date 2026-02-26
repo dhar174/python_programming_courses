@@ -230,9 +230,9 @@ Basics/assignments/
       "2": "C"
     }
   }
+  ```
 - Generated autograder artifacts:
-  - `submission/.github/autograder/Basics_Day1_Quiz_criteria.json`
-  - `submission/.github/autograder/Basics_Day2_Quiz_criteria.json`
+  - `submission/.github/autograder/assignment_grades.json`
   - `submission/.github/autograder/quiz_grades.json`
 
 ## Code Style and Standards
