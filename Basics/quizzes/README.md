@@ -19,9 +19,9 @@ Both quiz files use a **dark IDE theme** styled for a Python coding academy:
 | `--txt-muted` | `#A6ADC8` | Secondary / muted text |
 | `--txt-code` | `#CBA6F7` | Inline code highlight |
 
-Spacing follows an **8-point grid** (`--sp1: 8px` … `--sp6: 48px`). All interactive elements use `transition: all 0.2s ease-in-out` for micro-interactions. Code blocks render in `JetBrains Mono` (with monospace fallbacks) and have a Python-yellow left-border accent. A live progress bar in the header tracks answered questions.
+Spacing is **primarily based on an 8-point grid** via the `--sp*` spacing tokens (`--sp1: 8px` … `--sp6: 48px`). Some small non-8px values (such as tight padding and `3px`/`4px` border-radii) are used at the component level for visual polish. All interactive elements use `transition: all 0.2s ease-in-out` for micro-interactions. Code blocks render in `JetBrains Mono` (with monospace fallbacks) and have a Python-yellow left-border accent. A live progress bar in the header tracks answered questions.
 
-To edit the theme, modify the `:root` CSS variables at the top of each quiz HTML file. Do **not** change the JavaScript `QUIZ_DATA` block or export logic.
+To edit the core theme (colors and spacing tokens), modify the `:root` CSS variables at the top of each quiz HTML file. Component-specific spacing and border-radius tweaks may also appear in individual CSS rules below `:root`. Do **not** change the JavaScript `QUIZ_DATA` block or export logic.
 
 ## Student answer export and required filenames
 

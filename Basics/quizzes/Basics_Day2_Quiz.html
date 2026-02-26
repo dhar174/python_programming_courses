@@ -91,7 +91,7 @@
       background: var(--surface-hi);
       border: 1px solid var(--border);
       border-radius: var(--r-sm);
-      padding: 6px var(--sp2);
+      padding: var(--sp1) var(--sp2);
       font-size: 0.875rem;
       color: var(--txt-muted);
       margin-top: var(--sp2);
@@ -221,7 +221,6 @@
       background: var(--surface-hi);
       cursor: pointer;
       transition: var(--t);
-      user-select: none;
     }
     .option-row:hover {
       border-color: var(--py-blue);
@@ -390,13 +389,14 @@
 
     function saveAnswers(answers) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-      const count = Object.keys(answers).length;
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const count = Object.keys(answers).filter((k) => validIds.has(k)).length;
       const total = QUIZ_DATA.questions.length;
       const status = document.getElementById('status');
       status.textContent = `Saved ${count}/${total} answers locally.`;
       const fill = document.getElementById('progressFill');
       const label = document.getElementById('progressLabel');
-      if (fill) fill.style.width = `${Math.round((count / total) * 100)}%`;
+      if (fill) fill.style.width = `${total > 0 ? Math.min(100, Math.round((count / total) * 100)) : 0}%`;
       if (label) label.textContent = `${count} / ${total}`;
     }
 
