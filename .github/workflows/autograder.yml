@@ -54,6 +54,84 @@ jobs:
           template_preset: 'io'
           feedback-type: 'default'
 
+      - name: Summarize assignment grading results
+        run: |
+          python - << 'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          output_dir = Path("submission/.github/autograder")
+          output_dir.mkdir(parents=True, exist_ok=True)
+
+          assignment_results = []
+          granular_files = []
+          ignored_names = {"criteria.json", "feedback.json", "setup.json", "quiz_grades.json", "assignment_grades.json"}
+
+          for json_path in sorted(output_dir.rglob("*.json")):
+              if json_path.name in ignored_names:
+                  continue
+              if "_Quiz_" in json_path.name:
+                  continue
+              try:
+                  payload = json.loads(json_path.read_text(encoding="utf-8"))
+              except json.JSONDecodeError:
+                  continue
+              tests = payload.get("tests") if isinstance(payload, dict) else None
+              if not isinstance(tests, list) or not tests:
+                  continue
+              if not any(isinstance(test, dict) and ("pass" in test or "student_stdout" in test) for test in tests):
+                  continue
+
+              total_points = 0.0
+              score_points = 0.0
+              for test in tests:
+                  if not isinstance(test, dict):
+                      continue
+                  try:
+                      points = float(test.get("points", 1))
+                  except (TypeError, ValueError):
+                      points = 1.0
+                  total_points += points
+                  if test.get("pass") is True:
+                      score_points += points
+
+              assignment_results.append(
+                  {
+                      "assignment_id": json_path.stem.replace("_criteria", ""),
+                      "score": score_points,
+                      "total": total_points,
+                      "source_file": str(json_path),
+                  }
+              )
+              granular_files.append(json_path)
+
+          results_file = output_dir / "assignment_grades.json"
+          results_file.write_text(json.dumps({"assignments": assignment_results}, indent=2), encoding="utf-8")
+          print(f"Wrote assignment grading report to {results_file}")
+
+          for granular_file in granular_files:
+              try:
+                  granular_file.unlink()
+              except OSError as exc:
+                  print(f"Warning: could not remove granular assignment file {granular_file}: {exc}", file=sys.stderr)
+
+          summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_file:
+              lines = ["## Assignment grading results", "", "| Assignment | Score | Source |", "| --- | --- | --- |"]
+              if assignment_results:
+                  for result in assignment_results:
+                      lines.append(f"| {result['assignment_id']} | {result['score']}/{result['total']} | {result['source_file']} |")
+              else:
+                  lines.append("| _No assignment results found_ | 0/0 | n/a |")
+              try:
+                  with open(summary_file, "a", encoding="utf-8") as handle:
+                      handle.write("\n".join(lines) + "\n")
+              except OSError as exc:
+                  print(f"Warning: could not write GitHub step summary: {exc}", file=sys.stderr)
+          PY
+
       - name: Grade Basics HTML quizzes
         run: |
           python - << 'PY'
@@ -77,6 +155,9 @@ jobs:
           output_dir.mkdir(parents=True, exist_ok=True)
           quiz_results = []
           UNANSWERED_MARKER = "unanswered"
+
+          for legacy_file in output_dir.glob("*_Quiz_criteria.json"):
+              legacy_file.unlink(missing_ok=True)
 
           def load_quiz_data(html_path: Path) -> dict:
               html = html_path.read_text(encoding="utf-8")
@@ -156,9 +237,6 @@ jobs:
                       }
                   )
 
-              criteria_like = {"tests": tests}
-              (output_dir / f"{quiz_id}_criteria.json").write_text(json.dumps(criteria_like, indent=2), encoding="utf-8")
-
               quiz_results.append(
                   {
                       "quiz_id": quiz_id,
@@ -166,7 +244,7 @@ jobs:
                       "answer_source": answer_source,
                       "score": score,
                       "total": len(expected_answers),
-                      "criteria_file": str(output_dir / f"{quiz_id}_criteria.json"),
+                      "tests": tests,
                   }
               )
 

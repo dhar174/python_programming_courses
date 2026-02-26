@@ -57,23 +57,6 @@ Each quiz export contains metadata plus answer/test data. Example:
 
 - Assignment grading still uses `Basics/assignments/Basics_DayX_homework/criteria.json` + `setup.json`.
 - Quiz grading runs in `.github/workflows/autograder.yml` (`Grade Basics HTML quizzes` step), reads `expectedAnswers` from quiz HTML, and compares to `student_answers` from exported JSON.
-- The workflow writes criteria-style quiz outputs to:
-  - `submission/.github/autograder/Basics_Day1_Quiz_criteria.json`
-  - `submission/.github/autograder/Basics_Day2_Quiz_criteria.json`
+- The workflow writes consolidated summary files to:
+  - `submission/.github/autograder/assignment_grades.json`
   - `submission/.github/autograder/quiz_grades.json`
-
-Generated quiz criteria files follow the same `tests[]` shape used by `criteria.json`, for example:
-
-```json
-{
-  "tests": [
-    {
-      "name": "Basics_Day1_Quiz Question 1",
-      "points": 1,
-      "expected_stdout": ["D"],
-      "student_stdout": ["D"],
-      "pass": true
-    }
-  ]
-}
-```
