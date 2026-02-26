@@ -4,6 +4,7 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 
 ## Milestone Status
 - **2026-02-26 — Autograder workflow review (Days 1–2)**: Completed a workflow + integration audit and drafted a manual testing plan. See the report below for findings, alignment notes, and a triggerable test suite design.
+- **2026-02-26 — Basics Days 1–2 alignment review**: Completed a runbook-to-courseware alignment audit for Hours 1–8. See the report below for matches, gaps, and scope drift.
 
 ## Decisions
 - _No decisions recorded yet._
@@ -83,3 +84,34 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
   - `Basics/quizzes/Basics_Day2_Quiz.html`
   - `Basics/quizzes/Basics_Day1_Quiz_answers.json`
   - `Basics/quizzes/Basics_Day2_Quiz_answers.json`
+
+## Basics Days 1–2 Alignment Review (2026-02-26)
+
+### 1) Scope reviewed
+- **Runbook**: Basics Instructor 4hr Runbook, Hours 1–8 (Sessions 1–2).
+- **Day 1 materials**: `Basics/lessons/lecture/Day1_Hour1_Basics.md` through `Day1_Hour4_Basics.md`, Day 1 homework, Day 1 quiz.
+- **Day 2 materials**: `Basics/lessons/day-02-session-2.md`, Day 2 homework, Day 2 quiz.
+
+### 2) Alignment matches (runbook → materials)
+- **Hour 1** (orientation + environment readiness): fully covered in Day 1 Hour 1 lecture, reinforced in Day 1 homework and quiz.
+- **Hour 2** (print(), comments, reading errors): fully covered in Day 1 Hour 2 lecture, reinforced in Day 1 homework and quiz.
+- **Hour 3** (variables + basic types): fully covered in Day 1 Hour 3 lecture, reinforced in Day 1 homework and quiz.
+- **Hour 4** (numbers + operators): fully covered in Day 1 Hour 4 lecture, reinforced in Day 1 quiz.
+- **Hours 5–8** (strings, methods, input/type conversion, checkpoint): covered in `day-02-session-2.md`, Day 2 homework, and Day 2 quiz.
+
+### 3) Gaps or mismatches
+- **Hour 4 lab alignment**: Runbook specifies a Tip Calculator lab; Day 1 homework instead focuses on a restaurant bill and a unit converter. The Tip Calculator appears only in the lecture script.
+- **Input-driven lab vs autograder-safe homework**: Runbook Hours 5–8 labs rely on user input; Day 2 homework uses fixed values to stay deterministic for autograding, reducing alignment with the input-driven practice.
+- **Checkpoint alignment**: Runbook Hour 8 receipt generator is input-driven; Day 2 homework receipt uses fixed values.
+
+### 4) Scope drift (topics appearing earlier than runbook)
+- **Day 1 homework**: unit converter exercises (aligned to Hour 7 content), `==` vs `=` reflection (runbook Hour 9 topic), and explicit type hints (not covered in Hours 1–8).
+- **Day 2 homework/quiz**: runbook Hour 11 string topics are split across Day 2 materials: homework introduces `split()`, `title()`, and `join()`, while the Day 2 quiz covers `split()`, `join()`, and `max(..., key=len)` (no `.title()` question).
+
+### 5) Structural mismatches
+- **Day 2 lecture structure**: No per-hour lecture scripts in `Basics/lessons/lecture/` for Hours 5–8; content is consolidated in `day-02-session-2.md` without hour-specific lecture files.
+
+### 6) Follow-up recommendations
+- Add Hour 5–8 lecture scripts or explicitly label `day-02-session-2.md` as the canonical lecture source for Day 2.
+- Decide whether to move `split()/join()/title()` content to Day 3 or mark it as a preview in Day 2 materials.
+- Consider a Tip Calculator homework/lab entry to mirror the Hour 4 runbook lab.
