@@ -53,8 +53,10 @@ Module 1 materials (Python Programming - Basic, 48 hours):
   - [`python-dark.css`](./Basics/themes/python-dark.css) - Dark theme for slides.
   - [`python-light.css`](./Basics/themes/python-light.css) - Light theme for slides.
   
-- **[`Basics/lessons/`](./Basics/lessons/lecture)** - Markdown source files for readable Lecture scripts + notes.
-  - Lesson files should be created here following the naming pattern: `DayX_HourY_Basics.md`
+- **[`Basics/lessons/lecture/`](./Basics/lessons/lecture)** - Markdown source files for readable Lecture scripts + notes.
+  - Lesson files are organized one file per hour following the naming pattern: `DayX_HourY_Basics.md`
+  - Example files: `Day1_Hour1_Basics.md` – `Day1_Hour4_Basics.md`, `Day2_Hour5_Basics.md` – `Day2_Hour8_Basics.md`, `Day3_Hour1_Basics.md` – `Day3_Hour4_Basics.md`
+  - **All new sessions must use per-hour files** (not combined session files)
 
 - **[`Basics/lessons/`](./Basics/lessons/assignments)** - IPNYB source files for homework assignment notebooks.
 
@@ -184,14 +186,27 @@ These runbooks define:
 Each hour receives its own dedicated Markdown file formatted for direct instructor delivery:
 
 1. **Location**:
-   - Basic topics: `Basics/lessons/DayX_HourY_Basics.md`
-   - Advanced topics: `Advanced/lessons/DayX_HourY_Advanced.md`
+   - Basic topics: `Basics/lessons/lecture/DayX_HourY_Basics.md`
+   - Advanced topics: `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
 
 2. **Naming Convention**:
    - `Day1_Hour1_Basics.md` - Day 1, Hour 1 of Basic module
+   - `Day2_Hour5_Basics.md` - Day 2, Hour 5 of Basic module
    - `Day3_Hour2_Advanced.md` - Day 3, Hour 2 of Advanced module
 
-3. **Content Requirements**:
+3. **Per-Hour File Structure (Standard)**:
+   All session content **must** be split into one file per hour. Do not combine multiple hours into a single file. This enables:
+   - Granular instructional agent automation
+   - Easy per-hour updates without touching adjacent hours
+   - Clear curriculum traceability
+
+   Example — Day 2, Session 2 files:
+   - `Basics/lessons/lecture/Day2_Hour5_Basics.md` (String Fundamentals)
+   - `Basics/lessons/lecture/Day2_Hour6_Basics.md` (String Methods)
+   - `Basics/lessons/lecture/Day2_Hour7_Basics.md` (Input/Output + Type Conversion)
+   - `Basics/lessons/lecture/Day2_Hour8_Basics.md` (Checkpoint 1 + Session Wrap-Up)
+
+4. **Content Requirements**:
    - Comprehensive coverage of topics for that hour
    - Readable verbatim during instruction
    - Minimal paraphrasing required
