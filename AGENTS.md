@@ -246,7 +246,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 2. **Workflow overview**:
     - The autograder workflow (`.github/workflows/autograder.yml`, introduced in PR #114) runs on push/PR to `main`, plus manual `workflow_dispatch`.
     - The workflow uses `webtech-network/autograder@v1`.
-    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies the matching `Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` notebook into `submission/` for pre-flight file checks.
+    - For v1 compatibility, CI generates `submission/.github/autograder/setup.json` at runtime and copies the matching `Basics/assignments/Basics_Day1_homework/submissions/*Basics_Day1*.ipynb` notebook into `submission/` for pre-flight file checks.
     - The workflow also parses `Basics_Day1_Quiz.html` and `Basics_Day2_Quiz.html` (from `Basics/quizzes/Basics_Day1/` or `Basics/quizzes/`) and writes consolidated grading summaries to `submission/.github/autograder/assignment_grades.json` and `submission/.github/autograder/quiz_grades.json`.
     - Quiz submissions are JSON answer exports (`Basics_Day1_Quiz_answers.json`, `Basics_Day2_Quiz_answers.json`) rather than notebook/script execution, unlike assignment grading.
     - Quiz answer exports are discovered from either the quiz subfolder (same directory as the HTML) or `Basics/quizzes/` root and must include `student_answers` with numeric string question IDs.

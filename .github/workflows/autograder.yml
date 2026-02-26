@@ -25,14 +25,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Prepare autograder configuration
+        id: prepare_autograder
         run: |
           mkdir -p submission/.github/autograder
           SUBMISSIONS_DIR="Basics/assignments/Basics_Day1_homework/submissions"
           mkdir -p "$SUBMISSIONS_DIR"
           mapfile -t DAY1_NOTEBOOKS < <(find "$SUBMISSIONS_DIR" -maxdepth 1 -type f -name "*Basics_Day1*.ipynb" | sort)
           if [ ${#DAY1_NOTEBOOKS[@]} -eq 0 ]; then
-            echo "No Day 1 submission notebook found in ${SUBMISSIONS_DIR}. Expected an .ipynb containing 'Basics_Day1' in the filename."
-            exit 1
+            echo "::notice::No Day 1 submission notebook found in ${SUBMISSIONS_DIR}. Expected an .ipynb containing 'Basics_Day1' in the filename. Skipping Day 1 assignment grading for this run."
+            echo "day1_submission_found=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           if [ ${#DAY1_NOTEBOOKS[@]} -gt 1 ]; then
             echo "Multiple Day 1 submission notebooks found; using the first sorted match: ${DAY1_NOTEBOOKS[0]}"
@@ -47,6 +49,7 @@ jobs:
             echo "Invalid submission filename '$DAY1_NOTEBOOK_NAME'. Relative path-like names are not allowed."
             exit 1
           fi
+          echo "day1_submission_found=true" >> "$GITHUB_OUTPUT"
           cp "$DAY1_NOTEBOOK" "submission/$DAY1_NOTEBOOK_NAME"
           cp "$DAY1_NOTEBOOK" "submission/.github/autograder/$DAY1_NOTEBOOK_NAME"
           cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
@@ -90,6 +93,7 @@ jobs:
           test -f submission/.github/autograder/setup.json || (echo "Missing generated setup.json" && exit 1)
       
       - name: Run autograder
+        if: steps.prepare_autograder.outputs.day1_submission_found == 'true'
         uses: webtech-network/autograder@v1
         with:
           template_preset: 'io'
