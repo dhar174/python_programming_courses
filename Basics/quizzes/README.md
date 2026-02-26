@@ -5,6 +5,24 @@ Day 1 and Day 2 quizzes are interactive HTML files:
 - `Basics/quizzes/Basics_Day1_Quiz.html` (or `Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html`)
 - `Basics/quizzes/Basics_Day2_Quiz.html` (or `Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html`)
 
+## Visual Design
+
+Both quiz files use a **dark IDE theme** styled for a Python coding academy:
+
+| Token | Value | Purpose |
+|---|---|---|
+| `--bg` | `#1E1E2E` | Page background (dark IDE) |
+| `--surface` | `#252537` | Card background |
+| `--py-blue` | `#4B8BBE` | Python-brand blue accent |
+| `--py-yellow` | `#FFD43B` | Python-brand yellow accent |
+| `--txt` | `#CDD6F4` | Primary text (WCAG AA) |
+| `--txt-muted` | `#A6ADC8` | Secondary / muted text |
+| `--txt-code` | `#CBA6F7` | Inline code highlight |
+
+Spacing follows an **8-point grid** (`--sp1: 8px` … `--sp6: 48px`). All interactive elements use `transition: all 0.2s ease-in-out` for micro-interactions. Code blocks render in `JetBrains Mono` (with monospace fallbacks) and have a Python-yellow left-border accent. A live progress bar in the header tracks answered questions.
+
+To edit the theme, modify the `:root` CSS variables at the top of each quiz HTML file. Do **not** change the JavaScript `QUIZ_DATA` block or export logic.
+
 ## Student answer export and required filenames
 
 1. Open the quiz HTML file in a browser.
