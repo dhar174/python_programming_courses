@@ -106,7 +106,7 @@ jobs:
           cd submission
           NOTEBOOK=$(ls *.ipynb 2>/dev/null | head -1)
           if [ -n "$NOTEBOOK" ]; then
-            jupyter nbconvert --to script "$NOTEBOOK" --output day1 2>&1 || echo "::warning::Notebook conversion failed"
+            jupyter nbconvert --to script "$NOTEBOOK" --output day1 2>&1 || echo "::warning::Notebook conversion failed for $NOTEBOOK"
           fi
           python - << 'PYEVAL'
           import json
