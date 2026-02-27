@@ -99,6 +99,58 @@ jobs:
           template_preset: 'io'
           feedback-type: 'default'
 
+      - name: Evaluate assignment tests
+        if: steps.prepare_autograder.outputs.day1_submission_found == 'true'
+        run: |
+          python -m pip install --quiet nbconvert 2>/dev/null
+          cd submission
+          NOTEBOOK=$(ls *.ipynb 2>/dev/null | head -1)
+          if [ -n "$NOTEBOOK" ]; then
+            jupyter nbconvert --to script "$NOTEBOOK" --output day1 2>&1 || echo "::warning::Notebook conversion failed"
+          fi
+          python - << 'PYEVAL'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          criteria_path = Path(".github/autograder/criteria.json")
+          if not criteria_path.exists():
+              print("::warning::criteria.json not found; skipping host-side test evaluation")
+              sys.exit(0)
+
+          criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
+          tests = criteria.get("tests")
+          if not isinstance(tests, list) or not tests:
+              print("::warning::No tests found in criteria.json")
+              sys.exit(0)
+
+          for test in tests:
+              if not isinstance(test, dict):
+                  continue
+              cmd = test.get("command", [])
+              stdin_data = test.get("stdin", "")
+              expected = test.get("expected_stdout", [])
+              try:
+                  result = subprocess.run(
+                      cmd,
+                      input=stdin_data,
+                      capture_output=True,
+                      text=True,
+                      timeout=30,
+                  )
+                  stdout_text = result.stdout
+                  test["student_stdout"] = stdout_text.strip().splitlines()
+                  test["pass"] = all(exp_line in stdout_text for exp_line in expected)
+              except Exception as exc:
+                  test["student_stdout"] = [str(exc)]
+                  test["pass"] = False
+
+          output_path = Path(".github/autograder/Basics_Day1_criteria.json")
+          output_path.write_text(json.dumps(criteria, indent=2), encoding="utf-8")
+          print(f"Wrote evaluated test results to {output_path}")
+          PYEVAL
+
       - name: Summarize assignment grading results
         run: |
           python - << 'PY'
