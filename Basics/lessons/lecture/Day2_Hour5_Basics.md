@@ -1,4 +1,5 @@
-# Day 2 — Hour 5 (Session 2): String Fundamentals (Indexing, Slicing, `len()`)
+# Day 2, Hour 5: String Fundamentals (Indexing, Slicing, `len()`)
+**Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
 **Runbook alignment:** Session 2, Hour 5  

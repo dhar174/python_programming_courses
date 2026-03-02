@@ -1,4 +1,5 @@
-# Day 2 — Hour 7 (Session 2): Input/Output + Type Conversion
+# Day 2, Hour 7: Input/Output + Type Conversion
+**Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
 **Runbook alignment:** Session 2, Hour 7  
@@ -36,7 +37,7 @@
 
 ## 2) Framing and Setup
 
-Prepare file: `hour7_input_conversion.py`.
+Prepare file: `hour7_converter.py`.
 
 Have these sample values ready:
 - Valid integers: `25`, `0`, `-3`
@@ -249,6 +250,7 @@ print("\n--- Temperature Converter ---")
 fahrenheit = float(input("Enter temperature in °F: "))
 celsius = (fahrenheit - 32) * 5 / 9
 print(f"{round(fahrenheit, 1)}°F = {round(celsius, 1)}°C")
+```
 
 ## 5.6 Facilitation timeline
 

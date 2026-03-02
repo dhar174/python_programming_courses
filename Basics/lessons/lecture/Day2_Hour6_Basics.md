@@ -1,4 +1,5 @@
-# Day 2 — Hour 6 (Session 2): String Methods (Normalize, Search, Replace)
+# Day 2, Hour 6: String Methods (Normalize, Search, Replace)
+**Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
 **Runbook alignment:** Session 2, Hour 6  
@@ -9,7 +10,7 @@
 
 ## Instructor Deliverable Script (Largely Verbatim)
 
-> This hour reinforces the runbook outcomes: use common string methods, explain immutability, and apply methods in practical text-cleaning.
+> This hour reinforces the runbook outcomes: use common string methods, explain immutability, and apply methods in practical text-cleaning for beginners.
 
 ---
 
@@ -235,6 +236,7 @@ Keyword 'is' found: True
 
 ## 5.2 Scaffolded starter
 
+```python
 cleaned = sentence.strip().lower()
 
 # TODO: collapse 2+ spaces repeatedly until stable

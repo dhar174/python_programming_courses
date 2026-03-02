@@ -1,4 +1,5 @@
-# Day 2 — Hour 8 (Session 2): Checkpoint 1 — Fundamentals Mini-Assessment
+# Day 2, Hour 8: Checkpoint 1 — Fundamentals Mini-Assessment
+**Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
 **Runbook alignment:** Session 2, Hour 8  
@@ -148,15 +149,14 @@ subtotal = quantity * price_per_item
 total = subtotal
 
 print()
-print("=" * 28)
-print("         RECEIPT")
-print("=" * 28)
+print("========== RECEIPT ==========")
 print(f"Item:     {item_name}")
 print(f"Quantity: {quantity}")
-print(f"Price:    ${round(price, 2)} each")
-print("-" * 28)
-print(f"Subtotal: ${round(subtotal, 2)}")
-print("=" * 28)
+print(f"Price:    ${price_per_item:.2f} each")
+print("-----------------------------")
+print(f"Subtotal: ${subtotal:.2f}")
+print(f"Total:    ${total:.2f}")
+print("=============================")
 ```
 
 ---
