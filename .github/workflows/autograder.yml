@@ -99,6 +99,76 @@ jobs:
           template_preset: 'io'
           feedback-type: 'default'
 
+      - name: Evaluate assignment tests
+        if: steps.prepare_autograder.outputs.day1_submission_found == 'true'
+        run: |
+          python -m pip install --quiet nbconvert || { echo "::error::Failed to install nbconvert; cannot run notebook conversion."; exit 1; }
+          cd submission
+          NOTEBOOK=$(ls *.ipynb 2>/dev/null | head -1)
+          if [ -n "$NOTEBOOK" ]; then
+            jupyter nbconvert --to script "$NOTEBOOK" --output day1 2>&1 || echo "::warning::Notebook conversion failed for $NOTEBOOK"
+          fi
+          python - << 'PYEVAL'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          criteria_path = Path(".github/autograder/criteria.json")
+          if not criteria_path.exists():
+              print("::warning::criteria.json not found; skipping host-side test evaluation")
+              sys.exit(0)
+
+          criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
+          tests = criteria.get("tests")
+          if not isinstance(tests, list) or not tests:
+              print("::warning::No tests found in criteria.json")
+              sys.exit(0)
+
+          for test in tests:
+              if not isinstance(test, dict):
+                  continue
+              cmd = test.get("command", [])
+              stdin_data = test.get("stdin", "")
+              expected = test.get("expected_stdout", [])
+              try:
+                  result = subprocess.run(
+                      cmd,
+                      input=stdin_data,
+                      capture_output=True,
+                      text=True,
+                      timeout=30,
+                  )
+                  stdout_text = result.stdout or ""
+                  stdout_lines = stdout_text.splitlines()
+                  test["student_stdout"] = stdout_lines
+
+                  # Determine pass/fail: fail on non-zero return code, otherwise
+                  # require each expected line to be present with strict matching.
+                  if result.returncode != 0:
+                      pass_flag = False
+                  else:
+                      matches = []
+                      for exp_line in expected:
+                          if not isinstance(exp_line, str):
+                              continue
+                          if exp_line in ("Student:", "Date:", "Python Version:"):
+                              match = any(line.startswith(exp_line) for line in stdout_lines)
+                          else:
+                              match = any(line == exp_line for line in stdout_lines)
+                          matches.append(match)
+                      pass_flag = all(matches) if expected else True
+
+                  test["pass"] = pass_flag
+              except Exception as exc:
+                  test["student_stdout"] = [str(exc)]
+                  test["pass"] = False
+
+          output_path = Path(".github/autograder/Basics_Day1_criteria.json")
+          output_path.write_text(json.dumps(criteria, indent=2), encoding="utf-8")
+          print(f"Wrote evaluated test results to {output_path}")
+          PYEVAL
+
       - name: Summarize assignment grading results
         run: |
           python - << 'PY'
