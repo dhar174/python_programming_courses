@@ -692,8 +692,8 @@ name = "Alice"
 # print(f"Use {name} like this: {name}")   # confusing duplication
 
 # What if you want to SHOW the syntax itself?
-# WRONG — this causes an error or unexpected output
-# print(f"Syntax: {name}")
+# WRONG (for showing literal braces) — this substitutes the value of name instead of showing {name}
+# print(f"Syntax: {name}")   # prints: Syntax: Alice
 
 # RIGHT — double the braces to escape them
 print(f"Syntax example: {{name}} becomes {name}")
