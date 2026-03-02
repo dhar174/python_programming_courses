@@ -777,13 +777,11 @@ print(pos)
 ### Q5: Robust cleaner function
 
 ```python
-def clean_sentence(text: str) -> str:
-    cleaned = text.strip().lower()
-    while "  " in cleaned:
-        cleaned = cleaned.replace("  ", " ")
-    return cleaned
-
-print(clean_sentence("  HELLO     WORLD  "))
+text = "  HELLO     WORLD  "
+cleaned = text.strip().lower()
+while "  " in cleaned:
+    cleaned = cleaned.replace("  ", " ")
+print(cleaned)
 ```
 
 ---
