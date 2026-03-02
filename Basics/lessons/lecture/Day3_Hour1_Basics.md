@@ -530,14 +530,14 @@ Remember the order of operations: `and` is evaluated before `or`. So Python read
 
 The first part is `True and False` → `False`. But the second part is `not False` → `True`. So the whole expression becomes `False or True` → `True`.
 
-**This is a real bug you could write.** The fix is to use explicit parentheses:
+**This is a real bug you could write.** The fix is to require all three conditions with explicit parentheses:
 
 ```python
-if username == "admin" and (password == "secret" or not is_locked):
+if (username == "admin") and (password == "secret") and (not is_locked):
     print("Access granted")
 ```
 
-Now the logic groups correctly: the username must be "admin", AND either the password is correct or the account isn't locked. **Parentheses aren't just for clarity—they change meaning.**
+Now the logic is crystal clear: the username must be `"admin"`, AND the password must be `"secret"`, AND the account must not be locked. All three must be `True` for access to be granted. **Parentheses aren't just for clarity—they prevent subtle security bugs.**
 
 ---
 
