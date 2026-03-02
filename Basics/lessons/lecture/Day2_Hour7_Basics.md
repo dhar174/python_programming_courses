@@ -221,7 +221,7 @@ miles = float(input("Enter distance in miles: "))
 
 km = miles * 1.60934
 
-print(f"{miles:.1f} miles = {km:.2f} kilometers")
+print(f"{round(miles, 1)} miles = {round(km, 2)} kilometers")
 ```
 
 ## 5.4 Reference solution — °F to °C
