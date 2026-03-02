@@ -5,7 +5,7 @@
 
 ## Timing Overview
 **Total Time:** 60 minutes  
-- Recap & Transition from Day 1: 3 minutes
+- Recap & Transition from Day 2: 3 minutes
 - Comparison Operators: 10-12 minutes
 - Boolean Logic (and/or/not): 8-10 minutes
 - Truthy/Falsey Preview: 3-5 minutes
@@ -27,18 +27,23 @@ By the end of this hour, you will be able to:
 
 ---
 
-## Section 1: Recap & Transition from Day 1 (3 minutes)
+## Section 1: Recap & Transition from Day 2 (3 minutes)
 
 ### Quick Review
 
 **[Instructor speaks:]**
 
-Welcome to Day 2! Yesterday, we covered a lot of ground. Let's do a quick recap:
+Welcome to Day 3! Over the first two days, we covered a lot of ground. Let's do a quick recap:
 
 **Day 1 Highlights:**
 - **Hour 1-2**: We set up our environment, learned about `print()`, comments, and reading errors
 - **Hour 3**: We introduced variables, data types (int, float, str), and type conversion
-- **Hour 4**: We built our first interactive programs with `input()` and basic if statements
+- **Hour 4**: We explored numbers, arithmetic operators, and operator precedence
+
+**Day 2 Highlights:**
+- **Hour 5-6**: We dove into string fundamentals—indexing, slicing, `len()`—and mastered string methods like `.upper()`, `.lower()`, `.find()`, `.replace()`, and `.strip()`
+- **Hour 7**: We built interactive programs with `input()` and practiced type conversion in real scenarios
+- **Hour 8**: We completed Checkpoint 1, putting all those fundamentals to the test
 
 Quick show of hands: **Who completed the Tip Calculator from yesterday?**
 
@@ -48,7 +53,7 @@ Excellent! You're all now officially writing **programs**, not just scripts. Pro
 
 ### What We're Building Toward Today
 
-Today, we're going to **strengthen your decision-making logic**. By the end of Day 2, your programs will be able to:
+Today, we're going to **strengthen your decision-making logic**. By the end of Day 3, your programs will be able to:
 
 - Compare values and make complex decisions
 - Format output beautifully with f-strings
@@ -163,6 +168,71 @@ False
 ```
 
 Good! The first comparison checks if 85 is greater than or equal to 80—it is, so `True`. The second checks if 85 equals 100—it doesn't, so `False`.
+
+### Real-World Comparison Scenarios
+
+**[Instructor speaks:]**
+
+Let's look at a few more examples, because comparisons are everywhere in real programs. Think about the kinds of checks you make every day—even outside of code.
+
+**Scenario 1: Temperature check**
+
+Imagine you're building a weather app that tells people what to wear:
+
+```python
+temperature = 32
+
+print(temperature <= 32)    # True — freezing or below
+print(temperature > 100)    # False — not dangerously hot
+print(temperature != 72)    # True — not "room temperature"
+```
+
+**Output:**
+```
+True
+False
+True
+```
+
+Every decision this app makes starts with a comparison like one of these.
+
+**Scenario 2: Password length validation**
+
+When users create an account, you need to check that their password meets minimum requirements:
+
+```python
+password = "secret"
+min_length = 8
+
+print(len(password) >= min_length)    # False — "secret" is only 6 characters
+```
+
+**Output:**
+```
+False
+```
+
+See how we used `len()` from Day 2 inside a comparison? The tools you already know keep combining in new ways.
+
+**Scenario 3: Checking string equality (case-sensitive)**
+
+Remember `.lower()` from our string methods lesson? Here's why it matters for comparisons:
+
+```python
+user_answer = "Paris"
+correct_answer = "paris"
+
+print(user_answer == correct_answer)              # False — capital P vs lowercase p
+print(user_answer.lower() == correct_answer)      # True — both are "paris"
+```
+
+**Output:**
+```
+False
+True
+```
+
+**[Key takeaway]:** Comparisons are the building blocks. On their own, they answer simple yes/no questions. In the next section, we'll learn how to **combine** those questions into complex logic.
 
 ### Comparing Different Data Types
 
@@ -426,6 +496,49 @@ Perfect beach day!
 
 Both conditions are True (75 >= 70, and is_sunny is True), so the `and` condition is True.
 
+### Quick Check #3
+
+**[Instructor asks:]**
+
+Let's try a slightly harder one. What does this print?
+
+```python
+username = "admin"
+password = "1234"
+is_locked = False
+
+if username == "admin" and password == "secret" or not is_locked:
+    print("Access granted")
+else:
+    print("Access denied")
+```
+
+[Pause for student predictions]
+
+**Answer:**
+```
+Access granted
+```
+
+**Wait—the password is wrong! How did that happen?**
+
+Remember the order of operations: `and` is evaluated before `or`. So Python reads this as:
+
+```
+(username == "admin" and password == "secret") or (not is_locked)
+```
+
+The first part is `True and False` → `False`. But the second part is `not False` → `True`. So the whole expression becomes `False or True` → `True`.
+
+**This is a real bug you could write.** The fix is to use explicit parentheses:
+
+```python
+if username == "admin" and (password == "secret" or not is_locked):
+    print("Access granted")
+```
+
+Now the logic groups correctly: the username must be "admin", AND either the password is correct or the account isn't locked. **Parentheses aren't just for clarity—they change meaning.**
+
 ---
 
 ## Section 4: Truthy and Falsey Values – A Preview (3-5 minutes)
@@ -498,6 +611,44 @@ if name != "":
 ```
 
 **[Important note]:** We're not using truthy/falsey extensively in this course yet. I just want you to recognize it when you see it. For now, **stick to explicit comparisons** like `name != ""` or `count > 0`—it's clearer.
+
+### One More Practical Example
+
+**[Instructor speaks:]**
+
+Here's another pattern you'll run into almost immediately. Say you ask a user for their age and want to make sure they actually typed something before you try to convert it:
+
+```python
+age_input = input("Enter your age: ")
+
+if age_input:
+    age = int(age_input)
+    print(f"You are {age} years old")
+else:
+    print("You didn't enter anything!")
+```
+
+If the user just presses Enter without typing, `age_input` is `""` (an empty string)—which is falsey. The `if age_input:` check prevents us from calling `int("")`, which would crash with a `ValueError`.
+
+And here's a numeric version of the same idea:
+
+```python
+items_in_cart = 0
+
+if items_in_cart:
+    print("Proceed to checkout")
+else:
+    print("Your cart is empty")
+```
+
+**Output:**
+```
+Your cart is empty
+```
+
+Because `0` is falsey, this prints the "empty" message. It's the same as writing `if items_in_cart != 0:` or `if items_in_cart > 0:`, just shorter.
+
+**[Reminder]:** You don't need to write code this way yet. The explicit versions (`!= ""`, `> 0`) are perfectly fine and often easier to read. But now you'll understand what's happening when you see the short form online or in someone else's code.
 
 ---
 
@@ -857,6 +1008,22 @@ In this hour, you:
 **This is a major milestone.** You can now write programs that make **complex decisions** based on multiple conditions. This is the foundation of almost every program you'll ever write.
 
 In Hour 10, we'll make your output look professional with f-string formatting.
+
+### What Comes Next
+
+**[Instructor speaks:]**
+
+Take a moment to appreciate what you can do now. After just two days of fundamentals, you're already writing programs that:
+
+- **Accept input** from a user (with `input()` and type conversion)
+- **Store and manipulate data** (variables, strings, numbers)
+- **Make decisions** (comparisons + `and`/`or`/`not`)
+
+That's the core loop of most software: *get data → process data → decide what to do → show the result*. The rest of this course builds on exactly this foundation.
+
+In the next hour, we'll focus on **f-string formatting**—making your output look clean and professional instead of just functional. After that, we'll tackle string processing patterns and then wrap Day 3 with a debugging session where you'll learn to read tracebacks and fix errors systematically.
+
+Everything connects: the comparisons you learned today will show up in every lab from here on out.
 
 **Great work! Take a quick 5-minute break.**
 
