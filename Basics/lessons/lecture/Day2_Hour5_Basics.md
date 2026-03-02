@@ -39,7 +39,7 @@ These are foundational skills you will use constantly in scripting, automation, 
 
 ## 2) Instructor Setup Checklist (before class)
 
-- Open terminal/editor with Python 3.11+.
+- Open terminal/editor with Python 3.x (examples will use Python 3.10 or 3.11).
 - Have a clean file ready, for example: `hour5_strings_demo.py`.
 - Ensure learners can run Python scripts.
 - Prepare three sample inputs in advance:
