@@ -235,24 +235,20 @@ celsius = (fahrenheit - 32) * 5 / 9
 print(f"{fahrenheit:.1f}°F = {celsius:.1f}°C")
 ```
 
-## 5.5 Optional extension (still Basics): menu without loops
+## 5.5 Optional extension (still Basics): sequential converters
 
 ```python
-print("1. Miles to Kilometers")
-print("2. Fahrenheit to Celsius")
-choice = input("Choose (1 or 2): ")
+# First, convert miles to kilometers
+print("--- Miles to Kilometers Converter ---")
+miles = float(input("Enter distance in miles: "))
+km = miles * 1.60934
+print(f"{round(miles, 1)} miles = {round(km, 2)} kilometers")
 
-if choice == "1":
-    miles = float(input("Enter miles: "))
-    km = miles * 1.60934
-    print(f"{miles:.1f} miles = {km:.2f} kilometers")
-elif choice == "2":
-    fahrenheit = float(input("Enter °F: "))
-    celsius = (fahrenheit - 32) * 5 / 9
-    print(f"{fahrenheit:.1f}°F = {celsius:.1f}°C")
-else:
-    print("Invalid choice")
-```
+# Then, convert Fahrenheit to Celsius
+print("\n--- Temperature Converter ---")
+fahrenheit = float(input("Enter temperature in °F: "))
+celsius = (fahrenheit - 32) * 5 / 9
+print(f"{round(fahrenheit, 1)}°F = {round(celsius, 1)}°C")
 
 ## 5.6 Facilitation timeline
 
