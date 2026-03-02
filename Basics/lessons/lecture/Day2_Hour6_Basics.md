@@ -235,15 +235,13 @@ Keyword 'is' found: True
 
 ## 5.2 Scaffolded starter
 
-```python
-sentence = input("Enter a sentence: ")
-keyword = input("Enter keyword to find: ")
-
 cleaned = sentence.strip().lower()
 
 # TODO: collapse 2+ spaces repeatedly until stable
 
 keyword_clean = keyword.strip().lower()
+
+# Now that the sentence is fully cleaned, check for the keyword
 found = keyword_clean in cleaned
 
 print(f"Cleaned: '{cleaned}'")
