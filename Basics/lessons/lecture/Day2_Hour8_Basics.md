@@ -93,8 +93,8 @@ Total:    $29.97
 
 2. **Correct math and types (35%)**
    - `quantity` converted to integer.
-   - `price` converted to float.
-   - `subtotal = quantity * price`.
+   - `price_per_item` converted to float.
+   - `subtotal = quantity * price_per_item`.
    - `total = subtotal` in baseline requirements.
 
 3. **Readable output formatting (20%)**
