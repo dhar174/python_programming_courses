@@ -61,7 +61,7 @@ Python Programming (Basic) • Day 2, Session 2
 
 ### Requirements
 - Input: item name, quantity, price per item
-- Compute subtotal and total
+- Compute subtotal
 - Print a receipt with aligned lines; money values rounded to 2 decimals using `round()`
 
 ---
