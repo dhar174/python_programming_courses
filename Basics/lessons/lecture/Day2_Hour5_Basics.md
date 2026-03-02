@@ -702,14 +702,19 @@ print(keyword.lower() in sentence.lower())
 ### Exercise 5: Safe first character helper
 
 ```python
-def safe_first_char(text: str) -> str:
-    text = text.strip()
-    if len(text) == 0:
-        return ""
-    return text[0]
+# For input " Alice "
+text = " Alice ".strip()
+if len(text) > 0:
+    print(f"First char: {text[0]}")
+else:
+    print("Input is empty.")
 
-print(safe_first_char(" Alice "))
-print(safe_first_char("   "))
+# For input "   "
+text = "   ".strip()
+if len(text) > 0:
+    print(f"First char: {text[0]}")
+else:
+    print("Input is empty.")
 ```
 
 ---
