@@ -62,7 +62,7 @@ Python Programming (Basic) • Day 2, Session 2
 ### Requirements
 - Input: item name, quantity, price per item
 - Compute subtotal and total
-- Print a receipt with aligned lines and 2-decimal money formatting
+- Print a receipt with aligned lines; money values rounded to 2 decimals using `round()`
 
 ---
 
@@ -107,9 +107,9 @@ print("         RECEIPT")
 print("=" * 28)
 print(f"Item:     {item_name}")
 print(f"Quantity: {quantity}")
-print(f"Price:    ${price:.2f} each")
+print(f"Price:    ${round(price, 2)} each")
 print("-" * 28)
-print(f"Subtotal: ${subtotal:.2f}")
+print(f"Subtotal: ${round(subtotal, 2)}")
 print("=" * 28)
 ```
 
@@ -202,8 +202,8 @@ result = int("3") + int("5")  # 8
 tax_rate = 0.08  # 8% tax
 tax_amount = subtotal * tax_rate
 total = subtotal + tax_amount
-print(f"Tax (8%): ${tax_amount:.2f}")
-print(f"Total:    ${total:.2f}")
+print(f"Tax (8%): ${round(tax_amount, 2)}")
+print(f"Total:    ${round(total, 2)}")
 ```
 
 ---
