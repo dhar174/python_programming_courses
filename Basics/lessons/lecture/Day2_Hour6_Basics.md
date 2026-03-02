@@ -40,7 +40,7 @@ Before class, open `hour6_methods_demo.py` and prepare sample strings:
 - `"   HELLO world   "`
 - `"Python    is      great"`
 - `"student@example.com"`
-- `"no-at-symbol.com"`
+- `"nosymbol.example.com"`
 
 **Say:**
 “Hour 5 taught us how to access text by position. Hour 6 teaches us how to transform text and search it cleanly. Think of these methods as your text toolbox.”
