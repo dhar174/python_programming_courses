@@ -47,6 +47,10 @@ I can clarify requirements, but I will not provide direct solutions. Think of th
 ## 3.1 Problem statement (read aloud slowly)
 
 “Build a Python script that generates a simple receipt for one item purchase.
+### Requirements
+- Input: item name, quantity, price per item
+- Compute subtotal
+- Print a receipt with aligned lines; money values rounded to 2 decimals using `round()`
 
 Your script must:
 1. Ask for item name.
@@ -149,10 +153,9 @@ print("         RECEIPT")
 print("=" * 28)
 print(f"Item:     {item_name}")
 print(f"Quantity: {quantity}")
-print(f"Price:    ${price_per_item:.2f} each")
+print(f"Price:    ${round(price, 2)} each")
 print("-" * 28)
-print(f"Subtotal: ${subtotal:.2f}")
-print(f"Total:    ${total:.2f}")
+print(f"Subtotal: ${round(subtotal, 2)}")
 print("=" * 28)
 ```
 
