@@ -36,7 +36,7 @@ By the end of this hour, you will be able to:
 
 **[Instructor speaks:]**
 
-Welcome to the final hour of Day 2! Let's do a quick recap:
+Welcome to the final hour of Day 3! Let's do a quick recap:
 
 **Today's Journey:**
 - **Hour 9**: Comparison operators and boolean logic—making decisions
@@ -1069,7 +1069,7 @@ Let me summarize the debugging mindset we practiced today:
 
 **[Instructor asks:]**
 
-Before we wrap up Day 2, answer this in your notes or in the chat:
+Before we wrap up Day 3, answer this in your notes or in the chat:
 
 **Question:** When is it helpful to print `type(variable)`, and why?
 
@@ -1092,9 +1092,9 @@ In this hour, you:
 
 ---
 
-## Recap: What We Accomplished in Day 2
+## Recap: What We Accomplished in Day 3
 
-**Day 2 Complete!** Let's review the full day:
+**Day 3 Complete!** Let's review the full day:
 
 ✅ **Hour 9:** Comparisons and boolean logic—making complex decisions  
 ✅ **Hour 10:** F-strings—formatting output like a pro  
@@ -1107,7 +1107,7 @@ In this hour, you:
 - Process and transform text
 - Debug problems independently
 
-**In Day 3 (Session 4), we'll dive into lists in detail and learn about loops.**
+**In Day 4 (Session 4), we'll dive into lists in detail and learn about loops.**
 
 **Amazing work today! See you next session!**
 
@@ -1158,4 +1158,4 @@ print(f"Working directory: {os.getcwd()}")
 
 ---
 
-**End of Hour 12 Script / End of Day 2**
+**End of Hour 12 Script / End of Day 3**

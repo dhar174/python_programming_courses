@@ -278,6 +278,76 @@ Last: Johnson
 
 **[Warning]:** This assumes the user enters exactly two words. In production code, you'd check the length of `parts` first to avoid an `IndexError`.
 
+### Practical Pattern: Parsing Simple Data
+
+**[Instructor speaks:]**
+
+Names are one example, but `split()` really shines when you need to pull apart structured data. Imagine you receive a string that contains product information separated by commas—something like a single line from a spreadsheet:
+
+```python
+record = "Coffee Beans,12.99,3"
+
+fields = record.split(",")
+print(fields)
+# ['Coffee Beans', '12.99', '3']
+```
+
+Each piece of data lands at a predictable position in the list. We can grab the fields by index and convert them to the types we actually need—remember `int()` and `float()` from earlier sessions:
+
+```python
+record = "Coffee Beans,12.99,3"
+fields = record.split(",")
+
+product_name = fields[0]
+price = float(fields[1])
+quantity = int(fields[2])
+
+total = price * quantity
+
+print(f"Product: {product_name}")
+print(f"Price:   ${price:.2f}")
+print(f"Qty:     {quantity}")
+print(f"Total:   ${total:.2f}")
+```
+
+**Output:**
+```
+Product: Coffee Beans
+Price:   $12.99
+Qty:     3
+Total:   $38.97
+```
+
+**[Key insight]:** Notice how this small example ties together three ideas from the last few hours:
+
+- **`split(",")`** to break the string apart (this hour)
+- **`float()` / `int()`** for type conversion (Session 1)
+- **f-strings with `:.2f`** for neat currency display (Hour 10)
+
+That is exactly how real programs work: you combine small skills into larger solutions.
+
+**One more example—**imagine the user types their data in directly:
+
+```python
+entry = input("Enter item (name,price,qty): ")
+# User types: Notebook,4.50,10
+
+parts = entry.split(",")
+item = parts[0]
+cost = float(parts[1])
+qty = int(parts[2])
+
+line_total = cost * qty
+print(f"{item}: {qty} × ${cost:.2f} = ${line_total:.2f}")
+```
+
+**Output:**
+```
+Notebook: 10 × $4.50 = $45.00
+```
+
+**[Warning]:** Just like the name example above, this assumes the user enters exactly three comma-separated values. Defensive checks would improve robustness, but the core pattern—split, index, convert—is the important takeaway.
+
 ### Counting Words
 
 **[Instructor speaks:]**
@@ -471,6 +541,46 @@ print(result)        # "1,2,3"
 
 **[For now]:** Just remember that `.join()` expects strings. If you see a `TypeError`, check that all elements are strings.
 
+### The Round-Trip Test
+
+**[Instructor speaks:]**
+
+Now that you know both methods, let's look at an important relationship between them. When you split a string and immediately join it back, you get a useful **round-trip**.
+
+**Whitespace round-trip (cleaning trick):**
+
+```python
+messy = "  too   many    spaces   "
+
+clean = " ".join(messy.split())
+print(f"'{clean}'")
+```
+
+**Output:**
+```
+'too many spaces'
+```
+
+This is one of the most common Python one-liners for cleaning whitespace. The `.split()` collapses all the gaps, and `" ".join()` rebuilds with exactly one space between each word.
+
+**Delimiter round-trip (identity test):**
+
+When you use the **same** separator for both operations, you get the original string back:
+
+```python
+csv_line = "Alice,Bob,Charlie"
+
+# Split on comma, then rejoin with comma
+result = ",".join(csv_line.split(","))
+print(result)
+# Alice,Bob,Charlie
+
+print(result == csv_line)
+# True
+```
+
+**Why does this matter?** It confirms you understand the relationship: `split()` and `join()` are true inverses when the separator matches. If your round-trip changes the string, that tells you something interesting happened—like extra whitespace being cleaned up. This is a handy mental model for reasoning about text transformations.
+
 ---
 
 ## Section 5: Practical Text Processing Patterns (5 minutes)
@@ -563,6 +673,54 @@ print(f"'{clean_text}'")
 ```
 
 **Why this works:** `.split()` breaks on any whitespace and ignores empties, `.join()` rebuilds with single spaces.
+
+### Pattern 5: Creating Simple CSV Lines
+
+**[Instructor speaks:]**
+
+We saw earlier how `split(",")` can take apart comma-separated data. Now let's go the other direction—use `join()` to **build** a comma-separated line from individual variables. This is useful whenever you need to create structured output, like a line in a report:
+
+```python
+name = "Alice"
+department = "Engineering"
+score = 92.5
+
+# Build a comma-separated line from these values
+line = ",".join([name, department, str(score)])
+print(line)
+```
+
+**Output:**
+```
+Alice,Engineering,92.5
+```
+
+**Remember:** `.join()` needs a list of **strings**, so we wrap `score` in `str()` before joining.
+
+You can combine this with f-strings from Hour 10 for even richer output—for instance, adding a formatted header and aligning the data:
+
+```python
+name = "Bob"
+role = "Analyst"
+hours = 37.5
+rate = 45.00
+
+pay = hours * rate
+
+header = ",".join(["Name", "Role", "Hours", "Rate", "Total"])
+data = ",".join([name, role, str(hours), f"${rate:.2f}", f"${pay:.2f}"])
+
+print(header)
+print(data)
+```
+
+**Output:**
+```
+Name,Role,Hours,Rate,Total
+Bob,Analyst,37.5,$45.00,$1687.50
+```
+
+**[Key insight]:** Notice how we used f-strings *inside* the list that we pass to `.join()`. Each f-string formats one value, and `.join()` stitches them together with commas. This is a clean, readable way to produce structured text output without messy string concatenation.
 
 ---
 

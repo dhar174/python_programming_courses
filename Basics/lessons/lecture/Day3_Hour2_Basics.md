@@ -191,6 +191,64 @@ The temperature in New York is 72°F
 
 The variables `city` and `temperature` get inserted exactly where they appear in the curly braces.
 
+### F-Strings with Conditional Logic
+
+**[Instructor speaks:]**
+
+Here's something powerful: f-strings work perfectly inside `if/elif/else` blocks. Remember the comparison operators and boolean logic we learned last hour? We can combine those decisions with f-strings to display *different* formatted messages depending on conditions.
+
+Let's say we have a student's score and want to display a grade classification:
+
+```python
+student_name = "Marcus"
+score = 82.7
+
+if score >= 90:
+    print(f"{student_name} earned an A with a score of {score:.1f}%  — Excellent!")
+elif score >= 80:
+    print(f"{student_name} earned a B with a score of {score:.1f}%  — Good job!")
+elif score >= 70:
+    print(f"{student_name} earned a C with a score of {score:.1f}%  — Satisfactory")
+elif score >= 60:
+    print(f"{student_name} earned a D with a score of {score:.1f}%  — Needs improvement")
+else:
+    print(f"{student_name} earned an F with a score of {score:.1f}%  — See instructor")
+```
+
+**Output:**
+```
+Marcus earned a B with a score of 82.7%  — Good job!
+```
+
+**[Instructor speaks:]**
+
+Notice a few things here:
+
+- Each branch has its **own** f-string with a different message, but they all use the *same* variables (`student_name` and `score`).
+- The `:.1f` format specifier keeps the score consistent across every branch — one decimal place, no matter which path runs.
+- The logic decides *which* message to show; the f-string decides *how* it looks.
+
+Here's another quick example — imagine a simple temperature advisor:
+
+```python
+city = "Denver"
+temp = 28
+
+if temp <= 32:
+    print(f"Brrr! It is {temp}°F in {city}. Bundle up — it's freezing!")
+elif temp <= 60:
+    print(f"It is {temp}°F in {city}. A jacket would be smart.")
+else:
+    print(f"It is {temp}°F in {city}. Enjoy the warm weather!")
+```
+
+**Output:**
+```
+Brrr! It is 28°F in Denver. Bundle up — it's freezing!
+```
+
+**[Key insight]:** The `if/elif/else` chooses the message. The f-string makes the message look good. They're a natural pair — you'll use this pattern constantly in real programs.
+
 ### Using Expressions in F-Strings
 
 **[Instructor speaks:]**
@@ -408,6 +466,108 @@ print(f"{percentage:.1%}")   # 87.5%
 
 **For now, focus on `.2f` for money.** That's the one you'll use most often.
 
+### Formatting Patterns for Common Scenarios
+
+**[Instructor speaks:]**
+
+Let's look at a handful of real-world formatting patterns you'll reach for again and again. Each one solves a problem you're likely to hit in your own programs.
+
+**Pattern 1 — GPA Display (1 decimal place)**
+
+Grade-point averages are always shown with one decimal. You already know how to do this:
+
+```python
+gpa = 3.8667
+
+print(f"Current GPA: {gpa:.1f}")
+```
+
+**Output:**
+```
+Current GPA: 3.9
+```
+
+The `.1f` rounds to one decimal place — perfect for transcripts, report cards, or any metric where one decimal is the convention.
+
+**Pattern 2 — Percentage Formatting (manual approach)**
+
+Earlier you saw the `%` format specifier. But sometimes you want to calculate the percentage *yourself* and just display it with a `%` sign at the end. That's totally fine:
+
+```python
+correct = 17
+total = 20
+pct = correct / total * 100
+
+print(f"You got {correct} out of {total} correct — {pct:.1f}%")
+```
+
+**Output:**
+```
+You got 17 out of 20 correct — 85.0%
+```
+
+Here the `%` after `{pct:.1f}` is just a regular character in the string — Python doesn't treat it specially. We did the math ourselves (`correct / total * 100`) and formatted the result to one decimal.
+
+**Pattern 3 — Large Numbers with Comma Separators**
+
+When numbers get big, commas make them readable at a glance:
+
+```python
+population = 8336817
+
+print(f"New York City population: {population:,}")
+```
+
+**Output:**
+```
+New York City population: 8,336,817
+```
+
+You can combine the comma with decimal formatting too:
+
+```python
+revenue = 2493817.439
+
+print(f"Annual revenue: ${revenue:,.2f}")
+```
+
+**Output:**
+```
+Annual revenue: $2,493,817.44
+```
+
+The `:,.2f` means: add commas for thousands *and* show exactly 2 decimal places. That's one handy format spec for financial numbers.
+
+**Pattern 4 — Padding Strings to Build a Simple Table Row**
+
+You don't need fancy alignment every time. Sometimes you just want labels and values to line up. Use a width specifier on the label string:
+
+```python
+label_1 = "Name"
+value_1 = "Alice"
+label_2 = "Score"
+value_2 = 92.5
+label_3 = "Status"
+value_3 = "Pass"
+
+print(f"{label_1:<10}: {value_1}")
+print(f"{label_2:<10}: {value_2:.1f}")
+print(f"{label_3:<10}: {value_3}")
+```
+
+**Output:**
+```
+Name      : Alice
+Score     : 92.5
+Status    : Pass
+```
+
+The `:<10` pads each label to 10 characters wide (left-aligned), so the colons all line up in a neat column. This tiny trick makes any program output look polished.
+
+**[Instructor speaks:]**
+
+You don't need to memorize all of these right now. The big takeaway is: **whatever formatting problem you run into — decimals, commas, padding — there's probably a format specifier for it.** Start with `.2f` for money, and explore the rest as you need them.
+
 ---
 
 ## Section 4: Why F-Strings Beat Concatenation (3-5 minutes)
@@ -483,6 +643,104 @@ F-strings are great, but there are times to avoid them:
    ```
 
 **For this course, use f-strings for output. They're simpler and more readable.**
+
+### Common Beginner Mistakes with F-Strings
+
+**[Instructor speaks:]**
+
+Before we move on, let me show you four mistakes that trip up almost every beginner. I'd rather you see them here than fight them on your own during the lab.
+
+**Mistake 1 — Putting a space between `f` and the quote**
+
+```python
+name = "Priya"
+
+# WRONG — Python sees a variable f followed by a regular string
+print(f "Hello, {name}!")   # SyntaxError!
+
+# RIGHT — f must be glued to the opening quote
+print(f"Hello, {name}!")
+```
+
+The `f` is a prefix, not a separate word. There must be **no space** between `f` and `"`.
+
+**Mistake 2 — Quote conflicts (single quotes inside single-quoted f-strings)**
+
+```python
+item = "latte"
+
+# WRONG — the apostrophe in "it's" ends the string early
+print(f'It's a {item}!')    # SyntaxError!
+
+# FIX 1 — use double quotes for the f-string
+print(f"It's a {item}!")
+
+# FIX 2 — escape the inner quote
+print(f'It\'s a {item}!')
+```
+
+**Rule of thumb:** if your text contains an apostrophe, wrap the f-string in **double** quotes. If your text contains double quotes, wrap it in **single** quotes. Pick whichever avoids the conflict.
+
+**Mistake 3 — Accidentally nesting curly braces**
+
+Curly braces `{}` are special inside f-strings — they mark placeholders. So what happens if you actually want to print a literal curly brace?
+
+```python
+name = "Alice"
+
+# WRONG — Python tries to evaluate the outer braces AND the inner ones
+# print(f"Use {name} like this: {name}")   # confusing duplication
+
+# What if you want to SHOW the syntax itself?
+# WRONG (for showing literal braces) — this substitutes the value of name instead of showing {name}
+# print(f"Syntax: {name}")   # prints: Syntax: Alice
+
+# RIGHT — double the braces to escape them
+print(f"Syntax example: {{name}} becomes {name}")
+```
+
+**Output:**
+```
+Syntax example: {name} becomes Alice
+```
+
+`{{` prints a literal `{` and `}}` prints a literal `}`. You won't need this often, but when you do, now you'll know.
+
+**Mistake 4 — Forgetting the `f` prefix on one line in a series**
+
+This one is sneaky because it doesn't cause an error — it just gives wrong output:
+
+```python
+item = "Coffee"
+price = 4.5
+quantity = 2
+total = price * quantity
+
+print(f"Item: {item}")
+print(f"Price: ${price:.2f}")
+print("Quantity: {quantity}")     # Oops — forgot the f!
+print(f"Total: ${total:.2f}")
+```
+
+**Output:**
+```
+Item: Coffee
+Price: $4.50
+Quantity: {quantity}
+Total: $9.00
+```
+
+See the third line? It printed the literal text `{quantity}` instead of `2`. No error, no crash — just silently wrong output. **Always double-check that every line with `{}` placeholders starts with `f`.**
+
+[Pause for student predictions]
+
+**[Instructor speaks:]**
+
+Quick summary of the four gotchas:
+1. No space between `f` and the quote
+2. Match your quote style to avoid apostrophe / quote conflicts
+3. Use `{{` and `}}` to print literal curly braces
+4. Every line that uses `{}` needs the `f` prefix — check them all!
 
 ---
 
@@ -835,6 +1093,16 @@ If anyone completed the extensions, let's see what you built!
 [Call on 1-2 students who finished extensions to share their screen briefly]
 
 Great creativity! The split-bill calculator is especially practical.
+
+### Looking Ahead
+
+**[Instructor speaks:]**
+
+Now that you can format output beautifully, in the next hour we'll learn to *process* text — breaking it apart and reassembling it. Specifically, you'll meet `.split()` and `.join()`, two string methods that let you chop a sentence into individual words and glue pieces back together with whatever separator you choose.
+
+Think about it this way: this hour taught you how to **build polished output**. Next hour teaches you how to **take messy input apart and rebuild it**. Together, those two skills cover most of what real programs do with text — accept it, clean it up, rearrange it, and present it nicely.
+
+So keep your f-string skills warmed up — you'll be using them in the very next lab to display the results of splitting and joining strings.
 
 ### Exit Ticket
 
