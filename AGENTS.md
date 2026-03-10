@@ -109,7 +109,7 @@ GitHub-specific configuration and automation:
   - [`frontend-slides-batch.agent.md`](./.github/agents/frontend-slides-batch.agent.md) - Agent for batch-generating HTML slides.
   - [`presentations-marp-writer.agent.md`](./.github/agents/presentations-marp-writer.agent.md) - Agent for writing Marp presentations.
   - [`presentations-orchestrator.agent.md`](./.github/agents/presentations-orchestrator.agent.md) - Agent for orchestrating presentation builds.
-  - [`python_educator.agent.md`](./.github/agents/python_educator.agent.md) - Agent specialized in Python educational content.
+  - [`python-educator.agent.md`](./.github/agents/python_educator.agent.md) - Agent specialized in Python educational content.
   - [`technical-content-evaluator.agent.md`](./.github/agents/technical-content-evaluator.agent.md) - Agent for evaluating technical content quality.
   
 - **[`.github/prompts/`](./.github/prompts/)** - Prompt templates:
