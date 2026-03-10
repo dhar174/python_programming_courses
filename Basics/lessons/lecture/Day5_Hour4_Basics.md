@@ -593,7 +593,6 @@ world                 2
 
 ```
 Lab: Word Counter
-=================
 Write a Python program that:
 
 1. Prompts the user to enter a sentence (any length).
