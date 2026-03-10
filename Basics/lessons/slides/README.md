@@ -8,6 +8,7 @@ This directory contains standalone HTML slide presentations generated from the c
 - **day-01/day-01-session-1.html** - Basics Day 1 Session 1 comprehensive lesson (59 slides)
 - **day-02-session-2.html** - Basics Day 2 Session 2: Strings, I/O, and Checkpoint 1 (74 slides)
 - **day-03/day-03-session-3.html** - Basics Day 3 Session 3: Comparisons, F-Strings, Text Processing & Debugging (48 slides)
+- **day-04/day-04-session-4.html** - Basics Day 4 Session 4: Lists & Iteration — Lists Fundamentals, for Loops, Nested Lists, Checkpoint 2 (53 slides)
 
 ## Features
 
@@ -157,6 +158,16 @@ The Day 3, Session 3 content also has per-hour lecture files in `Basics/lessons/
 - `Basics/lessons/lecture/Day3_Hour4_Basics.md` (Debugging Habits)
 
 The compiled `day-03/day-03-session-3.html` slide deck covers the full session.
+
+### Per-Hour Lecture Files (Day 4, Session 4)
+
+The Day 4, Session 4 content also has per-hour lecture files in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day4_Hour1_Basics.md` (Lists Fundamentals — Course Hour 13)
+- `Basics/lessons/lecture/Day4_Hour2_Basics.md` (Iterating Lists with for Loops — Course Hour 14)
+- `Basics/lessons/lecture/Day4_Hour3_Basics.md` (Nested Lists for Table-Like Data — Course Hour 15)
+- `Basics/lessons/lecture/Day4_Hour4_Basics.md` (Checkpoint 2: Lists + String Handling — Course Hour 16)
+
+The compiled `day-04/day-04-session-4.html` slide deck covers the full session.
 
 ---
 
