@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics Day 5 — Session 5 (Hours 17–20)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES — TWEAK GUIDE
+           ====================================
+           To customise the theme, edit these vars:
+
+           COLOURS
+             --bg              Main slide background          #f7f7f7
+             --fg              Primary text colour            #111111
+             --accent          Headings, links, highlights    #0066ff
+             --accent-light    Soft accent fill               #e6f0ff
+             --accent-dark     Hover / bold accent            #0044cc
+             --code-bg         Code block background          #1e1e1e
+             --code-fg         Code text colour               #f8f8f2
+             --section-bg      Section-title slide bg         #0066ff
+             --section-fg      Section-title slide text       #ffffff
+             --title-bg        Title slide background         #111111
+             --title-fg        Title slide text               #ffffff
+             --border          Table/rule borders             #cccccc
+
+           TYPOGRAPHY
+             --font-body       Body typeface (sans-serif stack)
+             --font-heading    Heading typeface (Inter stack)
+             --font-code       Code typeface (monospace stack)
+
+           SPACING
+             --spacing         Base unit (gaps, margins)      24px
+             --slide-padding   Inner padding per slide        52px 64px
+             --border-radius   Card/code corner radius        8px
+
+           ANIMATION
+             --transition-speed  Slide transition duration    0.28s
+             Change translateX → translateY for vertical deck.
+           ==================================== */
+        :root {
+            --bg:              #f7f7f7;
+            --fg:              #111111;
+            --accent:          #0066ff;
+            --accent-light:    #e6f0ff;
+            --accent-dark:     #0044cc;
+            --code-bg:         #1e1e1e;
+            --code-fg:         #f8f8f2;
+            --section-bg:      #0066ff;
+            --section-fg:      #ffffff;
+            --title-bg:        #111111;
+            --title-fg:        #ffffff;
+            --border:          #cccccc;
+            --shadow:          rgba(0,0,0,0.10);
+            --success:         #22c55e;
+            --danger:          #ef4444;
+            --warn:            #f59e0b;
+
+            --font-body:    system-ui, -apple-system, "Segoe UI", Helvetica, sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code:    "SF Mono", "Fira Code", "Consolas", "Monaco", monospace;
+
+            --spacing:          24px;
+            --slide-padding:    52px 64px;
+            --transition-speed: 0.28s;
+            --border-radius:    8px;
+        }
+
+        /* ====================================
+           RESET
+           ==================================== */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: #222;
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--bg);
+            color: var(--fg);
+            opacity: 0;
+            transform: translateX(60px);
+            transition:
+                opacity var(--transition-speed) ease,
+                transform var(--transition-speed) ease;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        /* ====================================
+           TITLE SLIDE
+           ==================================== */
+        .title-slide {
+            background: var(--title-bg);
+            color: var(--title-fg);
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .title-slide h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            color: #ffffff;
+            margin-bottom: 20px;
+            border-left: 6px solid var(--accent);
+            padding-left: 24px;
+        }
+
+        .title-slide .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: #aaaaaa;
+            padding-left: 30px;
+            margin-top: 8px;
+        }
+
+        /* ====================================
+           SECTION TITLE SLIDE
+           ==================================== */
+        .section-title-slide {
+            background: var(--section-bg);
+            color: var(--section-fg);
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .section-title-slide h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: #ffffff;
+            border-left: 6px solid rgba(255,255,255,0.6);
+            padding-left: 24px;
+            line-height: 1.2;
+        }
+
+        .section-title-slide p,
+        .section-title-slide li {
+            color: rgba(255,255,255,0.88);
+            font-size: 1.05rem;
+        }
+
+        .section-title-slide ul {
+            margin: 16px 0 0 30px;
+        }
+
+        /* ====================================
+           REGULAR SLIDE HEADINGS
+           ==================================== */
+        .slide h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            line-height: 1.2;
+        }
+
+        .slide h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(1rem, 2vw, 1.22rem);
+            font-weight: 600;
+            color: var(--fg);
+            margin: 18px 0 8px;
+        }
+
+        .slide h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #555;
+            margin: 12px 0 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        .slide p {
+            font-size: clamp(0.92rem, 1.6vw, 1.08rem);
+            margin: 8px 0;
+            line-height: 1.65;
+        }
+
+        .slide ul, .slide ol {
+            margin: 10px 0 10px 28px;
+        }
+
+        .slide li {
+            font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+            margin: 5px 0;
+            line-height: 1.55;
+        }
+
+        .slide strong { color: var(--accent-dark); }
+        .slide em { font-style: italic; color: #444; }
+
+        /* ====================================
+           INLINE CODE
+           ==================================== */
+        .slide code {
+            font-family: var(--font-code);
+            background: rgba(0,102,255,0.08);
+            color: #c7254e;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.88em;
+        }
+
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        .slide pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            border-radius: var(--border-radius);
+            padding: 18px 20px;
+            margin: 14px 0;
+            overflow-x: auto;
+            font-size: clamp(0.78rem, 1.3vw, 0.92rem);
+            line-height: 1.55;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+
+        .slide pre code {
+            background: transparent;
+            color: var(--code-fg);
+            padding: 0;
+            font-size: inherit;
+            border-radius: 0;
+        }
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        .slide table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: clamp(0.82rem, 1.4vw, 0.97rem);
+            box-shadow: 0 1px 6px var(--shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .slide thead th {
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .slide tbody td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .slide tbody tr:last-child td { border-bottom: none; }
+        .slide tbody tr:nth-child(even) td { background: var(--accent-light); }
+
+        /* ====================================
+           SPEAKER NOTES
+           ==================================== */
+        .speaker-note {
+            background: #fffbea;
+            border-left: 4px solid var(--warn);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: 10px 16px;
+            margin: 12px 0;
+            font-size: 0.88rem;
+            color: #555;
+        }
+
+        /* ====================================
+           PROGRESS BAR
+           ==================================== */
+        #progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            transition: width 0.25s ease;
+            z-index: 100;
+        }
+
+        /* ====================================
+           SLIDE COUNTER
+           ==================================== */
+        #slide-counter {
+            position: fixed;
+            bottom: 14px;
+            right: 20px;
+            font-size: 0.78rem;
+            color: #888;
+            font-family: var(--font-code);
+            z-index: 100;
+            background: rgba(247,247,247,0.85);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        /* ====================================
+           NAV HINT
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            color: #999;
+            z-index: 100;
+            pointer-events: none;
+            font-family: var(--font-code);
+        }
+
+        /* ====================================
+           NAV BUTTONS
+           ==================================== */
+        .nav-btn {
+            position: fixed;
+            bottom: 10px;
+            z-index: 100;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.75;
+            transition: opacity 0.2s;
+        }
+        .nav-btn:hover { opacity: 1; }
+        #btn-prev { left: 20px; }
+        #btn-next { left: 64px; }
+
+        /* ====================================
+           RESPONSIVE
+           ==================================== */
+        @media (max-width: 640px) {
+            :root { --slide-padding: 28px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="slides-container">
+        <section class="slide title-slide">
+            <h1>Basics Day 5 — Session 5 (Hours 17–20)</h1>
+            <p class="subtitle">Python Programming (Basic) • Tuples, Sets, and Dictionaries</p>
+            
+        </section>
+
+        <section class="slide">
+            <h2>Session 5 Overview</h2>
+            <ul>
+<li>Hour 17: Tuples + unpacking</li>
+<li>Hour 18: Sets – uniqueness + membership</li>
+<li>Hour 19: Dictionaries fundamentals</li>
+<li>Hour 20: Dictionary iteration + counting pattern</li>
+</ul>
+        </section>
+
+        <section class="slide section-title-slide">
+            <h1>Hour 17: Tuples + Unpacking</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h2>Learning Outcomes</h2>
+            <ul>
+<li>Create a tuple using parentheses and commas</li>
+<li>Explain immutability: why tuples cannot be changed after creation</li>
+<li>Unpack a tuple into individual variables</li>
+<li>Identify the single-item tuple gotcha: <code>(x,)</code> vs <code>(x)</code></li>
+<li>Build a coordinate-tracker program storing 5 (x, y) points</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>What Is a Tuple?</h2>
+            <h3>Ordered, Immutable Sequence</h3>
+<pre><code class="language-python">point = (3, 7)        # a tuple with two values
+print(point)          # (3, 7)
+print(point[0])       # 3
+print(point[1])       # 7</code></pre>
+<h3>Key Properties</h3>
+<ul>
+<li><strong>Ordered</strong> — items have a fixed position</li>
+<li><strong>Immutable</strong> — you cannot add, remove, or change items after creation</li>
+<li><strong>Allows duplicates</strong> — same value can appear multiple times</li>
+<li>Written with parentheses <code>()</code> and commas</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Tuple vs List</h2>
+            <table>
+<thead><tr><th>Feature</th><th>List</th><th>Tuple</th></tr></thead><tbody>
+<tr><td>Created with</td><td><code>[1, 2, 3]</code></td><td><code>(1, 2, 3)</code></td></tr>
+<tr><td>Mutable?</td><td>✅ Yes</td><td>❌ No</td></tr>
+<tr><td>Use when</td><td>Order changes</td><td>Fixed record</td></tr>
+<tr><td>Example</td><td>Shopping cart</td><td>GPS coordinate</td></tr>
+</tbody>
+</table>
+<h3>Why Use Tuples?</h3>
+<ul>
+<li>Protect data from accidental changes</li>
+<li>Communicate intent: &quot;this should not change&quot;</li>
+<li>Common for returning multiple values from a function</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Creating Tuples</h2>
+            <pre><code class="language-python"># Basic tuple
+colors = (&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;)
+
+# Single-item tuple — MUST have trailing comma
+one = (42,)        # ✅ tuple with one item
+not_one = (42)     # ❌ just the number 42, not a tuple!
+
+# Empty tuple
+empty = ()
+
+# Without parentheses (still works)
+coords = 10, 20    # same as (10, 20)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Immutability Demo</h2>
+            <pre><code class="language-python">point = (3, 7)
+
+# Trying to change a tuple item → TypeError
+point[0] = 99   # TypeError: &#x27;tuple&#x27; object does not support item assignment
+
+# Trying to append → AttributeError
+point.append(5)  # AttributeError: &#x27;tuple&#x27; object has no attribute &#x27;append&#x27;</code></pre>
+<h3>Speaker Note</h3>
+<!-- Speaker note: Immutability is a feature, not a bug. When you see a tuple, you know it won&#x27;t be modified anywhere in the program. -->
+<aside class="speaker-note"><strong>💡 Speaker note:</strong> Immutability is a feature, not a bug. When you see a tuple, you know it won&#x27;t be modified anywhere in the program.</aside>
+        </section>
+
+        <section class="slide">
+            <h2>Unpacking Tuples</h2>
+            <pre><code class="language-python">point = (3, 7)
+
+# Unpack into named variables
+x, y = point
+print(x)   # 3
+print(y)   # 7
+
+# Swap two values elegantly
+a = 10
+b = 20
+a, b = b, a
+print(a, b)   # 20 10
+
+# Unpack in a loop
+coordinates = [(1, 2), (3, 4), (5, 6)]
+for x, y in coordinates:
+    print(f&quot;x={x}, y={y}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Lab: Coordinate Tracker</h2>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Goal:</strong> Store 5 (x, y) coordinate points as tuples in a list, display them, and find the min/max x values.</p>
+<pre><code class="language-python"># Starter structure
+points = [
+    (2, 5),
+    (8, 1),
+    (4, 9),
+    (1, 3),
+    (6, 7)
+]
+
+# Step 1: Print each point
+# Step 2: Extract all x values
+# Step 3: Find min and max x</code></pre>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+<li>Uses tuples (not lists) for each point</li>
+<li>Correctly prints all 5 points</li>
+<li>Produces the correct min and max x values</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Lab: Solution Walk-Through</h2>
+            <pre><code class="language-python">points = [(2, 5), (8, 1), (4, 9), (1, 3), (6, 7)]
+
+# Print each point
+print(&quot;All coordinates:&quot;)
+for x, y in points:
+    print(f&quot;  ({x}, {y})&quot;)
+
+# Extract x values and compute min/max
+x_values = [x for x, y in points]
+print(f&quot;\nMin x: {min(x_values)}&quot;)   # 1
+print(f&quot;Max x: {max(x_values)}&quot;)    # 8</code></pre>
+<p><strong>Optional Extension:</strong> Compute distance from origin: <code>import math; d = math.sqrt(x<strong>2 + y</strong>2)</code></p>
+        </section>
+
+        <section class="slide">
+            <h2>Common Pitfalls — Hour 17</h2>
+            <h3>Pitfall 1: Single-item tuple missing comma</h3>
+<pre><code class="language-python">one = (42)    # ❌ This is just the integer 42
+one = (42,)   # ✅ This is a tuple containing 42
+print(type((42)))    # &lt;class &#x27;int&#x27;&gt;
+print(type((42,)))   # &lt;class &#x27;tuple&#x27;&gt;</code></pre>
+<h3>Pitfall 2: Trying to change a tuple</h3>
+<pre><code class="language-python">location = (40.7128, -74.0060)
+location[0] = 41.0    # TypeError — tuples are immutable</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Quick Check — Hour 17</h2>
+            <p><strong>Exit Ticket Question:</strong> Why might you choose a tuple over a list?</p>
+<p><strong>Model Answer:</strong> &quot;A tuple is a good choice when the data is fixed and should not change — like a coordinate, a date (year, month, day), or a record with a set number of fields. Using a tuple signals to other programmers (and your future self) that this data is intentionally read-only.&quot;</p>
+<p><strong>Recap:</strong></p>
+<ul>
+<li>Tuples: ordered, immutable, created with <code>(value, value)</code></li>
+<li>Single-item needs trailing comma: <code>(value,)</code></li>
+<li>Unpack with <code>x, y = point</code></li>
+<li>Great for fixed records like coordinates, dates, or paired data</li>
+</ul>
+        </section>
+
+        <section class="slide section-title-slide">
+            <h1>Hour 18: Sets – Uniqueness + Membership</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h2>Learning Outcomes</h2>
+            <ul>
+<li>Create a set from a list to remove duplicates</li>
+<li>Use <code>add()</code> to add items to a set</li>
+<li>Use <code>in</code> for fast membership testing</li>
+<li>Understand that sets are unordered (no indexing)</li>
+<li>Explain union and intersection conceptually</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>What Is a Set?</h2>
+            <h3>An Unordered Collection of Unique Items</h3>
+<pre><code class="language-python">visitors = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Alice&quot;, &quot;Bob&quot;}
+print(visitors)     # {&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Charlie&#x27;} — duplicates removed!
+print(len(visitors))  # 3, not 5</code></pre>
+<h3>Key Properties</h3>
+<ul>
+<li><strong>No duplicates</strong> — automatically removes repeated values</li>
+<li><strong>Unordered</strong> — no guaranteed position, no indexing</li>
+<li><strong>Fast membership test</strong> — <code>in</code> is very efficient for sets</li>
+<li>Written with curly braces <code>{}</code> or <code>set()</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Creating Sets</h2>
+            <pre><code class="language-python"># From a literal
+fruits = {&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;}
+
+# From a list (removes duplicates)
+names_list = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Alice&quot;, &quot;Carol&quot;, &quot;Bob&quot;]
+unique_names = set(names_list)
+print(unique_names)    # {&#x27;Alice&#x27;, &#x27;Carol&#x27;, &#x27;Bob&#x27;} — order not guaranteed
+
+# Empty set — MUST use set(), not {}
+empty = set()     # ✅ empty set
+not_empty = {}    # ❌ this creates an empty DICT, not a set!</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Set Operations</h2>
+            <pre><code class="language-python">visitors = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;}
+
+# Add an item
+visitors.add(&quot;Diana&quot;)
+print(visitors)     # has 4 items
+
+# Remove an item (raises KeyError if not found)
+visitors.remove(&quot;Bob&quot;)
+
+# Discard — like remove but no error if missing
+visitors.discard(&quot;Eve&quot;)   # no error even though &quot;Eve&quot; isn&#x27;t in set
+
+# Membership test — very fast!
+print(&quot;Alice&quot; in visitors)    # True
+print(&quot;Zara&quot; in visitors)     # False</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Conceptual: Union and Intersection</h2>
+            <pre><code class="language-python">group_a = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;}
+group_b = {&quot;Bob&quot;, &quot;Carol&quot;, &quot;Dave&quot;}
+
+# Union — everyone in either group
+print(group_a | group_b)
+# {&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Carol&#x27;, &#x27;Dave&#x27;}
+
+# Intersection — only those in both groups
+print(group_a &amp; group_b)
+# {&#x27;Bob&#x27;, &#x27;Carol&#x27;}</code></pre>
+<h3>Speaker Note</h3>
+<!-- Speaker note: Keep this conceptual for now. The key idea: union = OR, intersection = AND. Real use cases: finding common attendees, filtering overlapping data. -->
+<aside class="speaker-note"><strong>💡 Speaker note:</strong> Keep this conceptual for now. The key idea: union = OR, intersection = AND. Real use cases: finding common attendees, filtering overlapping data.</aside>
+        </section>
+
+        <section class="slide">
+            <h2>Lab: Unique Visitors</h2>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Goal:</strong> Collect 10 visitor names (duplicates allowed), then use a set to find unique visitors.</p>
+<pre><code class="language-python"># Step 1: Collect names
+names = []
+for i in range(10):
+    name = input(f&quot;Enter visitor name {i+1}: &quot;)
+    names.append(name)
+
+# Step 2: Convert to set for uniqueness
+unique = set(names)
+
+# Step 3: Report
+print(f&quot;\nTotal entries: {len(names)}&quot;)
+print(f&quot;Unique visitors: {len(unique)}&quot;)
+print(&quot;Names:&quot;, sorted(unique))</code></pre>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+<li>Correct unique count</li>
+<li>Can explain why duplicates disappear</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Common Pitfalls — Hour 18</h2>
+            <h3>Pitfall 1: Expecting order to be preserved</h3>
+<pre><code class="language-python">tags = {&quot;python&quot;, &quot;basics&quot;, &quot;beginner&quot;}
+# Do NOT write code that depends on a specific order
+# tags[0]  ← TypeError: &#x27;set&#x27; object is not subscriptable
+for tag in tags:
+    print(tag)   # order is not guaranteed</code></pre>
+<h3>Pitfall 2: Creating an empty set with <code>{}</code></h3>
+<pre><code class="language-python">my_set = {}        # ❌ This creates a dict!
+my_set = set()     # ✅ This creates an empty set</code></pre>
+<h3>Pitfall 3: Forgetting <code>sorted()</code> for display</h3>
+<pre><code class="language-python"># For consistent output in tests or display
+print(sorted(my_set))   # convert to sorted list first</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Quick Check — Hour 18</h2>
+            <p><strong>Exit Ticket Question:</strong> When is a set better than a list?</p>
+<p><strong>Model Answer:</strong> &quot;Use a set when you care about uniqueness — removing duplicates, or checking if something is present. Sets make <code>in</code> very fast. Use a list when order matters or you need to access items by position.&quot;</p>
+<p><strong>Recap:</strong></p>
+<ul>
+<li>Sets store unique items only, duplicates auto-removed</li>
+<li>Created with <code>{value, value}</code> or <code>set(iterable)</code></li>
+<li>Unordered: no indexing, no guaranteed print order</li>
+<li><code>add()</code> to insert, <code>in</code> for membership, <code>remove()</code>/<code>discard()</code> to delete</li>
+</ul>
+        </section>
+
+        <section class="slide section-title-slide">
+            <h1>Hour 19: Dictionaries Fundamentals</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h2>Learning Outcomes</h2>
+            <ul>
+<li>Create a dictionary with key/value pairs</li>
+<li>Access values by key</li>
+<li>Add and update entries</li>
+<li>Use <code>get()</code> to safely access a key that might not exist</li>
+<li>Avoid <code>KeyError</code> crashes in real programs</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>What Is a Dictionary?</h2>
+            <h3>A Lookup Table: Keys Map to Values</h3>
+<pre><code class="language-python">inventory = {
+    &quot;apples&quot;:  10,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8
+}
+
+print(inventory[&quot;apples&quot;])    # 10
+print(inventory[&quot;bananas&quot;])   # 5</code></pre>
+<h3>Key Properties</h3>
+<ul>
+<li><strong>Key–value pairs</strong> — every item has a name (key) and data (value)</li>
+<li><strong>Keys must be unique</strong> — no two items share the same key</li>
+<li><strong>Ordered</strong> (Python 3.7+) — insertion order is preserved</li>
+<li><strong>Mutable</strong> — you can add, update, and remove entries</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Creating Dictionaries</h2>
+            <pre><code class="language-python"># Basic dictionary
+student = {
+    &quot;name&quot;: &quot;Alice&quot;,
+    &quot;grade&quot;: 92,
+    &quot;passed&quot;: True
+}
+
+# Empty dictionary
+empty = {}
+also_empty = dict()
+
+# Dictionary from keyword arguments
+config = dict(host=&quot;localhost&quot;, port=8080)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Accessing Values</h2>
+            <pre><code class="language-python">inventory = {&quot;apples&quot;: 10, &quot;bananas&quot;: 5}
+
+# Direct access — KeyError if key missing
+print(inventory[&quot;apples&quot;])     # 10
+print(inventory[&quot;grapes&quot;])     # KeyError: &#x27;grapes&#x27;
+
+# Safe access with get() — returns None if missing
+print(inventory.get(&quot;grapes&quot;))           # None
+print(inventory.get(&quot;grapes&quot;, 0))        # 0  (default value)
+
+# Check before accessing
+if &quot;grapes&quot; in inventory:
+    print(inventory[&quot;grapes&quot;])</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Adding and Updating Entries</h2>
+            <pre><code class="language-python">inventory = {&quot;apples&quot;: 10, &quot;bananas&quot;: 5}
+
+# Add a new key
+inventory[&quot;oranges&quot;] = 8
+print(inventory)   # {&#x27;apples&#x27;: 10, &#x27;bananas&#x27;: 5, &#x27;oranges&#x27;: 8}
+
+# Update an existing key
+inventory[&quot;apples&quot;] = 15
+print(inventory[&quot;apples&quot;])   # 15
+
+# Increment a value
+inventory[&quot;bananas&quot;] += 3
+print(inventory[&quot;bananas&quot;])  # 8</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>KeyError Demo</h2>
+            <pre><code class="language-python">inventory = {&quot;apples&quot;: 10, &quot;bananas&quot;: 5}
+
+# This CRASHES
+count = inventory[&quot;grapes&quot;]   # KeyError: &#x27;grapes&#x27;
+
+# Safe alternatives
+count = inventory.get(&quot;grapes&quot;, 0)      # returns 0 — no crash
+count = inventory.get(&quot;grapes&quot;)         # returns None — no crash
+
+if &quot;grapes&quot; in inventory:
+    count = inventory[&quot;grapes&quot;]
+else:
+    count = 0</code></pre>
+<h3>Speaker Note</h3>
+<!-- Speaker note: `get()` is your best friend for safe dictionary access. Teach learners to default to `get()` whenever the key might not exist. -->
+<aside class="speaker-note"><strong>💡 Speaker note:</strong> <code>get()</code> is your best friend for safe dictionary access. Teach learners to default to <code>get()</code> whenever the key might not exist.</aside>
+        </section>
+
+        <section class="slide">
+            <h2>Lab: Inventory Manager</h2>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Goal:</strong> Build a simple inventory system using a dictionary.</p>
+<pre><code class="language-python"># Step 1: Create inventory
+inventory = {
+    &quot;apples&quot;: 10,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;grapes&quot;: 3,
+    &quot;pears&quot;: 6
+}
+
+# Step 2: Ask for item and quantity
+item = input(&quot;Which item to restock? &quot;).lower()
+qty = int(input(&quot;How many to add? &quot;))
+
+# Step 3: Update safely
+if item in inventory:
+    inventory[item] += qty
+    print(f&quot;Updated {item}: {inventory[item]} units&quot;)
+else:
+    print(f&quot;&#x27;{item}&#x27; not found in inventory.&quot;)
+
+# Step 4: Print full inventory
+print(&quot;\nCurrent Inventory:&quot;)
+for key, value in inventory.items():
+    print(f&quot;  {key}: {value}&quot;)</code></pre>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+<li>Updates correct key without crashing on missing key</li>
+<li>Prints full inventory neatly</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Common Pitfalls — Hour 19</h2>
+            <h3>Pitfall 1: Case sensitivity</h3>
+<pre><code class="language-python">inventory = {&quot;Apples&quot;: 10}
+name = input(&quot;Item: &quot;)         # user types &quot;apples&quot;
+print(inventory[name])         # KeyError — &quot;apples&quot; ≠ &quot;Apples&quot;
+
+# Fix: normalize to lowercase
+name = input(&quot;Item: &quot;).lower()
+inventory_lower = {k.lower(): v for k, v in inventory.items()}</code></pre>
+<h3>Pitfall 2: Accidental new key</h3>
+<pre><code class="language-python">inventory = {&quot;apples&quot;: 10}
+inventory[&quot;applez&quot;] = 5    # typo creates a new key instead of updating!</code></pre>
+<h3>Pitfall 3: Direct access on unknown key</h3>
+<pre><code class="language-python"># Always prefer get() when you&#x27;re unsure
+qty = inventory.get(&quot;grapes&quot;, 0)   # safe — returns 0 if missing</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Quick Check — Hour 19</h2>
+            <p><strong>Exit Ticket Question:</strong> What happens if you access a missing key with <code>dict[key]</code>?</p>
+<p><strong>Model Answer:</strong> &quot;Python raises a <code>KeyError</code> and your program crashes. To avoid this, use <code>dict.get(key)</code> which returns <code>None</code> by default, or <code>dict.get(key, default_value)</code> to return a fallback instead of crashing.&quot;</p>
+<p><strong>Recap:</strong></p>
+<ul>
+<li>Dict = key → value lookup table</li>
+<li><code>dict[key]</code> = direct access (crashes if missing)</li>
+<li><code>dict.get(key, default)</code> = safe access</li>
+<li>Add/update: <code>dict[key] = value</code></li>
+<li>Check existence: <code>key in dict</code></li>
+</ul>
+        </section>
+
+        <section class="slide section-title-slide">
+            <h1>Hour 20: Dictionary Iteration + Counting Pattern</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h2>Learning Outcomes</h2>
+            <ul>
+<li>Iterate over dictionary keys, values, and items</li>
+<li>Use the <code>items()</code> method in a <code>for</code> loop</li>
+<li>Apply the counting pattern: <code>d[word] = d.get(word, 0) + 1</code></li>
+<li>Build a word-frequency counter from user input</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Iterating Over Dictionaries</h2>
+            <pre><code class="language-python">scores = {&quot;Alice&quot;: 92, &quot;Bob&quot;: 87, &quot;Carol&quot;: 95}
+
+# Iterate over keys (default)
+for name in scores:
+    print(name)
+
+# Iterate over values
+for score in scores.values():
+    print(score)
+
+# Iterate over key-value pairs (most common)
+for name, score in scores.items():
+    print(f&quot;{name}: {score}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>The items() Method</h2>
+            <pre><code class="language-python">inventory = {&quot;apples&quot;: 10, &quot;bananas&quot;: 5, &quot;oranges&quot;: 8}
+
+# items() returns pairs of (key, value)
+for item, count in inventory.items():
+    print(f&quot;{item.capitalize()}: {count} units&quot;)
+
+# Output:
+# Apples: 10 units
+# Bananas: 5 units
+# Oranges: 8 units</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>The Counting Pattern</h2>
+            <pre><code class="language-python"># Core pattern: count occurrences of each item
+words = [&quot;apple&quot;, &quot;banana&quot;, &quot;apple&quot;, &quot;cherry&quot;, &quot;banana&quot;, &quot;apple&quot;]
+
+# Build frequency dictionary
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+# {&#x27;apple&#x27;: 3, &#x27;banana&#x27;: 2, &#x27;cherry&#x27;: 1}</code></pre>
+<h3>How It Works</h3>
+<ol>
+<li><code>counts.get(word, 0)</code> — get current count, default 0 if first time seen</li>
+<li><code>+ 1</code> — increment by one</li>
+<li><code>counts[word] = ...</code> — store the updated count</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h2>Word Frequency Demo</h2>
+            <pre><code class="language-python">sentence = &quot;to be or not to be that is the question to be&quot;
+words = sentence.split()
+
+frequency = {}
+for word in words:
+    frequency[word] = frequency.get(word, 0) + 1
+
+# Display results sorted by word
+print(&quot;Word Frequencies:&quot;)
+for word in sorted(frequency):
+    print(f&quot;  &#x27;{word}&#x27;: {frequency[word]}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Word Frequencies:
+  &#x27;be&#x27;: 3
+  &#x27;is&#x27;: 1
+  &#x27;not&#x27;: 1
+  &#x27;or&#x27;: 1
+  &#x27;question&#x27;: 1
+  &#x27;that&#x27;: 1
+  &#x27;the&#x27;: 1
+  &#x27;to&#x27;: 3</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Lab: Word Counter</h2>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Goal:</strong> Build a word-frequency counter that processes a sentence entered by the user.</p>
+<pre><code class="language-python"># Step 1: Get input
+sentence = input(&quot;Enter a sentence: &quot;)
+
+# Step 2: Split into words
+words = sentence.split()
+
+# Step 3: Count frequencies
+frequency = {}
+for word in words:
+    frequency[word] = frequency.get(word, 0) + 1
+
+# Step 4: Display results
+print(&quot;\nWord frequencies:&quot;)
+for word, count in frequency.items():
+    print(f&quot;  {word}: {count}&quot;)</code></pre>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+<li>Correct counts for all words</li>
+<li>Uses <code>get()</code> pattern (or equivalent <code>if</code>-check)</li>
+</ul>
+<p><strong>Optional Extension:</strong></p>
+<ul>
+<li>Normalize to lowercase: <code>word = word.lower()</code></li>
+<li>Strip punctuation: <code>word = word.replace(&quot;,&quot;, &quot;&quot;).replace(&quot;.&quot;, &quot;&quot;)</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Common Pitfalls — Hour 20</h2>
+            <h3>Pitfall 1: Forgetting to normalize case</h3>
+<pre><code class="language-python">sentence = &quot;The the THE&quot;
+# Without .lower():
+# {&#x27;The&#x27;: 1, &#x27;the&#x27;: 1, &#x27;THE&#x27;: 1}  ← wrong!
+
+# With .lower():
+words = sentence.lower().split()
+# {&#x27;the&#x27;: 3}  ← correct</code></pre>
+<h3>Pitfall 2: Punctuation counts as part of word</h3>
+<pre><code class="language-python">sentence = &quot;Hello, world.&quot;
+words = sentence.split()
+# [&#x27;Hello,&#x27;, &#x27;world.&#x27;]  ← punctuation attached!
+
+# Simple fix:
+words = sentence.replace(&quot;,&quot;, &quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).split()</code></pre>
+<h3>Pitfall 3: Accessing keys that weren&#x27;t set</h3>
+<pre><code class="language-python">counts = {}
+# DON&#x27;T do this — KeyError on first occurrence:
+# counts[word] += 1
+
+# DO use get():
+counts[word] = counts.get(word, 0) + 1</code></pre>
+        </section>
+
+        <section class="slide">
+            <h2>Quick Check — Hour 20</h2>
+            <p><strong>Exit Ticket Question:</strong> What does <code>dict.items()</code> produce?</p>
+<p><strong>Model Answer:</strong> &quot;<code>dict.items()</code> returns a view of the dictionary&#x27;s key-value pairs as tuples. In a <code>for</code> loop, you can unpack each pair: <code>for key, value in dict.items()</code>. This is the standard way to iterate when you need both the key and its value at the same time.&quot;</p>
+<p><strong>Recap:</strong></p>
+<ul>
+<li><code>for k in d:</code> — keys only</li>
+<li><code>for v in d.values():</code> — values only</li>
+<li><code>for k, v in d.items():</code> — both key and value</li>
+<li>Counting pattern: <code>d[k] = d.get(k, 0) + 1</code></li>
+<li>Always normalize (<code>.lower()</code>) and clean input before counting</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Session 5 Summary</h2>
+            <h3>What We Covered</h3>
+<table>
+<thead><tr><th>Hour</th><th>Topic</th><th>Key Concept</th></tr></thead><tbody>
+<tr><td>17</td><td>Tuples + Unpacking</td><td>Immutable sequences; <code>x, y = point</code></td></tr>
+<tr><td>18</td><td>Sets</td><td>Automatic uniqueness; unordered; fast <code>in</code></td></tr>
+<tr><td>19</td><td>Dictionaries</td><td>Key→value lookup; <code>get()</code> for safety</td></tr>
+<tr><td>20</td><td>Dict Iteration</td><td><code>items()</code> loop; counting pattern</td></tr>
+</tbody>
+</table>
+<h3>The Big Picture</h3>
+<p>You now have four data structure tools:</p>
+<ul>
+<li><strong>List</strong> — ordered, mutable, allows duplicates</li>
+<li><strong>Tuple</strong> — ordered, immutable, fixed records</li>
+<li><strong>Set</strong> — unordered, unique items, fast membership test</li>
+<li><strong>Dict</strong> — key-value lookup, flexible, mutable</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h2>Scope Guardrail Reminder</h2>
+            <h3>Stay in Basics Scope — Session 5</h3>
+<p>✅ <strong>Teach:</strong></p>
+<ul>
+<li>Tuple creation, immutability, unpacking</li>
+<li>Set creation, <code>add()</code>, <code>remove()</code>, <code>discard()</code>, <code>in</code></li>
+<li>Union (<code>|</code>) and intersection (<code>&amp;</code>) — conceptually only</li>
+<li>Dict creation, <code>[]</code> access, <code>get()</code>, add/update entries</li>
+<li><code>items()</code>, <code>keys()</code>, <code>values()</code> loops</li>
+<li>Counting pattern with <code>get(word, 0) + 1</code></li>
+</ul>
+<p>❌ <strong>Do NOT introduce:</strong></p>
+<ul>
+<li>Named tuples (<code>collections.namedtuple</code>)</li>
+<li>Set comprehensions</li>
+<li><code>defaultdict</code> or <code>Counter</code> (those are in the Advanced course)</li>
+<li><code>OrderedDict</code> (unnecessary in Python 3.7+)</li>
+<li>Nested dictionaries deeper than one level</li>
+<li>Dictionary comprehensions (Advanced scope)</li>
+<li>File I/O or database concepts</li>
+<li>OOP or class definitions</li>
+</ul>
+<!-- Speaker note: **Speaker note:** If a learner asks about `Counter` or `defaultdict`, acknowledge it&#x27;s a great next step and point to the Advanced course. -->
+<aside class="speaker-note"><strong>💡 Speaker note:</strong> <strong>Speaker note:</strong> If a learner asks about <code>Counter</code> or <code>defaultdict</code>, acknowledge it&#x27;s a great next step and point to the Advanced course.</aside>
+        </section>
+</div>
+
+<div id="progress-bar" style="width:0%"></div>
+<div id="slide-counter"><span id="current">1</span>&nbsp;/&nbsp;<span id="total">43</span></div>
+<div id="nav-hint">← → Space · navigate</div>
+<button class="nav-btn" id="btn-prev" onclick="prevSlide()" aria-label="Previous slide">&#8592;</button>
+<button class="nav-btn" id="btn-next" onclick="nextSlide()" aria-label="Next slide">&#8594;</button>
+
+<script>
+    // ====================================
+    // SLIDE NAVIGATION
+    // ====================================
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const progressBar = document.getElementById('progress-bar');
+    const currentCounter = document.getElementById('current');
+
+    function updateSlideDisplay(updateHash) {
+        slides.forEach((slide, idx) => {
+            slide.classList.remove('active', 'previous');
+            if (idx < currentSlide) slide.classList.add('previous');
+        });
+        if (slides[currentSlide]) slides[currentSlide].classList.add('active');
+        const pct = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = pct + '%';
+        currentCounter.textContent = currentSlide + 1;
+        if (updateHash !== false) window.location.hash = currentSlide + 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) { currentSlide++; updateSlideDisplay(); }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) { currentSlide--; updateSlideDisplay(); }
+    }
+
+    function goToSlide(idx) {
+        if (idx >= 0 && idx < totalSlides) { currentSlide = idx; updateSlideDisplay(); }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+        switch (e.key) {
+            case 'ArrowRight': case ' ': case 'PageDown':
+                e.preventDefault(); nextSlide(); break;
+            case 'ArrowLeft': case 'PageUp':
+                e.preventDefault(); prevSlide(); break;
+            case 'Home': e.preventDefault(); goToSlide(0); break;
+            case 'End':  e.preventDefault(); goToSlide(totalSlides - 1); break;
+        }
+    });
+
+    // Touch / swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+    document.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(dx) > 50) { dx < 0 ? nextSlide() : prevSlide(); }
+    }, {passive: true});
+
+    // Hash-based deep-link
+    window.addEventListener('load', () => {
+        const hash = parseInt(window.location.hash.slice(1));
+        currentSlide = (!isNaN(hash) && hash > 0) ? Math.min(hash - 1, totalSlides - 1) : 0;
+        updateSlideDisplay(false);
+    });
+</script>
+</body>
+</html>
