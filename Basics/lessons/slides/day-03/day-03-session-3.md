@@ -21,15 +21,6 @@ Python Programming (Basic) • Comparisons, F-Strings, Text Processing & Debuggi
 - Combine conditions with `and`, `or`, and `not`
 - Chain comparison operators in Python
 - Identify boundary condition mistakes (off-by-one errors)
-
-<!--
-Speaker Notes:
-- Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab
-- Recap Day 2: mention Tip Calculator and Checkpoint 1
-- Common pitfall: students confuse = and ==; stress this repeatedly
-- Scope guardrail: keep truthy/falsey preview minimal; do NOT go into __bool__() or operator overloading
--->
-
 ---
 
 ## Comparison Operators
@@ -96,13 +87,6 @@ else:
 ```
 
 > 💡 We'll see more of this as we work with conditionals.
-
-<!--
-Speaker Notes:
-- Keep this minimal — just enough so students aren't confused when they see it
-- Do NOT discuss __bool__(), custom objects, or truthiness of containers yet
--->
-
 ---
 
 ## Demo: Age Gating
@@ -127,14 +111,6 @@ else:
 Enter your age: 15
 Teen access granted
 ```
-
-<!--
-Speaker Notes:
-- Walk through each branch: what happens for ages 10, 15, 18, 25?
-- Show the off-by-one: what if we use > 13 instead of >= 13? Age 13 is excluded.
-- Highlight: age >= 13 and age < 18 means 13 to 17 inclusive
--->
-
 ---
 
 ## Lab: Eligibility Checker
@@ -162,14 +138,6 @@ Speaker Notes:
 ⚠️ **Comparing strings to numbers** — `input()` returns a string!  
 ⚠️ **Using `=` instead of `==`** — assignment vs comparison  
 ⚠️ **Forgetting `int()` conversion** — `"18" >= 13` is a TypeError
-
-<!--
-Speaker Notes:
-- Most common issue: students forget int() around input()
-- Second most common: off-by-one where age 13 falls into wrong bracket
-- Pacing adjustment: if students finish early, have them add a "senior" bracket (65+)
--->
-
 ---
 
 ## Quick Check (Hour 9)
@@ -189,15 +157,6 @@ Speaker Notes:
 - Format numbers to fixed decimals (`{value:.2f}`)
 - Apply width and alignment specifiers
 - Explain why f-strings are better than concatenation
-
-<!--
-Speaker Notes:
-- Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab
-- Bridge from Hour 9: "Now that we can make decisions, let's make our output look professional"
-- Common pitfall: students forget the leading 'f' in f-strings
-- Scope guardrail: do NOT cover str.format() or %-formatting; f-strings only
--->
-
 ---
 
 ## F-String Basics
@@ -267,13 +226,6 @@ print(f"Hello, {name}! You are {age} years old.")
 - No manual `str()` conversion needed
 - Reads left-to-right naturally
 - Format specifiers built in
-
-<!--
-Speaker Notes:
-- Key point: f-strings eliminate the most common beginner bug (forgetting str())
-- Show side-by-side: which one would you rather debug at 2am?
--->
-
 ---
 
 ## Demo: Upgrade Tip Calculator Output
@@ -335,13 +287,6 @@ print("{name} is {age}")     # literal text
 # ✓ With the f
 print(f"{name} is {age}")    # variable values
 ```
-
-<!--
-Speaker Notes:
-- The #1 pitfall is forgetting the f — watch for it during lab
-- Pacing adjustment: fast students can add split-bill feature with formatted per-person amounts
--->
-
 ---
 
 ## Quick Check (Hour 10)
@@ -362,16 +307,6 @@ Speaker Notes:
 - Join words back into a string with `' '.join()`
 - Count words in a sentence
 - Find the longest word in a text string
-
-<!--
-Speaker Notes:
-- Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab
-- Bridge: "We've formatted output nicely; now let's process INPUT text"
-- Key insight: split() returns a list — first real exposure to lists
-- Scope guardrail: do NOT cover list methods (append, pop, etc.) or list comprehensions
-- Keep list usage to: indexing, len(), and iteration basics only
--->
-
 ---
 
 ## The split() Method
@@ -448,14 +383,6 @@ for word in words:
 
 print(f"Longest word: {longest}")    # 'quick' or 'brown' or 'jumps'
 ```
-
-<!--
-Speaker Notes:
-- This is a great moment to introduce the 'for' loop pattern informally
-- Keep it simple: "for each word in the list, check if it's longer"
-- Do NOT formally teach for-loops yet — that's Session 4
--->
-
 ---
 
 ## Demo: Word Count and Rebuild
@@ -523,15 +450,6 @@ result = ', '.join(numbers)  # TypeError!
 # ✓ Convert to strings first
 result = ', '.join(str(n) for n in numbers)
 ```
-
-<!--
-Speaker Notes:
-- Mention punctuation as a known limitation — we won't solve it today
-- If students ask about stripping punctuation, show str.strip() briefly
-- Pacing adjustment: fast finishers can add "shortest word" or "word count per unique word"
-- Optional extension (stay in Basics scope): reverse the word order
--->
-
 ---
 
 ## Quick Check (Hour 11)
@@ -549,17 +467,6 @@ Speaker Notes:
 - Identify NameError, TypeError, ValueError, IndexError
 - Use print-debugging strategically to isolate problems
 - Apply a systematic debugging process
-
-<!--
-Speaker Notes:
-- Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab
-- This is the wrap-up hour for Day 3 — keep energy up
-- Common pitfall: students change multiple things at once when debugging
-- Key habit to instill: change ONE thing, then re-run
-- Scope guardrail: do NOT teach try/except — that's Advanced module
-- Optional extension: Python 2 vs 3 differences (5-10 min if time allows)
--->
-
 ---
 
 ## Reading Error Messages (Tracebacks)
@@ -651,15 +558,6 @@ print(f"Top score: {scores[3]}")  # Bug 3: index out of range
 1. `age = int(input("Enter age: "))`
 2. `greeting = f"Hello, {name}!"`
 3. `print(f"Top score: {scores[2]}")`
-
-<!--
-Speaker Notes:
-- Walk through each bug step-by-step
-- Ask students: "What does the error message tell us?"
-- Show: add a print() BEFORE the error line to see variable values
-- Reinforce: read the error FIRST, hypothesize, then fix
--->
-
 ---
 
 ## Lab: Debugging Drill
@@ -712,35 +610,17 @@ print(f"Last color: {colors[3]}")
 ⚠️ **Not re-running after each fix** — always verify  
 ⚠️ **Ignoring the error message** — read it first!  
 ⚠️ **Leaving debug prints in final code** — clean up when done
-
-<!--
-Speaker Notes:
-- This is the #1 habit to build: one change at a time
-- Pacing adjustment: if students finish early, give them a 4th broken script
-  that combines multiple error types
--->
-
 ---
 
 ## Optional: Python 2 vs Python 3 (Quick Note)
 
 ### Key Differences (When You See Old Code Online)
-| Feature | Python 2 | Python 3 |
-|---------|----------|----------|
-| Print | `print "hello"` | `print("hello")` |
-| Division | `5 / 2 → 2` | `5 / 2 → 2.5` |
-| Input | `raw_input()` | `input()` |
-| Strings | ASCII default | Unicode default |
+- **Print**: Python 2 `print "hello"` → Python 3 `print("hello")`
+- **Division**: Python 2 `5 / 2 → 2` → Python 3 `5 / 2 → 2.5`
+- **Input**: Python 2 `raw_input()` → Python 3 `input()`
+- **Strings**: Python 2 ASCII default → Python 3 Unicode default
 
 > 💡 Always use Python 3. If you find Python 2 code online, convert the syntax.
-
-<!--
-Speaker Notes:
-- Only cover this if you have 5-10 extra minutes
-- Main takeaway: Python 2 is end-of-life; always use Python 3
-- Students will encounter Python 2 snippets on Stack Overflow — now they'll recognize it
--->
-
 ---
 
 ## Quick Check (Hour 12)
@@ -791,16 +671,6 @@ Speaker Notes:
 ✗ List comprehensions  
 ✗ Advanced string formatting (str.format(), %-style)  
 ✗ Custom exception classes
-
-<!--
-Speaker Notes:
-- SCOPE GUARDRAIL: Remind students that try/except, regex, and list comprehensions
-  are all in the Advanced module. If students ask, acknowledge it's a great question
-  and let them know it's coming later.
-- No-go topics for Basics: web frameworks, databases, GUI frameworks, testing frameworks,
-  packaging/distribution, decorators, generators, lambda functions, advanced OOP
--->
-
 ---
 
 ## No-Go Topics for Basics Course

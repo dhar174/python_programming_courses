@@ -390,15 +390,6 @@
   <li>Chain comparison operators in Python</li>
   <li>Identify boundary condition mistakes (off-by-one errors)</li>
 </ul>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab</li>
-  <li>Recap Day 2: mention Tip Calculator and Checkpoint 1</li>
-  <li>Common pitfall: students confuse = and ==; stress this repeatedly</li>
-  <li>Scope guardrail: keep truthy/falsey preview minimal; do NOT go into __bool__() or operator overloading</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -451,13 +442,6 @@ if name:
 else:
     print(&quot;Name is empty&quot;)   # ← this prints</code></pre>
 <blockquote>💡 We&#x27;ll see more of this as we work with conditionals.</blockquote>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Keep this minimal — just enough so students aren&#x27;t confused when they see it</li>
-  <li>Do NOT discuss __bool__(), custom objects, or truthiness of containers yet</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -478,14 +462,6 @@ else:
 <h3>Expected Output (age = 15)</h3>
 <pre><code>Enter your age: 15
 Teen access granted</code></pre>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Walk through each branch: what happens for ages 10, 15, 18, 25?</li>
-  <li>Show the off-by-one: what if we use &gt; 13 instead of &gt;= 13? Age 13 is excluded.</li>
-  <li>Highlight: age &gt;= 13 and age &lt; 18 means 13 to 17 inclusive</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -512,14 +488,6 @@ Teen access granted</code></pre>
 <p><strong>⚠️</strong> <strong>Comparing strings to numbers</strong> — <code>input()</code> returns a string!</p>
 <p><strong>⚠️</strong> <strong>Using <code>=</code> instead of <code>==</code></strong> — assignment vs comparison</p>
 <p><strong>⚠️</strong> <strong>Forgetting <code>int()</code> conversion</strong> — <code>&quot;18&quot; &gt;= 13</code> is a TypeError</p>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Most common issue: students forget int() around input()</li>
-  <li>Second most common: off-by-one where age 13 falls into wrong bracket</li>
-  <li>Pacing adjustment: if students finish early, have them add a &quot;senior&quot; bracket (65+)</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -545,15 +513,6 @@ Teen access granted</code></pre>
   <li>Apply width and alignment specifiers</li>
   <li>Explain why f-strings are better than concatenation</li>
 </ul>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab</li>
-  <li>Bridge from Hour 9: &quot;Now that we can make decisions, let&#x27;s make our output look professional&quot;</li>
-  <li>Common pitfall: students forget the leading &#x27;f&#x27; in f-strings</li>
-  <li>Scope guardrail: do NOT cover str.format() or %-formatting; f-strings only</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -604,13 +563,6 @@ print(f&quot;Hello, {name}! You are {age} years old.&quot;)</code></pre>
   <li>Reads left-to-right naturally</li>
   <li>Format specifiers built in</li>
 </ul>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Key point: f-strings eliminate the most common beginner bug (forgetting str())</li>
-  <li>Show side-by-side: which one would you rather debug at 2am?</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -663,13 +615,6 @@ print(&quot;{name} is {age}&quot;)     # literal text
 
 # ✓ With the f
 print(f&quot;{name} is {age}&quot;)    # variable values</code></pre>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>The #1 pitfall is forgetting the f — watch for it during lab</li>
-  <li>Pacing adjustment: fast students can add split-bill feature with formatted per-person amounts</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -696,16 +641,6 @@ print(f&quot;{name} is {age}&quot;)    # variable values</code></pre>
   <li>Count words in a sentence</li>
   <li>Find the longest word in a text string</li>
 </ul>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab</li>
-  <li>Bridge: &quot;We&#x27;ve formatted output nicely; now let&#x27;s process INPUT text&quot;</li>
-  <li>Key insight: split() returns a list — first real exposure to lists</li>
-  <li>Scope guardrail: do NOT cover list methods (append, pop, etc.) or list comprehensions</li>
-  <li>Keep list usage to: indexing, len(), and iteration basics only</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -762,14 +697,6 @@ for word in words:
         longest = word
 
 print(f&quot;Longest word: {longest}&quot;)    # &#x27;quick&#x27; or &#x27;brown&#x27; or &#x27;jumps&#x27;</code></pre>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>This is a great moment to introduce the &#x27;for&#x27; loop pattern informally</li>
-  <li>Keep it simple: &quot;for each word in the list, check if it&#x27;s longer&quot;</li>
-  <li>Do NOT formally teach for-loops yet — that&#x27;s Session 4</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -825,15 +752,6 @@ result = &#x27;, &#x27;.join(numbers)  # TypeError!
 
 # ✓ Convert to strings first
 result = &#x27;, &#x27;.join(str(n) for n in numbers)</code></pre>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Mention punctuation as a known limitation — we won&#x27;t solve it today</li>
-  <li>If students ask about stripping punctuation, show str.strip() briefly</li>
-  <li>Pacing adjustment: fast finishers can add &quot;shortest word&quot; or &quot;word count per unique word&quot;</li>
-  <li>Optional extension (stay in Basics scope): reverse the word order</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -855,17 +773,6 @@ result = &#x27;, &#x27;.join(str(n) for n in numbers)</code></pre>
   <li>Use print-debugging strategically to isolate problems</li>
   <li>Apply a systematic debugging process</li>
 </ul>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Pacing: 10–15 min talk, 5–10 min demo, 25–35 min lab</li>
-  <li>This is the wrap-up hour for Day 3 — keep energy up</li>
-  <li>Common pitfall: students change multiple things at once when debugging</li>
-  <li>Key habit to instill: change ONE thing, then re-run</li>
-  <li>Scope guardrail: do NOT teach try/except — that&#x27;s Advanced module</li>
-  <li>Optional extension: Python 2 vs 3 differences (5-10 min if time allows)</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -939,15 +846,6 @@ print(f&quot;Top score: {scores[3]}&quot;)  # Bug 3: index out of range</code></
   <li><code>greeting = f&quot;Hello, {name}!&quot;</code></li>
   <li><code>print(f&quot;Top score: {scores[2]}&quot;)</code></li>
 </ol>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>Walk through each bug step-by-step</li>
-  <li>Ask students: &quot;What does the error message tell us?&quot;</li>
-  <li>Show: add a print() BEFORE the error line to see variable values</li>
-  <li>Reinforce: read the error FIRST, hypothesize, then fix</li>
-</ul>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
@@ -994,34 +892,18 @@ print(f&quot;Last color: {colors[3]}&quot;)</code></pre>
 <p><strong>⚠️</strong> <strong>Not re-running after each fix</strong> — always verify</p>
 <p><strong>⚠️</strong> <strong>Ignoring the error message</strong> — read it first!</p>
 <p><strong>⚠️</strong> <strong>Leaving debug prints in final code</strong> — clean up when done</p>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>This is the #1 habit to build: one change at a time</li>
-  <li>Pacing adjustment: if students finish early, give them a 4th broken script</li>
-</ul>
-<p>that combines multiple error types</p>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
             <h1>Optional: Python 2 vs Python 3 (Quick Note)</h1>
             <h3>Key Differences (When You See Old Code Online)</h3>
-<p>| Feature | Python 2 | Python 3 |</p>
-<p>|---------|----------|----------|</p>
-<p>| Print | <code>print &quot;hello&quot;</code> | <code>print(&quot;hello&quot;)</code> |</p>
-<p>| Division | <code>5 / 2 → 2</code> | <code>5 / 2 → 2.5</code> |</p>
-<p>| Input | <code>raw_input()</code> | <code>input()</code> |</p>
-<p>| Strings | ASCII default | Unicode default |</p>
-<blockquote>💡 Always use Python 3. If you find Python 2 code online, convert the syntax.</blockquote>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
 <ul>
-  <li>Only cover this if you have 5-10 extra minutes</li>
-  <li>Main takeaway: Python 2 is end-of-life; always use Python 3</li>
-  <li>Students will encounter Python 2 snippets on Stack Overflow — now they&#x27;ll recognize it</li>
+  <li><strong>Print</strong>: Python 2 <code>print &quot;hello&quot;</code> → Python 3 <code>print(&quot;hello&quot;)</code></li>
+  <li><strong>Division</strong>: Python 2 <code>5 / 2 → 2</code> → Python 3 <code>5 / 2 → 2.5</code></li>
+  <li><strong>Input</strong>: Python 2 <code>raw_input()</code> → Python 3 <code>input()</code></li>
+  <li><strong>Strings</strong>: Python 2 ASCII default → Python 3 Unicode default</li>
 </ul>
-<p>--&gt;</p>
+<blockquote>💡 Always use Python 3. If you find Python 2 code online, convert the syntax.</blockquote>
         </section>
 
         <section class="slide">
@@ -1076,18 +958,6 @@ print(f&quot;Last color: {colors[3]}&quot;)</code></pre>
 <p><span class="cross">✗</span> List comprehensions</p>
 <p><span class="cross">✗</span> Advanced string formatting (str.format(), %-style)</p>
 <p><span class="cross">✗</span> Custom exception classes</p>
-<p>&lt;!--</p>
-<p>Speaker Notes:</p>
-<ul>
-  <li>SCOPE GUARDRAIL: Remind students that try/except, regex, and list comprehensions</li>
-</ul>
-<p>are all in the Advanced module. If students ask, acknowledge it&#x27;s a great question</p>
-<p>and let them know it&#x27;s coming later.</p>
-<ul>
-  <li>No-go topics for Basics: web frameworks, databases, GUI frameworks, testing frameworks,</li>
-</ul>
-<p>packaging/distribution, decorators, generators, lambda functions, advanced OOP</p>
-<p>--&gt;</p>
         </section>
 
         <section class="slide">
