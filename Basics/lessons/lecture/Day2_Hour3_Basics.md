@@ -1,8 +1,8 @@
-# Day 2, Hour 7: Input/Output + Type Conversion
+# Day 2, Hour 3: Input/Output + Type Conversion (Course Hour 7)
 **Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
-**Runbook alignment:** Session 2, Hour 7  
+**Runbook alignment:** Session 2, Course Hour 7  
 **Duration:** 60 minutes  
 **Mode:** Instructor-led + live coding + guided lab
 
@@ -31,7 +31,7 @@
 - **0:18–0:26** Live demos: conversion success + ValueError preview
 - **0:26–0:52** Guided lab: Unit Converter
 - **0:52–0:58** Debrief + pitfalls + quick checks
-- **0:58–1:00** Transition to Hour 8 checkpoint
+- **0:58–1:00** Transition to Day 2, Hour 4 checkpoint
 
 ---
 
@@ -318,7 +318,7 @@ Expected responses:
 
 ---
 
-## 8) Transition to Hour 8
+## 8) Transition to Day 2, Hour 4
 
 “You now have the full chain: collect input, convert types, compute, and format output. In Hour 8, you will demonstrate these fundamentals in a mini-assessment: the Receipt Generator checkpoint.”
 
