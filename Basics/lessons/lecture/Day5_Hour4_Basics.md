@@ -9,6 +9,8 @@
 
 ---
 
+## Instructor Deliverable Script (Use Largely Verbatim)
+
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 20 — the final hour of Session 5 and the capstone of our four-hour journey through Python's core data structures. Everything this hour builds directly on Hour 19 (dictionaries fundamentals). Learners already know how to create dictionaries, access values with bracket notation and `get()`, add and update entries, and remove keys. This hour adds the missing piece: *traversal*. We will walk through all three dictionary iteration methods — `keys()`, `values()`, and `items()` — and then develop the **counting pattern**, the single most practically useful dictionary idiom beginners will encounter. The word-frequency counter is the canonical demonstration of the counting pattern, and it is tangible enough that learners immediately see where it applies in real programs (log analysis, survey results, inventory tracking, analytics). Stay firmly within Basics scope: no `collections.Counter`, no `defaultdict`, no dictionary comprehensions. The goal is that every learner leaves this hour able to write a frequency counter from scratch and explain every line. The live demo is typed in front of the class — do not paste pre-written code. Every "Say:" block is written to be read nearly verbatim; adapt to your natural voice but do not skip the conceptual scaffolding — it is load-bearing.
 
 ---
@@ -673,7 +675,7 @@ for word, count in counts.items():
 **Say:**
 "Seven lines including the blank one. If you got this working, you have fully met the lab requirements. Now let's look at each optional extension."
 
-**Extension 1 — lowercase normalisation:**
+**Extension 1 — lowercase normalization:**
 
 ```python
 sentence: str = input("Enter a sentence: ")
@@ -681,7 +683,7 @@ words: list[str] = sentence.split()
 
 counts: dict[str, int] = {}
 for word in words:
-    word = word.lower()   # normalise before counting
+    word = word.lower()   # normalize before counting
     counts[word] = counts.get(word, 0) + 1
 ```
 
@@ -714,7 +716,7 @@ words: list[str] = sentence.split()
 
 counts: dict[str, int] = {}
 for word in words:
-    # Normalise: lowercase and strip common punctuation
+    # Normalize: lowercase and strip common punctuation
     word = word.lower()
     for punct in (",", ".", "!", "?", ";", ":"):
         word = word.replace(punct, "")
@@ -744,7 +746,7 @@ if counts:
 ### 8.5 Design discussion
 
 **Say:**
-"Take thirty seconds and think about this design choice: we normalise the word *inside* the counting loop, not before it. Could we have normalised all words first, before the loop?
+"Take thirty seconds and think about this design choice: we normalize the word *inside* the counting loop, not before it. Could we have normalized all words first, before the loop?
 
 …
 
@@ -795,7 +797,7 @@ print(counts)
 **Say:**
 "As we saw during the demo, Python treats `'Hello'`, `'hello'`, and `'HELLO'` as three different strings. Dictionary keys are exact-match — case included. A word typed at the start of a sentence will have an uppercase first letter; the same word elsewhere will be lowercase.
 
-**Fix:** Always normalise to lowercase with `word.lower()` before using the word as a dictionary key — unless you have a specific reason to preserve case (which is rare for word counting)."
+**Fix:** Always normalize to lowercase with `word.lower()` before using the word as a dictionary key — unless you have a specific reason to preserve case (which is rare for word counting)."
 
 ```python
 # Demonstrating the problem
@@ -842,7 +844,10 @@ for word, count in counts.items():
 counts = {"apple": 3, "banana": 1, "cherry": 2}
 
 # CORRECT — collect first, delete after
-to_remove = [word for word in counts if counts[word] == 1]
+to_remove: list[str] = []
+for word in counts:
+    if counts[word] == 1:
+        to_remove.append(word)
 for word in to_remove:
     del counts[word]
 
@@ -858,9 +863,9 @@ print(counts)
 ## 10) Optional Extension: Lowercase + Punctuation Stripping
 
 **Say:**
-"Let's look at the normalisation extension one more time in a focused way, so the technique is crystal clear. This section is for learners who finished the lab early and want to level up their solution."
+"Let's look at the normalization extension one more time in a focused way, so the technique is crystal clear. This section is for learners who finished the lab early and want to level up their solution."
 
-### 10.1 Why normalisation matters
+### 10.1 Why normalization matters
 
 **Say:**
 "Consider analysing a real paragraph — say, a few sentences from a news article. You would encounter:
@@ -870,7 +875,7 @@ print(counts)
 - Exclamation marks, question marks, colons
 - Possibly hyphens within compound words
 
-Without normalisation, your frequency counter misses patterns that a human reader would naturally group together. Normalisation is not fancy — it is just good data hygiene."
+Without normalization, your frequency counter misses patterns that a human reader would naturally group together. Normalization is not fancy — it is just good data hygiene."
 
 ### 10.2 `str.lower()` — fixing case
 
@@ -918,7 +923,7 @@ print(clean)    # 'hello'
 
 ```python
 sentence = "To be, or not to be: that is the question!"
-print("BEFORE normalisation:")
+print("BEFORE normalization:")
 words_raw = sentence.split()
 counts_raw: dict[str, int] = {}
 for word in words_raw:
@@ -926,7 +931,7 @@ for word in words_raw:
 for w, c in sorted(counts_raw.items()):
     print(f"  {w!r}: {c}")
 
-print("\nAFTER normalisation:")
+print("\nAFTER normalization:")
 counts_clean: dict[str, int] = {}
 for word in words_raw:
     word = word.lower()
@@ -964,7 +969,7 @@ for w, c in sorted(counts_clean.items()):
 ```
 
 **Say:**
-"Before normalisation: 10 unique entries — 'To' and 'to' are separate, 'be,' and 'be:' are separate. After normalisation: 8 unique entries — 'be' correctly counted 2 times, 'to' correctly counted 2 times. The result is far more meaningful.
+"Before normalization: 10 unique entries — 'To' and 'to' are separate, 'be,' and 'be:' are separate. After normalization: 8 unique entries — 'be' correctly counted 2 times, 'to' correctly counted 2 times. The result is far more meaningful.
 
 Notice `{w!r}` in the f-string — the `!r` conversion applies `repr()` to the value, which wraps strings in quotes and makes invisible characters visible. It is very useful for debugging string content. You don't need it in production output, but it is handy when checking whether punctuation was correctly stripped."
 
@@ -987,7 +992,7 @@ We discovered the set — an unordered collection of unique values. Sets are Pyt
 We introduced the dictionary — the most powerful and flexible collection type in Python for associating meaning with data. You learned the key-value model, how to create dictionaries with literal syntax, how to read, add, and update entries, and — critically — how to access values safely with `get()` rather than risking a `KeyError`. You built an interactive Inventory Manager.
 
 **Hour 20 — Dictionary Iteration + Counting Pattern:**
-This hour. We completed the dictionary picture by learning how to traverse all entries with `keys()`, `values()`, and `items()`. Then we built the counting pattern — `d.get(word, 0) + 1` — which is one of the most practically useful idioms in all of Python. We applied it to build a Word Frequency Counter from scratch, added sorted display, found the most common word, and learned to normalise text by converting to lowercase and stripping punctuation. You can now write a frequency counter from memory."
+This hour. We completed the dictionary picture by learning how to traverse all entries with `keys()`, `values()`, and `items()`. Then we built the counting pattern — `d.get(word, 0) + 1` — which is one of the most practically useful idioms in all of Python. We applied it to build a Word Frequency Counter from scratch, added sorted display, found the most common word, and learned to normalize text by converting to lowercase and stripping punctuation. You can now write a frequency counter from memory."
 
 ### 11.2 The data structures map
 

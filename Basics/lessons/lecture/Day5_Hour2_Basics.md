@@ -9,6 +9,8 @@
 
 ---
 
+## Instructor Deliverable Script (Use Largely Verbatim)
+
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 18. The entire hour focuses on sets: what they are, why uniqueness is built in, how to use them for fast membership checks, and how a few key operations (union, intersection, difference) solve real problems. Stay firmly within Basics scope — do not introduce frozensets, set comprehensions, or the `collections` module here. The key outcomes are (1) using `set()` to strip duplicates from a list, (2) checking membership with `in`, (3) building intuition for when a set beats a list, and (4) understanding why sets are unordered and how to work with that. The lab ties everything together in a practical "Unique Visitors" program that learners build step by step. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip or abbreviate the conceptual explanations.
 
 ---
@@ -28,13 +30,13 @@
 ## 1) Agenda + Timing
 
 - **0:00–0:05** Reconnect to Hour 17 (tuples); set up the problem sets solve
-- **0:05–0:18** Core concept: what a set is, analogy, literal syntax, `set()` constructor
-- **0:18–0:28** Adding, removing, and clearing: `add()`, `discard()`, `remove()`, `pop()`, `clear()`
-- **0:28–0:35** Membership checks: `in` with sets vs lists, conceptual speed difference
-- **0:35–0:43** Set operations: union, intersection, difference with classroom examples
-- **0:43–0:48** Sets are unordered — demo and `sorted()` as the display fix
-- **0:48–0:53** Live demo: list of names → set (typed live in class)
-- **0:53–0:58** Guided lab: Unique Visitors
+- **0:05–0:14** Core concept: what a set is, analogy, literal syntax, `set()` constructor
+- **0:14–0:22** Adding, removing, and clearing: `add()`, `discard()`, `remove()`, `pop()`, `clear()`
+- **0:22–0:28** Membership checks: `in` with sets vs lists, conceptual speed difference
+- **0:28–0:34** Set operations: union, intersection, difference with classroom examples
+- **0:34–0:39** Sets are unordered — demo and `sorted()` as the display fix
+- **0:39–0:43** Live demo: list of names → set (typed live in class)
+- **0:43–0:58** Guided lab: Unique Visitors
 - **0:58–1:00** Debrief, recap, and exit ticket
 
 ---
@@ -153,7 +155,7 @@ print(len(unique_names))   # 4
 **Say:**
 "Let me read that code out loud so we absorb what is happening.
 
-We start with `names_list` — a regular Python list with seven items, including three Alices, two Bobs, and a Carol and a David.
+We start with `names_list` — a regular Python list with seven items, including two Alices, three Bobs, and a Carol and a David.
 
 We call `set(names_list)`, passing the whole list in. Python reads through every item, and for each one, if it has not seen that value before, it keeps it. If it has seen it before, it throws it away. The result is a new set with four items: one Alice, one Bob, one Carol, one David.
 
@@ -793,9 +795,11 @@ numbers: set[int] = {1, 2, 3, 4, 5}
 #         numbers.discard(n)  # RuntimeError: Set changed size during iteration
 
 # FIX: Decide what to keep, then build a new set
-numbers = {n for n in numbers if n % 2 != 0}  # Advanced: set comprehension
-# ...or using the tools you know:
-numbers = set(n for n in list(numbers) if n % 2 != 0)
+new_numbers: set[int] = set()
+for n in numbers:
+    if n % 2 != 0:
+        new_numbers.add(n)
+numbers = new_numbers
 print(numbers)  # {1, 3, 5}
 ```
 

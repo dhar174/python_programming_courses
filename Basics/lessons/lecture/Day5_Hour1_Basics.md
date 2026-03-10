@@ -46,7 +46,7 @@
 - Have the Python REPL ready in a terminal (type `python` or `python3`) for quick interactive experiments.
 - Plan to show one deliberate `TypeError` by trying to assign to a tuple index.
 - Plan to show the single-element trap: `(42)` is an integer, `(42,)` is a tuple.
-- Confirm that `min()` and `max()` are covered in your learners' prior knowledge — they were introduced in Hour 15 (Day 4, Hour 3). Briefly remind learners if needed.
+- Confirm that `min()` and `max()` are covered in your learners' prior knowledge — they were introduced in Hour 14 (Day 4, Hour 2). Briefly remind learners if needed.
 
 **Say:** "Please have your editor open and an empty file ready. This hour involves a lot of typing together. The real learning happens at your keyboard, not just by watching."
 

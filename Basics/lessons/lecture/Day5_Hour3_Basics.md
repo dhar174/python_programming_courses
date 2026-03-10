@@ -9,6 +9,8 @@
 
 ---
 
+## Instructor Deliverable Script (Use Largely Verbatim)
+
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 19. The entire hour focuses on Python dictionaries: what they are, how key-value thinking works, how to create and manipulate them, and — critically — how to access them safely using `get()` rather than crashing with a `KeyError`. Stay firmly within Basics scope: do not introduce dict comprehensions, `collections.defaultdict`, or nested dictionaries beyond a passing mention. The two key outcomes are (1) creating, reading, adding, and updating a dictionary by key, and (2) always using `get()` or an `in`-check before accessing a key that might be missing. The live demo types an inventory dictionary from scratch and deliberately triggers a `KeyError` to make the contrast with `get()` vivid and memorable. The guided lab turns learners loose to build their own interactive inventory manager. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip the conceptual explanations — they are load-bearing.
 
 ---
@@ -28,13 +30,13 @@
 ## 1) Agenda + Timing
 
 - **0:00–0:05** Reconnect to Hour 18 (sets); introduce the key-value problem that dictionaries solve
-- **0:05–0:18** Core concept: what a dictionary is, real-world analogy, literal syntax, reading values by key
-- **0:18–0:28** Adding and updating entries: assignment syntax, `in`-check, what happens when a key already exists
-- **0:28–0:35** Safe access with `get()`: `get(key)`, `get(key, default)`, side-by-side comparison with bracket notation
-- **0:35–0:40** Removing entries: `del`, `pop()`, `clear()`
-- **0:40–0:45** Keys must be unique and hashable: duplicate key rule, valid key types, what cannot be a key
-- **0:45–0:53** Live demo: Inventory Dictionary — typed live, showing `KeyError` vs `get()`, updating quantities, adding items
-- **0:53–0:58** Guided lab: Inventory Manager
+- **0:05–0:14** Core concept: what a dictionary is, real-world analogy, literal syntax, reading values by key
+- **0:14–0:22** Adding and updating entries: assignment syntax, `in`-check, what happens when a key already exists
+- **0:22–0:29** Safe access with `get()`: `get(key)`, `get(key, default)`, side-by-side comparison with bracket notation
+- **0:29–0:33** Removing entries: `del`, `pop()`, `clear()`
+- **0:33–0:38** Keys must be unique and hashable: duplicate key rule, valid key types, what cannot be a key
+- **0:38–0:43** Live demo: Inventory Dictionary — typed live, showing `KeyError` vs `get()`, updating quantities, adding items
+- **0:43–0:58** Guided lab: Inventory Manager
 - **0:58–1:00** Debrief, recap, and exit ticket
 
 ---
