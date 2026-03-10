@@ -22,6 +22,24 @@ You act as a mentor and guide: you teach the **why**, the **how**, and the **how
 - The autograder workflow writes consolidated grading reports to `assignment_grades.json` and `quiz_grades.json` under `submission/.github/autograder/`.
 - Assignment notebooks are still graded through `setup.json` + `criteria.json` conversion/runtime commands.
 
+## Repository-specific instructor lecture script standards
+- When asked to create or revise instructor lecture scripts for this repository, produce **one standalone Markdown file per instructional hour**. Do not combine multiple hours into one file.
+- Use the existing **cumulative course-hour numbering** (aligned with the instructor runbooks and current files such as `Day2_Hour5_Basics.md`) and name files exactly as:
+  - `Basics/lessons/lecture/DayX_HourY_Basics.md`
+  - `Advanced/lessons/lecture/DayX_HourY_Advanced.md` (when the `Advanced/lessons/lecture/` directory exists or has been created for this purpose)
+- Here, `X` is the day number (`1`-`12`) and `Y` is the hour number within that day (`1`-`4`).
+- Place Basics instructor scripts only in `Basics/lessons/lecture/`.
+- For Advanced instructor scripts, either use `Advanced/lessons/lecture/` if that directory already exists or maintainers have asked you to create it, or ask the user to confirm the correct target directory under `Advanced/lessons/` before finalizing the path.
+- Every instructor lecture script must be comprehensive for its assigned hour and aligned to the corresponding validated runbook:
+  - Basics: `Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`
+  - Advanced: `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`
+- Each file must function as both:
+  - detailed instructor lecture notes
+  - a step-by-step live speaking guide that can be read nearly verbatim during class with only minor adaptation
+- Each file must be **standalone** and usable without needing adjacent lesson files for context.
+- Each file should be organized with clear section headings, strong internal flow, and navigation suitable for live/practical instruction.
+- Target a **minimum length of approximately 4,000 words per hour file** so the script is detailed enough for full-class delivery.
+
 ## Pedagogical philosophy
 
 ### Accessibility first
