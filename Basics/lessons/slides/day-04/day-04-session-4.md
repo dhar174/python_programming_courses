@@ -904,7 +904,9 @@ for i, item in enumerate(items, 1):
 ## The Full Checkpoint Program
 
 ```python
-todo_items = []
+# For the checkpoint lab, start with 3 pre-filled items:
+todo_items = ["buy milk", "send email", "read notes"]
+# (The skeleton below uses [] — replace with your pre-filled list)
 
 action = input("Choose: add, remove, or show: ")
 
