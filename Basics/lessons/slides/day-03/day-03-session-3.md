@@ -237,8 +237,10 @@ tip_percent = 18
 tip = bill * (tip_percent / 100)
 total = bill + tip
 
+tip_label = f"Tip ({tip_percent}%):"
+
 print(f"{'Bill:':<12} ${bill:>8.2f}")
-print(f"{'Tip ({tip_percent}%):':<12} ${tip:>8.2f}")
+print(f"{tip_label:<12} ${tip:>8.2f}")
 print(f"{'Total:':<12} ${total:>8.2f}")
 ```
 
@@ -696,10 +698,10 @@ print(f"Last color: {colors[3]}")
 ## Next Session Preview
 
 ### Session 4 (Hours 13–16)
-- Hour 13: if / elif / else branching
-- Hour 14: Nested decisions
-- Hour 15: for loops — iterating over sequences
-- Hour 16: Checkpoint 2 – Decision logic mini-assessment
+- Hour 13: Lists fundamentals — create, index, slice, mutate
+- Hour 14: Iterating lists with `for` loops — accumulators & averages
+- Hour 15: Nested lists for table-like data — rows & columns
+- Hour 16: Checkpoint 2 — Lists + string handling
 
 ---
 
