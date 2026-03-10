@@ -313,7 +313,7 @@ This repository has specialized agents configured in `.github/agents/`:
 - `frontend-slides-batch.agent.md` - Batch HTML slide generation
 - `presentations-orchestrator.agent.md` - Presentation build orchestration
 - `presentations-marp-writer.agent.md` - Marp presentation writing
-- `python_educator.agent.md` - Python educational content specialist
+- `python-educator.agent.md` - Python educational content specialist
 - `technical-content-evaluator.agent.md` - Technical content quality evaluation
 
 Use these agents for specialized tasks in their respective domains.
