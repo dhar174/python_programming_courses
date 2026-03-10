@@ -55,7 +55,7 @@ Module 1 materials (Python Programming - Basic, 48 hours):
   
 - **[`Basics/lessons/lecture/`](./Basics/lessons/lecture)** - Markdown source files for readable Lecture scripts + notes.
   - Lesson files are organized one file per hour following the naming pattern: `DayX_HourY_Basics.md`
-  - Example files: `Day1_Hour1_Basics.md` – `Day1_Hour4_Basics.md`, `Day2_Hour5_Basics.md` – `Day2_Hour8_Basics.md`, `Day3_Hour1_Basics.md` – `Day3_Hour4_Basics.md`
+  - Example files: `Day1_Hour1_Basics.md` – `Day1_Hour4_Basics.md`, `Day2_Hour1_Basics.md` – `Day2_Hour4_Basics.md`, `Day3_Hour1_Basics.md` – `Day3_Hour4_Basics.md`
   - **All new sessions must use per-hour files** (not combined session files)
 
 - **[`Basics/lessons/`](./Basics/lessons/assignments)** - IPNYB source files for homework assignment notebooks.
@@ -191,7 +191,7 @@ Each hour receives its own dedicated Markdown file formatted for direct instruct
 
 2. **Naming Convention**:
    - `Day1_Hour1_Basics.md` - Day 1, Hour 1 of Basic module
-   - `Day2_Hour5_Basics.md` - Day 2, Hour 5 of Basic module
+   - `Day2_Hour1_Basics.md` - Day 2, Hour 1 of Basic module (runbook Session 2 / course Hour 5)
    - `Day3_Hour2_Advanced.md` - Day 3, Hour 2 of Advanced module
 
 3. **Per-Hour File Structure (Standard)**:
@@ -201,10 +201,10 @@ Each hour receives its own dedicated Markdown file formatted for direct instruct
    - Clear curriculum traceability
 
    Example — Day 2, Session 2 files:
-   - `Basics/lessons/lecture/Day2_Hour5_Basics.md` (String Fundamentals)
-   - `Basics/lessons/lecture/Day2_Hour6_Basics.md` (String Methods)
-   - `Basics/lessons/lecture/Day2_Hour7_Basics.md` (Input/Output + Type Conversion)
-   - `Basics/lessons/lecture/Day2_Hour8_Basics.md` (Checkpoint 1 + Session Wrap-Up)
+   - `Basics/lessons/lecture/Day2_Hour1_Basics.md` (String Fundamentals; runbook Session 2 / course Hour 5)
+   - `Basics/lessons/lecture/Day2_Hour2_Basics.md` (String Methods; runbook Session 2 / course Hour 6)
+   - `Basics/lessons/lecture/Day2_Hour3_Basics.md` (Input/Output + Type Conversion; runbook Session 2 / course Hour 7)
+   - `Basics/lessons/lecture/Day2_Hour4_Basics.md` (Checkpoint 1 + Session Wrap-Up; runbook Session 2 / course Hour 8)
 
 4. **Content Requirements**:
    - Comprehensive coverage of topics for that hour

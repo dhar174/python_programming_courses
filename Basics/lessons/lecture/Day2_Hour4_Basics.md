@@ -1,8 +1,8 @@
-# Day 2, Hour 8: Checkpoint 1 — Fundamentals Mini-Assessment
+# Day 2, Hour 4: Checkpoint 1 — Fundamentals Mini-Assessment (Course Hour 8)
 **Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
-**Runbook alignment:** Session 2, Hour 8  
+**Runbook alignment:** Session 2, Course Hour 8  
 **Duration:** 60 minutes (assessment-centric)  
 **Mode:** Brief instructor framing + timeboxed individual checkpoint + debrief
 

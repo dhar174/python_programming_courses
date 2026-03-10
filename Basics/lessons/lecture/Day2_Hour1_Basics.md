@@ -1,8 +1,8 @@
-# Day 2, Hour 5: String Fundamentals (Indexing, Slicing, `len()`)
+# Day 2, Hour 1: String Fundamentals (Course Hour 5: Indexing, Slicing, `len()`)
 **Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
-**Runbook alignment:** Session 2, Hour 5  
+**Runbook alignment:** Session 2, Course Hour 5  
 **Duration:** 60 minutes  
 **Mode:** Instructor-led + live coding + guided lab  
 **Audience:** Beginners in Python (Basics scope only)
@@ -34,7 +34,7 @@ These are foundational skills you will use constantly in scripting, automation, 
 - **0:18–0:26** Live demos: initials, email domain, last character with `-1`
 - **0:26–0:52** Guided lab: Username Builder
 - **0:52–0:58** Debrief, pitfalls, quick checks
-- **0:58–1:00** Transition to Hour 6
+- **0:58–1:00** Transition to Day 2, Hour 2
 
 ---
 
@@ -370,7 +370,7 @@ Ask these verbally, then cold-call 2–3 learners:
 
 ---
 
-## 8) Transition Script to Hour 6 (~2 minutes)
+## 8) Transition Script to Day 2, Hour 2 (~2 minutes)
 
 “Great work. In this hour, we learned to access and extract text by position. In the next hour, we’ll learn how to transform text more efficiently with string methods like `strip()`, `replace()`, and `find()`. Keep your mental model: strings are precise, and small operations combine into powerful text cleaning pipelines.”
 
