@@ -5,8 +5,9 @@ This directory contains standalone HTML slide presentations generated from the c
 ## Generated Files
 
 - **01-intro-to-python.html** - Introduction to Python slides (3 slides)
-- **day-01-session-1.html** - Basics Day 1 Session 1 comprehensive lesson (59 slides)
+- **day-01/day-01-session-1.html** - Basics Day 1 Session 1 comprehensive lesson (59 slides)
 - **day-02-session-2.html** - Basics Day 2 Session 2: Strings, I/O, and Checkpoint 1 (74 slides)
+- **day-03/day-03-session-3.html** - Basics Day 3 Session 3: Comparisons, F-Strings, Text Processing & Debugging (49 slides)
 
 ## Features
 
@@ -130,8 +131,9 @@ This will scan `Basics/lessons/` and `Advanced/lessons/` for any `.md` files and
 
 These slides were generated from:
 - `Basics/lessons/01-intro-to-python.md`
-- `Basics/lessons/day-01-session-1.md`
+- `Basics/lessons/slides/day-01/day-01-session-1.md`
 - `Basics/lessons/day-02-session-2.md` (combined session file — still present for CI/Marp builds)
+- `Basics/lessons/slides/day-03/day-03-session-3.md`
 - `Advanced/lessons/01-intro-to-python.md`
 
 ### Per-Hour Lecture Files (Day 2, Session 2)
@@ -145,6 +147,16 @@ instructional use and agent automation. These files live in `Basics/lessons/lect
 
 The compiled `day-02-session-2.html` slide deck was generated from the combined markdown and
 covers the full session. Future sessions should follow the per-hour file standard.
+
+### Per-Hour Lecture Files (Day 3, Session 3)
+
+The Day 3, Session 3 content also has per-hour lecture files in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day3_Hour1_Basics.md` (Comparisons + Boolean Logic)
+- `Basics/lessons/lecture/Day3_Hour2_Basics.md` (String Formatting with F-Strings)
+- `Basics/lessons/lecture/Day3_Hour3_Basics.md` (Working with Text: split/join)
+- `Basics/lessons/lecture/Day3_Hour4_Basics.md` (Debugging Habits)
+
+The compiled `day-03/day-03-session-3.html` slide deck covers the full session.
 
 ---
 
