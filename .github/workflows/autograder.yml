@@ -125,6 +125,8 @@ jobs:
               print("::warning::No tests found in criteria.json")
               sys.exit(0)
 
+          prefix_labels = {"Student:", "Date:", "Python Version:", "Name:", "Age:"}
+
           for test in tests:
               if not isinstance(test, dict):
                   continue
@@ -152,7 +154,7 @@ jobs:
                       for exp_line in expected:
                           if not isinstance(exp_line, str):
                               continue
-                          if exp_line in ("Student:", "Date:", "Python Version:"):
+                          if exp_line in prefix_labels:
                               match = any(line.startswith(exp_line) for line in stdout_lines)
                           else:
                               match = any(line == exp_line for line in stdout_lines)
