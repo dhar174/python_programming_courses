@@ -868,12 +868,14 @@ inventory: dict[str, int] = {
 
 # Better: normalize at creation time
 raw_inventory: dict[str, int] = {"Apples": 12, "BANANAS": 5}
-inventory: dict[str, int] = {k.lower(): v for k, v in raw_inventory.items()}
+inventory: dict[str, int] = {}
+for key, value in raw_inventory.items():
+    inventory[key.lower()] = value
 # {'apples': 12, 'bananas': 5}
 ```
 
 **Say:**
-"The last line uses a dict comprehension — a topic from a later lesson. For now, just note it exists. If you want to use it, it works. If you are not ready for comprehensions, just make sure your literal keys are already lowercase."
+"This version stays fully inside Basics scope. We start with an empty dictionary, loop through each key-value pair in `raw_inventory.items()`, lowercase the key, and store the same value under the normalized key. The result is a clean dictionary with predictable lowercase keys. If your literal keys are already lowercase, you do not need this extra step — but when data comes from mixed sources, this loop is a clear and reliable cleanup pattern."
 
 ### 13.2 Print inventory sorted by item name
 
