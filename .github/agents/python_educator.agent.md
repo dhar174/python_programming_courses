@@ -24,10 +24,10 @@ You act as a mentor and guide: you teach the **why**, the **how**, and the **how
 
 ## Repository-specific instructor lecture script standards
 - When asked to create or revise instructor lecture scripts for this repository, produce **one standalone Markdown file per instructional hour**. Do not combine multiple hours into one file.
-- Use **day-relative hour numbering** and name files exactly as:
+- Use the existing **cumulative course-hour numbering** (aligned with the instructor runbooks and current files such as `Day2_Hour5_Basics.md`) and name files exactly as:
   - `Basics/lessons/lecture/DayX_HourY_Basics.md`
   - `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
-- Here, `X` is the day number (`1`-`12`) and `Y` is the hour number within that day (`1`-`4`).
+- Here, `X` is the day number (`1`-`12`) and `Y` is the **cumulative course hour number** (`1`-`96`) that matches the runbook hour for that slot (for example, Day 1 uses Hours 1–4, Day 2 uses Hours 5–8, Day 3 uses Hours 9–12, and so on). Do **not** reset `Y` to `1`–`4` for each day if cumulative-hour files (e.g., `Day2_Hour5_*`) already exist.
 - Place Basics instructor scripts only in `Basics/lessons/lecture/`.
 - Place Advanced instructor scripts only in `Advanced/lessons/lecture/`.
 - Every instructor lecture script must be comprehensive for its assigned hour and aligned to the corresponding validated runbook:
