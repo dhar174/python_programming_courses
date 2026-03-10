@@ -66,6 +66,7 @@ jobs:
           test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
           python - "$NOTEBOOK_NAME" << 'PY'
           import json
+          import re
           import shlex
           import sys
           from pathlib import Path
@@ -74,7 +75,7 @@ jobs:
           # Defense-in-depth validation before writing shell commands into setup.json.
           if (
               not notebook_name.endswith(".ipynb")
-              or "Basics_Day" not in notebook_name
+              or not re.search(r"(?:^|_)Basics_Day\d+(?:_|\.|$)", notebook_name)
               or "/" in notebook_name
               or "\\" in notebook_name
               or notebook_name.startswith(".")
@@ -188,7 +189,11 @@ jobs:
                   evaluated = copy.deepcopy(criteria)
                   eval_tests = evaluated.get("tests")
                   if conversion.returncode != 0 or not script_path.exists():
-                      details = conversion.stderr.strip() or conversion.stdout.strip() or "Notebook conversion failed"
+                      details = (
+                          conversion.stderr.strip()
+                          or conversion.stdout.strip()
+                          or f"Notebook conversion failed for {notebook_path} with command: {' '.join(convert_cmd)}"
+                      )
                       print(f"::warning::Notebook conversion failed for {notebook_path}: {details}")
                       if isinstance(eval_tests, list):
                           for test in eval_tests:
@@ -208,7 +213,7 @@ jobs:
                       runtime_cmd = [str(part) for part in cmd] if isinstance(cmd, list) else []
                       replaced_script = False
                       for index, part in enumerate(runtime_cmd):
-                          if part.lower().endswith(".py"):
+                          if re.fullmatch(r"day\d+\.py", Path(part).name):
                               runtime_cmd[index] = str(script_path)
                               replaced_script = True
                               break
@@ -345,18 +350,14 @@ jobs:
 
           def load_quiz_data(html_path: Path) -> dict:
               html = html_path.read_text(encoding="utf-8")
-              start_marker = "const QUIZ_DATA = "
-              storage_marker = "const STORAGE_KEY"
-              start = html.find(start_marker)
-              if start < 0:
-                  raise ValueError(f"Unable to find QUIZ_DATA marker in {html_path}")
-              content_start = start + len(start_marker)
-              end = html.find(storage_marker, content_start)
-              if end < 0:
+              quiz_data_match = re.search(
+                  r"const QUIZ_DATA = (\{.*?\});\s*const STORAGE_KEY",
+                  html,
+                  flags=re.DOTALL,
+              )
+              if not quiz_data_match:
                   raise ValueError(f"Unable to parse QUIZ_DATA from {html_path}")
-              quiz_data_json = html[content_start:end].rstrip()
-              if quiz_data_json.endswith(";"):
-                  quiz_data_json = quiz_data_json[:-1].rstrip()
+              quiz_data_json = quiz_data_match.group(1)
               try:
                   return json.loads(quiz_data_json)
               except json.JSONDecodeError as exc:
@@ -394,7 +395,8 @@ jobs:
               match = re.search(r"Basics_Day(\d+)_Quiz$", quiz_id)
               if match:
                   return (int(match.group(1)), quiz_id)
-              return (10**9, quiz_id)
+              # Non-standard quiz ids sort after numbered day quizzes.
+              return (float("inf"), quiz_id)
 
           for quiz_id in sorted(quiz_candidates, key=quiz_sort_key):
               candidates = quiz_candidates[quiz_id]
@@ -576,22 +578,16 @@ jobs:
                   print(f"::notice::No answer export found for {quiz_id}; skipping strict quiz data validation.")
                   continue
               html = quiz_path.read_text(encoding='utf-8')
-              start_marker = "const QUIZ_DATA = "
-              storage_marker = "const STORAGE_KEY"
-              start = html.find(start_marker)
-              if start < 0:
-                  print(f'{quiz_path} must define const QUIZ_DATA')
-                  sys.exit(1)
-              content_start = start + len(start_marker)
-              end = html.find(storage_marker, content_start)
-              if end < 0:
+              quiz_data_match = re.search(
+                  r"const QUIZ_DATA = (\{.*?\});\s*const STORAGE_KEY",
+                  html,
+                  flags=re.DOTALL,
+              )
+              if not quiz_data_match:
                   print(f'{quiz_path} must define const QUIZ_DATA')
                   sys.exit(1)
               try:
-                  quiz_json = html[content_start:end].rstrip()
-                  if quiz_json.endswith(";"):
-                      quiz_json = quiz_json[:-1].rstrip()
-                  quiz_data = json.loads(quiz_json)
+                  quiz_data = json.loads(quiz_data_match.group(1))
               except json.JSONDecodeError as exc:
                   print(f'{quiz_path} has invalid QUIZ_DATA JSON: {exc}')
                   sys.exit(1)
