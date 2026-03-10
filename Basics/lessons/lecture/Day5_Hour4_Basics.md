@@ -11,828 +11,1042 @@
 
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
-> **Instructor note:** This document is written as a detailed read-aloud teaching guide. This hour deepens dictionary skills from Hour 19 and introduces the frequency-counting pattern. The three key mechanics are: iterating with `dict.items()` to access key-value pairs in a loop, the counting idiom `d[word] = d.get(word, 0) + 1`, and cleaning input (lowercase, punctuation stripping) to produce accurate counts. Keep scope tight. Do not introduce `collections.Counter`, dict comprehensions, `sorted()` with `key=` on dict items (it is fine to use `sorted()` on keys for display, but do not require complex sort keys in the lab), or `defaultdict`. The lab is the Word Counter. The optional extension is simple punctuation stripping with `str.replace()`.
+> **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 20 — the final hour of Session 5 and the capstone of our four-hour journey through Python's core data structures. Everything this hour builds directly on Hour 19 (dictionaries fundamentals). Learners already know how to create dictionaries, access values with bracket notation and `get()`, add and update entries, and remove keys. This hour adds the missing piece: *traversal*. We will walk through all three dictionary iteration methods — `keys()`, `values()`, and `items()` — and then develop the **counting pattern**, the single most practically useful dictionary idiom beginners will encounter. The word-frequency counter is the canonical demonstration of the counting pattern, and it is tangible enough that learners immediately see where it applies in real programs (log analysis, survey results, inventory tracking, analytics). Stay firmly within Basics scope: no `collections.Counter`, no `defaultdict`, no dictionary comprehensions. The goal is that every learner leaves this hour able to write a frequency counter from scratch and explain every line. The live demo is typed in front of the class — do not paste pre-written code. Every "Say:" block is written to be read nearly verbatim; adapt to your natural voice but do not skip the conceptual scaffolding — it is load-bearing.
 
 ---
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
 "By the end of this hour, you will be able to:
-1. Use `dict.items()` to iterate over key-value pairs together in a for loop.
-2. Explain what `dict.keys()` and `dict.values()` return and when each is useful.
-3. Build a frequency counter using the pattern `d[word] = d.get(word, 0) + 1`.
-4. Count how many times each word appears in a sentence entered by the user.
-5. Handle case inconsistencies by normalizing text to lowercase before counting.
-6. Describe how to extend the pattern to strip simple punctuation from words.
-7. Print a clear word-frequency report sorted by word for easy reading.
 
-The counting pattern we cover today appears everywhere in real Python: analyzing logs, surveying survey data, processing user input, and building any kind of frequency analysis. It is one of those techniques that every Python programmer reaches for regularly."
+1. Iterate through a dictionary's keys, values, and key-value pairs using `keys()`, `values()`, and `items()`, and choose the right method for the task at hand.
+2. Explain in plain language what `dict.items()` returns and why unpacking `for key, value in d.items()` is more readable than alternatives.
+3. Write a frequency-counting loop from scratch using the `d.get(word, 0) + 1` pattern, and explain step by step why this pattern handles both the 'first time we see a word' and the 'word already counted' cases in a single line.
+4. Sort and display dictionary results using `sorted(d.items())`, print aligned output with f-strings, and identify the most-frequent item without any library imports.
+5. Build a complete Word Counter program: read a sentence, split it into words, build a frequency dictionary, handle punctuation and capitalisation as optional extensions, and print a clean results table."
 
 ---
 
-## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
+## 1) Agenda + Timing
 
-- **0:00–0:05** Recap of dict fundamentals, transition to iteration, and motivation for counting
-- **0:05–0:15** `items()`, `keys()`, `values()`: the three dict view methods
-- **0:15–0:28** The counting pattern: `d.get(word, 0) + 1` explained step by step
-- **0:28–0:38** Live demo: word frequency counter for a hard-coded sentence
-- **0:38–0:48** Common pitfalls: punctuation, case sensitivity, `None` from missing default
-- **0:48–0:57** Guided lab: Word Counter (user input)
-- **0:57–1:00** Debrief, Session 5 recap, and exit ticket
-
----
-
-## 2) Instructor Setup Checklist (before class)
-
-- Open a clean file such as `hour20_dict_iteration_demo.py`.
-- Prepare a sample sentence with intentional repetition: `"the cat sat on the mat the cat"`.
-- Be ready to show the output of `dict.items()`, `dict.keys()`, and `dict.values()` separately.
-- Be ready to step through the counting loop iteration by iteration on the board or verbally.
-- Be ready to show what happens without `.lower()`: `"The"` and `"the"` count as different words.
-- Have a second sentence ready for a second run: `"to be or not to be that is the question"`.
-- If some learners type slowly, have a starter file ready.
-
-**Say:** "This hour ties together everything we have learned about dictionaries. Please type with me—the counting pattern especially needs to be felt, not just read."
+- **0:00–0:05** Reconnect to Hour 19 (dicts fundamentals); introduce the iteration question
+- **0:05–0:15** Dictionary iteration: `keys()`, `values()`, and `items()` — all three with examples and comparison
+- **0:15–0:28** The counting pattern — three progressive builds: blank dict → manual `if`-branch → elegant `get()` one-liner
+- **0:28–0:35** Sorting and displaying results — `sorted()`, aligned f-string output, finding the most common item
+- **0:35–0:45** Live demo: Word Frequency Counter — typed live from blank file
+- **0:45–0:57** Hands-on lab: Word Counter — guided with hints, full walkthrough solution
+- **0:57–1:00** Session 5 wrap-up, forward look to Session 6, exit ticket
 
 ---
 
-## 3) Opening Script: From Storing to Processing (~5 minutes)
+## 2) Instructor Setup Checklist
 
-### 3.1 Recap and frame the hour
+- Open two clean, blank files before class: `hour20_word_freq_demo.py` for the live demo and `hour20_lab_word_counter.py` as a guided starting shell for learners.
+- Have a Python REPL terminal open alongside your editor — you will use it for quick interactive experiments in Sections 4 and 5.
+- Prepare a short "starter sentence" of 12–15 words to type into the demo. Something concrete and slightly repetitive works best; for example: `"the quick brown fox jumps over the lazy dog and the fox"`. The repeated words make the counting effect immediately visible.
+- This is the last instructional hour of Session 5. Plan a slightly longer debrief (3–5 minutes) to celebrate what learners have accomplished across all four hours today before the session ends.
+- Confirm learners are comfortable with the `get()` method from Hour 19. If any learners missed Hour 19 or look uncertain, pair them with a neighbour during the lab — `get()` is the cornerstone of this hour.
+- Have a whiteboard or screen annotation ready for Section 5 to draw the "before / after" state of a dictionary as each word is processed in the counting loop.
 
-**Say:**
-"Welcome to the final hour of Session 5 and of Day 5.
-
-In Hour 19, we learned the fundamentals of dictionaries: how to create them, how to read values safely, how to update or add entries, and how to check whether a key exists.
-
-That knowledge was about working with a dictionary we already have. Today's hour is about building dictionaries from scratch during runtime—constructing a dict by processing information one piece at a time.
-
-Specifically, we will learn how to count things. When you have a stream of items—words, events, votes, inputs—and you want to know how many times each one appeared, a dictionary is the perfect tool."
-
-### 3.2 The real problem that motivates counting
-
-**Say:**
-"Imagine you are building a word-cloud generator. You need to know which words appear most often in a document. Or imagine you are analyzing a sales log and want to know which products were ordered most frequently. Or you are building a voting system and need to tally votes per candidate.
-
-In all of these situations, you are asking the same question: 'For each unique thing I have seen, how many times did I see it?'
-
-That question maps perfectly onto a dictionary. The unique thing is the key. The count is the value.
-
-By the end of this hour, you will have the pattern memorized and will be able to apply it to any counting problem you encounter."
-
-### 3.3 Connect to prior learning
-
-**Say:**
-"Before we write the counting pattern, let me close a gap from the last hour. When we printed the inventory, I used `for item, qty in inventory.items()` but I did not fully explain what `.items()` is.
-
-Today we start there. Understanding `items()` properly will make the rest of the hour much clearer."
+**Say:** "Open a fresh file called `hour20_word_freq_demo.py` and have your terminal ready. We are in the final hour of Day 5 and we are going to finish strong — because what we build today is one of the most genuinely useful patterns you will carry with you into every Python project you ever write."
 
 ---
 
-## 4) Core Concept: Dict Iteration with `items()`, `keys()`, `values()` (~10 minutes)
+## 3) Opening Script: Reconnect to Earlier Learning (~5 minutes)
 
-### 4.1 Why iteration matters
+### 3.1 Quick recap from Hour 19
 
 **Say:**
-"In Hour 19, we printed the inventory neatly by looping over `inventory.items()`. But why not just `for item in inventory`? Let me show you the difference."
+"Let's take a quick minute and make sure we are all standing on the same ground before we build on top of it. Last hour we met dictionaries. Who can remind me — in one sentence — what makes a dictionary different from a list?
 
-**Type:**
+…
+
+Right. A list stores values in *order* and you access them by *position* — by index number. A dictionary stores values by *meaning* — by a key you choose. Instead of saying 'give me item at index 0', you say 'give me the value for this key'. That shift from position to meaning is what makes dictionaries so powerful.
+
+We also learned the most important safety rule: never use bare bracket notation `d[key]` on a key you are not certain exists, because Python will raise a `KeyError` and your program will crash. Instead, use `d.get(key)` or `d.get(key, some_default)` — which returns `None` or your default silently if the key is not present.
+
+Let's do a ten-second mental check: in your head, or by typing it out quickly — how do you create a dictionary with three entries? And how do you safely get the value for a key that might not be there? … Great. Hold all of that, because we are about to take dictionaries from *storage* to *action*."
+
+### 3.2 The iteration gap
+
+**Say:**
+"Here is the gap we filled in Hour 19: we could *create* a dictionary, *read* from it, *update* it, and *safely access* it. But here is something we haven't asked yet: what do you do when you need to look at *every entry* in a dictionary — not just one specific key, but all of them?
+
+Imagine you have a dictionary of fifty inventory items and their quantities. You want to print a full stock report. Or you have a dictionary of student names and scores and you want to find the highest scorer. Or — and this is where we are going today — you have a dictionary that is being *built up* as a program runs, one entry at a time, counting how many times each word appears in a text.
+
+To do any of those things, you need to *iterate* through a dictionary. You need a for-loop that walks through every key, every value, or every key-value pair in turn. That is precisely what we are going to learn in the first part of this hour — and then we are going to use that knowledge to build something genuinely impressive."
+
+---
+
+## 4) Dictionary Iteration Methods
+
+### 4.1 The three iteration views
+
+**Say:**
+"Python gives you three built-in methods for looking at a dictionary's contents in a loop. Think of them as three different *views* of the same data:
+
+- `dict.keys()` — gives you just the keys
+- `dict.values()` — gives you just the values
+- `dict.items()` — gives you key-value pairs together
+
+Let's look at each one. I'm going to type these in the REPL so you can see the output immediately."
+
+Type in the REPL:
 
 ```python
 inventory = {
-    "apples": 30,
-    "bananas": 12,
-    "milk": 5,
-    "bread": 8,
-    "eggs": 24,
+    "apples": 12,
+    "bananas": 5,
+    "oranges": 8,
+    "pears": 3,
+    "grapes": 20,
 }
-
-# Loop directly over a dict — what do we get?
-for thing in inventory:
-    print(thing)
 ```
 
-Run it.
+**Say:** "There is our dictionary from Hour 19. Now let's iterate with each of the three methods."
 
-**Say:**
-"When you loop directly over a dictionary, you get only the keys—not the values. Python's default dict iteration is key iteration.
+### 4.2 Iterating over keys
 
-This is useful when you only need the keys—for example, to check or display them. But when you need both key and value together, you use `.items()`."
-
-### 4.2 `dict.items()` — the paired view
-
-**Type:**
+**Say:** "First — `keys()`. When you use a plain `for` loop on a dictionary without calling any method, Python iterates over the keys by default. But calling `.keys()` explicitly makes the intent obvious. Both of these are equivalent:"
 
 ```python
-# items() gives (key, value) pairs
+# Implicit key iteration (works, but intent is hidden)
+for item in inventory:
+    print(item)
+
+# Explicit key iteration (clearer)
+for item in inventory.keys():
+    print(item)
+```
+
+**Say:**
+"Both loops print the same thing:
+
+```
+apples
+bananas
+oranges
+pears
+grapes
+```
+
+**[Ask learners]** When would iterating over just the keys be useful? Think of a real example.
+
+… Good answers: printing a menu of available items, checking whether a key exists without caring about the value, building a sorted list of category names. If you only need the key, `keys()` is the right tool.
+
+One style note: when you see experienced Python developers write `for k in d:` without calling `.keys()`, they are using the default-iterates-over-keys behaviour. Both styles are correct. In teaching code I will usually write `.keys()` explicitly so the intent is visible to you."
+
+### 4.3 Iterating over values
+
+**Say:** "Next — `values()`. Sometimes you genuinely do not care what the keys are. You just want to process all the values."
+
+```python
+# Sum all quantities without caring about which item they belong to
+total = 0
+for qty in inventory.values():
+    total += qty
+
+print(f"Total items in stock: {total}")
+# Output: Total items in stock: 48
+```
+
+**Say:**
+"That's clean and readable. We don't need the item names at all, so we don't ask for them.
+
+**[Ask learners]** What other things might you do with just the values? … Find the average, the minimum, the maximum, collect them into a list for further analysis — yes, all of those are great use cases.
+
+A common mistake is trying to call `.values()` when you actually need both the key and the value — for example, if you want to print 'apples: 12'. In that situation, `values()` is the wrong choice. You need `items()`, which we are coming to next."
+
+### 4.4 Iterating over items — the workhorse
+
+**Say:**
+"The third method — `items()` — is the one you will use most often. It returns each entry as a *tuple* of `(key, value)`. And because we learned tuple unpacking in Hour 17, we can unpack that tuple right in the `for` loop header:"
+
+```python
 for item, qty in inventory.items():
     print(f"{item}: {qty}")
 ```
 
-Run it.
-
 **Say:**
-"`.items()` returns each entry as a pair. We unpack each pair into two variables—`item` and `qty`—in the loop header. This is exactly the same tuple unpacking pattern we learned in Hour 17. A dictionary entry, when you iterate with `items()`, behaves like a two-item tuple.
+"Run that and you get:
 
-So our Session 5 topics connect directly: the unpacking skill from Hour 17 is the same skill we use here with `items()`."
+```
+apples: 12
+bananas: 5
+oranges: 8
+pears: 3
+grapes: 20
+```
 
-### 4.3 `dict.keys()` — keys only
+This is beautiful. The loop variable names `item` and `qty` are descriptive and chosen by you — they map directly onto the semantic meaning of your key and value. This is a pattern you will see in almost every real Python program that works with dictionaries.
 
-**Type:**
+Let me show you the same loop without the unpacking trick, so you can see why unpacking is the preferred style:"
 
 ```python
-# keys() gives only the keys
-for key in inventory.keys():
-    print(key)
+# Without unpacking — verbose and less readable
+for pair in inventory.items():
+    print(f"{pair[0]}: {pair[1]}")
 ```
 
 **Say:**
-"`.keys()` explicitly returns the keys. This is the same as just `for key in inventory`, but it is more explicit about your intent. Use it when you want to communicate clearly that you only care about keys."
+"That works exactly the same way, but `pair[0]` and `pair[1]` are far less expressive than `item` and `qty`. The unpacking form is not just aesthetic — it makes your code self-documenting. Always prefer `for key, value in d.items()` when you need both sides of the pair."
 
-### 4.4 `dict.values()` — values only
+### 4.5 Comparison: when to use which
 
-**Type:**
+**Say:**
+"Let me put all three methods side by side as a decision guide you can refer back to:"
 
 ```python
-# values() gives only the values
-for qty in inventory.values():
-    print(qty)
+inventory = {"apples": 12, "bananas": 5, "oranges": 8}
 
-# Useful for aggregate operations
+# Use .keys() when you only need the keys
+print("Available items:")
+for item in inventory.keys():
+    print(f"  - {item}")
+
+# Use .values() when you only need the values
 total = sum(inventory.values())
-print(f"\nTotal items in stock: {total}")
+print(f"Total stock: {total}")
+
+# Use .items() when you need both — most common case
+print("\nFull inventory:")
+for item, qty in inventory.items():
+    print(f"  {item:<12} {qty:>4}")
 ```
 
-Run it.
-
 **Say:**
-"`.values()` returns just the values. This is useful for aggregate calculations: total stock, average quantity, minimum or maximum value.
+"Notice that last print. The `:<12` and `:>4` are *format specifiers* inside f-strings. `:<12` means 'left-align in a field 12 characters wide', and `:>4` means 'right-align in a field 4 characters wide'. This makes the output line up nicely in columns — we will use this again when we print the word frequency results.
 
-Notice `sum(inventory.values())` gives us the total of all quantities without needing to manually loop and accumulate."
+Output:
+```
+Full inventory:
+  apples        12
+  bananas         5
+  oranges         8
+```
 
-### 4.5 Ask for predictions
+**[Ask learners]** What does `dict.items()` actually return? Can you describe it in one sentence?
 
-**Ask learners:**
-- "If I use `for key in inventory`, do I get keys or values?"
-- "If I use `for k, v in inventory.items()`, what are `k` and `v`?"
-- "If I use `sum(inventory.values())`, what does that compute?"
-
-Pause for answers, then confirm.
+… It returns a view of the dictionary as a sequence of `(key, value)` tuples. 'View' means it reflects the dictionary's current state — if you add or remove entries, the view updates automatically. For our purposes today, the important thing is: it gives you pairs you can unpack in a for-loop."
 
 ---
 
-## 5) The Counting Pattern (~12 minutes)
+## 5) The Counting Pattern
 
-### 5.1 Introduce the problem clearly
-
-**Say:**
-"Now let's solve the word-frequency problem step by step.
-
-I have a sentence: `'the cat sat on the mat the cat'`.
-
-I want to produce a dictionary that looks like this:
-
-```text
-{'the': 3, 'cat': 2, 'sat': 1, 'on': 1, 'mat': 1}
-```
-
-Key is the word. Value is how many times it appears. Let me walk you through the counting loop."
-
-### 5.2 Start with the naive approach and its problem
-
-**Type:**
-
-```python
-sentence = "the cat sat on the mat the cat"
-words = sentence.split()
-print(words)
-```
-
-Run it.
+### 5.1 The problem it solves
 
 **Say:**
-"`split()` with no arguments splits on whitespace and returns a list of words. We now have a list we can loop over.
+"Now we are going to build the counting pattern — and I want you to understand *why* it exists before we look at how it works.
 
-Now, here is the challenge: how do we count each word? My instinct might be to write:
+Here is a concrete scenario. I give you a sentence:
 
-```python
-counts = {}
-for word in words:
-    counts[word] += 1  # This will FAIL
+```
+'the quick brown fox jumps over the lazy dog and the fox'
 ```
 
-Let me show you why this fails."
+I want to know how many times each word appears. 'the' appears three times. 'fox' appears twice. Everything else appears once.
 
-**Type and run:**
+How would you approach this? The natural data structure is a dictionary: the word is the key, and the count is the value. But here is the challenge — you cannot know in advance which words will appear. You have to *build* the dictionary as you go, word by word, and you have to handle two cases:
 
-```python
-counts = {}
-for word in words:
-    counts[word] += 1
-```
+1. You see a word for the **first time** — it is not yet in the dictionary. You need to add it with a count of 1.
+2. You see a word that is **already in the dictionary**. You need to increase its count by 1.
 
-Run it.
+Your loop has to decide, every iteration, which case it is in. Let's build up to the most elegant solution step by step."
+
+### 5.2 Step 1 — the manual if-branch approach
 
 **Say:**
-"We get a `KeyError: 'the'`. Why? Because on the very first iteration, when we see 'the' for the first time, the key 'the' does not yet exist in the dictionary. So `counts['the']` raises a `KeyError` before `+= 1` can even run.
-
-The fundamental problem is: we cannot increment a value that does not exist yet. We need to handle the first occurrence separately from subsequent occurrences."
-
-### 5.3 The `if-else` approach (intuitive but verbose)
-
-**Type:**
+"The most literal translation of the two-case logic is a simple `if`-statement:"
 
 ```python
-counts = {}
+sentence = "the quick brown fox jumps over the lazy dog and the fox"
+words = sentence.split()   # split on spaces → list of word strings
+
+counts: dict[str, int] = {}   # start with an empty dictionary
+
 for word in words:
     if word in counts:
-        counts[word] += 1
+        # Word already seen — increment
+        counts[word] = counts[word] + 1
+    else:
+        # First time seeing this word — initialise to 1
+        counts[word] = 1
+
+print(counts)
+```
+
+**Say:**
+"Let's trace through the first few iterations together. I will draw the state of the dictionary on the board as we go.
+
+- `word = 'the'` → not in `counts` → `counts = {'the': 1}`
+- `word = 'quick'` → not in `counts` → `counts = {'the': 1, 'quick': 1}`
+- `word = 'brown'` → not in `counts` → `counts = {'the': 1, 'quick': 1, 'brown': 1}`
+- (skip ahead…)
+- `word = 'the'` again → IS in `counts` → `counts['the']` becomes `1 + 1 = 2`
+- `word = 'the'` a third time → IS in `counts` → `counts['the']` becomes `2 + 1 = 3`
+
+The output will be:
+
+```python
+{'the': 3, 'quick': 1, 'brown': 1, 'fox': 2, 'jumps': 1,
+ 'over': 1, 'lazy': 1, 'dog': 1, 'and': 1}
+```
+
+This is **completely correct**. The `if word in counts` branch handles both cases perfectly. If you understand this version, you already understand the counting pattern conceptually. Keep it — it is not wrong.
+
+But Python has a one-liner that eliminates the `if`/`else` entirely, and once you see how it works, you will use it every time."
+
+### 5.3 Step 2 — introducing `get()` as the bridge
+
+**Say:**
+"Recall from Hour 19: `d.get(key, default)` returns the value for `key` if it exists, or returns `default` if it does not — without raising a `KeyError`.
+
+Think about our two cases again:
+- First time seeing 'the': `counts.get('the', 0)` → returns `0` (the default)
+- Second time seeing 'the': `counts.get('the', 0)` → returns `1` (the stored value)
+
+In *both* cases, the expression `counts.get(word, 0) + 1` gives us the right new value:
+- First time: `0 + 1 = 1` ✓
+- Second time: `1 + 1 = 2` ✓
+- Third time: `2 + 1 = 3` ✓
+
+So we can collapse the `if`/`else` into a single assignment:"
+
+```python
+counts[word] = counts.get(word, 0) + 1
+```
+
+**Say:**
+"Read this line aloud with me: 'Set `counts[word]` equal to whatever is currently in `counts` for this word — defaulting to zero if it's not there yet — plus one.'
+
+That's the whole pattern. It is one line, it handles both cases, and it is the standard Python idiom you will see in production code everywhere. Let's rewrite our counting loop using it:"
+
+### 5.4 Step 3 — the complete elegant version
+
+```python
+sentence = "the quick brown fox jumps over the lazy dog and the fox"
+words = sentence.split()
+
+counts: dict[str, int] = {}
+
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+```
+
+**Say:**
+"Four lines to build a complete word frequency counter. This is the counting pattern in its canonical form. Let me point out each piece:
+
+1. `words = sentence.split()` — `str.split()` with no argument splits on any whitespace (spaces, tabs, newlines) and returns a list of strings.
+2. `counts: dict[str, int] = {}` — we start with a completely empty dictionary. The type hint `dict[str, int]` is optional but communicates our intent: string keys, integer values.
+3. `for word in words:` — iterate through every word in the list.
+4. `counts[word] = counts.get(word, 0) + 1` — the counting idiom. 
+
+**[Ask learners]** What is the value of `counts.get('elephant', 0)` in this program? And why?
+
+… Zero — because 'elephant' is not a word in our sentence, so `get()` returns the default of 0. The dictionary does not get a new entry for 'elephant' from the `get()` call — `get()` only *reads*, it does not create. The new entry is only created if `elephant` actually appeared in the loop and we assigned `counts['elephant'] = 0 + 1`."
+
+### 5.5 Side-by-side comparison: `if`-branch vs `get()` pattern
+
+**Say:**
+"Let me put both versions next to each other so you can decide which you prefer:"
+
+```python
+# Version 1: explicit if-branch (clear, verbose)
+for word in words:
+    if word in counts:
+        counts[word] = counts[word] + 1
     else:
         counts[word] = 1
-print(counts)
-```
 
-Run it.
-
-**Say:**
-"This works correctly. On the first occurrence of a word, the `else` branch creates the entry with value `1`. On every subsequent occurrence, the `if` branch increments it.
-
-This is readable and clear. For beginners who find the next version too dense, this is a perfectly valid solution. Use it if the one-liner pattern does not feel natural yet.
-
-But there is a more compact, idiomatic Python way."
-
-### 5.4 The `get()` counting idiom
-
-**Type:**
-
-```python
-counts = {}
+# Version 2: get() pattern (concise, idiomatic)
 for word in words:
     counts[word] = counts.get(word, 0) + 1
-print(counts)
-```
-
-Run it.
-
-**Say:**
-"This produces exactly the same result. Let me break down this one line:
-
-`counts.get(word, 0)` says: 'Get the current count for this word. If there is no count yet, treat it as 0.'
-
-Then we add 1 to that result.
-
-Then we assign back to `counts[word]`.
-
-So on the first occurrence of 'the': `counts.get('the', 0)` returns `0`. Add 1. Assign `counts['the'] = 1`.
-
-On the second occurrence of 'the': `counts.get('the', 0)` returns `1`. Add 1. Assign `counts['the'] = 2`.
-
-On the third: `counts.get('the', 0)` returns `2`. Add 1. Assign `counts['the'] = 3`.
-
-This pattern is elegant because it collapses the first-occurrence and subsequent-occurrence logic into one line. The `get()` default handles the 'not yet seen' case silently."
-
-### 5.5 Make learners say the pattern back
-
-**Ask learners:**
-"In your own words, what does `counts.get(word, 0) + 1` compute?"
-
-Take two or three responses. You want to hear something like: "It gets the current count, defaulting to zero if the word hasn't been seen, then adds one."
-
-**Say:**
-"That is exactly right. The key insight is: `get()` with a default of `0` turns a missing key into a starting value, and then we increment it. This is the one-liner version of the if-else pattern."
-
-### 5.6 Printing the result sorted
-
-**Type:**
-
-```python
-print("\nWord counts:")
-for word in sorted(counts):
-    print(f"  {word}: {counts[word]}")
 ```
 
 **Say:**
-"When we use `sorted(counts)`, we iterate over the keys in alphabetical order. The output is now consistent and easy to scan, rather than depending on insertion order.
+"Both versions produce identical output. Version 1 is perfectly fine and many beginners find it easier to read initially because the two cases are spelled out explicitly. Version 2 is what you'll see in professional Python code. The runbook for this course lists both as acceptable for the lab completion criteria — so you are free to use either.
 
-This is a small but important polish. In real programs, sorted output makes logs, reports, and outputs much easier to read."
+My recommendation: understand Version 1 first so the logic is solid in your head, then adopt Version 2 once you feel confident. The `get()` pattern rewards you with fewer lines and fewer opportunities to introduce a typo."
 
 ---
 
-## 6) Handling Case and Punctuation (~8 minutes)
+## 6) Sorting and Displaying Results
 
-### 6.1 Case sensitivity problem
+### 6.1 Why sorting matters
 
 **Say:**
-"Let me show you a real problem that will occur the moment you use real text."
+"We now have a dictionary of word counts. But if we just `print(counts)`, the output is unsorted and potentially hard to read, especially for a large text. Let's look at how to produce useful, well-formatted output."
 
-**Type:**
+### 6.2 Sorting with `sorted(d.items())`
+
+**Say:**
+"We cannot sort a dictionary in place — dictionaries in Python 3.7+ maintain insertion order, but they don't have a sort method like lists do. Instead, we sort the *items* of the dictionary into a list of tuples, and then iterate over that sorted list.
+
+`sorted(d.items())` returns a list of `(key, value)` tuples sorted by key alphabetically:"
 
 ```python
-sentence = "The cat sat on the mat. The cat."
+sentence = "the quick brown fox jumps over the lazy dog and the fox"
 words = sentence.split()
-counts = {}
+counts: dict[str, int] = {}
 for word in words:
     counts[word] = counts.get(word, 0) + 1
-print(counts)
+
+# Sort alphabetically by word (the key)
+for word, count in sorted(counts.items()):
+    print(f"{word}: {count}")
 ```
 
-Run it.
+**Output:**
+```
+and: 1
+brown: 1
+dog: 1
+fox: 2
+jumps: 1
+lazy: 1
+over: 1
+quick: 1
+the: 3
+```
 
 **Say:**
-"Look at the output. 'The' and 'the' are counted separately. 'mat.' with the period and 'mat' without are treated as different words. 'cat.' and 'cat' are different words too.
+"Clean and alphabetical. Notice that `sorted()` without any extra arguments sorts tuples by their first element — which is the key (the word). That gives us alphabetical order for free."
 
-This is not the result we want. We want 'the', 'The', and 'THE' to all count as the same word, and we want to ignore punctuation."
+### 6.3 Sorting by count (descending)
 
-### 6.2 Fix with `.lower()`
-
-**Type:**
+**Say:**
+"What if we want to sort by *frequency* — most common word first? We use the `key` parameter of `sorted()` with a small function. Don't worry about the `lambda` syntax right now — just read it as 'sort using the second element of each pair, in reverse':"
 
 ```python
-sentence = "The cat sat on the mat. The cat."
-words = sentence.split()
-counts = {}
-for word in words:
-    word = word.lower()  # normalize case
-    counts[word] = counts.get(word, 0) + 1
-print(counts)
+# Sort by count, highest first
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f"{word}: {count}")
 ```
 
-Run it.
+**Output:**
+```
+the: 3
+fox: 2
+quick: 1
+brown: 1
+jumps: 1
+over: 1
+lazy: 1
+dog: 1
+and: 1
+```
 
 **Say:**
-"Now 'The' and 'the' are counted together as 'the': 3 occurrences. But we still have 'mat.' and 'cat.' with trailing periods. That is the punctuation problem."
+"The most frequent word is at the top. If `lambda` looks mysterious right now, that is fine — we cover it properly in a later session. The pattern `key=lambda pair: pair[1]` simply means 'when comparing two pairs, use the second element — the count — as the sort key'. You can copy this pattern today without fully understanding every piece of it."
 
-### 6.3 Simple punctuation stripping with `replace()`
+### 6.4 Printing aligned output
 
 **Say:**
-"For beginner-level text cleaning, the simplest approach is to use `replace()` to remove specific punctuation characters."
-
-**Type:**
+"For a professional-looking report, we can use f-string format specifiers to align the columns:"
 
 ```python
-sentence = "The cat sat on the mat. The cat."
-# Remove periods and commas before splitting
-clean = sentence.replace(".", "").replace(",", "")
-words = clean.split()
-
-counts = {}
-for word in words:
-    word = word.lower()
-    counts[word] = counts.get(word, 0) + 1
-
-print("Word counts:")
-for word in sorted(counts):
-    print(f"  {word}: {counts[word]}")
+print(f"\n{'Word':<15} {'Count':>5}")
+print("-" * 22)
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f"{word:<15} {count:>5}")
 ```
 
-Run it.
+**Output:**
+```
+Word              Count
+----------------------
+the                   3
+fox                   2
+quick                 1
+brown                 1
+jumps                 1
+over                  1
+lazy                  1
+dog                   1
+and                   1
+```
 
 **Say:**
-"Now the counts are clean. 'cat' appears twice, 'the' appears three times, and every other word appears once.
+"The `:<15` format specifier left-aligns the word in a field 15 characters wide. The `:>5` right-aligns the count in a field 5 characters wide. Headers use the same specifiers so the columns line up perfectly. This is polish, not functionality — but learners who add this to their lab submission will have genuinely impressive output."
 
-The cleaning approach here is simple: call `replace()` for each punctuation character you want to remove. This is not the most powerful text-processing technique in Python—for production-grade NLP you would use regular expressions or a library—but for beginner programs it is clear, readable, and effective.
-
-In the lab, if you want to attempt the optional extension, this is exactly the technique to use."
-
-### 6.4 Reinforce the full pattern
+### 6.5 Finding the most common item
 
 **Say:**
-"Let me now state the complete, clean counting recipe so you can use it in the lab:
+"One more useful trick: finding the single most common word. We can use `max()` with the same key trick:"
 
-1. Start with an empty dictionary: `counts = {}`
-2. Get your list of words by splitting the sentence
-3. Loop over the words
-4. Normalize each word with `.lower()`
-5. Use the get-plus-one idiom: `counts[word] = counts.get(word, 0) + 1`
-6. After the loop, print with `for word in sorted(counts)`
+```python
+most_common_word = max(counts, key=counts.get)
+print(f"Most common word: '{most_common_word}' ({counts[most_common_word]} times)")
+```
 
-That is the recipe. It is five lines of logic and it solves a real problem."
+**Say:**
+"`max(counts, key=counts.get)` iterates over the keys of `counts` and finds the one whose associated value is the largest. It uses `counts.get` — note: no parentheses, we are passing the method itself as a function — as the comparison key. The result is the key with the highest count.
+
+This is an advanced-looking line that you can use without fully understanding its mechanics yet. File it away as a useful idiom: 'to find the key with the maximum value in a dictionary, use `max(d, key=d.get)`'."
 
 ---
 
-## 7) Full Live Demo: Word Frequency Counter (~5 minutes)
+## 7) Live Demo: Word Frequency Counter
+
+### 7.1 Transition to the demo
 
 **Say:**
-"Let me now write the complete demo, clean and commented, so you have a reference model for the lab."
+"Everything we have covered in the last twenty minutes comes together right now. We are going to type a complete word frequency counter from scratch — no pasting, no shortcuts. I want you to type along with me so your muscle memory builds. If you fall behind, don't panic — keep watching, and I will pause after each logical block.
 
-**Type:**
+Open `hour20_word_freq_demo.py` if it isn't already open."
+
+### 7.2 Full demo — type live
+
+**Say:** "Let's start with the sentence and the basic counting loop. I will use `input()` so the user can provide their own text:"
 
 ```python
-# hour20_dict_iteration_demo.py
+# hour20_word_freq_demo.py
+# Word Frequency Counter — live demo
 
-sentence = "to be or not to be that is the question to be"
+# Step 1: Get a sentence from the user
+sentence: str = input("Enter a sentence: ")
 
-# Step 1: clean and split
-words = sentence.lower().split()
+# Step 2: Split into words
+words: list[str] = sentence.split()
 
-# Step 2: build frequency dict
-counts = {}
+# Step 3: Build a frequency dictionary
+counts: dict[str, int] = {}
 for word in words:
     counts[word] = counts.get(word, 0) + 1
-
-# Step 3: display sorted results
-print("Word Frequency Report")
-print("=" * 24)
-for word in sorted(counts):
-    print(f"  {word:<12} {counts[word]}")
-
-# Step 4: summary stats
-total_words = sum(counts.values())
-unique_words = len(counts)
-print(f"\nTotal words:  {total_words}")
-print(f"Unique words: {unique_words}")
 ```
 
-Run it.
+**Say:**
+"Three steps, and we already have a working frequency counter. Let's run it with our test sentence: `the quick brown fox jumps over the lazy dog and the fox`
+
+Pause: what do you expect `counts` to look like? … Type your prediction. Now let's add output and run it."
+
+```python
+# Step 4: Display results sorted by frequency
+print(f"\nWord frequency for: '{sentence}'")
+print(f"Total words: {len(words)} | Unique words: {len(counts)}")
+print()
+print(f"{'Word':<15} {'Count':>5}")
+print("-" * 22)
+
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f"{word:<15} {count:>5}")
+
+# Step 5: Most common word
+most_common = max(counts, key=counts.get)
+print()
+print(f"Most common: '{most_common}' ({counts[most_common]} times)")
+```
 
 **Say:**
-"A few new things here:
+"Run the program. Enter: `the quick brown fox jumps over the lazy dog and the fox`
 
-`sentence.lower().split()` chains the two operations in one step. We lowercase the whole sentence first, then split. This is equivalent to the two-step version but slightly more compact.
+Expected output:
 
-`{word:<12}` in the f-string left-aligns the word in a field 12 characters wide, producing a neat two-column table.
+```
+Word frequency for: 'the quick brown fox jumps over the lazy dog and the fox'
+Total words: 12 | Unique words: 9
 
-`sum(counts.values())` gives the total word count.
+Word              Count
+----------------------
+the                   3
+fox                   2
+and                   1
+brown                 1
+dog                   1
+jumps                 1
+lazy                  1
+over                  1
+quick                 1
 
-`len(counts)` gives the number of unique words.
+Most common: 'the' (3 times)
+```
 
-These summary stats are small additions that make the output much more informative. For the lab, they are a natural extension."
+**[Ask learners]** What happens if two words are tied for most common? … `max()` returns the first one it encounters in that case — whichever comes first in the dictionary's internal order. That is fine for our purposes.
+
+Now let's try a deliberately tricky input: `Hello hello HELLO world world`
+
+What do you predict the output will be?
+
+… Run it. You get:
+
+```
+Hello                 1
+hello                 1
+HELLO                 1
+world                 2
+```
+
+**[Ask learners]** Is that what we actually want? 'Hello', 'hello', and 'HELLO' are all three counted separately — because Python strings are case-sensitive. This is the case-inconsistency pitfall, and we will fix it in the extension section. For now, the program is *correct* by Python's rules, even if the output is not what a human reader might expect."
 
 ---
 
-## 8) Common Pitfalls and How to Coach Through Them (~4 minutes)
+## 8) Hands-on Lab: Word Counter
 
-### 8.1 Pitfall: KeyError in the counting loop
-
-**Symptom:** learner writes `counts[word] += 1` without initializing the key first.
-
-**Coach with these words:**
-"Your first instinct—`counts[word] += 1`—is natural, but it fails on the very first time you see a word. The key does not exist yet, so there is no value to increment. Use `counts[word] = counts.get(word, 0) + 1` instead. The `get()` default of `0` handles the first-occurrence case."
-
-### 8.2 Pitfall: forgetting `.lower()` and counting 'The' and 'the' separately
-
-**Symptom:** learner sees 'The' and 'the' as different entries in the output.
-
-**Coach with these words:**
-"Try printing the keys and you'll see 'The' and 'the' are separate. Python string comparison is case-sensitive, so `'The' == 'the'` is `False`. Add `word = word.lower()` inside the loop before the `get()` line. That normalizes every word to lowercase so they merge correctly."
-
-### 8.3 Pitfall: words including punctuation like 'cat.' and 'cat'
-
-**Symptom:** learner sees 'cat.' and 'cat' counted separately.
-
-**Coach with these words:**
-"The period is still attached to the word because `split()` only splits on spaces. To strip the period, call `replace('.', '')` on the sentence before splitting, or call `word.strip('.')` on each word inside the loop. For the optional extension, try `replace()` on the full sentence first—it is the simplest approach."
-
-### 8.4 Pitfall: `get()` without a default returning `None`
-
-**Symptom:** learner writes `counts.get(word) + 1` and gets `TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'`.
-
-**Coach with these words:**
-"When you call `get()` with only one argument and the key is missing, Python returns `None`. You cannot add 1 to `None`. Always include the second argument—the default: `counts.get(word, 0)`. The `0` is what makes the arithmetic work on first occurrence."
-
-### 8.5 Pitfall: printing the dict directly instead of using a loop
-
-**Symptom:** learner prints `print(counts)` and gets an unformatted wall of text.
-
-**Coach with these words:**
-"Printing the raw dict is useful for quick debugging, but for a clean report, use `for word in sorted(counts): print(f'{word}: {counts[word]}')`. That gives one entry per line in alphabetical order."
-
----
-
-## 9) Guided Lab: Word Counter (~12 minutes)
-
-### 9.1 Introduce the lab
+### 8.1 Lab specification
 
 **Say:**
-"Your task is to build the Word Counter. Here are the requirements:
+"You are now going to build your own version of the Word Counter independently. Here is the specification. Open `hour20_lab_word_counter.py`."
 
-1. Ask the user to enter a sentence.
-2. Split the sentence into words.
-3. Build a frequency dictionary using the counting pattern.
-4. Print each word and its count.
-5. Normalize words to lowercase so case differences do not affect counts.
+**Lab prompt (display on screen or dictate):**
 
-The optional extension is to strip simple punctuation (periods and commas) before counting."
-
-### 9.2 Put the requirements on screen
-
-```text
+```
 Lab: Word Counter
-- Input a sentence from the user
-- Split into words
-- Build a frequency dictionary: word → count
-- Normalize to lowercase
-- Print each word and its count (sorted)
-Optional: strip periods and commas before counting
+Write a Python program that:
+
+1. Prompts the user to enter a sentence (any length).
+2. Splits the sentence into individual words.
+3. Builds a frequency dictionary: each unique word maps to the
+   number of times it appears in the sentence.
+4. Prints each word and its count — one word per line.
+
+Minimum requirements:
+- Correct counts for all words.
+- Uses the `d.get(word, 0) + 1` pattern OR an if-check approach.
+- Iterates using `.items()` to print results.
+
+Optional extensions (if you finish early):
+- Normalize all words to lowercase before counting.
+- Strip trailing punctuation (period, comma, exclamation mark)
+  using str.replace().
+- Sort the output alphabetically or by frequency.
+- Print the most common word at the end.
+- Print the total word count and the unique word count.
 ```
 
-### 9.3 Provide a beginner-friendly starter structure
+### 8.2 Hints to offer if learners are stuck
 
-**Type and leave on screen:**
+**Say (if asked):**
+"If you are not sure where to start, think about it in steps:
+1. Use `input()` to get the sentence.
+2. Use `.split()` to turn it into a list.
+3. Start with `counts = {}`.
+4. Write a for-loop over the words and apply the counting pattern.
+5. Write a second for-loop using `.items()` to print."
+
+**Starter shell (optional — write on board or paste into their file):**
 
 ```python
 # hour20_lab_word_counter.py
 
-# Step 1: get user input
 sentence = input("Enter a sentence: ")
-
-# Step 2: normalize and split
-words = sentence.lower().split()
-
-# Step 3: count words
+words = sentence.split()
 counts = {}
+
+# TODO: build the frequency dictionary
+
+# TODO: print each word and its count
+```
+
+### 8.3 Circulate and observe
+
+**Say:**
+"You have 10–12 minutes. I will come around. When you finish the minimum requirements, try the optional extensions — they are genuinely interesting and not far out of reach."
+
+**While circulating, watch for:**
+- Learners who iterate the list correctly but forget to start with `counts = {}`.
+- Learners who print `counts` directly instead of iterating with `.items()`.
+- Learners who try to modify the dictionary inside the iteration loop (see pitfalls section).
+- Learners who skip the `get()` pattern and use `counts[word] += 1` — this will raise a `KeyError` on the first encounter; redirect them to initialise with `0` first or use `get()`.
+
+### 8.4 Full walkthrough solution
+
+**Say:**
+"Let's walk through a complete solution. I'll build it from the minimum requirements up to the optional extensions so everyone can see the whole arc."
+
+**Minimum solution:**
+
+```python
+# hour20_lab_word_counter.py — minimum solution
+
+sentence: str = input("Enter a sentence: ")
+words: list[str] = sentence.split()
+
+counts: dict[str, int] = {}
 for word in words:
     counts[word] = counts.get(word, 0) + 1
 
-# Step 4: print results
-print("\nWord Frequency:")
-for word in sorted(counts):
-    print(f"  {word}: {counts[word]}")
-
-# Step 5: summary
-print(f"\nTotal words: {sum(counts.values())}")
-print(f"Unique words: {len(counts)}")
-```
-
-### 9.4 Explain the starter
-
-**Say:**
-"This is the complete minimal solution. It implements every required step:
-- Line 4 takes user input.
-- Line 7 normalizes to lowercase and splits.
-- Lines 10–11 run the counting loop.
-- Lines 14–15 print the sorted report.
-- Lines 18–19 add summary statistics.
-
-Your first goal is to run this and try it with a sentence that has repeated words. Then try one where the same word appears with different capitalization—like 'The' and 'the'—and confirm they are counted together."
-
-### 9.5 Optional extension: punctuation stripping
-
-**Type the extension:**
-
-```python
-# Optional extension: strip common punctuation
-sentence = input("Enter a sentence: ")
-
-# Remove periods, commas, question marks, exclamation marks
-clean = (sentence
-         .replace(".", "")
-         .replace(",", "")
-         .replace("?", "")
-         .replace("!", ""))
-
-words = clean.lower().split()
-counts = {}
-for word in words:
-    counts[word] = counts.get(word, 0) + 1
-
-print("\nWord Frequency (punctuation stripped):")
-for word in sorted(counts):
-    print(f"  {word}: {counts[word]}")
-```
-
-**Say:**
-"Notice the chained `.replace()` calls. Each call returns a new string with one character removed, and we immediately call `.replace()` again on the result. This is method chaining, and it is a common Python pattern for successive transformations.
-
-For a beginner extension, this is clean and readable. You do not need to know anything about regular expressions to make it work."
-
-### 9.6 Optional second extension
-
-**Say:**
-"If you want a second challenge: after building the frequency dict, find and print the most common word. You can do this with `max(counts, key=lambda w: counts[w])` — but if lambda syntax feels uncomfortable, you can also just use a manual loop to track the maximum."
-
-**Type the manual approach:**
-
-```python
-# Find the most frequent word (manual approach)
-max_word = None
-max_count = 0
 for word, count in counts.items():
-    if count > max_count:
-        max_count = count
-        max_word = word
-
-print(f"\nMost common word: '{max_word}' ({max_count} times)")
+    print(f"{word}: {count}")
 ```
 
 **Say:**
-"This manual approach reinforces `items()` iteration and a max-tracking pattern that works in many other situations. It is also more transparent than the one-liner lambda version—you can follow each step."
+"Seven lines including the blank one. If you got this working, you have fully met the lab requirements. Now let's look at each optional extension."
 
-### 9.7 Instructor circulation prompts
+**Extension 1 — lowercase normalization:**
 
-As learners work, walk around and ask:
-- "Show me your counting line. What does `counts.get(word, 0)` return on the first time we see a word?"
-- "What happens if you forget `.lower()`? Try a sentence with 'The' at the start."
-- "What does `sorted(counts)` sort by? Keys or values?"
-- "How many unique words does your sentence have? Does `len(counts)` match your expectation?"
-- "What does `sum(counts.values())` compute? Is that the same as `len(words)`?"
+```python
+sentence: str = input("Enter a sentence: ")
+words: list[str] = sentence.split()
 
----
-
-## 10) Debrief, Share-Outs, and Session 5 Close (~5 minutes)
-
-### 10.1 Bring the class back together
-
-**Say:**
-"Let's debrief the Word Counter and then close Session 5.
-
-First, the lab. You built a program that reads text, splits it into words, builds a frequency dictionary, and reports the results. That is a real, useful program that you could adapt for a dozen different tasks right now."
-
-### 10.2 Ask targeted questions
-
-Ask:
-- "Who can explain the counting idiom in one sentence?"
-- "Who tried the punctuation extension? What did you use and how?"
-- "Who found the most common word? What approach did you use—the manual loop or the lambda one-liner?"
-- "Who connected the `items()` loop back to the tuple unpacking from Hour 17?"
-
-### 10.3 Session 5 recap
-
-**Say:**
-"Before we close, let me zoom out and summarize the full arc of Session 5.
-
-We covered four data structures today:
-- **Tuples** (Hour 17): ordered, immutable, ideal for fixed-size records like coordinates. Unpack with `x, y = point`.
-- **Sets** (Hour 18): unordered, unique values. Convert a list to a set to deduplicate. `add()` ignores repeats.
-- **Dicts fundamentals** (Hour 19): key-value storage. Read safely with `get()`. Check with `in`. Update or create with assignment.
-- **Dict iteration + counting** (Hour 20): loop over `items()` for key-value pairs. Build frequency counters with the `get(word, 0) + 1` idiom.
-
-These four structures—lists from Session 4, plus tuples, sets, and dicts from today—are the core collection tools in Python. Nearly every real program uses at least two of them.
-
-The question you should carry forward is not 'How do I use each structure?' but 'Which structure should I reach for when?'"
-
-### 10.4 The four-structure decision guide
-
-**Say:**
-"Here is a simple decision guide you can keep in mind:
-
-| Question | Use |
-|---|---|
-| Is order important, and will the size change? | List |
-| Is order important, but the data is fixed? | Tuple |
-| Do I need unique values only? | Set |
-| Do I need to look up a value by name? | Dictionary |
-
-That is not the whole story—there are more nuances—but this guide is accurate for ninety percent of the beginner decisions you will face."
-
----
-
-## 11) Recap Script (~2 minutes)
-
-**Say:**
-"For Hour 20 specifically, here is what to take away:
-
-- `dict.items()` returns key-value pairs as tuples. Use it when you need both key and value in a loop.
-- `dict.keys()` returns keys only. `dict.values()` returns values only.
-- The frequency-counting idiom: `d[word] = d.get(word, 0) + 1`.
-- Normalize with `.lower()` before counting to merge 'The' and 'the'.
-- Use `sorted(counts)` to iterate keys alphabetically for clean output.
-- `sum(counts.values())` = total item count. `len(counts)` = unique item count.
-
-In the next session, we will begin exploring functions: how to define reusable blocks of code that take input and produce output. The data structures we mastered today will show up immediately inside those functions."
-
----
-
-## 12) Exit Ticket (~1 minute)
-
-Ask learners to answer verbally, in chat, or on paper:
-
-1. What does `dict.items()` produce when used in a for loop?
-2. Why does `counts[word] += 1` fail on the first occurrence of a new word?
-3. What does `counts.get(word, 0) + 1` return when `word` has never been seen?
-4. What is the difference between `len(counts)` and `sum(counts.values())`?
-
-**Expected direction of answers:**
-- `items()` produces key-value pairs (like tuples) — both the key and value together per iteration
-- on the first occurrence the key does not exist, so `counts[word]` raises `KeyError`
-- `get()` returns the default `0`; add 1 gives `1` — the first occurrence is correctly initialized to `1`
-- `len(counts)` is the number of unique keys (unique words); `sum(counts.values())` is the total of all values (total word occurrences)
-
----
-
-## 13) Instructor Notes for the Transition to Session 6
-
-**Say:**
-"We have now built a solid foundation in Python's core data structures. The next session introduces functions. Functions will change the way you organize and think about your programs. Instead of writing everything in one flat sequence of lines, you will learn to break programs into named, reusable blocks.
-
-The data structures you learned today will show up immediately. You will write functions that accept lists or dicts as arguments, process them, and return results. Everything you practiced this session is groundwork for that next step."
-
-If learners seem shaky on today's counting pattern, reinforce before dismissing:
-- "The key idiom: `counts[word] = counts.get(word, 0) + 1`."
-- "The key loop: `for word, count in counts.items():`."
-
----
-
-## Appendix: Instructor Reinforcement Notes for Hour 20
-
-### A) Board sketch for visual learners
-
-Draw this on the board and walk through it step by step:
-
-```text
-sentence = "the cat sat the cat"
-words    = ["the", "cat", "sat", "the", "cat"]
-
-Iteration 1: word = "the"
-  counts.get("the", 0) → 0
-  counts["the"] = 0 + 1 = 1
-  counts = {"the": 1}
-
-Iteration 2: word = "cat"
-  counts.get("cat", 0) → 0
-  counts["cat"] = 0 + 1 = 1
-  counts = {"the": 1, "cat": 1}
-
-Iteration 3: word = "sat"
-  counts["sat"] = 0 + 1 = 1
-  counts = {"the": 1, "cat": 1, "sat": 1}
-
-Iteration 4: word = "the"
-  counts.get("the", 0) → 1
-  counts["the"] = 1 + 1 = 2
-  counts = {"the": 2, "cat": 1, "sat": 1}
-
-Iteration 5: word = "cat"
-  counts.get("cat", 0) → 1
-  counts["cat"] = 1 + 1 = 2
-  counts = {"the": 2, "cat": 2, "sat": 1}
+counts: dict[str, int] = {}
+for word in words:
+    word = word.lower()   # normalize before counting
+    counts[word] = counts.get(word, 0) + 1
 ```
 
-Say: "Notice that `get()` with default `0` handles iteration 1 for any new word, and returns the real count for any word already seen."
+**Say:**
+"We apply `word.lower()` *before* the counting step. Now 'Hello', 'hello', and 'HELLO' all map to the same key `'hello'`. One line change, significant improvement in results."
 
-### B) Short extra practice prompts
+**Extension 2 — simple punctuation stripping:**
 
-If you have extra minutes:
+```python
+for word in words:
+    word = word.lower()
+    word = word.replace(",", "").replace(".", "").replace("!", "").replace("?", "")
+    counts[word] = counts.get(word, 0) + 1
+```
 
-1. What does `counts.items()` return? How would you use it in a loop?
-2. What is the result of `counts.get("zebra", 0)` if 'zebra' is not in `counts`?
-3. If `counts = {"a": 3, "b": 1, "c": 2}`, what does `sorted(counts)` return?
-4. What does `max(counts.values())` return for the same dict?
-5. Write one line to print every key in `counts` that has a count greater than 1.
+**Say:**
+"We chain `str.replace()` calls to remove common punctuation characters. `replace(',', '')` replaces every comma in the string with an empty string — effectively deleting it. We handle period, exclamation mark, and question mark the same way.
 
-### C) Instructor language for gentle correction
+Note: this is a simple approach that works well for typical sentences. In later sessions we will see more powerful tools (like `str.strip()` for leading/trailing characters, and eventually regular expressions for advanced pattern matching). But for Basics scope, chaining `replace()` is perfectly acceptable and transparent.
 
-- "Read the error. `KeyError` on the counting line means the key does not exist yet. Use `get(word, 0)` to handle first occurrence."
-- "Print a few values from your `counts` dict. Do you see separate entries for uppercase and lowercase versions of the same word? Add `.lower()` before counting."
-- "You are printing `counts` as a raw dict. That works, but use a sorted loop for a cleaner report."
-- "Where exactly are you building the counts dict? Make sure the `counts = {}` line is outside the loop."
+After stripping: `'hello,'` becomes `'hello'`, `'world!'` becomes `'world'`."
 
-### D) Common conceptual misunderstanding: `items()` returns what exactly?
+**Full enhanced solution:**
 
-If a learner asks "What kind of thing does `items()` return?", say:
+```python
+# hour20_lab_word_counter.py — full solution with extensions
 
-"It returns a view object that generates pairs—each pair is a tuple of (key, value). That is why we can unpack in the loop header with `for word, count in counts.items()`. The unpacking is exactly the same as `for x, y in list_of_tuples`—which is why we practiced tuple unpacking in Hour 17."
+sentence: str = input("Enter a sentence: ")
+words: list[str] = sentence.split()
 
-### E) Coaching if learners ask about Counter
+counts: dict[str, int] = {}
+for word in words:
+    # Normalize: lowercase and strip common punctuation
+    word = word.lower()
+    for punct in (",", ".", "!", "?", ";", ":"):
+        word = word.replace(punct, "")
+    counts[word] = counts.get(word, 0) + 1
 
-If a learner asks "Why not just use `Counter` from `collections`?", say:
+print(f"\nResults for: '{sentence}'")
+print(f"Total words: {len(words)} | Unique words: {len(counts)}")
+print()
+print(f"{'Word':<15} {'Count':>5}")
+print("-" * 22)
 
-"Great instinct—`Counter` is exactly the right tool for this in an Advanced Python context. It does everything we are doing here in one step. But we are building the pattern by hand first, because once you understand how a frequency dict works from scratch, `Counter` will feel like a natural shortcut rather than a mystery. When you reach the Advanced session, `Counter` will be a one-line replacement for what you built today."
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f"{word:<15} {count:>5}")
 
-### F) Connecting iteration + counting to real applications
+if counts:
+    most_common = max(counts, key=counts.get)
+    print(f"\nMost common: '{most_common}' ({counts[most_common]} times)")
+```
 
-If you want to extend the debrief discussion, mention:
-- Log analysis: counting how many times each HTTP status code appears
-- Survey data: counting how many people chose each answer option
-- Game scores: tallying wins per player
-- E-commerce: counting orders per product
+**Say:**
+"Notice one small refinement: we added `if counts:` before calling `max()`. If the user entered an empty string, `sentence.split()` returns an empty list, `counts` remains empty, and `max()` on an empty dictionary raises a `ValueError`. The `if counts:` guard prevents that crash gracefully.
 
-Each one uses exactly the same pattern: loop, normalize if needed, and `d[key] = d.get(key, 0) + 1`.
+**[Ask learners]** What does `if counts:` evaluate to when `counts` is empty?
 
-### G) Final teaching reminder to yourself
+… An empty dictionary is falsy in Python — just like an empty list, empty string, and zero. So `if counts:` is `True` when the dictionary has at least one entry and `False` when it's empty. Clean and Pythonic."
 
-The hour succeeds if learners leave with this mental model:
+### 8.5 Design discussion
 
-"`dict.items()` gives me key and value together in a loop. The counting pattern is `d[word] = d.get(word, 0) + 1`. Normalize with `.lower()`. Print sorted for clean output."
+**Say:**
+"Take thirty seconds and think about this design choice: we normalize the word *inside* the counting loop, not before it. Could we have normalized all words first, before the loop?
+
+…
+
+Yes — we could do `words = [w.lower() for w in sentence.split()]` before the loop. But we haven't covered list comprehensions yet. The inside-the-loop approach is perfectly clear, step-by-step, and follows the principle of doing one thing at a time.
+
+Also notice that we used a `for punct in (...):` loop inside the counting loop to remove each punctuation character. That inner loop is simple and easy to extend — if you want to also remove brackets or quotes, you just add them to the tuple. When you learn more advanced tools later, you can revisit this code and refactor it. But for now, it is readable, correct, and handles real-world input."
 
 ---
 
-## Speaker Notes: Scope Guardrails
+## 9) Common Pitfalls
 
-**Teach in this hour:**
-- `dict.items()` for key-value pair iteration
-- `dict.keys()` for key-only iteration
-- `dict.values()` for value-only iteration
-- `sum(dict.values())` for total
-- `len(dict)` for unique key count
-- The frequency-counting idiom: `d[word] = d.get(word, 0) + 1`
-- The if-else alternative for counting (valid and clear for beginners)
-- Normalizing to lowercase with `.lower()` before counting
-- Simple punctuation stripping with `str.replace()` (optional extension)
-- `sorted(counts)` for alphabetical key iteration in display
-- Manual max-tracking loop over `items()` (optional extension)
+**Say:**
+"Before we wrap up, let's name the three pitfalls I see most often with this pattern. These are the things to watch out for — both in your own code and when helping a classmate."
 
-**Do NOT introduce in this hour:**
-- `collections.Counter` (out of scope — Advanced)
-- `collections.defaultdict` (out of scope — Advanced)
-- Dict comprehensions (out of scope — Basics generally avoids comprehensions)
-- `sorted()` with complex `key=` functions as a required concept (lambda is optional/extension only)
-- Regular expressions for text cleaning (out of scope — Advanced)
-- `nltk` or other NLP libraries (out of scope)
-- Sorting a dict by values as a required outcome (optional only)
-- Merging two dicts with `update()` or `|=` (save for a later session)
-- `enumerate()` on dict views (not needed for this lab)
+### 9.1 Pitfall 1: punctuation attached to words
 
-Keep the conceptual messages clear and repeatable:
-1. **`items()` gives you both key and value.** Use it whenever you need to work with the full pair.
-2. **`d[word] = d.get(word, 0) + 1` is the counting idiom.** Memorize it. Apply it to any counting problem.
+**Say:**
+"The most common issue is punctuation that attaches itself to words. Python's `str.split()` splits on whitespace — but it does *not* strip punctuation from the individual tokens. So if your sentence is:
+
+```
+'Hello, world! The fox said: hello.'
+```
+
+then `split()` gives you `['Hello,', 'world!', 'The', 'fox', 'said:', 'hello.']`.
+
+Notice: `'Hello,'` (with a comma) and `'hello.'` (with a full stop) are treated as completely different words from each other and from `'Hello'`. Your count will show three separate entries instead of one.
+
+**Fix:** Strip punctuation before or during the counting step, as we showed in the extension. The simple `replace()` chain handles the most common cases."
+
+```python
+# Demonstrating the problem
+sentence = "Hello, world! Hello."
+words = sentence.split()
+print(words)
+# ['Hello,', 'world!', 'Hello.']
+
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+# {'Hello,': 1, 'world!': 1, 'Hello.': 1}
+# Three entries — not what we wanted.
+```
+
+### 9.2 Pitfall 2: case inconsistency
+
+**Say:**
+"As we saw during the demo, Python treats `'Hello'`, `'hello'`, and `'HELLO'` as three different strings. Dictionary keys are exact-match — case included. A word typed at the start of a sentence will have an uppercase first letter; the same word elsewhere will be lowercase.
+
+**Fix:** Always normalize to lowercase with `word.lower()` before using the word as a dictionary key — unless you have a specific reason to preserve case (which is rare for word counting)."
+
+```python
+# Demonstrating the problem
+words = ["The", "fox", "and", "the", "dog"]
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+print(counts)
+# {'The': 1, 'fox': 1, 'and': 1, 'the': 1, 'dog': 1}
+# 'The' and 'the' are separate — but they should be the same word.
+
+# The fix
+counts = {}
+for word in words:
+    counts[word.lower()] = counts.get(word.lower(), 0) + 1
+print(counts)
+# {'the': 2, 'fox': 1, 'and': 1, 'dog': 1}
+```
+
+### 9.3 Pitfall 3: modifying a dictionary while iterating over it
+
+**Say:**
+"This is a classic Python trap that catches beginners off guard. If you try to add or remove keys from a dictionary inside a loop that is actively iterating over that dictionary, Python raises a `RuntimeError`:
+
+```
+RuntimeError: dictionary changed size during iteration
+```
+
+Here is an example that triggers the error:"
+
+```python
+counts = {"apple": 3, "banana": 1, "cherry": 2}
+
+# BROKEN — do NOT do this
+for word, count in counts.items():
+    if count == 1:
+        del counts[word]   # RuntimeError!
+```
+
+**Say:**
+"The fix is to collect the keys you want to remove *first*, and then delete them *after* the loop finishes:"
+
+```python
+counts = {"apple": 3, "banana": 1, "cherry": 2}
+
+# CORRECT — collect first, delete after
+to_remove: list[str] = []
+for word in counts:
+    if counts[word] == 1:
+        to_remove.append(word)
+for word in to_remove:
+    del counts[word]
+
+print(counts)
+# {'apple': 3, 'cherry': 2}
+```
+
+**Say:**
+"You won't run into this in today's lab — because we are only reading from the dictionary inside our loop, not modifying it. But keep it in mind for future programs where you might want to filter or clean a dictionary."
+
+---
+
+## 10) Optional Extension: Lowercase + Punctuation Stripping
+
+**Say:**
+"Let's look at the normalization extension one more time in a focused way, so the technique is crystal clear. This section is for learners who finished the lab early and want to level up their solution."
+
+### 10.1 Why normalization matters
+
+**Say:**
+"Consider analysing a real paragraph — say, a few sentences from a news article. You would encounter:
+- Sentence-starting capital letters: `'The'` vs `'the'`
+- Commas: `'apple,'` vs `'apple'`
+- Periods: `'dog.'` vs `'dog'`
+- Exclamation marks, question marks, colons
+- Possibly hyphens within compound words
+
+Without normalization, your frequency counter misses patterns that a human reader would naturally group together. Normalization is not fancy — it is just good data hygiene."
+
+### 10.2 `str.lower()` — fixing case
+
+```python
+word = "Hello"
+print(word.lower())    # 'hello'
+
+word = "PYTHON"
+print(word.lower())    # 'python'
+
+word = "already lowercase"
+print(word.lower())    # 'already lowercase' (no change)
+```
+
+**Say:**
+"`str.lower()` returns a *new* string with all characters converted to lowercase. It does not modify the original string — strings in Python are immutable. You must assign the result back (e.g. `word = word.lower()`) or use it directly."
+
+### 10.3 `str.replace()` — removing punctuation
+
+```python
+word = "hello,"
+clean = word.replace(",", "")
+print(clean)    # 'hello'
+
+word = "world!"
+clean = word.replace("!", "")
+print(clean)    # 'world'
+```
+
+**Say:**
+"`str.replace(old, new)` returns a new string with every occurrence of `old` replaced by `new`. When `new` is an empty string, every occurrence of `old` is deleted.
+
+We can chain multiple `replace()` calls on a single line:"
+
+```python
+word = "Hello,"
+clean = word.lower().replace(",", "").replace(".", "").replace("!", "").replace("?", "")
+print(clean)    # 'hello'
+```
+
+**Say:**
+"Read the chain from left to right: first lowercase, then remove comma, then remove period, then remove exclamation mark, then remove question mark. Each method call receives the output of the previous one."
+
+### 10.4 Before and after — seeing the difference
+
+```python
+sentence = "To be, or not to be: that is the question!"
+print("BEFORE normalization:")
+words_raw = sentence.split()
+counts_raw: dict[str, int] = {}
+for word in words_raw:
+    counts_raw[word] = counts_raw.get(word, 0) + 1
+for w, c in sorted(counts_raw.items()):
+    print(f"  {w!r}: {c}")
+
+print("\nAFTER normalization:")
+counts_clean: dict[str, int] = {}
+for word in words_raw:
+    word = word.lower()
+    for punct in (",", ".", "!", "?", ":"):
+        word = word.replace(punct, "")
+    counts_clean[word] = counts_clean.get(word, 0) + 1
+for w, c in sorted(counts_clean.items()):
+    print(f"  {w!r}: {c}")
+```
+
+**Output — Before:**
+```
+  'To': 1
+  'be,': 1
+  'be:': 1
+  'is': 1
+  'not': 1
+  'or': 1
+  'question!': 1
+  'that': 1
+  'the': 1
+  'to': 1
+```
+
+**Output — After:**
+```
+  'be': 2
+  'is': 1
+  'not': 1
+  'or': 1
+  'question': 1
+  'that': 1
+  'the': 1
+  'to': 2
+```
+
+**Say:**
+"Before normalization: 10 unique entries — 'To' and 'to' are separate, 'be,' and 'be:' are separate. After normalization: 8 unique entries — 'be' correctly counted 2 times, 'to' correctly counted 2 times. The result is far more meaningful.
+
+Notice `{w!r}` in the f-string — the `!r` conversion applies `repr()` to the value, which wraps strings in quotes and makes invisible characters visible. It is very useful for debugging string content. You don't need it in production output, but it is handy when checking whether punctuation was correctly stripped."
+
+---
+
+## 11) Session 5 Day Wrap-Up
+
+### 11.1 Recap of all four hours
+
+**Say:**
+"We have arrived at the end of Day 5 — Session 5 — and I want to take a moment to genuinely appreciate how much ground we covered today. This was a dense, important session.
+
+**Hour 17 — Tuples + Unpacking:**
+We learned that a tuple is an ordered, immutable sequence — like a list that has been locked. You use tuples when the data should not change: coordinates, RGB colour values, function return values with multiple parts. We practised the unpacking pattern — `x, y = point` — which lets you assign all elements of a tuple to named variables in one clean line. You built a Coordinate Tracker and handled `ValueError` when a single-item tuple is accidentally written without its trailing comma.
+
+**Hour 18 — Sets: Uniqueness + Membership:**
+We discovered the set — an unordered collection of unique values. Sets are Python's answer to 'have I seen this before?' questions and 'give me all the distinct things in this collection'. You saw how adding a duplicate to a set is silently ignored, how `in` checks on sets are fast, and how to convert a list to a set to strip duplicates in one step. You built the Unique Visitors program.
+
+**Hour 19 — Dictionary Fundamentals:**
+We introduced the dictionary — the most powerful and flexible collection type in Python for associating meaning with data. You learned the key-value model, how to create dictionaries with literal syntax, how to read, add, and update entries, and — critically — how to access values safely with `get()` rather than risking a `KeyError`. You built an interactive Inventory Manager.
+
+**Hour 20 — Dictionary Iteration + Counting Pattern:**
+This hour. We completed the dictionary picture by learning how to traverse all entries with `keys()`, `values()`, and `items()`. Then we built the counting pattern — `d.get(word, 0) + 1` — which is one of the most practically useful idioms in all of Python. We applied it to build a Word Frequency Counter from scratch, added sorted display, found the most common word, and learned to normalize text by converting to lowercase and stripping punctuation. You can now write a frequency counter from memory."
+
+### 11.2 The data structures map
+
+**Say:**
+"Step back for a second and look at the full picture of what you now know:
+
+| Structure | Ordered? | Unique values? | Mutable? | Key use case |
+|-----------|----------|----------------|----------|--------------|
+| `list`    | ✅ Yes   | No             | ✅ Yes   | Ordered sequences, indexing |
+| `tuple`   | ✅ Yes   | No             | ❌ No    | Fixed records, unpacking |
+| `set`     | ❌ No    | ✅ Yes         | ✅ Yes   | Uniqueness, membership |
+| `dict`    | ✅ Yes*  | Keys only      | ✅ Yes   | Key→value lookup, counting |
+
+*Dictionaries maintain insertion order in Python 3.7+.
+
+You have the full toolkit. The question is no longer 'how do I use this structure?' but 'which structure should I reach for?' And that is *exactly* what Session 6 tackles."
+
+### 11.3 Forward look to Session 6
+
+**Say:**
+"In our next session — Session 6, Hours 21 through 24 — we are going to step back from individual structures and ask the big design question: **when should I use a list? When should I use a set? When should I use a dictionary?**
+
+We will work through a Refactor Challenge where you first solve a problem using a list, and then improve it by switching to a more appropriate structure. We will also start looking at how structures nest inside each other — a list of dictionaries is one of the most common data shapes in real-world Python, and you will start using it to model more complex data.
+
+Session 6 is where everything clicks together. I am genuinely excited to see you there."
+
+### 11.4 Congratulatory close
+
+**Say:**
+"Seriously — take a moment to recognise what you did today. You learned four distinct data structures, wrote four programs from scratch, handled edge cases, and built a word frequency counter that could run on a real piece of text. That is not beginner stuff disguised as beginner stuff — that is actual, practical Python programming skill.
+
+If any part of today felt hard: good. That means you were working in the zone where learning actually happens. If you want to consolidate, go home and type the Word Counter again from memory — no notes. Then run it on a paragraph of text you find interesting. See what the most common words are. That's real programming.
+
+Well done today. Save your files, and I'll see you at Session 6."
+
+---
+
+## 12) Exit Ticket
+
+**Display the following question and give learners 90 seconds to answer in writing or by typing:**
+
+**Question:**
+> What does `dict.items()` produce, and why is it useful in a for-loop?
+
+**Expected answer (for instructor reference):**
+
+`dict.items()` returns a view of the dictionary as a sequence of `(key, value)` tuples. In a for-loop, you can unpack each tuple into named variables — for example `for word, count in counts.items():` — which gives you access to both the key and the value on every iteration without any extra indexing. This makes it the standard way to process all entries of a dictionary when you need both pieces of information.
+
+**Bonus follow-up (ask verbally if time allows):**
+
+> What is the difference between `d.get(key)` and `d[key]`?
+
+**Expected answer:** `d[key]` raises a `KeyError` if the key is not in the dictionary. `d.get(key)` returns `None` silently if the key is absent. `d.get(key, default)` returns `default` instead of `None`. The `get()` form is safe for keys that may not be present; bracket notation is safe only when you are certain the key exists.
+
+---
+
+*End of Day 5, Hour 4 (Course Hour 20) — Dictionary Iteration + Counting Pattern*  
+*Python Programming Basics – Session 5*

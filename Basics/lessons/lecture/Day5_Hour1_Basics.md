@@ -11,94 +11,111 @@
 
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
-> **Instructor note:** This document is written as a detailed read-aloud teaching guide. This hour introduces tuples as a second sequence type alongside lists. The critical comparison is mutability: lists can change; tuples cannot. Keep scope tight. The key concepts are tuple creation with parentheses and commas, why immutability is a feature rather than a limitation, tuple unpacking into separate variables, and the single-item tuple gotcha of the trailing comma. Do not introduce named tuples, `collections.namedtuple`, `typing.NamedTuple`, or advanced unpacking with `*`. The lab is the Coordinate Tracker.
+> **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on tuples: what they are, how they differ from lists, how immutability protects data, and how unpacking lets you pull values out cleanly. Stay within Basics scope — do not introduce named tuples, `collections.namedtuple`, or advanced destructuring. The key outcomes are creating tuples, understanding why they are immutable, unpacking tuple values into variables, and making a principled choice between tuple and list. The lab reinforces all of this in a concrete coordinate-tracking program.
 
 ---
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
 "By the end of this hour, you will be able to:
-1. Create a tuple using parentheses and commas, and explain what immutability means.
-2. Explain when a tuple is a better choice than a list for storing related values.
-3. Unpack a tuple's values into individual variables in a single assignment line.
-4. Recognize and correct the single-item tuple mistake of omitting the trailing comma.
-5. Store a collection of (x, y) coordinate tuples inside a list and iterate over them.
-6. Compute the minimum and maximum x-values from a list of coordinate tuples.
 
-This hour marks the beginning of Session 5. We are expanding our toolbox beyond lists. Today we learn a structure that is similar to a list in some ways, but fundamentally different in one important way: once you create a tuple, it cannot be changed."
+1. Create a tuple and explain in plain language why it is different from a list.
+2. Demonstrate what immutability means by deliberately triggering a `TypeError` and reading its message.
+3. Unpack a tuple's values into named variables in one clean line.
+4. Explain when choosing a tuple over a list makes your code clearer and safer.
+5. Build a coordinate-tracking program that stores `(x, y)` points as tuples in a list, prints each point, and computes the minimum and maximum x values."
 
 ---
 
-## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
+## 1) Agenda + Timing
 
-- **0:00–0:05** Session 5 introduction, recap of Session 4, and motivation for a new data structure
-- **0:05–0:15** What a tuple is, how to write one, and why immutability matters
-- **0:15–0:25** Tuple unpacking: pulling values out into separate variables
-- **0:25–0:35** Common pitfalls: single-item tuples, trying to modify tuple items
-- **0:35–0:45** Live demo: coordinates, unpacking, immutability error
-- **0:45–0:57** Guided lab: Coordinate Tracker
+- **0:00–0:05** Reconnect to Day 4 collections; introduce the problem tuples solve
+- **0:05–0:18** Core concept: what a tuple is, syntax, analogy, immutability
+- **0:18–0:28** Tuple unpacking: basic form, swap trick, ignoring values with `_`
+- **0:28–0:33** Tuple vs list decision guide
+- **0:33–0:43** Live demo: coordinate pair, return from function, immutability error
+- **0:43–0:57** Guided lab: Coordinate Tracker
 - **0:57–1:00** Debrief, recap, and exit ticket
 
 ---
 
-## 2) Instructor Setup Checklist (before class)
+## 2) Instructor Setup Checklist
 
-- Open a clean file such as `hour17_tuples_demo.py`.
-- Have terminal and editor visible side by side so learners see code and output together.
-- Prepare a few (x, y) coordinate pairs mentally: `(3, 7)`, `(0, 0)`, `(-2, 5)`, `(10, 4)`, `(1, 9)`.
-- Be ready to demonstrate one deliberate `TypeError` by trying to assign to a tuple index.
-- Be ready to show the single-item tuple trap: `(5)` vs `(5,)`.
-- If some learners type slowly, have a starter file with comments only ready to paste.
+- Open a clean file called `hour17_tuples_demo.py` before class begins.
+- Have a second file called `hour17_lab_coords.py` ready with empty comments only as a starter for learners who fall behind.
+- Have the Python REPL ready in a terminal (type `python` or `python3`) for quick interactive experiments.
+- Plan to show one deliberate `TypeError` by trying to assign to a tuple index.
+- Plan to show the single-element trap: `(42)` is an integer, `(42,)` is a tuple.
+- Confirm that `min()` and `max()` are covered in your learners' prior knowledge — they were introduced in Hour 14 (Day 4, Hour 2). Briefly remind learners if needed.
 
-**Say:** "Please type with me today. The tuple concepts are short, but the patterns—especially unpacking—become muscle memory only when you actually type them."
-
----
-
-## 3) Opening Script: Welcome to Session 5 (~5 minutes)
-
-### 3.1 Reconnect to the path so far
-
-**Say:**
-"Welcome to Day 5. We are now in Session 5 of the course.
-
-Let me take thirty seconds to place today in context. In Sessions 1 and 2, we focused on individual values: numbers, strings, booleans, conditions, and loops. In Sessions 3 and 4, we introduced lists—our first real data structure. Lists gave us a way to store many related values in one variable and process them with loops.
-
-If you now understand how to create a list, append to it, remove from it, access items by index, and loop over it, you have a very real foundation.
-
-Today we are not abandoning any of that. We are widening the toolbox.
-
-The question we are answering today is: are there situations where a list is actually the wrong tool? And the answer is yes—there are."
-
-### 3.2 Motivate the need for a tuple
-
-**Say:**
-"Think about coordinates. A GPS coordinate has two parts: a latitude and a longitude. Those two values belong together. They describe one location.
-
-If I want to store a location, I could use a list: `[48.8566, 2.3522]`. That works. But there is a risk with a list: I could accidentally change one of those values. I could call `append()` and suddenly my 'two-part coordinate' has three parts. I could `pop()` one value by mistake.
-
-For data that has a fixed structure—two parts, three parts, some specific number of parts that should never change—a tuple is a better tool. It is like a list, but it is locked. Once created, it cannot be modified.
-
-That locked quality is not a weakness. It is a deliberate protection."
-
-### 3.3 Soften the introduction
-
-**Say:**
-"I want to reassure you: tuples are not harder than lists. They are simpler in one important way: there are fewer operations to learn, because most mutation operations simply do not exist on tuples. You cannot append to a tuple. You cannot remove from a tuple. You can read from a tuple. You can iterate over a tuple. And you can unpack a tuple's values, which is one of the most useful patterns in Python.
-
-Let us look at the syntax first, and then we will talk about why the immutability is valuable."
+**Say:** "Please have your editor open and an empty file ready. This hour involves a lot of typing together. The real learning happens at your keyboard, not just by watching."
 
 ---
 
-## 4) Core Concept: What a Tuple Is (~10 minutes)
+## 3) Opening Script: Reconnect to Earlier Learning (~5 minutes)
 
-### 4.1 Tuple syntax explained
+### 3.1 Quick recap from Session 4
 
 **Say:**
-"A tuple is written with parentheses and comma-separated values."
+"Welcome back. In Session 4 we covered lists. We built shopping-list programs, worked with loops that iterated over collections, and used core list methods like `append()`, `remove()`, and `pop()`.
 
-**Type:**
+Lists gave us a very powerful tool: one variable that holds many related values in order, and that we can change whenever we need to.
+
+But here is a question worth pausing on: is it always a good idea for a collection to be changeable?
+
+Think about a GPS coordinate. A point in two-dimensional space — say, latitude and longitude, or an (x, y) pair on a grid — represents one fixed location. Once you record it, you do not expect it to change. If your program accidentally changed it, that would be a bug, not a feature.
+
+Today we learn a data structure that is designed to be *fixed*: the tuple."
+
+### 3.2 Motivating the need
+
+**Say:**
+"Let me give you a few real-world situations where you want a small, fixed collection of related values:
+
+- A point in 2D space: `(3, 7)` — an x and a y.
+- A date: `(2024, 6, 15)` — a year, month, and day.
+- An RGB colour: `(255, 128, 0)` — red, green, blue channels.
+- The result of a measurement: `(34.5, 'celsius')` — a value and a unit.
+
+In each of these cases, the values are related to each other and should stay together. And in each case, you would not want your program to accidentally add an extra item or remove one. You want the structure to be locked.
+
+A tuple is exactly that: an ordered, fixed-size, immutable group of values."
+
+### 3.3 Set expectations for the hour
+
+**Say:**
+"In this hour, we will learn:
+- how to create a tuple
+- why tuples cannot be changed and why that is actually useful
+- how to pull values out of a tuple cleanly using a technique called unpacking
+- when to choose a tuple rather than a list
+- and how to build a small coordinate-tracking program using these ideas
+
+You already know most of what you need. Tuples use a lot of the same intuitions as lists. The big new idea today is immutability and why it helps."
+
+---
+
+## 4) Concept: What Is a Tuple?
+
+### 4.1 Beginner-friendly definition
+
+**Say:**
+"A tuple is an ordered, immutable collection of values.
+
+Let's take that one word at a time.
+
+- **Ordered** means the items have positions. First item, second item, third item. Same as a list.
+- **Immutable** means the tuple cannot be changed after it is created. You cannot add items. You cannot remove items. You cannot swap one item for another. Once a tuple exists, it stays exactly as it was made.
+- **Collection** means one variable holds multiple values.
+
+If a list is like a whiteboard that you can write on and erase as much as you want, a tuple is like a laminated card. You can read it, you can pass it around, but you cannot change what is written on it."
+
+### 4.2 Tuple literal syntax
+
+**Type and narrate:**
 
 ```python
+# A tuple with three values
 point = (3, 7)
 print(point)
 print(type(point))
@@ -107,574 +124,964 @@ print(type(point))
 Run it.
 
 **Say:**
-"When I print `point`, Python shows `(3, 7)`. The parentheses and the comma together tell Python this is a tuple, not just a calculation.
+"We create a tuple using parentheses. Inside the parentheses, values are separated by commas.
 
-`type(point)` returns `<class 'tuple'>`. That confirms Python sees this as a tuple object.
+When we print `point`, Python shows us `(3, 7)`.
+When we check the type, Python tells us `<class 'tuple'>`.
 
-Notice I named this variable `point`. That name is intentional. A tuple is a great fit for things that feel like a fixed record: a coordinate point, a color in RGB, a date as year/month/day, a name and age pair. When you look at the variable name, you should already have a sense of what the tuple contains."
+Notice that the parentheses appear in the output. Python uses them consistently to signal that this is a tuple, not a list."
 
-### 4.2 Indexing works the same as a list
+### 4.3 Tuples with more than two values
+
+**Type:**
+
+```python
+date = (2024, 6, 15)
+colour = (255, 128, 0)
+measurement = (34.5, "celsius")
+
+print(date)
+print(colour)
+print(measurement)
+```
+
+**Say:**
+"Tuples can hold any number of values. They can also mix types — notice `measurement` holds a float and a string together. That is valid because a measurement is a pair of related but differently-typed values.
+
+However, for beginners, keep your tuples simple and focused. A tuple works best when it represents a single logical unit with a small, known number of parts."
+
+### 4.4 Indexing into a tuple
+
+**Say:**
+"Because tuples are ordered, you can access individual items using index notation — exactly the same way you would with a list or a string."
 
 **Type:**
 
 ```python
 point = (3, 7)
-print(point[0])
-print(point[1])
+print(point[0])   # 3
+print(point[1])   # 7
 ```
 
-**Say:**
-"Indexing works exactly like a list. Index 0 is the first value, index 1 is the second. The zero-based counting rule does not change.
+**Ask learners:**
+"What do you think `point[0]` prints? Call it out."
 
-I can use negative indexing too: `point[-1]` is `7`."
+Wait for answers, then run it.
+
+**Say:**
+"Correct. Index zero gives us the first item, which is 3. Index one gives us the second item, which is 7.
+
+The indexing rules are the same as lists: counting starts at zero, negative indices count from the right."
+
+### 4.5 The critical trap: the single-element tuple
+
+**Say:**
+"Before we go any further, I want to show you one trap that catches almost every beginner the first time they see it.
+
+How do you think we would write a tuple with just one value in it?"
+
+Pause for guesses.
 
 **Type:**
 
 ```python
-print(point[-1])
-```
-
-**Say:**
-"So reading from a tuple behaves like reading from a list. That should feel familiar."
-
-### 4.3 Show immutability directly
-
-**Say:**
-"Now let me show you the defining characteristic of a tuple."
-
-**Type:**
-
-```python
-point = (3, 7)
-point[0] = 99  # This will cause a TypeError
+not_a_tuple = (42)
+print(type(not_a_tuple))
 ```
 
 Run it.
 
 **Say:**
-"Read the error message: `TypeError: 'tuple' object does not support item assignment`. Python is refusing to let me change the value at index 0.
+"Look at the type. Python says `<class 'int'>`. This is an integer, not a tuple! Python sees `(42)` as ordinary parentheses around a number — the kind you use in a math expression. The parentheses do not automatically make something a tuple.
 
-This is not a bug. This is Python enforcing the contract we implicitly agreed to when we chose a tuple. We said: these two values belong together and will not change. Python is holding us to that commitment.
-
-If I need to change a coordinate, I have two options:
-1. Use a list instead.
-2. Create a new tuple with the updated values.
-
-For the Coordinate Tracker lab today, we will treat each coordinate as fixed, so tuples are exactly right."
-
-### 4.4 Tuples without parentheses (brief mention)
-
-**Say:**
-"Python technically allows you to write a tuple without parentheses, just using commas."
+So how do we create a single-element tuple? We add a trailing comma."
 
 **Type:**
 
 ```python
-color = 255, 128, 0
-print(color)
-print(type(color))
+actually_a_tuple = (42,)
+print(type(actually_a_tuple))
+print(actually_a_tuple)
 ```
 
-**Say:**
-"Python still recognizes this as a tuple. However, for clarity and readability—especially when you are learning—I strongly recommend always including the parentheses. Explicit is better than implicit.
-
-I am showing you this only because you may encounter it in other people's code."
-
-### 4.5 The single-item tuple trap
+Run it.
 
 **Say:**
-"This is the pitfall I want you to remember, because it surprises nearly every beginner."
+"Now Python says `<class 'tuple'>`. That trailing comma is what tells Python: this is a tuple with one element, not just parentheses around a value.
 
-**Type:**
+This is one of the most common beginner mistakes with tuples. If your single-element tuple is behaving like an integer, check your comma.
 
-```python
-not_a_tuple = (5)
-print(type(not_a_tuple))
-
-real_tuple = (5,)
-print(type(real_tuple))
-```
-
-Run both.
-
-**Say:**
-"Look at the types. `(5)` is just the number 5 inside parentheses—Python sees those as grouping parentheses, not a tuple. The type is `int`.
-
-`(5,)` with the trailing comma is a real single-item tuple. The type is `tuple`.
-
-The rule is simple: if you want a single-item tuple, you must include the trailing comma. If you omit it, you get a regular value, not a tuple.
-
-For this course, you will almost always work with tuples that have two or more items, so this pitfall is unlikely to bite you in today's lab. But I want you to know it exists."
-
-### 4.6 Ask for predictions
-
-**Ask learners:**
-- "What is the type of `(10, 20)`?"
-- "What is the type of `(10)`?"
-- "What is the type of `(10,)`?"
-- "If I try `(10, 20)[0] = 99`, what happens?"
-
-Pause after each, then confirm by running the code.
+For today's lab, all our tuples have two values, so you will not hit this trap. But I want you to have seen it before you encounter it by accident."
 
 ---
 
-## 5) Tuple Unpacking (~10 minutes)
+## 5) Immutability: Why Tuples Cannot Change
 
-### 5.1 Introduce unpacking with motivation
+### 5.1 Show the TypeError
 
 **Say:**
-"One of the most elegant and frequently used features of tuples is unpacking. Instead of accessing each value by index, you can assign all the values of a tuple to separate variables in a single line.
+"The defining feature of a tuple is that it is immutable. Let me show you exactly what that means in code."
 
-This is especially powerful when a function returns a tuple, or when you loop over a list of tuples."
+**Type:**
 
-### 5.2 Basic unpacking example
+```python
+point = (3, 7)
+point[0] = 99   # attempt to change the first value
+```
+
+Run it.
+
+**Say:**
+"Python raises a `TypeError`. Read the message with me: `'tuple' object does not support item assignment`.
+
+This is not a bug in your code that you need to fix — it is Python enforcing the rule. A tuple refuses to let you change any of its values after creation.
+
+Now, here is the key question: why is this useful? Why would we ever *want* a collection we cannot change?"
+
+### 5.2 Explain the value of immutability
+
+**Say:**
+"Immutability is a form of protection and communication.
+
+First, **protection**: if a coordinate should never change, making it a tuple means Python will stop you — or anyone else editing the code — from accidentally modifying it. If you store a GPS point as a list, nothing prevents a careless line of code from doing `coords[0] = 0.0` and silently corrupting your data. If you store it as a tuple, Python raises an error immediately, and the bug is caught early.
+
+Second, **communication**: when another programmer — or your future self — reads your code and sees a tuple, it sends a message. It says 'this group of values is meant to be fixed. Do not change it. Treat it as a record.'
+
+Lists say 'this collection will grow and change'. Tuples say 'these values belong together and should not be touched'.
+
+That distinction makes code easier to understand at a glance."
+
+### 5.3 What you *can* do with a tuple
+
+**Say:**
+"Immutability does not mean useless. There is plenty you can do with a tuple.
+
+You can read any item by index. You can iterate over it with a for loop. You can check membership with `in`. You can pass it to a function. You can store it in a list. You can unpack its values into separate variables — and unpacking is one of the most powerful patterns you will learn today."
+
+**Type:**
+
+```python
+point = (3, 7)
+
+# Reading
+print(point[0])
+
+# Membership check
+print(3 in point)
+
+# Iterating
+for value in point:
+    print(value)
+```
+
+Run it.
+
+**Say:**
+"All of this works. The only thing that does not work is *changing* the tuple in place."
+
+---
+
+## 6) Tuple Unpacking
+
+### 6.1 The concept
+
+**Say:**
+"Tuple unpacking is one of my favourite Python features. It looks simple, but it turns out to be incredibly useful.
+
+The idea is this: instead of accessing tuple items by index — `point[0]`, `point[1]` — you can unpack all the values in one line and give each of them a name."
 
 **Type:**
 
 ```python
 point = (3, 7)
 x, y = point
-print(f"x = {x}")
-print(f"y = {y}")
+
+print(x)   # 3
+print(y)   # 7
 ```
 
 Run it.
 
 **Say:**
-"This is unpacking. Python looks at `point`, sees it has two values, and assigns the first value to `x` and the second value to `y` in one step.
+"In one line, `x, y = point`, Python takes the first value of `point` and assigns it to `x`, and takes the second value and assigns it to `y`.
 
-The result is the same as writing:
+This is far more readable than:
+
 ```python
 x = point[0]
 y = point[1]
 ```
 
-But unpacking is cleaner and more readable. When you read `x, y = point`, you immediately understand the intent: we are pulling the x-coordinate and y-coordinate out of the point."
+With unpacking, the code *reads like natural language*. You can see immediately that `point` has two parts: an x-coordinate and a y-coordinate."
 
-### 5.3 Unpacking in a for loop over a list of tuples
-
-**Say:**
-"This is where unpacking becomes genuinely powerful. When we have a list of tuples—which is exactly what the lab asks for—we can unpack directly in the loop."
-
-**Type:**
-
-```python
-coordinates = [(3, 7), (0, 0), (-2, 5), (10, 4), (1, 9)]
-
-for x, y in coordinates:
-    print(f"Point: x={x}, y={y}")
-```
-
-Run it.
+### 6.2 Unpacking must match the count
 
 **Say:**
-"Look at the loop header: `for x, y in coordinates`. Python automatically unpacks each tuple in the list. First iteration: `x = 3`, `y = 7`. Second: `x = 0`, `y = 0`. And so on.
-
-This pattern is extremely common in real Python. When you see `for a, b in some_list_of_pairs`, that is tuple unpacking at work."
-
-### 5.4 Mismatched unpacking error
-
-**Say:**
-"Unpacking requires that the number of variables exactly matches the number of items in the tuple."
+"There is one important rule: the number of variables on the left must match the number of values in the tuple."
 
 **Type:**
 
 ```python
 point = (3, 7)
-x, y, z = point  # This will fail
+x, y, z = point   # wrong! three names for two values
 ```
 
-**Say:**
-"Before I run this, what do you predict will happen?"
-
-Pause, then run.
+Run it.
 
 **Say:**
-"We get a `ValueError: not enough values to unpack`. Python has three target variables but only two values. The counts must match.
+"Python raises a `ValueError`: `not enough values to unpack`. It expected three values but only found two.
 
-This is actually a useful error. It tells you immediately that your understanding of the tuple's structure does not match reality. If this happens in real code, check how many items your tuple actually has."
+The same error occurs in reverse if you have too many values. Unpacking is strict — it requires an exact match."
 
-### 5.5 Practical pattern: returned pairs
+Fix the code:
+
+```python
+x, y = point   # back to the correct version
+```
+
+### 6.3 Unpacking any tuple
 
 **Say:**
-"Tuple unpacking also works beautifully when a function returns two values. You will see this pattern everywhere in Python, even though we have not fully covered functions with return values yet. Here is a quick preview."
+"Unpacking works with any tuple, not just two-element ones."
 
 **Type:**
 
 ```python
-def min_max(numbers: list) -> tuple:
-    return min(numbers), max(numbers)
+date = (2024, 6, 15)
+year, month, day = date
 
-low, high = min_max([5, 2, 9, 1, 7])
-print(f"Min: {low}, Max: {high}")
+print(f"Year: {year}")
+print(f"Month: {month}")
+print(f"Day: {day}")
 ```
 
 Run it.
 
 **Say:**
-"The function returns a tuple of two values. We immediately unpack them into `low` and `high`. This is a very clean pattern.
+"Now instead of `date[0]`, `date[1]`, `date[2]`, we have meaningful names: `year`, `month`, `day`. Anyone reading this code understands immediately what each value represents."
 
-Do not worry about fully understanding function return values today—that comes in Session 7. The point is to see that unpacking is useful far beyond just coordinate data."
+### 6.4 The swap trick
+
+**Say:**
+"Here is one of Python's most elegant patterns. Without a temporary variable, you can swap two variable values in one line using tuple unpacking."
+
+**Type:**
+
+```python
+a = 10
+b = 20
+
+print(f"Before: a={a}, b={b}")
+
+a, b = b, a   # swap
+
+print(f"After:  a={a}, b={b}")
+```
+
+Run it.
+
+**Say:**
+"In most other languages you would need a third variable — `temp = a; a = b; b = temp`. In Python, `a, b = b, a` works because Python evaluates the right side first, creates a tuple `(20, 10)`, and then unpacks it into `a` and `b`.
+
+You do not need to fully understand the mechanics today. What matters is recognising the pattern and knowing it works."
+
+### 6.5 Ignoring values with `_`
+
+**Say:**
+"Sometimes a tuple has more values than you care about in a particular moment. Python has a convention: use an underscore `_` as a variable name to signal 'I deliberately don't need this value'."
+
+**Type:**
+
+```python
+measurement = (34.5, "celsius")
+value, _ = measurement   # we only care about the number
+
+print(f"Temperature: {value}")
+```
+
+Run it.
+
+**Say:**
+"The underscore is assigned the string `'celsius'`, but we are not planning to use it. Using `_` communicates to anyone reading the code: 'I know there is a second value here and I am intentionally ignoring it'. This is better than naming it something throwaway like `unused`."
 
 ---
 
-## 6) Live Demo: Full Tuple Workflow (~10 minutes)
+## 7) When to Use a Tuple vs a List
 
-### 6.1 Set up the demo file
+### 7.1 The core distinction
 
 **Say:**
-"Let me now put together a complete demo that shows everything we have discussed: creating tuples, immutability, and unpacking together in one coherent piece of code."
+"You now know two ordered collection types: lists and tuples. How do you choose between them?
 
-**Type the full demo:**
+Here is the clearest way I can put it:
+
+- Use a **list** when the collection is meant to grow, shrink, or change over time.
+- Use a **tuple** when the collection represents a fixed record with a known, specific structure.
+
+Ask yourself: 'Does this collection need to be modified after I create it?' If yes, use a list. If no, think about whether a tuple is the better signal."
+
+### 7.2 Decision guide
+
+| Situation | Best choice | Why |
+|-----------|-------------|-----|
+| Shopping cart that items are added to and removed from | List | The collection changes |
+| All the tasks a user enters during a session | List | Grows over time |
+| An (x, y) coordinate that should never change | Tuple | Fixed record, immutability protects it |
+| A date like (year, month, day) | Tuple | Fixed structure, three known parts |
+| A series of test scores | List | May grow; order matters but content evolves |
+| RGB colour value: (255, 128, 0) | Tuple | Three fixed channels, never changes |
+| A collection of user messages | List | Grows as messages arrive |
+| A function returning two results | Tuple | Fixed pair; caller will unpack |
+
+**Say:**
+"Notice that tuples show up naturally when a function needs to return multiple values. In Python, the conventional way to return two things from a function is to return them as a tuple. The caller then unpacks them. We will see this in the live demo."
+
+### 7.3 Keep it practical
+
+**Say:**
+"For beginners, this rule of thumb covers most cases: if the collection is a bunch of things that accumulate — add, remove, append — use a list. If the collection is a small, structured record with a fixed number of named parts — an address, a coordinate, a date, a size — use a tuple.
+
+You will not always be certain which to choose. That is normal. As you write more programs, the right choice becomes more intuitive."
+
+---
+
+## 8) Live Demo: Coordinate Pairs
+
+### 8.1 Overview
+
+**Say:**
+"Let me bring all of these ideas together in a live demo before we move into the lab. I am going to build a short program step by step. Please type along.
+
+We will:
+- create a pair of coordinates as a tuple
+- unpack the x and y values
+- show the immutability error
+- then simulate a function returning a tuple
+
+Open `hour17_tuples_demo.py`."
+
+### 8.2 Part 1 — A simple coordinate
+
+**Type and narrate:**
 
 ```python
 # hour17_tuples_demo.py
 
-# 1. Create a list of coordinate tuples
-coordinates = [
-    (3, 7),
-    (0, 0),
-    (-2, 5),
-    (10, 4),
-    (1, 9)
-]
+# --- Part 1: Create and read a coordinate tuple ---
+origin = (0, 0)
+home = (3, 7)
+destination = (-2, 5)
 
-# 2. Print each coordinate with unpacking
-print("All coordinates:")
-for x, y in coordinates:
-    print(f"  ({x}, {y})")
-
-# 3. Extract just the x values
-x_values = []
-for x, y in coordinates:
-    x_values.append(x)
-
-print(f"\nX values: {x_values}")
-print(f"Minimum x: {min(x_values)}")
-print(f"Maximum x: {max(x_values)}")
-
-# 4. Show immutability
-first_point = coordinates[0]
-print(f"\nFirst point: {first_point}")
-
-# Uncomment to see the error:
-# first_point[0] = 99
+print(f"Origin:      {origin}")
+print(f"Home:        {home}")
+print(f"Destination: {destination}")
 ```
 
 Run it.
 
 **Say:**
-"Notice how clean the code reads. The `for x, y in coordinates` loop is self-documenting. Anyone reading the code understands immediately that each element of `coordinates` is an (x, y) pair.
+"Three coordinate tuples. Each one is a (x, y) pair. Python prints each pair with its parentheses intact, which is a visual reminder that these are tuples."
 
-I left the immutability error as a comment. Let me uncomment it now and show you what happens."
+### 8.3 Part 2 — Unpacking coordinates
 
-Uncomment `first_point[0] = 99`, save, and run.
-
-**Say:**
-"There is the `TypeError` again. This is Python protecting the data we told it should not change."
-
-Re-comment the line.
-
-### 6.2 Build intuition for when to choose tuples
-
-**Say:**
-"Let me leave you with a simple mental model for when to reach for a tuple versus a list.
-
-Use a list when:
-- the number of items can change
-- you need to add or remove items
-- you are building a collection over time
-
-Use a tuple when:
-- the number of items is fixed
-- the items form a meaningful record
-- you want immutability as a built-in guarantee
-- you are returning multiple values from a function
-
-The most common real-world uses for tuples are: coordinates, RGB colors, database row records, key-value pairs in some patterns, and function return values with multiple outputs."
-
-**Ask learners:**
-"Given this, should a shopping list be a list or a tuple?"
-
-Pause.
-
-"Right—a shopping list changes over time. It is a list.
-
-Should a screen resolution like 1920 × 1080 be a list or a tuple?"
-
-Pause.
-
-"Right—a resolution is two fixed values. It is a tuple."
-
----
-
-## 7) Common Pitfalls and Coaching (~5 minutes)
-
-### 7.1 Pitfall: trying to change a tuple item
-
-**Symptom:** learner gets `TypeError: 'tuple' object does not support item assignment`.
-
-**Coach with these words:**
-"Read the error. Python is not broken. The tuple is doing its job. If you actually need to change the value, ask yourself: should this be a list? If yes, switch to a list. If the data should be immutable, create a new tuple with the corrected values."
-
-### 7.2 Pitfall: single-item tuple missing the trailing comma
-
-**Symptom:** learner writes `single = (5)` and is confused when it behaves like an integer.
-
-**Coach with these words:**
-"Check the type with `print(type(single))`. If it shows `int`, you are missing the trailing comma. Change it to `(5,)` and re-check."
-
-### 7.3 Pitfall: unpacking variable count mismatch
-
-**Symptom:** learner gets `ValueError: too many values to unpack` or `not enough values to unpack`.
-
-**Coach with these words:**
-"Print the tuple first. Count its items. Count your target variables. They must match exactly. If you have a three-item tuple, you need three target variables: `a, b, c = my_tuple`."
-
-### 7.4 Pitfall: confusing a tuple with a function call
-
-**Symptom:** learner writes `print(3, 7)` and thinks `(3, 7)` is stored somewhere.
-
-**Coach with these words:**
-"The parentheses in a function call are syntax for the function, not a tuple. If you want to store a tuple, assign it to a variable: `point = (3, 7)`. Then pass it to print if you like: `print(point)`."
-
-### 7.5 Pitfall: forgetting tuples support indexing and len()
-
-**Say:**
-"Beginners sometimes think tuples are mysterious. They are not. `len(my_tuple)` works. `my_tuple[0]` works. `for item in my_tuple` works. The only thing that does not work is modifying items in place."
-
----
-
-## 8) Guided Lab: Coordinate Tracker (~12 minutes)
-
-### 8.1 Introduce the lab
-
-**Say:**
-"Now it is your turn. This lab connects directly to what we built in the demo. You are going to build a Coordinate Tracker that stores five (x, y) points as tuples, prints each one, and computes the minimum and maximum x-values.
-
-Here are the requirements:
-1. Create a list containing exactly five (x, y) tuples. You can use the coordinates from the demo or choose your own.
-2. Use a loop to print each point in a clean, readable format.
-3. Compute the minimum x-value across all five points.
-4. Compute the maximum x-value across all five points.
-5. Print the minimum and maximum."
-
-### 8.2 Put the requirements on screen
-
-```text
-Lab: Coordinate Tracker
-- Create a list of 5 (x, y) tuples
-- Print each point in a clear format
-- Compute and print the minimum x-value
-- Compute and print the maximum x-value
-```
-
-### 8.3 Provide a beginner-friendly starter structure
-
-**Type and leave on screen:**
+**Type:**
 
 ```python
-# hour17_lab_coordinate_tracker.py
+# --- Part 2: Unpack and use the values ---
+x, y = home
+print(f"Home x-coordinate: {x}")
+print(f"Home y-coordinate: {y}")
+```
 
-# Step 1: create the list of coordinate tuples
-coordinates = [
-    (3, 7),
+Run it.
+
+**Say:**
+"Instead of writing `home[0]` and `home[1]`, we unpack into meaningful names. When we later use `x` and `y`, the intent is perfectly clear."
+
+### 8.4 Part 3 — Show the immutability error
+
+**Say:**
+"Now I want to deliberately trigger the immutability error so you see the full picture."
+
+**Type:**
+
+```python
+# --- Part 3: Show immutability ---
+# This line will raise a TypeError — that is expected!
+home[0] = 10
+```
+
+Run it.
+
+**Say:**
+"Read the message: `TypeError: 'tuple' object does not support item assignment`.
+
+If you ever see this error in your own code, your first question should be: 'Did I intend this to be mutable? Should it be a list instead?' If the answer is no — if the tuple genuinely should stay fixed — then the error is Python protecting you."
+
+Delete or comment out the failing line:
+
+```python
+# home[0] = 10  # intentional demo — do not run in lab
+```
+
+### 8.5 Part 4 — A function that returns a tuple
+
+**Say:**
+"Here is a common and very clean Python pattern: a function that returns two values as a tuple."
+
+**Type:**
+
+```python
+# --- Part 4: Function returning a tuple ---
+def get_midpoint(point_a: tuple[int, int], point_b: tuple[int, int]) -> tuple[float, float]:
+    """Return the midpoint between two (x, y) coordinates."""
+    mid_x = (point_a[0] + point_b[0]) / 2
+    mid_y = (point_a[1] + point_b[1]) / 2
+    return (mid_x, mid_y)
+
+
+result = get_midpoint(home, destination)
+print(f"Midpoint: {result}")
+
+mid_x, mid_y = get_midpoint(home, destination)
+print(f"Mid x = {mid_x}, Mid y = {mid_y}")
+```
+
+Run it.
+
+**Say:**
+"The function returns a tuple `(mid_x, mid_y)`. We can use the return value in two ways:
+
+1. Keep the tuple whole: `result = get_midpoint(...)` — useful if we want to store it.
+2. Unpack immediately: `mid_x, mid_y = get_midpoint(...)` — useful if we want named variables straight away.
+
+Both forms are valid. Choose based on what makes the calling code most readable."
+
+### 8.6 Part 5 — A list of tuples
+
+**Say:**
+"Our lab is built around a list of coordinate tuples. Let me show the pattern quickly so you can see it before you build it."
+
+**Type:**
+
+```python
+# --- Part 5: A list of coordinate tuples ---
+path = [
     (0, 0),
-    (-2, 5),
-    (10, 4),
-    (1, 9),
+    (1, 3),
+    (4, 2),
+    (6, 8),
+    (5, 1),
 ]
 
-# Step 2: print each coordinate
-print("Points:")
-for x, y in coordinates:
-    print(f"  ({x}, {y})")
-
-# Step 3: collect x values and compute min/max
-x_values = []
-for x, y in coordinates:
-    x_values.append(x)
-
-print(f"\nMin x: {min(x_values)}")
-print(f"Max x: {max(x_values)}")
+for point in path:
+    x, y = point
+    print(f"  x={x}, y={y}")
 ```
 
-### 8.4 Explain the starter
+Run it.
 
 **Say:**
-"This starter structure breaks the problem into three clear steps. Step 1 is the data. Step 2 is the display. Step 3 is the calculation. Each step uses what we have covered today.
+"Notice the structure: `path` is a list — it is mutable, it can grow or shrink. Each item inside the list is a tuple — each coordinate is fixed. This is a natural and very common pattern in Python: a mutable outer container of immutable records."
 
-Your first task is to get this running with your own coordinate values. After that, you can explore the optional extension."
+---
 
-### 8.5 Optional extension
+## 9) Hands-on Lab: Coordinate Tracker
+
+### 9.1 Lab overview
 
 **Say:**
-"If you finish the core lab early, try this extension: compute the distance of each point from the origin, which is (0, 0).
+"Now it is your turn. The lab task is called the Coordinate Tracker. You have 14 minutes to work through it, then we will walk through the solution together.
 
-The distance formula is the square root of `(x squared + y squared)`. In Python, you can compute a square root with `x ** 0.5` or by importing `math.sqrt`—but `** 0.5` works fine without any imports.
+This lab reinforces:
+- creating tuples
+- storing tuples in a list
+- iterating with a for loop and unpacking
+- using `min()` and `max()` on extracted values
 
-Print each point alongside its distance from the origin."
+Open a new file called `hour17_lab_coords.py`."
 
-**Type the extension hint:**
+### 9.2 Lab specification
+
+**Display or read aloud:**
+
+---
+
+**Lab: Coordinate Tracker**
+
+**Situation:** You are tracking the positions of five sensors on a grid. Each sensor has an (x, y) location. Your program should record the positions and analyse them.
+
+**Your task:**
+
+1. Create a list called `sensors` containing **five (x, y) tuples**. Use any integer values you like. Make them varied — use positive and negative numbers, different magnitudes. Example: `(3, 7)`, `(-1, 4)`, `(8, 2)`, `(0, -5)`, `(6, 3)`.
+
+2. Use a **for loop** to print each sensor's coordinates in this format:
+   ```
+   Sensor at x=3, y=7
+   Sensor at x=-1, y=4
+   ...
+   ```
+
+3. **Extract all the x values** from the sensor list into a new list called `x_values`. Use a for loop or a list comprehension (if you have seen those).
+
+4. Print the **minimum x value** and the **maximum x value** using `min()` and `max()`.
+
+**Expected output shape (your numbers will differ):**
+```
+Sensor at x=3, y=7
+Sensor at x=-1, y=4
+Sensor at x=8, y=2
+Sensor at x=0, y=-5
+Sensor at x=6, y=3
+
+Minimum x: -1
+Maximum x: 8
+```
+
+**Starter hint if you are stuck:**
 
 ```python
-# Optional extension: distance from origin
-for x, y in coordinates:
-    distance = (x**2 + y**2) ** 0.5
-    print(f"  ({x}, {y}) → distance from origin: {distance:.2f}")
+sensors = [
+    (3, 7),
+    # add four more...
+]
+
+for point in sensors:
+    x, y = point   # unpack here
+    print(...)
+
+x_values = []
+for point in sensors:
+    x, y = point
+    x_values.append(x)
+
+print(f"Minimum x: {min(x_values)}")
+print(f"Maximum x: {max(x_values)}")
+```
+
+---
+
+Give learners approximately 12–14 minutes of working time. Circulate the room. Watch for:
+- learners writing `[x, y]` instead of `(x, y)` for tuples
+- learners forgetting to append to `x_values`
+- learners trying to do `sensors[0, 1]` instead of `sensors[0][1]`
+
+### 9.3 Walkthrough solution
+
+After working time, say:
+
+**Say:**
+"Let's walk through the solution together. I will type it from scratch so you can see the whole picture."
+
+**Type the full solution:**
+
+```python
+# hour17_lab_coords.py
+# Lab: Coordinate Tracker
+
+# Step 1 — Five sensor positions as (x, y) tuples in a list
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+# Step 2 — Print each sensor using tuple unpacking
+print("=== Sensor Positions ===")
+for point in sensors:
+    x, y = point
+    print(f"Sensor at x={x}, y={y}")
+
+# Step 3 — Extract all x values
+x_values: list[int] = []
+for point in sensors:
+    x, y = point
+    x_values.append(x)
+
+# Step 4 — Compute min and max x
+print()
+print(f"Minimum x: {min(x_values)}")
+print(f"Maximum x: {max(x_values)}")
+```
+
+Run it.
+
+**Say:**
+"Let's review what we did.
+
+Line by line:
+
+- `sensors` is a **list** because it is a collection that could grow or change. Each item inside it is a **tuple** because each coordinate is a fixed (x, y) record.
+- In the first loop, `x, y = point` unpacks each tuple. We then format the output with an f-string.
+- We build `x_values` by looping again and appending just the x value from each tuple.
+- Finally, we call `min()` and `max()` on `x_values`.
+
+This is a clean and readable program. It makes the structure of the data very clear."
+
+### 9.4 Verify correctness
+
+**Say:**
+"Let's check the min and max manually. My x values are 3, -1, 8, 0, 6. The smallest is -1. The largest is 8. Python agrees. If your numbers are different, double-check your tuple values and your append loop."
+
+### 9.5 Discuss design decisions
+
+**Say:**
+"Why did we put the sensors in a list rather than five separate variables?
+
+Because we want to iterate over them. If they were five separate variables, we could not write a for loop.
+
+Why is each sensor a tuple rather than a list?
+
+Because a coordinate is a fixed pair. It is a record, not something that grows. Using a tuple communicates that clearly and protects the data.
+
+This pattern — a list of tuples — is one you will use many times in real Python programs."
+
+---
+
+## 10) Common Pitfalls
+
+### 10.1 The single-element tuple trap (revisited)
+
+**Say:**
+"We saw this earlier, but it is worth repeating because it is so common.
+
+If you write `value = (42)`, you get an integer, not a tuple. Python reads the parentheses as a math grouping expression.
+
+To make a single-element tuple, you must add a trailing comma: `value = (42,)`.
+
+Here is a quick test to build the reflex:"
+
+**Type:**
+
+```python
+a = (5)
+b = (5,)
+print(type(a))   # <class 'int'>
+print(type(b))   # <class 'tuple'>
+```
+
+Run it.
+
+**Say:**
+"The comma is what makes the tuple. Remember: comma first, parentheses optional."
+
+**Pause.**
+
+"Actually — here is a surprising fact you can verify. The parentheses in a tuple literal are technically optional in most contexts. What makes something a tuple is the commas, not the parentheses."
+
+**Type:**
+
+```python
+point = 3, 7      # no parentheses!
+print(point)
+print(type(point))
+```
+
+Run it.
+
+**Say:**
+"Python sees `3, 7` as a tuple without parentheses. However, using parentheses is strongly preferred because it makes the intent explicit and the code easier to read. Always write `(3, 7)` in practice. But understanding that the comma is the mechanism helps when you are puzzled by a bug."
+
+### 10.2 Trying to modify a tuple
+
+**Say:**
+"The second pitfall is trying to use list-style mutation on a tuple. These all fail with a `TypeError`:"
+
+**Type (but pause before running each):**
+
+```python
+coords = (3, 7)
+
+# All of these raise errors:
+coords[0] = 10          # TypeError: does not support item assignment
+coords.append(5)        # AttributeError: 'tuple' has no attribute 'append'
+coords.remove(3)        # AttributeError: 'tuple' has no attribute 'remove'
 ```
 
 **Say:**
-"The `:.2f` in the f-string formats the float to two decimal places. That keeps the output tidy."
+"Do not run all three at once — Python stops at the first error. Run each one individually to read its message.
 
-### 8.6 Instructor circulation prompts
+The key diagnosis: if you see a `TypeError` about item assignment or an `AttributeError` about a missing method like `append`, ask yourself whether you accidentally used a tuple where you meant a list."
 
-As learners work, walk around and ask:
-- "Show me your tuple list. How many elements does it have?"
-- "Which line unpacks the x and y values?"
-- "Where do you collect the x values? Is that a list or a tuple?"
-- "What do `min()` and `max()` return when you pass in the x_values list?"
-- "What is the type of each element in your `coordinates` list?"
-
----
-
-## 9) Debrief and Share-Outs (~5 minutes)
-
-### 9.1 Bring the class back together
+### 10.3 Over-parenthesising and confusing tuples with grouped expressions
 
 **Say:**
-"Let's look at a few different solutions. The goal is not to find the single correct version—there are always multiple valid approaches. The goal is to identify what made certain solutions clean and readable."
+"A related trap is over-parenthesising and thinking you have a tuple when you do not.
 
-### 9.2 Ask targeted questions
+For example:"
 
-Ask:
-- "Who used tuple unpacking in their loop? What did your loop header look like?"
-- "Who can explain why we used a separate `x_values` list to collect x values before calling `min()` and `max()`?"
-- "Did anyone try to modify a tuple item during the lab? What happened?"
-- "Who tried the distance extension? What did the output look like?"
+**Type:**
 
-### 9.3 Model a concise explanation
-
-**Say:**
-"A strong explanation of this lab sounds like: 'I created a list where each element is an (x, y) tuple. I used a for loop with unpacking to print each point. I collected the x values into a separate list, then called min() and max() on that list.'
-
-That explanation shows you understood both the data structure and the process."
-
----
-
-## 10) Recap Script (~2 minutes)
-
-**Say:**
-"Today we introduced tuples. Here is what you should be able to say when you walk out:
-
-- A tuple is an ordered, immutable sequence. You create it with parentheses and commas.
-- You read from a tuple using indexing, just like a list. You cannot change items in place.
-- Single-item tuples require a trailing comma: `(5,)` not `(5)`.
-- Unpacking assigns each item in a tuple to a separate variable in one line: `x, y = point`.
-- A list of tuples is a very practical pattern for storing structured records like coordinates.
-
-The next hour continues Session 5. We move to sets: a collection that automatically removes duplicates and supports fast membership testing."
-
----
-
-## 11) Exit Ticket (~1 minute)
-
-Ask learners to answer verbally, in chat, or on paper:
-
-1. What does `(10,)` do that `(10)` does not?
-2. Write the one-line code that unpacks `point = (4, 9)` into two variables `x` and `y`.
-3. Name one situation where a tuple is a better choice than a list.
-4. What error do you get if you try to change an item in a tuple?
-
-**Expected direction of answers:**
-- `(10,)` is a single-item tuple; `(10)` is just the integer 10
-- `x, y = point`
-- fixed-size records (coordinates, RGB, function return values)
-- `TypeError: 'tuple' object does not support item assignment`
-
----
-
-## 12) Instructor Notes for the Transition to Hour 18
-
-**Say:**
-"We now have two sequence types in our toolkit: lists (mutable, ordered) and tuples (immutable, ordered). In the next hour, we add a third data structure: the set. Sets are unordered and contain no duplicates. They answer a completely different question: 'Is this value present, and how many unique values do I have?' That is a question you will need constantly in real programs."
-
-If learners seem shaky, reinforce these core ideas before moving on:
-- "A tuple cannot be changed after creation. That is the essential rule."
-- "Unpacking is the most useful thing you can do with a tuple: `a, b = my_tuple`."
-
----
-
-## Appendix: Instructor Reinforcement Notes for Hour 17
-
-### A) Board sketch for visual learners
-
-Draw this on the board if the room needs a visual anchor:
-
-```text
-List:  [3, 7]      ← can be changed
-Tuple: (3, 7)      ← cannot be changed
-
-Unpacking:
-x, y = (3, 7)
-x ← 3
-y ← 7
+```python
+result = (10 + 5)
+print(type(result))   # int, not tuple!
 ```
 
-Point to each element and ask: "What index is this?" Then ask: "What variable does this unpack into?"
+**Say:**
+"This is just arithmetic in parentheses. Python evaluates `10 + 5` and assigns the integer `15`.
 
-### B) Short extra practice prompts
+If you meant a tuple, you need the comma: `result = (15,)`.
 
-If you have two or three extra minutes, ask learners to answer these without typing first:
+The rule is simple: parentheses alone do not make a tuple. Commas make a tuple."
 
-1. If `point = (10, 20)`, what does `point[0]` return?
-2. If `color = (255, 128, 0)`, write the unpacking line.
-3. If I write `t = (42)`, is `t` a tuple?
-4. Can I use `len()` on a tuple?
-5. If `pairs = [(1, 2), (3, 4)]`, what does `for a, b in pairs` do on the first iteration?
+### 10.4 Unpack count mismatch
 
-### C) Instructor language for gentle correction
+**Say:**
+"One more pitfall: forgetting to match the number of variables to the size of the tuple during unpacking."
 
-When a learner makes a mistake:
-- "Check the type with `type()`. What does Python say it is?"
-- "Count the values in your tuple. Count your unpacking variables. Do they match?"
-- "Is that value something that should be able to change? If so, should we use a list instead?"
-- "Read the error name out loud. What does `TypeError` mean in plain English?"
+**Type:**
 
-### D) Coaching if learners ask about named tuples
+```python
+point = (3, 7, 5)      # three values
+x, y = point           # only two variables on the left
+```
 
-If a learner asks about `namedtuple` or `typing.NamedTuple`, say:
+**Say:**
+"This raises `ValueError: too many values to unpack`. Python expected to assign three values but only found two slots.
 
-"That is a great question, and it exists in Python—it lets you access tuple fields by name instead of index. But it is an Advanced-scope topic. For today, the important thing is to get comfortable with basic tuples and unpacking. Named tuples build on exactly what we are practicing right now."
-
-### E) Final teaching reminder to yourself
-
-The hour succeeds if learners leave with this mental model:
-
-"A tuple is a fixed, ordered record. I can read it, loop over it, and unpack it. I cannot change it. Unpacking is the most useful pattern: `x, y = point`."
-
-If they can create a list of tuples, unpack in a loop, and extract values for min/max computation, the hour has met its runbook goal.
+The fix is simple: match the count, or use `_` to discard values you do not need."
 
 ---
 
-## Speaker Notes: Scope Guardrails
+## 11) Optional Extension: Distance from Origin
 
-**Teach in this hour:**
-- Tuple creation with parentheses and commas
-- Immutability (cannot assign to an index after creation)
-- Tuple indexing (reading values by index)
-- Tuple unpacking into variables
-- Single-item tuple trailing-comma rule
-- List of tuples + unpacking in a for loop
+> **Instructor note:** Offer this only if learners finish the lab early and there is time remaining. This stays within Basics scope — we only use the `math` module's `sqrt` function and the exponentiation operator `**`. Do not introduce complex math or trigonometry.
 
-**Do NOT introduce in this hour:**
-- `collections.namedtuple` (out of scope — Advanced)
-- `typing.NamedTuple` (out of scope — Advanced)
-- Extended unpacking with `*` (out of scope — Advanced)
-- Tuple as a dictionary key (mention only if directly asked; do not demo)
-- `zip()` function (save for when functions are more established)
-- Comprehensions for generating tuple lists (out of scope for Basics)
-- Comparison of tuple performance vs list (not needed at Basics level)
-- `tuple()` constructor converting other types (not needed today)
+**Say:**
+"If you have finished the lab and want a stretch challenge, here it is.
 
-Keep the conceptual message simple and repeatable: **tuples are immutable, they unpack cleanly, and they are ideal for fixed-size records like coordinates.**
+For each sensor in your coordinate tracker, calculate the distance from the origin `(0, 0)`.
+
+The formula is the Pythagorean theorem: distance = √(x² + y²)
+
+In Python, that is `(x**2 + y**2) ** 0.5`, or you can use `math.sqrt(x**2 + y**2)` after `import math`.
+
+Try adding a line to your loop that prints the distance for each sensor."
+
+**Full extension solution:**
+
+```python
+import math
+
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+print("=== Sensor Positions and Distances from Origin ===")
+for point in sensors:
+    x, y = point
+    distance = math.sqrt(x**2 + y**2)
+    print(f"Sensor at x={x}, y={y}  |  Distance from origin: {distance:.2f}")
+```
+
+Run it.
+
+**Say:**
+"The `:.2f` in the f-string rounds the distance to two decimal places.
+
+`math.sqrt()` returns a float. For a point like `(3, 7)`, the distance is `√(9 + 49)` = `√58` ≈ `7.62`.
+
+This is a taste of how tuples connect naturally to geometric calculations in real programs."
+
+---
+
+## 12) Debrief, Recap, and Exit Ticket
+
+### 12.1 Recap the key ideas
+
+**Say:**
+"We covered a lot of ground in one hour. Let me recap the five most important things to take away.
+
+**First:** A tuple is an ordered, immutable collection. You create it with parentheses and commas: `(3, 7)`.
+
+**Second:** Immutability is a feature, not a limitation. It tells other programmers — and Python itself — that these values are not meant to change. If you try to change them, Python raises a `TypeError` immediately.
+
+**Third:** Tuple unpacking lets you assign the values of a tuple to named variables in one clean line: `x, y = point`. This is one of Python's most readable patterns.
+
+**Fourth:** The single-element tuple trap: `(42)` is an int, `(42,)` is a tuple. The comma is what matters.
+
+**Fifth:** Use a tuple when your data is a fixed record with known parts. Use a list when your collection grows and changes. A list of tuples — like our sensor list — is a natural and common combination."
+
+### 12.2 Connections to what comes next
+
+**Say:**
+"In the next hours, we will see tuples appear again when we work with dictionaries — specifically, when we iterate over a dictionary's key-value pairs, we will unpack them as two-element tuples. So the unpacking pattern you just practised will keep paying off.
+
+You will also see tuples appear naturally when functions return multiple results. Returning a tuple is the idiomatic Python way to 'return two things at once'."
+
+### 12.3 Exit ticket
+
+**Say:**
+"Before we close, I want to give you one question to think about — either discuss it with a neighbour or just reflect for thirty seconds.
+
+Here is the question:
+
+**Why might you choose a tuple over a list?**
+
+Think about what you have learned this hour. Name at least two reasons."
+
+Give learners 60 seconds to think or discuss briefly, then collect a few answers.
+
+**Good answers to listen for:**
+- "Because the data should not change — immutability protects it."
+- "Because the collection represents a fixed record with a known structure."
+- "Because it communicates intent — a reader knows the values are fixed."
+- "Because it is slightly more memory-efficient than a list for the same data." *(accept this if offered; do not prioritise it)*
+
+**Say:**
+"Those are excellent reasons. The most important one, in my view, is intent and communication. Tuples are a design choice. When you write a tuple, you are making a statement: 'these values belong together and they are not meant to change'. That kind of clarity makes programs easier to understand, maintain, and trust."
+
+### 12.4 Final thought
+
+**Say:**
+"Congratulations on completing Hour 17. You have added a new data structure to your toolbox, and — more importantly — you have started thinking about *why* to choose one data structure over another. That kind of thinking is what separates someone who knows Python syntax from someone who writes good Python programs.
+
+See you in Hour 18."
+
+---
+
+## Appendix A: Complete Demo File
+
+```python
+# hour17_tuples_demo.py
+# Day 5, Hour 1 — Tuples + Unpacking
+
+# --- Part 1: Create and read coordinate tuples ---
+origin = (0, 0)
+home = (3, 7)
+destination = (-2, 5)
+
+print(f"Origin:      {origin}")
+print(f"Home:        {home}")
+print(f"Destination: {destination}")
+
+# --- Part 2: Unpack and use the values ---
+x, y = home
+print(f"Home x-coordinate: {x}")
+print(f"Home y-coordinate: {y}")
+
+# --- Part 3: Immutability (deliberate error — comment out before lab) ---
+# home[0] = 10  # TypeError: 'tuple' object does not support item assignment
+
+# --- Part 4: Function returning a tuple ---
+def get_midpoint(
+    point_a: tuple[int, int],
+    point_b: tuple[int, int],
+) -> tuple[float, float]:
+    """Return the midpoint between two (x, y) coordinates."""
+    mid_x = (point_a[0] + point_b[0]) / 2
+    mid_y = (point_a[1] + point_b[1]) / 2
+    return (mid_x, mid_y)
+
+
+result = get_midpoint(home, destination)
+print(f"Midpoint: {result}")
+
+mid_x, mid_y = get_midpoint(home, destination)
+print(f"Mid x = {mid_x}, Mid y = {mid_y}")
+
+# --- Part 5: A list of coordinate tuples ---
+path = [
+    (0, 0),
+    (1, 3),
+    (4, 2),
+    (6, 8),
+    (5, 1),
+]
+
+print("\nPath coordinates:")
+for point in path:
+    x, y = point
+    print(f"  x={x}, y={y}")
+```
+
+---
+
+## Appendix B: Complete Lab Solution
+
+```python
+# hour17_lab_coords.py
+# Lab: Coordinate Tracker
+
+# Step 1 — Five sensor positions as (x, y) tuples in a list
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+# Step 2 — Print each sensor using tuple unpacking
+print("=== Sensor Positions ===")
+for point in sensors:
+    x, y = point
+    print(f"Sensor at x={x}, y={y}")
+
+# Step 3 — Extract all x values into a separate list
+x_values: list[int] = []
+for point in sensors:
+    x, y = point
+    x_values.append(x)
+
+# Step 4 — Compute and display min and max x
+print()
+print(f"Minimum x: {min(x_values)}")
+print(f"Maximum x: {max(x_values)}")
+```
+
+---
+
+## Appendix C: Optional Extension Solution
+
+```python
+# hour17_lab_coords_extension.py
+# Lab Extension: Distance from Origin
+import math
+
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+print("=== Sensor Positions and Distances from Origin ===")
+for point in sensors:
+    x, y = point
+    distance = math.sqrt(x**2 + y**2)
+    print(f"Sensor at x={x}, y={y}  |  Distance from origin: {distance:.2f}")
+
+x_values: list[int] = []
+for point in sensors:
+    x, _ = point
+    x_values.append(x)
+
+print()
+print(f"Minimum x: {min(x_values)}")
+print(f"Maximum x: {max(x_values)}")
+```
+
+---
+
+## Appendix D: Quick-Reference Card (share with learners)
+
+| Concept | Syntax | Example |
+|---|---|---|
+| Create a tuple | `name = (val1, val2)` | `point = (3, 7)` |
+| Single-element tuple | `name = (val,)` | `solo = (42,)` |
+| Access by index | `name[i]` | `point[0]` → `3` |
+| Unpack two values | `a, b = name` | `x, y = point` |
+| Unpack, ignore one | `a, _ = name` | `val, _ = measurement` |
+| Swap two variables | `a, b = b, a` | `x, y = y, x` |
+| Check membership | `val in name` | `3 in point` → `True` |
+| Iterate over tuple | `for v in name:` | `for v in point:` |
+| List of tuples | `[(...), (...)]` | `[(0,0),(1,3)]` |
+| Immutability error | attempt `name[i] = v` | `TypeError` |

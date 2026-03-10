@@ -1,4 +1,4 @@
-# Day 5, Hour 2: Sets – Uniqueness + Membership (Course Hour 18)
+# Day 5, Hour 2: Sets — Uniqueness + Membership (Course Hour 18)
 **Python Programming Basics – Session 5**
 
 **Course:** Python Programming (Basics)  
@@ -11,674 +11,981 @@
 
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
-> **Instructor note:** This document is written as a detailed read-aloud teaching guide. This hour introduces sets as the third data structure of Session 5. The two key messages are: (1) sets automatically remove duplicates, and (2) sets support fast membership testing. Keep the scope tight. Teach set literals, `add()`, `in` membership checks, and `len()` for unique counts. Union and intersection should be mentioned at a conceptual level only—do not require learners to use operators (`|`, `&`) or methods (`union()`, `intersection()`) in the lab. Do not introduce `frozenset`, set comprehensions, `discard()`, `remove()`, or `difference()`. The lab is the Unique Visitors counter.
+> **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 18. The entire hour focuses on sets: what they are, why uniqueness is built in, how to use them for fast membership checks, and how a few key operations (union, intersection, difference) solve real problems. Stay firmly within Basics scope — do not introduce frozensets, set comprehensions, or the `collections` module here. The key outcomes are (1) using `set()` to strip duplicates from a list, (2) checking membership with `in`, (3) building intuition for when a set beats a list, and (4) understanding why sets are unordered and how to work with that. The lab ties everything together in a practical "Unique Visitors" program that learners build step by step. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip or abbreviate the conceptual explanations.
 
 ---
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
 "By the end of this hour, you will be able to:
-1. Create a set using curly braces and explain why it differs from a list.
-2. Add items to a set with `add()` and observe that duplicates are silently ignored.
-3. Check whether a value is present in a set using `in`.
-4. Convert a list to a set to remove duplicates, and count the unique values with `len()`.
-5. Explain why sets are unordered and what that means for display.
-6. Use `sorted()` to produce an alphabetical display of set contents.
-7. Build a Unique Visitors program that collects names, removes duplicates automatically, and reports the unique count.
 
-This hour answers a question that comes up constantly in real programs: 'I have a collection of values, but some of them repeat. How many unique ones do I have?'"
+1. Create a set using a set literal and using the `set()` constructor to convert a list, and explain in plain language what makes a set different from a list or tuple.
+2. Add items to a set with `add()`, remove items safely with `discard()`, and describe why sets never store duplicate values.
+3. Check whether a value exists in a set using the `in` operator and explain why this is conceptually faster than checking a list.
+4. Use union (`|`), intersection (`&`), and difference (`-`) to combine or compare two sets, and give a real example of when each operation is useful.
+5. Build the Unique Visitors program: collect ten names from the user, store them in a list, convert to a set, and report the unique count — then explain why the duplicate names disappeared."
 
 ---
 
-## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
+## 1) Agenda + Timing
 
-- **0:00–0:05** Recap of tuples, transition to sets, and motivation for uniqueness
-- **0:05–0:15** What a set is, how to create one, and the automatic-uniqueness property
-- **0:15–0:25** `add()`, membership with `in`, and converting a list to a set
-- **0:25–0:32** Sets are unordered: what this means and how `sorted()` helps display
-- **0:32–0:42** Union and intersection: conceptual overview only
-- **0:42–0:57** Guided lab: Unique Visitors
-- **0:57–1:00** Debrief, recap, and exit ticket
-
----
-
-## 2) Instructor Setup Checklist (before class)
-
-- Open a clean file such as `hour18_sets_demo.py`.
-- Prepare a list of names with deliberate duplicates: `["Alice", "Bob", "Alice", "Charlie", "Bob", "Alice"]`.
-- Be ready to show the contrast between printing a list vs printing a set of the same values.
-- Be ready to demonstrate that set order is not guaranteed (the order may vary between runs).
-- Have a short word list prepared for an optional second demo: `["cat", "dog", "cat", "fish", "dog"]`.
-- If some learners type slowly, have a starter file with comments only ready.
-
-**Say:** "Please type with me today. The set operations are quick to learn, but seeing the output change in real time is what makes the concept click."
+- **0:00–0:05** Reconnect to Hour 17 (tuples); set up the problem sets solve
+- **0:05–0:14** Core concept: what a set is, analogy, literal syntax, `set()` constructor
+- **0:14–0:22** Adding, removing, and clearing: `add()`, `discard()`, `remove()`, `pop()`, `clear()`
+- **0:22–0:28** Membership checks: `in` with sets vs lists, conceptual speed difference
+- **0:28–0:34** Set operations: union, intersection, difference with classroom examples
+- **0:34–0:39** Sets are unordered — demo and `sorted()` as the display fix
+- **0:39–0:43** Live demo: list of names → set (typed live in class)
+- **0:43–0:58** Guided lab: Unique Visitors
+- **0:58–1:00** Debrief, recap, and exit ticket
 
 ---
 
-## 3) Opening Script: From Ordered to Unique (~5 minutes)
+## 2) Instructor Setup Checklist
 
-### 3.1 Recap the data structures covered so far
+- Open two clean files before class: `hour18_sets_demo.py` for the live demo, and `hour18_lab_visitors.py` with blank comment placeholders as a starter for learners.
+- Have a Python REPL terminal ready for quick interactive experiments in Sections 4 and 5.
+- Prepare to type the exact "wrong" code first (using `{}` for an empty set) — this is a planned pitfall demonstration, not an accident.
+- Confirm learners have completed Hour 17 (tuples) and Hour 15–16 (lists deep dive). This hour builds directly on list knowledge.
+- Have a whiteboard or screen annotation tool ready to sketch the "bag of unique tags" analogy.
 
-**Say:**
-"Welcome back. In the last hour we covered tuples: ordered, immutable sequences that are great for fixed-size records like coordinates.
-
-Before tuples, we spent all of Session 4 on lists: ordered, mutable collections that grow and shrink as needed.
-
-Both of those structures care about order. Both allow duplicates. If I have `['cat', 'cat', 'cat']` in a list, Python keeps all three.
-
-Today we learn a structure that cares about neither order nor duplicates. It cares only about one question: is this value present or not?"
-
-### 3.2 Real-world motivation
-
-**Say:**
-"Here is a situation you will recognize.
-
-Imagine a website has a log of every page visit. Over the course of a day, many visitors come and go. Some visitors arrive once. Some arrive five or ten times.
-
-At the end of the day, the site owner wants to know: 'How many unique visitors did I have today?' Not how many visits—how many distinct people.
-
-If you store every visit in a list, you have to count carefully and avoid duplicates in your logic. If you use a set, the problem nearly solves itself. A set will hold only one copy of each visitor's name, no matter how many times you try to add them.
-
-That is the core use case for sets: uniqueness tracking."
-
-### 3.3 A second motivating example
-
-**Say:**
-"Here is another one. You are building a word-count program. Before you count frequencies, you want to know: 'How many distinct words appear in this document?' A set gives you the answer immediately.
-
-Or: you have a survey where people can choose their favorite programming languages, and many people give the same answers. A set collapses all the repeated answers into one entry per language.
-
-The pattern is always the same: you have a pile of values, some repeated, and you want the unique ones. That is a set."
+**Say:** "Get your editor open and a fresh empty file ready. The best way to learn sets is to type the code yourself and watch what happens. This hour will be very hands-on."
 
 ---
 
-## 4) Core Concept: What a Set Is (~10 minutes)
+## 3) Opening Script: Reconnect to Earlier Learning (~5 minutes)
 
-### 4.1 Set syntax
+### 3.1 Quick recap from Hour 17
 
 **Say:**
-"A set is created with curly braces and comma-separated values."
+"Last hour we learned about tuples. We found out that a tuple is like a locked list — it holds an ordered sequence of values that cannot be changed after creation. We used tuples for (x, y) coordinates and saw how unpacking lets us pull those values into named variables cleanly.
 
-**Type:**
+Tuples are the right tool when you have a small, fixed group of related values that belong together and should never change.
 
-```python
-languages = {"Python", "Java", "Python", "Go", "Java"}
-print(languages)
-print(type(languages))
+Now, today's question is different. Today we are going to think about a situation that comes up constantly in real programs: what do you do when you need a collection where every item is unique — where duplicates simply should not exist?"
+
+### 3.2 The everyday problem of duplicates
+
+**Say:**
+"Let me paint a picture. Imagine you are running a conference and you have a sign-in sheet. Over the course of the day, people walk up and write their name. The sheet looks like this:
+
+```
+Alice
+Bob
+Alice
+Carol
+Bob
+Bob
+David
+Alice
 ```
 
-Run it.
+At the end of the day, someone asks: 'How many unique attendees did we have today?'
+
+You know the answer is four — Alice, Bob, Carol, and David — but to get that answer from the raw list you have to scan through and mentally filter out the repeats.
+
+Now imagine this is not eight names but eight thousand names. Or eighty thousand. Filtering duplicates by hand — or even by writing a loop that checks every entry against every other entry — gets expensive fast.
+
+Python has a data structure built precisely for this problem. It is called a **set**, and its defining property is simple: a set can only ever contain each value once. No duplicates. Not because you have to prevent them manually — because the structure itself refuses to store them."
+
+### 3.3 Transition and roadmap
 
 **Say:**
-"Look at the output. Python only kept one copy of each value. 'Python' appeared twice in our literal, but the set contains it only once. Same with 'Java'.
+"Here is what we are going to cover this hour. First, we will understand what a set is and how to create one. Then we will look at how to add and remove items. After that we will explore why sets are so good at answering the question 'is this value in here?' — the membership check. We will also look at three simple operations — union, intersection, and difference — that let you combine or compare two sets in ways that are very useful in real programs. And we will finish with a hands-on lab where you build a Unique Visitors program from scratch.
 
-`type(languages)` confirms we have a `set` object.
+Let's start."
 
-Notice something else: the order may not match the order I typed the values. When I run this on my machine, I might see `{'Go', 'Python', 'Java'}`. If I run it again, I might see a different order.
+---
 
-This is not a bug. Sets are intentionally unordered. Python uses an internal algorithm called hashing to store values efficiently, and the display order is a side effect of that algorithm, not something Python guarantees."
+## 4) Concept: What Is a Set?
 
-### 4.2 Empty set — the one exception to curly-brace syntax
+### 4.1 The bag-of-unique-tags analogy
 
 **Say:**
-"There is one important exception. If you want an empty set, you cannot use just `{}`. That creates an empty dictionary, which we will study in the next two hours."
+"Think of a set like a bag of tags. Each tag has a value written on it. Here is the key rule: you can only have one tag with any given value in the bag. If you try to drop in a tag that says 'Alice' and there is already a tag in the bag that says 'Alice', the bag rejects it. You end up with exactly one 'Alice' tag, no matter how many times you try to add it.
 
-**Type:**
+Now compare that to a list, which is more like a queue of numbered tickets. You can have as many tickets with the same number as you like — the list just keeps adding them to the end. Lists care about order and allow duplicates. Sets do not care about order and refuse duplicates.
+
+That is the core trade-off in one sentence: **lists are ordered and allow duplicates; sets are unordered and enforce uniqueness.**"
+
+### 4.2 Set literal syntax
+
+**Say:**
+"Let's look at the syntax. A set literal uses curly braces, just like this:"
 
 ```python
-# This creates an empty DICTIONARY, not a set
-not_a_set = {}
-print(type(not_a_set))
-
-# This creates an empty SET
-real_empty_set = set()
-print(type(real_empty_set))
+# A set literal — curly braces with comma-separated values
+fruits: set = {"apple", "banana", "cherry"}
+print(fruits)
 ```
 
-Run it.
-
 **Say:**
-"This is a common source of confusion. Remember: `{}` is an empty dict. `set()` is an empty set.
+"Type that into your REPL and run it. Notice two things: first, there are no duplicates (we only put one of each in). Second, when Python prints the set, the order might be different from the order you typed the items in. We will talk about why that is in a moment — it is one of the most important things to understand about sets.
 
-For the lab today, you will start with a list and convert it to a set, so you will not need an empty set to begin with. But know this rule exists."
-
-### 4.3 `add()` and the no-duplicate contract
-
-**Type:**
+Now let me show you what happens when you deliberately add a duplicate right in the literal:"
 
 ```python
-visitors = set()
+# Python silently keeps only one copy
+colours: set = {"red", "blue", "red", "green", "blue"}
+print(colours)  # Only 3 items: {'red', 'blue', 'green'}
+print(len(colours))  # 3
+```
+
+**Say:**
+"Try that. Python does not raise an error. It does not warn you. It just quietly keeps one copy of each value and discards the rest. That is sets doing their job automatically."
+
+### 4.3 The `set()` constructor — converting a list to a set
+
+**Say:**
+"The most common way to use a set in practice is not to write a set literal. It is to start with a list — which you already know how to build — and convert it.
+
+That is where the `set()` constructor comes in."
+
+```python
+# Start with a list that has duplicates
+names_list: list[str] = ["Alice", "Bob", "Alice", "Carol", "Bob", "Bob", "David"]
+
+# Convert to a set — duplicates vanish automatically
+unique_names: set[str] = set(names_list)
+
+print(unique_names)        # {'Alice', 'Bob', 'Carol', 'David'} (order may vary)
+print(len(unique_names))   # 4
+```
+
+**Say:**
+"Let me read that code out loud so we absorb what is happening.
+
+We start with `names_list` — a regular Python list with seven items, including two Alices, three Bobs, and a Carol and a David.
+
+We call `set(names_list)`, passing the whole list in. Python reads through every item, and for each one, if it has not seen that value before, it keeps it. If it has seen it before, it throws it away. The result is a new set with four items: one Alice, one Bob, one Carol, one David.
+
+That is the duplicate-removal pattern you will use over and over again in real programs. Build a list in whatever way makes sense — from user input, from a file, from an API — then call `set()` on it to get the unique values."
+
+### 4.4 Important distinction: `{}` is NOT an empty set
+
+**Say:**
+"Before we go further, I want to flag a trap that catches almost every Python beginner at some point. Let me show you two things that look similar but are completely different:"
+
+```python
+# This creates an empty DICTIONARY, not an empty set
+empty_dict = {}
+print(type(empty_dict))  # <class 'dict'>
+
+# This creates an empty SET — use set() with no arguments
+empty_set = set()
+print(type(empty_set))   # <class 'set'>
+```
+
+**Say:**
+"In Python, a pair of empty curly braces `{}` creates an empty *dictionary*, not an empty set. Dictionaries also use curly braces, and when Python sees `{}` it defaults to dictionary. To get an empty set you must write `set()` explicitly.
+
+This is one of the most common beginner mistakes with sets. We will come back to it in the pitfalls section, but I want to plant that flag in your memory right now: **empty set = `set()`, not `{}`**."
+
+### 4.5 Sets hold hashable values
+
+**Say:**
+"One more rule before we move on. Sets can only store values that Python considers *hashable* — which in practical terms means values that are immutable: strings, numbers, tuples of immutable values, booleans.
+
+Lists cannot go inside sets because lists can be changed (they are mutable). Dictionaries cannot go inside sets for the same reason. If you try, Python will raise a `TypeError` with the message 'unhashable type: list'.
+
+At the Basics level, this mostly means: sets of strings, sets of numbers, and sets of tuples are fine. Sets of lists are not. You do not need to understand *why* hashability works the way it does right now — just know the practical rule."
+
+```python
+# Fine — strings, ints, tuples are hashable
+valid_set: set = {"hello", 42, (1, 2)}
+
+# This will raise TypeError
+try:
+    invalid_set = {[1, 2, 3]}  # list inside a set
+except TypeError as e:
+    print(f"Error: {e}")  # Error: unhashable type: 'list'
+```
+
+---
+
+## 5) Adding and Removing Items
+
+### 5.1 The `add()` method
+
+**Say:**
+"Sets are mutable — you can add and remove items after creation. But the methods look a little different from list methods because the rules are different.
+
+To add a single item to an existing set, use `add()`:"
+
+```python
+visitors: set[str] = {"Alice", "Bob"}
+print(visitors)  # {'Alice', 'Bob'}
+
+# Add a new name
+visitors.add("Carol")
+print(visitors)  # {'Alice', 'Bob', 'Carol'}
+
+# Try to add a name that already exists — nothing changes
 visitors.add("Alice")
-visitors.add("Bob")
-visitors.add("Alice")  # duplicate
-visitors.add("Charlie")
-visitors.add("Bob")    # duplicate
-print(visitors)
-print(f"Unique visitors: {len(visitors)}")
+print(visitors)  # Still {'Alice', 'Bob', 'Carol'} — no duplicate
+print(len(visitors))  # 3
 ```
 
-Run it.
+**Say:**
+"Notice: adding a value that is already in the set does nothing. No error, no warning, no second copy. The set stays the same. This is the uniqueness guarantee working for you — you never need to check 'is this already in here?' before calling `add()`. The set checks for you."
+
+### 5.2 The `remove()` and `discard()` methods
 
 **Say:**
-"We called `add()` five times but the set only has three elements. The duplicate calls for 'Alice' and 'Bob' were silently ignored.
-
-This is the no-duplicate contract of a set. Calling `add()` with a value that already exists is not an error—Python simply does nothing. The value is already there.
-
-`len(visitors)` returns `3`, the actual unique count, not the five times we called `add()`."
-
-**Ask learners:**
-"If I call `visitors.add('Alice')` ten more times, what does `len(visitors)` return?"
-
-Pause for answers, then confirm: still `3`.
-
-### 4.4 Membership testing with `in`
-
-**Type:**
+"To remove an item, you have two options: `remove()` and `discard()`. They do the same thing when the item exists. They behave differently when the item does not."
 
 ```python
-visitors = {"Alice", "Bob", "Charlie"}
+visitors: set[str] = {"Alice", "Bob", "Carol", "David"}
 
-print("Alice" in visitors)
-print("Dave" in visitors)
-print("Dave" not in visitors)
+# remove() raises KeyError if the item is not found
+visitors.remove("Carol")
+print(visitors)  # {'Alice', 'Bob', 'David'}
+
+try:
+    visitors.remove("Zara")  # Zara is not in the set
+except KeyError as e:
+    print(f"KeyError: {e}")  # KeyError: 'Zara'
+
+# discard() silently does nothing if the item is not found
+visitors.discard("Zara")   # No error
+visitors.discard("Bob")    # Bob IS here, so this works normally
+print(visitors)  # {'Alice', 'David'}
 ```
 
-Run it.
+**Say:**
+"The rule of thumb is easy: if you *know* the item is in the set, use `remove()`. If you are not sure and you do not want an error if it is missing, use `discard()`. In most beginner programs, `discard()` is the safer default."
+
+### 5.3 The `pop()` method
 
 **Say:**
-"Membership testing with `in` works the same way for sets as it does for lists and tuples. The syntax is identical.
+"`pop()` removes and returns *some* item from the set. The catch is that because sets are unordered, you have no control over which item gets removed. It is essentially random from your perspective."
 
-The important difference is that for very large collections, `in` on a set is dramatically faster than `in` on a list. The reason is the internal hashing—Python can jump directly to where a value would be stored rather than checking each item one by one. You do not need to understand hashing deeply today. Just know: if you need fast membership checks on large data, a set is the right tool."
+```python
+colours: set[str] = {"red", "green", "blue", "yellow"}
+removed = colours.pop()  # Removes some item — we don't know which
+print(f"Removed: {removed}")
+print(f"Remaining: {colours}")
+```
+
+**Say:**
+"You will rarely use `pop()` on a set in everyday code. It exists for cases where you need to process items one by one and do not care about order. For now, just know it is there."
+
+### 5.4 The `clear()` method
+
+**Say:**
+"`clear()` removes every item from the set, leaving you with an empty set:"
+
+```python
+temp_set: set[str] = {"a", "b", "c"}
+temp_set.clear()
+print(temp_set)   # set()
+print(len(temp_set))  # 0
+```
+
+**Say:**
+"Notice that when Python prints an empty set, it shows `set()` rather than `{}`. That is consistent with what we said earlier — `{}` is always a dictionary in Python's display."
 
 ---
 
-## 5) Converting a List to a Set (~7 minutes)
+## 6) Membership Checks
 
-### 5.1 The conversion pattern
+### 6.1 Using `in` with a set
 
 **Say:**
-"In real programs, you often start with a list—because you collected data over time using `append()`—and then convert to a set to deduplicate."
+"One of the most valuable things about sets — maybe the most valuable — is how fast they answer the question 'is this value in here?'
 
-**Type:**
+The syntax is the same `in` keyword you already know from lists:"
 
 ```python
-raw_names = ["Alice", "Bob", "Alice", "Charlie", "Bob", "Alice", "Dave"]
-print(f"Raw list has {len(raw_names)} entries.")
+approved_users: set[str] = {"alice", "bob", "carol", "david", "eva"}
 
-unique_names = set(raw_names)
-print(f"Unique names: {unique_names}")
-print(f"Unique count: {len(unique_names)}")
+username = "carol"
+if username in approved_users:
+    print(f"Welcome, {username}!")
+else:
+    print("Access denied.")
+
+username = "zara"
+if username in approved_users:
+    print(f"Welcome, {username}!")
+else:
+    print("Access denied.")  # This one prints
 ```
 
-Run it.
+**Say:**
+"Clean and readable. `username in approved_users` reads almost like English: 'is username in approved_users?' — yes or no."
+
+### 6.2 Sets vs lists for membership — conceptual speed difference
 
 **Say:**
-"The pattern is simple: `set(my_list)` converts a list into a set, removing all duplicates in one step.
+"Here is where sets have a real advantage over lists for this kind of check, and I want you to understand *why* even if we are not going to run benchmarks today.
 
-The original list had seven entries with repeats. The set has four unique values.
+When you check `item in my_list`, Python starts at the beginning of the list and checks item one by one: 'Is it the first element? No. Is it the second? No...' and so on, until it either finds the item or reaches the end. If the item is at the end of a list with a million elements, Python checks a million elements.
 
-This is one of the most useful one-liners in Python for data cleaning. You will use this in your own work."
+When you check `item in my_set`, Python uses a mathematical trick called *hashing*. It computes a numeric fingerprint of your item and uses that fingerprint to jump almost directly to where the item would be stored — like looking up a word in a dictionary that has an alphabetical index versus scanning every single page. The check takes roughly the same time whether the set has five items or five million items.
 
-### 5.2 `sorted()` for ordered display
+The practical lesson: **if you are going to check membership many times and you do not need order or duplicates, use a set instead of a list.**
 
-**Say:**
-"Since sets are unordered, printing a set directly gives unpredictable output—which is fine for a quick check, but not ideal if you want to show the user a clean alphabetical list.
-
-The solution is `sorted()`. `sorted()` takes any iterable—including a set—and returns a list of the values in sorted order."
-
-**Type:**
+Let's see a side-by-side example that illustrates the idea:"
 
 ```python
-unique_names = {"Dave", "Alice", "Charlie", "Bob"}
-print("Raw set:", unique_names)
-print("Sorted display:", sorted(unique_names))
+# Same data — once as a list, once as a set
+blocked_words_list: list[str] = ["spam", "scam", "fake", "fraud", "phishing"]
+blocked_words_set: set[str] = {"spam", "scam", "fake", "fraud", "phishing"}
+
+message_word = "fraud"
+
+# Both work correctly — the difference is how Python searches internally
+if message_word in blocked_words_list:
+    print("List check: word is blocked.")
+
+if message_word in blocked_words_set:
+    print("Set check: word is blocked.")
 ```
 
-Run it a couple of times.
-
 **Say:**
-"Every time we run `sorted(unique_names)`, we get the same alphabetical order. The underlying set itself is still unordered, but `sorted()` gives us a predictable view of the data for display purposes.
-
-For the lab today, I recommend using `sorted()` when you print the unique visitor names, so the output is clear and consistent."
-
-### 5.3 You cannot access a set by index
-
-**Say:**
-"Before we move to the lab, I want to flag one more characteristic that surprises learners."
-
-**Type:**
-
-```python
-visitors = {"Alice", "Bob", "Charlie"}
-# print(visitors[0])  # This will fail
-```
-
-Uncomment the second line and run.
-
-**Say:**
-"Sets do not support indexing. You cannot say `visitors[0]`. Because a set has no guaranteed order, the concept of 'the item at position 0' does not exist.
-
-This is why we use `sorted()` to produce a list first if we need indexed access or display in a specific order.
-
-For the lab, you only need to print unique values and count them. Neither of those requires indexing."
-
-Re-comment the line.
+"Both produce the same answer. The set check is conceptually faster for large collections — but for five items, you will never notice the difference. The point is to build the habit: when the collection is a lookup table and you do not care about order or duplicates, reach for a set."
 
 ---
 
-## 6) Union and Intersection: Conceptual Overview (~5 minutes)
-
-### 6.1 Set operations in plain English
+## 7) Set Operations at a Conceptual Level
 
 **Say:**
-"Sets come from mathematics, and they support mathematical set operations. I want to give you a conceptual overview of two common ones: union and intersection.
+"Sets in mathematics have three fundamental operations that let you combine or compare two sets. Python implements all three with simple operators. You do not need to write any loops — Python does the work. Let me walk through each one."
 
-I am not asking you to use these in the lab today. But knowing they exist will save you time in real programs, and they may appear in later exercises."
-
-### 6.2 Union
+### 7.1 Setup — two classroom rosters
 
 **Say:**
-"Union answers: what values appear in either set, or in both?"
-
-**Type:**
+"To make these concrete, let's use two class rosters as our example. Imagine you are coordinating two optional workshops at the conference:"
 
 ```python
-set_a = {"Alice", "Bob", "Charlie"}
-set_b = {"Charlie", "Dave", "Eve"}
+# Students in the Python workshop
+python_workshop: set[str] = {"Alice", "Bob", "Carol", "David", "Eva"}
 
-union_result = set_a | set_b
-print("Union:", union_result)
+# Students in the Data workshop
+data_workshop: set[str] = {"Carol", "Eva", "Frank", "Grace", "David"}
 ```
 
-Run it.
+### 7.2 Union (`|`) — everyone in either group
 
 **Say:**
-"The union contains all values from both sets. 'Charlie' appears in both, but since sets have no duplicates, it appears only once in the result.
-
-The `|` operator is the union operator for sets. There is also a `.union()` method that does the same thing."
-
-### 6.3 Intersection
-
-**Say:**
-"Intersection answers: what values appear in both sets at the same time?"
-
-**Type:**
+"The **union** of two sets gives you every item that appears in *either* set — or in both. Think of it as 'everyone who attended at least one workshop.' In Python, the union operator is the pipe character `|`:"
 
 ```python
-intersection_result = set_a & set_b
-print("Intersection:", intersection_result)
+# Union: all students in either workshop
+all_students = python_workshop | data_workshop
+print(all_students)
+# {'Alice', 'Bob', 'Carol', 'David', 'Eva', 'Frank', 'Grace'}
 ```
 
-Run it.
+**Say:**
+"Notice Carol, Eva, and David attended both workshops, but they only appear once in the result — because it is a set. That is exactly right. We want a list of unique people who attended any workshop, not a count of attendances.
+
+The union answers the question: 'Give me everyone.'"
+
+### 7.3 Intersection (`&`) — only those in both groups
 
 **Say:**
-"Only 'Charlie' appears in both sets, so the intersection contains only 'Charlie'.
+"The **intersection** of two sets gives you only the items that appear in *both* sets — the overlap. Think of it as 'students who attended both workshops.' In Python, the intersection operator is the ampersand `&`:"
 
-The `&` operator is the intersection operator.
+```python
+# Intersection: students who attended BOTH workshops
+attended_both = python_workshop & data_workshop
+print(attended_both)
+# {'Carol', 'Eva', 'David'}
+```
 
-Use case: imagine you have a set of users who logged in on Monday and a set of users who logged in on Tuesday. The intersection tells you which users logged in on both days.
+**Say:**
+"Only Carol, Eva, and David are in both sets. Alice, Bob, Frank, and Grace each attended only one. The intersection filters down to just the overlap.
 
-Again, you will not be asked to use these operators in today's lab. Just know they exist and what they do."
+The intersection answers the question: 'Give me only those who are in all groups.'
+
+Real-world use: imagine running a survey about two products. Who completed both surveys? Intersection. Who bought both products? Intersection. Who is in both your email list and your social-media followers? Intersection."
+
+### 7.4 Difference (`-`) — in one but not the other
+
+**Say:**
+"The **difference** of two sets gives you the items that are in the first set but *not* in the second. Think of it as 'students who attended only the Python workshop, not the Data workshop.' In Python, the difference operator is the minus sign `-`:"
+
+```python
+# Difference: in Python workshop but NOT in data workshop
+python_only = python_workshop - data_workshop
+print(python_only)
+# {'Alice', 'Bob'}
+
+# You can flip it too: in data workshop but NOT in python workshop
+data_only = data_workshop - python_workshop
+print(data_only)
+# {'Frank', 'Grace'}
+```
+
+**Say:**
+"The order matters for difference — `A - B` is not the same as `B - A`. `python_workshop - data_workshop` gives you people in the Python workshop who skipped the Data workshop. Flip it, and you get Data workshop attendees who skipped Python.
+
+Real-world use: you send a marketing email to list A. You also have list B of people who already unsubscribed. `A - B` is the safe list of people you can contact.
+
+Or: you have a list of tasks to do today (set A) and a list of tasks already completed (set B). `A - B` is your remaining to-do list."
+
+### 7.5 Quick summary table
+
+**Say:**
+"Here is a summary you can refer back to:"
+
+```
+Operation  | Operator | Plain English question
+-----------|----------|-------------------------------------------
+Union      |    |     | Who is in either (or both) groups?
+Intersection|   &     | Who is in ALL groups (the overlap)?
+Difference |    -     | Who is in the first group but NOT the second?
+```
+
+**Say:**
+"You do not need to memorise these right now. Just know that they exist, that they use simple symbols, and that they let you compare collections without writing loops. We will practice them more in later sessions."
 
 ---
 
-## 7) Live Demo: Putting It Together (~5 minutes)
+## 8) Sets Are Unordered — What That Means
+
+### 8.1 Demonstrating the lack of order
 
 **Say:**
-"Let me now run a clean end-to-end demo that mirrors the lab structure closely."
+"I mentioned several times that sets are unordered. Let me be precise about what that means and why it matters.
 
-**Type:**
+When you create a set, Python internally arranges the items using a hashing system that is optimised for fast lookups. That arrangement has nothing to do with the order you typed the items in, the order you added them, or alphabetical order. Every time you print a set, the items may appear in a completely different order.
+
+Let me show you:"
+
+```python
+# Create the same set three different ways — notice the print order
+tags: set[str] = {"python", "beginner", "coding", "tutorial", "free"}
+print(tags)
+# Output might be: {'free', 'beginner', 'coding', 'python', 'tutorial'}
+# ...but it could be different on your machine or in a different run
+```
+
+**Say:**
+"If you run this multiple times, or run it on different computers, the order of the printed output may vary. This is not a bug. It is the expected behaviour of sets.
+
+The practical implication: **never write code that relies on the order of items in a set.** Do not assume the first item you added will be first when you iterate. Do not assume alphabetical order. Assume no order at all."
+
+### 8.2 Why this catches beginners off guard
+
+**Say:**
+"Coming from lists, where the order is always preserved, this feels strange. Here are the two situations where it bites beginners most often:
+
+**Situation 1 — Displaying results:** You convert a list to a set to remove duplicates, then print the set. The items come out in a random-looking order that confuses your users.
+
+**Situation 2 — Testing:** You write a test that says 'the first element of my set should be X.' It passes on your machine, fails on someone else's. The test is wrong because it assumes order."
+
+### 8.3 The `sorted()` fix for display
+
+**Say:**
+"The solution is simple: when you need to display the contents of a set in a readable, predictable order, wrap it in `sorted()`. This does not modify your set — it creates a temporary sorted list just for display purposes:"
+
+```python
+unique_tags: set[str] = {"python", "beginner", "coding", "tutorial", "free"}
+
+# Do NOT do this for user-facing output:
+print(unique_tags)           # Order unpredictable
+
+# DO this instead:
+print(sorted(unique_tags))   # ['beginner', 'coding', 'free', 'python', 'tutorial']
+```
+
+**Say:**
+"`sorted()` returns a **list** in ascending order (alphabetical for strings, numerical for numbers). Your set is unchanged — `unique_tags` still contains the same five items, still unordered. But your display is clean and consistent.
+
+This is the pattern you will use in the lab. Collect data into a set, do your set operations, then use `sorted()` whenever you need to show the results to a user."
+
+---
+
+## 9) Live Demo: List of Names → Set
+
+**Say:**
+"Let's pull everything together in a live demo. I am going to type this in `hour18_sets_demo.py` in my editor. Follow along and type the same code."
+
+### 9.1 Set up the demo file
+
+**Say:**
+"Here is the scenario: we have a conference sign-in sheet. Multiple people signed in throughout the day, some more than once. We want to know how many unique attendees there were."
 
 ```python
 # hour18_sets_demo.py
+# Demo: List of names → set, removing duplicates
 
-# Simulated log of visitor names with duplicates
-raw_log = [
-    "Alice", "Bob", "Alice",
-    "Charlie", "Bob", "Alice",
-    "Dave", "Charlie", "Eve",
-    "Bob"
+# Step 1: Raw sign-in data — names collected throughout the day
+# (Simulating input that has duplicates)
+sign_ins: list[str] = [
+    "Alice",
+    "Bob",
+    "Alice",      # duplicate
+    "Carol",
+    "Bob",        # duplicate
+    "David",
+    "Bob",        # duplicate again
+    "Alice",      # duplicate
+    "Eva",
+    "Carol",      # duplicate
 ]
 
-print(f"Total log entries: {len(raw_log)}")
+print("--- Raw sign-in sheet ---")
+print(f"Total sign-ins: {len(sign_ins)}")
+print(sign_ins)
+```
 
-# Convert to set for unique visitors
-unique_visitors = set(raw_log)
-print(f"Unique visitor count: {len(unique_visitors)}")
+**Say:**
+"Run that. You should see 10 total sign-ins in the list, with obvious duplicates."
 
-# Display in alphabetical order
-print("Unique visitors:")
+### 9.2 Convert to a set
+
+```python
+# Step 2: Convert the list to a set — duplicates are removed automatically
+unique_visitors: set[str] = set(sign_ins)
+
+print("\n--- After converting to a set ---")
+print(f"Unique attendees: {len(unique_visitors)}")
+print(unique_visitors)
+```
+
+**Say:**
+"Run this next section. You should see five unique attendees: Alice, Bob, Carol, David, Eva. The duplicates are gone. We went from 10 items in the list to 5 unique items in the set. And we did not write a single loop to check for duplicates — `set()` did all the work."
+
+### 9.3 Display with sorted() and loop over the results
+
+```python
+# Step 3: Display neatly with sorted()
+print("\n--- Unique attendees (sorted) ---")
 for name in sorted(unique_visitors):
     print(f"  - {name}")
 
-# Membership check
-query = "Alice"
-if query in unique_visitors:
-    print(f"\n'{query}' did visit today.")
-else:
-    print(f"\n'{query}' did not visit today.")
+print(f"\nTotal unique attendees: {len(unique_visitors)}")
 ```
 
-Run it.
+**Say:**
+"Now we use `sorted()` to display the names in alphabetical order, and a loop to print each one with a dash. This looks professional and is easy to read.
+
+Notice that we are looping over `sorted(unique_visitors)`, not over `unique_visitors` directly. We still have the set; we are just sorting a copy of it for display."
+
+### 9.4 Bonus: membership check in the demo
+
+```python
+# Step 4: Check whether a specific person attended
+person_to_check = "Alice"
+if person_to_check in unique_visitors:
+    print(f"\n{person_to_check} attended the conference.")
+else:
+    print(f"\n{person_to_check} did NOT attend the conference.")
+
+# Check someone who didn't attend
+person_to_check = "Zara"
+if person_to_check in unique_visitors:
+    print(f"{person_to_check} attended the conference.")
+else:
+    print(f"{person_to_check} did NOT attend the conference.")
+```
 
 **Say:**
-"This is almost exactly the structure you will build in the lab. The main difference is that in the lab, the names will be entered by the user—not hard-coded in a list. The `for` loop and the set conversion pattern are identical."
+"Clean and fast. `in` does the work. No loop, no manual scanning.
+
+Here is the full picture of what we just built:
+
+- We started with a raw list of 10 sign-ins, some duplicates.
+- One call to `set()` gave us 5 unique visitors.
+- `sorted()` let us display them in alphabetical order.
+- `in` let us answer 'did this person attend?' instantly.
+
+That is the complete pattern for uniqueness and membership in Python. Now let's build it from scratch in the lab."
 
 ---
 
-## 8) Guided Lab: Unique Visitors (~12 minutes)
+## 10) Hands-on Lab: Unique Visitors
 
-### 8.1 Introduce the lab
+### 10.1 Lab overview
 
 **Say:**
-"Your task is to build the Unique Visitors program. Here are the requirements:
+"This lab takes the demo pattern and makes it interactive. Instead of hard-coding names, you are going to ask the user to type in 10 names — some of them repeated on purpose — and then your program will figure out the unique count automatically.
 
-1. Use a loop to collect 10 names from the user, one at a time. Allow repeats—that is the point.
-2. Store the names in a list as they are entered.
-3. After collection, convert the list to a set to find the unique names.
-4. Print the total number of unique names.
-5. Print the unique names in alphabetical order."
+Here are the requirements:
 
-### 8.2 Put the requirements on screen
+1. Ask the user to enter 10 names, one at a time (encourage them to type some names more than once to test uniqueness).
+2. Store each name in a list as the user types it.
+3. After all 10 names are collected, convert the list to a set.
+4. Print the number of unique names.
+5. Print the unique names themselves in sorted alphabetical order.
+6. Explain in a comment *in your code* why duplicates disappear.
 
-```text
-Lab: Unique Visitors
-- Collect 10 names from the user (allow repeats)
-- Store in a list
-- Convert to a set
-- Print unique count
-- Print unique names in sorted order
-```
+**Completion criteria:**
+- The unique count is correct.
+- The output shows sorted unique names.
+- There is at least one comment that explains the uniqueness property of sets."
 
-### 8.3 Provide a beginner-friendly starter structure
+### 10.2 Starter hints
 
-**Type and leave on screen:**
+**Say:**
+"Before you start coding, here are a few hints to guide your thinking:
+
+**Hint 1:** You already know how to collect user input in a loop. Think: `for i in range(10):` with `input()` inside.
+
+**Hint 2:** Use `append()` to add each name to the list as you go.
+
+**Hint 3:** After the loop ends, convert the whole list with one call: `unique = set(name_list)`.
+
+**Hint 4:** Use `len(unique)` for the count and `sorted(unique)` for the display loop.
+
+**Stretch challenge:** After showing unique names, ask the user if they want to check whether a specific name was entered. If yes, read a name and use `in` to answer."
 
 ```python
-# hour18_lab_unique_visitors.py
+# hour18_lab_visitors.py — STARTER TEMPLATE (fill in the blanks)
 
-# Step 1: collect names from the user
-names_log = []
+# Step 1: Create an empty list to hold all sign-ins
+# ...
+
+# Step 2: Collect 10 names from the user
+# for i in range(10):
+#     ...
+
+# Step 3: Convert the list to a set (duplicates removed automatically)
+# ...
+
+# Step 4: Print the unique count
+# ...
+
+# Step 5: Print unique names in sorted order
+# ...
+```
+
+**Say:**
+"You have 15 minutes. Work at your own pace. If you finish early, attempt the stretch challenge. If you get stuck, raise your hand or re-read the hints — do not stare at a blank screen for more than two minutes."
+
+*(Allow 15–18 minutes of lab time. Circulate and help. Look for: students who forgot to strip whitespace from `input()`, students who try to use `{}` for the empty container, students who loop over the set without `sorted()`.)*
+
+### 10.3 Walkthrough solution
+
+**Say:**
+"Let's walk through the solution together. Even if you got it right, follow along — we will make sure the logic is tight and the code is clean."
+
+```python
+# hour18_lab_visitors.py — COMPLETE SOLUTION
+
+# Step 1: Empty list to accumulate all sign-ins (duplicates included)
+all_sign_ins: list[str] = []
+
+print("=== Conference Visitor Sign-In ===")
+print("Enter 10 names (repeats are fine — that is the point!):\n")
+
+# Step 2: Collect 10 names from the user
+for i in range(1, 11):
+    name = input(f"  Visitor {i}: ").strip()  # .strip() removes accidental spaces
+    all_sign_ins.append(name)
+
+# Step 3: Convert to a set.
+# Sets enforce uniqueness: if a name appears more than once in the list,
+# the set will only keep one copy of it automatically.
+unique_visitors: set[str] = set(all_sign_ins)
+
+# Step 4: Report the unique count
+print(f"\nTotal sign-ins recorded : {len(all_sign_ins)}")
+print(f"Unique visitors today   : {len(unique_visitors)}")
+
+# Step 5: Display unique names in sorted order
+# sorted() returns a list in ascending order — does NOT change the set.
+print("\nAttendee list (alphabetical):")
+for name in sorted(unique_visitors):
+    print(f"  - {name}")
+
+# --- Stretch challenge ---
+check = input("\nCheck if someone attended? (yes/no): ").strip().lower()
+if check == "yes":
+    lookup = input("Enter name to look up: ").strip()
+    if lookup in unique_visitors:
+        print(f"Yes — {lookup} attended today.")
+    else:
+        print(f"No — {lookup} was not recorded as a visitor.")
+```
+
+**Say:**
+"Let's read through this together.
+
+The list `all_sign_ins` is our raw data — everything the user types, duplicates and all. We use `append()` in the loop to build it up.
+
+After the loop, `set(all_sign_ins)` does the uniqueness work in a single line. We store the result in `unique_visitors`.
+
+We print `len(all_sign_ins)` for the raw count and `len(unique_visitors)` for the unique count. The difference tells the user how many duplicates there were.
+
+Then we loop over `sorted(unique_visitors)` to display the names alphabetically — because sets are unordered and we want a predictable, readable output.
+
+The stretch challenge uses `in` to check a name against the set. Notice that this is the membership check we practised earlier, applied in a real interactive context.
+
+One detail worth noting: we call `.strip()` on every `input()`. This removes leading and trailing whitespace. Without it, a user who accidentally hits the spacebar before typing would create a string like `' Alice'`, which is different from `'Alice'`. The set would treat them as two different values. `.strip()` is a small habit that saves a lot of confusion."
+
+### 10.4 Design discussion
+
+**Say:**
+"Let me ask a question to make sure you understand the design choices: why did we use a list first and then convert to a set, instead of adding directly to a set from the beginning?
+
+Take a moment to think about that."
+
+*(Pause 20–30 seconds.)*
+
+**Say:**
+"The answer is: we could have added directly to a set. Here is what that would look like:"
+
+```python
+# Alternative: build the set directly (also valid)
+unique_visitors_v2: set[str] = set()
+for i in range(1, 11):
+    name = input(f"  Visitor {i}: ").strip()
+    unique_visitors_v2.add(name)  # add() instead of append()
+```
+
+**Say:**
+"This is shorter and perfectly correct. The reason we used a list first is that in real programs, you often collect data in a list before you know you need to de-duplicate it. You might read from a file, receive data from an API, or accumulate entries over time — all of which naturally produce a list. Then you convert to a set as a processing step.
+
+Both patterns are valid. The list-then-convert pattern is more common and more general. The direct-to-set pattern is fine when you know from the start that uniqueness is all you care about."
+
+---
+
+## 11) Common Pitfalls
+
+### 11.1 Expecting order to be preserved
+
+**Say:**
+"This is the big one and it is worth repeating. A set does not preserve the order of insertion. If you need to display items in order, always use `sorted()`. If you need the original insertion order, keep the list alongside the set — use each for what it is good at."
+
+```python
+# PITFALL: Don't rely on set iteration order
+tags: set[str] = {"z", "a", "m", "b"}
+for tag in tags:
+    print(tag)  # Could print in any order — don't assume
+
+# FIX: Use sorted() when order matters for output
+for tag in sorted(tags):
+    print(tag)  # 'a', 'b', 'm', 'z' — consistent alphabetical order
+```
+
+### 11.2 Using `{}` to create an empty set
+
+**Say:**
+"We covered this earlier but it is important enough to repeat as a named pitfall."
+
+```python
+# PITFALL: This creates an empty DICT, not an empty SET
+wrong = {}
+print(type(wrong))  # <class 'dict'>
+
+# FIX: Use set() explicitly
+correct = set()
+print(type(correct))  # <class 'set'>
+```
+
+**Say:**
+"If you ever get a confusing error like `'set' object does not support item assignment` or `AttributeError: 'dict' object has no attribute 'add'`, the first thing to check is whether you accidentally created a dict with `{}` instead of a set with `set()`."
+
+### 11.3 Trying to modify a set while iterating over it
+
+**Say:**
+"Just like lists, you should not add or remove items from a set while you are looping over it. Python may raise a `RuntimeError` or produce unpredictable behaviour."
+
+```python
+numbers: set[int] = {1, 2, 3, 4, 5}
+
+# PITFALL: Modifying a set during iteration
+# for n in numbers:
+#     if n % 2 == 0:
+#         numbers.discard(n)  # RuntimeError: Set changed size during iteration
+
+# FIX: Decide what to keep, then build a new set
+new_numbers: set[int] = set()
+for n in numbers:
+    if n % 2 != 0:
+        new_numbers.add(n)
+numbers = new_numbers
+print(numbers)  # {1, 3, 5}
+```
+
+**Say:**
+"For beginners: the safe rule is to never modify a set inside the loop that is iterating over it. Instead, build a new set with the items you want to keep."
+
+### 11.4 Putting unhashable items (like lists) into a set
+
+**Say:**
+"If you ever see `TypeError: unhashable type: 'list'`, it means you tried to add a list (or another mutable object) into a set. Sets can only contain immutable values. Convert the inner list to a tuple if you need to store it in a set."
+
+```python
+# PITFALL
+# bad_set = {[1, 2], [3, 4]}  # TypeError: unhashable type: 'list'
+
+# FIX: Use tuples instead of lists
+good_set: set[tuple[int, int]] = {(1, 2), (3, 4)}
+print(good_set)  # {(1, 2), (3, 4)}
+```
+
+---
+
+## 12) Optional Extension: Sorted Display
+
+**Say:**
+"If you finished the lab early or want to extend your Unique Visitors program, here is a clean extension that demonstrates a useful pattern: keeping both the list and the set, and using them for different purposes."
+
+```python
+# Extension: work with both list and set simultaneously
+
+all_sign_ins: list[str] = []
+print("Enter 10 visitor names:")
 
 for i in range(1, 11):
-    name = input(f"Enter visitor name {i}: ")
-    names_log.append(name)
+    name = input(f"  Name {i}: ").strip()
+    all_sign_ins.append(name)
 
-print(f"\nTotal entries collected: {len(names_log)}")
+unique_visitors: set[str] = set(all_sign_ins)
 
-# Step 2: convert to set for uniqueness
-unique_names = set(names_log)
+# --- Use the LIST to count total sign-ins per person ---
+print("\n=== Visitor Frequency ===")
+for name in sorted(unique_visitors):
+    count = all_sign_ins.count(name)  # list.count() counts occurrences
+    print(f"  {name}: signed in {count} time(s)")
 
-# Step 3: report results
-print(f"Unique visitors: {len(unique_names)}")
-print("\nUnique names (alphabetical):")
-for name in sorted(unique_names):
-    print(f"  {name}")
+# --- Use the SET for the unique summary ---
+print(f"\n=== Summary ===")
+print(f"Total sign-ins  : {len(all_sign_ins)}")
+print(f"Unique visitors : {len(unique_visitors)}")
+print(f"Repeat sign-ins : {len(all_sign_ins) - len(unique_visitors)}")
 ```
 
-### 8.4 Explain the starter
+**Say:**
+"This extension shows something important about choosing the right data structure. The list is valuable for tasks that need the full record including duplicates — like counting how many times each person signed in. The set is valuable for tasks that need uniqueness — like reporting the unique headcount.
+
+Using both together is completely normal. In professional code you will often see a list and a set created from the same data, each serving a different purpose."
 
 **Say:**
-"This structure is clear and direct. `range(1, 11)` gives us numbers 1 through 10 for the prompt. We collect each name and append it to `names_log`. Then we convert to a set in one line. Then we display.
+"Notice `all_sign_ins.count(name)` — this is the list `count()` method, which counts how many times a value appears in the list. It loops through every element internally, so it is not fast for very large data, but for a lab program with 10 or even 100 names it is perfectly fine.
 
-Your first goal is to get this running. Enter some names with deliberate repeats and confirm that the unique count is correct."
-
-### 8.5 Optional extension
-
-**Say:**
-"If you finish the core lab early, here is an extension: after displaying the unique names, ask the user to check whether a specific name appears in the visitor log. Use `in` to check membership and print a friendly message either way."
-
-**Type the extension hint:**
+A second extension, staying in Basics scope: demonstrate all three set operations (union, intersection, difference) using two separate groups. Imagine morning visitors and afternoon visitors — the union tells you total unique attendance for the day, the intersection tells you who attended both sessions, the difference tells you who only came in the morning."
 
 ```python
-# Optional extension: membership check
-query_name = input("\nCheck if a visitor was present: ")
-if query_name in unique_names:
-    print(f"Yes, {query_name} was a visitor today.")
-else:
-    print(f"No, {query_name} was not in today's visitor log.")
+# Further extension: morning vs afternoon visitors
+morning: set[str] = {"Alice", "Bob", "Carol", "David"}
+afternoon: set[str] = {"Carol", "David", "Eva", "Frank"}
+
+all_day = morning | afternoon          # Union
+both_sessions = morning & afternoon    # Intersection
+morning_only = morning - afternoon     # Difference
+
+print(f"Attended either session : {sorted(all_day)}")
+print(f"Attended both sessions  : {sorted(both_sessions)}")
+print(f"Morning only            : {sorted(morning_only)}")
 ```
 
+---
+
+## 13) Debrief, Recap, and Exit Ticket
+
+### 13.1 Concept recap
+
 **Say:**
-"Notice that we check membership on `unique_names`, the set, not on `names_log`, the list. Either would work for correctness, but checking the set is more intentional: we care about unique presence, not visit count."
+"Let's take two minutes to consolidate what we covered this hour. I will summarise the key ideas and then give you an exit-ticket question to answer before you close your laptop.
 
-### 8.6 Optional second extension
+**What is a set?**
+A set is an unordered collection that automatically enforces uniqueness — every value can appear at most once. You create a set literal with curly braces containing values, or you convert an existing list with `set()`.
+
+**How do you add and remove items?**
+Use `add()` to add a single item (silently does nothing if the item already exists), `discard()` to remove an item without raising an error if it is absent, and `remove()` when you want an error on a missing item. Use `clear()` to empty the set.
+
+**Why are sets good for membership checks?**
+`value in my_set` is conceptually very fast regardless of how large the set is, because Python uses hashing to jump near-directly to the answer rather than scanning every element.
+
+**What are the three main set operations?**
+Union (`|`) — everyone in either group. Intersection (`&`) — only those in both groups. Difference (`-`) — in the first group but not the second.
+
+**What does 'unordered' mean in practice?**
+Never rely on the order items come out of a set. When you need to display or process items in a consistent order, wrap the set in `sorted()`.
+
+**What is the empty-set trap?**
+`{}` creates a dictionary, not a set. Always write `set()` for an empty set."
+
+### 13.2 When to reach for a set vs a list vs a tuple
 
 **Say:**
-"If you complete the first extension, try this: add a second prompt that asks for another batch of visitor names (say, five names for 'afternoon visitors'). Convert those to a second set. Then show the union—everyone who visited at any point—and the intersection—people who visited in both batches."
+"Here is a decision guide to close out our discussion of all three collection types so far:
 
-### 8.7 Instructor circulation prompts
+| Question | Best choice |
+|---|---|
+| Do I need to maintain insertion order? | List or Tuple |
+| Can duplicates exist? | List or Tuple |
+| Do I frequently check 'is X in here?' | Set |
+| Do I need to remove duplicates from a list? | Convert to Set |
+| Is the collection fixed / should never change? | Tuple |
+| Do I need to combine two groups and check overlap? | Set operations |
+| Do I need to track how many times each item occurs? | Keep the List |
 
-As learners work, walk around and ask:
-- "What is the type of `names_log`? What is the type of `unique_names`?"
-- "How many entries did you add to `names_log`? How many unique values does the set have?"
-- "If you call `add()` with a duplicate, what happens to `len()` of the set?"
-- "Why do we use `sorted()` before printing? What would happen without it?"
-- "What is the difference between the list and the set in terms of what they store?"
+You will not always get this perfect — that is fine. Learning to notice these trade-offs comes with practice."
+
+### 13.3 Looking ahead
+
+**Say:**
+"Next hour — Hour 19 — we are going to meet the last and arguably most powerful built-in data structure: the dictionary. Dictionaries let you associate a *key* with a *value*, like a real-world dictionary that associates a word with its definition. We will see how dictionaries extend what we can do with data well beyond lists, tuples, and sets.
+
+Before we get there, take 30 seconds to answer the exit ticket."
+
+### 13.4 Exit ticket
+
+**Say:**
+"Here is your exit ticket. Answer this in your own words — out loud, in a note, or just think it through:
+
+**When is a set better than a list?**
+
+Think about at least two distinct situations. If you have a partner nearby, tell them your answer. If you are working solo, write two bullet points in a comment at the bottom of your lab file.
+
+*(Pause 30–60 seconds for reflection.)*
+
+I will share what I am looking for: a good answer mentions (1) when you want to remove or prevent duplicates, and (2) when you need to check membership many times and the collection is large. Bonus points if you mention set operations — union, intersection, difference — as a third reason to choose a set over a list."
+
+### 13.5 Closing
+
+**Say:**
+"Great work today. You learned a new data structure — the set — and you saw how it solves the uniqueness problem elegantly with almost no code. You practised the most important patterns: creating a set from a list, checking membership with `in`, using union and intersection to combine groups, and displaying sorted output.
+
+Save your files. In the next hour we will open up dictionaries and your toolkit for working with data in Python will be complete at the Basics level.
+
+See you in a few minutes."
 
 ---
 
-## 9) Common Pitfalls and How to Coach Through Them (~3 minutes)
+## Quick Reference Card
 
-### 9.1 Pitfall: expecting a set to preserve insertion order
-
-**Symptom:** learner enters names in a specific order, prints the set, and the output order is different.
-
-**Coach with these words:**
-"Sets are unordered. Python does not guarantee the order you see. If you need a consistent display, use `sorted()`. That is not a weakness—it is just a characteristic you need to account for."
-
-### 9.2 Pitfall: using `{}` for an empty set
-
-**Symptom:** learner creates `s = {}` expecting a set, then gets a `TypeError` when trying to `add()`.
-
-**Coach with these words:**
-"Check `type(s)`. If it shows `dict`, you created a dictionary by accident. Use `s = set()` for an empty set."
-
-### 9.3 Pitfall: trying to index a set
-
-**Symptom:** learner writes `unique_names[0]` and gets a `TypeError`.
-
-**Coach with these words:**
-"Sets have no indexes. If you need the first item alphabetically, convert to a sorted list first: `sorted(unique_names)[0]`. But for the lab, you just need to loop and print."
-
-### 9.4 Pitfall: case sensitivity
-
-**Symptom:** learner enters "Alice" once and "alice" once; the set treats them as different values.
-
-**Coach with these words:**
-"Python's `in` operator is case-sensitive. 'Alice' and 'alice' are different strings. If you want case-insensitive uniqueness, you can normalize inputs with `.lower()` before adding them. Try it as an extension if you are interested."
-
----
-
-## 10) Debrief and Share-Outs (~4 minutes)
-
-### 10.1 Bring the class back together
-
-**Say:**
-"Let's compare what we built. The Unique Visitors program is simple, but it demonstrates a powerful and reusable pattern."
-
-### 10.2 Ask targeted questions
-
-Ask:
-- "Who can explain in one sentence why the set has fewer items than the list?"
-- "Who used `sorted()` for display? What difference did it make?"
-- "Who discovered the empty-set trap while working?"
-- "Who tried the membership check extension? What did it feel like compared to searching a list?"
-
-### 10.3 Model a concise explanation
-
-**Say:**
-"A strong description of the Unique Visitors program: 'I collected 10 names in a list, allowing repeats. I converted the list to a set using `set()`, which automatically removed duplicates. I printed `len()` of the set for the unique count, and used `sorted()` before the loop so names appear in alphabetical order.'
-
-That explanation shows you understood both what the code does and why each step was chosen."
-
----
-
-## 11) Recap Script (~2 minutes)
-
-**Say:**
-"Today we added sets to our toolbox.
-
-Here is what you should be able to say:
-- A set stores unique values only. Duplicates are silently ignored when you call `add()` or when you convert a list.
-- Sets are unordered. Do not rely on display order. Use `sorted()` if you need alphabetical output.
-- `in` membership testing works on sets and is conceptually the same as `in` for lists.
-- `set(my_list)` is the standard deduplication pattern.
-- For an empty set, always use `set()`, never `{}`.
-
-In the next hour, we introduce dictionaries: a structure that stores key-value pairs. Dictionaries will become one of your most-used Python tools."
-
----
-
-## 12) Exit Ticket (~1 minute)
-
-Ask learners to answer verbally, in chat, or on paper:
-
-1. If I run `s = {"cat", "dog", "cat"}`, what does `len(s)` return?
-2. How do I create an empty set without accidentally creating a dictionary?
-3. Why does the order of items in a set change between runs?
-4. What does `sorted(my_set)` return?
-
-**Expected direction of answers:**
-- `len(s)` returns `2`
-- use `set()`, not `{}`
-- sets are unordered; Python uses hashing for internal storage and does not preserve insertion order
-- a sorted list (not a set) of the elements in ascending order
-
----
-
-## 13) Instructor Notes for the Transition to Hour 19
-
-**Say:**
-"We now have three data structures in our toolkit: lists (ordered, mutable), tuples (ordered, immutable), and sets (unordered, unique values). Each one answers a different kind of question.
-
-In the next hour, we meet dictionaries—the structure that answers: 'What is the value associated with this key?' Dictionaries power an enormous range of real programs: phone books, inventory systems, configuration files, HTTP request data, JSON parsing, and much more. It is the most flexible and widely used structure we will study in the Basics course."
-
----
-
-## Appendix: Instructor Reinforcement Notes for Hour 18
-
-### A) Board sketch for visual learners
-
-Draw this on the board:
-
-```text
-List:  ["Alice", "Bob", "Alice"]   ← allows duplicates, has order
-Set:   {"Alice", "Bob"}             ← no duplicates, no guaranteed order
-
-set(["Alice", "Bob", "Alice"])  →  {"Alice", "Bob"}
-```
-
-Ask: "Which structure would you use for a vote count where you need only unique voters?"
-
-### B) Short extra practice prompts
-
-If you have extra minutes:
-
-1. `s = {1, 2, 3, 2, 1}`. What does `len(s)` return?
-2. `s.add(3)`. Now what does `len(s)` return?
-3. Is `5 in {1, 3, 5, 7}` True or False?
-4. If I want to print the contents of a set in reverse alphabetical order, what do I write?
-5. What is the difference between `len(names_log)` and `len(set(names_log))`?
-
-### C) Instructor language for gentle correction
-
-- "Check whether your variable holds a set or a list. Use `type()` if you are not sure."
-- "Read the error out loud. What is Python complaining about?"
-- "If the output order surprised you, remember: sets are unordered. Wrap with `sorted()` for display."
-- "Before calling `in`, ask yourself: are you checking the set or the original list? For this program, checking the set is the right choice."
-
-### D) Coaching if learners ask about `remove()` and `discard()` on sets
-
-If a learner asks about removing items from a set, say:
-
-"Sets do have a `remove()` method and a `discard()` method—the difference is that `remove()` raises an error if the item is not present, while `discard()` silently does nothing. But for today's lab, we are not removing items from the set. We are only adding and reading. Save set removal for when you encounter a specific problem that needs it."
-
-### E) Connecting sets to data-cleaning scenarios
-
-If you want to deepen the debrief discussion, mention these real-world scenarios where the list-to-set conversion pattern is immediately useful:
-
-**Scenario 1: De-duplicating email lists**
-An email list for a newsletter has been built up over months from multiple sign-up forms. There are duplicates. Before sending a campaign, the sender converts the list to a set to get unique addresses only.
+> Copy this to the top of your notes file, or keep it open as a reference during the lab.
 
 ```python
-all_signups = ["alice@example.com", "bob@example.com",
-               "alice@example.com", "carol@example.com",
-               "bob@example.com"]
-unique_recipients = set(all_signups)
-print(f"Sending to {len(unique_recipients)} unique addresses.")
+# ── CREATING SETS ──────────────────────────────────────────────
+literal:   s = {"a", "b", "c"}         # set literal (no duplicates)
+from list: s = set(my_list)             # convert list → set (removes duplicates)
+empty:     s = set()                    # NEVER use {} for empty set (that's a dict)
+
+# ── ADDING / REMOVING ──────────────────────────────────────────
+s.add("x")         # add one item (no-op if already present)
+s.discard("x")     # remove (silent if not found — safe default)
+s.remove("x")      # remove (KeyError if not found)
+s.pop()            # remove and return an arbitrary item
+s.clear()          # empty the set
+
+# ── MEMBERSHIP ─────────────────────────────────────────────────
+"x" in s           # True if "x" is in the set
+"x" not in s       # True if "x" is NOT in the set
+
+# ── SET OPERATIONS ─────────────────────────────────────────────
+a | b              # Union        — items in a OR b (or both)
+a & b              # Intersection — items in BOTH a AND b
+a - b              # Difference   — items in a but NOT in b
+
+# ── DISPLAY IN ORDER ───────────────────────────────────────────
+sorted(s)          # returns a sorted LIST — does not change s
+for item in sorted(s):
+    print(item)
+
+# ── SIZE ───────────────────────────────────────────────────────
+len(s)             # number of unique items in the set
 ```
-
-**Scenario 2: Tracking which students have submitted**
-A teacher receives assignment submissions throughout the day. Some students accidentally submit twice. The teacher uses a set to track who has submitted at all.
-
-```python
-submissions = ["Alice", "Bob", "Alice", "Charlie", "Dave", "Bob"]
-submitted = set(submissions)
-print(f"{len(submitted)} students have submitted.")
-```
-
-**Scenario 3: Finding shared interests**
-Two users each list their favorite topics. Intersection shows what they have in common.
-
-```python
-user_a = {"Python", "hiking", "cooking", "chess"}
-user_b = {"Python", "gaming", "cooking", "running"}
-shared = user_a & user_b
-print(f"Shared interests: {sorted(shared)}")
-```
-
-These examples show that `set` is a practical, frequently-needed tool—not an academic curiosity.
-
-### F) Extended drill questions for fast finishers or after-class practice
-
-Give these to learners who complete the lab early or want more practice:
-
-1. Write a program that asks for three different users' tag lists (comma-separated) and finds which tags all three users share.
-2. Given two lists of product IDs, find: (a) products in either list, (b) products in both lists.
-3. Given a paragraph of text, count how many distinct words it contains using a set.
-4. Why can you not use a list as a set element? What does Python say if you try?
-5. A set `s = {1, 2, 3}`. Write the one-line expression to create a new set with only elements greater than 1 (hint: use a for loop and a new set, since comprehensions are out of scope).
-6. Explain in plain English why checking `'Alice' in large_set` is faster than `'Alice' in large_list` for very large data.
-
-For question 4: if learners try `{[1, 2], [3, 4]}`, Python raises `TypeError: unhashable type: 'list'`. The brief answer is that set elements must be hashable (their value cannot change), so lists—which can change—cannot be set elements. Strings, integers, and tuples can be.
-
-For question 6: the brief answer is that a list checks each item one by one (up to N steps), while a set uses hashing to jump directly to the relevant location (near-constant time). Do not go deeper than this at Basics level.
-
-### G) Calm language for the "order keeps changing" confusion
-
-When a learner is surprised that printing the same set twice shows different orders, use this explanation:
-
-"Python uses a technique called hashing to store set values efficiently. The display order is a byproduct of that internal storage, not something Python promises to preserve. Think of a corkboard where you push pins without worrying about their exact position—you can still check whether a pin is there or not, and that check is very fast. The order of pins on the board is irrelevant. That is what a set does."
-
-### H) Final teaching reminder to yourself
-
-The hour succeeds if learners leave with this mental model:
-
-"A set holds unique values. Duplicates disappear automatically. Use `set(my_list)` to deduplicate. Use `in` for membership. Use `sorted()` for clean display."
 
 ---
 
-## Speaker Notes: Scope Guardrails
-
-**Teach in this hour:**
-- Set creation with curly braces
-- `set()` for empty set and list-to-set conversion
-- `add()` method
-- Automatic uniqueness (duplicates ignored)
-- `in` membership testing on a set
-- `len()` for unique count
-- Sets are unordered — use `sorted()` for display
-- Union (`|`) and intersection (`&`) at a conceptual/demo level only
-
-**Do NOT introduce in this hour:**
-- `frozenset` (out of scope — Basics)
-- Set comprehensions (out of scope — Advanced)
-- `discard()` and `remove()` methods (Advanced complexity; not needed for lab)
-- `difference()`, `symmetric_difference()` (out of scope)
-- Performance benchmarking of set vs list (not needed at Basics level)
-- Hashing internals (mention the word only if asked; do not explain in depth)
-- `collections.Counter` class (out of scope — Advanced; this is for Hour 20 counting pattern using only dicts)
-- Set operations in the lab requirements (conceptual overview only — do not require `|` or `&` in lab submission)
-
-Keep the conceptual message simple: **sets give you unique values and fast membership checks. Duplicates disappear automatically.**
+*End of Day 5, Hour 2 — Course Hour 18: Sets — Uniqueness + Membership*
