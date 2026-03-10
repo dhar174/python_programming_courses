@@ -6,7 +6,7 @@ This repository contains instructional materials for a comprehensive Python Prog
 - **Module 1: Python Programming (Basic)** – 48 Hours
 - **Module 2: Python Programming (Advanced)** – 48 Hours
 
-The content is primarily delivered as slides (generated with Marp), lecture scripts and notes, homework assignments as ipynb notebooks, and multiple choice questions. The course is aligned to the Python Institute certification pathway (PCEP and PCAP).
+The content is primarily delivered as slides (generated with Marp; `.github/skills/slides` is also available as an alternative or supplement for deck work), lecture scripts and notes, homework assignments as ipynb notebooks, and multiple choice questions. The course is aligned to the Python Institute certification pathway (PCEP and PCAP).
 
 **Instructor:** Charles Niswander  
 **Organization:** GlobalIT
