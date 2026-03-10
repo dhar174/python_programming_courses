@@ -1,8 +1,8 @@
-# Day 2, Hour 6: String Methods (Normalize, Search, Replace)
+# Day 2, Hour 2: String Methods (Course Hour 6: Normalize, Search, Replace)
 **Python Programming Basics – Session 2**
 
 **Course:** Python Programming (Basics)  
-**Runbook alignment:** Session 2, Hour 6  
+**Runbook alignment:** Session 2, Course Hour 6  
 **Duration:** 60 minutes  
 **Mode:** Instructor-led + live coding + guided lab
 
@@ -31,7 +31,7 @@
 - **0:18–0:26** Live demos: cleanup pipeline + `find()` with `-1`
 - **0:26–0:52** Guided lab: Text Sanitizer
 - **0:52–0:58** Debrief, pitfalls, quick checks
-- **0:58–1:00** Transition to Hour 7
+- **0:58–1:00** Transition to Day 2, Hour 3
 
 ---
 
@@ -359,7 +359,7 @@ Ask and discuss briefly:
 
 ---
 
-## 8) Transition Script to Hour 7
+## 8) Transition Script to Day 2, Hour 3
 
 “Excellent. You can now clean and search text reliably. In Hour 7, we’ll connect this to user interaction: collecting input, converting to numbers with `int()` and `float()`, and producing correct numeric calculations.”
 

@@ -5,8 +5,10 @@ This directory contains standalone HTML slide presentations generated from the c
 ## Generated Files
 
 - **01-intro-to-python.html** - Introduction to Python slides (3 slides)
-- **day-01-session-1.html** - Basics Day 1 Session 1 comprehensive lesson (59 slides)
+- **day-01/day-01-session-1.html** - Basics Day 1 Session 1 comprehensive lesson (59 slides)
 - **day-02-session-2.html** - Basics Day 2 Session 2: Strings, I/O, and Checkpoint 1 (74 slides)
+- **day-03/day-03-session-3.html** - Basics Day 3 Session 3: Comparisons, F-Strings, Text Processing & Debugging (48 slides)
+- **day-04/day-04-session-4.html** - Basics Day 4 Session 4: Lists & Iteration — Lists Fundamentals, for Loops, Nested Lists, Checkpoint 2 (53 slides)
 
 ## Features
 
@@ -130,21 +132,42 @@ This will scan `Basics/lessons/` and `Advanced/lessons/` for any `.md` files and
 
 These slides were generated from:
 - `Basics/lessons/01-intro-to-python.md`
-- `Basics/lessons/day-01-session-1.md`
+- `Basics/lessons/slides/day-01/day-01-session-1.md`
 - `Basics/lessons/day-02-session-2.md` (combined session file — still present for CI/Marp builds)
+- `Basics/lessons/slides/day-03/day-03-session-3.md`
 - `Advanced/lessons/01-intro-to-python.md`
 
 ### Per-Hour Lecture Files (Day 2, Session 2)
 
 The Day 2, Session 2 content has been split into individual per-hour lecture files for easier
 instructional use and agent automation. These files live in `Basics/lessons/lecture/`:
-- `Basics/lessons/lecture/Day2_Hour5_Basics.md` (String Fundamentals)
-- `Basics/lessons/lecture/Day2_Hour6_Basics.md` (String Methods)
-- `Basics/lessons/lecture/Day2_Hour7_Basics.md` (Input/Output + Type Conversion)
-- `Basics/lessons/lecture/Day2_Hour8_Basics.md` (Checkpoint 1 + Session Wrap-Up)
+- `Basics/lessons/lecture/Day2_Hour1_Basics.md` (String Fundamentals; runbook Session 2 / course Hour 5)
+- `Basics/lessons/lecture/Day2_Hour2_Basics.md` (String Methods; runbook Session 2 / course Hour 6)
+- `Basics/lessons/lecture/Day2_Hour3_Basics.md` (Input/Output + Type Conversion; runbook Session 2 / course Hour 7)
+- `Basics/lessons/lecture/Day2_Hour4_Basics.md` (Checkpoint 1 + Session Wrap-Up; runbook Session 2 / course Hour 8)
 
 The compiled `day-02-session-2.html` slide deck was generated from the combined markdown and
 covers the full session. Future sessions should follow the per-hour file standard.
+
+### Per-Hour Lecture Files (Day 3, Session 3)
+
+The Day 3, Session 3 content also has per-hour lecture files in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day3_Hour1_Basics.md` (Comparisons + Boolean Logic)
+- `Basics/lessons/lecture/Day3_Hour2_Basics.md` (String Formatting with F-Strings)
+- `Basics/lessons/lecture/Day3_Hour3_Basics.md` (Working with Text: split/join)
+- `Basics/lessons/lecture/Day3_Hour4_Basics.md` (Debugging Habits)
+
+The compiled `day-03/day-03-session-3.html` slide deck covers the full session.
+
+### Per-Hour Lecture Files (Day 4, Session 4)
+
+The Day 4, Session 4 content also has per-hour lecture files in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day4_Hour1_Basics.md` (Lists Fundamentals — Course Hour 13)
+- `Basics/lessons/lecture/Day4_Hour2_Basics.md` (Iterating Lists with for Loops — Course Hour 14)
+- `Basics/lessons/lecture/Day4_Hour3_Basics.md` (Nested Lists for Table-Like Data — Course Hour 15)
+- `Basics/lessons/lecture/Day4_Hour4_Basics.md` (Checkpoint 2: Lists + String Handling — Course Hour 16)
+
+The compiled `day-04/day-04-session-4.html` slide deck covers the full session.
 
 ---
 

@@ -38,7 +38,7 @@ Map user requests to these specialists:
 | Task Type                       | Agent Name            | Usage Prompt Example                                                                                                                 |
 | ------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **Content inventory / outline** | presentations-content | "Scan docs/ and README.md; propose a 12-slide outline for a repo overview deck."                                                     |
-| **Marp deck authoring**         | presentations-marp    | "Write/refresh presentations/decks/repo-overview/marp/slides.md from the approved outline."                                          |
+| **Marp deck authoring**         | presentations-marp-writer    | "Write/refresh presentations/decks/repo-overview/marp/slides.md from the approved outline."                                          |
 | **Slidev deck authoring**       | presentations-slidev  | "Write/refresh presentations/decks/repo-overview/slidev/slides.md mirroring the Marp narrative; add speaker notes."                  |
 | **Build scripts / CI workflow** | presentations-build   | "Create/update presentations/package.json, scripts/build-*.mjs, and .github/workflows/presentations.yml to export MD/HTML/PDF/PPTX." |
 | **QA / correctness review**     | presentations-qa      | "Validate claims vs repo sources; ensure Marp + Slidev decks match and exports are buildable."                                       |
