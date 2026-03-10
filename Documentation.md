@@ -116,3 +116,7 @@ Usage: Log milestone status updates and decisions so future handoffs can continu
 - Add Hour 5–8 lecture scripts or explicitly label `day-02-session-2.md` as the canonical lecture source for Day 2.
 - Decide whether to move `split()/join()/title()` content to Day 3 or mark it as a preview in Day 2 materials.
 - Consider a Tip Calculator homework/lab entry to mirror the Hour 4 runbook lab.
+
+### Resolution note (2026-03-10)
+- Day 2 lecture scripts now exist as per-day files in `Basics/lessons/lecture/Day2_Hour1_Basics.md` through `Day2_Hour4_Basics.md`.
+- Each Day 2 file keeps an explicit `Runbook alignment` note mapping back to Session 2 / course Hours 5–8 so the day-relative filenames are easy to discover without losing course-hour context.

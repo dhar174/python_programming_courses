@@ -138,10 +138,10 @@ These slides were generated from:
 
 The Day 2, Session 2 content has been split into individual per-hour lecture files for easier
 instructional use and agent automation. These files live in `Basics/lessons/lecture/`:
-- `Basics/lessons/lecture/Day2_Hour5_Basics.md` (String Fundamentals)
-- `Basics/lessons/lecture/Day2_Hour6_Basics.md` (String Methods)
-- `Basics/lessons/lecture/Day2_Hour7_Basics.md` (Input/Output + Type Conversion)
-- `Basics/lessons/lecture/Day2_Hour8_Basics.md` (Checkpoint 1 + Session Wrap-Up)
+- `Basics/lessons/lecture/Day2_Hour1_Basics.md` (String Fundamentals; runbook Session 2 / course Hour 5)
+- `Basics/lessons/lecture/Day2_Hour2_Basics.md` (String Methods; runbook Session 2 / course Hour 6)
+- `Basics/lessons/lecture/Day2_Hour3_Basics.md` (Input/Output + Type Conversion; runbook Session 2 / course Hour 7)
+- `Basics/lessons/lecture/Day2_Hour4_Basics.md` (Checkpoint 1 + Session Wrap-Up; runbook Session 2 / course Hour 8)
 
 The compiled `day-02-session-2.html` slide deck was generated from the combined markdown and
 covers the full session. Future sessions should follow the per-hour file standard.
