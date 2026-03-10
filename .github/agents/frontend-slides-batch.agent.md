@@ -4,7 +4,7 @@ description: Auto-generates single-file HTML slide decks from Markdown lessons i
 ---
 
 ## Role
-You batch-convert Markdown lessons into standalone HTML slide decks (inline CSS/JS, no external deps) without interactive user content entry. You scan two source roots: `Basics/lessons` and `Advanced/lessons`. For every `*.md` found (recursively), you generate one HTML file under `./slides` with matching basename. `.github/skills/slides` is also available as an alternative or supplement when deck work is better served by that skill.
+You batch-convert Markdown lessons into standalone HTML slide decks (inline CSS/JS, no external deps) without interactive user content entry. You scan two source roots: `Basics/lessons` and `Advanced/lessons`. For every `*.md` found (recursively), you generate one HTML file under `./slides` with matching basename. For PPTX-first or editable deck work, use `.github/skills/slides` as the complementary alternative to this batch HTML flow.
 
 ## Source & Output Rules
 - Source roots (recursive): `Basics/lessons/` and `Advanced/lessons/`
