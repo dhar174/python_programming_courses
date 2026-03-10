@@ -880,7 +880,7 @@ for i, item in enumerate(todo_items, 1):
 
 ### The pattern
 ```python
-items = ["study Python", "buy groceries", "call mum"]
+items = ["study Python", "buy groceries", "call mom"]
 
 for i, item in enumerate(items, 1):
     print(f"{i}. {item}")
@@ -890,7 +890,7 @@ for i, item in enumerate(items, 1):
 ```
 1. study Python
 2. buy groceries
-3. call mum
+3. call mom
 ```
 
 ### What `enumerate(items, 1)` gives you
@@ -904,9 +904,8 @@ for i, item in enumerate(items, 1):
 ## The Full Checkpoint Program
 
 ```python
-# For the checkpoint lab, start with 3 pre-filled items:
+# Pre-filled list (lab requires 3 starting items)
 todo_items = ["buy milk", "send email", "read notes"]
-# (The skeleton below uses [] — replace with your pre-filled list)
 
 action = input("Choose: add, remove, or show: ")
 
@@ -929,6 +928,9 @@ elif action == "show":
     else:
         for i, item in enumerate(todo_items, 1):
             print(f"{i}. {item}")
+
+else:
+    print("Unrecognized action. Choose: add, remove, or show.")
 ```
 
 <!-- Speaker note: Walk through this structure at a high level ONLY before the lab. Do not write it for learners. Your goal is to show the three branches exist and the numbered output pattern — then let them build it themselves. -->
@@ -938,7 +940,7 @@ elif action == "show":
 ## Demo: To-Do List in Action
 
 ### Watch for…
-- Empty list starting point
+- Pre-filled list as the starting point
 - `in` guard before `remove()`
 - `enumerate(items, 1)` for numbered output
 - Clean branch separation with `if/elif/elif`
@@ -990,7 +992,7 @@ Build a simple in-memory to-do list program. A single run of the program should:
 3. For **add**: ask for a new item, append it, confirm it was added
 4. For **remove**: ask for an item, check it exists, remove it, confirm
 5. For **show**: display items with **numbered output** using `enumerate()`
-6. Handle an unrecognised action with a friendly message
+6. Handle an unrecognized action with a friendly message
 
 ### Completion Criteria
 ✓ List pre-filled with 3 items  
@@ -998,7 +1000,7 @@ Build a simple in-memory to-do list program. A single run of the program should:
 ✓ `remove` uses an `in` guard — no `ValueError` crash  
 ✓ `show` uses `enumerate(items, 1)` for numbered output  
 ✓ F-strings used for all output messages  
-✓ Program handles unrecognised action gracefully
+✓ Program handles unrecognized action gracefully
 
 <!-- Speaker note: Circulate during the checkpoint. Look for: (1) missing in-check before remove; (2) students using pop() with a value — remind them pop() needs an index; (3) enumerate starting at 0 instead of 1. This is a self-contained assessment — resist solving it for students. Ask guiding questions: "What does your remove branch do if the item isn't there?" -->
 
