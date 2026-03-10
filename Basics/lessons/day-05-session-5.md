@@ -158,7 +158,7 @@ print(f"\nMin x: {min(x_values)}")   # 1
 print(f"Max x: {max(x_values)}")    # 8
 ```
 
-**Optional Extension:** Compute distance from origin: `import math; d = math.sqrt(x**2 + y**2)`
+**Optional Extension:** Compute distance from origin: `import math; d = math.sqrt(x*x + y*y)`
 
 ---
 
@@ -249,15 +249,13 @@ visitors = {"Alice", "Bob", "Charlie"}
 visitors.add("Diana")
 print(visitors)     # has 4 items
 
-# Remove an item (raises KeyError if not found)
-visitors.remove("Bob")
-
-# Discard — like remove but no error if missing
-visitors.discard("Eve")   # no error even though "Eve" isn't in set
-
 # Membership test — very fast!
 print("Alice" in visitors)    # True
 print("Zara" in visitors)     # False
+
+# Adding a duplicate changes nothing
+visitors.add("Alice")
+print(visitors)
 ```
 
 ---
@@ -345,7 +343,7 @@ print(sorted(my_set))   # convert to sorted list first
 - Sets store unique items only, duplicates auto-removed
 - Created with `{value, value}` or `set(iterable)`
 - Unordered: no indexing, no guaranteed print order
-- `add()` to insert, `in` for membership, `remove()`/`discard()` to delete
+- `add()` to insert, `in` for membership, duplicates ignored automatically
 
 ---
 
@@ -512,9 +510,10 @@ inventory = {"Apples": 10}
 name = input("Item: ")         # user types "apples"
 print(inventory[name])         # KeyError — "apples" ≠ "Apples"
 
-# Fix: normalize to lowercase
+# Fix: normalize keys once, then normalize the user input
+inventory = {"apples": 10}
 name = input("Item: ").lower()
-inventory_lower = {k.lower(): v for k, v in inventory.items()}
+print(inventory.get(name, 0))   # safe if key is missing
 ```
 
 ### Pitfall 2: Accidental new key
@@ -666,8 +665,8 @@ for word in words:
 
 # Step 4: Display results
 print("\nWord frequencies:")
-for word, count in frequency.items():
-    print(f"  {word}: {count}")
+for word in sorted(frequency):
+    print(f"  {word}: {frequency[word]}")
 ```
 
 **Completion Criteria:**
@@ -756,7 +755,7 @@ You now have four data structure tools:
 
 ✅ **Teach:**
 - Tuple creation, immutability, unpacking
-- Set creation, `add()`, `remove()`, `discard()`, `in`
+- Set creation, `add()`, `in`, and duplicate removal through conversion from a list
 - Union (`|`) and intersection (`&`) — conceptually only
 - Dict creation, `[]` access, `get()`, add/update entries
 - `items()`, `keys()`, `values()` loops

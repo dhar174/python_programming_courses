@@ -545,7 +545,7 @@ for x, y in points:
 x_values = [x for x, y in points]
 print(f&quot;\nMin x: {min(x_values)}&quot;)   # 1
 print(f&quot;Max x: {max(x_values)}&quot;)    # 8</code></pre>
-<p><strong>Optional Extension:</strong> Compute distance from origin: <code>import math; d = math.sqrt(x<strong>2 + y</strong>2)</code></p>
+<p><strong>Optional Extension:</strong> Compute distance from origin: <code>import math; d = math.sqrt(x*x + y*y)</code></p>
         </section>
 
         <section class="slide">
@@ -627,15 +627,13 @@ not_empty = {}    # ❌ this creates an empty DICT, not a set!</code></pre>
 visitors.add(&quot;Diana&quot;)
 print(visitors)     # has 4 items
 
-# Remove an item (raises KeyError if not found)
-visitors.remove(&quot;Bob&quot;)
-
-# Discard — like remove but no error if missing
-visitors.discard(&quot;Eve&quot;)   # no error even though &quot;Eve&quot; isn&#x27;t in set
-
 # Membership test — very fast!
 print(&quot;Alice&quot; in visitors)    # True
-print(&quot;Zara&quot; in visitors)     # False</code></pre>
+print(&quot;Zara&quot; in visitors)     # False
+
+# Adding a duplicate changes nothing
+visitors.add(&quot;Alice&quot;)
+print(visitors)</code></pre>
         </section>
 
         <section class="slide">
@@ -704,7 +702,7 @@ print(sorted(my_set))   # convert to sorted list first</code></pre>
 <li>Sets store unique items only, duplicates auto-removed</li>
 <li>Created with <code>{value, value}</code> or <code>set(iterable)</code></li>
 <li>Unordered: no indexing, no guaranteed print order</li>
-<li><code>add()</code> to insert, <code>in</code> for membership, <code>remove()</code>/<code>discard()</code> to delete</li>
+<li><code>add()</code> to insert, <code>in</code> for membership, duplicates ignored automatically</li>
 </ul>
         </section>
 
@@ -857,9 +855,10 @@ for key, value in inventory.items():
 name = input(&quot;Item: &quot;)         # user types &quot;apples&quot;
 print(inventory[name])         # KeyError — &quot;apples&quot; ≠ &quot;Apples&quot;
 
-# Fix: normalize to lowercase
+# Fix: normalize keys once, then normalize the user input
+inventory = {&quot;apples&quot;: 10}
 name = input(&quot;Item: &quot;).lower()
-inventory_lower = {k.lower(): v for k, v in inventory.items()}</code></pre>
+print(inventory.get(name, 0))   # safe if key is missing</code></pre>
 <h3>Pitfall 2: Accidental new key</h3>
 <pre><code class="language-python">inventory = {&quot;apples&quot;: 10}
 inventory[&quot;applez&quot;] = 5    # typo creates a new key instead of updating!</code></pre>
@@ -990,8 +989,8 @@ for word in words:
 
 # Step 4: Display results
 print(&quot;\nWord frequencies:&quot;)
-for word, count in frequency.items():
-    print(f&quot;  {word}: {count}&quot;)</code></pre>
+for word in sorted(frequency):
+    print(f&quot;  {word}: {frequency[word]}&quot;)</code></pre>
 <p><strong>Completion Criteria:</strong></p>
 <ul>
 <li>Correct counts for all words</li>
@@ -1071,7 +1070,7 @@ counts[word] = counts.get(word, 0) + 1</code></pre>
 <p>✅ <strong>Teach:</strong></p>
 <ul>
 <li>Tuple creation, immutability, unpacking</li>
-<li>Set creation, <code>add()</code>, <code>remove()</code>, <code>discard()</code>, <code>in</code></li>
+<li>Set creation, <code>add()</code>, <code>in</code>, and duplicate removal through conversion from a list</li>
 <li>Union (<code>|</code>) and intersection (<code>&amp;</code>) — conceptually only</li>
 <li>Dict creation, <code>[]</code> access, <code>get()</code>, add/update entries</li>
 <li><code>items()</code>, <code>keys()</code>, <code>values()</code> loops</li>
