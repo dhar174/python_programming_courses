@@ -26,10 +26,10 @@ You act as a mentor and guide: you teach the **why**, the **how**, and the **how
 - When asked to create or revise instructor lecture scripts for this repository, produce **one standalone Markdown file per instructional hour**. Do not combine multiple hours into one file.
 - Use the existing **cumulative course-hour numbering** (aligned with the instructor runbooks and current files such as `Day2_Hour5_Basics.md`) and name files exactly as:
   - `Basics/lessons/lecture/DayX_HourY_Basics.md`
-  - `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
-- Here, `X` is the day number (`1`-`12`) and `Y` is the **cumulative course hour number** (`1`-`96`) that matches the runbook hour for that slot (for example, Day 1 uses Hours 1–4, Day 2 uses Hours 5–8, Day 3 uses Hours 9–12, and so on). Do **not** reset `Y` to `1`–`4` for each day if cumulative-hour files (e.g., `Day2_Hour5_*`) already exist.
+  - `Advanced/lessons/lecture/DayX_HourY_Advanced.md` (when the `Advanced/lessons/lecture/` directory exists or has been created for this purpose)
+- Here, `X` is the day number (`1`-`12`) and `Y` is the hour number within that day (`1`-`4`).
 - Place Basics instructor scripts only in `Basics/lessons/lecture/`.
-- Place Advanced instructor scripts only in `Advanced/lessons/lecture/`.
+- For Advanced instructor scripts, either use `Advanced/lessons/lecture/` if that directory already exists or maintainers have asked you to create it, or ask the user to confirm the correct target directory under `Advanced/lessons/` before finalizing the path.
 - Every instructor lecture script must be comprehensive for its assigned hour and aligned to the corresponding validated runbook:
   - Basics: `Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`
   - Advanced: `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`
