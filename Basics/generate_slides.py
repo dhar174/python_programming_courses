@@ -387,7 +387,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         // Initialize
         totalCounter.textContent = totalSlides;
         
-        function updateSlideDisplay() {{
+        function updateSlideDisplay(updateHash = true) {{
             // Hide all slides
             slides.forEach((slide, index) => {{
                 slide.classList.remove('active', 'previous');
@@ -409,7 +409,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             currentCounter.textContent = currentSlide + 1;
             
             // Update URL hash (for bookmarking)
-            window.location.hash = currentSlide + 1;
+            if (updateHash) {{
+                window.location.hash = currentSlide + 1;
+            }}
         }}
         
         function nextSlide() {{
@@ -487,15 +489,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             if (hash) {{
                 const slideNum = parseInt(hash) - 1;
                 if (!isNaN(slideNum)) {{
-                    goToSlide(slideNum);
-                    return;
+                    currentSlide = slideNum;
                 }}
             }}
-            updateSlideDisplay();
+            updateSlideDisplay(false);
         }});
-        
-        // Initialize first slide
-        updateSlideDisplay();
     </script>
 </body>
 </html>"""

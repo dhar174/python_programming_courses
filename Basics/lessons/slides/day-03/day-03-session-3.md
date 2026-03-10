@@ -1,11 +1,7 @@
 # Basics Day 3 — Session 3 (Hours 9–12)
 Python Programming (Basic) • Comparisons, F-Strings, Text Processing & Debugging
 
----
-
-# Session 3 Overview
-
-## Topics Covered Today
+## Session 3 Overview
 - Hour 9: Comparisons + boolean logic
 - Hour 10: String formatting with f-strings
 - Hour 11: Working with text: split/join
@@ -72,10 +68,10 @@ score = 85
 
 ---
 
-## Truthy and Falsey (Preview)
+## Truthy and Falsy (Preview)
 
 ### Quick Peek
-- **Falsey values**: `0`, `0.0`, `""`, `None`, `False`
+- **Falsy values**: `0`, `0.0`, `""`, `None`, `False`
 - Everything else is **truthy**
 
 ```python
@@ -189,7 +185,7 @@ print(f"Total: {price * (1 + tax_rate)}")
 price = 19.999
 tip = 3.5
 
-print(f"Price: ${price:.2f}")     # Price: $19.99
+print(f"Price: ${price:.2f}")     # Price: $20.00
 print(f"Tip:   ${tip:.2f}")       # Tip:   $3.50
 ```
 
