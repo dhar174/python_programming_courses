@@ -48,11 +48,11 @@ The strong projects are rarely the ones with the most ambitious idea. They are t
 
 So today’s goal is to replace vague enthusiasm with a delivery plan.
 
-### Instructor Tone for the Workshop
+### Keep the Workshop Encouraging and Concrete
 
 **[Instructor speaks:]**
 
-I want students to feel encouraged, not constrained. Planning is not about shrinking their creativity. Planning is about protecting their creativity from chaos.
+I want you to feel encouraged, not constrained. Planning is not about shrinking creativity. Planning is about protecting creativity from chaos.
 
 If a student says, “I want to build an app that tracks tasks, syncs with external APIs, has analytics dashboards, multi-user auth, notifications, exports, and a GUI,” do not dismiss the ambition. Instead say, “Great long-term vision. What is the smallest version that still proves the core value?”
 

@@ -34,11 +34,11 @@ By the end of this hour, you will be able to:
 
 **[Instructor speaks:]**
 
-Checkpoint 2 is where the course asks students to prove that their project has a real core and that the core can survive beyond a single run. This is a deceptively important transition.
+Checkpoint 2 is where you prove that your project has a real core and that the core can survive beyond a single run. This is a deceptively important transition.
 
 Before persistence, a project can look functional while still being fragile. It may perform a few actions in memory, print nice output, and then lose everything the moment the process ends. That is not yet a reliable application foundation.
 
-This checkpoint asks students to cross an architectural threshold:
+This checkpoint asks you to cross an architectural threshold:
 
 - the code is organized as a package under `src/`
 - state can be serialized to JSON

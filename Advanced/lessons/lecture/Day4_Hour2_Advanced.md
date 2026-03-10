@@ -133,7 +133,7 @@ def get_required_env(name: str) -> str:
 
 **[Instructor speaks:]**
 
-In many projects, developers use a local `.env` file during development. In this course, we should teach the pattern carefully:
+In many projects, developers use a local `.env` file during development. In this course, teach the pattern carefully:
 
 - `.env.example` may be committed
 - `.env` should usually be ignored
@@ -155,7 +155,7 @@ This tells collaborators what variables they need without exposing actual values
 
 Good secret hygiene is not just code. It includes project scaffolding.
 
-In `.gitignore`, students should exclude local secret files such as:
+In `.gitignore`, exclude local secret files such as:
 
 ```gitignore
 .env

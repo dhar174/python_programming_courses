@@ -33,11 +33,11 @@ By the end of this hour, you will be able to:
 
 **[Instructor speaks:]**
 
-Welcome to Session 4. Up to this point in the advanced course, students have been building stronger program structure: organizing code into reusable functions and classes, separating responsibilities, and thinking about applications as systems instead of as one-off scripts. That matters today, because as soon as a program starts talking to something outside itself, the stakes change.
+Welcome to Session 4. Up to this point in the advanced course, you have been building stronger program structure: organizing code into reusable functions and classes, separating responsibilities, and thinking about applications as systems instead of as one-off scripts. That matters today, because as soon as a program starts talking to something outside itself, the stakes change.
 
 In the earlier sessions, most of our programs worked with data that was already inside Python: lists, dictionaries, objects, files we controlled, and logic we wrote. Today we start consuming data that comes from somewhere else. That “somewhere else” might be a public API, an internal service, a local development endpoint, or a future capstone backend.
 
-The mental shift I want students to make is this: **outside data is untrusted until we check it**. It may be late. It may be malformed. It may be missing keys. The server may be down. The JSON may not match what we assumed yesterday. Professional-grade software is not the software that works only in the happy path; professional-grade software is software that behaves predictably when the world gets messy.
+The mental shift I want you to make is this: **outside data is untrusted until we check it**. It may be late. It may be malformed. It may be missing keys. The server may be down. The JSON may not match what we assumed yesterday. Professional-grade software is not the software that works only in the happy path; professional-grade software is software that behaves predictably when the world gets messy.
 
 So in this hour we are not just learning how to “call an API.” We are learning how to build a small, reliable client.
 
@@ -51,7 +51,7 @@ Here is the storyline for this hour:
 - Then we will talk about practical HTTP concerns: methods, status codes, timeouts, and failures.
 - After that, we will introduce a very important design habit: **JSON is a contract**.
 - Then I will demo a tiny client wrapper built with `requests`.
-- Finally, students will build a small consumer script that handles both success and failure cases cleanly.
+- Finally, you will build a small consumer script that handles both success and failure cases cleanly.
 
 **[Ask students:]** Before we start typing, where have you seen an application use outside data? Weather apps? Maps? Streaming recommendations? Payment systems? Inventory dashboards?
 
