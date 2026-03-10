@@ -1,925 +1,667 @@
-# Day 4, Hour 4: Checkpoint 4 – Control Flow Assessment
-**Python Programming Basics – Day 4 / Session 8 / Course Hour 32**
+# Day 4, Hour 4: Checkpoint 2 – Lists + String Handling (Course Hour 16)
+**Python Programming Basics – Session 4**
+
+**Course:** Python Programming (Basics)  
+**Runbook alignment:** Session 4, Course Hour 16 – Checkpoint 2: Lists + string handling  
+**Duration:** 60 minutes  
+**Mode:** Instructor-led + checkpoint lab + debrief  
+**Audience:** Beginners in Python (Basics scope only)
 
 ---
 
-## Subtitle
-**Assessment-centered instructor script for demonstrating conditionals, loops, and data structures through a CLI To-Do Manager**
+## Instructor Deliverable Script (Use Largely Verbatim)
 
-**Instructor framing:** This is the standalone script for **Day 4, Hour 4**, aligned to **Course Hour 32** in the runbook. This hour is intentionally **assessment-centric** while still following the same instructional structure used in the Day 3 lecture scripts. The checkpoint asks learners to show that they can combine control flow and data structures into one coherent program.
-
----
-
-## Timing Overview
-**Total Time:** 60 minutes  
-- Recap & transition into checkpoint mode: 5 minutes  
-- Assessment framing and rubric explanation: 10 minutes  
-- Clarifying required features and constraints: 8 minutes  
-- Live Demo – how the instructor will spot-check submissions: 7 minutes  
-- Hands-On Checkpoint Lab 4 – CLI To-Do Manager: 20 minutes  
-- Debrief, reflection, and exit ticket: 10 minutes  
+> **Instructor note:** This is an assessment-centered hour, but it should still feel supportive and teachable. Stay tightly aligned to the Session 4 runbook. The checkpoint focuses on correct list use and clean output, not advanced architecture. The build target is a simple in-memory to-do list with menu-style options for add, remove, and show. No repeating menu loop is required yet. Walk through the structure at a high level only; do not give learners a full finished solution before they work.
 
 ---
 
-## Learning Outcomes for This Hour
+## 0) Learning Outcomes (read aloud, ~2 minutes)
 
-By the end of this hour, learners will be able to:
-1. Demonstrate conditionals, loops, and data structures in one coherent CLI program
-2. Build a menu loop that remains active until quit
-3. Add, list, mark complete, and delete to-do tasks in memory
-4. Apply basic input validation, especially for non-empty task names
-5. Avoid common state and index bugs in menu-driven programs
-6. Explain how correctness, readability, required constructs, and robustness affect assessment quality
-7. Reflect on how they tested their own work under checkpoint conditions
+“By the end of this hour, you will be able to:
+1. Demonstrate list creation and list updates in a short checkpoint program.
+2. Use strings and list operations together to produce clean, user-facing output.
+3. Display a numbered list of items.
+4. Add items, remove items, and show items in a simple in-memory to-do list.
+5. Explain the difference between removing by name and removing by position.
+6. Reflect on whether your program is both correct and readable.
 
----
-
-## Section 1: Recap & Transition into Assessment Mode (5 minutes)
-
-### Framing the Hour
-
-**[Instructor speaks:]**
-
-We are now in **Day 4, Hour 4**, which aligns to **Course Hour 32** in the full Basics runbook. This is **Checkpoint 4**, our control-flow assessment point.
-
-The previous three hours built the foundation for this moment:
-
-- **Hour 29:** menu loops
-- **Hour 30:** input validation using simple guards
-- **Hour 31:** mini-project integration with a contact manager
-
-Now students will demonstrate that they can use those ideas independently in a related but not identical program.
-
-### Checkpoint Mindset
-
-**[Instructor speaks:]**
-
-When students hear the word “assessment,” some immediately become tense. It helps to set the tone carefully.
-
-Say something like this clearly and sincerely:
-
-> “This checkpoint is not here to trick you. It is here to help you prove what you can do with loops, conditions, and data structures.”
-
-That matters. Good assessment language reduces panic and supports better performance.
-
-### Transition Statement
-
-**[Instructor speaks:]**
-
-Today’s checkpoint program is a **CLI To-Do Manager**. It is similar in shape to the contact manager, but the student still has to make real choices about data storage, menu flow, and basic validation.
+This checkpoint is not about trick questions. It is about showing that you can use the list skills from this session with confidence.”
 
 ---
 
-## Section 2: Explain the Rubric – Correctness, Readability, Required Constructs, Robustness (10 minutes)
+## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
 
-### Why Share the Rubric Up Front?
-
-**[Instructor speaks:]**
-
-Students perform better when they know what “good” looks like. So before they start, explain the assessment criteria in plain language.
-
-### Rubric Category 1: Correctness
-
-**[Instructor speaks:]**
-
-Correctness means the program actually does what it is supposed to do.
-
-For this checkpoint, that includes:
-
-- the menu loop works
-- tasks can be added
-- tasks can be listed
-- tasks can be marked complete
-- tasks can be deleted
-- tasks stay in memory during the run
-
-A program may look impressive, but if “mark complete” does nothing, it is not correct.
-
-### Rubric Category 2: Readability
-
-**[Instructor speaks:]**
-
-Readability means another person can follow the code without confusion.
-
-That includes basics like:
-
-- clear variable names
-- consistent indentation
-- logical branch structure
-- understandable output messages
-
-A program can technically work and still be hard to read. We want students to value both.
-
-### Rubric Category 3: Required Constructs
-
-**[Instructor speaks:]**
-
-This checkpoint is specifically about **control flow** and **data structures**. So students need to actually use those constructs.
-
-Expected evidence includes:
-
-- a loop that repeats until quit
-- `if/elif/else` or equivalent conditional routing
-- a data structure for storing tasks (`list` of `dict`s or a `dict` of statuses)
-- basic input handling for required actions
-
-If someone submits a very different program that avoids the intended constructs, it misses the learning target.
-
-### Rubric Category 4: Robustness
-
-**[Instructor speaks:]**
-
-Robustness means the program handles ordinary mistakes reasonably well.
-
-At this Basics level, we are not asking for industrial-strength validation. We are asking for sensible protections such as:
-
-- non-empty task names
-- polite response to invalid menu choices
-- no crash when trying to complete or delete something that does not exist
-- care around indices when deleting
-
-This is the difference between “works in one perfect demo” and “works reliably enough for a beginner CLI tool.”
-
-### Student-Friendly Summary
-
-**[Instructor speaks:]**
-
-A strong checkpoint program is:
-
-- correct
-- readable
-- built with the required concepts
-- reasonably robust
-
-That four-part summary is worth repeating before work time starts.
+- **0:00–0:05** Calm framing, recap, and checkpoint expectations
+- **0:05–0:15** Review of grading focus: correct list use + clean output
+- **0:15–0:22** High-level walkthrough of the task structure only
+- **0:22–0:47** Checkpoint Lab 2: simple to-do list in memory
+- **0:47–0:55** Debrief, selected share-outs, and optional quick quiz
+- **0:55–1:00** Recap and exit ticket
 
 ---
 
-## Section 3: Clarify the Checkpoint Lab Requirements (8 minutes)
+## 2) Instructor Setup Checklist (before class)
 
-### Checkpoint Lab 4 Prompt
+- Open a clean file such as `hour16_checkpoint2_todo.py`.
+- Prepare a small example list such as `["email team", "buy notebook", "study lists"]` for explanation only.
+- Prepare one example of clean numbered output.
+- Have a short spot-check rubric ready: list storage, add item, remove item, show items, numbered output, no crash on typical inputs.
+- Decide whether learners start from a blank file or a very small scaffold.
+- Be ready to stop yourself from over-teaching. The checkpoint should measure learners’ control, not the instructor’s ability to complete the task for them.
 
-**[Instructor speaks:]**
+**Say:** “This checkpoint is a chance to show what you can already do. You do not need advanced features. You need clear thinking, careful list use, and readable output.”
 
-Students will build a **CLI To-Do Manager**.
+---
 
-Required features:
+## 3) Opening Script: Set the Tone for Checkpoint 2 (~5 minutes)
 
-- menu loop until quit
-- add task
-- list tasks
-- mark complete
-- delete task
-- store tasks in a **list of dictionaries** or a **dictionary of status**
-- include basic input validation for **non-empty task name**
+### 3.1 Reconnect to the day’s learning arc
 
-### Acceptable Data Structures
+**Say:**
+“Over the last three instructional hours, we have built a very specific skill set.
 
-#### Option A: List of Dictionaries
+First, we learned how to create and change lists.
+Then we learned how to process list items with a `for` loop.
+Then we learned how to picture lists as rows inside a larger structure.
 
-```python
-tasks = [
-    {"name": "Buy milk", "done": False},
-    {"name": "Call mom", "done": True},
-]
+Now we pause for a checkpoint that stays in the same family of ideas: lists and strings together, with output that a user can actually read.”
+
+### 3.2 Reduce unnecessary anxiety
+
+**Say:**
+“When some learners hear the word ‘checkpoint,’ they immediately assume the goal is to catch them making mistakes. That is not the purpose here.
+
+The real purpose of a checkpoint is to make learning visible.
+It answers questions like:
+- Can you store items in a list?
+- Can you update that list correctly?
+- Can you show the current items cleanly?
+- Can you produce output that a normal user could understand?”
+
+### 3.3 State the build target clearly
+
+**Say:**
+“Your checkpoint task is to build a simple in-memory to-do list.
+It needs three menu-style actions:
+- add an item
+- remove an item
+- show items
+
+At this point in the course, the menu does not need to repeat in a loop. A single pass through the user’s chosen action is enough. That scope control matters.”
+
+### 3.4 State the scope boundaries out loud
+
+**Say:**
+“We are staying in Basics scope only.
+That means:
+- use a list to store to-do items
+- keep the items as strings
+- use clean printed output
+- do not drift into files
+- do not build a large multi-menu application
+- do not introduce advanced features just because you know they exist”
+
+---
+
+## 4) Explain the Grading Focus Clearly (~10 minutes)
+
+### 4.1 What the checkpoint is really measuring
+
+**Say:**
+“This checkpoint measures a small number of important basics. If learners understand these criteria, they usually perform better because the task feels concrete instead of mysterious.”
+
+Write or read these aloud:
+
+1. **Correct list creation and updates**
+2. **Correct add and remove behavior**
+3. **Clear, readable output**
+4. **Numbered display of items when showing the list**
+5. **No crashes on typical inputs**
+6. **Reasonable code readability**
+
+### 4.2 Correct list creation and updates
+
+**Say:**
+“First, the program must really use a list.
+That means the to-do items should live in a list variable, not in separate variables.
+
+Adding should place a new string into the list.
+Removing should remove the intended item.
+Showing should display the current contents of the list.”
+
+### 4.3 Clean output matters
+
+**Say:**
+“This checkpoint is not only about internal correctness. It is also about communication.
+If the program technically works but the output is messy, confusing, or incomplete, the user experience is poor.
+
+For example, compare these two outputs:
+
+`['email team', 'buy notebook', 'study lists']`
+
+and
+
+```text
+To-Do List:
+1. email team
+2. buy notebook
+3. study lists
 ```
 
-This structure is usually the easiest for readable listing.
+The second version is much easier for a user to read.”
 
-#### Option B: Dictionary of Status
+### 4.4 Numbered output should be explicit
+
+**Say:**
+“When learners show the to-do items, they should display them in a numbered list format.
+That means the output should look like a list a human would naturally read.
+
+A small detail like numbering makes a big difference in professionalism.”
+
+### 4.5 Remove by name vs remove by index confusion
+
+**Say:**
+“The runbook names one important pitfall explicitly: confusion between removing by name and removing by index.
+
+For this checkpoint, a clean beginner path is usually removing by name with `remove()` because the to-do items are strings.
+
+If the learner tries to use `pop()`, they need to understand that `pop()` uses an index, not a name.”
+
+### 4.6 The checkpoint is about calm correctness
+
+**Say:**
+“Remind learners that they do not need to add every possible feature. A smaller, correct, readable solution is stronger than a larger, fragile one.”
+
+---
+
+## 5) High-Level Walkthrough Only: Do Not Give the Full Solution (~7 minutes)
+
+### 5.1 Explain the structure without handing over the answer
+
+**Say:**
+“I am going to walk through the shape of a good solution, but I am not going to project or hand you a full finished answer. The purpose is to help you organize your thinking, not to remove the problem-solving step.”
+
+### 5.2 Step 1: create the list
+
+**Say:**
+“A good starting point is an empty list if the learner wants to build from scratch, or a short starter list if the exercise format provides one.”
+
+Show this tiny fragment only:
 
 ```python
-tasks = {
-    "Buy milk": False,
-    "Call mom": True,
-}
+todo_items = []
 ```
 
-This is also acceptable if students use it correctly.
+Then say:
 
-### Recommended Default for Most Learners
+“This line creates the storage structure. Nothing more, nothing less.”
 
-**[Instructor speaks:]**
+### 5.3 Step 2: ask the user which action they want
 
-For most students, I recommend a **list of dictionaries** because it naturally supports listing with numbers and keeps each task record explicit.
+**Say:**
+“The checkpoint uses menu-style options, but not a repeating menu loop yet. That means the learner can ask once which action they want, then branch based on that choice.”
 
-### Required Behaviors in Plain Language
-
-1. **Add task**
-   - ask for a task name
-   - reject empty task names
-   - store the task in memory
-
-2. **List tasks**
-   - show all tasks
-   - indicate whether each task is complete or not
-
-3. **Mark complete**
-   - let the user mark a task as done
-   - this may be by name or by number, depending on the student’s design
-
-4. **Delete task**
-   - remove a task safely
-   - avoid index errors
-
-5. **Quit**
-   - stop the menu loop cleanly
-
-### Suggested Simplification for Stronger Success Rates
-
-**[Instructor speaks:]**
-
-If you want to keep the checkpoint accessible, encourage students to use **task numbers** for complete/delete after listing tasks. That reduces ambiguity when there are duplicate names.
-
-However, if they choose name-based complete/delete and it works reliably, that is also fine.
-
----
-
-## Section 4: Live Demo – How the Instructor Will Spot-Check Quickly (7 minutes)
-
-### Why Model Spot-Checking?
-
-**[Instructor speaks:]**
-
-The runbook calls for a simple demo of how the checkpoint will be tested:
-
-- run the program
-- try invalid input
-- try missing data
-
-This is helpful because students learn what good self-testing looks like.
-
-### Demo Script to Narrate
-
-**[Instructor speaks:]**
-
-I am not going to build the whole solution here. I am going to show how I would quickly evaluate whether a student program is ready.
-
-### Spot-Check Sequence
-
-1. **Run the program**
-   - Does the menu appear immediately?
-
-2. **Add a task**
-   - Example: `Buy milk`
-   - Do I get a confirmation?
-
-3. **List tasks**
-   - Does the task appear?
-   - Is completion status visible?
-
-4. **Try invalid input**
-   - Example: choose menu option `9`
-   - Does the program recover politely?
-
-5. **Try missing data**
-   - Example: delete or complete a task number that does not exist
-   - Does the program avoid crashing?
-
-6. **Quit**
-   - Does the loop end cleanly?
-
-### Short Instructor Demo Snippet
+Show only the idea, not a full solution:
 
 ```python
-print("\nQuick self-test checklist:")
-print("1. Add task")
-print("2. List tasks")
-print("3. Try invalid menu choice")
-print("4. Try missing task")
-print("5. Quit")
+action = input("Choose an action: add, remove, or show: ")
 ```
 
-### Key Message to Students
+### 5.4 Step 3: if the user chooses add
 
-**[Instructor speaks:]**
+**Say:**
+“If the action is `add`, the learner should ask for a to-do item and append it to the list.”
 
-Before you call your program “done,” run the same kind of spot-check on your own work. If you only test the happy path once, you are not finished.
-
-### Prediction Prompt
-
-**[Instructor asks:]**
-
-If deleting uses list positions, what bug might happen if we do not check whether the chosen number is valid?
-
-[Expected answer: an `IndexError` or deletion of the wrong item.]
-
----
-
-## Section 5: Hands-On Checkpoint Lab 4 – Build the CLI To-Do Manager (20 minutes setup + work time)
-
-### Assessment Prompt
-
-**Checkpoint Lab 4: Build a CLI To-Do Manager**
-
-Create a command-line to-do manager that allows the user to manage tasks during one program run.
-
-### Required Features
-
-Your program must:
-
-- use a menu loop until the user quits
-- add a task
-- list tasks
-- mark a task complete
-- delete a task
-- store tasks in a **list of dictionaries** or **dictionary of status**
-- include basic input validation for **non-empty task names**
-
-### Completion Criteria
-
-A submission meets the checkpoint target when:
-
-- ✅ the menu loop works  
-- ✅ tasks persist in memory during the run  
-- ✅ complete and delete actions work  
-- ✅ invalid or empty task input is handled sensibly  
-- ✅ the program does not lose all data during each menu cycle  
-
-### Recommended Starter Structure
+Show a tiny fragment:
 
 ```python
-tasks = []
-running = True
-
-while running:
-    print("\n=== To-Do Manager ===")
-    print("1. Add task")
-    print("2. List tasks")
-    print("3. Mark complete")
-    print("4. Delete task")
-    print("Q. Quit")
-
-    choice = input("Choose an option: ").strip().lower()
-
-    if choice == "1":
-        # add task
-        pass
-    elif choice == "2":
-        # list tasks
-        pass
-    elif choice == "3":
-        # mark complete
-        pass
-    elif choice == "4":
-        # delete task
-        pass
-    elif choice == "q":
-        running = False
-    else:
-        print("Invalid choice.")
+new_item = input("Enter a to-do item: ")
+todo_items.append(new_item)
 ```
 
-### Suggested Task Structure
+### 5.5 Step 4: if the user chooses remove
+
+**Say:**
+“If the action is `remove`, the learner should ask for the item name, then remove it if it exists. A membership check is a good beginner move here.”
+
+Show only the key shape:
 
 ```python
-{"name": "Buy milk", "done": False}
+item_to_remove = input("Enter the item to remove: ")
+
+if item_to_remove in todo_items:
+    todo_items.remove(item_to_remove)
 ```
 
-### A Beginner-Friendly Add Pattern
+Do **not** continue into a full finished program here.
+
+### 5.6 Step 5: if the user chooses show
+
+**Say:**
+“If the action is `show`, the learner should print the items in a numbered list format. There are multiple valid ways to do that. For this checkpoint, a simple counter plus a `for` loop is completely appropriate.”
+
+Show only the display pattern, still not a full program:
 
 ```python
-task_name = input("Enter task name: ").strip()
-
-if task_name == "":
-    print("Task name cannot be empty.")
-else:
-    tasks.append({"name": task_name, "done": False})
-    print(f"Added task: {task_name}")
+number = 1
+for item in todo_items:
+    print(f"{number}. {item}")
+    number += 1
 ```
 
-### A Beginner-Friendly List Pattern
+### 5.7 Emphasize what you are intentionally not giving
+
+**Say:**
+“Notice what I did not do. I did not connect all of those pieces into one full answer for you. You still need to make the decisions about the branching structure, the exact output wording, and the flow of the program. That is the checkpoint part.”
+
+---
+
+## 6) Checkpoint Lab Instructions (~5 minutes of framing, then work time)
+
+### 6.1 State the build requirements exactly
+
+**Say:**
+“Here is the checkpoint task in clear, simple language.”
+
+```text
+Checkpoint Lab 2: Simple To-Do List (in-memory)
+- Menu options (no loop required yet): add item, remove item, show items.
+- Store items in a list.
+- Show numbered list output.
+```
+
+Then say:
+
+“Your code should stay in memory only. No file saving. No repeated menu loop required yet. No advanced features required.”
+
+### 6.2 Clarify what counts as success
+
+**Say:**
+“A successful checkpoint submission can do these three things:
+- add an item correctly
+- remove an item correctly
+- show items clearly with numbering
+
+And it should not crash on normal, expected usage.”
+
+### 6.3 Encourage a build order
+
+**Say:**
+“If you are not sure where to start, use this order:
+1. create the list
+2. get the user’s action
+3. make `show` work first because it is easy to see
+4. make `add` work
+5. make `remove` work
+6. clean up your output”
+
+This gives anxious learners a reliable path.
+
+### 6.4 Remind them to test small cases
+
+**Say:**
+“Test your program with very small examples.
+For example:
+- start with one item and show it
+- add one item and show again
+- remove one item and show again
+
+Small tests are easier to trust.”
+
+---
+
+## 7) Instructor Support During Work Time (~20–25 minutes)
+
+### 7.1 What to say while circulating
+
+Use these prompts instead of taking over the keyboard:
+- “Show me where the list is created.”
+- “What action did the user choose here?”
+- “How are you deciding which block of code runs?”
+- “If the user chooses `remove`, what value are you asking for?”
+- “Are you removing by name or by position?”
+- “Where is your numbered output?”
+- “After changing the list, are you showing the updated result?”
+
+### 7.2 Encourage debugging through observation
+
+**Say to learners who are stuck:**
+“Before you change more code, print what you already have.
+Print the action.
+Print the list before the change.
+Print the list after the change.
+That often reveals the misunderstanding quickly.”
+
+### 7.3 Support learners who finish one branch only
+
+**Say:**
+“If you finish `show` first, that is good progress.
+If you finish `add` second, that is more progress.
+Then move to `remove`.
+A checkpoint can be built piece by piece.”
+
+### 7.4 Keep the class inside scope
+
+If a learner starts designing a full application with repeating menus, data files, or advanced validation, say:
+
+“That is interesting, but save it for later. Right now, the checkpoint is measuring the basics. Finish the Basics version first.”
+
+### 7.5 Gentle help for learners who want to remove by number
+
+**Say:**
+“You may remove by number if you are very clear about the difference between number shown to the user and index used by Python, but for this checkpoint, removing by item name is often simpler and safer.”
+
+That keeps the assessment aligned to the stated pitfall.
+
+---
+
+## 8) Common Pitfalls and How to Coach Through Them (~6 minutes)
+
+### 8.1 Pitfall: remove by name vs remove by index confusion
+
+**Say:**
+“This is the most likely conceptual mistake in the checkpoint.
+If the list contains strings like `"buy milk"` and the learner writes `pop("buy milk")`, the code is mixing up value and position.
+
+Coach with the question:
+‘Are you trying to remove by the item itself, or by where it sits in the list?’”
+
+### 8.2 Pitfall: forgetting to reprint after a change
+
+**Say:**
+“Sometimes the learner successfully changes the list but never shows the updated state. Ask them: ‘How will the user know the action worked?’”
+
+### 8.3 Pitfall: unclear output labels
+
+**Say:**
+“Output like `['task1', 'task2']` is technically valid Python output, but it is not the clearest user-facing output. Encourage labels like `To-Do List:` and numbered lines beneath it.”
+
+### 8.4 Pitfall: action text mismatch
+
+**Say:**
+“If the learner expects `add` but types `Add`, the program may not match. At this stage, a simple `.lower()` is acceptable if already known, but do not let validation become the main story. The main story is list use and clean output.”
+
+### 8.5 Pitfall: empty list display confusion
+
+**Say:**
+“If the list is empty, learners may wonder what to print. A simple message like `No items in the to-do list.` is perfectly reasonable and user-friendly.”
+
+A tiny display fragment you can suggest if needed:
 
 ```python
-if len(tasks) == 0:
-    print("No tasks yet.")
-else:
-    for index, task in enumerate(tasks, start=1):
-        status = "Done" if task["done"] else "Not done"
-        print(f"{index}. {task['name']} [{status}]")
+if len(todo_items) == 0:
+    print("No items in the to-do list.")
 ```
 
-### A Beginner-Friendly Complete Pattern
+### 8.6 Pitfall: turning the checkpoint into a later-topic lesson
 
-```python
-if len(tasks) == 0:
-    print("No tasks to complete.")
-else:
-    task_number_text = input("Enter task number to mark complete: ").strip()
+**Say:**
+“This is not the time to introduce advanced loop design, exceptions, files, or functions as the core teaching focus. Keep bringing the class back to the essentials.”
 
-    if task_number_text.isdigit():
-        task_index = int(task_number_text) - 1
+---
 
-        if 0 <= task_index < len(tasks):
-            tasks[task_index]["done"] = True
-            print(f"Marked '{tasks[task_index]['name']}' as complete.")
-        else:
-            print("Task number not found.")
-    else:
-        print("Please enter a valid task number.")
+## 9) Debrief and Selected Share-Outs (~8 minutes)
+
+### 9.1 Reassemble the room calmly
+
+**Say:**
+“Let’s pause and look at what made solutions strong. Remember, the goal is not to compare who wrote the longest code. The goal is to identify what made the code clear and correct.”
+
+### 9.2 Ask targeted reflection questions
+
+Ask:
+- “Who used a list and can point to where items were added?”
+- “Who can explain how their remove logic works?”
+- “Who printed the items in a numbered format?”
+- “Who added a helpful message when the list was empty or an item was missing?”
+
+### 9.3 Model high-level solution reasoning only
+
+**Say:**
+“A strong checkpoint solution usually has this shape:
+- create a list
+- ask for the action
+- branch based on the action
+- update or display the list as needed
+- print clean output so the user sees what happened
+
+That is the level of reasoning I want learners to take away.”
+
+### 9.4 Reinforce that readable output is part of programming skill
+
+**Say:**
+“When beginners first start coding, they often focus only on ‘Does it run?’ That is an important question, but it is not the only question.
+
+A second important question is ‘Can a human understand the output?’
+
+This checkpoint intentionally asks for both.”
+
+---
+
+## 10) Optional Quick Quiz: Strings + Lists + Loops Basics (~4 minutes)
+
+Use these as verbal checks, quick polling, or a mini whiteboard quiz.
+
+1. What does `append()` do to a list?
+2. What is the difference between `remove()` and `pop()`?
+3. In plain English, what does `for item in todo_items:` mean?
+4. Why is numbered output easier for a user to read?
+5. If a list is empty, what is one polite message you could print?
+
+**Instructor answer direction:**
+- `append()` adds one item to the end
+- `remove()` uses a value; `pop()` uses an index or the last item by default
+- the loop visits each item one at a time
+- numbering makes the output clearer and easier to scan
+- something like `No items in the to-do list.`
+
+---
+
+## 11) Recap Script (~2 minutes)
+
+**Say:**
+“Checkpoint 2 brought together several important basics from Session 4.
+
+We used lists to store items.
+We used string handling to collect and display text clearly.
+We used list operations to add and remove values.
+We used simple loop logic to print numbered items.
+And we kept the scope under control so the solution stayed readable.
+
+That combination matters. Real beginner programs are not just about storing data. They are also about presenting it clearly.”
+
+---
+
+## 12) Exit Ticket (~1 minute)
+
+Ask learners to answer verbally, in chat, or on paper:
+
+1. What is the difference between removing an item by name and removing an item by index?
+2. Why is a list a good structure for a simple to-do program?
+3. What makes output ‘clean’ from a user’s point of view?
+4. If your program works but the output is confusing, is the job fully done? Why or why not?
+
+**Expected direction of answers:**
+- name means the value itself, index means the position
+- a list stores multiple to-do strings together in order
+- clear labels, numbering, and readable messages
+- no, because usable programs need understandable output too
+
+---
+
+## 13) Instructor Notes for Moving Beyond the Checkpoint
+
+**Say:**
+“Session 4 was all about building confidence with lists.
+
+Across these four hours, learners have now practiced:
+- creating and changing lists
+- iterating through lists with `for` loops
+- thinking about small table-like structures with nested lists
+- combining list skills with string handling in a checkpoint task
+
+That is strong progress. The next sessions will broaden the learner’s toolbox, but this foundation matters because collections show up everywhere in Python.”
+
+Close with this final reminder:
+
+“A short, correct, readable program is a strong program.”
+
+---
+
+## Appendix: Instructor Reinforcement Notes for Hour 16
+
+### A) A simple spot-check rubric for live support
+
+While learners work, keep the checkpoint aligned to a few visible questions:
+
+1. Is there a real list storing the to-do items?
+2. Does the learner have a clear action choice such as add, remove, or show?
+3. Does add actually place a new string into the list?
+4. Does remove operate on the intended item?
+5. Does show produce readable, numbered output?
+6. Does the program avoid crashing on normal inputs?
+
+This keeps your support focused on the runbook goals: correct list use and clean output.
+
+### B) Example instructor questions that preserve learner ownership
+
+Instead of taking the keyboard, try these prompts:
+
+- “What should the user type first?”
+- “What should happen to the list after that?”
+- “How will the user know the action worked?”
+- “Are you removing by the item text or by its position?”
+- “What output would look clearest to someone who is not reading your code?”
+
+These questions guide the learner toward self-correction.
+
+### C) Small test scenarios you can suggest during work time
+
+If a learner says, “I think it works,” suggest one of these tests:
+
+**Test 1: Empty show**
+- choose `show`
+- expected idea: a polite message or an empty-state output
+
+**Test 2: Add one item**
+- choose `add`
+- enter `call dentist`
+- expected idea: the item appears when shown
+
+**Test 3: Remove existing item**
+- choose `remove`
+- remove a real item from the list
+- expected idea: the item disappears and the output confirms the change
+
+**Test 4: Remove missing item**
+- choose `remove`
+- enter an item not in the list
+- expected idea: a readable message instead of a crash
+
+These tests are small enough that beginners can reason about them easily.
+
+### D) Example clean output formats for reference
+
+You can show the class examples of good output without showing a full solution.
+
+**Show action example**
+
+```text
+To-Do List:
+1. email team
+2. buy notebook
+3. study lists
 ```
 
-### A Beginner-Friendly Delete Pattern
+**Empty list example**
 
-```python
-if len(tasks) == 0:
-    print("No tasks to delete.")
-else:
-    task_number_text = input("Enter task number to delete: ").strip()
-
-    if task_number_text.isdigit():
-        task_index = int(task_number_text) - 1
-
-        if 0 <= task_index < len(tasks):
-            removed_task = tasks.pop(task_index)
-            print(f"Deleted task: {removed_task['name']}")
-        else:
-            print("Task number not found.")
-    else:
-        print("Please enter a valid task number.")
+```text
+No items in the to-do list.
 ```
 
-### Common Pitfalls to Watch For
+**Remove-missing-item example**
 
-1. **Reinitializing the list inside the loop**  
-   This erases all tasks every cycle.
-
-2. **Index errors when deleting**  
-   Students may forget that list indices start at 0 but user-facing numbering often starts at 1.
-
-3. **Empty task names**  
-   Without a basic check, students may add blank tasks.
-
-4. **No invalid-choice handling**  
-   The program becomes brittle if unsupported menu input is ignored or crashes.
-
-5. **Marking complete on missing task**  
-   The code must check the selected number or name before updating.
-
-### Optional Extension
-
-If students finish early, they may add a filter such as:
-
-- show only completed tasks
-- show only incomplete tasks
-
-This stays within Basics scope but should not distract from required functionality.
-
-### Instructor Circulation Prompts
-
-**[Instructor speaks:]**
-
-While students work, use short assessment-friendly prompts:
-
-- “Show me where your tasks are stored.”
-- “How do you know the loop ends?”
-- “What happens if I enter an empty task name?”
-- “What happens if I choose task number 99?”
-- “Can you prove complete/delete works with a quick test?”
-
-These prompts support the assessment without giving away the entire solution.
-
----
-
-## Section 6: Debrief, Reflection, and Exit Ticket (10 minutes)
-
-### Debrief Focus
-
-**[Instructor speaks:]**
-
-Because this is an assessment-centered hour, the debrief should focus less on re-teaching content and more on reflection, quality, and transfer.
-
-### Debrief Questions
-
-**[Instructor asks:]**
-
-- What testing strategy did you use before calling your program complete?
-- Where did input validation matter most?
-- What structure did you choose for task storage, and why?
-- What bug did you catch by trying an invalid input or missing task?
-
-### Instructor Synthesis
-
-**[Instructor speaks:]**
-
-This checkpoint is about more than one to-do manager. It is about whether students can organize their thinking around:
-
-- looped user interaction
-- conditional routing
-- stored state
-- safe updates and deletions
-- predictable behavior when input is imperfect
-
-If they can do that here, they are building durable programming habits.
-
-### Exit Ticket
-
-**[Instructor asks:]**
-
-Answer in one or two sentences:
-
-**What is one strategy you used to test a boundary case in your To-Do Manager?**
-
-Examples of acceptable answers:
-
-- “I tried deleting from an empty list.”
-- “I entered a task number bigger than the number of tasks.”
-- “I tested an empty task name to make sure it was rejected.”
-- “I tried an invalid menu choice like `9`.”
-
----
-
-## Recap: What We Accomplished in Day 4, Hour 4 / Course Hour 32
-
-In this checkpoint hour, learners:
-
-- demonstrated control flow and data structure skills in a single program
-- built or refined a CLI To-Do Manager
-- used a menu loop until quit
-- added, listed, completed, and deleted in-memory tasks
-- applied basic validation for empty input and invalid choices
-- practiced self-testing with quick spot-checks and boundary cases
-
-**[Instructor speaks:]**
-
-This is a strong checkpoint because it asks students to combine what they know instead of repeating one isolated pattern. That is exactly how confidence grows: not from memorizing syntax, but from using familiar tools together in a meaningful way.
-
----
-
-## Appendix A: Instructor Exemplar Solution
-
-```python
-# todo_manager.py
-# Checkpoint 4 exemplar using list of dictionaries
-
-tasks: list[dict[str, object]] = []
-running = True
-
-while running:
-    print("\n=== To-Do Manager ===")
-    print("1. Add task")
-    print("2. List tasks")
-    print("3. Mark complete")
-    print("4. Delete task")
-    print("Q. Quit")
-
-    choice = input("Choose an option: ").strip().lower()
-
-    if choice == "1":
-        task_name = input("Enter task name: ").strip()
-
-        if task_name == "":
-            print("Task name cannot be empty.")
-        else:
-            tasks.append({"name": task_name, "done": False})
-            print(f"Added task: {task_name}")
-
-    elif choice == "2":
-        if len(tasks) == 0:
-            print("No tasks yet.")
-        else:
-            print("\nTasks:")
-            for index, task in enumerate(tasks, start=1):
-                status = "Done" if task["done"] else "Not done"
-                print(f"{index}. {task['name']} [{status}]")
-
-    elif choice == "3":
-        if len(tasks) == 0:
-            print("No tasks to complete.")
-        else:
-            task_number_text = input("Enter task number to mark complete: ").strip()
-
-            if task_number_text.isdigit():
-                task_index = int(task_number_text) - 1
-
-                if 0 <= task_index < len(tasks):
-                    tasks[task_index]["done"] = True
-                    print(f"Marked '{tasks[task_index]['name']}' as complete.")
-                else:
-                    print("Task number not found.")
-            else:
-                print("Please enter a valid task number.")
-
-    elif choice == "4":
-        if len(tasks) == 0:
-            print("No tasks to delete.")
-        else:
-            task_number_text = input("Enter task number to delete: ").strip()
-
-            if task_number_text.isdigit():
-                task_index = int(task_number_text) - 1
-
-                if 0 <= task_index < len(tasks):
-                    removed_task = tasks.pop(task_index)
-                    print(f"Deleted task: {removed_task['name']}")
-                else:
-                    print("Task number not found.")
-            else:
-                print("Please enter a valid task number.")
-
-    elif choice == "q":
-        print("Goodbye!")
-        running = False
-
-    else:
-        print("Invalid choice. Please select 1, 2, 3, 4, or Q.")
+```text
+That item was not found.
 ```
 
----
+The exact wording can vary. The important thing is that the output is easy to understand.
 
-## Appendix B: Suggested Rubric Notes for Instructors
+### E) Coaching language for common moments of frustration
 
-### Correctness
-- Menu loop repeats until quit
-- All four required actions are present
-- Task state persists during run
-- Complete/delete actually change program state
+If a learner says, “My code is messy,” say:
 
-### Readability
-- Clear names like `tasks`, `task_name`, `choice`
-- Indentation is consistent
-- Output is understandable to the user
-- Code branches align with menu choices
+“Choose clarity over cleverness. One small step at a time is better than trying to solve everything in one jump.”
 
-### Required Constructs
-- Loop present
-- Conditional routing present
-- Data structure present
-- Basic validation present
+If a learner says, “Can I make the menu repeat forever?” say:
 
-### Robustness
-- Empty task names rejected
-- Invalid menu choice handled
-- Out-of-range task numbers handled
-- Empty-list cases handled politely
+“You can later. For this checkpoint, finish the one-pass version first. The Basics version is the required version.”
 
----
+If a learner says, “Can you just give me the answer?” say:
 
-## Appendix C: Common Assessment Errors and Interventions
+“I can help you see the shape of the answer, but I want you to connect the pieces so the checkpoint reflects what you understand.”
 
-### Error: Tasks disappear after each action
-**Cause:** `tasks = []` placed inside the loop.  
-**Intervention:** “Should the task list be created once or every cycle?”
+### F) A high-level closing reflection you can use
 
-### Error: Deleting the wrong task
-**Cause:** Off-by-one confusion between display number and list index.  
-**Intervention:** “If the user sees task 1, what is its actual list index?”
+At the end of the hour, you can say:
 
-### Error: Program crashes on invalid complete/delete selection
-**Cause:** No digit or range check before indexing.  
-**Intervention:** “What should happen if I type `abc` or `99` here?”
+“This checkpoint matters because it combines three beginner habits that really matter in real programs:
+- storing related values together
+- changing those values correctly
+- presenting results in a way another person can read
 
-### Error: Blank tasks allowed
-**Cause:** Missing `.strip()` or empty-string check.  
-**Intervention:** “What does your code do if the user just presses Enter?”
+That combination is more important than writing the shortest code.”
 
-### Error: Student stops after add/list only
-**Cause:** Incomplete feature set under time pressure.  
-**Intervention:** “Which required action can you implement next with the least extra code?”
+### G) Extra review prompts for the checkpoint debrief
 
----
+If you want a slightly longer closing discussion, ask:
 
-## Appendix D: Sample Boundary and Spot-Check Cases
+- “What made your output easier to read?”
+- “How did you decide whether to remove by name or by position?”
+- “What message did you show when an item was missing?”
+- “What part of the checkpoint felt easiest?”
+- “What part helped you realize you understand lists better than you did an hour ago?”
 
-Use these cases during grading, conferencing, or self-checking.
+These questions help learners reflect on both correctness and communication.
 
-1. Start program and choose list before adding anything
-2. Add `Buy milk`
-3. Add `Study Python`
-4. List tasks and confirm both appear as not done
-5. Mark task 2 complete
-6. List tasks and confirm status changed
-7. Try menu choice `9`
-8. Try delete task number `99`
-9. Try adding an empty task name
-10. Delete task 1 and verify remaining list
-11. Quit cleanly
+### H) Final encouragement script
 
-This test set is intentionally small but revealing.
+You can close the checkpoint hour with these words:
 
----
+“You do not need a giant program to prove real progress. A small, correct, readable program is meaningful work.
 
-## Appendix E: Additional Instructor Support Moves
+If you can store items in a list, change them on purpose, and present them clearly to a user, you are doing real programming.
 
-### If students freeze because it is an assessment
+That is exactly what this checkpoint was designed to reveal.”
 
-Use calming, specific language:
+### I) Suggested final self-check learners can run before submitting
 
-- “Start with the menu shell.”
-- “Get add working before anything else.”
-- “List tasks as soon as you can so you can see your data.”
-- “Then add complete and delete one at a time.”
+Invite learners to ask themselves:
 
-This keeps the hour assessment-centered but not emotionally overwhelming.
+- “Does my program really use a list?”
+- “Can I add an item and see the change?”
+- “Can I remove an item correctly?”
+- “Does `show` produce numbered output?”
+- “Would another person understand the printed messages?”
 
-### If students are close but incomplete
+Then say:
 
-Coach them toward the highest-value unfinished feature. For example:
+“If the answer to those questions is yes, then the checkpoint is doing what it is supposed to do. It is showing that you can combine list skills and clean string output in a practical beginner program.”
 
-- If add/list work, push next toward mark complete.
-- If complete works but delete does not, simplify delete to task number removal.
-- If validation is weak, add the non-empty task name check first.
+### J) Closing teaching sentence to repeat aloud
 
-This helps students meet the checkpoint targets efficiently.
+Use this final line if you want a clean end to Session 4:
 
-### If students want to over-engineer
+“Clear output matters because programs are for people, not just for Python.”
 
-Some learners may want to add due dates, categories, priorities, or colored output. Gently redirect:
+That sentence reinforces why the checkpoint focuses on both correct list use and readable string output.
 
-“Those are interesting stretch ideas, but first make sure your required checkpoint features are correct and robust.”
+One final checkpoint reminder: do not measure success only by how much code was written. Measure success by whether the program uses a list correctly, responds to a simple action clearly, and shows output that another person can read without guessing.
 
-That protects alignment to the rubric.
+If there is time for one final reflection, ask learners to describe their program in plain English before they leave: “My program stores to-do items in a list, lets the user choose a simple action, and shows the results clearly.” That sentence reinforces both the technical structure and the communication goal of the checkpoint.
 
----
+A final instructor reminder: the checkpoint stays successful when the learner can explain what the list stores, what action the user selected, and what the user sees after the action. That explanation is just as important as the code itself because it shows intentional, readable problem solving.
 
-## Appendix F: Quick Reference Card for Students
+Keep the closing message simple: correct list use plus clean output is already meaningful programming work, and that is the exact target of Checkpoint 2.
 
-### Checkpoint Success Checklist
-
-- [ ] Menu repeats until quit
-- [ ] Add task works
-- [ ] List tasks works
-- [ ] Mark complete works
-- [ ] Delete task works
-- [ ] Empty task names are rejected
-- [ ] Invalid menu choices are handled
-- [ ] Tasks stay in memory while running
-
-### High-Value Reminders
-
-- create the task list outside the loop
-- validate before indexing into a list
-- display numbering can start at 1 even though indices start at 0
-- test empty and invalid cases, not just happy paths
-- readable code is part of quality
-
----
-
-## Appendix G: Instructor Observation Checklist During the Checkpoint
-
-Use this as a quiet circulation tool while students work.
-
-### Program Structure Checks
-
-- [ ] Does the student have a visible menu loop?
-- [ ] Is the shared task structure created outside the loop?
-- [ ] Do the menu branches line up clearly with the listed choices?
-- [ ] Is there an obvious quit path?
-
-### Feature Checks
-
-- [ ] Add task implemented
-- [ ] List tasks implemented
-- [ ] Mark complete implemented
-- [ ] Delete implemented
-- [ ] Basic non-empty validation present
-
-### Robustness Checks
-
-- [ ] Invalid menu choice handled
-- [ ] Empty task list handled gracefully
-- [ ] Out-of-range selection handled safely
-- [ ] No obvious data reset bug
-
-### Coaching Priority Rule
-
-If a student is behind, prioritize support in this order:
-
-1. menu + quit
-2. add
-3. list
-4. complete
-5. delete
-6. polish
-
-That order keeps the checkpoint achievable.
-
----
-
-## Appendix H: Sample Instructor Conference Script
-
-If you are doing short desk-side check-ins, these are helpful near-verbatim prompts.
-
-### When a student says, “I don’t know where to start.”
-
-**[Instructor speaks:]**
-
-“Start with the smallest working version. Can you print the menu and make quit work first? Once that works, we’ll add one feature at a time.”
-
-### When a student says, “My code is long and messy.”
-
-**[Instructor speaks:]**
-
-“Messy is okay while building. Let’s focus on whether each branch does one clear job. Which branch works already? Which branch is next?”
-
-### When a student says, “Delete is broken.”
-
-**[Instructor speaks:]**
-
-“Before deleting, can you prove which task you matched? What number or name did the program receive, and what index does that map to?”
-
-### When a student says, “I think I’m done.”
-
-**[Instructor speaks:]**
-
-“Great. Show me your self-test. Add a task, list it, try an invalid menu choice, try an invalid task number, then quit. If all of that behaves well, you are in strong shape.”
-
-### When a student is overbuilding
-
-**[Instructor speaks:]**
-
-“Your extra ideas are good, but let’s secure the checkpoint requirements first. Correctness on the required features matters more than optional features that only partly work.”
-
----
-
-## Appendix I: Reflection and Self-Assessment Prompts
-
-These prompts help students think like evaluators of their own code.
-
-### Quick Written Prompts
-
-- “The feature I trust most is … because …”
-- “The feature I tested most carefully was …”
-- “One boundary case I checked was …”
-- “If I had five more minutes, I would improve …”
-
-### Verbal Pair-Share Prompts
-
-Ask students to explain to a partner:
-
-- how their tasks are stored
-- how their loop ends
-- how they prevent empty task names
-- how they handle invalid selections
-
-If a student can explain those four pieces clearly, they usually understand the core design of their program.
-
-### Instructor Use
-
-These reflections are useful even if a student’s code is incomplete. They reveal whether the student understands the intended control-flow design even when implementation is still in progress.
-
----
-
-## Appendix J: Optional Post-Checkpoint Review Notes
-
-If time remains after collection or informal grading, use the class’s experience to reinforce durable habits.
-
-### Discussion Point 1: Why state placement matters
-
-Revisit the classic bug:
-
-```python
-while running:
-    tasks = []
-```
-
-**[Instructor speaks:]**
-
-“A checkpoint like this makes the cost of that bug obvious. If tasks reset every cycle, your program cannot function as a manager at all.”
-
-### Discussion Point 2: Why happy-path testing is not enough
-
-Students often test:
-
-- add one task
-- list one task
-
-and stop there.
-
-Encourage the class to name additional checks that reveal quality:
-
-- deleting from an empty list
-- choosing menu option `9`
-- typing an empty task name
-- marking complete with an out-of-range number
-
-### Discussion Point 3: How readability supports correctness
-
-Messy code is not just a style issue. It makes bugs harder to spot. When branch logic is easy to read, debugging becomes faster. That is why readability belongs in the rubric.
-
----
-
-## Appendix K: Short Oral Wrap-Up Script for the End of the Checkpoint
-
-Use this short closing script if you want a more reflective ending before dismissing students.
-
-**[Instructor speaks:]**
-
-Today’s checkpoint was not just about tasks. It was about whether you can take a problem, organize it into menu choices, store data in memory, and update that data safely while the user interacts with your program.
-
-That is a real programming skill.
-
-Some of you finished every required feature. Some of you got close but still have one branch to clean up. In both cases, the important question is not only “What did I complete?” but also “What did I learn about building programs in stages?”
-
-If your program had a bug, that does not erase the learning. In fact, checkpoints often make your next step clearer:
-
-- test earlier
-- build one branch at a time
-- validate before indexing
-- keep shared state outside the loop
-
-Those are durable lessons, and they matter far beyond this one assessment.
-
----
-
-**End of Day 4, Hour 4 Script / Course Hour 32**
+That is enough for a strong Basics-level checkpoint hour.

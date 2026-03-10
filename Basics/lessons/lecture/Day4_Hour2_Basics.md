@@ -1,1064 +1,798 @@
-# Day 4, Hour 2: Input Validation (Basics Approach)
-**Python Programming Basics – Day 4 / Session 8 / Course Hour 30**
+# Day 4, Hour 2: Iterating Lists with `for` Loops (Course Hour 14)
+**Python Programming Basics – Session 4**
+
+**Course:** Python Programming (Basics)  
+**Runbook alignment:** Session 4, Course Hour 14 – Iterating lists with `for` loops (gentle intro)  
+**Duration:** 60 minutes  
+**Mode:** Instructor-led + live coding + guided lab  
+**Audience:** Beginners in Python (Basics scope only)
 
 ---
 
-## Subtitle
-**Helping beginner programs stay calm when users type something unexpected**
+## Instructor Deliverable Script (Use Largely Verbatim)
 
-**Instructor framing:** This file is the standalone script for **Day 4, Hour 2**, aligned to **Course Hour 30** in the runbook. It builds directly on the menu-loop work from the previous hour and focuses on a Basics-friendly validation pattern: **check first, convert second**.
-
----
-
-## Timing Overview
-**Total Time:** 60 minutes  
-- Recap & transition from Hour 29 menu loops: 5 minutes  
-- Why input validation matters in beginner programs: 8 minutes  
-- Using `.isdigit()` and `if` checks before conversion: 12 minutes  
-- Re-prompt loops and validation functions: 10 minutes  
-- Light preview of `try/except` for later study: 3 minutes  
-- Live Demo – Safe whole-number input: 10 minutes  
-- Hands-On Lab – Safe Number Entry: 7 minutes  
-- Debrief & Exit Ticket: 5 minutes  
+> **Instructor note:** This hour should feel calm, concrete, and repetitive in a good way. The goal is not to teach every loop feature. The goal is to help beginners understand `for item in items:` in plain English, use a running total, compute an average, and find the highest grade in a list. Stay tightly aligned to the Session 4 runbook.
 
 ---
 
-## Learning Outcomes for This Hour
+## 0) Learning Outcomes (read aloud, ~2 minutes)
 
-By the end of this hour, learners will be able to:
-1. Explain why input validation matters in user-facing programs
-2. Use `.isdigit()` to check whether a string contains whole-number digits
-3. Use `if` checks before calling `int()`
-4. Re-prompt the user with a `while` loop when input is invalid
-5. Build a simple reusable pattern for safe integer input
-6. State one important limitation of `.isdigit()`
-7. Preview, at a light level, that `try/except` exists for more advanced input handling later
+“By the end of this hour, you will be able to:
+1. Explain what `for item in items:` means in everyday language.
+2. Loop through a list and perform an action for each item.
+3. Use an accumulator variable to keep a running total.
+4. Compute an average from values stored in a list.
+5. Find the highest grade in a list using a beginner-friendly approach.
+6. Build a grade-average program that asks for 5 numeric grades, stores them in a list, and reports the average and highest grade.
 
----
-
-## Section 1: Recap & Transition from Day 4, Hour 1 (5 minutes)
-
-### Quick Review
-
-**[Instructor speaks:]**
-
-In **Day 4, Hour 1 / Course Hour 29**, students built menu loops. That was a big structural step. Their programs could stay open, show choices, route actions, and keep data in memory during one run.
-
-Now we are going to improve the **robustness** of those programs.
-
-If a user types something unexpected, what should happen?
-
-For example:
-
-- If we expect a whole number and the user types `hello`
-- If we expect a menu number and the user types `9`
-- If we expect a positive count and the user presses Enter without typing
-
-Should the program crash?
-
-Of course not. At least, we do not want it to if we can help it.
-
-Today’s theme is one of the most practical habits beginners can learn:
-
-> **Do not trust input automatically. Check it first.**
-
-### Warm-Up Prompt
-
-**[Instructor asks:]**
-
-What is the problem with this line if the user types `cat`?
-
-```python
-age = int(input("Enter your age: "))
-```
-
-[Pause.]
-
-**[Instructor speaks:]**
-
-Exactly. `int("cat")` causes a `ValueError`. Students have already seen errors and tracebacks. Today we want to prevent some of those crashes by validating before converting.
-
-### Transition Statement
-
-**[Instructor speaks:]**
-
-Hour 29 gave us the program structure. Hour 30 gives us better protection around user input so the structure does not fall apart when the user makes a common mistake.
+This hour is where lists become active. Last hour, we learned how to store values together. This hour, we learn how to process those values one by one.”
 
 ---
 
-## Section 2: Why Input Validation Matters (8 minutes)
+## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
 
-### Programs Meet Real Users
-
-**[Instructor speaks:]**
-
-One of the fastest ways to make a beginner program feel frustrating is to let it crash on very ordinary user behavior.
-
-Real users do things like:
-
-- type letters when you expected numbers
-- add spaces before or after input
-- hit Enter too quickly
-- misunderstand the prompt
-- type negative numbers when you wanted positive numbers
-- type decimals when you wanted whole numbers
-
-A beginner sometimes thinks, “But the prompt clearly said enter a number.” That is not enough.
-
-Good programming means anticipating that humans are human.
-
-### Validation Is Part of Good User Experience
-
-**[Instructor speaks:]**
-
-Input validation is not just a technical detail. It is also a **user experience** decision.
-
-Compare these two experiences.
-
-**Poor experience:**
-- User types `hello`
-- Program crashes with a traceback
-
-**Better experience:**
-- User types `hello`
-- Program says: “Invalid input. Please enter a whole number.”
-- Program asks again
-
-The second experience is calmer, clearer, and more respectful.
-
-### A Beginner-Friendly Rule
-
-**[Instructor speaks:]**
-
-For this hour, I want students to remember a very simple rule:
-
-> **Check first, convert second.**
-
-That means:
-
-1. get input as a string
-2. inspect whether it looks valid
-3. if valid, convert it
-4. if invalid, show a message and ask again
-
-This is the core pattern for today.
-
-### Prediction Prompt
-
-**[Instructor asks:]**
-
-Why might it be safer to keep input as a string for a moment instead of converting immediately?
-
-[Accept answers like “so we can inspect it first,” “so we can avoid crashing,” or “because input() always returns a string.”]
-
-**[Instructor speaks:]**
-
-Exactly. The string is the raw material. We do not convert it until it passes our simple check.
+- **0:00–0:05** Recap of lists and transition into loops
+- **0:05–0:15** Why loops matter when a list has many items
+- **0:15–0:25** Read `for item in items:` in plain English
+- **0:25–0:35** Accumulator pattern: totals and averages
+- **0:35–0:45** Live demo: sum numbers and compute average
+- **0:45–0:57** Guided lab: grade average + highest grade
+- **0:57–1:00** Debrief, recap, and exit ticket
 
 ---
 
-## Section 3: `.isdigit()` and Checking Before Conversion (12 minutes)
+## 2) Instructor Setup Checklist (before class)
 
-### What `.isdigit()` Does
+- Open a clean file such as `hour14_for_loops_lists.py`.
+- Prepare a short list like `[10, 20, 30, 40]` for the first demo.
+- Prepare five sample grades, such as `88`, `92`, `76`, `95`, and `84`.
+- Be ready to show one deliberate mistake: forgetting to convert `input()` to numbers.
+- Be ready to show a second deliberate mistake: dividing by the wrong count.
+- Keep the examples numeric and simple. This is a gentle intro, not an advanced looping lesson.
 
-**[Instructor speaks:]**
-
-Python strings have a method called `.isdigit()`.
-
-It returns:
-
-- `True` if every character in the string is a digit
-- `False` otherwise
-
-Examples:
-
-```python
-print("123".isdigit())     # True
-print("007".isdigit())     # True
-print("12a".isdigit())     # False
-print("".isdigit())        # False
-print("12.5".isdigit())    # False
-print("-3".isdigit())      # False
-print(" 42 ".isdigit())    # False
-```
-
-### Important Teaching Note
-
-**[Instructor speaks:]**
-
-That last example matters. If a user types spaces around a number, `.isdigit()` will return `False` unless we strip the spaces first.
-
-So the usual beginner pattern is:
-
-```python
-user_input = input("Enter a whole number: ").strip()
-```
-
-Then test:
-
-```python
-if user_input.isdigit():
-    number = int(user_input)
-```
-
-### The Basic Safe Pattern
-
-```python
-user_input = input("Enter a whole number: ").strip()
-
-if user_input.isdigit():
-    number = int(user_input)
-    print(f"You entered {number}")
-else:
-    print("Invalid input. Please enter digits only.")
-```
-
-### Why This Works
-
-**[Instructor speaks:]**
-
-Notice the order:
-
-- first we gather input
-- then we inspect it with `.isdigit()`
-- only then do we call `int()`
-
-That prevents the obvious crash on inputs like `hello`.
-
-### Common Mistake #1: Converting Too Early
-
-```python
-number = int(input("Enter a whole number: ").strip())
-if str(number).isdigit():
-    print("Valid")
-```
-
-**[Instructor speaks:]**
-
-This defeats the purpose. By the time you check `.isdigit()`, the conversion has already happened. If the input is bad, the program already crashed.
-
-Validation has to happen **before** conversion.
-
-### Common Mistake #2: Forgetting `.strip()`
-
-**[Instructor speaks:]**
-
-If the user enters ` 42 `, then without `.strip()` the string contains spaces.
-
-```python
-value = input("Enter a number: ")
-print(value.isdigit())
-```
-
-This may return `False` even though the visible content looks numeric.
-
-So encourage students to normalize the string first:
-
-```python
-value = input("Enter a number: ").strip()
-```
-
-### Common Mistake #3: Over-Trusting `.isdigit()`
-
-**[Instructor speaks:]**
-
-`.isdigit()` is useful, but it is limited.
-
-It works well for:
-
-- positive whole numbers like `7`, `42`, `1000`
-
-It does **not** directly handle:
-
-- negative integers like `-5`
-- decimals like `3.14`
-- numbers with commas like `1,000`
-
-This is not a flaw in Python. It is simply the scope of the method.
-
-For **this Basics hour**, that limitation is acceptable. We are intentionally teaching a simple, reliable beginner pattern.
-
-### Prediction Prompt
-
-**[Instructor asks:]**
-
-What will this print?
-
-```python
-value = "-12"
-print(value.isdigit())
-```
-
-[Pause.]
-
-**[Instructor speaks:]**
-
-It prints `False`, because the minus sign is not a digit.
-
-That is today’s key limitation to remember.
+**Say:** “Today we are learning how to let Python repeat a simple action for each item in a list. That is one of the most useful beginner patterns in the language.”
 
 ---
 
-## Section 4: Re-Prompting with a `while` Loop (10 minutes)
+## 3) Opening Script: Connect Lists to Loops (~5 minutes)
 
-### Why One Check Is Not Enough
+### 3.1 Review the storage idea from Hour 13
 
-**[Instructor speaks:]**
+**Say:**
+“In the previous hour, we learned how to create lists, change lists, and check whether an item is present. That was the storage side of the story.
 
-If the user enters bad input, we usually do not want to give up immediately. We want to **ask again**.
+But think about what happens next in real programs. If I have five grades in a list, I probably want to do something with all five grades. I might want to print them. I might want to total them. I might want to calculate an average. I might want to find the highest one.
 
-That means validation and loops work beautifully together.
+That is where loops matter.”
 
-Here is the pattern:
+### 3.2 Show the problem with repetition
 
-```python
-while True:
-    user_input = input("Enter a whole number: ").strip()
-
-    if user_input.isdigit():
-        number = int(user_input)
-        break
-    else:
-        print("Invalid input. Please enter digits only.")
-```
-
-### Explaining the Flow
-
-**[Instructor speaks:]**
-
-This loop says:
-
-- keep asking forever
-- if the input is valid, convert it and `break`
-- otherwise, show an error and keep looping
-
-That is a clean beginner-friendly structure.
-
-### Turning the Pattern into a Small Function
-
-**[Instructor speaks:]**
-
-Because students will probably need this more than once, it is useful to show a small function pattern.
+**Type:**
 
 ```python
-def get_whole_number(prompt: str) -> int:
-    while True:
-        user_input = input(prompt).strip()
+grades = [88, 92, 76, 95, 84]
 
-        if user_input.isdigit():
-            return int(user_input)
-
-        print("Invalid input. Please enter a whole number.")
+print(grades[0])
+print(grades[1])
+print(grades[2])
+print(grades[3])
+print(grades[4])
 ```
 
-Then we can call it like this:
+**Say:**
+“This works for exactly five grades. But it is repetitive, and it breaks down quickly if the list grows or changes.
 
-```python
-age = get_whole_number("Enter your age: ")
-quantity = get_whole_number("Enter quantity: ")
-```
+If I had 100 grades, I would not want 100 print lines.
+If I had 1,000 values, I definitely would not want 1,000 print lines.
 
-### Teaching Note on Functions Here
+So we need a tool that says: do the same action for each item in the list.”
 
-**[Instructor speaks:]**
+### 3.3 Frame the new pattern
 
-This is a light use of functions in service of the lesson. The goal is not a full functions lesson. The goal is to show that repeated validation logic can be wrapped in one readable place.
+**Say:**
+“That tool is the `for` loop.
 
-If students are not yet comfortable with defining functions, it is perfectly fine to teach the loop inline first and show the function as a preview or helper.
+A `for` loop is one of the cleanest ways to move through the items of a list.
 
-### A Good Prompt Makes Validation Easier
+You do not need to know advanced loop theory today. You just need this mental model:
 
-**[Instructor speaks:]**
+‘For each item in this list, do these indented steps.’”
 
-Prompts matter. Compare:
+**Ask learners:**
+- “If a list changes from 5 items to 50 items, would you rather rewrite 50 lines or use one loop?”
+- “Why might repeated code be harder to manage?”
 
-```python
-input("Enter input: ")
-```
-
-versus:
-
-```python
-input("Enter a whole number between 1 and 10: ")
-```
-
-The second prompt tells the user what kind of answer is expected. That reduces confusion before validation even begins.
-
-### Beyond Type Validation: Simple Rule Validation
-
-**[Instructor speaks:]**
-
-We can also validate simple rules after conversion.
-
-Example:
-
-```python
-def get_menu_choice() -> int:
-    while True:
-        user_input = input("Choose 1, 2, or 3: ").strip()
-
-        if user_input.isdigit():
-            choice = int(user_input)
-            if 1 <= choice <= 3:
-                return choice
-
-        print("Invalid choice. Enter 1, 2, or 3.")
-```
-
-Now we are checking two things:
-
-1. is it numeric?
-2. is it in the allowed range?
-
-That is exactly the kind of simple robustness beginners can handle.
+Guide them toward efficiency and readability.
 
 ---
 
-## Section 5: Light Preview of `try/except` (3 minutes)
+## 4) Core Concept Delivery: Reading `for item in items:` (~10 minutes)
 
-**[Instructor speaks:]**
+### 4.1 The basic pattern
 
-I want to give a **very light preview** of something students will study more deeply later: `try/except`.
-
-Sometimes Python programmers validate by attempting a conversion and catching the error if it fails.
-
-For example, later in the course we may write patterns like this:
+**Type:**
 
 ```python
-try:
-    number = int(user_input)
-except ValueError:
-    print("Please enter a valid integer.")
+colors = ["red", "blue", "green"]
+
+for color in colors:
+    print(color)
 ```
 
-But for **today**, we are **not** teaching exception handling deeply. We are using the Basics-friendly rule:
+Run it.
 
-> **Use `.isdigit()` and `if` checks before conversion.**
+**Say:**
+“Read this line out loud as:
+‘For each color in colors, print color.’
 
-That keeps the mental model simple.
+That plain-English reading is important. If learners can read it out loud, they usually understand it much better.”
 
-### Important Boundary for This Hour
+### 4.2 Explain the loop variable simply
 
-**[Instructor speaks:]**
+**Say:**
+“`color` is a temporary name for the current item.
+On the first pass, `color` is `red`.
+On the second pass, `color` is `blue`.
+On the third pass, `color` is `green`.
 
-If students ask, “Should I use `try/except` here?” the answer is:
+Python is taking one item at a time from the list and placing it into the loop variable.”
 
-- It exists
-- It is useful
-- We will cover it more fully later
-- For this hour, stay with the simpler guard-based approach
+### 4.3 Emphasize indentation
 
-That keeps the lesson aligned with the runbook and prevents accidental topic drift.
+**Say:**
+“The indented line belongs to the loop. That means Python repeats that indented action once for each item.
 
----
+If the indentation is wrong, the loop does not behave the way you expect. Indentation is not decoration in Python. It changes meaning.”
 
-## Section 6: Live Demo – Safe Whole-Number Input Function (10 minutes)
+### 4.4 Ask for prediction
 
-### Demo Goal
+**Ask learners:**
+- “How many times will `print(color)` run?”
+- “What do you think prints first?”
+- “What do you think prints last?”
 
-**[Instructor speaks:]**
+### 4.5 Show another simple example
 
-Now I will live-code a small program that safely asks for two whole numbers and then uses them in a calculator.
-
-The demo will model three good habits:
-
-1. validate before converting
-2. re-prompt on bad input
-3. use the validated values in a real task
-
-### Live Coding Script
+**Type:**
 
 ```python
-# safe_number_demo.py
-# Day 4, Hour 2 demo: validation with while + isdigit()
+shopping_items = ["milk", "bread", "eggs"]
 
-def get_whole_number(prompt: str) -> int:
-    while True:
-        user_input = input(prompt).strip()
-
-        if user_input.isdigit():
-            return int(user_input)
-
-        print("Invalid input. Please enter a whole number using digits only.")
-
-
-print("=== Safe Number Calculator ===")
-
-first_number = get_whole_number("Enter the first whole number: ")
-second_number = get_whole_number("Enter the second whole number: ")
-
-print("\nResults:")
-print(f"Addition: {first_number} + {second_number} = {first_number + second_number}")
-print(f"Multiplication: {first_number} * {second_number} = {first_number * second_number}")
-print(f"Larger value: {max(first_number, second_number)}")
+for item in shopping_items:
+    print(f"Need to buy: {item}")
 ```
 
-### Live Narration Points
+**Say:**
+“This demonstrates something important: the loop pattern is the same even when the action changes. We are still going through each item in the list, but now we are printing a sentence instead of just the raw item.”
 
-**[Instructor speaks:]**
+### 4.6 Clarify what the loop gives you
 
-As I type, I want to say things like:
+**Say:**
+“A very important beginner point: `for x in my_list` gives you each item, not the position number.
 
-- “I am keeping input as a string first.”
-- “I call `.strip()` so accidental spaces do not break validation.”
-- “Only after `.isdigit()` returns `True` do I use `int()`.”
-- “If the input is bad, I do not crash. I explain and ask again.”
-
-### Suggested Demo Inputs
-
-Test these live:
-
-1. `12` and `7` — valid path  
-2. `cat` then `12` — invalid then recovery  
-3. `3.5` then `8` — decimal rejected  
-4. `-4` then `4` — negative rejected in this version  
-
-### Teaching the Limitation Explicitly
-
-**[Instructor speaks:]**
-
-If a student says, “But `-4` is a real integer,” agree with them. Then explain:
-
-“Yes, mathematically it is. But our current validation rule uses `.isdigit()`, which is a limited but useful beginner tool. Today we are intentionally keeping the pattern simple.”
-
-That keeps the lesson accurate and honest.
+At this stage, that is perfect. We want the values themselves.
+Later, you will learn more patterns, but right now this one is enough.”
 
 ---
 
-## Section 7: Hands-On Lab – Safe Number Entry (7 minutes setup + remainder of work time)
+## 5) Accumulator Pattern: Running Totals and Averages (~10 minutes)
 
-### Lab Prompt
+### 5.1 Motivation
 
-**Lab: Safe Number Entry**
+**Say:**
+“If a loop can visit every number in a list, then we can build totals by adding those numbers one by one.
 
-Create a program that safely asks the user for a whole number. If the user types invalid input, the program must show an error message and ask again until a valid whole number is entered.
+This brings us to one of the most useful loop ideas in beginner programming: the accumulator.”
 
-Then use the validated number in a small calculator-style result.
+### 5.2 Define accumulator in plain language
 
-### Required Features
+**Say:**
+“An accumulator is a variable that starts with an initial value and changes as the loop runs.
 
-Your program must:
+For totals, we usually start at zero.”
 
-- ask for at least one whole number
-- reject non-numeric input without crashing
-- re-prompt until the user enters valid digits
-- convert the input to an integer only after validation
-- use the validated number in a small calculation
+### 5.3 Demonstrate running total
 
-### Suggested Versions
-
-Students can choose one of these mini calculators:
-
-1. **Double and square**
-   - print the number doubled and squared
-2. **Age helper**
-   - ask for age in years and print months lived (rough estimate)
-3. **Simple add-two-numbers tool**
-   - safely ask for two numbers and add them
-
-### Starter Template
+**Type:**
 
 ```python
-def get_whole_number(prompt: str) -> int:
-    while True:
-        user_input = input(prompt).strip()
+numbers = [10, 20, 30, 40]
+total = 0
 
-        if user_input.isdigit():
-            return int(user_input)
+for number in numbers:
+    total = total + number
+    print(f"Added {number}, total is now {total}")
 
-        print("Invalid input. Please enter a whole number.")
-
-
-number = get_whole_number("Enter a whole number: ")
-
-print(f"You entered: {number}")
-print(f"Double: {number * 2}")
-print(f"Square: {number ** 2}")
+print(f"Final total: {total}")
 ```
 
-### Completion Criteria
+Run it.
 
-A student solution is complete when:
+**Say:**
+“Watch the total grow.
+It starts at `0`.
+Then it becomes `10`.
+Then `30`.
+Then `60`.
+Then `100`.
 
-- ✅ the program never crashes on non-numeric input  
-- ✅ invalid input triggers an error message and re-prompt  
-- ✅ valid numbers are accepted and converted correctly  
-- ✅ the validated number is used in a small calculator result  
+This is a strong beginner pattern because the state changes in a way you can follow.”
 
-### Common Pitfalls to Watch For
+### 5.4 Show shorthand but explain gently
 
-1. **Using `.isdigit()` after `int()`**  
-   Validation must happen first.
-
-2. **Forgetting `.strip()`**  
-   Inputs with spaces may fail unexpectedly.
-
-3. **Thinking `.isdigit()` handles negatives or decimals**  
-   It does not in this version.
-
-4. **Breaking out of the loop too early**  
-   Some students accidentally `break` before the valid conversion.
-
-5. **Returning a string instead of an integer**  
-   Make sure the function returns `int(user_input)`.
-
-### Optional Extension
-
-If students finish early, invite them to handle negative whole numbers with a small extension:
+**Type:**
 
 ```python
-if user_input.startswith("-"):
-    check_text = user_input[1:]
-else:
-    check_text = user_input
+numbers = [10, 20, 30, 40]
+total = 0
+
+for number in numbers:
+    total += number
+
+print(total)
 ```
 
-Then validate `check_text.isdigit()`.
+**Say:**
+“`total += number` is shorthand for `total = total + number`.
 
-Frame this as optional only. The core lesson remains the positive-whole-number pattern.
+If learners are brand new, say both versions are acceptable. Clarity matters more than shorthand.”
 
-### Coaching Prompts While Circulating
+### 5.5 Move from total to average
 
-**[Instructor speaks:]**
+**Say:**
+“An average is just a total divided by how many values you have.”
 
-Use prompts like:
-
-- “Where does validation happen?”
-- “When exactly do you convert to `int`?”
-- “What happens if I type `hello`?”
-- “What happens if I type `3.14`?”
-- “Does your program recover, or does it stop?”
-
----
-
-## Section 8: Debrief & Exit Ticket (5 minutes)
-
-### Debrief Questions
-
-**[Instructor asks:]**
-
-- What is the benefit of checking with `.isdigit()` before using `int()`?
-- Why is re-prompting better than crashing?
-- What kinds of input does `.isdigit()` handle well?
-- What kinds of input does it not handle well?
-
-### Instructor Synthesis
-
-**[Instructor speaks:]**
-
-Today’s goal was not to solve every validation problem in Python. It was to build a clean, basic habit students can actually use right away.
-
-That habit is:
-
-- gather input
-- normalize it
-- validate it
-- convert it
-- keep going if it is invalid
-
-That is an excellent beginner workflow.
-
-### Exit Ticket
-
-**[Instructor asks:]**
-
-Answer this in one sentence:
-
-**What is one limitation of `.isdigit()`?**
-
-**Expected answer:** It does not directly handle negative numbers or decimals.
-
----
-
-## Recap: What We Accomplished in Day 4, Hour 2 / Course Hour 30
-
-In this hour, learners:
-
-- used `.isdigit()` to check whole-number strings
-- applied `if` checks before conversion
-- built re-prompt loops with `while`
-- created a reusable safe-input pattern
-- previewed, lightly, that `try/except` exists for later
-- discussed the limits of simple validation
-
-**[Instructor speaks:]**
-
-This hour matters because many beginner bugs come from assuming input will be perfect. Students now have a pattern for writing programs that are more patient and more durable.
-
-In **Day 4, Hour 3 / Course Hour 31**, they will use loops, data structures, menus, and friendly messages together in a larger mini-project: a **CLI Contact Manager**.
-
----
-
-## Appendix A: Full Demo Solution
+**Type:**
 
 ```python
-# safe_number_demo.py
-# Day 4, Hour 2 demo solution
+numbers = [10, 20, 30, 40]
+total = 0
 
-def get_whole_number(prompt: str) -> int:
-    while True:
-        user_input = input(prompt).strip()
+for number in numbers:
+    total += number
 
-        if user_input.isdigit():
-            return int(user_input)
-
-        print("Invalid input. Please enter a whole number using digits only.")
-
-
-print("=== Safe Number Calculator ===")
-
-first_number = get_whole_number("Enter the first whole number: ")
-second_number = get_whole_number("Enter the second whole number: ")
-
-print("\nResults:")
-print(f"Addition: {first_number} + {second_number} = {first_number + second_number}")
-print(f"Subtraction: {first_number} - {second_number} = {first_number - second_number}")
-print(f"Multiplication: {first_number} * {second_number} = {first_number * second_number}")
+average = total / len(numbers)
+print(f"Average: {average}")
 ```
 
----
+**Say:**
+“Notice the structure:
+1. build the total
+2. divide by the count
 
-## Appendix B: Instructor Notes on Scope and Accuracy
+The count comes from `len(numbers)`.”
 
-### What We Are Teaching Today
+### 5.6 Stress the count issue
 
-- positive whole-number validation
-- `.isdigit()` as a simple guard
-- `while` loops for re-prompting
-- conversion only after validation
+**Say:**
+“One of today’s biggest pitfalls is dividing by the wrong count. If you have five grades, divide by 5. If you use `len(grades)`, Python computes that count for you, which is safer and clearer.”
 
-### What We Are Not Teaching Deeply Today
+### 5.7 Briefly introduce highest grade
 
-- decimal parsing
-- full negative-number support as required content
-- exception handling as the main validation strategy
-- advanced parsing rules
+**Say:**
+“The runbook also asks us to report the highest grade. There are two beginner-friendly ways to think about that:
+- use `max(grades)` once the list is built
+- or compare values manually in a loop
 
-### Why This Matters
+For a gentle intro, it is perfectly fine to use `max(grades)` in the lab. I will also show you the manual logic so you can see how a loop can track the biggest value.”
 
-Keeping the scope tight helps beginners succeed. It is better for a learner to confidently master one reliable validation pattern than to vaguely hear about six patterns and retain none of them.
+**Type:**
 
----
+```python
+grades = [88, 92, 76, 95, 84]
+highest = grades[0]
 
-## Appendix C: Common Student Misconceptions
+for grade in grades:
+    if grade > highest:
+        highest = grade
 
-### Misconception: “If I type a number with spaces, `.isdigit()` should still work.”
-**Clarification:** Not unless the string is stripped first.  
-**Response:** “Let’s inspect the raw string and then apply `.strip()`.”
+print(f"Highest grade: {highest}")
+```
 
-### Misconception: “If `.isdigit()` returns `False`, the input is not a number in any sense.”
-**Clarification:** It only means the string is not made entirely of digit characters.  
-**Response:** “`-5` and `3.14` are numeric ideas, but they do not pass this specific check.”
-
-### Misconception: “Validation is optional if the prompt is clear.”
-**Clarification:** Clear prompts help, but users still make mistakes.  
-**Response:** “Validation protects both the program and the user experience.”
-
-### Misconception: “The error message is enough; I don’t need to re-prompt.”
-**Clarification:** In an interactive program, recovery is usually better than failure.  
-**Response:** “Try to help the user succeed on the next input attempt.”
+**Say:**
+“Even if we do not make this the center of the hour, it is good for learners to see the logic.
+We start with the first grade as the current highest.
+Then we walk through the list.
+If we find something larger, we update `highest`.”
 
 ---
 
-## Appendix D: Sample Board Work / Visual Explanation
+## 6) Live Demo: Sum Numbers in a List and Compute Average (~10 minutes)
 
-### Validation Flow
+### 6.1 Frame the demo
+
+**Say:**
+“I am going to solve a small problem from start to finish. I have a list of numbers. I want to total them and compute an average. Then I will adapt the same pattern to grades.”
+
+### 6.2 Demo code, part 1: print each number
+
+**Type:**
+
+```python
+numbers = [12, 18, 25, 30]
+
+for number in numbers:
+    print(number)
+```
+
+**Say:**
+“Start simple. Before we calculate anything, make sure the loop is visiting the values we expect.”
+
+### 6.3 Demo code, part 2: build the total
+
+**Type:**
+
+```python
+numbers = [12, 18, 25, 30]
+total = 0
+
+for number in numbers:
+    total += number
+    print(f"After adding {number}, total = {total}")
+
+print(f"Final total = {total}")
+```
+
+Run it.
+
+**Say:**
+“This is a strong teaching move: print inside the loop while learners are still new. It helps them see the running total instead of treating the result like magic.”
+
+### 6.4 Demo code, part 3: compute average
+
+**Type:**
+
+```python
+average = total / len(numbers)
+print(f"Average = {average}")
+```
+
+**Say:**
+“Now the average is easy because the total is already prepared.”
+
+### 6.5 Demo code, part 4: adapt to grades
+
+**Type:**
+
+```python
+grades = [88, 92, 76, 95, 84]
+total = 0
+
+for grade in grades:
+    total += grade
+
+average = total / len(grades)
+highest = max(grades)
+
+print(f"Grades: {grades}")
+print(f"Average grade: {average}")
+print(f"Highest grade: {highest}")
+```
+
+**Say:**
+“Notice what stayed the same:
+- a list of values
+- a loop through the list
+- a total that starts at zero
+- an average that uses total divided by count
+
+The exact values changed, but the pattern stayed the same. That is what makes loops powerful.”
+
+### 6.6 Ask learners to narrate the logic back
+
+**Ask learners:**
+- “Why does `total` start at zero?”
+- “What does the loop add each time?”
+- “Where does the average come from?”
+- “What does `max(grades)` return?”
+
+---
+
+## 7) Guided Lab: Grade Average (~12 minutes)
+
+### 7.1 Introduce the task clearly
+
+**Say:**
+“Now you will build the lab from the runbook.
+
+Your program should:
+1. Ask the user for 5 numeric grades.
+2. Store them in a list.
+3. Compute the average.
+4. Report the highest grade.
+5. Print the results clearly.”
+
+### 7.2 Put the runbook-aligned lab prompt on screen
 
 ```text
-input() -> string
-      ↓
-normalize with .strip()
-      ↓
-check with .isdigit()
-      ↓
-valid? yes -> int()
-valid? no  -> error message + ask again
+Lab: Grade Average
+- Ask for 5 numeric grades.
+- Store them in a list.
+- Compute average and highest grade.
+- Print results with formatting.
 ```
 
-### Re-Prompt Pattern
+### 7.3 Provide a beginner-friendly starter
 
-```text
-while True:
-    ask
-    if valid:
-        return / break
-    else:
-        explain and repeat
-```
-
-### Key Phrase to Repeat
-
-```text
-Check first.
-Convert second.
-```
-
----
-
-## Appendix E: Extension Example for Negative Whole Numbers
-
-**Optional instructor-only stretch example:**
+**Type:**
 
 ```python
-def get_integer_allow_negative(prompt: str) -> int:
-    while True:
-        user_input = input(prompt).strip()
+grades = []
 
-        if user_input.startswith("-"):
-            check_text = user_input[1:]
-        else:
-            check_text = user_input
+grade = float(input("Enter grade 1: "))
+grades.append(grade)
 
-        if check_text.isdigit() and check_text != "":
-            return int(user_input)
+grade = float(input("Enter grade 2: "))
+grades.append(grade)
 
-        print("Invalid input. Please enter a whole number.")
+grade = float(input("Enter grade 3: "))
+grades.append(grade)
+
+grade = float(input("Enter grade 4: "))
+grades.append(grade)
+
+grade = float(input("Enter grade 5: "))
+grades.append(grade)
+
+total = 0
+
+for grade in grades:
+    total += grade
+
+average = total / len(grades)
+highest = max(grades)
+
+print(f"Grades entered: {grades}")
+print(f"Average grade: {average}")
+print(f"Highest grade: {highest}")
 ```
 
-Use this only if students are ready and time allows. Keep the main lesson centered on the required Basics approach.
+### 7.4 Explain the design choice
+
+**Say:**
+“Yes, we could eventually use a loop to collect the five inputs too, but that is not today’s teaching target. Today’s teaching target is iterating through the finished list with a `for` loop.
+
+So we will keep input collection simple and make the list-processing part the star of the lesson.”
+
+### 7.5 Challenge questions during circulation
+
+Ask learners:
+- “Where do you convert the input to a number?”
+- “Where does the running total begin?”
+- “What does the loop variable represent each time?”
+- “What happens if you accidentally divide by 4 instead of 5?”
+- “How are you finding the highest grade?”
+
+### 7.6 Encourage output checks
+
+**Say:**
+“Always test with values where you can estimate the answer. If you enter `80`, `80`, `80`, `80`, `80`, the average should clearly be `80`. Use simple test data to build confidence.”
+
+### 7.7 Optional extension for early finishers
+
+If time permits, offer:
+- drop the lowest grade using `min(grades)` and a modified total
+- print a message like `Great job!` if the average is 90 or above
+- count how many grades are above 80 using another loop variable such as `count_above_80`
+
+Make it clear these are optional and still within Basics scope.
 
 ---
 
-## Appendix F: Additional Instructor Coaching Moves
+## 8) Common Pitfalls and Coaching Moves (~6 minutes)
 
-### When students keep crashing their program
+### 8.1 Pitfall: forgetting numeric conversion
 
-**[Instructor speaks:]**
+**Symptom:** grades are stored as strings, and math does not work as expected.
 
-Do not immediately fix it for them. Ask them to point to the exact line where conversion happens. Then ask:
+**Say:**
+“This is one of today’s most important mistakes to catch. `input()` returns text. If we want math, we must convert the input to `int` or `float`.”
 
-- “What type is the data before this line?”
-- “What could happen if the user typed text instead of digits?”
-- “Where should the check happen?”
-
-This helps them reconstruct the rule themselves.
-
-### When students want to jump to advanced solutions
-
-Some learners may say, “I saw `try/except` online.” Respond warmly but steer them back:
-
-- “Yes, that pattern is real.”
-- “We will study it more deeply later.”
-- “For this hour, I want you to master the simpler guard-based approach first.”
-
-That keeps the lesson coherent and aligned with the current course stage.
-
-### When students are frustrated by `.isdigit()` limitations
-
-Use that frustration productively. Say:
-
-“Good. You are noticing that real input is messy. That means you are thinking like a programmer. Today we use a simple tool with known limits. Later we will learn stronger tools.”
-
-That turns a limitation into a growth point rather than a disappointment.
-
----
-
-## Appendix G: Quick Reference Card for Students
-
-### Safe Whole Number Pattern
+Show:
 
 ```python
-while True:
-    user_input = input("Enter a whole number: ").strip()
-
-    if user_input.isdigit():
-        number = int(user_input)
-        break
-
-    print("Invalid input. Please try again.")
+grade = float(input("Enter grade 1: "))
 ```
 
-### Remember
+Then say:
 
-- `input()` returns a string
-- validate before converting
-- `.strip()` helps remove spaces
-- `.isdigit()` works for positive whole numbers
-- `.isdigit()` does not directly handle negatives or decimals
-- re-prompting is better than crashing
+“If a learner forgets this step, do not just fix it for them. Ask: ‘What type does `input()` return?’ That question helps them reconnect to earlier lessons.”
+
+### 8.2 Pitfall: dividing by the wrong count
+
+**Say:**
+“Beginners sometimes hard-code the divisor incorrectly. A safer pattern is `len(grades)` because it always matches the list length.”
+
+### 8.3 Pitfall: resetting the total inside the loop
+
+**Say:**
+“If `total = 0` is placed inside the loop, the total restarts every time. Ask learners: ‘Should this happen once before the loop, or again and again during the loop?’”
+
+### 8.4 Pitfall: indentation mistakes
+
+**Say:**
+“If only one line belongs to the loop but the learner intended two, or vice versa, the result will look strange. Have them point to the exact indented block and say out loud what repeats.”
+
+### 8.5 Pitfall: misunderstanding what `for grade in grades` gives you
+
+**Say:**
+“At this stage, the loop gives you each grade value, not the position. If a learner wants the value itself, the pattern is correct. Remind them to focus on the item.”
 
 ---
 
-## Appendix H: Guided Practice Script for the Instructor
+## 9) Debrief and Share-Out (~4 minutes)
 
-Use this appendix when you want more spoken guidance before sending students into independent work.
+### 9.1 Bring learners back together
 
-### Guided Example 1: Validate Before Converting
+**Say:**
+“Let’s compare approaches. Even if your formatting is different, the core logic should be similar.”
 
-**[Instructor speaks:]**
+### 9.2 Invite short reflections
 
-Let’s say I want to ask for a class size. I know `input()` gives me a string. So I should not rush into `int()` unless I have first checked whether the string looks safe for this lesson’s rules.
+Ask:
+- “Who can read `for grade in grades:` out loud in plain English?”
+- “Who can explain why `total` starts at zero?”
+- “Who used `max(grades)` for the highest grade?”
+- “Who tested with easy values to verify the average?”
 
-I might say to students:
+### 9.3 Model the summary of the pattern
 
-> “Watch the order carefully. First I collect the text. Then I ask whether the text is made of digits. Only then do I convert it.”
+**Say:**
+“A strong summary sounds like this:
+‘I stored the grades in a list, used a `for` loop to add them into a running total, divided by the number of grades to get the average, and reported the highest value.’
 
-Code:
+That sentence captures the logic of the hour.”
+
+---
+
+## 10) Recap Script (~2 minutes)
+
+**Say:**
+“Today we learned how to process list items with a `for` loop.
+
+We learned that:
+- `for item in items:` means do something once for each item
+- the loop variable is a temporary name for the current item
+- an accumulator is a variable that keeps a running result
+- totals often start at zero
+- averages come from total divided by count
+- `len()` gives the count
+- `max()` can help report the highest value in a list
+
+This is one of the first patterns that makes beginner code feel efficient instead of repetitive.”
+
+---
+
+## 11) Exit Ticket (~1 minute)
+
+Ask learners to answer verbally, in chat, or on paper:
+
+1. In plain English, what does `for grade in grades:` mean?
+2. Why does an accumulator like `total` usually start at `0`?
+3. If your list has five grades, what should you divide by to compute the average?
+4. What problem happens if you forget to convert `input()` to a number?
+
+**Expected direction of answers:**
+- the loop visits each grade in the list one at a time
+- total starts at zero because nothing has been added yet
+- divide by the number of items, often using `len(grades)`
+- the data stays as strings, so math is incorrect or fails
+
+---
+
+## 12) Instructor Notes for the Transition to Hour 15
+
+**Say:**
+“So far our lists have been one-dimensional: one item after another in a single row. In the next hour, we will change the shape of the data. We will build a list where each item is itself another list. That will let us model table-like data such as a seating chart.”
+
+Reinforce this final line before transition:
+
+“Store values in a list, then let the loop visit each one.”
+
+---
+
+## Appendix: Instructor Reinforcement Notes for Hour 14
+
+### A) A second spoken walkthrough of the loop pattern
+
+If the room still feels unsure about loops, slow everything down and read the code almost like a story.
+
+Use this example:
 
 ```python
-class_size_text = input("Enter class size: ").strip()
+numbers = [5, 10, 15]
+total = 0
 
-if class_size_text.isdigit():
-    class_size = int(class_size_text)
-    print(f"Class size recorded: {class_size}")
-else:
-    print("Please enter digits only.")
+for number in numbers:
+    total += number
+    print(f"Added {number}, total is now {total}")
 ```
 
-### Guided Example 2: Range Validation After Type Validation
+Then say:
 
-**[Instructor speaks:]**
+“On the first pass, `number` is `5`, so `total` becomes `5`.
+On the second pass, `number` is `10`, so `total` becomes `15`.
+On the third pass, `number` is `15`, so `total` becomes `30`.
+Then the loop stops because there are no more items.
 
-Sometimes a value is numeric but still not acceptable for the specific situation.
+That is the whole shape of the pattern.
+The loop variable changes.
+The accumulator grows.
+The indented code repeats.”
 
-For example, if I ask the user to choose a menu option from 1 to 4, the value `9` is a number, but it is still not a valid choice.
+This kind of slow narration often helps learners who feel that loops are ‘magic.’
 
-That means validation often has **layers**:
+### B) Extra board drills for running totals
 
-1. Is it the right kind of input?
-2. Is it within the allowed rule?
+Write these on the board and ask learners to answer before you run anything.
 
-Code:
+**Drill 1**
 
 ```python
-choice_text = input("Enter a menu number from 1 to 4: ").strip()
+scores = [2, 4, 6]
+total = 0
 
-if choice_text.isdigit():
-    choice = int(choice_text)
-
-    if 1 <= choice <= 4:
-        print(f"Valid choice: {choice}")
-    else:
-        print("That number is outside the allowed range.")
-else:
-    print("Please enter digits only.")
+for score in scores:
+    total += score
 ```
 
-### Guided Example 3: Why Re-Prompting Feels Better
+Ask:
+- “What is `total` after the first pass?”
+- “What is `total` after the second pass?”
+- “What is `total` at the end?”
 
-**[Instructor speaks:]**
-
-I like to ask students to imagine two versions of the same calculator:
-
-- version A crashes the first time the user types bad input
-- version B says “Please enter a whole number” and asks again
-
-Then I ask:
-
-**[Instructor asks:]**
-
-Which version would you rather use? Which version would you rather show to someone else?
-
-This question helps students understand that validation is not just about avoiding embarrassment. It is part of writing software that respects the user.
-
-### Suggested Call-and-Response Moments
-
-Use these quick prompts during teaching:
-
-- “What type does `input()` return?” → **Expected:** string
-- “Do we convert first or check first?” → **Expected:** check first
-- “What does `.isdigit()` handle well?” → **Expected:** positive whole numbers
-- “What is one thing `.isdigit()` does not handle?” → **Expected:** negatives or decimals
-- “If input is invalid, what should our program do?” → **Expected:** explain and ask again
-
----
-
-## Appendix I: Troubleshooting Scenarios for Live Support
-
-### Scenario 1: Student keeps getting `False` for a value that looks numeric
-
-Possible cause:
-- extra spaces before or after the value
-
-Helpful coaching:
-
-**[Instructor speaks:]**
-
-“Let’s print the raw input with markers around it so we can see hidden spaces.”
-
-Example:
+**Drill 2**
 
 ```python
-user_input = input("Enter a number: ")
-print(f"RAW -> [{user_input}]")
-print(user_input.isdigit())
+scores = [10, 20, 30, 40]
+average = sum(scores) / len(scores)
 ```
 
-Then show how `.strip()` changes the result.
+Ask:
+- “What does `len(scores)` represent?”
+- “Why would dividing by `3` be wrong here?”
 
-### Scenario 2: Student validates correctly but still returns a string
+**Drill 3**
 
-Possible cause:
-- they forgot to convert after validation
-
-Helpful coaching:
-
-**[Instructor speaks:]**
-
-“Your check is good, but what type are you returning? Can you print `type(number)` after that line?”
-
-This moves the student from vague frustration to a concrete observation.
-
-### Scenario 3: Student accepts input once but does not re-prompt
-
-Possible cause:
-- validation is written with `if/else` but without a loop
-
-Helpful coaching:
-
-**[Instructor speaks:]**
-
-“Right now your program can reject input, but can it recover? What structure do we use when we want to keep asking until a condition is satisfied?”
-
-Expected student insight: use a `while` loop.
-
-### Scenario 4: Student wants to support every possible number format
-
-Possible cause:
-- they are expanding beyond the lesson scope
-
-Helpful coaching:
-
-**[Instructor speaks:]**
-
-“That is a thoughtful goal, but for this hour we are mastering one clean pattern first. Let’s make positive whole numbers solid before we broaden the problem.”
-
-This preserves ambition without letting scope overwhelm the learner.
-
----
-
-## Appendix J: Extra Practice Prompts for Fast Finishers
-
-If time remains, offer one of these short prompts without changing the core lesson focus.
-
-### Practice Prompt 1: Safe Dice Counter
-
-Ask the user how many dice to roll. The input must be a whole number. After validation, print a message like:
-
-```text
-You chose to roll 6 dice.
+```python
+grades = [91, 84, 88, 97]
+print(max(grades))
 ```
 
-Optional extension: reject `0` as well.
+Ask:
+- “What should print?”
+- “Why is `max()` useful after the list is built?”
 
-### Practice Prompt 2: Safe Ticket Calculator
+These drills reinforce the exact runbook outcomes: processing list items, totals, averages, and highest value.
 
-Ask for a number of tickets. Re-prompt until the user enters a whole number. Then print the total cost if each ticket is $12.
+### C) Common learner questions and ready responses
 
-### Practice Prompt 3: Safe Team Size Checker
+**Question:** “Why do I need a loop if there are only five grades?”
 
-Ask how many people are on a team. Re-prompt until valid. Then print:
+**Suggested response:**
+“Because the loop teaches a pattern that works even if the number of grades changes later. Good habits in programming are about patterns that scale.”
 
-- whether the team is smaller than 5
-- exactly 5
-- larger than 5
+**Question:** “Why can’t I just add them manually?”
 
-This gives extra practice combining validation with conditionals.
+**Suggested response:**
+“You can for a tiny one-time script, but the loop is clearer, more reusable, and less error-prone once the list grows.”
 
-### Practice Prompt 4: Menu Number Validator
+**Question:** “Why is my average incorrect?”
 
-Ask for a menu number from 1 to 3 and re-prompt until the user enters a valid option. This directly connects Hour 30 back to Hour 29.
+**Suggested response:**
+“Check three things in order:
+1. Are the values numbers or strings?
+2. Did your total start at zero before the loop?
+3. Did you divide by the correct count?”
 
----
+**Question:** “Do I have to use `max()`?”
 
-**End of Day 4, Hour 2 Script / Course Hour 30**
+**Suggested response:**
+“No. `max()` is a convenient built-in. The manual comparison pattern is also valid. The key thing is understanding what the program is trying to compute.”
+
+### D) A short manual-highest walkthrough for learners who are curious
+
+If a learner wants to understand highest-value logic more deeply, use this small example:
+
+```python
+grades = [88, 92, 76, 95, 84]
+highest = grades[0]
+
+for grade in grades:
+    if grade > highest:
+        highest = grade
+
+print(highest)
+```
+
+Talk it through like this:
+
+“Start by assuming the first grade is the highest.
+Now compare every grade to that current highest value.
+If a new grade is larger, replace `highest`.
+At the end, `highest` stores the biggest grade we saw.”
+
+This is useful because it connects looping to comparison logic without turning the hour into an advanced topic.
+
+### E) Suggested instructor reminders during the lab
+
+While circulating, you can repeat these prompts:
+
+- “Show me where the list of grades is stored.”
+- “Show me where the total begins.”
+- “What value is the loop variable holding on each pass?”
+- “How are you making sure the average uses the right count?”
+- “How are you finding the highest grade?”
+
+These keep the learner’s attention on the exact target of the hour.
+
+### F) Optional mini-debrief if learners finish early
+
+If several learners finish early, ask them to write or say a three-sentence explanation:
+
+1. One sentence explaining what `for grade in grades:` means.
+2. One sentence explaining what an accumulator is.
+3. One sentence explaining how average is calculated.
+
+This quick reflection helps turn pattern-following into understanding.
+
+### G) Extra end-of-hour review prompts
+
+If you want one more short review cycle before transitioning to nested lists, ask learners to respond to these prompts in one sentence each:
+
+- “What does the loop variable represent during a `for` loop?”
+- “Why does the running total start at zero?”
+- “Why is `len(grades)` safer than guessing the count?”
+- “What mistake happens if the grades stay as strings?”
+- “What is one reason loops are better than repeated lines of code?”
+
+Then summarize with this read-aloud statement:
+
+“A `for` loop helps us process every item in a list. An accumulator keeps a running result. An average comes from total divided by count. These three ideas work together.”
+
+### H) Short instructor script for a final confidence boost
+
+You can close the hour with these exact words if learners still seem cautious:
+
+“Do not worry if loops still feel a little new. That is normal. At the beginning, the pattern can feel mechanical. That is okay.
+
+What matters is that you can now read the loop in plain English, trace what happens on each pass, and use it to solve a real beginner problem with totals and averages.
+
+That is real progress, and it is enough for this hour.”
+
+### I) Mini whiteboard exercise for last-minute reinforcement
+
+Write this on the board:
+
+```python
+values = [3, 6, 9, 12]
+total = 0
+
+for value in values:
+    total += value
+
+average = total / len(values)
+```
+
+Then ask learners to talk through it without running it:
+
+- “What is the list storing?”
+- “What does `value` represent each time?”
+- “What is the final total?”
+- “What is the average?”
+
+After a few responses, say:
+
+“This tiny example contains the whole pattern of the hour. Store values in a list, visit each value with a loop, build a total, then divide by the count. If you understand this pattern, you are on solid ground.”
+
+### J) Closing teaching sentence to repeat aloud
+
+If you want one sentence learners can carry into the next session, use this:
+
+“A list stores many values together, and a `for` loop helps us process those values one by one.”
+
+That sentence is short, but it captures the exact bridge from Hour 13 into Hour 14 and prepares learners for later list work.
+
+One final reminder for learners: loops become easier through tracing. If a learner can point to each value as the loop visits it and explain how the total changes, they are understanding the core pattern of the hour.
+
+That ability to trace the loop, explain the accumulator, and connect the average back to total divided by count is exactly the kind of understanding this hour is designed to build.

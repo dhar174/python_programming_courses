@@ -1,972 +1,862 @@
-# Day 4, Hour 1: Menu Loops (CLI Pattern)
-**Python Programming Basics – Day 4 / Session 8 / Course Hour 29**
+# Day 4, Hour 1: Lists Fundamentals (Course Hour 13)
+**Python Programming Basics – Session 4**
+
+**Course:** Python Programming (Basics)  
+**Runbook alignment:** Session 4, Course Hour 13 – Lists fundamentals  
+**Duration:** 60 minutes  
+**Mode:** Instructor-led + live coding + guided lab  
+**Audience:** Beginners in Python (Basics scope only)
 
 ---
 
-## Subtitle
-**Building programs that stay open, repeat useful actions, and respond to the user one choice at a time**
+## Instructor Deliverable Script (Use Largely Verbatim)
 
-**Instructor framing:** This is **Day 4, Hour 1** in the local course sequence and **Course Hour 29** in the full 48-hour Basics runbook. Students already know variables, strings, lists, dictionaries, conditionals, and loops. In this hour, they begin combining those pieces into a more realistic command-line program structure: the **menu loop**.
-
----
-
-## Timing Overview
-**Total Time:** 60 minutes  
-- Recap & Transition from Day 3 / previous control-flow work: 5 minutes  
-- Why menu-driven CLI programs matter: 8 minutes  
-- Anatomy of a menu loop with `while` + `if/elif`: 12 minutes  
-- Basic choice validation and shared state: 8 minutes  
-- Live Demo (3 options + quit): 10 minutes  
-- Hands-On Lab – Upgrade Menu: 12 minutes  
-- Debrief & Exit Ticket: 5 minutes  
+> **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on lists as an ordered, changeable collection. Stay within Basics scope. Do not drift into dictionaries, file handling, or function design. The key outcomes for this hour are list creation, indexing, slicing, mutation, `append()`, `remove()`, `pop()`, and membership checks with `in`.
 
 ---
 
-## Learning Outcomes for This Hour
+## 0) Learning Outcomes (read aloud, ~2 minutes)
 
-By the end of this hour, learners will be able to:
-1. Build a menu-driven program using a `while` loop
-2. Repeatedly display choices and collect user input until the user quits
-3. Route different actions using `if/elif/else`
-4. Apply basic input validation for menu choices
-5. Keep program state in memory while the loop runs
-6. Explain why a menu loop is a common pattern in command-line tools
-7. Preview how functions can later help organize menu-based programs
+“By the end of this hour, you will be able to:
+1. Explain what a list is in plain beginner-friendly language.
+2. Create a list and print it.
+3. Access list items with indexing and look at portions of a list with slicing.
+4. Change a list by updating items and by using `append()`, `remove()`, and `pop()`.
+5. Check whether an item exists in a list using `in`.
+6. Build a small shopping-list program that starts with an empty list, adds five items, removes one chosen item, and prints the final list and item count.
 
----
-
-## Section 1: Recap & Transition into Day 4 (5 minutes)
-
-### Reconnecting to Prior Learning
-
-**[Instructor speaks:]**
-
-Welcome to **Day 4**. In our local day-by-day sequence, this is the first instructional hour of the day. In the full runbook, this maps to **Course Hour 29**, which is the beginning of **Session 8**.
-
-Before we start building menu-driven programs, let’s remember what students already know, because today is not a brand-new world. It is a **combination hour**.
-
-Up to this point, learners have already practiced:
-
-- variables and assignment
-- strings and string methods
-- `input()` and type conversion
-- conditionals with `if`, `elif`, and `else`
-- `while` loops and `for` loops
-- lists and dictionaries for storing data in memory
-
-That means today’s goal is not “learn one isolated syntax feature.” Today’s goal is:
-
-> **Use several familiar tools together in a realistic command-line program pattern.**
-
-A lot of students reach a point where they say, “I know loops,” or “I know dictionaries,” but then freeze when asked to build a tiny program. Menu loops help close that gap because they give learners a simple frame:
-
-1. show choices
-2. ask for a choice
-3. do something
-4. repeat
-
-That is a huge step toward writing programs that feel interactive and useful instead of one-and-done.
-
-### Suggested Warm-Up Questions
-
-**[Instructor asks:]**
-
-- When have you seen a menu in software before?
-- If a command-line program should let a user do more than one thing, should it end after one action?
-- What kind of loop feels like a good fit when we do not know ahead of time how many actions the user wants to perform?
-
-[Pause. Invite a few answers.]
-
-**[Instructor speaks:]**
-
-Exactly. If the user might add one item, or five items, or search several times, we need a loop that keeps going **until some condition says stop**. That is why `while` is so useful here.
-
-### Transition Statement
-
-**[Instructor speaks:]**
-
-In the previous control-flow work, we practiced loops and decision-making as separate ideas. In this hour, we merge them into a pattern you will use again and again: the **CLI menu loop**.
+This is an important transition point in the course. Up to now, many of our programs have stored one value at a time. Lists let us store a whole collection of related values in one variable.”
 
 ---
 
-## Section 2: Why Menu-Driven CLI Programs Matter (8 minutes)
+## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
 
-### The Problem with One-Shot Scripts
-
-**[Instructor speaks:]**
-
-Let’s say you wrote a simple script yesterday that lets a user add one item to a list. That script may work, but it usually has a limitation:
-
-- it performs one action
-- it prints one result
-- then it ends
-
-That is fine for a tiny script. But real tools often need to support **multiple actions in one run**.
-
-Imagine a small in-memory program for:
-
-- tracking books
-- managing contacts
-- storing student names
-- keeping a grocery list
-- managing tasks
-
-Would it be good user experience to run the script once to add an item, close it, run it again to list items, close it, run it again to search?
-
-Probably not.
-
-### What a Menu Loop Gives Us
-
-**[Instructor speaks:]**
-
-A menu loop solves that by giving the user a clear, repeated interface.
-
-A typical command-line flow looks like this:
-
-```text
-1. Add item
-2. List items
-3. Search items
-Q. Quit
-```
-
-Then the program waits for input, performs the requested action, and returns to the menu.
-
-That structure is powerful because it gives us:
-
-- **clarity** — the user always knows the available actions
-- **repeatability** — the program stays alive across multiple actions
-- **state** — data remains in memory during the run
-- **organization** — our program logic becomes easier to reason about
-
-### Real-World Relevance
-
-**[Instructor speaks:]**
-
-Even when you later move beyond command-line programs, the thinking pattern still matters.
-
-A menu loop teaches students to think in terms of:
-
-- event → response
-- input → decision → action
-- persistent state during a session
-
-That logic shows up in:
-
-- terminal tools
-- admin dashboards
-- desktop menus
-- web forms and button actions
-- chatbot command handlers
-
-So even though today’s work is simple and text-based, the thinking is absolutely real-world.
-
-### Prediction Prompt
-
-**[Instructor asks:]**
-
-What do you think is the single most important reason to use a menu loop in a small CLI program?
-
-[Accept answers such as “so the user can do multiple things,” “so the program doesn’t end immediately,” or “so we can reuse the same state.”]
-
-**[Instructor speaks:]**
-
-Yes. The central value is this:
-
-> **A menu loop lets a program continue serving the user until the user decides to quit.**
-
-That is the mental model we want students to keep.
+- **0:00–0:05** Recap, transition into Session 4, and motivation for lists
+- **0:05–0:15** What lists are, why they matter, and list literal syntax
+- **0:15–0:25** Indexing, slicing, and the idea that lists are mutable
+- **0:25–0:35** Core operations: update, `append()`, `remove()`, `pop()`, and `in`
+- **0:35–0:45** Live demo: build and modify a shopping list
+- **0:45–0:57** Guided lab: shopping-list program
+- **0:57–1:00** Debrief, recap, and exit ticket
 
 ---
 
-## Section 3: The Anatomy of a Menu Loop (12 minutes)
+## 2) Instructor Setup Checklist (before class)
 
-### The Four-Part Pattern
+- Open a clean file such as `hour13_lists_demo.py`.
+- Have terminal and editor visible if possible so learners see both the code and the output.
+- Prepare a few familiar item names ahead of time: `milk`, `bread`, `eggs`, `tea`, `rice`, `apples`, `soap`.
+- Be ready to show one deliberate mistake: trying to remove an item that is not in the list.
+- Be ready to show a second deliberate mistake: calling `pop()` with a value instead of an index.
+- If some learners type slowly, have a starter file ready with comments only.
 
-**[Instructor speaks:]**
+**Say:** “Please type with me today. Lists are much easier to understand when you build and change them yourself.”
 
-Here is the core pattern we want students to learn today. A menu-driven program usually has four repeating pieces:
+---
 
-1. **Display the menu**
-2. **Get the user’s choice**
-3. **Route that choice to the correct action**
-4. **Repeat until quit**
+## 3) Opening Script: Reconnect to Earlier Learning (~5 minutes)
 
-Let’s write the most basic possible version:
+### 3.1 Quick recap of the path so far
+
+**Say:**
+“Welcome back. Before today, we built the foundations of beginner Python. We learned how to print, store values in variables, work with numbers, work with strings, take input from users, compare values, format output, and read errors with a calmer mindset.
+
+That is already a lot of progress.
+
+But there is one limitation in most of the programs we have written so far: they usually work with one value at a time.
+
+For example, if I want to store one name, one variable works perfectly. If I want to store one age, one variable works perfectly. But what if I need five grocery items? Or seven grades? Or ten tasks? Or the names of every learner in the room?”
+
+### 3.2 Set up the problem
+
+**Say:**
+“If I try to solve that problem with separate variables, my code gets awkward very quickly.”
+
+**Type and narrate:**
 
 ```python
-running = True
-
-while running:
-    print("\n=== Menu ===")
-    print("1. Say hello")
-    print("2. Show a message")
-    print("Q. Quit")
-
-    choice = input("Choose an option: ").strip().lower()
-
-    if choice == "1":
-        print("Hello!")
-    elif choice == "2":
-        print("Python is fun to learn.")
-    elif choice == "q":
-        print("Goodbye!")
-        running = False
-    else:
-        print("Invalid choice. Please try again.")
+item_1 = "milk"
+item_2 = "bread"
+item_3 = "eggs"
+item_4 = "tea"
+item_5 = "rice"
 ```
 
-### Reading the Pattern Slowly
+**Say:**
+“This is possible, but it is not a good long-term pattern. It is repetitive. It is harder to print neatly. It is harder to search. It is harder to update. And if I suddenly need six items instead of five, I have to create another variable.
 
-**[Instructor speaks:]**
+So today we learn a better tool: the list.”
 
-Let’s slow this way down.
+### 3.3 Motivation in plain language
 
-#### Part 1: The loop condition
+**Say:**
+“A list is one variable that can hold multiple related values in order.
+
+That word ‘order’ matters. Lists remember position.
+
+That word ‘related’ matters too. A list is a very natural choice when you have a group of similar things such as:
+- shopping items
+- grades
+- tasks
+- names
+- menu choices
+- words collected from a user
+
+If strings helped us work with one piece of text, lists help us work with many values together.”
+
+**Ask learners:**
+- “Where might a shopping app use a list?”
+- “Where might a teacher use a list?”
+- “Where might you personally use a list in a small script?”
+
+Take two or three answers, then say:
+
+“Good. The goal is not just to memorize list syntax. The goal is to recognize when a collection belongs together.”
+
+---
+
+## 4) Core Concept Delivery: What a List Is and How It Looks (~10 minutes)
+
+### 4.1 Beginner-friendly definition
+
+**Say:**
+“A list is an ordered collection of values.
+
+Let’s unpack that.
+- **Collection** means one variable can hold many items.
+- **Ordered** means each item has a position.
+- **Changeable** means we can update the list after it is created.
+
+That last idea is important. Later in the hour we will compare lists with strings. Strings are text values, and strings do not let us change one character in place. Lists do let us change items in place. That is why we say lists are mutable.”
+
+### 4.2 Basic syntax
+
+**Type:**
 
 ```python
-running = True
-while running:
+fruits = ["apple", "banana", "cherry"]
+print(fruits)
 ```
 
-This means: keep repeating while `running` is `True`.
+Run it.
 
-Later, when the user chooses quit, we change `running` to `False`. That causes the loop to end naturally.
+**Say:**
+“We create a list using square brackets. Inside the brackets, items are separated by commas.
 
-#### Part 2: The menu display
+The variable name is `fruits`.
+The list contains three string items.
+When we print the list, Python shows us the whole structure.”
+
+### 4.3 Show that a list can start empty
+
+**Type:**
 
 ```python
-print("\n=== Menu ===")
-print("1. Say hello")
-print("2. Show a message")
-print("Q. Quit")
+shopping_list = []
+print(shopping_list)
 ```
 
-We print the choices **inside the loop**, not outside. Why? Because the menu needs to appear again each time the loop repeats.
+**Say:**
+“This is an empty list. It contains no items yet, but it is still a valid list.
 
-This is one of the biggest beginner mistakes.
+Empty lists are extremely common. Often, we create an empty list first and then add items as the program runs.”
 
-### Common Mistake #1: Printing the Menu Only Once
+### 4.4 Keep the examples simple and consistent
 
-**[Instructor speaks:]**
+**Say:**
+“For beginners, it helps to keep lists consistent. If a list is meant to store grocery items, then use grocery-item strings. If a list is meant to store grades, then use numbers. Python technically allows mixed data in one list, but for now we want clarity more than cleverness.”
 
-Students often do this:
+**Type:**
 
 ```python
-print("1. Add")
-print("2. List")
-print("Q. Quit")
-
-while running:
-    choice = input("Choose: ")
-    ...
+numbers = [10, 20, 30]
+print(numbers)
 ```
 
-That prints the menu only one time at the beginning. After a few actions, the user may forget the choices.
+Then say:
 
-A menu is most useful when it is **easy to see repeatedly**. So the display normally belongs **inside** the loop.
+“You can store numbers in a list. You can store strings in a list. The main point is: the list keeps the items together in order.”
 
-### Part 3: Normalize the input
+### 4.5 Ask for prediction
+
+**Ask learners:**
+- “What do you think prints if I run `print(fruits)`?”
+- “What do you think prints if I run `print(shopping_list)`?”
+- “Why might an empty list still be useful?”
+
+Use the predictions to reinforce: empty list first, then grow it later.
+
+---
+
+## 5) Indexing and Slicing Lists (~10 minutes)
+
+### 5.1 Connect lists to a familiar idea
+
+**Say:**
+“If Day 2 felt comfortable, this next part should look familiar. Lists, like strings, use indexing. That means each item has a position number.
+
+And just like strings, Python starts counting at zero.”
+
+### 5.2 Indexing example
+
+**Type:**
 
 ```python
-choice = input("Choose an option: ").strip().lower()
+fruits = ["apple", "banana", "cherry"]
+print(fruits[0])
+print(fruits[1])
+print(fruits[2])
 ```
 
-This is a great beginner-friendly pattern.
+Run it.
 
-- `.strip()` removes accidental leading or trailing spaces
-- `.lower()` makes uppercase and lowercase choices easier to handle
+**Say:**
+“Index `0` is the first item.
+Index `1` is the second item.
+Index `2` is the third item.
 
-That means `Q`, `q`, and even ` q ` can all be treated consistently.
+This zero-based counting takes practice. It feels unusual at first, but it becomes normal very quickly.”
 
-### Part 4: Route the choice using `if/elif/else`
+**Ask learners:**
+“What do you predict `fruits[1]` prints?”
 
-**[Instructor speaks:]**
+Pause, then run it.
 
-This is where the menu actually becomes a program.
+### 5.3 Negative indexing
+
+**Type:**
 
 ```python
-if choice == "1":
-    ...
-elif choice == "2":
-    ...
-elif choice == "q":
-    ...
+print(fruits[-1])
+print(fruits[-2])
+```
+
+**Say:**
+“Negative indexes count from the end.
+- `-1` means last item
+- `-2` means second-to-last item
+
+This is useful when you care more about the end than the beginning.”
+
+### 5.4 Slicing example
+
+**Type:**
+
+```python
+letters = ["a", "b", "c", "d", "e"]
+print(letters[0:3])
+print(letters[1:4])
+print(letters[:2])
+print(letters[2:])
+```
+
+**Say:**
+“Slicing works like it did with strings. The pattern is `start:end`, and the end position is not included.
+
+So `letters[0:3]` gives us index 0, index 1, and index 2.
+It stops before index 3.”
+
+### 5.5 Clarify what slicing returns
+
+**Say:**
+“One easy mistake is to think a slice returns one item. It does not. A slice returns a new list containing multiple items.
+
+That means:
+- indexing gives one item
+- slicing gives a list of items”
+
+**Type:**
+
+```python
+print(letters[2])
+print(letters[2:4])
+```
+
+### 5.6 Quick practice questions
+
+**Ask learners:**
+- “What is the first item in `fruits`?”
+- “What is the last item in `fruits`?”
+- “If I want the first two items, what slice would I use?”
+- “If I want everything from index 1 onward, what slice would I use?”
+
+Let learners answer aloud before you confirm.
+
+### 5.7 Gentle warning about out-of-range indexes
+
+**Type:**
+
+```python
+# print(fruits[10])
+```
+
+**Say:**
+“If I try to access an index that does not exist, Python raises an error. Today we only need to understand that positions must be valid. We do not need a deep exception-handling lesson here. Just remember: lists have boundaries.”
+
+---
+
+## 6) Lists Are Mutable: Changing Items Matters (~7 minutes)
+
+### 6.1 Explain mutability simply
+
+**Say:**
+“Now we arrive at one of the most important ideas in today’s hour.
+
+Lists are mutable.
+
+That means we can change an existing list after it is created.
+
+This is different from strings. With strings, we can create a new string, but we do not replace one character in place using indexing. With lists, we absolutely can replace one item at a specific position.”
+
+### 6.2 Demonstrate item update
+
+**Type:**
+
+```python
+fruits = ["apple", "banana", "cherry"]
+print(fruits)
+
+fruits[1] = "blueberry"
+print(fruits)
+```
+
+Run it.
+
+**Say:**
+“We changed the second item from `banana` to `blueberry`.
+
+The list itself changed. That is the key idea.”
+
+### 6.3 Compare gently with strings
+
+**Type:**
+
+```python
+word = "cat"
+# word[0] = "b"
+```
+
+**Say:**
+“If I try to change one character of a string in place, Python will not allow it. That is because strings are not mutable in that way.
+
+I do not want you to memorize the word ‘mutable’ as a fancy vocabulary term. I want you to connect it to a concrete idea:
+- a list can be changed after it is created
+- a string cannot be changed item-by-item that same way”
+
+### 6.4 Ask a concept question
+
+**Ask learners:**
+“If I change `fruits[1]`, am I creating a completely different kind of structure, or am I updating the existing list?”
+
+Guide them to: “updating the existing list.”
+
+---
+
+## 7) Core List Operations: `append()`, `remove()`, `pop()`, and `in` (~10 minutes)
+
+### 7.1 `append()` adds to the end
+
+**Type:**
+
+```python
+shopping_list = ["milk", "bread"]
+print(shopping_list)
+
+shopping_list.append("eggs")
+print(shopping_list)
+```
+
+**Say:**
+“`append()` adds one item to the end of the list.
+
+This is one of the most common list methods beginners use. If your program collects items from a user one at a time, `append()` is often exactly what you need.”
+
+### 7.2 `remove()` removes by value
+
+**Type:**
+
+```python
+shopping_list.remove("bread")
+print(shopping_list)
+```
+
+**Say:**
+“`remove()` removes by value, not by position.
+
+That wording matters.
+If I say `shopping_list.remove("bread")`, Python searches for the item with that value and removes it.”
+
+### 7.3 `pop()` removes by index
+
+**Type:**
+
+```python
+shopping_list = ["milk", "bread", "eggs"]
+removed_item = shopping_list.pop(1)
+print(removed_item)
+print(shopping_list)
+```
+
+**Say:**
+“`pop()` usually works with a position. It removes the item at a given index.
+
+So now we have an important difference:
+- `remove()` uses a value
+- `pop()` uses an index”
+
+### 7.4 Show `pop()` without an index
+
+**Type:**
+
+```python
+shopping_list = ["milk", "bread", "eggs"]
+last_item = shopping_list.pop()
+print(last_item)
+print(shopping_list)
+```
+
+**Say:**
+“If you do not give `pop()` an index, it removes the last item.
+
+That is useful when the last item is the one you want to take off.”
+
+### 7.5 Membership test with `in`
+
+**Type:**
+
+```python
+shopping_list = ["milk", "bread", "eggs"]
+print("milk" in shopping_list)
+print("tea" in shopping_list)
+```
+
+**Say:**
+“The `in` operator answers a yes-or-no question: is this value present in the list?
+
+The result is `True` or `False`.
+
+That makes `in` very useful before removing an item.”
+
+### 7.6 Model a safe removal check
+
+**Type:**
+
+```python
+item_to_remove = "tea"
+
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print("Item removed.")
 else:
-    ...
+    print("That item is not in the list.")
 ```
 
-Each branch is one possible action.
+**Say:**
+“Notice what we are doing here. We are checking membership first. That helps us avoid a crash if the value is missing.
 
-This is not fancy, and that is a good thing. In Basics, we want the routing logic to be **obvious**.
+The runbook for this hour specifically mentions a common pitfall: `remove()` on a missing item raises an error. We are not doing a full lesson on exceptions right now. A simple membership check is enough for this hour.”
 
-### Why `if/elif` Is the Right Level Here
+### 7.7 Deliberate mistake: `pop()` with a value
 
-**[Instructor speaks:]**
+**Type:**
 
-Could more advanced programmers use other patterns later? Yes. But at the Basics level, `if/elif/else` is perfect because:
+```python
+shopping_list = ["milk", "bread", "eggs"]
+# shopping_list.pop("bread")
+```
 
-- students can already read it
-- it clearly matches the menu choices
-- it keeps the control flow visible
-- it supports small programs very well
+**Say:**
+“This is wrong because `pop()` expects an index, not a value. If I want to remove by value, I use `remove()`. If I want to remove by position, I use `pop()`.”
 
-We are not trying to be clever. We are trying to be understandable.
-
-### Prediction Prompt
-
-**[Instructor asks:]**
-
-If I remove the `elif choice == "q":` branch, what happens when the user types `q`?
-
-[Pause.]
-
-**[Instructor speaks:]**
-
-Right: the program never gets the signal to stop. It will likely fall into the `else` block and keep going. The loop itself is not magical. **We must design the exit condition.**
+**Ask learners:**
+- “Which method removes by value?”
+- “Which method removes by position?”
+- “Which method adds to the end?”
 
 ---
 
-## Section 4: Basic Validation and Shared State (8 minutes)
+## 8) Live Demo: Shopping List Build and Update (~10 minutes)
 
-### Basic Validation for Menu Choices
+### 8.1 Frame the demo
 
-**[Instructor speaks:]**
+**Say:**
+“Now let’s put the core list operations together in one realistic mini-example. I am going to build a shopping list, update it, remove items in two different ways, check for membership, and print the result after each step.
 
-Notice that our first level of validation is very simple: if the input is not one of the valid choices, we do not crash. We just respond with:
+As I type, I want you to keep asking yourself: what changed in the list?”
 
-```python
-print("Invalid choice. Please try again.")
-```
+### 8.2 Demo code, part 1: start empty and grow the list
 
-That is an important design habit.
-
-A beginner sometimes assumes validation means something complex. But in many cases, good validation simply means:
-
-- check whether the input matches expected options
-- if not, show a helpful message
-- let the user try again
-
-That alone makes a program feel far more solid.
-
-### Shared State: Data Must Live Outside the Action Branches
-
-**[Instructor speaks:]**
-
-Now let’s connect the menu loop to stored data.
-
-Suppose we are storing names in a list:
+**Type and narrate slowly:**
 
 ```python
-names = []
-running = True
+shopping_list = []
+print("Starting list:", shopping_list)
 
-while running:
-    print("\n1. Add name")
-    print("2. List names")
-    print("Q. Quit")
+shopping_list.append("milk")
+print("After adding milk:", shopping_list)
 
-    choice = input("Choose: ").strip().lower()
+shopping_list.append("bread")
+print("After adding bread:", shopping_list)
 
-    if choice == "1":
-        new_name = input("Enter a name: ").strip()
-        names.append(new_name)
-        print(f"Added: {new_name}")
-    elif choice == "2":
-        print(names)
-    elif choice == "q":
-        running = False
-    else:
-        print("Invalid choice.")
+shopping_list.append("eggs")
+print("After adding eggs:", shopping_list)
 ```
 
-The critical idea is that `names` is created **before** the loop, not inside it.
+Run it.
 
-### Common Mistake #2: Rebuilding the Data Structure Each Time
+**Say:**
+“Notice the pattern. We began with an empty list and used `append()` three times. That is the exact same pattern learners will use in the lab, except the values will come from user input.”
 
-**[Instructor speaks:]**
+### 8.3 Demo code, part 2: update an item
 
-A very common bug is this:
+**Type:**
 
 ```python
-while running:
-    names = []
+shopping_list[1] = "whole grain bread"
+print("After updating index 1:", shopping_list)
 ```
 
-If `names = []` appears inside the loop, the list gets reset every time the menu repeats. Students then say:
+**Say:**
+“This line reminds us that lists are mutable. We can change one item directly by index.”
 
-> “My add option worked, but my list is empty again.”
+### 8.4 Demo code, part 3: membership test and remove by value
 
-That is not a mystery bug. It is a **state reset bug**.
-
-If data should persist during the program run, create the list or dictionary **once**, outside the loop.
-
-### Preview: Separating Logic into Functions
-
-**[Instructor speaks:]**
-
-Today we are only previewing this idea, not teaching functions in depth yet.
-
-As menu programs get longer, it helps to separate actions into functions later, for example:
+**Type:**
 
 ```python
-def add_name(names: list[str]) -> None:
-    new_name = input("Enter a name: ").strip()
-    names.append(new_name)
-    print(f"Added: {new_name}")
+item_to_remove = "milk"
+
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print(f"Removed {item_to_remove}.")
+else:
+    print(f"{item_to_remove} was not found.")
+
+print("Current list:", shopping_list)
 ```
 
-Then the menu branch can simply call `add_name(names)`.
+**Say:**
+“This is the safer beginner pattern. Check membership first, then remove.”
 
-We are **not** requiring students to organize everything with functions yet. But it is useful to mention the direction of travel:
+### 8.5 Demo code, part 4: pop the last item
 
-- first learn the pattern clearly in one file
-- later, break actions into functions for readability
+**Type:**
 
-That preview helps students understand that programs can grow in an organized way.
+```python
+popped_item = shopping_list.pop()
+print(f"Popped item: {popped_item}")
+print("Current list:", shopping_list)
+```
+
+**Say:**
+“`pop()` not only removes an item. It also gives it back to us, so we can store it in a variable and print it.”
+
+### 8.6 Demo code, part 5: final list and count
+
+**Type:**
+
+```python
+print("Final shopping list:", shopping_list)
+print(f"Item count: {len(shopping_list)}")
+```
+
+**Say:**
+“`len()` tells us how many items are in the list. That is useful for summaries and clean output.”
+
+### 8.7 Ask comprehension questions
+
+**Ask learners:**
+- “What part of the code actually made the list longer?”
+- “What line changed an existing item?”
+- “Why did I use `in` before `remove()`?”
+- “What does `len(shopping_list)` measure?”
+
+### 8.8 Optional quick variation if time permits
+
+If the class is comfortable, add:
+
+```python
+print(shopping_list[0])
+print(shopping_list[:1])
+```
+
+Then say:
+
+“Notice the difference between one item and a slice containing items.”
 
 ---
 
-## Section 5: Live Demo – Menu Scaffold with 3 Options and Quit (10 minutes)
-
-### Demo Goal
-
-**[Instructor speaks:]**
-
-Now I am going to build a small menu-driven program live. I want students to hear the reasoning, not just see the code appear.
-
-For today’s demo, I’ll use a tiny **movie list manager**. It will store movie titles in memory and support:
-
-1. Add movie
-2. List movies
-3. Search movies
-Q. Quit
-
-### Live Coding Script
-
-**[Instructor types and speaks:]**
-
-```python
-# menu_movies.py
-# Day 4, Hour 1 demo: menu loop scaffold
-
-movies: list[str] = []
-running = True
-
-while running:
-    print("\n=== Movie Menu ===")
-    print("1. Add movie")
-    print("2. List movies")
-    print("3. Search movies")
-    print("Q. Quit")
-
-    choice = input("Choose an option: ").strip().lower()
-
-    if choice == "1":
-        movie = input("Enter a movie title: ").strip()
-        if movie == "":
-            print("Movie title cannot be empty.")
-        else:
-            movies.append(movie)
-            print(f"Added '{movie}' to your list.")
-
-    elif choice == "2":
-        if len(movies) == 0:
-            print("Your movie list is empty.")
-        else:
-            print("\nYour movies:")
-            for index, movie in enumerate(movies, start=1):
-                print(f"{index}. {movie}")
-
-    elif choice == "3":
-        search_term = input("Enter text to search for: ").strip().lower()
-        found_movies = []
-
-        for movie in movies:
-            if search_term in movie.lower():
-                found_movies.append(movie)
-
-        if len(found_movies) == 0:
-            print("No matches found.")
-        else:
-            print("Matches:")
-            for movie in found_movies:
-                print(f"- {movie}")
-
-    elif choice == "q":
-        print("Goodbye!")
-        running = False
-
-    else:
-        print("Invalid menu choice. Please enter 1, 2, 3, or Q.")
-```
-
-### Narration Notes During the Demo
-
-**[Instructor speaks:]**
-
-As I code, I want to narrate decisions like these:
-
-- “I’m creating `movies` outside the loop so the list persists.”
-- “I’m printing the menu inside the loop so users see it every round.”
-- “I’m normalizing input with `.strip().lower()`.”
-- “I’m using `if/elif` because it maps clearly to menu choices.”
-- “I’m checking for an empty list before listing items so the output stays friendly.”
-
-### Student Prediction Prompts During Demo
-
-**[Instructor asks:]**
-
-- What happens if I add two movies, then list them?
-- What happens if I type `Q` instead of `q`?
-- What happens if I search for text that is not present?
-- If I accidentally move `movies = []` inside the loop, what bug would appear?
-
-Use these questions to keep the class mentally engaged.
-
-### Testing the Demo in Front of Students
-
-**[Instructor speaks:]**
-
-Do not just write the code and move on. Model quick testing.
-
-Run these cases live:
-
-1. List when empty
-2. Add one movie
-3. Add a second movie
-4. Search with a match
-5. Search with no match
-6. Enter an invalid menu choice
-7. Quit
-
-This teaches students an important habit:
-
-> **A program is not finished when the typing stops. It is finished when the behavior is checked.**
-
----
-
-## Section 6: Hands-On Lab – Upgrade Menu (12 minutes)
-
-### Lab Setup
-
-**[Instructor speaks:]**
-
-Now students will build their own looped menu by upgrading a previous script or starting a fresh one with a familiar dataset.
-
-Encourage them to choose a simple dataset they can reason about easily. Good options include:
-
-- books
-- favorite songs
-- grocery items
-- student names
-- game scores
-- recipes
-
-The point is not the theme. The point is the **menu pattern**.
-
-### Lab Prompt
-
-**Lab: Upgrade Menu**
-
-Turn a previous script into a looped menu program, or create a new one from scratch.
-
-Your program must:
-
-- use a menu-driven `while` loop
-- include **add**, **list**, and **search** actions
-- keep state in memory while the program runs
-- repeat until the user chooses quit
-
-### Required Features
-
-1. **Add action**
-   - Let the user add a new item to the dataset
-2. **List action**
-   - Show all stored items
-3. **Search action**
-   - Let the user search for text or a name
-4. **Quit action**
-   - End the program cleanly
-5. **Basic invalid-choice handling**
-   - If the user types an unsupported menu option, show a message and continue
-
-### Suggested Starter Template
-
-```python
-items: list[str] = []
-running = True
-
-while running:
-    print("\n=== My Menu ===")
-    print("1. Add item")
-    print("2. List items")
-    print("3. Search items")
-    print("Q. Quit")
-
-    choice = input("Choose an option: ").strip().lower()
-
-    if choice == "1":
-        # add logic
-        pass
-    elif choice == "2":
-        # list logic
-        pass
-    elif choice == "3":
-        # search logic
-        pass
-    elif choice == "q":
-        # quit logic
-        pass
-    else:
-        print("Invalid choice.")
-```
-
-### Completion Criteria
-
-A student solution is complete when:
-
-- ✅ the menu repeats until quit  
-- ✅ add works  
-- ✅ list works  
-- ✅ search works  
-- ✅ data stays available during the run  
-- ✅ invalid menu choices do not crash the program  
-
-### Coaching Language While Circulating
-
-**[Instructor speaks:]**
-
-Use short coaching prompts while moving around the room:
-
-- “Where is your shared list created?”
-- “What tells your loop when to stop?”
-- “What should happen after a successful add?”
-- “Does your menu show again after each action?”
-- “If the user searches for text that is not found, what message do they see?”
-
-These questions guide students without taking over the keyboard.
-
-### Common Pitfalls to Watch For
-
-1. **Forgetting to reprint the menu**  
-   Usually caused by printing it outside the loop.
-
-2. **Not updating the shared data structure**  
-   Students gather input but never append it to the list.
-
-3. **Resetting the list inside the loop**  
-   This makes data disappear after each action.
-
-4. **Search variable mismatch**  
-   Students compare the search term to the wrong variable or forget `.lower()` on both sides.
-
-5. **No feedback messages**  
-   The program technically works, but the user experience is confusing.
-
-### Optional Extension
-
-If students finish early, invite them to add:
-
-- **update** option
-- **delete** option
-
-Keep this optional. Today’s required learning target is the menu loop pattern itself.
-
----
-
-## Section 7: Debrief & Exit Ticket (5 minutes)
-
-### Debrief Questions
-
-**[Instructor asks:]**
-
-- What part of the menu loop felt easiest?
-- What part was most error-prone?
-- What bug happened when data did not seem to “stick” between actions?
-- Why is the menu pattern more realistic than a one-shot script?
-
-### Instructor Synthesis
-
-**[Instructor speaks:]**
-
-What we built today is a very big step in beginner programming. Even though the code is still small, students are now organizing programs around:
-
-- repeated interaction
-- branch-based actions
-- in-memory state
-- user-driven flow
-
-That is real program structure.
-
-### Exit Ticket
-
-**[Instructor asks:]**
-
-Write one or two sentences answering this:
-
-**Why is a menu loop useful for CLI programs?**
-
-**Expected ideas:**
-- it lets the user do multiple actions in one run
-- it keeps the program open until the user chooses to quit
-- it keeps state in memory during the session
-- it makes the user interface clearer
-
----
-
-## Recap: What We Accomplished in Day 4, Hour 1 / Course Hour 29
-
-In this hour, learners:
-
-- built or analyzed a menu-driven `while` loop
-- routed choices with `if/elif/else`
-- handled invalid choices without crashing
-- practiced keeping shared data in memory
-- saw how menu-based CLI programs are structured
-- previewed how functions can later organize menu actions
-
-**[Instructor speaks:]**
-
-The key takeaway is not just “I can write a loop.” The key takeaway is:
-
-> **I can design a small interactive program that stays alive and responds to user choices.**
-
-That is a major milestone.
-
-In **Day 4, Hour 2 / Course Hour 30**, we will improve these programs by adding **input validation**, so user mistakes are handled more gracefully.
-
----
-
-## Appendix A: Full Demo Solution with Comments
-
-```python
-# menu_movies.py
-# Day 4, Hour 1 demo: menu-driven CLI pattern
-
-movies: list[str] = []
-running = True
-
-while running:
-    print("\n=== Movie Menu ===")
-    print("1. Add movie")
-    print("2. List movies")
-    print("3. Search movies")
-    print("Q. Quit")
-
-    choice = input("Choose an option: ").strip().lower()
-
-    if choice == "1":
-        movie = input("Enter a movie title: ").strip()
-        if movie == "":
-            print("Movie title cannot be empty.")
-        else:
-            movies.append(movie)
-            print(f"Added '{movie}'.")
-
-    elif choice == "2":
-        if len(movies) == 0:
-            print("No movies stored yet.")
-        else:
-            print("\nSaved movies:")
-            for index, movie in enumerate(movies, start=1):
-                print(f"{index}. {movie}")
-
-    elif choice == "3":
-        search_term = input("Search text: ").strip().lower()
-        matches = []
-
-        for movie in movies:
-            if search_term in movie.lower():
-                matches.append(movie)
-
-        if len(matches) == 0:
-            print("No matches found.")
-        else:
-            print("Matches:")
-            for movie in matches:
-                print(f"- {movie}")
-
-    elif choice == "q":
-        print("Goodbye!")
-        running = False
-
-    else:
-        print("Invalid choice. Please select 1, 2, 3, or Q.")
-```
-
----
-
-## Appendix B: Instructor Whiteboard / Slide Outline
-
-Use this if you want a fast visual summary during teaching.
-
-### Board Sketch 1: Menu Loop Pattern
+## 9) Guided Lab: Shopping List Program (~12 minutes)
+
+### 9.1 Introduce the lab clearly
+
+**Say:**
+“Now it is your turn. Your job is to build a shopping-list program that follows the Session 4 runbook exactly.
+
+Your program should:
+1. Start with an empty list.
+2. Ask the user for 5 shopping items, one at a time.
+3. Append each item to the list.
+4. Ask the user for one item to remove.
+5. Remove that item if it exists.
+6. Print the final list.
+7. Print the item count.”
+
+### 9.2 Put the lab requirements on screen
 
 ```text
-while running:
-    show menu
-    get choice
-    if/elif route action
-    if quit -> stop loop
+Lab: Shopping List
+- Start with an empty list.
+- Ask the user for 5 items, one at a time.
+- Remove one chosen item.
+- Print the final list and item count.
 ```
 
-### Board Sketch 2: State Placement
+### 9.3 Provide a beginner-friendly starter structure
 
-```text
-GOOD:
-items = []
-while running:
-    ...
-
-BAD:
-while running:
-    items = []
-    ...
-```
-
-### Board Sketch 3: Core Question
-
-```text
-How do we keep the program alive
-until the user chooses to stop?
-```
-
----
-
-## Appendix C: Common Student Bugs and Coaching Responses
-
-### Bug: “My list is empty every time I go back to the menu.”
-**Likely cause:** The list is being recreated inside the loop.  
-**Coaching response:** “Show me where the list is initialized. Should that happen once, or every menu cycle?”
-
-### Bug: “My quit option does nothing.”
-**Likely cause:** The quit branch is missing, or the user input is not normalized.  
-**Coaching response:** “What exact value are you checking for in the quit branch? What happens if the user types uppercase Q?”
-
-### Bug: “I can search, but it never finds anything.”
-**Likely cause:** Case mismatch or wrong comparison variable.  
-**Coaching response:** “What two strings are you comparing? Are they in the same case?”
-
-### Bug: “My menu disappears after one choice.”
-**Likely cause:** Menu printing is outside the loop, or the loop ends too early.  
-**Coaching response:** “Where is the print block for the menu? Does execution return there after each branch?”
-
----
-
-## Appendix D: Stretch Discussion – Why Functions Help Later
-
-**[Instructor speaks:]**
-
-We are not formally teaching functions in this hour, but it is helpful to preview where this is going.
-
-A menu program often starts small and becomes messy as it grows. For example, a long `if/elif` chain may contain:
-
-- input prompts
-- data updates
-- loop logic
-- output formatting
-
-Later, functions help by allowing us to separate responsibilities.
-
-For example:
+**Type and leave it on screen:**
 
 ```python
-def add_movie(movies: list[str]) -> None:
-    movie = input("Enter a movie title: ").strip()
-    if movie == "":
-        print("Movie title cannot be empty.")
-    else:
-        movies.append(movie)
-        print(f"Added '{movie}'.")
+shopping_list = []
+
+item = input("Enter shopping item 1: ")
+shopping_list.append(item)
+
+item = input("Enter shopping item 2: ")
+shopping_list.append(item)
+
+item = input("Enter shopping item 3: ")
+shopping_list.append(item)
+
+item = input("Enter shopping item 4: ")
+shopping_list.append(item)
+
+item = input("Enter shopping item 5: ")
+shopping_list.append(item)
+
+print("Your shopping list is:", shopping_list)
+
+item_to_remove = input("Enter one item to remove: ")
+
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print(f"Removed {item_to_remove}.")
+else:
+    print("That item was not found.")
+
+print("Final shopping list:", shopping_list)
+print(f"Item count: {len(shopping_list)}")
 ```
 
-Then the menu branch becomes:
+### 9.4 Explain why this starter is intentionally simple
 
-```python
-if choice == "1":
-    add_movie(movies)
-```
+**Say:**
+“This is not the shortest possible program. It is the clearest possible program for this point in the course.
 
-That is not required today, but it is valuable for students to hear that the pattern they are learning now will scale later.
+Later, loops will help us avoid repetition. Right now, repetition is acceptable if it helps you see the pattern clearly.
+
+Notice that I am not trying to be fancy. I am trying to be readable.”
+
+### 9.5 Prompt learners to personalize
+
+**Say:**
+“After you get the basic version working, you may personalize your test data. Use grocery items you actually buy. That makes it easier to reason about the output.”
+
+### 9.6 Instructor circulation prompts during lab time
+
+As learners work, walk around and ask:
+- “Show me where the empty list is created.”
+- “Which line adds a new item?”
+- “How many times do you append?”
+- “What happens if the user tries to remove an item that is missing?”
+- “Where do you print the final count?”
+
+### 9.7 If learners finish early
+
+Offer these optional extensions, but emphasize they are optional:
+- allow the user to type `done` before five items are entered
+- print the list alphabetically using `sorted(shopping_list)`
+- print each item on its own line instead of printing the whole list object
+
+Be clear that these are extensions, not required outcomes.
 
 ---
 
-## Appendix E: Additional Instructor Notes for Pacing and Support
+## 10) Common Pitfalls and How to Coach Through Them (~6 minutes)
 
-### If the class is moving quickly
+### 10.1 Pitfall: `remove()` on a missing item
 
-**[Instructor speaks:]**
+**Symptom:** learner gets an error when the item is not in the list.
 
-If students understand the core pattern quickly, use the extra time to strengthen quality rather than immediately raising complexity.
+**Coach with these words:**
+“Read the message calmly. The program is telling you that the value you tried to remove is not present. Before removing, check with `in`.”
 
-Possible fast-finisher directions:
+Show again if needed:
 
-- improve output formatting
-- make search case-insensitive
-- add a confirmation message after list when no items exist
-- add update or delete as optional features
-- refactor one branch into a helper function as a preview
+```python
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+else:
+    print("That item was not found.")
+```
 
-### If the class is moving slowly
+### 10.2 Pitfall: confusing `pop()` with `remove()`
 
-Slow the pace and make the success target smaller:
+**Say:**
+“This is one of today’s signature mistakes.
+- `remove("bread")` uses a value.
+- `pop(1)` uses a position.
 
-- first get the menu printing repeatedly
-- then get quit working
-- then get one action working, such as add
-- then add list
-- only then attempt search
+If a learner writes `pop("bread")`, pause and ask: ‘Are you giving Python a position or a value?’ Usually that question helps them self-correct.”
 
-This preserves confidence. Students do not need a perfect polished app in the first 20 minutes. They need a stable mental model.
+### 10.3 Pitfall: forgetting that indexes start at zero
 
-### If many students are stuck on branching
+**Say:**
+“If a learner thinks index 1 is the first item, bring them back to the phrase: ‘Python counts from zero.’ Have them print the list and label the positions out loud.”
 
-Re-center them on a paper model:
+### 10.4 Pitfall: printing too early and thinking the list is wrong
+
+**Say:**
+“Sometimes the list is fine, but the learner is printing it before the last update. Encourage them to print after each important change while debugging. Lists are easier to understand when you inspect them step by step.”
+
+### 10.5 Pitfall: confusing one item with the full list
+
+**Say:**
+“Beginners sometimes forget whether they are printing the whole list or just one item. Ask them: ‘Do you want the collection, or one element from the collection?’ That simple question often clears it up.”
+
+---
+
+## 11) Debrief and Share-Out (~4 minutes)
+
+### 11.1 Bring the class back together
+
+**Say:**
+“Let’s pause and compare what we built. Even if your code is not perfect yet, you can still learn a lot from the structure.”
+
+### 11.2 Prompt two or three learners
+
+Ask:
+- “Who used the membership check before removing?”
+- “Who can explain the difference between `remove()` and `pop()` in one sentence?”
+- “Who printed the final item count with `len()`?”
+
+### 11.3 Model a concise explanation
+
+**Say:**
+“A strong answer sounds like this:
+‘My program starts with an empty list, collects five items using `append()`, asks for one item to remove, checks whether the item exists, removes it if present, and then prints the final list and the number of items.’
+
+That explanation matters because it shows the learner understands the program, not just the syntax.”
+
+---
+
+## 12) Recap Script (~2 minutes)
+
+**Say:**
+“Today we introduced one of the most useful structures in beginner Python: the list.
+
+We learned that:
+- a list stores multiple related values in one variable
+- lists keep their order
+- lists use indexing and slicing
+- lists are mutable, which means they can change
+- `append()` adds to the end
+- `remove()` removes by value
+- `pop()` removes by index, or the last item if no index is given
+- `in` checks whether an item exists in the list
+
+That is a lot of progress for one hour, and it gives us the foundation for the next step: processing list items with loops.”
+
+---
+
+## 13) Exit Ticket (~1 minute)
+
+Ask learners to answer verbally, in chat, or on paper:
+
+1. Why can lists change after creation, but strings cannot change item-by-item the same way?
+2. What is the difference between `remove()` and `pop()`?
+3. If `shopping_list = ["milk", "bread", "eggs"]`, what does `"bread" in shopping_list` return?
+4. If you wanted to start collecting user items before you knew them, why might `[]` be a good first line of code?
+
+**Expected direction of answers:**
+- lists are mutable
+- `remove()` uses a value, `pop()` uses an index
+- the membership test returns `True`
+- an empty list gives you a place to store items as they are entered
+
+---
+
+## 14) Instructor Notes for the Transition to Hour 14
+
+**Say:**
+“Right now we know how to store many values together. In the next hour, we learn how to process every item in a list without writing repetitive code. That is where `for` loops enter the picture.”
+
+If learners seem shaky, reinforce these two lines before moving on:
+- “A list is a changeable collection.”
+- “`append()`, `remove()`, `pop()`, and `in` are the core tools from this hour.”
+
+---
+
+## Appendix: Instructor Reinforcement Notes for Hour 13
+
+### A) Quick board plan if learners need one more visual pass
+
+If the room needs a calmer visual explanation, draw this on the board:
 
 ```text
-choice == "1" -> add
-choice == "2" -> list
-choice == "3" -> search
-choice == "q" -> quit
-anything else -> invalid
+shopping_list = ["milk", "bread", "eggs"]
+                 0        1        2
 ```
 
-Sometimes the clearest debugging step is not more code. It is writing the decision map in plain English.
+Then ask:
+- “Which item is at index 0?”
+- “Which item is at index 2?”
+- “If I change index 1, what changes?”
+- “If I call `pop(0)`, which item leaves the list?”
 
----
+This board sketch is helpful because it makes the list feel less abstract. Many beginners understand faster when they can point to a position with a finger.
 
-## Appendix F: Quick Reference Card for Students
+### B) Short extra practice prompts you can use verbally
 
-### Menu Loop Recipe
+If there are two or three extra minutes, ask learners to answer these without typing first:
 
-```python
-items = []
-running = True
+1. If `items = ["pen", "paper", "book"]`, what does `items[1]` return?
+2. What does `items[-1]` return?
+3. If you write `items.append("eraser")`, where does the new value go?
+4. If you write `items.remove("paper")`, are you removing by value or by position?
+5. If you write `items.pop(2)`, what kind of input does `pop()` expect?
 
-while running:
-    print("menu")
-    choice = input("Choose: ").strip().lower()
+Then say:
 
-    if choice == "1":
-        ...
-    elif choice == "2":
-        ...
-    elif choice == "q":
-        running = False
-    else:
-        print("Invalid choice")
-```
+“Notice that each question is really checking one of four ideas: position, change, membership, or method choice. That is the heart of this hour.”
 
-### Remember
+### C) Instructor language for gentle correction
 
-- Print the menu **inside** the loop
-- Create your shared list/dictionary **outside** the loop
-- Use `if/elif/else` to route actions
-- Normalize user input with `.strip()` and `.lower()`
-- Make quit an explicit option
-- Show helpful feedback after each action
+When a learner makes a mistake, try short coaching lines like these:
 
----
+- “Tell me whether you want one item or the whole list.”
+- “Tell me whether you are removing by value or by position.”
+- “Show me the line where the list actually changes.”
+- “Print the list right after that line so we can see the result.”
+- “If the item is missing, how could we check before removing?”
 
-**End of Day 4, Hour 1 Script / Course Hour 29**
+These phrases are effective because they guide thinking without taking the keyboard away from the learner.
+
+### D) Suggested micro-debrief question set
+
+If you want a slightly longer closing conversation before Hour 14, use these prompts:
+
+- “Why is an empty list a good starting point when you plan to collect user input?”
+- “Why is `append()` so useful for beginner programs?”
+- “Why might `in` be helpful before `remove()`?”
+- “What is one real-world example where a list would be better than five separate variables?”
+
+A strong class debrief will keep the answers practical rather than overly theoretical.
+
+### E) Final teaching reminder to yourself
+
+The hour succeeds if learners leave with this mental model:
+
+“A list is a changeable collection of values in order.”
+
+If they can say that, create one, add items, remove an item safely, and print the result, the hour has met its runbook goal.
