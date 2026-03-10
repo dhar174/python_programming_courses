@@ -159,7 +159,10 @@ In `.gitignore`, exclude local secret files such as:
 
 ```gitignore
 .env
-.env.*
+.env.local
+.env.development
+.env.production
+!.env.example
 secrets.json
 local_settings.json
 ```
@@ -205,6 +208,7 @@ Here is the classroom-safe pattern we will show:
 from __future__ import annotations
 
 import hashlib
+import secrets
 
 
 def sha256_digest(value: str) -> str:
@@ -217,10 +221,10 @@ provided_key = "demo-admin-key"
 expected_digest = sha256_digest(admin_key)
 provided_digest = sha256_digest(provided_key)
 
-print(expected_digest == provided_digest)
+print(secrets.compare_digest(expected_digest, provided_digest))
 ```
 
-The point of this demo is not that we now have “security solved.” The point is that a hash digest can be compared without printing or storing the original value directly in application logic.
+The point of this demo is not that we now have “security solved.” The point is that a hash digest can be compared without printing or storing the original value directly in application logic. Using `secrets.compare_digest(...)` also models a safer constant-time comparison habit.
 
 **[Prediction prompt:]** If I change one character in the input, do you expect a small change in the digest or a completely different digest-looking string?
 
@@ -258,6 +262,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
+import secrets
 
 logging.basicConfig(
     level=logging.INFO,
@@ -280,7 +285,10 @@ def sha256_digest(value: str) -> str:
 def run_admin_action(provided_key: str) -> None:
     expected_key = get_required_env("APP_ADMIN_KEY")
 
-    if sha256_digest(provided_key) != sha256_digest(expected_key):
+    if not secrets.compare_digest(
+        sha256_digest(provided_key),
+        sha256_digest(expected_key),
+    ):
         logger.warning("Admin action denied due to invalid key.")
         print("Admin action denied.")
         return
@@ -306,7 +314,7 @@ Walk students through the helper function first. Explain why failing early on a 
 
 Then highlight the logging. The user sees “Admin action denied,” while the log captures the event for later review. This is a nice bridge between security and observability.
 
-Then talk about the digest comparison. Be explicit that we are demonstrating the concept of comparing one-way digests rather than storing or reusing a plain-text value directly in business logic.
+Then talk about the digest comparison. Be explicit that we are demonstrating the concept of comparing one-way digests rather than storing or reusing a plain-text value directly in business logic, and point out that `secrets.compare_digest(...)` is the safer comparison helper to model.
 
 **[Instructor action:]** Show, but do not commit, example setup guidance:
 
@@ -326,7 +334,10 @@ Show `.gitignore` guidance:
 
 ```gitignore
 .env
-.env.*
+.env.local
+.env.development
+.env.production
+!.env.example
 ```
 
 Show the README note:

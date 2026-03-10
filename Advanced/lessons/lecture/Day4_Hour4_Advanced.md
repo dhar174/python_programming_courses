@@ -340,7 +340,7 @@ from pathlib import Path
 
 from reading_tracker.errors import PersistenceError, ValidationError
 from reading_tracker.logging_config import configure_logging
-from reading_tracker.models import Book
+from reading_tracker.models import Book, ReadingState
 from reading_tracker.persistence import JSONStateStore
 from reading_tracker.services import ReadingService
 
@@ -353,7 +353,7 @@ def main() -> None:
         initial_state = store.load()
     except PersistenceError as error:
         print(f"Could not load state: {error}")
-        initial_state = None
+        initial_state = ReadingState()
 
     service = ReadingService(initial_state)
 
