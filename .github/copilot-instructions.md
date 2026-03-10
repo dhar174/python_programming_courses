@@ -46,6 +46,7 @@ This repository contains comprehensive instructional materials for a 96-hour Pyt
 npx @marp-team/marp-cli -c .marprc.yml
 ```
 Output: `./_site/slides/` (HTML, PDF, PPTX, PNG)
+For PPTX-first or editable deck work, `.github/skills/slides` is also available as an alternative or supplement to this Marp workflow.
 
 **Build specific file:**
 ```bash
