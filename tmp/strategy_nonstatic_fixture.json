@@ -1,0 +1,128 @@
+{
+  "classification": {
+    "primary": "api",
+    "reasons": [
+      "Python manifest detected"
+    ]
+  },
+  "decision_matrix_markdown": "## Deployment Decision Matrix\n\nPrimary shape: `api`\n\n| Rank | Strategy | Total | Fit | Security | Ops | Cost | Required Secrets |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n| 1 | GitHub Actions to Render | 86 | 94 | 75 | 81 | 70 | RENDER_API_KEY |\n| 2 | GitHub Actions to Azure Web App | 82 | 89 | 82 | 71 | 60 | AZURE_CREDENTIALS, AZURE_WEBAPP_NAME |\n| 3 | GitHub Actions to Vercel | 77 | 75 | 80 | 82 | 75 | VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID |\n| 4 | GitHub Actions to Cloudflare Pages | 68 | 55 | 84 | 80 | 85 | CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID |\n| 5 | GitHub Pages via Actions | 55 | 25 | 90 | 90 | 95 | None |",
+  "provider_shortlist": [
+    {
+      "id": "actions-render",
+      "title": "GitHub Actions to Render",
+      "total_score": 86
+    },
+    {
+      "id": "actions-azure-webapp",
+      "title": "GitHub Actions to Azure Web App",
+      "total_score": 82
+    },
+    {
+      "id": "actions-vercel",
+      "title": "GitHub Actions to Vercel",
+      "total_score": 77
+    }
+  ],
+  "recommended_strategy": {
+    "delivery": "actions-to-provider",
+    "id": "actions-render",
+    "required_secrets": [
+      "RENDER_API_KEY"
+    ],
+    "title": "GitHub Actions to Render",
+    "total_score": 86,
+    "why": [
+      "Strong fit for Python APIs, workers, and full-stack apps.",
+      "Python runtime signal aligns with provider workflow",
+      "Docker signal supports portable deployment packaging"
+    ]
+  },
+  "strategies": [
+    {
+      "cost": 70,
+      "delivery": "actions-to-provider",
+      "fit": 94,
+      "id": "actions-render",
+      "ops": 81,
+      "rationale": [
+        "Strong fit for Python APIs, workers, and full-stack apps.",
+        "Python runtime signal aligns with provider workflow",
+        "Docker signal supports portable deployment packaging"
+      ],
+      "required_secrets": [
+        "RENDER_API_KEY"
+      ],
+      "security": 75,
+      "title": "GitHub Actions to Render",
+      "total_score": 86
+    },
+    {
+      "cost": 60,
+      "delivery": "actions-to-provider",
+      "fit": 89,
+      "id": "actions-azure-webapp",
+      "ops": 71,
+      "rationale": [
+        "Good fit when enterprise Azure governance or App Service is desired.",
+        "Python runtime signal aligns with provider workflow",
+        "Docker signal supports portable deployment packaging"
+      ],
+      "required_secrets": [
+        "AZURE_CREDENTIALS",
+        "AZURE_WEBAPP_NAME"
+      ],
+      "security": 82,
+      "title": "GitHub Actions to Azure Web App",
+      "total_score": 82
+    },
+    {
+      "cost": 75,
+      "delivery": "actions-to-provider",
+      "fit": 75,
+      "id": "actions-vercel",
+      "ops": 82,
+      "rationale": [
+        "Great for frontend-heavy projects and Next.js workloads."
+      ],
+      "required_secrets": [
+        "VERCEL_TOKEN",
+        "VERCEL_ORG_ID",
+        "VERCEL_PROJECT_ID"
+      ],
+      "security": 80,
+      "title": "GitHub Actions to Vercel",
+      "total_score": 77
+    },
+    {
+      "cost": 85,
+      "delivery": "actions-to-provider",
+      "fit": 55,
+      "id": "actions-cloudflare-pages",
+      "ops": 80,
+      "rationale": [
+        "Strong static and SPA hosting option with global edge delivery."
+      ],
+      "required_secrets": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
+      "security": 84,
+      "title": "GitHub Actions to Cloudflare Pages",
+      "total_score": 68
+    },
+    {
+      "cost": 95,
+      "delivery": "github-native",
+      "fit": 25,
+      "id": "github-pages-actions",
+      "ops": 90,
+      "rationale": [
+        "Best default for static, docs, or slide repositories."
+      ],
+      "required_secrets": [],
+      "security": 90,
+      "title": "GitHub Pages via Actions",
+      "total_score": 55
+    }
+  ]
+}

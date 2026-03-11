@@ -1,0 +1,119 @@
+{
+  "classification": {
+    "primary": "slides",
+    "reasons": [
+      "Marp configuration detected"
+    ]
+  },
+  "decision_matrix_markdown": "## Deployment Decision Matrix\n\nPrimary shape: `slides`\n\n| Rank | Strategy | Total | Fit | Security | Ops | Cost | Required Secrets |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n| 1 | GitHub Pages via Actions | 94 | 100 | 80 | 90 | 95 | None |\n| 2 | GitHub Actions to Cloudflare Pages | 86 | 88 | 84 | 80 | 85 | CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID |\n| 3 | GitHub Actions to Vercel | 81 | 82 | 80 | 82 | 75 | VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID |\n| 4 | GitHub Actions to Render | 64 | 55 | 75 | 78 | 70 | RENDER_API_KEY |\n| 5 | GitHub Actions to Azure Web App | 60 | 50 | 82 | 68 | 60 | AZURE_CREDENTIALS, AZURE_WEBAPP_NAME |",
+  "provider_shortlist": [
+    {
+      "id": "actions-cloudflare-pages",
+      "title": "GitHub Actions to Cloudflare Pages",
+      "total_score": 86
+    },
+    {
+      "id": "actions-vercel",
+      "title": "GitHub Actions to Vercel",
+      "total_score": 81
+    }
+  ],
+  "recommended_strategy": {
+    "delivery": "github-native",
+    "id": "github-pages-actions",
+    "required_secrets": [],
+    "title": "GitHub Pages via Actions",
+    "total_score": 94,
+    "why": [
+      "Best default for static, docs, or slide repositories.",
+      "Existing Pages workflow detected",
+      "Detected PAT token usage; hardening opportunity exists"
+    ]
+  },
+  "strategies": [
+    {
+      "cost": 95,
+      "delivery": "github-native",
+      "fit": 100,
+      "id": "github-pages-actions",
+      "ops": 90,
+      "rationale": [
+        "Best default for static, docs, or slide repositories.",
+        "Existing Pages workflow detected",
+        "Detected PAT token usage; hardening opportunity exists"
+      ],
+      "required_secrets": [],
+      "security": 80,
+      "title": "GitHub Pages via Actions",
+      "total_score": 94
+    },
+    {
+      "cost": 85,
+      "delivery": "actions-to-provider",
+      "fit": 88,
+      "id": "actions-cloudflare-pages",
+      "ops": 80,
+      "rationale": [
+        "Strong static and SPA hosting option with global edge delivery."
+      ],
+      "required_secrets": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
+      "security": 84,
+      "title": "GitHub Actions to Cloudflare Pages",
+      "total_score": 86
+    },
+    {
+      "cost": 75,
+      "delivery": "actions-to-provider",
+      "fit": 82,
+      "id": "actions-vercel",
+      "ops": 82,
+      "rationale": [
+        "Great for frontend-heavy projects and Next.js workloads."
+      ],
+      "required_secrets": [
+        "VERCEL_TOKEN",
+        "VERCEL_ORG_ID",
+        "VERCEL_PROJECT_ID"
+      ],
+      "security": 80,
+      "title": "GitHub Actions to Vercel",
+      "total_score": 81
+    },
+    {
+      "cost": 70,
+      "delivery": "actions-to-provider",
+      "fit": 55,
+      "id": "actions-render",
+      "ops": 78,
+      "rationale": [
+        "Strong fit for Python APIs, workers, and full-stack apps."
+      ],
+      "required_secrets": [
+        "RENDER_API_KEY"
+      ],
+      "security": 75,
+      "title": "GitHub Actions to Render",
+      "total_score": 64
+    },
+    {
+      "cost": 60,
+      "delivery": "actions-to-provider",
+      "fit": 50,
+      "id": "actions-azure-webapp",
+      "ops": 68,
+      "rationale": [
+        "Good fit when enterprise Azure governance or App Service is desired."
+      ],
+      "required_secrets": [
+        "AZURE_CREDENTIALS",
+        "AZURE_WEBAPP_NAME"
+      ],
+      "security": 82,
+      "title": "GitHub Actions to Azure Web App",
+      "total_score": 60
+    }
+  ]
+}
