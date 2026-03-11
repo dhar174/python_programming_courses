@@ -42,11 +42,35 @@ jobs:
         uses: KoharaKazuya/marp-cli-action@v4
         with:
           config-file: ./.marprc.yml
+
+      - name: Ensure Pages root resolves to slide content
+        run: |
+          mkdir -p _site
+          cat <<'EOF' > _site/index.html
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta http-equiv="refresh" content="0; url=./slides/">
+              <title>Redirecting to slides…</title>
+            </head>
+            <body>
+              <p><a href="./slides/">Open the published slides</a></p>
+            </body>
+          </html>
+          EOF
+
+          # Fallback to the checked-in static slide site when the Marp action
+          # does not populate the configured `_site/slides` output directory.
+          if [ ! -d _site/slides ]; then
+            mkdir -p _site/slides
+            cp -R Basics/lessons/slides/. _site/slides/
+          fi
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'Basics/lessons/slides'
+          path: '_site'
 
   deploy:
     permissions:
