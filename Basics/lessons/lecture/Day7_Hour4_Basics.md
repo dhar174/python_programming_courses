@@ -694,9 +694,9 @@ These three patterns are fundamental. You will use them in almost every program 
 **Say:**
 "Initialize min_value to the first number in the list: min_value = numbers[0].
 
-Why? If you initialize to 0, and all numbers are negative (like -5, -10, -20), then every comparison num < min_value will be true (because negative numbers are less than 0). But you will never update min_value correctly, and your final answer will be 0, which is wrong.
+Why? Because you don’t know ahead of time whether your numbers will be positive, negative, or mixed. If you just “guess” 0, that guess might accidentally work in some cases, but fail badly in others—for example, if you were finding the *maximum* of a list of negative numbers and wrote max_value = 0, your loop would incorrectly report 0 as the maximum even though 0 is not in the list.
 
-By initializing to the first number, you are guaranteed to start with a value that is actually in the list. Then the comparisons work correctly regardless of whether the numbers are positive, negative, or mixed."
+By initializing to the first number, you are guaranteed to start with a value that is actually in the list. Then the comparisons work correctly and consistently regardless of whether the numbers are all positive, all negative, or a mix."
 
 ---
 
