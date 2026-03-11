@@ -28,60 +28,74 @@ jobs:
         id: prepare_autograder
         run: |
           mkdir -p submission/.github/autograder
-          SUBMISSIONS_DIR="Basics/assignments/Basics_Day1_homework/submissions"
-          mkdir -p "$SUBMISSIONS_DIR"
-          mapfile -t DAY1_NOTEBOOKS < <(find "$SUBMISSIONS_DIR" -maxdepth 1 -type f -name "*Basics_Day1*.ipynb" | sort)
-          if [ ${#DAY1_NOTEBOOKS[@]} -eq 0 ]; then
-            echo "::notice::No Day 1 submission notebook found in ${SUBMISSIONS_DIR}. Expected an .ipynb containing 'Basics_Day1' in the filename. Skipping Day 1 assignment grading for this run."
-            echo "day1_submission_found=false" >> "$GITHUB_OUTPUT"
+          mapfile -t ALL_NOTEBOOKS < <(find Basics/assignments -type f -path "*/submissions/*Basics_Day*.ipynb" | sort)
+          if [ ${#ALL_NOTEBOOKS[@]} -eq 0 ]; then
+            echo "::notice::No assignment submission notebooks found under Basics/assignments/*/submissions. Skipping autograder action execution for this run."
+            echo "any_submission_found=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [ ${#DAY1_NOTEBOOKS[@]} -gt 1 ]; then
-            echo "::warning::Found ${#DAY1_NOTEBOOKS[@]} Day 1 submission notebooks in ${SUBMISSIONS_DIR}; using first sorted match: ${DAY1_NOTEBOOKS[0]}"
+          for NOTEBOOK_PATH in "${ALL_NOTEBOOKS[@]}"; do
+            NOTEBOOK_NAME="$(basename "$NOTEBOOK_PATH")"
+            if [[ ! "$NOTEBOOK_NAME" =~ ^[A-Za-z0-9._-]+$ ]]; then
+              echo "Invalid submission filename '$NOTEBOOK_NAME'. Use only letters, numbers, dots, underscores, and hyphens."
+              exit 1
+            fi
+            if [[ "$NOTEBOOK_NAME" == .* || "$NOTEBOOK_NAME" == *..* ]]; then
+              echo "Invalid submission filename '$NOTEBOOK_NAME'. Relative path-like names are not allowed."
+              exit 1
+            fi
+          done
+          if [ ${#ALL_NOTEBOOKS[@]} -gt 1 ]; then
+            echo "::warning::Found ${#ALL_NOTEBOOKS[@]} notebooks across all assignment days; using first sorted match for webtech-network/autograder@v1 compatibility: ${ALL_NOTEBOOKS[0]}"
           fi
-          DAY1_NOTEBOOK="${DAY1_NOTEBOOKS[0]}"
-          DAY1_NOTEBOOK_NAME="$(basename "$DAY1_NOTEBOOK")"
-          if [[ ! "$DAY1_NOTEBOOK_NAME" =~ ^[A-Za-z0-9._-]+$ ]]; then
-            echo "Invalid submission filename '$DAY1_NOTEBOOK_NAME'. Use only letters, numbers, dots, underscores, and hyphens."
+          NOTEBOOK_PATH="${ALL_NOTEBOOKS[0]}"
+          NOTEBOOK_NAME="$(basename "$NOTEBOOK_PATH")"
+          ASSIGNMENT_DIR="$(dirname "$(dirname "$NOTEBOOK_PATH")")"
+          if [ ! -f "$ASSIGNMENT_DIR/criteria.json" ] || [ ! -f "$ASSIGNMENT_DIR/feedback.json" ]; then
+            echo "::error::Missing criteria.json or feedback.json in $ASSIGNMENT_DIR for selected notebook $NOTEBOOK_NAME"
             exit 1
           fi
-          if [[ "$DAY1_NOTEBOOK_NAME" == .* || "$DAY1_NOTEBOOK_NAME" == *..* ]]; then
-            echo "Invalid submission filename '$DAY1_NOTEBOOK_NAME'. Relative path-like names are not allowed."
-            exit 1
-          fi
-          echo "day1_submission_found=true" >> "$GITHUB_OUTPUT"
-          cp "$DAY1_NOTEBOOK" "submission/$DAY1_NOTEBOOK_NAME"
-          cp "$DAY1_NOTEBOOK" "submission/.github/autograder/$DAY1_NOTEBOOK_NAME"
-          cp Basics/assignments/Basics_Day1_homework/criteria.json submission/.github/autograder/criteria.json
-          cp Basics/assignments/Basics_Day1_homework/feedback.json submission/.github/autograder/feedback.json
-          test -f "submission/$DAY1_NOTEBOOK_NAME" || (echo "Missing copied submission/$DAY1_NOTEBOOK_NAME" && exit 1)
-          test -f "submission/.github/autograder/$DAY1_NOTEBOOK_NAME" || (echo "Missing copied $DAY1_NOTEBOOK_NAME" && exit 1)
+          echo "any_submission_found=true" >> "$GITHUB_OUTPUT"
+          cp "$NOTEBOOK_PATH" "submission/$NOTEBOOK_NAME"
+          cp "$NOTEBOOK_PATH" "submission/.github/autograder/$NOTEBOOK_NAME"
+          cp "$ASSIGNMENT_DIR/criteria.json" submission/.github/autograder/criteria.json
+          cp "$ASSIGNMENT_DIR/feedback.json" submission/.github/autograder/feedback.json
+          test -f "submission/$NOTEBOOK_NAME" || (echo "Missing copied submission/$NOTEBOOK_NAME" && exit 1)
+          test -f "submission/.github/autograder/$NOTEBOOK_NAME" || (echo "Missing copied $NOTEBOOK_NAME" && exit 1)
           test -f submission/.github/autograder/criteria.json || (echo "Missing copied criteria.json" && exit 1)
           test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
-          python - "$DAY1_NOTEBOOK_NAME" << 'PY'
+          python - "$NOTEBOOK_NAME" << 'PY'
           import json
+          import re
           import shlex
           import sys
           from pathlib import Path
 
           notebook_name = sys.argv[1]
           # Defense-in-depth validation before writing shell commands into setup.json.
+          # Allow any filename that contains 'Basics_DayN' anywhere (e.g. "alex-Basics_Day1_homework.ipynb").
           if (
               not notebook_name.endswith(".ipynb")
-              or "Basics_Day1" not in notebook_name
+              or not re.search(r"Basics_Day\d+", notebook_name)
               or "/" in notebook_name
               or "\\" in notebook_name
               or notebook_name.startswith(".")
               or ".." in notebook_name
           ):
-              raise ValueError(f"Unsafe Day 1 notebook filename: {notebook_name}")
+              raise ValueError(f"Unsafe notebook filename: {notebook_name}")
+          # Derive the script name from the day number to match criteria.json expectations
+          # (criteria.json uses e.g. "day1.py" for Day 1, "day2.py" for Day 2, etc.).
+          day_match = re.search(r"Basics_Day(\d+)", notebook_name)
+          day_num = day_match.group(1) if day_match else "1"
+          script_stem = f"day{day_num}"
+          script_file = f"{script_stem}.py"
           setup_json = {
               "file_checks": [notebook_name],
               "commands": [
                   "python -m pip install --quiet --upgrade pip",
                   "python -m pip install nbconvert",
-                  f"jupyter nbconvert --to script {shlex.quote(notebook_name)} --output day1",
-                  "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi",
+                  f"jupyter nbconvert --to script {shlex.quote(notebook_name)} --output {shlex.quote(script_stem)}",
+                  f"if [ ! -f {shlex.quote(script_file)} ]; then echo 'ERROR: Conversion failed'; exit 1; fi",
               ],
           }
 
@@ -93,82 +107,158 @@ jobs:
           test -f submission/.github/autograder/setup.json || (echo "Missing generated setup.json" && exit 1)
       
       - name: Run autograder
-        if: steps.prepare_autograder.outputs.day1_submission_found == 'true'
+        if: steps.prepare_autograder.outputs.any_submission_found == 'true'
         uses: webtech-network/autograder@v1
         with:
           template_preset: 'io'
           feedback-type: 'default'
 
       - name: Evaluate assignment tests
-        if: steps.prepare_autograder.outputs.day1_submission_found == 'true'
+        if: steps.prepare_autograder.outputs.any_submission_found == 'true'
         run: |
           python -m pip install --quiet nbconvert || { echo "::error::Failed to install nbconvert; cannot run notebook conversion."; exit 1; }
-          cd submission
-          NOTEBOOK=$(ls *.ipynb 2>/dev/null | head -1)
-          if [ -n "$NOTEBOOK" ]; then
-            jupyter nbconvert --to script "$NOTEBOOK" --output day1 2>&1 || echo "::warning::Notebook conversion failed for $NOTEBOOK"
-          fi
           python - << 'PYEVAL'
+          import copy
           import json
+          import re
           import subprocess
           import sys
           from pathlib import Path
 
-          criteria_path = Path(".github/autograder/criteria.json")
-          if not criteria_path.exists():
-              print("::warning::criteria.json not found; skipping host-side test evaluation")
-              sys.exit(0)
+          assignments_root = Path("Basics/assignments")
+          output_dir = Path("submission/.github/autograder")
+          output_dir.mkdir(parents=True, exist_ok=True)
+          for legacy_file in output_dir.glob("*_criteria.json"):
+              if "_Quiz_" in legacy_file.name:
+                  continue
+              legacy_file.unlink(missing_ok=True)
 
-          criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
-          tests = criteria.get("tests")
-          if not isinstance(tests, list) or not tests:
-              print("::warning::No tests found in criteria.json")
+          assignment_dirs = sorted(assignments_root.glob("Basics_Day*_homework"))
+          if not assignment_dirs:
+              print("::notice::No assignment directories found at Basics/assignments/Basics_Day*_homework. Skipping assignment grading.")
               sys.exit(0)
 
           prefix_labels = {"Student:", "Date:", "Python Version:", "Name:", "Age:"}
+          filename_pattern = re.compile(r"^[A-Za-z0-9._-]+$")
 
-          for test in tests:
-              if not isinstance(test, dict):
+          for assignment_dir in assignment_dirs:
+              day_match = re.search(r"Basics_Day(\d+)_homework$", assignment_dir.name)
+              if not day_match:
                   continue
-              cmd = test.get("command", [])
-              stdin_data = test.get("stdin", "")
-              expected = test.get("expected_stdout", [])
+              day = day_match.group(1)
+              criteria_path = assignment_dir / "criteria.json"
+              if not criteria_path.exists():
+                  print(f"::warning::Missing criteria.json for day {day} in {assignment_dir}; skipping.")
+                  continue
               try:
-                  result = subprocess.run(
-                      cmd,
-                      input=stdin_data,
-                      capture_output=True,
-                      text=True,
-                      timeout=30,
-                  )
-                  stdout_text = result.stdout or ""
-                  stdout_lines = stdout_text.splitlines()
-                  test["student_stdout"] = stdout_lines
+                  criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
+              except json.JSONDecodeError as exc:
+                  print(f"::error::Invalid criteria.json for day {day} ({criteria_path}): {exc}")
+                  sys.exit(1)
+              tests = criteria.get("tests")
+              if not isinstance(tests, list) or not tests:
+                  print(f"::notice::No tests found in {criteria_path}; skipping day {day}.")
+                  continue
 
-                  # Determine pass/fail: fail on non-zero return code, otherwise
-                  # require each expected line to be present with strict matching.
-                  if result.returncode != 0:
-                      pass_flag = False
-                  else:
-                      matches = []
-                      for exp_line in expected:
-                          if not isinstance(exp_line, str):
-                              continue
-                          if exp_line in prefix_labels:
-                              match = any(line.startswith(exp_line) for line in stdout_lines)
+              submissions_dir = assignment_dir / "submissions"
+              if not submissions_dir.exists():
+                  print(f"::notice::No submissions directory for day {day} ({submissions_dir}); skipping day {day}.")
+                  continue
+              notebooks = sorted(submissions_dir.glob(f"*Basics_Day{day}*.ipynb"))
+              if not notebooks:
+                  print(f"::notice::No valid submission notebooks found for day {day} in {submissions_dir}; skipping day {day}.")
+                  continue
+
+              for notebook_path in notebooks:
+                  notebook_name = notebook_path.name
+                  if not filename_pattern.match(notebook_name):
+                      print(f"::error::Invalid submission filename '{notebook_name}'. Use only letters, numbers, dots, underscores, and hyphens.")
+                      sys.exit(1)
+                  if notebook_name.startswith(".") or ".." in notebook_name:
+                      print(f"::error::Invalid submission filename '{notebook_name}'. Relative path-like names are not allowed.")
+                      sys.exit(1)
+
+                  script_dir = output_dir / "generated_scripts"
+                  script_dir.mkdir(parents=True, exist_ok=True)
+                  script_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", notebook_path.stem)
+                  script_path = script_dir / f"{script_stem}.py"
+                  convert_cmd = [
+                      "jupyter",
+                      "nbconvert",
+                      "--to",
+                      "script",
+                      str(notebook_path),
+                      "--output",
+                      script_path.stem,
+                      "--output-dir",
+                      str(script_dir),
+                  ]
+                  conversion = subprocess.run(convert_cmd, capture_output=True, text=True)
+                  evaluated = copy.deepcopy(criteria)
+                  eval_tests = evaluated.get("tests")
+                  if conversion.returncode != 0 or not script_path.exists():
+                      details = (
+                          conversion.stderr.strip()
+                          or conversion.stdout.strip()
+                          or f"Notebook conversion failed for {notebook_path} with command: {' '.join(convert_cmd)}"
+                      )
+                      print(f"::warning::Notebook conversion failed for {notebook_path}: {details}")
+                      if isinstance(eval_tests, list):
+                          for test in eval_tests:
+                              if isinstance(test, dict):
+                                  test["student_stdout"] = [details]
+                                  test["pass"] = False
+                      output_path = output_dir / f"{notebook_path.stem}_criteria.json"
+                      output_path.write_text(json.dumps(evaluated, indent=2), encoding="utf-8")
+                      continue
+
+                  for test in eval_tests:
+                      if not isinstance(test, dict):
+                          continue
+                      cmd = test.get("command", [])
+                      stdin_data = test.get("stdin", "")
+                      expected = test.get("expected_stdout", [])
+                      runtime_cmd = [str(part) for part in cmd] if isinstance(cmd, list) else []
+                      replaced_script = False
+                      for index, part in enumerate(runtime_cmd):
+                          if re.fullmatch(r"day\d+\.py", Path(part).name):
+                              runtime_cmd[index] = str(script_path)
+                              replaced_script = True
+                              break
+                      if not replaced_script and runtime_cmd and runtime_cmd[0].startswith("python"):
+                          runtime_cmd.append(str(script_path))
+                      try:
+                          result = subprocess.run(
+                              runtime_cmd,
+                              input=stdin_data,
+                              capture_output=True,
+                              text=True,
+                              timeout=30,
+                          )
+                          stdout_text = result.stdout or ""
+                          stdout_lines = stdout_text.splitlines()
+                          test["student_stdout"] = stdout_lines
+                          if result.returncode != 0:
+                              pass_flag = False
                           else:
-                              match = any(line == exp_line for line in stdout_lines)
-                          matches.append(match)
-                      pass_flag = all(matches) if expected else True
+                              matches = []
+                              for exp_line in expected:
+                                  if not isinstance(exp_line, str):
+                                      continue
+                                  if exp_line in prefix_labels:
+                                      match = any(line.startswith(exp_line) for line in stdout_lines)
+                                  else:
+                                      match = any(line == exp_line for line in stdout_lines)
+                                  matches.append(match)
+                              pass_flag = all(matches) if expected else True
+                          test["pass"] = pass_flag
+                      except Exception as exc:
+                          test["student_stdout"] = [str(exc)]
+                          test["pass"] = False
 
-                  test["pass"] = pass_flag
-              except Exception as exc:
-                  test["student_stdout"] = [str(exc)]
-                  test["pass"] = False
-
-          output_path = Path(".github/autograder/Basics_Day1_criteria.json")
-          output_path.write_text(json.dumps(criteria, indent=2), encoding="utf-8")
-          print(f"Wrote evaluated test results to {output_path}")
+                  output_path = output_dir / f"{notebook_path.stem}_criteria.json"
+                  output_path.write_text(json.dumps(evaluated, indent=2), encoding="utf-8")
+                  print(f"Wrote evaluated test results to {output_path}")
           PYEVAL
 
       - name: Summarize assignment grading results
@@ -254,19 +344,9 @@ jobs:
           python - << 'PY'
           import json
           import os
+          import re
           import sys
           from pathlib import Path
-
-          QUIZ_HTML_PATHS = {
-              "Basics_Day1_Quiz": [
-                  Path("Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html"),
-                  Path("Basics/quizzes/Basics_Day1_Quiz.html"),
-              ],
-              "Basics_Day2_Quiz": [
-                  Path("Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html"),
-                  Path("Basics/quizzes/Basics_Day2_Quiz.html"),
-              ],
-          }
 
           output_dir = Path("submission/.github/autograder")
           output_dir.mkdir(parents=True, exist_ok=True)
@@ -278,13 +358,14 @@ jobs:
 
           def load_quiz_data(html_path: Path) -> dict:
               html = html_path.read_text(encoding="utf-8")
-              start_marker = "const QUIZ_DATA = "
-              end_marker = ";\n    const STORAGE_KEY"
-              start = html.find(start_marker)
-              end = html.find(end_marker, start if start >= 0 else 0)
-              if start < 0 or end < 0:
+              quiz_data_match = re.search(
+                  r"const QUIZ_DATA = (\{.*?\});\s*const STORAGE_KEY",
+                  html,
+                  flags=re.DOTALL,
+              )
+              if not quiz_data_match:
                   raise ValueError(f"Unable to parse QUIZ_DATA from {html_path}")
-              quiz_data_json = html[start + len(start_marker):end]
+              quiz_data_json = quiz_data_match.group(1)
               try:
                   return json.loads(quiz_data_json)
               except json.JSONDecodeError as exc:
@@ -308,12 +389,34 @@ jobs:
                       continue
               return {}, "missing_submission"
 
-          for quiz_id, candidates in QUIZ_HTML_PATHS.items():
+          quiz_candidates: dict[str, list[Path]] = {}
+          for quiz_path in sorted(Path("Basics/quizzes").glob("Basics_Day*_Quiz.html")):
+              quiz_candidates.setdefault(quiz_path.stem, []).append(quiz_path)
+          for quiz_path in sorted(Path("Basics/quizzes").glob("Basics_Day*/Basics_Day*_Quiz.html")):
+              quiz_candidates.setdefault(quiz_path.stem, []).append(quiz_path)
+
+          if not quiz_candidates:
+              print("::notice::No Basics quiz HTML files found. Skipping quiz grading.")
+              sys.exit(0)
+
+          def quiz_sort_key(quiz_id: str) -> tuple[int, str]:
+              match = re.search(r"Basics_Day(\d+)_Quiz$", quiz_id)
+              if match:
+                  return (int(match.group(1)), quiz_id)
+              # Non-standard quiz ids sort after numbered day quizzes.
+              return (float("inf"), quiz_id)
+
+          for quiz_id in sorted(quiz_candidates, key=quiz_sort_key):
+              candidates = quiz_candidates[quiz_id]
               html_path = next((path for path in candidates if path.exists()), None)
               if html_path is None:
-                  missing = ", ".join(str(path) for path in candidates)
-                  print(f"Missing HTML quiz file for {quiz_id}. Tried: {missing}")
-                  sys.exit(1)
+                  print(f"::notice::Missing HTML quiz file for {quiz_id}. Skipping.")
+                  continue
+
+              student_answers, answer_source = load_student_answers(quiz_id, html_path)
+              if answer_source == "missing_submission":
+                  print(f"::notice::No answer export found for {quiz_id}. Skipping quiz grading for this quiz.")
+                  continue
 
               try:
                   quiz_data = load_quiz_data(html_path)
@@ -328,7 +431,6 @@ jobs:
                   print(f"Quiz {quiz_id} has non-numeric question IDs in expectedAnswers")
                   sys.exit(1)
 
-              student_answers, answer_source = load_student_answers(quiz_id, html_path)
               if not all(str(question_id).isdigit() for question_id in student_answers):
                   print(f"Quiz {quiz_id} has non-numeric keys in student_answers")
                   sys.exit(1)
@@ -372,8 +474,11 @@ jobs:
           summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
           if summary_file:
               lines = ["## Quiz grading results", "", "| Quiz | Score | Answer source |", "| --- | --- | --- |"]
-              for result in quiz_results:
-                  lines.append(f"| {result['quiz_id']} | {result['score']}/{result['total']} | {result['answer_source']} |")
+              if quiz_results:
+                  for result in quiz_results:
+                      lines.append(f"| {result['quiz_id']} | {result['score']}/{result['total']} | {result['answer_source']} |")
+              else:
+                  lines.append("| _No quiz results found_ | 0/0 | n/a |")
               try:
                   with open(summary_file, "a", encoding="utf-8") as handle:
                       handle.write("\n".join(lines) + "\n")
@@ -420,60 +525,86 @@ jobs:
 
       - name: Validate autograder source configuration
         run: |
-          test -f Basics/assignments/Basics_Day1_homework.ipynb
-          test -f Basics/assignments/Basics_Day1_homework/criteria.json
-          test -f Basics/assignments/Basics_Day1_homework/feedback.json
           python - << 'PY'
           import json
+          import re
           import sys
           from pathlib import Path
-          QUIZ_HTML_PATHS = {
-              "Basics_Day1_Quiz": [
-                  Path("Basics/quizzes/Basics_Day1/Basics_Day1_Quiz.html"),
-                  Path("Basics/quizzes/Basics_Day1_Quiz.html"),
-              ],
-              "Basics_Day2_Quiz": [
-                  Path("Basics/quizzes/Basics_Day2/Basics_Day2_Quiz.html"),
-                  Path("Basics/quizzes/Basics_Day2_Quiz.html"),
-              ],
-          }
-          try:
-              criteria = json.loads(Path('Basics/assignments/Basics_Day1_homework/criteria.json').read_text())
-          except json.JSONDecodeError as exc:
-              print(f'criteria.json is invalid JSON: {exc}')
-              sys.exit(1)
-          try:
-              feedback = json.loads(Path('Basics/assignments/Basics_Day1_homework/feedback.json').read_text())
-          except json.JSONDecodeError as exc:
-              print(f'feedback.json is invalid JSON: {exc}')
-              sys.exit(1)
-          if not isinstance(criteria.get('tests'), list):
-              print('criteria.json must contain a tests array')
-              sys.exit(1)
-          if not isinstance(feedback, dict):
-              print('feedback.json must be a JSON object')
-              sys.exit(1)
-          for quiz_id, candidates in QUIZ_HTML_PATHS.items():
-              quiz_path = next((candidate for candidate in candidates if candidate.exists()), None)
-              if quiz_path is None:
-                  print(f'Missing HTML quiz for {quiz_id}. Tried: {", ".join(str(path) for path in candidates)}')
+
+          assignment_dirs = sorted(Path("Basics/assignments").glob("Basics_Day*_homework"))
+          if not assignment_dirs:
+              print("::notice::No assignment config directories found.")
+          for assignment_dir in assignment_dirs:
+              day_match = re.search(r"Basics_Day(\d+)_homework$", assignment_dir.name)
+              if not day_match:
+                  continue
+              day = day_match.group(1)
+              criteria_path = assignment_dir / "criteria.json"
+              feedback_path = assignment_dir / "feedback.json"
+              template_notebook = Path("Basics/assignments") / f"Basics_Day{day}_homework.ipynb"
+              if not template_notebook.exists():
+                  print(f"Missing template notebook for day {day}: {template_notebook}")
                   sys.exit(1)
+              if not criteria_path.exists():
+                  print(f"Missing criteria.json for day {day}: {criteria_path}")
+                  sys.exit(1)
+              if not feedback_path.exists():
+                  print(f"Missing feedback.json for day {day}: {feedback_path}")
+                  sys.exit(1)
+              try:
+                  criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
+              except json.JSONDecodeError as exc:
+                  print(f"{criteria_path} is invalid JSON: {exc}")
+                  sys.exit(1)
+              try:
+                  feedback = json.loads(feedback_path.read_text(encoding="utf-8"))
+              except json.JSONDecodeError as exc:
+                  print(f"{feedback_path} is invalid JSON: {exc}")
+                  sys.exit(1)
+              if not isinstance(criteria.get("tests"), list):
+                  print(f"{criteria_path} must contain a tests array")
+                  sys.exit(1)
+              if not isinstance(feedback, dict):
+                  print(f"{feedback_path} must be a JSON object")
+                  sys.exit(1)
+
+          quiz_html_paths = sorted(Path("Basics/quizzes").glob("Basics_Day*_Quiz.html"))
+          quiz_html_paths += sorted(Path("Basics/quizzes").glob("Basics_Day*/Basics_Day*_Quiz.html"))
+          if not quiz_html_paths:
+              print("::notice::No quiz HTML files found.")
+          quiz_answer_exports = set(Path("Basics/quizzes").glob("*_answers.json"))
+          for quiz_export in Path("Basics/quizzes").glob("Basics_Day*/*_answers.json"):
+              quiz_answer_exports.add(quiz_export)
+          for quiz_path in quiz_html_paths:
+              quiz_id = quiz_path.stem
+              answer_candidates = {
+                  quiz_path.with_name(f"{quiz_id}_answers.json"),
+                  quiz_path.with_name(f"{quiz_id.lower()}_answers.json"),
+                  Path(f"Basics/quizzes/{quiz_id}_answers.json"),
+              }
+              if not any(candidate in quiz_answer_exports for candidate in answer_candidates):
+                  print(f"::notice::No answer export found for {quiz_id}; skipping strict quiz data validation.")
+                  continue
               html = quiz_path.read_text(encoding='utf-8')
-              start_marker = "const QUIZ_DATA = "
-              end_marker = ";\n    const STORAGE_KEY"
-              start = html.find(start_marker)
-              end = html.find(end_marker, start if start >= 0 else 0)
-              if start < 0 or end < 0:
+              quiz_data_match = re.search(
+                  r"const QUIZ_DATA = (\{.*?\});\s*const STORAGE_KEY",
+                  html,
+                  flags=re.DOTALL,
+              )
+              if not quiz_data_match:
                   print(f'{quiz_path} must define const QUIZ_DATA')
                   sys.exit(1)
               try:
-                  quiz_data = json.loads(html[start + len(start_marker):end])
+                  quiz_data = json.loads(quiz_data_match.group(1))
               except json.JSONDecodeError as exc:
                   print(f'{quiz_path} has invalid QUIZ_DATA JSON: {exc}')
                   sys.exit(1)
               expected = quiz_data.get('expectedAnswers')
               if not isinstance(expected, dict) or not expected:
                   print(f'{quiz_path} must include non-empty expectedAnswers')
+                  sys.exit(1)
+              if not all(str(question_id).isdigit() for question_id in expected):
+                  print(f'{quiz_path} must use numeric string keys in expectedAnswers')
                   sys.exit(1)
           print('Autograder source configuration files passed basic JSON structure checks.')
           PY
