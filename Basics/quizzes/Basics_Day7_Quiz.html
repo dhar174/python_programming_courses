@@ -1,16 +1,486 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Basics Day7 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 7 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── 8-Point Spatial Grid  ·  Dark IDE Theme  ·  Python Academy ── */
+    :root {
+      color-scheme: dark;
+      /* 8-pt grid tokens */
+      --sp1: 8px;  --sp2: 16px; --sp3: 24px;
+      --sp4: 32px; --sp5: 40px; --sp6: 48px;
+      /* Dark IDE palette */
+      --bg:          #1E1E2E;
+      --surface:     #252537;
+      --surface-hi:  #2E2E45;
+      --border:      #313244;
+      /* Python brand accents */
+      --py-blue:     #4B8BBE;
+      --py-yellow:   #FFD43B;
+      --py-blue-dim: rgba(75,139,190,0.18);
+      --py-yellow-dim: rgba(255,212,59,0.15);
+      /* Text hierarchy */
+      --txt:         #CDD6F4;
+      --txt-muted:   #A6ADC8;
+      --txt-code:    #CBA6F7;
+      /* Shadows */
+      --sh-sm: 0 2px 8px rgba(0,0,0,.40);
+      --sh-md: 0 4px 20px rgba(0,0,0,.50);
+      /* Radii – multiples of 8 */
+      --r-sm: 8px; --r-md: 16px; --r-lg: 24px;
+      /* Universal micro-interaction */
+      --t: all 0.2s ease-in-out;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Styled scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--py-blue); }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: var(--sp3) var(--sp2) var(--sp6);
+    }
+
+    /* ── Header card ── */
+    .header-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--py-yellow);
+      border-radius: var(--r-lg);
+      padding: var(--sp4);
+      box-shadow: var(--sh-md);
+      margin-bottom: var(--sp3);
+      position: relative;
+      overflow: hidden;
+    }
+    .header-card::after {
+      content: '';
+      position: absolute;
+      top: -48px; right: -48px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(75,139,190,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--py-yellow);
+      letter-spacing: -0.025em;
+      margin-bottom: var(--sp1);
+    }
+    .quiz-subtitle { color: var(--txt-muted); font-size: 0.9375rem; }
+    .meta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp1);
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: var(--sp1) var(--sp2);
+      font-size: 0.875rem;
+      color: var(--txt-muted);
+      margin-top: var(--sp2);
+    }
+    h2 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--py-blue);
+      margin-top: var(--sp3);
+      margin-bottom: var(--sp1);
+    }
+    ul { list-style: none; display: grid; gap: var(--sp1); margin-top: var(--sp1); }
+    ul li {
+      padding-left: var(--sp2);
+      position: relative;
+      color: var(--txt-muted);
+      font-size: 0.9375rem;
+    }
+    ul li::before { content: '▸'; position: absolute; left: 0; color: var(--py-blue); }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      margin-top: var(--sp2);
+      display: flex;
+      align-items: center;
+      gap: var(--sp1);
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--py-blue), var(--py-yellow));
+      border-radius: 3px;
+      transition: width 0.3s ease-in-out;
+    }
+    .progress-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--txt-muted);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* ── Question cards ── */
+    .question-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--sp3);
+      box-shadow: var(--sh-sm);
+      margin-bottom: var(--sp2);
+      transition: var(--t);
+    }
+    .question-card:hover {
+      border-color: rgba(75,139,190,0.45);
+      box-shadow: var(--sh-md);
+      transform: translateY(-1px);
+    }
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 var(--sp1);
+      background: var(--py-blue-dim);
+      border: 1.5px solid var(--py-blue);
+      border-radius: var(--r-sm);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--py-blue);
+      margin-bottom: var(--sp2);
+    }
+    .question-prompt {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--txt);
+      margin-bottom: var(--sp2);
+    }
+
+    /* ── Code blocks inside prompts ── */
+    .question-prompt pre {
+      background: #11111B;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--py-yellow);
+      border-radius: var(--r-sm);
+      padding: var(--sp2);
+      margin: var(--sp1) 0;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+    .question-prompt pre code {
+      color: #CDD6F4;
+      background: transparent;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+    }
+    .question-prompt code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+
+    /* ── Answer options ── */
+    .options { display: grid; gap: var(--sp1); }
+    .option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp1);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: var(--sp1) var(--sp2);
+      background: var(--surface-hi);
+      cursor: pointer;
+      transition: var(--t);
+    }
+    .option-row:hover {
+      border-color: var(--py-blue);
+      background: var(--py-blue-dim);
+      box-shadow: 0 0 0 2px rgba(75,139,190,0.2);
+    }
+    .option-row input[type="radio"] {
+      margin-top: 3px;
+      flex-shrink: 0;
+      accent-color: var(--py-blue);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .option-row span {
+      color: var(--txt-muted);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      transition: color 0.2s ease-in-out;
+    }
+    .option-row span code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875em;
+    }
+    .option-row:has(input:checked),
+    .option-row.is-checked {
+      border-color: var(--py-blue);
+      background: rgba(75,139,190,0.2);
+      box-shadow: 0 0 0 2px rgba(75,139,190,0.3);
+    }
+    .option-row:has(input:checked) span,
+    .option-row.is-checked span { color: var(--txt); font-weight: 500; }
+
+    /* ── Action card (footer) ── */
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--sp3);
+      box-shadow: var(--sh-sm);
+      margin-top: var(--sp3);
+    }
+    .actions { display: flex; gap: var(--sp2); align-items: center; flex-wrap: wrap; }
+    button#exportBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp1);
+      border: 0;
+      border-radius: var(--r-sm);
+      background: var(--py-yellow);
+      color: #1E1E2E;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      padding: var(--sp1) var(--sp3);
+      cursor: pointer;
+      transition: var(--t);
+      box-shadow: var(--sh-sm);
+    }
+    button#exportBtn:hover {
+      background: #FFE566;
+      box-shadow: var(--sh-md);
+      transform: translateY(-1px);
+    }
+    button#exportBtn:active { transform: translateY(0); box-shadow: var(--sh-sm); }
+    #status { color: var(--txt-muted); font-size: 0.875rem; }
+
+    /* ── Info / compat note ── */
+    .compat-note {
+      font-size: 0.875rem;
+      color: var(--txt-muted);
+      margin-top: var(--sp2);
+      padding: var(--sp1) var(--sp2);
+      background: var(--py-blue-dim);
+      border: 1px solid rgba(75,139,190,0.3);
+      border-radius: var(--r-sm);
+      line-height: 1.6;
+    }
+    .compat-note code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+    .compat-note strong { color: var(--txt); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      h1 { font-size: 1.5rem; }
+      .container { padding: var(--sp2) var(--sp1) var(--sp5); }
+      .header-card { padding: var(--sp3) var(--sp2); }
+      .question-card { padding: var(--sp2); }
+      .option-row { padding: var(--sp1); }
+    }
+  </style>
 </head>
 <body>
-  <h1>Basics Day7 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <!-- Autograder integration note: Exported JSON includes criteria_like_tests entries that mirror criteria.json test semantics (expected vs student output) per question. -->
+  <main class="container">
+    <section class="header-card">
+      <h1>Python Basics - Day 7 Quiz</h1>
+      <div class="meta">Total Questions: 30 • Time Estimate: 45-60 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul>
+          <li>Hour 25: Conditionals with if/elif/else and boundary handling</li>
+          <li>Hour 26: while loops, sentinel patterns, break/continue</li>
+          <li>Hour 27: for loops with range()</li>
+          <li>Hour 28: Loop patterns: counter, accumulator, min/max</li>
+      </ul>
+      <h2>Instructions</h2>
+      <ul>
+          <li>Answer all questions</li>
+          <li>For multiple choice, select the best answer</li>
+          <li>For code questions, write your answer or predict the output</li>
+          <li>Check your answers at the end</li>
+          <li>Review explanations for any questions you missed</li>
+      </ul>
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download your responses. The file includes <code>student_answers</code> and a <code>criteria_like_tests</code> array so maintainers can map each question to autograder-style checks similar to <code>criteria.json</code> test entries.</p>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="action-card">
+      <div class="actions">
+        <button id="exportBtn" type="button" aria-label="Save and export your answers as JSON">⬇ Save/Export Answers (JSON)</button>
+        <span id="status">Selections are auto-saved in localStorage.</span>
+      </div>
+    </section>
+  </main>
+
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {"quizId": "Basics_Day7_Quiz", "title": "Python Basics - Day 7 Quiz", "questions": [{"number": 1, "prompt": "For shipping tiers (`<=2` Standard, `<=10` Priority, else Heavy), which branch order avoids boundary mistakes?", "options": {"A": "`if weight <= 10` then `elif weight <= 2` then else", "B": "`if weight <= 2` then `elif weight <= 10` then else", "C": "`if weight > 10` then `elif weight <= 2` then else", "D": "Any order works the same"}}, {"number": 2, "prompt": "With the Day 7 shipping rules, what category should weight `10.00` receive?", "options": {"A": "Standard", "B": "Heavy", "C": "Priority", "D": "Invalid input"}}, {"number": 3, "prompt": "Why is this logic flawed?\n\n```python\nif weight <= 10:\n    ...\nelif weight <= 2:\n    ...\n```", "options": {"A": "Python cannot compare floats", "B": "elif cannot follow if", "C": "Both branches run every time", "D": "`weight <= 2` is unreachable because the first branch already catches it"}}, {"number": 4, "prompt": "For readability in Basics scope, what is usually preferred when conditions are mutually exclusive?", "options": {"A": "A flat `if/elif/else` chain", "B": "Deeply nested `if` blocks", "C": "Global variables only", "D": "A while loop instead of conditionals"}}, {"number": 5, "prompt": "Which boolean expression checks the middle tier correctly (strictly above 2 and up to 10)?", "options": {"A": "`weight >= 2 and weight < 10`", "B": "`2 < weight <= 10`", "C": "`2 <= weight < 10`", "D": "`weight > 10 and weight <= 2`"}}, {"number": 6, "prompt": "A Day 7 optional extension is to add free shipping over a threshold. Which new check should come first?", "options": {"A": "The narrowest/highest-priority special case check first", "B": "Always put `else` first", "C": "No extra check is needed", "D": "Only check after printing output"}}, {"number": 7, "prompt": "Using the runbook shipping tiers, what should print for weight `10.01`?", "options": {"A": "Priority ($8.00)", "B": "Standard ($5.00)", "C": "Heavy ($12.00)", "D": "Boundary error"}}, {"number": 8, "prompt": "Best reason the order of `elif` branches matters:", "options": {"A": "Python selects the first true condition and skips the rest", "B": "All `elif` branches always execute", "C": "Order only matters for strings", "D": "Order never matters in Python"}}, {"number": 9, "prompt": "In a password-attempt while loop, which value must update every iteration to avoid infinite looping?", "options": {"A": "The function name", "B": "The print label", "C": "The attempt counter (or loop-control state)", "D": "The import list"}}, {"number": 10, "prompt": "In sentinel patterns, what does sentinel `\"q\"` usually mean?", "options": {"A": "Retry previous step", "B": "Stop input loop", "C": "Convert to integer", "D": "Ignore all commands"}}, {"number": 11, "prompt": "When should `break` be used in the Day 7 password demo?", "options": {"A": "Immediately after correct password is entered", "B": "At the top of every loop iteration", "C": "Only after lockout", "D": "Never in while loops"}}, {"number": 12, "prompt": "If all 3 password attempts are wrong, the expected outcome is:", "options": {"A": "Program restarts forever", "B": "Prompt becomes optional", "C": "Auto-login anyway", "D": "Account lockout message after third failure"}}, {"number": 13, "prompt": "What is the main use of `continue` in loops?", "options": {"A": "Exit the loop permanently", "B": "Reset all variables", "C": "Skip the rest of current iteration and move to next", "D": "Convert while loop into for loop"}}, {"number": 14, "prompt": "Which operator checks equality in a loop condition?", "options": {"A": "`=`", "B": "`==`", "C": "`:=`", "D": "`!=` only"}}, {"number": 15, "prompt": "Given attempt inputs `\"guess\"`, `\"hello\"`, `\"python123\"`, what should attempt 3 report?", "options": {"A": "wrong password", "B": "locked out", "C": "correct password", "D": "sentinel reached"}}, {"number": 16, "prompt": "What does `list(range(1, 4))` produce?", "options": {"A": "`[1, 2, 3]`", "B": "`[1, 2, 3, 4]`", "C": "`[0, 1, 2, 3]`", "D": "`[2, 3, 4]`"}}, {"number": 17, "prompt": "What does `list(range(0, 11, 2))` produce?", "options": {"A": "`[2, 4, 6, 8, 10]`", "B": "`[0, 2, 4, 6, 8]`", "C": "`[0, 2, 4, 6, 8, 10, 12]`", "D": "`[0, 2, 4, 6, 8, 10]`"}}, {"number": 18, "prompt": "How many values are generated by `range(5)`?", "options": {"A": "4", "B": "5", "C": "6", "D": "Depends on platform"}}, {"number": 19, "prompt": "Which loop prints a multiplication table row from 1 to 10?", "options": {"A": "`for i in range(10): print(n * i)` (without adjustment)", "B": "`while i <= 10` with no increment", "C": "`for i in range(1, 11): print(f\"Table {n} x {i} = {n * i}\")`", "D": "`for i in range(1, 10): ...`"}}, {"number": 20, "prompt": "What is the off-by-one issue in `range(1, 10)` when you wanted 1..10?", "options": {"A": "It stops at 9, so 10 is missing", "B": "It starts at 0", "C": "It includes 11", "D": "No issue exists"}}, {"number": 21, "prompt": "Best way to iterate over each item in `names = [\"Ava\", \"Ben\"]`?", "options": {"A": "`for i in range(names):`", "B": "`for name in names:`", "C": "`for name <= names:`", "D": "`while names:`"}}, {"number": 22, "prompt": "Nested loops are useful for:", "options": {"A": "Only dictionary lookups", "B": "Avoiding all range usage", "C": "Replacing conditionals entirely", "D": "Building row/column style outputs like small multiplication grids"}}, {"number": 23, "prompt": "Which statement about `range(start, stop)` is correct?", "options": {"A": "Both start and stop are excluded", "B": "Only stop is included", "C": "Start is included, stop is excluded", "D": "Behavior is random"}}, {"number": 24, "prompt": "Which pattern counts how many values meet a condition?", "options": {"A": "Counter pattern (increment integer variable)", "B": "Tuple unpacking pattern", "C": "Recursion pattern", "D": "Import pattern"}}, {"number": 25, "prompt": "Which statement demonstrates accumulator logic?", "options": {"A": "`count = count + 1` for every loop no matter what", "B": "`minimum = 0` for all datasets", "C": "`values.sort()` to find sum", "D": "`total = total + value` each iteration"}}, {"number": 26, "prompt": "Safe initialization for min/max when `numbers` is non-empty:", "options": {"A": "`min_val = 0; max_val = 0` always", "B": "`min_val = numbers[0]; max_val = numbers[0]`", "C": "`min_val = \"\"; max_val = \"\"`", "D": "No initialization required"}}, {"number": 27, "prompt": "For `numbers = [8, 3, 9, 15, 7]`, what is the sum?", "options": {"A": "40", "B": "41", "C": "42", "D": "43"}}, {"number": 28, "prompt": "For the same list, what is the correctly formatted average to 2 decimals?", "options": {"A": "`8.4`", "B": "`8.00`", "C": "`8.50`", "D": "`8.40`"}}, {"number": 29, "prompt": "For `numbers = [8, 3, 9, 15, 7]`, what are min and max?", "options": {"A": "Min = 3, Max = 15", "B": "Min = 7, Max = 15", "C": "Min = 3, Max = 9", "D": "Min = 8, Max = 15"}}, {"number": 30, "prompt": "Day 7 optional extension for Hour 28 asks learners to:", "options": {"A": "Use file I/O to store every number", "B": "Replace loops with recursion only", "C": "Allow variable count input until sentinel like `done`", "D": "Skip min/max and only print count"}}], "expectedAnswers": {"1": "B", "2": "C", "3": "D", "4": "A", "5": "B", "6": "A", "7": "C", "8": "A", "9": "C", "10": "B", "11": "A", "12": "D", "13": "C", "14": "B", "15": "C", "16": "A", "17": "D", "18": "B", "19": "C", "20": "A", "21": "B", "22": "D", "23": "C", "24": "A", "25": "D", "26": "B", "27": "C", "28": "D", "29": "A", "30": "C"}};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatPrompt(markdownText) {
+      let text = escapeHtml(markdownText);
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      return text.replace(/\n/g, '<br />');
+    }
+
+    function loadAnswers() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([k]) => validIds.has(k)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
+      const status = document.getElementById('status');
+      status.textContent = `Saved ${count}/${total} answers locally.`;
+      const fill = document.getElementById('progressFill');
+      const label = document.getElementById('progressLabel');
+      if (fill) fill.style.width = `${total > 0 ? Math.min(100, Math.round((count / total) * 100)) : 0}%`;
+      if (label) label.textContent = `${count} / ${total}`;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById('questions');
+      const saved = loadAnswers();
+      const questionsLength = QUIZ_DATA.questions.length;
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join('');
+        return `
+          <article class="question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+          </article>
+        `;
+      }).join('');
+
+      container.addEventListener('change', (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        // Sync .is-checked class for browsers without :has() support
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => {
+          radio.closest('.option-row').classList.toggle('is-checked', radio.checked);
+        });
+        const answers = loadAnswers();
+        const questionNumber = event.target.name.replace('q', '');
+        answers[questionNumber] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      // Restore .is-checked class for pre-checked options (from localStorage)
+      container.querySelectorAll('input[type="radio"]:checked').forEach((radio) => {
+        radio.closest('.option-row').classList.add('is-checked');
+      });
+
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const qid = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[qid] || null;
+        const student = studentAnswers[qid] || null;
+        return {
+          name: `Question ${qid}`,
+          points: 1,
+          expected_stdout: [expected],
+          student_stdout: [student],
+          pass: expected !== null && student === expected
+        };
+      });
+
+      const exportPayload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: 'Map each criteria_like_tests item to criteria.json tests entries as needed for automated grading.'
+      };
+
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>
