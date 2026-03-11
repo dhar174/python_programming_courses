@@ -1,11 +1,11 @@
 {
   "file_checks": [
-    "../Advanced_Day8_homework.ipynb"
+    "submissions/*Advanced_Day8*.ipynb"
   ],
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "jupyter nbconvert --to script ../Advanced_Day8_homework.ipynb --output advanced_day8.py",
+    "set -- submissions/*Advanced_Day8*.ipynb; if [ \"$1\" = 'submissions/*Advanced_Day8*.ipynb' ]; then echo 'ERROR: No matching Day 8 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 8 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output advanced_day8 --output-dir .",
     "if [ ! -f advanced_day8.py ]; then echo 'ERROR: Notebook conversion failed - advanced_day8.py not found'; exit 1; fi"
   ]
 }

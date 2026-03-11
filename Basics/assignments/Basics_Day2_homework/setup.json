@@ -1,11 +1,11 @@
 {
   "file_checks": [
-    "../Basics_Day2_homework.ipynb"
+    "submissions/*Basics_Day2*.ipynb"
   ],
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "jupyter nbconvert --to script ../Basics_Day2_homework.ipynb --output day2.py",
+    "set -- submissions/*Basics_Day2*.ipynb; if [ \"$1\" = 'submissions/*Basics_Day2*.ipynb' ]; then echo 'ERROR: No matching Day 2 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 2 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output day2 --output-dir .",
     "if [ ! -f day2.py ]; then echo 'ERROR: Notebook conversion failed - day2.py not found'; exit 1; fi"
   ]
 }
