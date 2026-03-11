@@ -718,7 +718,7 @@ discount_rates = {
 discount = discount_rates.get(tier, 0)
 ```
 
-This is not always better, but when you have many tiers and the logic is a simple lookup, a dictionary is more maintainable. You will learn more about this pattern in Session 6.
+This is not always better, but when you have many tiers and the logic is a simple lookup, a dictionary is more maintainable. As you saw in Session 6, this dictionary lookup pattern is especially useful when you want to replace long chains of if/elif statements with a simple key-to-value mapping.
 
 For now, use if/elif/else when you need it. Just be aware that as your code grows, you will learn alternative patterns that reduce repetition."
 
