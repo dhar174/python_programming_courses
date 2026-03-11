@@ -73,22 +73,29 @@ jobs:
 
           notebook_name = sys.argv[1]
           # Defense-in-depth validation before writing shell commands into setup.json.
+          # Allow any filename that contains 'Basics_DayN' anywhere (e.g. "alex-Basics_Day1_homework.ipynb").
           if (
               not notebook_name.endswith(".ipynb")
-              or not re.search(r"(?:^|_)Basics_Day\d+(?:_|\.|$)", notebook_name)
+              or not re.search(r"Basics_Day\d+", notebook_name)
               or "/" in notebook_name
               or "\\" in notebook_name
               or notebook_name.startswith(".")
               or ".." in notebook_name
           ):
               raise ValueError(f"Unsafe notebook filename: {notebook_name}")
+          # Derive the script name from the day number to match criteria.json expectations
+          # (criteria.json uses e.g. "day1.py" for Day 1, "day2.py" for Day 2, etc.).
+          day_match = re.search(r"Basics_Day(\d+)", notebook_name)
+          day_num = day_match.group(1) if day_match else "1"
+          script_stem = f"day{day_num}"
+          script_file = f"{script_stem}.py"
           setup_json = {
               "file_checks": [notebook_name],
               "commands": [
                   "python -m pip install --quiet --upgrade pip",
                   "python -m pip install nbconvert",
-                  f"jupyter nbconvert --to script {shlex.quote(notebook_name)} --output assignment_submission",
-                  "if [ ! -f assignment_submission.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi",
+                  f"jupyter nbconvert --to script {shlex.quote(notebook_name)} --output {shlex.quote(script_stem)}",
+                  f"if [ ! -f {shlex.quote(script_file)} ]; then echo 'ERROR: Conversion failed'; exit 1; fi",
               ],
           }
 
@@ -107,6 +114,7 @@ jobs:
           feedback-type: 'default'
 
       - name: Evaluate assignment tests
+        if: steps.prepare_autograder.outputs.any_submission_found == 'true'
         run: |
           python -m pip install --quiet nbconvert || { echo "::error::Failed to install nbconvert; cannot run notebook conversion."; exit 1; }
           python - << 'PYEVAL'
