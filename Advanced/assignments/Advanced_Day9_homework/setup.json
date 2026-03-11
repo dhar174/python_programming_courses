@@ -1,9 +1,11 @@
 {
-  "install": [
-    "python -m pip install nbconvert"
+  "file_checks": [
+    "submissions/*Advanced_Day9*.ipynb"
   ],
-  "pre_test": [
-    "jupyter nbconvert --to script submissions/*Advanced_Day9*.ipynb --output advanced_day9.py",
-    "test -f advanced_day9.py"
+  "commands": [
+    "python -m pip install --quiet --upgrade pip",
+    "python -m pip install nbconvert",
+    "set -- submissions/*Advanced_Day9*.ipynb; if [ \"$1\" = 'submissions/*Advanced_Day9*.ipynb' ]; then echo 'ERROR: No matching Day 9 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 9 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output advanced_day9 --output-dir .",
+    "if [ ! -f advanced_day9.py ]; then echo 'ERROR: Notebook conversion failed - advanced_day9.py not found'; exit 1; fi"
   ]
 }
