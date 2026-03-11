@@ -716,7 +716,7 @@ Many drill-circuit errors are not deep logic issues. They are fast syntax issues
 
 ## 15) Appendix: Instructor Reference for Fast Support During Stations
 
-### 13.1 Fast coaching questions
+### 15.1 Fast coaching questions
 
 Keep these ready while circulating:
 
@@ -726,7 +726,7 @@ Keep these ready while circulating:
 - "Would a key-value mapping help here?"
 - "Can you test with a smaller example?"
 
-### 13.2 Minimal pattern reminders you can put on the board
+### 15.2 Minimal pattern reminders you can put on the board
 
 ```python
 # List filtering

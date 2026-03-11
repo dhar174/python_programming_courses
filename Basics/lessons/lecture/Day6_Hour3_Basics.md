@@ -680,12 +680,12 @@ Use some of these prompts:
 
 ## 15) Appendix: Instructor Quick Reference
 
-### 12.1 Why this project is still firmly Basics-level
+### 15.1 Why this project is still firmly Basics-level
 
 **Say:**
 "This project is still firmly in Basics scope because it uses only the tools learners already know: lists, dictionaries, loops, `input()`, conditionals, string methods, and formatted printing. No file handling, no classes, no external libraries."
 
-### 12.2 Acceptable variations during the lab
+### 15.2 Acceptable variations during the lab
 
 If a learner chooses a different runbook-approved theme such as contacts, expenses, or a simple book list, that is acceptable if the program still:
 
@@ -694,7 +694,7 @@ If a learner chooses a different runbook-approved theme such as contacts, expens
 - includes add, list, and search
 - prints readable output
 
-### 12.3 Compact reminder pattern for a record-based tracker
+### 15.3 Compact reminder pattern for a record-based tracker
 
 ```python
 records = [

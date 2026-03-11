@@ -532,7 +532,7 @@ Recommend practice with:
 
 ## 13) Appendix: Instructor Reference for Rubric and Coaching
 
-### 10.1 Suggested simple rubric categories
+### 13.1 Suggested simple rubric categories
 
 Use or adapt the following categories if you need a fast scoring guide:
 
@@ -542,7 +542,7 @@ Use or adapt the following categories if you need a fast scoring guide:
 - **Readable output** — Contact list and search result are clear
 - **Basic testing evident** — Existing and missing names checked
 
-### 10.2 High-level acceptable solution shapes
+### 13.2 High-level acceptable solution shapes
 
 Without giving a full worked program, remember that acceptable solutions may use either of these safe search shapes:
 
@@ -561,14 +561,14 @@ else:
     ...
 ```
 
-### 10.3 Reminder about case handling
+### 13.3 Reminder about case handling
 
 If you choose to discuss case normalization during debrief, keep it gentle:
 
 **Say:**
 "Case normalization is a nice improvement, but it is not more important than getting the basic safe search working. Correct and clear beats fancy."
 
-### 10.4 Final instructor reminder
+### 13.4 Final instructor reminder
 
 **Say:**
 "Keep the checkpoint supportive. Learners should leave with a clear sense of what they can do and what to practice next, not with the feeling that one bug erased their progress."
