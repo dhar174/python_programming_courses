@@ -64,18 +64,30 @@ jobs:
           # does not populate the configured `_site/slides` output directory
           # with a usable HTML entrypoint.
           USE_FALLBACK=0
+          GENERATED_SLIDE_HTML=""
 
           if [ -f _site/slides/index.html ]; then
             echo "Found generated slide index at _site/slides/index.html."
-          elif [ -d _site/slides ] && find _site/slides -maxdepth 2 -type f -name '*.html' -print -quit | grep -q .; then
+          elif [ -d _site/slides ]; then
+            GENERATED_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
+            if [ -n "${GENERATED_SLIDE_HTML}" ]; then
             echo "Generated slide HTML found in _site/slides; creating index.html entrypoint."
+            else
+              echo "No usable generated slide HTML found in _site/slides; applying fallback from Basics/lessons/slides."
+              USE_FALLBACK=1
+            fi
           else
             echo "No usable generated slide HTML found in _site/slides; applying fallback from Basics/lessons/slides."
             USE_FALLBACK=1
           fi
 
           if [ "${USE_FALLBACK:-0}" -eq 1 ]; then
-            if [ -d Basics/lessons/slides ] && find Basics/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit | grep -q .; then
+            FALLBACK_SLIDE_HTML=""
+            if [ -d Basics/lessons/slides ]; then
+              FALLBACK_SLIDE_HTML="$(find Basics/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
+            fi
+
+            if [ -n "${FALLBACK_SLIDE_HTML}" ]; then
               rm -rf _site/slides
               mkdir -p _site/slides
               cp -R Basics/lessons/slides/. _site/slides/
@@ -87,6 +99,8 @@ jobs:
           fi
 
           if [ ! -f _site/slides/index.html ]; then
+            # Use locale-independent sorting so the generated redirect is
+            # reproducible across runners and always targets the same deck.
             FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -name '*.html' ! -name 'index.html' | LC_ALL=C sort | head -n 1)"
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
@@ -95,7 +109,12 @@ jobs:
             fi
 
             FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
-            if printf '%s\n' "${FIRST_SLIDE_RELATIVE}" | grep -Eq '(^|/)\.\.(/|$)|[^A-Za-z0-9._/-]|^[./]|/$|(^|/)\.' || ! printf '%s\n' "${FIRST_SLIDE_RELATIVE}" | grep -Eq '^[A-Za-z0-9][A-Za-z0-9._/-]*\.html$'; then
+            if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|(^|/)\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
+              echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
+              exit 1
+            fi
+
+            if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9._/-]*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
               echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
               exit 1
             fi
