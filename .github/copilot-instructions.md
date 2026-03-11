@@ -188,12 +188,14 @@ Basics/assignments/
 **setup.json structure** (local example; CI generates a setup.json that uses only the copied notebook filename after staging it into `submission/`):
 ```json
 {
-  "file_checks": ["submissions/alex_Basics_Day1_homework.ipynb"],
+  "file_checks": [
+    "submissions/*Basics_Day7*.ipynb"
+  ],
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "jupyter nbconvert --to script submissions/alex_Basics_Day1_homework.ipynb --output day1.py",
-    "if [ ! -f day1.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
+    "set -- submissions/*Basics_Day7*.ipynb; if [ \"$1\" = 'submissions/*Basics_Day7*.ipynb' ]; then echo 'ERROR: No matching Day 7 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 7 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output day7 --output-dir .",
+    "if [ ! -f day7.py ]; then echo 'ERROR: Notebook conversion failed - day7.py not found'; exit 1; fi"
   ]
 }
 ```
