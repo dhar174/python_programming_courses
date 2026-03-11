@@ -5,7 +5,7 @@
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "jupyter nbconvert --to script submissions/*Basics_Day7*.ipynb --output day7 --output-dir .",
+    "set -- submissions/*Basics_Day7*.ipynb; if [ \"$1\" = 'submissions/*Basics_Day7*.ipynb' ]; then echo 'ERROR: No matching Day 7 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 7 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output day7 --output-dir .",
     "if [ ! -f day7.py ]; then echo 'ERROR: Notebook conversion failed - day7.py not found'; exit 1; fi"
   ]
 }
