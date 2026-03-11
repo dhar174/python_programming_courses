@@ -51,11 +51,11 @@ jobs:
           <html lang="en">
             <head>
               <meta charset="utf-8">
-              <meta http-equiv="refresh" content="0; url=./slides/">
+              <meta http-equiv="refresh" content="1; url=./slides/">
               <title>Redirecting to slides…</title>
             </head>
             <body>
-              <p><a href="./slides/">Open the published slides</a></p>
+              <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./slides/">open the slide index</a>.</p>
             </body>
           </html>
           EOF
@@ -67,7 +67,7 @@ jobs:
 
           if [ -f _site/slides/index.html ]; then
             echo "Found generated slide index at _site/slides/index.html."
-          elif [ -d _site/slides ] && find _site/slides -type f -name '*.html' -print -quit | grep -q .; then
+          elif [ -d _site/slides ] && find _site/slides -maxdepth 2 -type f -name '*.html' -print -quit | grep -q .; then
             echo "Generated slide HTML found in _site/slides; creating index.html entrypoint."
           else
             echo "No usable generated slide HTML found in _site/slides; applying fallback from Basics/lessons/slides."
@@ -75,7 +75,7 @@ jobs:
           fi
 
           if [ "${USE_FALLBACK:-0}" -eq 1 ]; then
-            if [ -d Basics/lessons/slides ] && find Basics/lessons/slides -type f -name '*.html' -print -quit | grep -q .; then
+            if [ -d Basics/lessons/slides ] && find Basics/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit | grep -q .; then
               rm -rf _site/slides
               mkdir -p _site/slides
               cp -R Basics/lessons/slides/. _site/slides/
@@ -100,11 +100,11 @@ jobs:
           <html lang="en">
             <head>
               <meta charset="utf-8">
-              <meta http-equiv="refresh" content="0; url=./${FIRST_SLIDE_RELATIVE}">
+              <meta http-equiv="refresh" content="1; url=./${FIRST_SLIDE_RELATIVE}">
               <title>Redirecting to slides…</title>
             </head>
             <body>
-              <p><a href="./${FIRST_SLIDE_RELATIVE}">Open the published slides</a></p>
+              <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./${FIRST_SLIDE_RELATIVE}">open the first available deck</a>.</p>
             </body>
           </html>
           EOF
