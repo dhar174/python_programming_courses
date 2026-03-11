@@ -101,6 +101,8 @@ jobs:
           if [ ! -f _site/slides/index.html ]; then
             # Use locale-independent sorting so the generated redirect is
             # reproducible across runners and always targets the same deck.
+            # Depth 2 matches the checked-in slide site layout and Marp's
+            # current output structure without traversing unrelated content.
             FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -name '*.html' ! -name 'index.html' | LC_ALL=C sort | head -n 1)"
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
@@ -111,14 +113,14 @@ jobs:
             FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
             # Reject traversal-style paths or hidden/relative path segments.
             INVALID_SLIDE_PATH_STRUCTURE=0
-            if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|(^|/)\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
+            if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|/\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
               INVALID_SLIDE_PATH_STRUCTURE=1
             fi
 
             # Allow only portable HTML paths composed of letters, digits,
             # dots, underscores, hyphens, and forward slashes.
             INVALID_SLIDE_PATH_CHARS=0
-            if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9._/-]*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
+            if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9_/-]*([.][A-Za-z0-9_/-]+)*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
               INVALID_SLIDE_PATH_CHARS=1
             fi
 
