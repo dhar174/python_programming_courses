@@ -13,6 +13,9 @@ permissions:
   issues: write
   checks: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   grade:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -22,7 +25,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Prepare autograder configuration
         id: prepare_autograder
@@ -521,7 +524,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Validate autograder source configuration
         run: |
