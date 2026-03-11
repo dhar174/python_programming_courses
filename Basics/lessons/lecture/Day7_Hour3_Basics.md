@@ -716,22 +716,6 @@ These style practices make your code easier to read and maintain."
 
 **End of Hour 3 Script**
 
-## 18) Advanced Pattern: Using enumerate() (Preview)
-
-**Teaching point:**
-"We have not covered enumerate() in detail, but here is a preview for curious learners.
-
-Sometimes you need both the index and the value from a list. You could use range(len(list)) and index into the list:
-
-```python
-names = ['Alice', 'Bob', 'Charlie']
-for i in range(len(names)):
-    print(f"{i}: {names[i]}")
-```
-
-But there is a cleaner way using enumerate():
-
-```python
 names = ['Alice', 'Bob', 'Charlie']
 for i, name in enumerate(names):
     print(f"{i}: {name}")
