@@ -109,12 +109,20 @@ jobs:
             fi
 
             FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
+            # Reject traversal-style paths or hidden/relative path segments.
+            INVALID_SLIDE_PATH_STRUCTURE=0
             if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|(^|/)\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
-              echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
-              exit 1
+              INVALID_SLIDE_PATH_STRUCTURE=1
             fi
 
+            # Allow only portable HTML paths composed of letters, digits,
+            # dots, underscores, hyphens, and forward slashes.
+            INVALID_SLIDE_PATH_CHARS=0
             if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9._/-]*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
+              INVALID_SLIDE_PATH_CHARS=1
+            fi
+
+            if [ "${INVALID_SLIDE_PATH_STRUCTURE}" -ne 0 ] || [ "${INVALID_SLIDE_PATH_CHARS}" -ne 0 ]; then
               echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
               exit 1
             fi
