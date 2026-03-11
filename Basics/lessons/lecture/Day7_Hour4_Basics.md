@@ -381,9 +381,9 @@ for num in numbers:
         min_value = num
 ```
 
-If all numbers are positive, min_value stays 0, which is wrong. If all numbers are negative, min_value stays 0, which is also wrong.
+If all numbers are positive, min_value stays 0, which is wrong. With all-negative numbers this particular code still happens to update min_value below 0, but that’s just luck — the opposite pattern (starting max_value at 0 and using >) fails for all-negative data. In general, initializing to a “magic” value like 0 makes correctness depend on what numbers actually appear.
 
-The safe approach: initialize to the first item in the collection. That way, you are guaranteed to find the true minimum."
+The safe approach: initialize to the first item in the collection. That way, you are guaranteed to find the true minimum for any mix of positive and negative values."
 
 ### 6.5 Using built-in functions
 
