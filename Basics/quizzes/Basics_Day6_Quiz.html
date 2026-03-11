@@ -1,16 +1,486 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Basics Day6 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 6 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── 8-Point Spatial Grid  ·  Dark IDE Theme  ·  Python Academy ── */
+    :root {
+      color-scheme: dark;
+      /* 8-pt grid tokens */
+      --sp1: 8px;  --sp2: 16px; --sp3: 24px;
+      --sp4: 32px; --sp5: 40px; --sp6: 48px;
+      /* Dark IDE palette */
+      --bg:          #1E1E2E;
+      --surface:     #252537;
+      --surface-hi:  #2E2E45;
+      --border:      #313244;
+      /* Python brand accents */
+      --py-blue:     #4B8BBE;
+      --py-yellow:   #FFD43B;
+      --py-blue-dim: rgba(75,139,190,0.18);
+      --py-yellow-dim: rgba(255,212,59,0.15);
+      /* Text hierarchy */
+      --txt:         #CDD6F4;
+      --txt-muted:   #A6ADC8;
+      --txt-code:    #CBA6F7;
+      /* Shadows */
+      --sh-sm: 0 2px 8px rgba(0,0,0,.40);
+      --sh-md: 0 4px 20px rgba(0,0,0,.50);
+      /* Radii – multiples of 8 */
+      --r-sm: 8px; --r-md: 16px; --r-lg: 24px;
+      /* Universal micro-interaction */
+      --t: all 0.2s ease-in-out;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Styled scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--py-blue); }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: var(--sp3) var(--sp2) var(--sp6);
+    }
+
+    /* ── Header card ── */
+    .header-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--py-yellow);
+      border-radius: var(--r-lg);
+      padding: var(--sp4);
+      box-shadow: var(--sh-md);
+      margin-bottom: var(--sp3);
+      position: relative;
+      overflow: hidden;
+    }
+    .header-card::after {
+      content: '';
+      position: absolute;
+      top: -48px; right: -48px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(75,139,190,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--py-yellow);
+      letter-spacing: -0.025em;
+      margin-bottom: var(--sp1);
+    }
+    .quiz-subtitle { color: var(--txt-muted); font-size: 0.9375rem; }
+    .meta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp1);
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: var(--sp1) var(--sp2);
+      font-size: 0.875rem;
+      color: var(--txt-muted);
+      margin-top: var(--sp2);
+    }
+    h2 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--py-blue);
+      margin-top: var(--sp3);
+      margin-bottom: var(--sp1);
+    }
+    ul { list-style: none; display: grid; gap: var(--sp1); margin-top: var(--sp1); }
+    ul li {
+      padding-left: var(--sp2);
+      position: relative;
+      color: var(--txt-muted);
+      font-size: 0.9375rem;
+    }
+    ul li::before { content: '▸'; position: absolute; left: 0; color: var(--py-blue); }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      margin-top: var(--sp2);
+      display: flex;
+      align-items: center;
+      gap: var(--sp1);
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--py-blue), var(--py-yellow));
+      border-radius: 3px;
+      transition: width 0.3s ease-in-out;
+    }
+    .progress-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--txt-muted);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* ── Question cards ── */
+    .question-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--sp3);
+      box-shadow: var(--sh-sm);
+      margin-bottom: var(--sp2);
+      transition: var(--t);
+    }
+    .question-card:hover {
+      border-color: rgba(75,139,190,0.45);
+      box-shadow: var(--sh-md);
+      transform: translateY(-1px);
+    }
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 var(--sp1);
+      background: var(--py-blue-dim);
+      border: 1.5px solid var(--py-blue);
+      border-radius: var(--r-sm);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--py-blue);
+      margin-bottom: var(--sp2);
+    }
+    .question-prompt {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--txt);
+      margin-bottom: var(--sp2);
+    }
+
+    /* ── Code blocks inside prompts ── */
+    .question-prompt pre {
+      background: #11111B;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--py-yellow);
+      border-radius: var(--r-sm);
+      padding: var(--sp2);
+      margin: var(--sp1) 0;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+    .question-prompt pre code {
+      color: #CDD6F4;
+      background: transparent;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+    }
+    .question-prompt code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+
+    /* ── Answer options ── */
+    .options { display: grid; gap: var(--sp1); }
+    .option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp1);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: var(--sp1) var(--sp2);
+      background: var(--surface-hi);
+      cursor: pointer;
+      transition: var(--t);
+    }
+    .option-row:hover {
+      border-color: var(--py-blue);
+      background: var(--py-blue-dim);
+      box-shadow: 0 0 0 2px rgba(75,139,190,0.2);
+    }
+    .option-row input[type="radio"] {
+      margin-top: 3px;
+      flex-shrink: 0;
+      accent-color: var(--py-blue);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .option-row span {
+      color: var(--txt-muted);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      transition: color 0.2s ease-in-out;
+    }
+    .option-row span code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875em;
+    }
+    .option-row:has(input:checked),
+    .option-row.is-checked {
+      border-color: var(--py-blue);
+      background: rgba(75,139,190,0.2);
+      box-shadow: 0 0 0 2px rgba(75,139,190,0.3);
+    }
+    .option-row:has(input:checked) span,
+    .option-row.is-checked span { color: var(--txt); font-weight: 500; }
+
+    /* ── Action card (footer) ── */
+    .action-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--sp3);
+      box-shadow: var(--sh-sm);
+      margin-top: var(--sp3);
+    }
+    .actions { display: flex; gap: var(--sp2); align-items: center; flex-wrap: wrap; }
+    button#exportBtn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp1);
+      border: 0;
+      border-radius: var(--r-sm);
+      background: var(--py-yellow);
+      color: #1E1E2E;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      padding: var(--sp1) var(--sp3);
+      cursor: pointer;
+      transition: var(--t);
+      box-shadow: var(--sh-sm);
+    }
+    button#exportBtn:hover {
+      background: #FFE566;
+      box-shadow: var(--sh-md);
+      transform: translateY(-1px);
+    }
+    button#exportBtn:active { transform: translateY(0); box-shadow: var(--sh-sm); }
+    #status { color: var(--txt-muted); font-size: 0.875rem; }
+
+    /* ── Info / compat note ── */
+    .compat-note {
+      font-size: 0.875rem;
+      color: var(--txt-muted);
+      margin-top: var(--sp2);
+      padding: var(--sp1) var(--sp2);
+      background: var(--py-blue-dim);
+      border: 1px solid rgba(75,139,190,0.3);
+      border-radius: var(--r-sm);
+      line-height: 1.6;
+    }
+    .compat-note code {
+      background: rgba(203,166,247,0.15);
+      color: var(--txt-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9em;
+    }
+    .compat-note strong { color: var(--txt); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      h1 { font-size: 1.5rem; }
+      .container { padding: var(--sp2) var(--sp1) var(--sp5); }
+      .header-card { padding: var(--sp3) var(--sp2); }
+      .question-card { padding: var(--sp2); }
+      .option-row { padding: var(--sp1); }
+    }
+  </style>
 </head>
 <body>
-  <h1>Basics Day6 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <!-- Autograder integration note: Exported JSON includes criteria_like_tests entries that mirror criteria.json test semantics (expected vs student output) per question. -->
+  <main class="container">
+    <section class="header-card">
+      <h1>Python Basics - Day 6 Quiz</h1>
+      <div class="meta">Total Questions: 30 • Time Estimate: 45-60 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul>
+          <li>Hour 21: Choosing the right structure</li>
+          <li>Hour 22: Data-structure drill circuit</li>
+          <li>Hour 23: Mini-project: in-memory contact tracker</li>
+          <li>Hour 24: Checkpoint 3: safe dict lookup and clear output</li>
+      </ul>
+      <h2>Instructions</h2>
+      <ul>
+          <li>Answer all questions</li>
+          <li>For multiple choice, select the best answer</li>
+          <li>For code questions, write your answer or predict the output</li>
+          <li>Check your answers at the end</li>
+          <li>Review your results and focus on any questions you missed</li>
+      </ul>
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download your responses. The file includes <code>student_answers</code> and a <code>criteria_like_tests</code> array so maintainers can map each question to autograder-style checks similar to <code>criteria.json</code> test entries.</p>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="action-card">
+      <div class="actions">
+        <button id="exportBtn" type="button" aria-label="Save and export your answers as JSON">⬇ Save/Export Answers (JSON)</button>
+        <span id="status">Selections are auto-saved in localStorage.</span>
+      </div>
+    </section>
+  </main>
+
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {"quizId": "Basics_Day6_Quiz", "title": "Python Basics - Day 6 Quiz", "questions": [{"number": 1, "prompt": "You need to keep insertion order and allow duplicate values. Which structure fits best?", "options": {"A": "`list`", "B": "`set`", "C": "`dict`", "D": "`tuple`"}}, {"number": 2, "prompt": "Which structure is best when your top priority is fast membership checks on unique items?", "options": {"A": "`list`", "B": "`set`", "C": "`tuple`", "D": "`str`"}}, {"number": 3, "prompt": "Which structure best maps contact name to phone number for quick lookup?", "options": {"A": "`list`", "B": "`set`", "C": "`dict`", "D": "`tuple`"}}, {"number": 4, "prompt": "You need a fixed pair like `(x, y)` that should not change. Which structure is most appropriate?", "options": {"A": "`tuple`", "B": "`list`", "C": "`set`", "D": "`dict`"}}, {"number": 5, "prompt": "Which statement reflects a good Day 6 design tradeoff?", "options": {"A": "Always use dict because it is the most advanced", "B": "Use the simplest structure that matches the requirement", "C": "Use set for every collection", "D": "Avoid list entirely"}}, {"number": 6, "prompt": "What is true about converting a list to a set?", "options": {"A": "Duplicates are removed", "B": "All items become strings", "C": "Items are sorted automatically in insertion order", "D": "Lookup becomes impossible"}}, {"number": 7, "prompt": "What does this print?\n\n```python\nitems = ['a', 'b', 'a', 'c']\nprint(len(set(items)))\n```", "options": {"A": "`4`", "B": "`3`", "C": "`2`", "D": "Raises `TypeError`"}}, {"number": 8, "prompt": "If readability and maintainability are priorities, which approach is best?", "options": {"A": "Use the structure that clearly matches the problem", "B": "Choose the longest syntax", "C": "Avoid comments and labels", "D": "Use nested dicts even for simple lists"}}, {"number": 9, "prompt": "For `numbers = [3, 12, 7, 18, 10, 27]`, what is the filtered result for values greater than 10?", "options": {"A": "`[12, 18, 27]`", "B": "`[10, 12, 18, 27]`", "C": "`[3, 7]`", "D": "`[12, 18]`"}}, {"number": 10, "prompt": "Which expression creates a list of values greater than 10 from `numbers`?", "options": {"A": "`[n for n in numbers if n > 10]`", "B": "`numbers > 10`", "C": "`numbers.filter(>10)`", "D": "`filter(numbers, 10)`"}}, {"number": 11, "prompt": "Given duplicated emails, which approach gives deterministic unique output for grading?", "options": {"A": "`list(set(emails))`", "B": "`set(emails)`", "C": "`sorted(set(emails))`", "D": "`emails.unique()`"}}, {"number": 12, "prompt": "What is the standard dictionary counting pattern?", "options": {"A": "`counts[word] = counts.get(word, 0) + 1`", "B": "`counts[word]++`", "C": "`counts.add(word)`", "D": "`counts[word] =+ 1`"}}, {"number": 13, "prompt": "What does this print?\n\n```python\npoint = (5, 9)\nx, y = point\nprint(f\"x={x} y={y}\")\n```", "options": {"A": "`x=5 y=9`", "B": "`x=(5, 9) y=(5, 9)`", "C": "`x=9 y=5`", "D": "Raises `ValueError`"}}, {"number": 14, "prompt": "Which loop is correct for iterating key-value pairs in a dictionary named `counts`?", "options": {"A": "`for key, value in counts.items():`", "B": "`for key, value in counts:`", "C": "`for key in counts.values():`", "D": "`for value in counts.items():`"}}, {"number": 15, "prompt": "How do you read the first value from `coords = (12, 34)`?", "options": {"A": "`coords[0]`", "B": "`coords.first()`", "C": "`coords{0}`", "D": "`coords.get(0)`"}}, {"number": 16, "prompt": "Why is sorting helpful before printing set/dict-derived results in autograded tasks?", "options": {"A": "It guarantees deterministic ordering", "B": "It changes data types to strings", "C": "It removes duplicates again", "D": "It makes output shorter"}}, {"number": 17, "prompt": "Hour 23 mini-project minimum features are:", "options": {"A": "add, list, search", "B": "add, export CSV, chart", "C": "add only", "D": "search and delete only"}}, {"number": 18, "prompt": "Which storage model is valid for the Day 6 contact tracker mini-project?", "options": {"A": "Only list of tuples", "B": "Only set of strings", "C": "List of dict records", "D": "Only a single string"}}, {"number": 19, "prompt": "What is the file I/O rule in Hour 23 mini-project scope?", "options": {"A": "File I/O is required", "B": "Use database storage only", "C": "No file I/O yet (in-memory only)", "D": "Write one JSON file per contact"}}, {"number": 20, "prompt": "When searching for a missing contact, what is the best behavior?", "options": {"A": "Crash with `KeyError`", "B": "Print a clear `Not found` message", "C": "Silently skip output", "D": "Create the contact automatically"}}, {"number": 21, "prompt": "Which method helps avoid `KeyError` when reading from a dictionary?", "options": {"A": "`dict.get(key)`", "B": "`dict.raise(key)`", "C": "`dict.peek(key)`", "D": "`dict.fetch(key)`"}}, {"number": 22, "prompt": "What happens with `phone = contacts['Noah']` when `'Noah'` is missing?", "options": {"A": "Returns empty string", "B": "Returns `None`", "C": "Raises `KeyError`", "D": "Creates the key automatically"}}, {"number": 23, "prompt": "Why normalize contact names (for example, lowercase for comparison)?", "options": {"A": "It reduces bugs from case differences", "B": "It always sorts descending", "C": "It removes duplicate phones", "D": "It disables dictionary lookup"}}, {"number": 24, "prompt": "Which expression gives sorted contact names from `contacts_map`?", "options": {"A": "`sorted(contacts_map.keys())`", "B": "`contacts_map.sort()`", "C": "`sort(contacts_map)`", "D": "`contacts_map.keys().sort()`"}}, {"number": 25, "prompt": "What is printed?\n\n```python\ncontacts = {'Mia': '555-0130'}\nprint(contacts.get('Noah', 'Not found'))\n```", "options": {"A": "`None`", "B": "`Not found`", "C": "`KeyError`", "D": "`555-0130`"}}, {"number": 26, "prompt": "Which output is clearest for users and autograder checks?", "options": {"A": "`Mia 555-0130`", "B": "`Lookup Mia: 555-0130`", "C": "`result ok`", "D": "`done`"}}, {"number": 27, "prompt": "Checkpoint 3 requires at least how many contacts in the dict-based task?", "options": {"A": "2", "B": "3", "C": "4", "D": "5"}}, {"number": 28, "prompt": "Which feature is an optional extension in Day 6 checkpoint work?", "options": {"A": "Search existing name", "B": "List all contacts", "C": "Partial-match search", "D": "Store contacts in dict"}}, {"number": 29, "prompt": "Which pitfall should you avoid when implementing delete logic on a collection?", "options": {"A": "Deleting while iterating the same collection", "B": "Using f-strings", "C": "Using sorted output", "D": "Using dict.get"}}, {"number": 30, "prompt": "What is the key difference between `dict.get(key)` and `dict[key]` for missing keys?", "options": {"A": "No difference", "B": "`dict.get` can return a default; `dict[key]` raises `KeyError`", "C": "`dict[key]` is safer", "D": "`dict.get` only works for integers"}}], "expectedAnswers": {"1": "A", "2": "B", "3": "C", "4": "A", "5": "B", "6": "A", "7": "B", "8": "A", "9": "A", "10": "A", "11": "C", "12": "A", "13": "A", "14": "A", "15": "A", "16": "A", "17": "A", "18": "C", "19": "C", "20": "B", "21": "A", "22": "C", "23": "A", "24": "A", "25": "B", "26": "B", "27": "D", "28": "C", "29": "A", "30": "B"}};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatPrompt(markdownText) {
+      let text = escapeHtml(markdownText);
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      return text.replace(/\n/g, '<br />');
+    }
+
+    function loadAnswers() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([k]) => validIds.has(k)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
+      const status = document.getElementById('status');
+      status.textContent = `Saved ${count}/${total} answers locally.`;
+      const fill = document.getElementById('progressFill');
+      const label = document.getElementById('progressLabel');
+      if (fill) fill.style.width = `${total > 0 ? Math.min(100, Math.round((count / total) * 100)) : 0}%`;
+      if (label) label.textContent = `${count} / ${total}`;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById('questions');
+      const saved = loadAnswers();
+      const questionsLength = QUIZ_DATA.questions.length;
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join('');
+        return `
+          <article class="question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+          </article>
+        `;
+      }).join('');
+
+      container.addEventListener('change', (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        // Sync .is-checked class for browsers without :has() support
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => {
+          radio.closest('.option-row').classList.toggle('is-checked', radio.checked);
+        });
+        const answers = loadAnswers();
+        const questionNumber = event.target.name.replace('q', '');
+        answers[questionNumber] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      // Restore .is-checked class for pre-checked options (from localStorage)
+      container.querySelectorAll('input[type="radio"]:checked').forEach((radio) => {
+        radio.closest('.option-row').classList.add('is-checked');
+      });
+
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const qid = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[qid] || null;
+        const student = studentAnswers[qid] || null;
+        return {
+          name: `Question ${qid}`,
+          points: 1,
+          expected_stdout: [expected],
+          student_stdout: [student],
+          pass: expected !== null && student === expected
+        };
+      });
+
+      const exportPayload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: 'Map each criteria_like_tests item to criteria.json tests entries as needed for automated grading.'
+      };
+
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>
