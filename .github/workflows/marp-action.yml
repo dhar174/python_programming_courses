@@ -61,10 +61,53 @@ jobs:
           EOF
 
           # Fallback to the checked-in static slide site when the Marp action
-          # does not populate the configured `_site/slides` output directory.
-          if [ ! -d _site/slides ]; then
-            mkdir -p _site/slides
-            cp -R Basics/lessons/slides/. _site/slides/
+          # does not populate the configured `_site/slides` output directory
+          # with a usable HTML entrypoint.
+          USE_FALLBACK=0
+
+          if [ -f _site/slides/index.html ]; then
+            echo "Found generated slide index at _site/slides/index.html."
+          elif [ -d _site/slides ] && find _site/slides -type f -name '*.html' -print -quit | grep -q .; then
+            echo "Generated slide HTML found in _site/slides; creating index.html entrypoint."
+          else
+            echo "No usable generated slide HTML found in _site/slides; applying fallback from Basics/lessons/slides."
+            USE_FALLBACK=1
+          fi
+
+          if [ "${USE_FALLBACK:-0}" -eq 1 ]; then
+            if [ -d Basics/lessons/slides ] && find Basics/lessons/slides -type f -name '*.html' -print -quit | grep -q .; then
+              rm -rf _site/slides
+              mkdir -p _site/slides
+              cp -R Basics/lessons/slides/. _site/slides/
+              echo "Fallback slide content copied from Basics/lessons/slides/."
+            else
+              echo "ERROR: No usable fallback slide content found in Basics/lessons/slides."
+              exit 1
+            fi
+          fi
+
+          if [ ! -f _site/slides/index.html ]; then
+            FIRST_SLIDE_HTML="$(find _site/slides -type f -name '*.html' ! -name 'index.html' | sort | head -n 1)"
+
+            if [ -z "${FIRST_SLIDE_HTML}" ]; then
+              echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
+              exit 1
+            fi
+
+            FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
+            cat <<EOF > _site/slides/index.html
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta http-equiv="refresh" content="0; url=./${FIRST_SLIDE_RELATIVE}">
+              <title>Redirecting to slides…</title>
+            </head>
+            <body>
+              <p><a href="./${FIRST_SLIDE_RELATIVE}">Open the published slides</a></p>
+            </body>
+          </html>
+          EOF
           fi
         
       - name: Upload artifact
