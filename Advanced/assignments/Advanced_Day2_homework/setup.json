@@ -1,9 +1,11 @@
 {
-  "install": [
-    "python -m pip install nbconvert"
+  "file_checks": [
+    "../Advanced_Day2_homework.ipynb"
   ],
-  "pre_test": [
-    "jupyter nbconvert --to script submissions/*Advanced_Day2*.ipynb --output advanced_day2.py",
-    "test -f advanced_day2.py"
+  "commands": [
+    "python -m pip install --quiet --upgrade pip",
+    "python -m pip install nbconvert",
+    "jupyter nbconvert --to script ../Advanced_Day2_homework.ipynb --output advanced_day2.py",
+    "if [ ! -f advanced_day2.py ]; then echo 'ERROR: Notebook conversion failed - advanced_day2.py not found'; exit 1; fi"
   ]
 }

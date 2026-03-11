@@ -1,9 +1,11 @@
 {
-  "install": [
-    "python -m pip install nbconvert"
+  "file_checks": [
+    "../Basics_Day5_homework.ipynb"
   ],
-  "pre_test": [
-    "jupyter nbconvert --to script submissions/*Basics_Day5*.ipynb --output day5",
-    "test -f day5.py"
+  "commands": [
+    "python -m pip install --quiet --upgrade pip",
+    "python -m pip install nbconvert",
+    "jupyter nbconvert --to script ../Basics_Day5_homework.ipynb --output day5.py",
+    "if [ ! -f day5.py ]; then echo 'ERROR: Notebook conversion failed - day5.py not found'; exit 1; fi"
   ]
 }
