@@ -87,7 +87,7 @@ jobs:
           fi
 
           if [ ! -f _site/slides/index.html ]; then
-            FIRST_SLIDE_HTML="$(find _site/slides -type f -name '*.html' ! -name 'index.html' | LC_ALL=C sort | head -n 1)"
+            FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -name '*.html' ! -name 'index.html' | LC_ALL=C sort | head -n 1)"
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
               echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
@@ -95,12 +95,10 @@ jobs:
             fi
 
             FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
-            case "${FIRST_SLIDE_RELATIVE}" in
-              *..*|*\"*|*\'*|*\<*|*\>*)
-                echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
-                exit 1
-                ;;
-            esac
+            if printf '%s\n' "${FIRST_SLIDE_RELATIVE}" | grep -Eq '(^|/)\.\.(/|$)|[^A-Za-z0-9._/-]|^[./]|/$|(^|/)\.' || ! printf '%s\n' "${FIRST_SLIDE_RELATIVE}" | grep -Eq '^[A-Za-z0-9][A-Za-z0-9._/-]*\.html$'; then
+              echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
+              exit 1
+            fi
             cat <<EOF > _site/slides/index.html
           <!doctype html>
           <html lang="en">
