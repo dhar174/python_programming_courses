@@ -1,16 +1,166 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Basics Day5 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 5 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: dark; --sp1:8px; --sp2:16px; --sp3:24px; --sp4:32px; --sp6:48px; --bg:#1E1E2E; --surface:#252537; --surface-hi:#2E2E45; --border:#313244; --py-blue:#4B8BBE; --py-yellow:#FFD43B; --txt:#CDD6F4; --txt-muted:#A6ADC8; --txt-code:#CBA6F7; --r-sm:8px; --r-md:16px; --r-lg:24px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); line-height: 1.6; }
+    .container { max-width: 820px; margin: 0 auto; padding: var(--sp3) var(--sp2) var(--sp6); }
+    .header-card, .question-card, .action-card { background: var(--surface); border:1px solid var(--border); border-radius: var(--r-md); padding: var(--sp3); margin-bottom: var(--sp2); }
+    .header-card { border-top:4px solid var(--py-yellow); border-radius: var(--r-lg); }
+    h1 { color: var(--py-yellow); margin-bottom: var(--sp1); }
+    h2 { font-size: 0.8rem; text-transform: uppercase; color: var(--py-blue); margin-top: var(--sp2); }
+    .meta { display:inline-block; margin-top:var(--sp1); color:var(--txt-muted); }
+    ul { list-style:none; margin-top:var(--sp1); }
+    ul li { color:var(--txt-muted); }
+    .progress-wrap { margin-top: var(--sp2); display:flex; gap: var(--sp1); align-items:center; }
+    .progress-track { flex:1; height:6px; background:var(--border); border-radius:3px; }
+    .progress-fill { height:100%; width:0%; background: linear-gradient(90deg, var(--py-blue), var(--py-yellow)); border-radius:3px; }
+    .progress-label { min-width:48px; text-align:right; color:var(--txt-muted); }
+    .question-number { color: var(--py-blue); font-weight:700; margin-bottom: var(--sp1); }
+    .question-prompt pre { background:#11111B; border:1px solid var(--border); border-left:3px solid var(--py-yellow); padding: var(--sp2); border-radius: var(--r-sm); overflow-x:auto; }
+    .question-prompt code, .option-row code, .compat-note code { background: rgba(203,166,247,0.15); color: var(--txt-code); padding:2px 6px; border-radius:4px; font-family:'JetBrains Mono', monospace; }
+    .options { display:grid; gap: var(--sp1); margin-top: var(--sp1); }
+    .option-row { display:flex; gap: var(--sp1); align-items:flex-start; background: var(--surface-hi); border:1px solid var(--border); border-radius: var(--r-sm); padding: var(--sp1) var(--sp2); }
+    .option-row.is-checked { border-color: var(--py-blue); }
+    .option-row span { color: var(--txt-muted); }
+    .explanation { margin-top: var(--sp2); border:1px solid rgba(255,212,59,0.35); background: rgba(255,212,59,0.1); padding: var(--sp1) var(--sp2); border-radius: var(--r-sm); color: var(--txt-muted); }
+    .explanation strong { color: var(--py-yellow); }
+    #exportBtn { background: var(--py-yellow); color: #1E1E2E; border:0; padding: var(--sp1) var(--sp3); border-radius: var(--r-sm); font-weight:700; cursor:pointer; }
+    #status, .compat-note { color: var(--txt-muted); font-size: 0.9rem; }
+  </style>
 </head>
 <body>
-  <h1>Basics Day5 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <main class="container">
+    <section class="header-card">
+      <h1>Python Basics - Day 5 Quiz</h1>
+      <div class="meta">Total Questions: 30 • Time Estimate: 45-60 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul>
+        <li>Tuples + unpacking</li>
+        <li>Sets: uniqueness + membership</li>
+        <li>Dictionaries fundamentals</li>
+        <li>Dictionary iteration + counting pattern</li>
+      </ul>
+      <h2>Instructions</h2>
+      <ul>
+        <li>Answer all questions</li>
+        <li>Select one option per question</li>
+        <li>Read explanations to reinforce concepts</li>
+      </ul>
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download your responses with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code>.</p>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="action-card">
+      <button id="exportBtn" type="button" aria-label="Save and export your answers as JSON">⬇ Save/Export Answers (JSON)</button>
+      <span id="status">Selections are auto-saved in localStorage.</span>
+    </section>
+  </main>
+
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {"quizId": "Basics_Day5_Quiz", "title": "Python Basics - Day 5 Quiz", "questions": [{"number": 1, "prompt": "Which literal creates a tuple with two values?", "options": {"A": "`[1, 2]`", "B": "`(1, 2)`", "C": "`{1, 2}`", "D": "`tuple(1, 2)`"}, "explanation": "Tuples use parentheses with comma-separated values, e.g., `(1, 2)`."}, {"number": 2, "prompt": "Why is `(5,)` written with a trailing comma?", "options": {"A": "To make it a list", "B": "To avoid a syntax error", "C": "To define a single-item tuple", "D": "To convert the number to float"}, "explanation": "Without the comma, `(5)` is just the integer `5` in parentheses."}, {"number": 3, "prompt": "What does tuple unpacking do?", "options": {"A": "Sorts tuple values", "B": "Assigns tuple items to multiple variables in one statement", "C": "Converts tuple to string", "D": "Removes duplicates"}, "explanation": "`x, y = (10, 20)` unpacks each tuple item into a separate variable."}, {"number": 4, "prompt": "What is printed?\n\n```python\npoint = (3, 7)\nx, y = point\nprint(y)\n```", "options": {"A": "`3`", "B": "`7`", "C": "`(3, 7)`", "D": "Error"}, "explanation": "`y` receives the second item of the tuple, which is `7`."}, {"number": 5, "prompt": "Which statement about tuples is correct?", "options": {"A": "Tuples are mutable", "B": "Tuples can only store integers", "C": "Tuples are immutable", "D": "Tuples cannot be sliced"}, "explanation": "Tuples cannot be changed in place after creation."}, {"number": 6, "prompt": "What does this produce?\n\n```python\nweek = ('Mon', 'Tue', 'Wed', 'Thu')\nprint(week[:2])\n```", "options": {"A": "`('Mon', 'Tue')`", "B": "`['Mon', 'Tue']`", "C": "`('Tue', 'Wed')`", "D": "`('Mon', 'Tue', 'Wed')`"}, "explanation": "Slicing a tuple returns another tuple with selected items."}, {"number": 7, "prompt": "How can you add one value to the end of a tuple named `roles`?", "options": {"A": "`roles.append('admin')`", "B": "`roles = roles + ('admin',)`", "C": "`roles.add('admin')`", "D": "`roles['admin'] = True`"}, "explanation": "Since tuples are immutable, create a new tuple by concatenation."}, {"number": 8, "prompt": "Which operation is a good use of a set?", "options": {"A": "Keeping duplicate entries", "B": "Preserving exact insertion order for display", "C": "Removing duplicates from a list", "D": "Storing key-value pairs"}, "explanation": "Sets are designed for uniqueness and are great for de-duplicating values."}, {"number": 9, "prompt": "What is the result of `set(['a', 'b', 'a'])`?", "options": {"A": "`['a', 'b', 'a']`", "B": "`{'a', 'b'}`", "C": "`('a', 'b')`", "D": "`{'a': 2, 'b': 1}`"}, "explanation": "Duplicate `'a'` is removed in a set."}, {"number": 10, "prompt": "Which expression checks membership in a set named `skills`?", "options": {"A": "`skills.has('python')`", "B": "`'python' in skills`", "C": "`skills['python']`", "D": "`in(skills, 'python')`"}, "explanation": "Use `in` for membership checks in sets and other containers."}, {"number": 11, "prompt": "What is printed?\n\n```python\ncolors = {'red', 'blue'}\nprint('green' in colors)\n```", "options": {"A": "`True`", "B": "`False`", "C": "`'green'`", "D": "Error"}, "explanation": "`'green'` is not one of the set members, so result is `False`."}, {"number": 12, "prompt": "Why might you sort values after converting a set to a list?", "options": {"A": "Sets are always sorted already", "B": "Sorting makes membership faster", "C": "To get deterministic output order", "D": "To convert strings to numbers"}, "explanation": "Set iteration order is not guaranteed for deterministic output."}, {"number": 13, "prompt": "Given `a = {1, 2}` and `b = {2, 3}`, what is `a | b`?", "options": {"A": "`{2}`", "B": "`{1, 2, 3}`", "C": "`{1}`", "D": "Error"}, "explanation": "`|` is set union: all unique items from both sets."}, {"number": 14, "prompt": "Which literal creates a dictionary?", "options": {"A": "`('name', 'Nia')`", "B": "`['name', 'Nia']`", "C": "`{'name': 'Nia'}`", "D": "`{'name', 'Nia'}`"}, "explanation": "Dictionaries use `{key: value}` pairs."}, {"number": 15, "prompt": "If `profile = {'name': 'Nia', 'role': 'analyst'}`, what is `profile['name']`?", "options": {"A": "`'Nia'`", "B": "`'name'`", "C": "`['Nia']`", "D": "`None`"}, "explanation": "Dictionary key lookup returns the value mapped to that key."}, {"number": 16, "prompt": "What does this do?\n\n```python\nprofile = {'city': 'Accra'}\nprofile['city'] = 'Lagos'\n```", "options": {"A": "Adds a duplicate key", "B": "Updates the value for key `'city'`", "C": "Deletes key `'city'`", "D": "Raises a TypeError"}, "explanation": "Assigning to an existing key replaces its old value."}, {"number": 17, "prompt": "How do you check whether key `'email'` exists in dictionary `profile`?", "options": {"A": "`profile.has('email')`", "B": "`'email' in profile`", "C": "`profile['email'] is not None`", "D": "`profile.containsKey('email')`"}, "explanation": "`in` checks dictionary keys by default."}, {"number": 18, "prompt": "What is returned by `len({'a': 1, 'b': 2, 'c': 3})`?", "options": {"A": "`2`", "B": "`3`", "C": "`6`", "D": "Error"}, "explanation": "`len()` on a dict counts key-value pairs (keys)."}, {"number": 19, "prompt": "Which method safely returns a value or default if key is missing?", "options": {"A": "`.value()`", "B": "`.lookup()`", "C": "`.get()`", "D": "`.find()`"}, "explanation": "`dict.get(key, default)` avoids KeyError for missing keys."}, {"number": 20, "prompt": "What does `sorted(profile.keys())` help with in grading scripts?", "options": {"A": "It encrypts keys", "B": "It makes output deterministic", "C": "It removes keys", "D": "It converts dict to tuple"}, "explanation": "Sorted keys provide consistent ordering for expected output lines."}, {"number": 21, "prompt": "What is the common counting pattern in a dictionary loop?", "options": {"A": "Always overwrite with `1`", "B": "Use `counts[item] = counts.get(item, 0) + 1`", "C": "Use a set only", "D": "Use recursion for each item"}, "explanation": "`get(..., 0) + 1` increments counts cleanly."}, {"number": 22, "prompt": "What is printed?\n\n```python\nwords = ['python', 'python', 'data']\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(counts['python'])\n```", "options": {"A": "`1`", "B": "`2`", "C": "`3`", "D": "Error"}, "explanation": "`'python'` appears twice, so count becomes `2`."}, {"number": 23, "prompt": "After counting words, what does `len(counts)` represent?", "options": {"A": "Total words processed", "B": "Unique words counted", "C": "Longest word length", "D": "Number of loops used"}, "explanation": "Dictionary size is the number of unique keys."}, {"number": 24, "prompt": "Why iterate as `for word, count in counts.items()`?", "options": {"A": "It yields both key and value together", "B": "It sorts automatically", "C": "It avoids dictionaries entirely", "D": "It only works for numbers"}, "explanation": "`.items()` gives `(key, value)` pairs for reporting."}, {"number": 25, "prompt": "What is a deterministic summary string from counts useful for?", "options": {"A": "Adding randomness to output", "B": "Stable autograder comparisons", "C": "Hiding dictionary contents", "D": "Speeding up internet downloads"}, "explanation": "Autograders compare exact text, so stable ordering is important."}, {"number": 26, "prompt": "Which snippet creates a sorted summary list from `counts`?", "options": {"A": "`[f'{k}={counts[k]}' for k in sorted(counts)]`", "B": "`counts.summary()`", "C": "`sorted(counts.values())`", "D": "`list(counts)`"}, "explanation": "Sorting keys then formatting each pair makes predictable output."}, {"number": 27, "prompt": "What does this print?\n\n```python\ncounts = {'data': 2, 'fun': 1}\nprint(counts.get('python', 0))\n```", "options": {"A": "`None`", "B": "`1`", "C": "`0`", "D": "Error"}, "explanation": "`get` returns the default `0` when key is missing."}, {"number": 28, "prompt": "Which structure best maps learner name to score?", "options": {"A": "Tuple", "B": "Set", "C": "Dictionary", "D": "String"}, "explanation": "A dictionary maps each name (key) to a score (value)."}, {"number": 29, "prompt": "Which output line is easiest for an autograder to verify?", "options": {"A": "`Looks good`", "B": "`Count for 'python': 3`", "C": "`Maybe done`", "D": "`All set!`"}, "explanation": "Specific labeled values are easiest to compare reliably."}, {"number": 30, "prompt": "Day 5 combines which core data structures most directly?", "options": {"A": "Lists, tuples, sets, and dictionaries", "B": "Only strings and floats", "C": "Only loops and comments", "D": "Files and sockets only"}, "explanation": "Day 5 focuses on tuple, set, and dictionary skills plus iteration patterns."}], "expectedAnswers": {"1": "B", "2": "C", "3": "B", "4": "B", "5": "C", "6": "A", "7": "B", "8": "C", "9": "B", "10": "B", "11": "B", "12": "C", "13": "B", "14": "C", "15": "A", "16": "B", "17": "B", "18": "B", "19": "C", "20": "B", "21": "B", "22": "B", "23": "B", "24": "A", "25": "B", "26": "A", "27": "C", "28": "C", "29": "B", "30": "A"}};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function formatPrompt(markdownText) {
+      let text = escapeHtml(markdownText);
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      return text.replace(/\n/g, '<br />');
+    }
+
+    function loadAnswers() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; } }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([k]) => validIds.has(k)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
+      document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`;
+      document.getElementById('progressFill').style.width = `${total ? Math.round((count/total)*100) : 0}%`;
+      document.getElementById('progressLabel').textContent = `${count} / ${total}`;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById('questions');
+      const saved = loadAnswers();
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)]===key?'checked':''} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join('');
+        return `
+          <article class="question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+            <div class="explanation"><strong>Explanation:</strong> ${formatPrompt(question.explanation || '')}</div>
+          </article>
+        `;
+      }).join('');
+
+      container.addEventListener('change', (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => radio.closest('.option-row').classList.toggle('is-checked', radio.checked));
+        const answers = loadAnswers();
+        answers[event.target.name.replace('q','')] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      container.querySelectorAll('input[type="radio"]:checked').forEach((radio) => radio.closest('.option-row').classList.add('is-checked'));
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const qid = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[qid] || null;
+        const student = studentAnswers[qid] || null;
+        return { name: `Question ${qid}`, points: 1, expected_stdout: [expected], student_stdout: [student], pass: expected !== null && student === expected };
+      });
+
+      const exportPayload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: 'Map each criteria_like_tests item to criteria.json tests entries as needed for automated grading.'
+      };
+
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>
