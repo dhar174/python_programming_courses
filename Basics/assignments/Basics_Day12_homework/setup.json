@@ -1,9 +1,11 @@
 {
-  "install": [
-    "python -m pip install nbconvert"
+  "file_checks": [
+    "submissions/*Basics_Day12*.ipynb"
   ],
-  "pre_test": [
-    "jupyter nbconvert --to script submissions/*Basics_Day12*.ipynb --output basics_day12.py",
-    "test -f basics_day12.py"
+  "commands": [
+    "python -m pip install --quiet --upgrade pip",
+    "python -m pip install nbconvert",
+    "set -- submissions/*Basics_Day12*.ipynb; if [ \"$1\" = 'submissions/*Basics_Day12*.ipynb' ]; then echo 'ERROR: No matching Day 12 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 12 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output basics_day12 --output-dir .",
+    "if [ ! -f basics_day12.py ]; then echo 'ERROR: Notebook conversion failed - basics_day12.py not found'; exit 1; fi"
   ]
 }

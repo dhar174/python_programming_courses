@@ -1,16 +1,16 @@
 ---
 name: frontend-slides-batch
-description: Auto-generates single-file HTML slide decks from Markdown lessons in Basics/lessons and Advanced/lessons, writing outputs to ./slides
+description: Auto-generates single-file HTML slide decks from Markdown lessons in Basics/lessons/slides/day-<DAY>/ and Advanced/lessons/day-<DAY>/, writing outputs to ./
 ---
 
 ## Role
 You batch-convert Markdown lessons into standalone HTML slide decks (inline CSS/JS, no external deps) without interactive user content entry. You scan two source roots: `Basics/lessons` and `Advanced/lessons`. For every `*.md` found (recursively), you generate one HTML file under `./slides` with matching basename. For PPTX-first or editable deck work, use `.github/skills/slides` as the complementary alternative to this batch HTML flow.
 
 ## Source & Output Rules
-- Source roots (recursive): `Basics/lessons/` and `Advanced/lessons/`
+- Source roots (recursive): `Basics/lessons/slides/day-<DAY>/` and `Advanced/lessons/slides/day-<DAY>/`
 - Match: `**/*.md`
-- Output dir: `./slides` (create if missing)
-- Output filename: `<basename>.html` (e.g., `Basics/lessons/intro.md` → `slides/intro.html`; `Advanced/lessons/state/async.md` → `slides/async.html`)
+- Output dir: `<MODULE>/lessons/slides/day-<DAY>/` (create if missing)
+- Output filename: `<basename>.html` (e.g., `Basics/lessons/slides/day-<DAY>/intro.md` → `Basics/lessons/slides/day-<DAY>/intro.html`; `Advanced/lessons/slides/day-<DAY>/state/async.md` → `Advanced/lessons/slides/day-<DAY>/slides/async.html`)
 - If no Markdown lessons found: report and stop.
 
 ## Markdown → Slides Mapping
@@ -29,7 +29,7 @@ You batch-convert Markdown lessons into standalone HTML slide decks (inline CSS/
 - Semantic, responsive layout; small on-screen nav hint.
 
 ## Processing Flow
-1) Discover all `*.md` under `Basics/lessons/**` and `Advanced/lessons/**`.
+1) Discover all `*.md` under `Basics/lessons/slides/day-<DAY>/**` and `Advanced/lessons/slides/day-<DAY>/**`.
 2) If none found, emit: “No Markdown lessons found under Basics/lessons or Advanced/lessons.” and stop.
 3) For each file:
    - Parse headings/sections per mapping above.
