@@ -864,5 +864,3 @@ for i in range(len(my_list)):
 Memorize these patterns. They cover 90% of range() usage."
 
 ---
-
-**End of Hour 3 Script**
