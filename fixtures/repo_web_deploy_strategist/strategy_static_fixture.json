@@ -5,7 +5,7 @@
       "Marp configuration detected"
     ]
   },
-  "decision_matrix_markdown": "## Deployment Decision Matrix\n\nPrimary shape: `slides`\n\n| Rank | Strategy | Total | Fit | Security | Ops | Cost | Required Secrets |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n| 1 | GitHub Pages via Actions | 94 | 100 | 80 | 90 | 95 | None |\n| 2 | GitHub Actions to Cloudflare Pages | 86 | 88 | 84 | 80 | 85 | CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID |\n| 3 | GitHub Actions to Vercel | 81 | 82 | 80 | 82 | 75 | VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID |\n| 4 | GitHub Actions to Render | 64 | 55 | 75 | 78 | 70 | RENDER_API_KEY |\n| 5 | GitHub Actions to Azure Web App | 60 | 50 | 82 | 68 | 60 | AZURE_CREDENTIALS, AZURE_WEBAPP_NAME |",
+  "decision_matrix_markdown": "## Deployment Decision Matrix\n\nPrimary shape: `slides`\n\n| Rank | Strategy | Total | Fit | Security | Ops | Cost | Required Secrets |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n| 1 | GitHub Pages via Actions | 94 | 100 | 80 | 90 | 95 | GH_PAT |\n| 2 | GitHub Actions to Cloudflare Pages | 86 | 88 | 84 | 80 | 85 | CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID |\n| 3 | GitHub Actions to Vercel | 81 | 82 | 80 | 82 | 75 | VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID |\n| 4 | GitHub Actions to Render | 64 | 55 | 75 | 78 | 70 | RENDER_API_KEY |\n| 5 | GitHub Actions to Azure Web App | 60 | 50 | 82 | 68 | 60 | AZURE_CREDENTIALS, AZURE_WEBAPP_NAME |",
   "provider_shortlist": [
     {
       "id": "actions-cloudflare-pages",
@@ -21,13 +21,15 @@
   "recommended_strategy": {
     "delivery": "github-native",
     "id": "github-pages-actions",
-    "required_secrets": [],
+    "required_secrets": [
+      "GH_PAT"
+    ],
     "title": "GitHub Pages via Actions",
     "total_score": 94,
     "why": [
       "Best default for static, docs, or slide repositories.",
       "Existing Pages workflow detected",
-      "Detected PAT token usage; hardening opportunity exists"
+      "Current workflow references GH_PAT; migrate to GITHUB_TOKEN to remove PAT requirement"
     ]
   },
   "strategies": [
@@ -40,9 +42,11 @@
       "rationale": [
         "Best default for static, docs, or slide repositories.",
         "Existing Pages workflow detected",
-        "Detected PAT token usage; hardening opportunity exists"
+        "Current workflow references GH_PAT; migrate to GITHUB_TOKEN to remove PAT requirement"
       ],
-      "required_secrets": [],
+      "required_secrets": [
+        "GH_PAT"
+      ],
       "security": 80,
       "title": "GitHub Pages via Actions",
       "total_score": 94

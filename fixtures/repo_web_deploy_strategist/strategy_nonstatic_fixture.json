@@ -5,7 +5,7 @@
       "Python manifest detected"
     ]
   },
-  "decision_matrix_markdown": "## Deployment Decision Matrix\n\nPrimary shape: `api`\n\n| Rank | Strategy | Total | Fit | Security | Ops | Cost | Required Secrets |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n| 1 | GitHub Actions to Render | 86 | 94 | 75 | 81 | 70 | RENDER_API_KEY |\n| 2 | GitHub Actions to Azure Web App | 82 | 89 | 82 | 71 | 60 | AZURE_CREDENTIALS, AZURE_WEBAPP_NAME |\n| 3 | GitHub Actions to Vercel | 77 | 75 | 80 | 82 | 75 | VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID |\n| 4 | GitHub Actions to Cloudflare Pages | 68 | 55 | 84 | 80 | 85 | CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID |\n| 5 | GitHub Pages via Actions | 55 | 25 | 90 | 90 | 95 | None |",
+  "decision_matrix_markdown": "## Deployment Decision Matrix\n\nPrimary shape: `api`\n\n| Rank | Strategy | Total | Fit | Security | Ops | Cost | Required Secrets |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n| 1 | GitHub Actions to Render | 86 | 94 | 75 | 81 | 70 | RENDER_API_KEY |\n| 2 | GitHub Actions to Azure Web App | 82 | 89 | 82 | 71 | 60 | AZURE_CREDENTIALS, AZURE_WEBAPP_NAME |\n| 3 | GitHub Actions to Vercel | 77 | 75 | 80 | 82 | 75 | VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID |\n| 4 | GitHub Actions to Cloudflare Pages | 68 | 55 | 84 | 80 | 85 | CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID |\n| 5 | GitHub Pages via Actions | 55 | 25 | 90 | 90 | 95 | GH_PAT |",
   "provider_shortlist": [
     {
       "id": "actions-render",
@@ -119,7 +119,9 @@
       "rationale": [
         "Best default for static, docs, or slide repositories."
       ],
-      "required_secrets": [],
+      "required_secrets": [
+        "GH_PAT"
+      ],
       "security": 90,
       "title": "GitHub Pages via Actions",
       "total_score": 55
