@@ -382,7 +382,11 @@
       let text = escapeHtml(markdownText);
       text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
       text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
-      return text.replace(/\n/g, '<br />');
+      text = text.replace(/\n/g, '<br />');
+      // Restore newlines within <pre> blocks, which don't need <br />
+      return text.replace(/(<pre><code>[\s\S]*?<\/code><\/pre>)/g, (preBlock) => {
+        return preBlock.replace(/<br \/>/g, '\n');
+      });
     }
 
     function loadAnswers() {
