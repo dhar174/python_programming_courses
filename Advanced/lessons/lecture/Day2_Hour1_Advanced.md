@@ -36,7 +36,14 @@
 2. **Build the Factory**:
    *(Action: Add a `@classmethod` acting as our factory.)*
    "Instead of cluttering `__init__`, let's build `UserFactory.from_dict()`"
+
+   *(Instructor note: `ValidationError` is the custom exception students built in Day 1, Hour 3. Remind them it lives in `error_handlers.py` in their project—the import below pulls it from there.)*
    ```python
+   # error_handlers.py (recap from Day 1, Hour 3)
+   class ValidationError(Exception):
+       pass
+
+   # user_factory.py
    from error_handlers import ValidationError
 
    class UserFactory:
