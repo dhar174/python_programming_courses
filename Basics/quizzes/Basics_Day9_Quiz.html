@@ -1,16 +1,166 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Basics Day9 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 9 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: dark; --sp1:8px; --sp2:16px; --sp3:24px; --sp4:32px; --sp6:48px; --bg:#1E1E2E; --surface:#252537; --surface-hi:#2E2E45; --border:#313244; --py-blue:#4B8BBE; --py-yellow:#FFD43B; --txt:#CDD6F4; --txt-muted:#A6ADC8; --txt-code:#CBA6F7; --r-sm:8px; --r-md:16px; --r-lg:24px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); line-height: 1.6; }
+    .container { max-width: 820px; margin: 0 auto; padding: var(--sp3) var(--sp2) var(--sp6); }
+    .header-card, .question-card, .action-card { background: var(--surface); border:1px solid var(--border); border-radius: var(--r-md); padding: var(--sp3); margin-bottom: var(--sp2); }
+    .header-card { border-top:4px solid var(--py-yellow); border-radius: var(--r-lg); }
+    h1 { color: var(--py-yellow); margin-bottom: var(--sp1); }
+    h2 { font-size: 0.8rem; text-transform: uppercase; color: var(--py-blue); margin-top: var(--sp2); }
+    .meta { display:inline-block; margin-top:var(--sp1); color:var(--txt-muted); }
+    ul { list-style:none; margin-top:var(--sp1); }
+    ul li { color:var(--txt-muted); }
+    .progress-wrap { margin-top: var(--sp2); display:flex; gap: var(--sp1); align-items:center; }
+    .progress-track { flex:1; height:6px; background:var(--border); border-radius:3px; }
+    .progress-fill { height:100%; width:0%; background: linear-gradient(90deg, var(--py-blue), var(--py-yellow)); border-radius:3px; }
+    .progress-label { min-width:48px; text-align:right; color:var(--txt-muted); }
+    .question-number { color: var(--py-blue); font-weight:700; margin-bottom: var(--sp1); }
+    .question-prompt pre { background:#11111B; border:1px solid var(--border); border-left:3px solid var(--py-yellow); padding: var(--sp2); border-radius: var(--r-sm); overflow-x:auto; }
+    .question-prompt code, .option-row code, .compat-note code { background: rgba(203,166,247,0.15); color: var(--txt-code); padding:2px 6px; border-radius:4px; font-family:'JetBrains Mono', monospace; }
+    .options { display:grid; gap: var(--sp1); margin-top: var(--sp1); }
+    .option-row { display:flex; gap: var(--sp1); align-items:flex-start; background: var(--surface-hi); border:1px solid var(--border); border-radius: var(--r-sm); padding: var(--sp1) var(--sp2); }
+    .option-row.is-checked { border-color: var(--py-blue); }
+    .option-row span { color: var(--txt-muted); }
+    .explanation { margin-top: var(--sp2); border:1px solid rgba(255,212,59,0.35); background: rgba(255,212,59,0.1); padding: var(--sp1) var(--sp2); border-radius: var(--r-sm); color: var(--txt-muted); }
+    .explanation strong { color: var(--py-yellow); }
+    #exportBtn { background: var(--py-yellow); color: #1E1E2E; border:0; padding: var(--sp1) var(--sp3); border-radius: var(--r-sm); font-weight:700; cursor:pointer; }
+    #status, .compat-note { color: var(--txt-muted); font-size: 0.9rem; }
+  </style>
 </head>
 <body>
-  <h1>Basics Day9 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <main class="container">
+    <section class="header-card">
+      <h1>Python Basics - Day 9 Quiz</h1>
+      <div class="meta">Total Questions: 24 • Time Estimate: 35-50 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul>
+        <li>Hour 33: Functions (`def`, parameters, `return`)</li>
+        <li>Hour 34: Scope, defaults, and common mistakes</li>
+        <li>Hour 35: Functions with lists and dictionaries</li>
+        <li>Hour 36: Standard library imports + custom `utils.py` module patterns</li>
+      </ul>
+      <h2>Instructions</h2>
+      <ul>
+        <li>Answer all questions</li>
+        <li>Select one option per question</li>
+        <li>Read explanations to reinforce concepts</li>
+      </ul>
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download your responses with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code>.</p>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="action-card">
+      <button id="exportBtn" type="button" aria-label="Save and export your answers as JSON">⬇ Save/Export Answers (JSON)</button>
+      <span id="status">Selections are auto-saved in localStorage.</span>
+    </section>
+  </main>
+
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {"quizId": "Basics_Day9_Quiz", "title": "Python Basics - Day 9 Quiz", "questions": [{"number": 1, "prompt": "Which keyword defines a function in Python?", "options": {"A": "`func`", "B": "`define`", "C": "`def`", "D": "`lambda`"}, "explanation": "Regular named functions are created with the `def` keyword."}, {"number": 2, "prompt": "In `greet(name)`, what is `name` inside the definition?", "options": {"A": "A parameter", "B": "A module", "C": "A return value", "D": "A global constant"}, "explanation": "`name` is the function parameter that receives an argument at call time."}, {"number": 3, "prompt": "What is the best reason to use `return` instead of only `print()` in a function?", "options": {"A": "It makes code run slower for debugging", "B": "It gives the computed value back to the program for reuse", "C": "It automatically writes to a file", "D": "It prevents all runtime errors"}, "explanation": "`return` makes function results reusable by other parts of the program."}, {"number": 4, "prompt": "What is printed?\n\n```python\ndef add(a, b):\n    return a + b\n\nprint(add(2, 5))\n```", "options": {"A": "`2 + 5`", "B": "`25`", "C": "`7`", "D": "`None`"}, "explanation": "The call evaluates to `7`, which is printed."}, {"number": 5, "prompt": "Which design best matches the Day 9 function refactor approach?", "options": {"A": "Put all logic in one large while loop", "B": "Use small named functions for each action and call them from main flow", "C": "Duplicate blocks so each branch is self-contained", "D": "Avoid parameters and hard-code values"}, "explanation": "Small, single-purpose functions improve reuse and clarity."}, {"number": 6, "prompt": "If a function does not include `return`, what value does it return by default?", "options": {"A": "`0`", "B": "`False`", "C": "`\"\"`", "D": "`None`"}, "explanation": "Python functions return `None` when no explicit `return` is provided."}, {"number": 7, "prompt": "Variables created inside a function are in what scope?", "options": {"A": "Global scope", "B": "Local scope", "C": "Module import scope", "D": "Class-only scope"}, "explanation": "Function-local variables exist only during that function call."}, {"number": 8, "prompt": "What common bug appears when a function silently depends on changing global state?", "options": {"A": "Guaranteed performance improvement", "B": "Hard-to-trace behavior and fragile coupling", "C": "Automatic type conversion", "D": "Automatic test generation"}, "explanation": "Hidden global dependencies make behavior unpredictable and hard to debug."}, {"number": 9, "prompt": "Given `def multiply(x, y=1): ...`, what is `y=1` called?", "options": {"A": "A shadow variable", "B": "A default parameter value", "C": "A global override", "D": "A keyword-only argument marker"}, "explanation": "It sets a default so callers may omit that argument."}, {"number": 10, "prompt": "Why is passing data via parameters usually preferred over reading globals inside functions?", "options": {"A": "It hides data flow from readers", "B": "It makes functions more predictable and testable", "C": "It removes the need for return values", "D": "It disables local variables"}, "explanation": "Explicit inputs/outputs make logic easier to test and maintain."}, {"number": 11, "prompt": "What should `divide(num1, num2)` return for zero divisor in this Basics lesson?", "options": {"A": "`0` always", "B": "`None` silently", "C": "`Error: Cannot divide by zero!`", "D": "`inf` automatically"}, "explanation": "Day 9 uses a clear guard message for divide-by-zero."}, {"number": 12, "prompt": "Which statement about default parameters is correct?", "options": {"A": "Default parameters must appear before all required parameters", "B": "Only global variables can use defaults", "C": "Defaults are optional fallbacks when caller omits that argument", "D": "Defaults work only with strings"}, "explanation": "Defaults provide optional behavior when no argument is supplied."}, {"number": 13, "prompt": "When passing a list to a function, which behavior can occur?", "options": {"A": "Lists always become tuples", "B": "Mutating the list in the function can affect the original list", "C": "The list is always deep-copied automatically", "D": "The list loses all elements after return"}, "explanation": "Lists are mutable; in-place edits inside a function can persist outside."}, {"number": 14, "prompt": "Which function contract is safest when you want to preserve original list data?", "options": {"A": "Mutate original and do not document it", "B": "Return a new cleaned list", "C": "Convert list to set and stop", "D": "Use globals to store backup copy"}, "explanation": "Returning a new list avoids accidental side effects on caller data."}, {"number": 15, "prompt": "What does a useful docstring communicate for collection-processing functions?", "options": {"A": "Only the author name", "B": "Whether function mutates input or returns a new value", "C": "Only performance benchmarks", "D": "Only import statements"}, "explanation": "Mutation behavior is critical context for callers."}, {"number": 16, "prompt": "What is the output?\n\n```python\nname = \"  saraH jOnes  \"\nprint(name.strip().title())\n```", "options": {"A": "`  Sarah Jones  `", "B": "`Sarah Jones`", "C": "`sarah jones`", "D": "`S A R A H`"}, "explanation": "`strip()` removes outer spaces and `title()` normalizes name case."}, {"number": 17, "prompt": "For dictionary lookup in Basics scope, what is a user-friendly missing-key behavior?", "options": {"A": "Crash with KeyError to teach discipline", "B": "Return or print a clear `not found` message", "C": "Delete all keys", "D": "Convert dictionary to list automatically"}, "explanation": "Graceful missing-key handling improves UX and program robustness."}, {"number": 18, "prompt": "Which pattern best demonstrates both approaches in Hour 35?", "options": {"A": "Only write mutating function", "B": "Only write returning function", "C": "Implement one mutating function and one return-new function, then compare outputs", "D": "Avoid collections in functions"}, "explanation": "Day 9 explicitly compares mutate-in-place vs return-new strategies."}, {"number": 19, "prompt": "What does `import math` require when calling square root?", "options": {"A": "`sqrt(9)`", "B": "`math.sqrt(9)`", "C": "`math->sqrt(9)`", "D": "`from math.sqrt import 9`"}, "explanation": "With `import math`, functions are accessed via module prefix."}, {"number": 20, "prompt": "What does `from math import ceil` allow?", "options": {"A": "Use `math.ceil(...)` only", "B": "Use `ceil(...)` directly", "C": "Disable all other math functions", "D": "Import only constants"}, "explanation": "Imported names can be called directly without module prefix."}, {"number": 21, "prompt": "A custom `utils.py` module is primarily used to:", "options": {"A": "Store random screenshots", "B": "Hold reusable helper functions for main scripts", "C": "Replace Python itself", "D": "Avoid all imports"}, "explanation": "`utils.py` keeps helper logic organized and reusable."}, {"number": 22, "prompt": "Why is naming your script `random.py` a bad idea?", "options": {"A": "It forces slow runtime only on Linux", "B": "It can shadow the standard library `random` module and break imports", "C": "Python disallows that filename syntax", "D": "It only breaks if you use dictionaries"}, "explanation": "Local file names that match stdlib modules can cause import conflicts."}, {"number": 23, "prompt": "When using a custom module split (`utils.py` + `main.py`), what is a key execution rule?", "options": {"A": "Run `utils.py` directly for user flow", "B": "Run `main.py` from the folder where both files live", "C": "Both files must be named `main.py`", "D": "Use absolute imports only in Basics"}, "explanation": "The interpreter must run from the project folder so local imports resolve."}, {"number": 24, "prompt": "Which output formatting is best for deterministic autograder checks?", "options": {"A": "Ambiguous phrases like `Looks good`", "B": "Labeled exact outputs like `Hour36 ceil(3.14): 4`", "C": "Randomized ordering each run", "D": "No printed output"}, "explanation": "Precise labeled output strings are easiest to compare reliably."}], "expectedAnswers": {"1": "C", "2": "A", "3": "B", "4": "C", "5": "B", "6": "D", "7": "B", "8": "B", "9": "B", "10": "B", "11": "C", "12": "C", "13": "B", "14": "B", "15": "B", "16": "B", "17": "B", "18": "C", "19": "B", "20": "B", "21": "B", "22": "B", "23": "B", "24": "B"}};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function formatPrompt(markdownText) {
+      let text = escapeHtml(markdownText);
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      return text.replace(/\n/g, '<br />');
+    }
+
+    function loadAnswers() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; } }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([k]) => validIds.has(k)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
+      document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`;
+      document.getElementById('progressFill').style.width = `${total ? Math.round((count/total)*100) : 0}%`;
+      document.getElementById('progressLabel').textContent = `${count} / ${total}`;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById('questions');
+      const saved = loadAnswers();
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)]===key?'checked':''} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join('');
+        return `
+          <article class="question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+            <div class="explanation"><strong>Explanation:</strong> ${formatPrompt(question.explanation || '')}</div>
+          </article>
+        `;
+      }).join('');
+
+      container.addEventListener('change', (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'radio') return;
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => radio.closest('.option-row').classList.toggle('is-checked', radio.checked));
+        const answers = loadAnswers();
+        answers[event.target.name.replace('q','')] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      container.querySelectorAll('input[type="radio"]:checked').forEach((radio) => radio.closest('.option-row').classList.add('is-checked'));
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const qid = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[qid] || null;
+        const student = studentAnswers[qid] || null;
+        return { name: `Question ${qid}`, points: 1, expected_stdout: [expected], student_stdout: [student], pass: expected !== null && student === expected };
+      });
+
+      const exportPayload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: 'Map each criteria_like_tests item to criteria.json tests entries as needed for automated grading.'
+      };
+
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>

@@ -52,7 +52,7 @@ jobs:
             fi
           done
           if [ ${#ALL_NOTEBOOKS[@]} -gt 1 ]; then
-            echo "::warning::Found ${#ALL_NOTEBOOKS[@]} notebooks across all assignment days; using first sorted match for webtech-network/autograder@v1 compatibility: ${ALL_NOTEBOOKS[0]}, ${ALL_NOTEBOOKS[1]"
+            echo "::warning::Found ${#ALL_NOTEBOOKS[@]} notebooks across all assignment days; using first sorted match for webtech-network/autograder@v1 compatibility: ${ALL_NOTEBOOKS[0]} and ${ALL_NOTEBOOKS[1]}"
           fi
           NOTEBOOK_PATH="${ALL_NOTEBOOKS[0]}"
           NOTEBOOK_NAME="$(basename "$NOTEBOOK_PATH")"
@@ -86,8 +86,7 @@ jobs:
               or "/" in notebook_name
               or "\\" in notebook_name
               or notebook_name.startswith(".")
-              or ".." in notebook_name
-          ):
+              or ".." in notebook_name):
               raise ValueError(f"Unsafe notebook filename: {notebook_name}")
           # Derive the script name from the day number to match criteria.json expectations
           # (criteria.json uses e.g. "day1.py" for Day 1, "day2.py" for Day 2, etc.).
