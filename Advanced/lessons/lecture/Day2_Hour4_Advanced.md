@@ -43,15 +43,15 @@
    
    print("\n1. Happy Path: Adding valid records...")
    try:
-       task1 = TaskFactory.from_dict({"title": "Buy Milk", "priority": "high"})
+       task1 = TaskFactory.from_dict({"title": "Buy Milk", "priority": 1})
        service.add_task(task1)
        print("Success:", task1)
-   except Exception as e:
+   except ValidationError as e:
        print("Failed:", e)
        
    print("\n2. Sad Path: Missing required fields...")
    try:
-       task2 = TaskFactory.from_dict({"priority": "low"}) # missing title
+       task2 = TaskFactory.from_dict({"priority": 2}) # missing title
        service.add_task(task2)
    except ValidationError as e:
        print("Caught expected validation error:", e)
