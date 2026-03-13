@@ -177,7 +177,37 @@
             margin-top: calc(var(--spacing) / 2);
             margin-bottom: calc(var(--spacing) / 2);
         }
-        
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
         /* ====================================
            CODE BLOCKS
            ==================================== */
@@ -415,13 +445,48 @@
 
         <section class="slide">
             <h1>Comparing Structures: Quick Reference</h1>
-            <p>| Structure | Ordered? | Mutable? | Duplicates? | Best For |</p>
-<p>|-----------|----------|----------|-------------|----------|</p>
-<p>| <strong>List</strong> | ✅ Yes | ✅ Yes | ✅ Yes | Sequences, ordered collections |</p>
-<p>| <strong>Tuple</strong> | ✅ Yes | ❌ No | ✅ Yes | Fixed records (coordinates, dates) |</p>
-<p>| <strong>Set</strong> | ❌ No | ✅ Yes | ❌ No | Removing duplicates, membership tests |</p>
-<p>| <strong>Dict</strong> | ✅ Insertion order* | ✅ Yes | ❌ No (keys) | Lookup by name/ID, key-value pairs |</p>
-<p>*Python 3.7+ maintains insertion order for dicts</p>
+            <table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Ordered?</th>
+<th>Mutable?</th>
+<th>Duplicates?</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>List</strong></td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>Sequences, ordered collections</td>
+</tr>
+<tr>
+<td><strong>Tuple</strong></td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+<td>Fixed records (coordinates, dates)</td>
+</tr>
+<tr>
+<td><strong>Set</strong></td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>Removing duplicates, membership tests</td>
+</tr>
+<tr>
+<td><strong>Dict</strong></td>
+<td>✅ Insertion order*</td>
+<td>✅ Yes</td>
+<td>❌ No (keys)</td>
+<td>Lookup by name/ID, key-value pairs</td>
+</tr>
+</tbody>
+</table>
+<p><em>Python 3.7+ maintains insertion order for dicts.</em></p>
         </section>
 
         <section class="slide">
@@ -1190,13 +1255,18 @@ for name, phone in contacts.items():
             <h3>Allow Partial Match Search</h3>
 <p>Search for contacts where the search term is a substring of the name:</p>
 <pre data-lang="python"><code>def search_partial(contacts, keyword):
-    results = [name for name in contacts if keyword.lower() in name.lower()]
+    results = []
+    lowered_keyword = keyword.lower()
+    for name in contacts:
+        if lowered_keyword in name.lower():
+            results.append(name)
+
     if results:
         for name in results:
             print(f&quot;{name}: {contacts[name]}&quot;)
     else:
         print(&quot;No matches found.&quot;)</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Use a simple loop instead of list comprehension if needed.</p>
+<p><strong>Stay in Basics Scope:</strong> This version stays in Basics scope by using a simple loop instead of a list comprehension.</p>
         </section>
 
         <section class="slide">

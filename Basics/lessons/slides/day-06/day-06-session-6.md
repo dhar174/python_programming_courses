@@ -941,7 +941,7 @@ def search_partial(contacts, keyword):
         print("No matches found.")
 ```
 
-**Stay in Basics Scope:** Use a simple loop instead of list comprehension if needed.
+**Stay in Basics Scope:** This version stays in Basics scope by using a simple loop instead of a list comprehension.
 
 ---
 
