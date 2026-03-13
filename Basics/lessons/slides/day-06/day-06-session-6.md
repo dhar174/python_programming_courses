@@ -55,7 +55,7 @@ From knowing **what** each structure is → choosing **when** to use each struct
 | **Set** | ❌ No | ✅ Yes | ❌ No | Removing duplicates, membership tests |
 | **Dict** | ✅ Insertion order* | ✅ Yes | ❌ No (keys) | Lookup by name/ID, key-value pairs |
 
-*Python 3.7+ maintains insertion order for dicts
+*Python 3.7+ maintains insertion order for dicts.*
 
 ---
 
@@ -941,7 +941,7 @@ def search_partial(contacts, keyword):
         print("No matches found.")
 ```
 
-**Stay in Basics Scope:** Use a simple loop instead of list comprehension if needed.
+**Stay in Basics Scope:** This version stays in Basics scope by using a simple loop instead of a list comprehension.
 
 ---
 

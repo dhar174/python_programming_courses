@@ -114,13 +114,13 @@ Each HTML file contains CSS variables at the top that control the appearance. Op
 
 ## Regenerating Slides
 
-To regenerate these slides from the source Markdown files, run:
+To regenerate the source-backed standalone HTML slide decks in this directory, run from the repository root:
 
 ```bash
-python3 generate_slides.py
+python3 Basics/generate_slides.py Basics/lessons/slides
 ```
 
-This will scan `Basics/lessons/` and `Advanced/lessons/` for any `.md` files and generate updated HTML slides.
+This scans `Basics/lessons/slides/**/*.md`, regenerates the source-adjacent HTML files in this directory, and writes the public day-based Basics mirrors under `slides/basics/day-XX/` when applicable.
 
 ## Technical Details
 
@@ -193,6 +193,6 @@ The compiled `day-06/day-06-session-6.html` slide deck covers the full session.
 
 ---
 
-**Generated:** March 11, 2026
-**Generator:** Marp CLI via `.marprc.yml` (`npx @marp-team/marp-cli -c .marprc.yml`)
+**Generated:** March 13, 2026
+**Generator:** `python3 Basics/generate_slides.py Basics/lessons/slides`
 **Style:** Swiss Modern with CSS Variables
