@@ -49,7 +49,7 @@ From knowing **what** each structure is → choosing **when** to use each struct
 ## Comparing Structures: Quick Reference
 
 | Structure | Ordered? | Mutable? | Duplicates? | Best For |
-|-----------|----------|----------|-------------|----------|
+| --- | --- | --- | --- | --- |
 | **List** | ✅ Yes | ✅ Yes | ✅ Yes | Sequences, ordered collections |
 | **Tuple** | ✅ Yes | ❌ No | ✅ Yes | Fixed records (coordinates, dates) |
 | **Set** | ❌ No | ✅ Yes | ❌ No | Removing duplicates, membership tests |
@@ -711,6 +711,8 @@ for contact in contacts:
 ### Example: Sort Contacts
 ```python
 def list_contacts(contacts):
+    # Advanced topic preview: sorting a list of dicts. 
+    # For basics, you might just display unsorted or use simpler lists.
     sorted_contacts = sorted(contacts, key=lambda c: c['name'])
     for contact in sorted_contacts:
         print(f"{contact['name']} - {contact['phone']}")
@@ -926,7 +928,12 @@ for name, phone in contacts.items():
 Search for contacts where the search term is a substring of the name:
 ```python
 def search_partial(contacts, keyword):
-    results = [name for name in contacts if keyword.lower() in name.lower()]
+    results = []
+    lowered_keyword = keyword.lower()
+    for name in contacts:
+        if lowered_keyword in name.lower():
+            results.append(name)
+            
     if results:
         for name in results:
             print(f"{name}: {contacts[name]}")

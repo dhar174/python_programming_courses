@@ -9,7 +9,7 @@ This directory contains standalone HTML slide presentations generated from the c
 - **day-02-session-2.html** - Basics Day 2 Session 2: Strings, I/O, and Checkpoint 1 (74 slides)
 - **day-03/day-03-session-3.html** - Basics Day 3 Session 3: Comparisons, F-Strings, Text Processing & Debugging (48 slides)
 - **day-04/day-04-session-4.html** - Basics Day 4 Session 4: Lists & Iteration — Lists Fundamentals, for Loops, Nested Lists, Checkpoint 2 (53 slides)
-- **day-05/day-05-session-5.html** - Basics Day 5 Session 5: Tuples, Sets, and Dictionaries (52 slides)
+- **day-05/day-05-session-5.html** - Basics Day 5 Session 5: Tuples, Sets, and Dictionaries (43 slides)
 - **day-06/day-06-session-6.html** - Basics Day 6 Session 6: Data Structure Selection & Mini-Projects — Choosing structures, drill circuit, mini-project tracker, Checkpoint 3 (62 slides)
 
 ## Features
@@ -194,5 +194,5 @@ The compiled `day-06/day-06-session-6.html` slide deck covers the full session.
 ---
 
 **Generated:** March 11, 2026
-**Generator:** generate_slides.py
+**Generator:** Marp CLI via `.marprc.yml` (`npx @marp-team/marp-cli -c .marprc.yml`)
 **Style:** Swiss Modern with CSS Variables
