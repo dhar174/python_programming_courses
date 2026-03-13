@@ -51,7 +51,7 @@
        
    print("\n2. Sad Path: Missing required fields...")
    try:
-       task2 = TaskFactory.from_dict({"priority": "low"}) # missing title
+       task2 = TaskFactory.from_dict({"priority": 2}) # missing title
        service.add_task(task2)
    except ValidationError as e:
        print("Caught expected validation error:", e)
