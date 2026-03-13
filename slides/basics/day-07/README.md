@@ -45,6 +45,17 @@ By the end of Session 7, learners can:
 
 ---
 
+## Labs
+
+| Hour | Lab | Description |
+|------|-----|-------------|
+| 25 | Shipping Calculator | Build a tiered shipping cost calculator with boundary handling |
+| 26 | Password Prompt | Password checker with limited attempts and lockout |
+| 27 | Multiplication Table | Generate a 1–10 multiplication table using `range()` |
+| 28 | Number Stats | Compute min, max, sum, and average for 5 numbers |
+
+---
+
 ## Files
 
 | File | Description |
