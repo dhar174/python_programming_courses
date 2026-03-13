@@ -5,8 +5,11 @@ Converts Markdown lessons to standalone HTML presentations
 """
 
 import re
+import sys
 from pathlib import Path
 from html import escape
+
+MIN_TABLE_SEPARATOR_DASHES = 3
 
 # HTML Template with Swiss Modern styling
 HTML_TEMPLATE = """<!DOCTYPE html>
@@ -188,7 +191,37 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             margin-top: calc(var(--spacing) / 2);
             margin-bottom: calc(var(--spacing) / 2);
         }}
-        
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {{
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }}
+
+        th, td {{
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }}
+
+        th {{
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }}
+
+        td {{
+            background: #fff;
+        }}
+         
         /* ====================================
            CODE BLOCKS
            ==================================== */
@@ -616,6 +649,17 @@ class MarkdownSlideParser:
                     i += 1
                 current_slide['content'].append(self._render_numbered_list(list_items))
                 continue
+
+            # Markdown pipe tables
+            elif self._is_table_row(line) and i + 1 < len(lines) and self._is_table_separator(lines[i + 1]):
+                header_line = line
+                i += 2
+                table_rows = []
+                while i < len(lines) and self._is_table_row(lines[i]) and not self._is_table_separator(lines[i]):
+                    table_rows.append(lines[i])
+                    i += 1
+                current_slide['content'].append(self._render_table(header_line, table_rows))
+                continue
             
             # Blockquotes
             elif line.strip().startswith('>'):
@@ -673,6 +717,49 @@ class MarkdownSlideParser:
             html += f'  <li>{self._process_inline_formatting(content)}</li>\n'
         html += '</ol>'
         return html
+
+    def _split_table_row(self, line):
+        """Split a Markdown table row into cells."""
+        stripped = line.strip()
+        if not stripped.startswith('|') or stripped.count('|') < 2:
+            return None
+        cells = [cell.strip() for cell in stripped.strip('|').split('|')]
+        return cells if cells else None
+
+    def _is_table_row(self, line):
+        """Check whether a line looks like a Markdown pipe table row."""
+        return self._split_table_row(line) is not None
+
+    def _is_table_separator(self, line):
+        """Check whether a line is a Markdown table separator row."""
+        cells = self._split_table_row(line)
+        if not cells:
+            return False
+        normalized_cells = [cell.replace(' ', '') for cell in cells]
+        separator_pattern = rf':?-{{{MIN_TABLE_SEPARATOR_DASHES},}}:?'
+        return all(re.fullmatch(separator_pattern, cell) for cell in normalized_cells)
+
+    def _render_table(self, header_line, body_lines):
+        """Render a Markdown pipe table."""
+        header_cells = self._split_table_row(header_line) or []
+        body_rows = [self._split_table_row(line) for line in body_lines]
+
+        html = ['<table>', '<thead>', '<tr>']
+        for cell in header_cells:
+            html.append(f'<th>{self._process_inline_formatting(cell)}</th>')
+        html.extend(['</tr>', '</thead>'])
+
+        if body_rows:
+            html.append('<tbody>')
+            for row in body_rows:
+                html.append('<tr>')
+                for cell in row:
+                    html.append(f'<td>{self._process_inline_formatting(cell)}</td>')
+                html.append('</tr>')
+            html.append('</tbody>')
+
+        html.append('</table>')
+        return '\n'.join(html)
     
     def _process_inline_formatting(self, text):
         """Process inline Markdown formatting"""
@@ -743,8 +830,55 @@ class MarkdownSlideParser:
         return html
 
 
-def process_markdown_file(input_path, output_dir):
-    """Process a single Markdown file and generate HTML slides"""
+def get_output_paths(input_path, repo_root):
+    """Determine output paths for a Markdown slide source."""
+    rel_path = input_path.relative_to(repo_root)
+    output_paths = []
+
+    is_source_backed_slides_path = (
+        len(rel_path.parts) >= 3
+        and rel_path.parts[0] in ('Basics', 'Advanced')
+        and rel_path.parts[1:3] == ('lessons', 'slides')
+    )
+
+    if is_source_backed_slides_path:
+        output_paths.append(input_path.with_suffix('.html'))
+
+        module_name = rel_path.parts[0].lower()
+        if len(rel_path.parts) >= 5 and rel_path.parts[3].startswith('day-'):
+            day_dir = rel_path.parts[3]
+            output_paths.append(repo_root / 'slides' / module_name / day_dir / f'{input_path.stem}.html')
+
+    deduped_paths = []
+    seen_paths = set()
+    for path in output_paths:
+        resolved_path = path.resolve()
+        if resolved_path in seen_paths:
+            continue
+        # Keep the first path object for each resolved destination while removing duplicates.
+        deduped_paths.append(path)
+        seen_paths.add(resolved_path)
+    return deduped_paths
+
+
+def collect_markdown_files(targets):
+    """Expand file and directory targets into Markdown files."""
+    markdown_files = []
+    for target in targets:
+        if not target.exists():
+            continue
+        if target.is_dir():
+            markdown_files.extend(
+                path for path in target.glob('**/*.md')
+                if path.name != 'README.md'
+            )
+        elif target.suffix == '.md' and target.name != 'README.md':
+            markdown_files.append(target)
+    return sorted({path.resolve() for path in markdown_files})
+
+
+def process_markdown_file(input_path, repo_root):
+    """Process a single Markdown file and generate HTML slides."""
     try:
         # Read the Markdown file
         with open(input_path, 'r', encoding='utf-8') as f:
@@ -757,13 +891,22 @@ def process_markdown_file(input_path, output_dir):
         parser = MarkdownSlideParser(markdown_content, basename)
         parser.parse()
         html_content = parser.render_html()
-        
-        # Write HTML file
-        output_path = output_dir / f"{basename}.html"
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-        
-        return True, output_path, len(parser.slides)
+
+        output_paths = get_output_paths(input_path, repo_root)
+        if not output_paths:
+            return (
+                False,
+                f"No configured output mapping for {input_path.relative_to(repo_root)}. "
+                "Ensure the file is under Basics/lessons/slides/ or Advanced/lessons/slides/.",
+                0,
+            )
+
+        for output_path in output_paths:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+
+        return True, output_paths, len(parser.slides)
     
     except Exception as e:
         return False, str(e), 0
@@ -773,43 +916,43 @@ def main():
     """Main execution function"""
     # Dynamically determine repository root
     script_dir = Path(__file__).parent.resolve()
-    repo_root = script_dir
-    output_dir = repo_root / 'slides'
-    
-    # Create output directory
-    output_dir.mkdir(exist_ok=True)
-    
-    # Find all Markdown files
-    source_dirs = [
-        repo_root / 'Basics' / 'lessons',
-        repo_root / 'Advanced' / 'lessons'
-    ]
-    
-    markdown_files = []
-    for source_dir in source_dirs:
-        if source_dir.exists():
-            markdown_files.extend(source_dir.glob('**/*.md'))
-    
+    repo_root = script_dir.parent
+
+    cli_targets = sys.argv[1:]
+    if cli_targets:
+        source_targets = [
+            (Path(target) if Path(target).is_absolute() else repo_root / target).resolve()
+            for target in cli_targets
+        ]
+    else:
+        source_targets = [
+            repo_root / 'Basics' / 'lessons' / 'slides',
+            repo_root / 'Advanced' / 'lessons' / 'slides'
+        ]
+
+    markdown_files = collect_markdown_files(source_targets)
+
     if not markdown_files:
-        print("No Markdown lessons found under Basics/lessons or Advanced/lessons.")
+        print("No Markdown slide sources found for the provided targets.")
         return
-    
+
     print(f"Found {len(markdown_files)} Markdown file(s):\n")
     
     # Process each file
     results = []
     for md_file in markdown_files:
         print(f"Processing: {md_file.relative_to(repo_root)}")
-        success, output_or_error, slide_count = process_markdown_file(md_file, output_dir)
+        success, output_or_error, slide_count = process_markdown_file(md_file, repo_root)
         
         if success:
             results.append({
                 'input': md_file.relative_to(repo_root),
-                'output': output_or_error.relative_to(repo_root),
+                'outputs': [path.relative_to(repo_root) for path in output_or_error],
                 'slides': slide_count,
                 'success': True
             })
-            print(f"  ✓ Generated: {output_or_error.relative_to(repo_root)} ({slide_count} slides)")
+            for output_path in output_or_error:
+                print(f"  ✓ Generated: {output_path.relative_to(repo_root)} ({slide_count} slides)")
         else:
             results.append({
                 'input': md_file.relative_to(repo_root),
@@ -830,14 +973,15 @@ def main():
     if successful:
         print(f"\n✓ Successfully generated {len(successful)} HTML slide deck(s):\n")
         for result in successful:
-            print(f"  • {result['output']} ({result['slides']} slides)")
+            for output_path in result['outputs']:
+                print(f"  • {output_path} ({result['slides']} slides)")
     
     if failed:
         print(f"\n✗ Failed to process {len(failed)} file(s):\n")
         for result in failed:
             print(f"  • {result['input']}: {result['error']}")
     
-    print(f"\n📁 Output directory: {output_dir.relative_to(repo_root)}")
+    print("\n📁 Output locations are determined by the source file path mapping.")
     print("\n" + "=" * 70)
     print("CUSTOMIZATION GUIDE")
     print("=" * 70)
