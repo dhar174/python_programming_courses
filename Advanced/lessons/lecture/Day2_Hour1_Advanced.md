@@ -37,12 +37,14 @@
    *(Action: Add a `@classmethod` acting as our factory.)*
    "Instead of cluttering `__init__`, let's build `UserFactory.from_dict()`"
    ```python
+   from error_handlers import ValidationError
+
    class UserFactory:
        @classmethod
        def from_dict(cls, data):
            # 1. Validation
            if "name" not in data:
-               raise ValueError("Missing required field: 'name'")
+               raise ValidationError("Missing required field: 'name'")
            
            # 2. Normalization / Defaults
            name = data["name"].strip().title()
@@ -50,7 +52,7 @@
            
            # 3. Validation of values
            if role not in ["admin", "member", "guest"]:
-               raise ValueError(f"Invalid role: {role}")
+               raise ValidationError(f"Invalid role: {role}")
                
            # 4. Creation
            return User(full_name=name, role=role)
@@ -68,14 +70,14 @@
    try:
        bad_data_1 = {"role": "member"}
        UserFactory.from_dict(bad_data_1)
-   except ValueError as e:
+   except ValidationError as e:
        print(f"Caught error: {e}")
        
    # Invalid input - bad role
    try:
        bad_data_2 = {"name": "Bob", "role": "superadmin"}
        UserFactory.from_dict(bad_data_2)
-   except ValueError as e:
+   except ValidationError as e:
        print(f"Caught error: {e}")
    ```
    "Notice how all the messy parsing rules are hidden away in the factory?"

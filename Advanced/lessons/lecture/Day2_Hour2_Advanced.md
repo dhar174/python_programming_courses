@@ -73,10 +73,12 @@
    def display_records_strategy(records, strategy_key):
        # Grab the correct strategy function, default to sort_by_id
        strategy_func = sorting_strategies.get(strategy_key, sort_by_id)
+       # Resolve the actual key used so the header matches the behavior
+       resolved_key = strategy_key if strategy_key in sorting_strategies else "id"
        
        sorted_records = sorted(records, key=strategy_func)
        
-       print(f"--- Sorted by {strategy_key} ---")
+       print(f"--- Sorted by {resolved_key} ---")
        for r in sorted_records:
            print(r)
 
