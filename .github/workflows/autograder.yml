@@ -13,6 +13,12 @@ permissions:
   issues: write
   checks: write
 
+env:
+  # Opt into GitHub Actions' Node.js 24 runtime for JavaScript actions before it becomes the default.
+  # See https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/ for Node 24 opt-in details.
+  # Remove this once GitHub Actions' default JavaScript runner is Node.js 24+ and this opt-in is deprecated.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   grade:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -22,7 +28,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Prepare autograder configuration
         id: prepare_autograder
@@ -520,7 +526,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Validate autograder source configuration
         run: |
