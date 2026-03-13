@@ -11,6 +11,12 @@ on:
 permissions:
   contents: read
 
+env:
+  # Temporary opt-in to run JavaScript actions on Node.js 24 runtime.
+  # See: https://github.blog/changelog/2024-09-04-github-actions-transitioning-from-node-20-to-node-22-and-node-24/
+  # Remove this once all referenced actions use Node 24 by default and GitHub deprecates this feature flag.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -28,7 +34,7 @@ jobs:
       deployments: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GH_PAT }}
         
@@ -144,7 +150,7 @@ jobs:
           fi
         
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: '_site'
 
