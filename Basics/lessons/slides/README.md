@@ -114,13 +114,13 @@ Each HTML file contains CSS variables at the top that control the appearance. Op
 
 ## Regenerating Slides
 
-To regenerate the standalone HTML slide decks documented in this README, run from the repository root:
+To regenerate the source-backed standalone HTML slide decks in this directory, run from the repository root:
 
 ```bash
-python3 Basics/generate_slides.py
+python3 Basics/generate_slides.py Basics/lessons/slides
 ```
 
-This scans `Basics/lessons/` and `Advanced/lessons/` for Markdown lessons and writes the standalone HTML outputs under `slides/`.
+This scans `Basics/lessons/slides/**/*.md`, regenerates the source-adjacent HTML files in this directory, and writes the public day-based Basics mirrors under `slides/basics/day-XX/` when applicable.
 
 ## Technical Details
 
@@ -194,5 +194,5 @@ The compiled `day-06/day-06-session-6.html` slide deck covers the full session.
 ---
 
 **Generated:** March 13, 2026
-**Generator:** `python3 Basics/generate_slides.py`
+**Generator:** `python3 Basics/generate_slides.py Basics/lessons/slides`
 **Style:** Swiss Modern with CSS Variables

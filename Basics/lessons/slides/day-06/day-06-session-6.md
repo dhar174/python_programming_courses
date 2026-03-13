@@ -55,7 +55,7 @@ From knowing **what** each structure is → choosing **when** to use each struct
 | **Set** | ❌ No | ✅ Yes | ❌ No | Removing duplicates, membership tests |
 | **Dict** | ✅ Insertion order* | ✅ Yes | ❌ No (keys) | Lookup by name/ID, key-value pairs |
 
-*Python 3.7+ maintains insertion order for dicts
+*Python 3.7+ maintains insertion order for dicts.*
 
 ---
 
