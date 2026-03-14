@@ -9,6 +9,8 @@ This directory contains standalone HTML slide presentations generated from the c
 - **day-02-session-2.html** - Basics Day 2 Session 2: Strings, I/O, and Checkpoint 1 (74 slides)
 - **day-03/day-03-session-3.html** - Basics Day 3 Session 3: Comparisons, F-Strings, Text Processing & Debugging (48 slides)
 - **day-04/day-04-session-4.html** - Basics Day 4 Session 4: Lists & Iteration — Lists Fundamentals, for Loops, Nested Lists, Checkpoint 2 (53 slides)
+- **day-05/day-05-session-5.html** - Basics Day 5 Session 5: Tuples, Sets, and Dictionaries (43 slides)
+- **day-06/day-06-session-6.html** - Basics Day 6 Session 6: Data Structure Selection & Mini-Projects — Choosing structures, drill circuit, mini-project tracker, Checkpoint 3 (62 slides)
 
 ## Features
 
@@ -112,13 +114,13 @@ Each HTML file contains CSS variables at the top that control the appearance. Op
 
 ## Regenerating Slides
 
-To regenerate these slides from the source Markdown files, run:
+To regenerate the source-backed standalone HTML slide decks in this directory, run from the repository root:
 
 ```bash
-python3 generate_slides.py
+python3 Basics/generate_slides.py Basics/lessons/slides
 ```
 
-This will scan `Basics/lessons/` and `Advanced/lessons/` for any `.md` files and generate updated HTML slides.
+This scans `Basics/lessons/slides/**/*.md`, regenerates the source-adjacent HTML files in this directory, and writes the public day-based Basics mirrors under `slides/basics/day-XX/` when applicable.
 
 ## Technical Details
 
@@ -169,8 +171,28 @@ The Day 4, Session 4 content also has per-hour lecture files in `Basics/lessons/
 
 The compiled `day-04/day-04-session-4.html` slide deck covers the full session.
 
+### Per-Hour Lecture Files (Day 5, Session 5)
+
+The Day 5, Session 5 content also has per-hour lecture files in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day5_Hour1_Basics.md` (Tuples + Unpacking — Course Hour 17)
+- `Basics/lessons/lecture/Day5_Hour2_Basics.md` (Sets – Uniqueness + Membership — Course Hour 18)
+- `Basics/lessons/lecture/Day5_Hour3_Basics.md` (Dictionaries Fundamentals — Course Hour 19)
+- `Basics/lessons/lecture/Day5_Hour4_Basics.md` (Dictionary Iteration + Counting Pattern — Course Hour 20)
+
+The compiled `day-05/day-05-session-5.html` slide deck covers the full session.
+
+### Per-Hour Lecture Files (Day 6, Session 6)
+
+The Day 6, Session 6 content also has per-hour lecture files in `Basics/lessons/lecture/`:
+- `Basics/lessons/lecture/Day6_Hour1_Basics.md` (Choosing the Right Structure — Course Hour 21)
+- `Basics/lessons/lecture/Day6_Hour2_Basics.md` (Data-Structure Drill Circuit — Course Hour 22)
+- `Basics/lessons/lecture/Day6_Hour3_Basics.md` (Mini-Project: In-Memory Tracker — Course Hour 23)
+- `Basics/lessons/lecture/Day6_Hour4_Basics.md` (Checkpoint 3: Data Structures Assessment — Course Hour 24)
+
+The compiled `day-06/day-06-session-6.html` slide deck covers the full session.
+
 ---
 
-**Generated:** February 3, 2025  
-**Generator:** generate_slides.py  
+**Generated:** March 13, 2026
+**Generator:** `python3 Basics/generate_slides.py Basics/lessons/slides`
 **Style:** Swiss Modern with CSS Variables

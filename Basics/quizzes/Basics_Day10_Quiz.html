@@ -1,16 +1,728 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Basics Day10 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 10 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #1e1e2e;
+      --surface: #252537;
+      --surface-hi: #2e2e45;
+      --border: #313244;
+      --text: #cdd6f4;
+      --muted: #a6adc8;
+      --blue: #4b8bbe;
+      --yellow: #ffd43b;
+      --blue-dim: rgba(75, 139, 190, 0.18);
+      --yellow-dim: rgba(255, 212, 59, 0.16);
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+      --radius-sm: 10px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(75, 139, 190, 0.16), transparent 28%),
+        radial-gradient(circle at top left, rgba(255, 212, 59, 0.14), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: var(--space-4) var(--space-2) 72px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero,
+    .question-card,
+    .action-card {
+      padding: var(--space-3);
+    }
+
+    .hero {
+      margin-bottom: var(--space-3);
+      border-top: 5px solid var(--yellow);
+    }
+
+    .action-card {
+      margin-top: var(--space-3);
+    }
+
+    h1 {
+      margin: 0 0 var(--space-1);
+      font-size: 2rem;
+      color: var(--yellow);
+    }
+
+    h2 {
+      margin: var(--space-3) 0 var(--space-1);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue);
+    }
+
+    .subtitle,
+    .meta,
+    .compat-note,
+    .progress-label,
+    #status {
+      color: var(--muted);
+    }
+
+    .meta {
+      display: inline-flex;
+      gap: var(--space-1);
+      align-items: center;
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.92rem;
+      margin-top: var(--space-2);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .compat-note {
+      margin-top: var(--space-2);
+      padding: var(--space-2);
+      background: var(--blue-dim);
+      border: 1px solid rgba(75, 139, 190, 0.28);
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+    }
+
+    .compat-note code,
+    .question-prompt code,
+    .explanation-body code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      background: rgba(203, 166, 247, 0.15);
+      color: #cba6f7;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--yellow));
+      transition: width 0.2s ease-in-out;
+    }
+
+    .question-card {
+      margin-bottom: var(--space-2);
+    }
+
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 32px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--blue-dim);
+      border: 1px solid rgba(75, 139, 190, 0.5);
+      color: var(--blue);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .question-prompt {
+      margin-bottom: var(--space-2);
+    }
+
+    .question-prompt pre,
+    .explanation-body pre {
+      overflow-x: auto;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #11111b;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.01);
+      cursor: pointer;
+    }
+
+    .option-row.is-checked {
+      border-color: rgba(255, 212, 59, 0.55);
+      background: var(--yellow-dim);
+    }
+
+    .option-row input {
+      margin-top: 4px;
+      accent-color: var(--yellow);
+    }
+
+    details.explanation {
+      margin-top: var(--space-2);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(75, 139, 190, 0.25);
+      background: rgba(75, 139, 190, 0.08);
+      overflow: hidden;
+    }
+
+    details.explanation summary {
+      cursor: pointer;
+      padding: 12px 14px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .explanation-body {
+      padding: 0 14px 14px;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--blue), var(--yellow));
+      color: #11111b;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: var(--space-3) 12px 48px;
+      }
+
+      .hero,
+      .question-card,
+      .action-card {
+        padding: var(--space-2);
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Basics Day10 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <main class="container">
+    <section class="panel hero">
+      <h1>Python Basics - Day 10 Quiz</h1>
+      <p class="subtitle">Classes, object collections, validation, and Checkpoint 5 planning.</p>
+      <div class="meta">Total Questions: 24 | Time Estimate: 35-50 minutes</div>
+
+      <h2>Topics Covered</h2>
+      <ul>
+        <li>Hour 37: classes, objects, attributes, methods, and `self`</li>
+        <li>Hour 38: searching lists of objects and updating object fields</li>
+        <li>Hour 39: validation inside methods and keeping UI separate from business rules</li>
+        <li>Hour 40: Checkpoint 5 requirements for a modular in-memory CLI organizer</li>
+      </ul>
+
+      <h2>Instructions</h2>
+      <ul>
+        <li>Answer every question with the best single choice.</li>
+        <li>Use explanations after each question to review Day 10 ideas from the runbook.</li>
+        <li>Save/export your answers as JSON when you finish.</li>
+        <li>This quiz stays inside Basics scope: no inheritance, no databases, no file I/O yet.</li>
+      </ul>
+
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download a file with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code> so the quiz stays compatible with the existing grading workflow.</p>
+
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="panel action-card">
+      <div class="actions">
+        <button id="exportBtn" type="button">Save/Export Answers (JSON)</button>
+        <span id="status">Selections are auto-saved in localStorage.</span>
+      </div>
+    </section>
+  </main>
+
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {
+      "quizId": "Basics_Day10_Quiz",
+      "title": "Python Basics - Day 10 Quiz",
+      "questions": [
+        {
+          "number": 1,
+          "prompt": "What is a class in Python at the Day 10 Basics level?",
+          "options": {
+            "A": "A saved output file",
+            "B": "A blueprint for creating objects",
+            "C": "A loop that runs forever",
+            "D": "A built-in database"
+          },
+          "explanation": "Correct answer: **B**. In this course, a class is a reusable blueprint. Objects are the actual instances created from that blueprint."
+        },
+        {
+          "number": 2,
+          "prompt": "If you write `ada = Contact(\"Ada\", \"5551234\")`, what is `ada`?",
+          "options": {
+            "A": "A method",
+            "B": "A module",
+            "C": "An object (instance) of `Contact`",
+            "D": "A syntax error"
+          },
+          "explanation": "Correct answer: **C**. `ada` is one concrete object created from the `Contact` class."
+        },
+        {
+          "number": 3,
+          "prompt": "What is the main job of `__init__` in a Basics-friendly class?",
+          "options": {
+            "A": "To import another module",
+            "B": "To initialize instance data when the object is created",
+            "C": "To delete objects automatically",
+            "D": "To print every attribute forever"
+          },
+          "explanation": "Correct answer: **B**. `__init__` sets up each new object, usually by storing incoming values on `self`."
+        },
+        {
+          "number": 4,
+          "prompt": "What does `self` represent inside an instance method?",
+          "options": {
+            "A": "The whole Python program",
+            "B": "The current object the method is working with",
+            "C": "Only the class name",
+            "D": "A required global variable"
+          },
+          "explanation": "Correct answer: **B**. `self` refers to the specific object that received the method call."
+        },
+        {
+          "number": 5,
+          "prompt": "Which line correctly calls a method named `display()` on a `Contact` object named `ada`?",
+          "options": {
+            "A": "`ada.display()`",
+            "B": "`display.ada()`",
+            "C": "`Contact.display(ada, display)`",
+            "D": "`ada->display()`"
+          },
+          "explanation": "Correct answer: **A**. Call the method from the object with parentheses: `ada.display()`."
+        },
+        {
+          "number": 6,
+          "prompt": "Why can two different `Contact` objects store different phone numbers even though they use the same class?",
+          "options": {
+            "A": "Because Python randomly changes attributes",
+            "B": "Because instance attributes belong to each object separately",
+            "C": "Because methods rewrite the class every time",
+            "D": "Because only one object can exist at a time"
+          },
+          "explanation": "Correct answer: **B**. Each object has its own instance data, so `Ada` and `Grace` can have different values."
+        },
+        {
+          "number": 7,
+          "prompt": "What is the simplest Day 10 approach for finding one contact inside a list of `Contact` objects?",
+          "options": {
+            "A": "Use inheritance",
+            "B": "Loop through the objects and compare the target name to each object's name attribute",
+            "C": "Convert the list into machine code",
+            "D": "Store everything in a PNG file"
+          },
+          "explanation": "Correct answer: **B**. The runbook keeps this simple: loop through the list and compare attributes."
+        },
+        {
+          "number": 8,
+          "prompt": "Why is a helper like `normalize_name(name)` useful before searching?",
+          "options": {
+            "A": "It can make searches ignore case and outer spaces",
+            "B": "It turns objects into lists",
+            "C": "It removes the need for loops",
+            "D": "It automatically saves to disk"
+          },
+          "explanation": "Correct answer: **A**. Normalizing values with steps like `strip()` and `lower()` makes searching more reliable."
+        },
+        {
+          "number": 9,
+          "prompt": "If no matching contact is found, what should a beginner-friendly search helper often return?",
+          "options": {
+            "A": "`7`",
+            "B": "`None`",
+            "C": "`print`",
+            "D": "A brand-new random contact"
+          },
+          "explanation": "Correct answer: **B**. Returning `None` is a simple way to signal that nothing matched."
+        },
+        {
+          "number": 10,
+          "prompt": "After you find a contact object in a list and update its phone, what is still true?",
+          "options": {
+            "A": "The object vanishes from the list",
+            "B": "The list can no longer be searched",
+            "C": "The list still stores that object, now with updated data",
+            "D": "Python turns the object into a tuple"
+          },
+          "explanation": "Correct answer: **C**. The list still contains the same object reference, so updated attributes remain visible."
+        },
+        {
+          "number": 11,
+          "prompt": "Why might objects make the contact manager easier to maintain than deeply nested dictionaries?",
+          "options": {
+            "A": "Objects forbid all validation",
+            "B": "Objects keep related data and behavior together",
+            "C": "Objects automatically create menus",
+            "D": "Objects always write JSON"
+          },
+          "explanation": "Correct answer: **B**. A class can keep display, search helpers, and validation close to the contact data."
+        },
+        {
+          "number": 12,
+          "prompt": "The runbook warns about duplicate names. What is the best beginner response?",
+          "options": {
+            "A": "Ignore the problem forever",
+            "B": "Switch to an advanced database",
+            "C": "Pick and document a clear rule, or add a simple ID as an optional extension",
+            "D": "Delete every contact with that name"
+          },
+          "explanation": "Correct answer: **C**. The course notes say to decide the rule clearly, and a simple ID counter is an optional extension."
+        },
+        {
+          "number": 13,
+          "prompt": "Where is the best place to enforce a phone validation rule for Day 10?",
+          "options": {
+            "A": "Inside the class method or a closely related helper that owns the rule",
+            "B": "Only in the README file",
+            "C": "Inside the operating system",
+            "D": "In a random print statement"
+          },
+          "explanation": "Correct answer: **A**. The runbook emphasizes keeping business rules in one place, close to the data they protect."
+        },
+        {
+          "number": 14,
+          "prompt": "If `update_phone(\"55-abc\")` is invalid in your Day 10 design, what should happen in a simple boolean-return approach?",
+          "options": {
+            "A": "The invalid value replaces the old phone anyway",
+            "B": "The method returns `False` and the old valid phone stays in place",
+            "C": "Python must crash",
+            "D": "The object becomes `None`"
+          },
+          "explanation": "Correct answer: **B**. A simple Basics design is to reject the change and keep the previous valid value."
+        },
+        {
+          "number": 15,
+          "prompt": "What does `.isdigit()` help you check in a Day 10 phone validator?",
+          "options": {
+            "A": "Whether a string is sorted alphabetically",
+            "B": "Whether an object is in a list",
+            "C": "Whether a string contains digits only",
+            "D": "Whether a file exists"
+          },
+          "explanation": "Correct answer: **C**. `.isdigit()` is a beginner-friendly guard for digits-only strings."
+        },
+        {
+          "number": 16,
+          "prompt": "Why is it helpful to keep UI messages separate from validation rules?",
+          "options": {
+            "A": "So the same validation logic can be reused and tested more easily",
+            "B": "So the program becomes unreadable",
+            "C": "So loops are no longer needed",
+            "D": "So methods stop using `self`"
+          },
+          "explanation": "Correct answer: **A**. Separating UI from core logic keeps the rules reusable and avoids scattering them across the program."
+        },
+        {
+          "number": 17,
+          "prompt": "The runbook says invalid input should be handled gracefully. What is a Basics-level example?",
+          "options": {
+            "A": "Erase the whole list of contacts",
+            "B": "Show a message and let the user try again without crashing",
+            "C": "Force file I/O for every bad input",
+            "D": "Require inheritance"
+          },
+          "explanation": "Correct answer: **B**. Day 10 wants guardrails, not crashes, so the UI should recover cleanly."
+        },
+        {
+          "number": 18,
+          "prompt": "Why does the runbook warn against overly strict validation rules?",
+          "options": {
+            "A": "Because validation should never exist",
+            "B": "Because all phone formats are identical",
+            "C": "Because strict code runs slower than comments",
+            "D": "Because you might accidentally reject valid input formats"
+          },
+          "explanation": "Correct answer: **D**. Validation should protect the data without blocking reasonable inputs by mistake."
+        },
+        {
+          "number": 19,
+          "prompt": "Which feature is explicitly required in Checkpoint 5?",
+          "options": {
+            "A": "A menu loop that runs until the user quits",
+            "B": "Inheritance with multiple base classes",
+            "C": "JSON file saving",
+            "D": "A web API"
+          },
+          "explanation": "Correct answer: **A**. Checkpoint 5 is still in-memory, but it does require a menu loop until quit."
+        },
+        {
+          "number": 20,
+          "prompt": "Which checkpoint requirement set matches the Day 10 runbook?",
+          "options": {
+            "A": "One function and zero classes",
+            "B": "Only one giant file with no helpers",
+            "C": "At least three functions, one custom module, and one class",
+            "D": "A spreadsheet export and machine learning model"
+          },
+          "explanation": "Correct answer: **C**. The checkpoint ties together functions, a module split, and at least one class."
+        },
+        {
+          "number": 21,
+          "prompt": "Which core features should the in-memory CLI Organizer support on Day 10?",
+          "options": {
+            "A": "Compile, encrypt, deploy",
+            "B": "Add, list, search",
+            "C": "Plot, train, predict",
+            "D": "Edit video frames"
+          },
+          "explanation": "Correct answer: **B**. The runbook lists `add`, `list`, and `search` as the minimum feature set."
+        },
+        {
+          "number": 22,
+          "prompt": "What is a sensible module split for the checkpoint organizer?",
+          "options": {
+            "A": "Put every idea in comments only",
+            "B": "`main.py` handles the menu flow while `utils.py` stores reusable helpers like name normalization",
+            "C": "Put `main.py` inside a string",
+            "D": "Use `utils.py` only for screenshots"
+          },
+          "explanation": "Correct answer: **B**. This split matches the runbook's emphasis on readable organization and helper reuse."
+        },
+        {
+          "number": 23,
+          "prompt": "What import-related naming mistake should Day 10 learners avoid in the checkpoint project?",
+          "options": {
+            "A": "Using lowercase function names",
+            "B": "Naming a file after a standard library module such as `random.py`",
+            "C": "Using lists",
+            "D": "Creating more than one function"
+          },
+          "explanation": "Correct answer: **B**. Shadowing standard-library module names can break imports in confusing ways."
+        },
+        {
+          "number": 24,
+          "prompt": "Why do functions matter in the checkpoint organizer even after you introduce a class?",
+          "options": {
+            "A": "They reduce duplication in repeated tasks such as add, search, and formatting output",
+            "B": "They replace every object automatically",
+            "C": "They make validation impossible",
+            "D": "They force the program to use files"
+          },
+          "explanation": "Correct answer: **A**. Functions still matter because they keep repeated steps organized and reusable."
+        }
+      ],
+      "expectedAnswers": {
+        "1": "B",
+        "2": "C",
+        "3": "B",
+        "4": "B",
+        "5": "A",
+        "6": "B",
+        "7": "B",
+        "8": "A",
+        "9": "B",
+        "10": "C",
+        "11": "B",
+        "12": "C",
+        "13": "A",
+        "14": "B",
+        "15": "C",
+        "16": "A",
+        "17": "B",
+        "18": "D",
+        "19": "A",
+        "20": "C",
+        "21": "B",
+        "22": "B",
+        "23": "B",
+        "24": "A"
+      }
+    };
+
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatPrompt(text) {
+      let formatted = escapeHtml(text);
+      formatted = formatted.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, __, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      formatted = formatted.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      formatted = formatted.replace(/\n/g, "<br />");
+      return formatted.replace(/(<pre><code>[\s\S]*?<\/code><\/pre>)/g, (preBlock) => preBlock.replace(/<br \/>/g, "\n"));
+    }
+
+    function loadAnswers() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
+      document.getElementById("status").textContent = `Saved ${count}/${total} answers locally.`;
+      document.getElementById("progressFill").style.width = `${total > 0 ? Math.round((count / total) * 100) : 0}%`;
+      document.getElementById("progressLabel").textContent = `${count} / ${total}`;
+    }
+
+    function renderQuiz() {
+      const saved = loadAnswers();
+      const container = document.getElementById("questions");
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row ${saved[String(question.number)] === key ? "is-checked" : ""}">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? "checked" : ""} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join("");
+
+        return `
+          <article class="panel question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+            <details class="explanation">
+              <summary>Show explanation</summary>
+              <div class="explanation-body">${formatPrompt(question.explanation)}</div>
+            </details>
+          </article>
+        `;
+      }).join("");
+
+      container.addEventListener("change", (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== "radio") {
+          return;
+        }
+
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => {
+          radio.closest(".option-row").classList.toggle("is-checked", radio.checked);
+        });
+
+        const answers = loadAnswers();
+        answers[event.target.name.replace("q", "")] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const questionId = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[questionId] || null;
+        const student = studentAnswers[questionId] || null;
+        return {
+          name: `Question ${questionId}`,
+          points: 1,
+          expected_stdout: [expected],
+          student_stdout: [student],
+          pass: expected !== null && student === expected
+        };
+      });
+
+      const payload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: "Map each question to quiz checks in the existing autograder workflow."
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("exportBtn").addEventListener("click", exportAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>
