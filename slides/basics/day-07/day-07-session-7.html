@@ -710,11 +710,11 @@ count = 1
 while count &lt;= 5:
     print(count)
     # Missing: count += 1</code></pre>
-<h3>Cause 2: Wrong Condition Direction</h3>
-<pre data-lang="python"><code># Bug: count starts at 10 and increases — never &lt;= 5
+<h3>Cause 2: Wrong Update Direction</h3>
+<pre data-lang="python"><code># Bug: count starts at 10 and goes UP, so count &gt;= 5 stays True forever
 count = 10
-while count &lt;= 5:
-    count += 1</code></pre>
+while count &gt;= 5:
+    count += 1   # Should be count -= 1 to eventually reach &lt; 5</code></pre>
 <h3>Cause 3: Condition Always True</h3>
 <pre data-lang="python"><code># Bug: 1 == 1 is always True
 while 1 == 1:
@@ -1311,12 +1311,13 @@ else:
 <p><span class="check">✓</span> for loops with range()</p>
 <p><span class="check">✓</span> Counter, accumulator, min/max patterns</p>
 <p><span class="check">✓</span> Basic input/output and string formatting</p>
-<h3>Not Yet (Advanced Topics)</h3>
+<h3>Not Yet (Later in Basics)</h3>
+<p><span class="cross">✗</span> Functions — defining and calling (Session 8)</p>
+<p><span class="cross">✗</span> Imports / modules (random, math, statistics, etc.)</p>
+<h3>Not Yet (Advanced Course)</h3>
 <p><span class="cross">✗</span> List comprehensions or generator expressions</p>
 <p><span class="cross">✗</span> try/except error handling</p>
-<p><span class="cross">✗</span> Functions (coming in a later session)</p>
 <p><span class="cross">✗</span> Lambda functions or decorators</p>
-<p><span class="cross">✗</span> External libraries (math, statistics, etc.)</p>
 <p><span class="cross">✗</span> File I/O or databases</p>
         </section>
 

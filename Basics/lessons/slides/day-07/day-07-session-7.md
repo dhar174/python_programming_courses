@@ -383,12 +383,12 @@ while count <= 5:
     # Missing: count += 1
 ```
 
-### Cause 2: Wrong Condition Direction
+### Cause 2: Wrong Update Direction
 ```python
-# Bug: count starts at 10 and increases — never <= 5
+# Bug: count starts at 10 and goes UP, so count >= 5 stays True forever
 count = 10
-while count <= 5:
-    count += 1
+while count >= 5:
+    count += 1   # Should be count -= 1 to eventually reach < 5
 ```
 
 ### Cause 3: Condition Always True
@@ -1106,12 +1106,14 @@ else:
 ✓ Counter, accumulator, min/max patterns
 ✓ Basic input/output and string formatting
 
-### Not Yet (Advanced Topics)
+### Not Yet (Later in Basics)
+✗ Functions — defining and calling (Session 8)
+✗ Imports / modules (random, math, statistics, etc.)
+
+### Not Yet (Advanced Course)
 ✗ List comprehensions or generator expressions
 ✗ try/except error handling
-✗ Functions (coming in a later session)
 ✗ Lambda functions or decorators
-✗ External libraries (math, statistics, etc.)
 ✗ File I/O or databases
 
 ---

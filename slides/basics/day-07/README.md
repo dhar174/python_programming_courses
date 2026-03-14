@@ -83,12 +83,15 @@ Inside the slide deck, use:
 ## Scope Guardrail
 
 This session stays within the **Basics** course scope.  
-Topics intentionally **excluded** (covered in the Advanced course):
+
+Topics coming **later in Basics**:
+- Functions — defining and calling (Session 8)
+- Imports / modules (random, math, statistics, etc.)
+
+Topics **excluded** (covered in the Advanced course):
 - List comprehensions or generator expressions
 - try/except error handling
-- Functions (coming in a later session)
 - Lambda functions or decorators
-- External libraries (math, statistics, etc.)
 - File I/O or databases
 
 ---
