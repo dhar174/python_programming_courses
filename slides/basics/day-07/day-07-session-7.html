@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics Day 7 — Session 7 (Hours 25–28)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Basics Day 7 — Session 7 (Hours 25–28)</h1>
+            <div class="subtitle">Python Programming (Basic) • Conditionals, Loops &amp; Loop Patterns</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 7 Overview</h1>
+            <ul>
+  <li>Hour 25: Conditionals — if/elif/else and boundaries</li>
+  <li>Hour 26: while loops + sentinel patterns</li>
+  <li>Hour 27: for loops + range()</li>
+  <li>Hour 28: Loop patterns — counters, accumulators, min/max</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 25: Conditionals — if/elif/else and Boundaries</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Write clear conditional logic</li>
+  <li>Handle boundary values correctly</li>
+  <li>Use if/elif/else effectively for multi-branch decisions</li>
+  <li>Order conditions to avoid overlapping branches</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Review: Basic Conditionals</h1>
+            <h3>The Building Blocks</h3>
+<pre data-lang="python"><code>if condition:
+    # runs when condition is True
+elif other_condition:
+    # runs when other_condition is True
+else:
+    # runs when all conditions are False</code></pre>
+<h3>Key Points</h3>
+<ul>
+  <li>Python uses <strong>indentation</strong> (4 spaces) to define blocks</li>
+  <li><code>elif</code> is short for &quot;else if&quot;</li>
+  <li><code>else</code> is optional — but often a good safety net</li>
+  <li>Only <strong>one</strong> branch executes per if/elif/else chain</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Condition Ordering Matters</h1>
+            <h3>The Problem</h3>
+<p>When conditions overlap, the <strong>order</strong> determines which branch runs first.</p>
+<h3>Bad Example — Overlapping Conditions</h3>
+<pre data-lang="python"><code>weight = 5
+
+if weight &lt;= 10:
+    cost = 5.00      # This catches weight=5
+elif weight &lt;= 5:
+    cost = 3.00      # Never reached for weight=5!</code></pre>
+<h3>Good Example — Correct Order</h3>
+<pre data-lang="python"><code>weight = 5
+
+if weight &lt;= 5:
+    cost = 3.00      # Checks smallest range first
+elif weight &lt;= 10:
+    cost = 5.00</code></pre>
+<blockquote>💡 **Rule of Thumb:** Check from smallest to largest (or most specific to least specific).</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Nested vs Flat Conditionals</h1>
+            <h3>Nested (Harder to Read)</h3>
+<pre data-lang="python"><code>if age &gt;= 18:
+    if has_ticket:
+        print(&quot;Welcome!&quot;)
+    else:
+        print(&quot;Buy a ticket first.&quot;)
+else:
+    print(&quot;Too young.&quot;)</code></pre>
+<h3>Flat (Clearer)</h3>
+<pre data-lang="python"><code>if age &lt; 18:
+    print(&quot;Too young.&quot;)
+elif not has_ticket:
+    print(&quot;Buy a ticket first.&quot;)
+else:
+    print(&quot;Welcome!&quot;)</code></pre>
+<blockquote>💡 **Prefer flat if/elif/else** when possible — it&#x27;s easier to read and maintain.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Readable Boolean Expressions</h1>
+            <h3>Tips for Cleaner Conditions</h3>
+<pre data-lang="python"><code># Avoid double negatives
+# Bad:
+if not is_invalid:
+    ...
+
+# Better:
+if is_valid:
+    ...</code></pre>
+<h3>Comparing to Boolean Values</h3>
+<pre data-lang="python"><code># Don&#x27;t write this:
+if is_ready == True:
+    ...
+
+# Write this instead:
+if is_ready:
+    ...</code></pre>
+<h3>Using `and` / `or`</h3>
+<pre data-lang="python"><code>if age &gt;= 18 and has_ticket:
+    print(&quot;Welcome!&quot;)
+
+if is_weekend or is_holiday:
+    print(&quot;Day off!&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Boundary Values</h1>
+            <h3>What Are Boundaries?</h3>
+<p>The exact values where behavior changes — e.g., the cutoff between shipping tiers.</p>
+<h3>Common Boundary Bug</h3>
+<pre data-lang="python"><code># Bug: What happens when weight is exactly 5?
+if weight &lt; 5:
+    cost = 3.00
+elif weight &lt; 10:
+    cost = 5.00
+# weight=5 → cost=5.00 (is that correct?)</code></pre>
+<h3>Fix: Use `&lt;=` When the Boundary Belongs to the Lower Tier</h3>
+<pre data-lang="python"><code>if weight &lt;= 5:
+    cost = 3.00
+elif weight &lt;= 10:
+    cost = 5.00</code></pre>
+<blockquote>⚠️ **Always test boundary values** — they&#x27;re where bugs hide.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Shipping Calculator</h1>
+            <h3>Watch For:</h3>
+<ul>
+  <li>Correct ordering of conditions</li>
+  <li>Boundary values handled properly</li>
+  <li>Clear output messages</li>
+</ul>
+<pre data-lang="python"><code>weight = float(input(&quot;Enter package weight (kg): &quot;))
+
+if weight &lt;= 0:
+    print(&quot;Invalid weight.&quot;)
+elif weight &lt;= 2:
+    cost = 5.00
+    category = &quot;Light&quot;
+elif weight &lt;= 5:
+    cost = 10.00
+    category = &quot;Medium&quot;
+elif weight &lt;= 10:
+    cost = 20.00
+    category = &quot;Heavy&quot;
+else:
+    cost = 35.00
+    category = &quot;Extra Heavy&quot;
+
+if weight &gt; 0:
+    print(f&quot;Category: {category}&quot;)
+    print(f&quot;Shipping cost: ${cost:.2f}&quot;)</code></pre>
+<h3>Expected Output (weight = 5)</h3>
+<pre><code>Category: Medium
+Shipping cost: $10.00</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Shipping Calculator</h1>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Task:</strong> Build a shipping cost calculator with tiered pricing.</p>
+<p><strong>Requirements:</strong></p>
+<ol>
+  <li>Ask the user to input a package weight (in kg)</li>
+  <li>Compute shipping cost using these tiers:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">0 kg or less → Invalid (print error message)</li>
+  <li style="margin-left: 30px;">Up to 2 kg → $5.00 (Light)</li>
+  <li style="margin-left: 30px;">Up to 5 kg → $10.00 (Medium)</li>
+  <li style="margin-left: 30px;">Up to 10 kg → $20.00 (Heavy)</li>
+  <li style="margin-left: 30px;">Over 10 kg → $35.00 (Extra Heavy)</li>
+</ul>
+<ol>
+  <li>Print both the category name and cost</li>
+</ol>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+  <li>✅ Correct cost for boundary weights (0, 2, 5, 10)</li>
+  <li>✅ Readable branching logic</li>
+  <li>✅ Handles invalid input (zero or negative weight)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 25</h1>
+            <h3>Pitfall 1: Overlapping Conditions</h3>
+<pre data-lang="python"><code># Bug: Both conditions match weight=5
+if weight &lt;= 10:
+    cost = 5.00
+if weight &lt;= 5:     # Should be elif, not if!
+    cost = 3.00</code></pre>
+<p><strong>Fix:</strong> Use <code>elif</code> to create mutually exclusive branches.</p>
+<h3>Pitfall 2: Wrong elif Order</h3>
+<pre data-lang="python"><code># Bug: Larger range checked first catches everything
+if weight &lt;= 10:
+    cost = 20.00   # weight=3 hits this!
+elif weight &lt;= 5:
+    cost = 10.00   # Never reached for small weights</code></pre>
+<p><strong>Fix:</strong> Check smallest ranges first, then larger ones.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 25</h1>
+            <h3>Extension 1: Free Shipping Threshold</h3>
+<p>Add a check: if total order is over $50, shipping is free.</p>
+<pre data-lang="python"><code>order_total = float(input(&quot;Order total: $&quot;))
+
+if order_total &gt; 50:
+    print(&quot;Free shipping!&quot;)
+else:
+    # Apply normal tiered pricing
+    ...</code></pre>
+<h3>Extension 2: Fragile Surcharge</h3>
+<p>Add a boolean input: if the package is fragile, add a $5 surcharge.</p>
+<pre data-lang="python"><code>is_fragile = input(&quot;Is the package fragile? (yes/no): &quot;).lower() == &quot;yes&quot;
+
+if is_fragile:
+    cost += 5.00
+    print(f&quot;Fragile surcharge applied. New cost: ${cost:.2f}&quot;)</code></pre>
+<p><strong>Stay in Basics Scope:</strong> Simple boolean input and addition — no classes or complex types.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 25</h1>
+            <p><strong>Exit Ticket Question:</strong> Why does the order of <code>elif</code> statements matter?</p>
+<p><strong>Model Answer:</strong> &quot;The order matters because Python evaluates conditions top to bottom and executes the <strong>first</strong> branch that is True. If a broader condition appears before a narrower one, the narrower condition will never execute. Always order from most specific (smallest range) to least specific (largest range).&quot;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 26: while Loops + Sentinel Patterns</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Use while loops for repeated prompts</li>
+  <li>Use break and continue appropriately</li>
+  <li>Implement sentinel value patterns (e.g., &#x27;q&#x27; to quit)</li>
+  <li>Avoid common infinite loop mistakes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>What Is a while Loop?</h1>
+            <h3>Basic Structure</h3>
+<pre data-lang="python"><code>while condition:
+    # body runs repeatedly while condition is True</code></pre>
+<h3>Simple Example</h3>
+<pre data-lang="python"><code>count = 1
+while count &lt;= 5:
+    print(count)
+    count += 1
+
+print(&quot;Done!&quot;)</code></pre>
+<h3>Output</h3>
+<pre><code>1
+2
+3
+4
+5
+Done!</code></pre>
+<blockquote>💡 A while loop keeps going as long as the condition stays True.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Sentinel Value Patterns</h1>
+            <h3>What Is a Sentinel?</h3>
+<p>A <strong>sentinel value</strong> is a special input that signals &quot;stop looping.&quot;</p>
+<h3>Common Sentinels</h3>
+<ul>
+  <li><code>&#x27;q&#x27;</code> or <code>&#x27;quit&#x27;</code> to exit a menu</li>
+  <li><code>-1</code> to stop entering numbers</li>
+  <li><code>&#x27;&#x27;</code> (empty string) to finish input</li>
+</ul>
+<h3>Example: Input Until Quit</h3>
+<pre data-lang="python"><code>while True:
+    command = input(&quot;Enter command (q to quit): &quot;)
+    if command == &#x27;q&#x27;:
+        print(&quot;Goodbye!&quot;)
+        break
+    print(f&quot;You entered: {command}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>break and continue</h1>
+            <h3>break — Exit the Loop Immediately</h3>
+<pre data-lang="python"><code>while True:
+    answer = input(&quot;Type &#x27;exit&#x27; to stop: &quot;)
+    if answer == &#x27;exit&#x27;:
+        break
+    print(f&quot;You said: {answer}&quot;)
+
+print(&quot;Loop ended.&quot;)</code></pre>
+<h3>continue — Skip to the Next Iteration</h3>
+<pre data-lang="python"><code>count = 0
+while count &lt; 10:
+    count += 1
+    if count % 2 == 0:
+        continue     # Skip even numbers
+    print(count)     # Only prints odd: 1, 3, 5, 7, 9</code></pre>
+<blockquote>⚠️ Use `break` and `continue` sparingly — overuse makes code harder to follow.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Common Infinite Loop Causes</h1>
+            <h3>Cause 1: Forgetting to Update the Loop Variable</h3>
+<pre data-lang="python"><code># Bug: count never changes!
+count = 1
+while count &lt;= 5:
+    print(count)
+    # Missing: count += 1</code></pre>
+<h3>Cause 2: Wrong Update Direction</h3>
+<pre data-lang="python"><code># Bug: count starts at 10 and goes UP, so count &gt;= 5 stays True forever
+count = 10
+while count &gt;= 5:
+    count += 1   # Should be count -= 1 to eventually reach &lt; 5</code></pre>
+<h3>Cause 3: Condition Always True</h3>
+<pre data-lang="python"><code># Bug: 1 == 1 is always True
+while 1 == 1:
+    print(&quot;Stuck forever!&quot;)</code></pre>
+<blockquote>💡 **Always ask:** &quot;What changes in each iteration to eventually make the condition False?&quot;</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Password Attempts Loop</h1>
+            <h3>Watch For:</h3>
+<ul>
+  <li>Limited number of attempts</li>
+  <li><code>break</code> on correct password</li>
+  <li>Lockout message after failures</li>
+</ul>
+<pre data-lang="python"><code>correct_password = &quot;python123&quot;
+max_attempts = 3
+attempts = 0
+
+while attempts &lt; max_attempts:
+    password = input(&quot;Enter password: &quot;)
+    attempts += 1
+
+    if password == correct_password:
+        print(&quot;Access granted!&quot;)
+        break
+else:
+    print(&quot;Account locked. Too many failed attempts.&quot;)</code></pre>
+<h3>Expected Output (all wrong)</h3>
+<pre><code>Enter password: wrong1
+Enter password: wrong2
+Enter password: wrong3
+Account locked. Too many failed attempts.</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>while/else Explained</h1>
+            <h3>How It Works</h3>
+<pre data-lang="python"><code>while condition:
+    # loop body
+    if something:
+        break
+else:
+    # runs ONLY if the loop ended normally (no break)</code></pre>
+<h3>Key Insight</h3>
+<ul>
+  <li>The <code>else</code> block runs when the <code>while</code> condition becomes False</li>
+  <li>It does <strong>not</strong> run if the loop exits via <code>break</code></li>
+  <li>Useful for &quot;search&quot; patterns: break when found, else = not found</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Password Prompt</h1>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Task:</strong> Build a password checker with limited attempts.</p>
+<p><strong>Requirements:</strong></p>
+<ol>
+  <li>Define a correct password (e.g., <code>&quot;secret123&quot;</code>)</li>
+  <li>Ask the user for a password — up to 3 attempts</li>
+  <li>If correct, print &quot;Access granted!&quot; and stop</li>
+  <li>If all 3 attempts fail, print &quot;Account locked.&quot;</li>
+</ol>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+  <li>✅ Stops correctly on successful password entry</li>
+  <li>✅ Locks out after exactly 3 failed attempts</li>
+  <li>✅ Correct use of while loop and counter</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 26</h1>
+            <h3>Pitfall 1: Not Updating the Attempt Counter</h3>
+<pre data-lang="python"><code># Bug: attempts never increases → infinite loop
+attempts = 0
+while attempts &lt; 3:
+    password = input(&quot;Enter password: &quot;)
+    if password == correct:
+        print(&quot;Correct!&quot;)
+        break
+    # Missing: attempts += 1</code></pre>
+<h3>Pitfall 2: Using = Instead of ==</h3>
+<pre data-lang="python"><code># Bug: Assignment, not comparison!
+if password = &quot;secret&quot;:    # SyntaxError in Python
+
+# Correct:
+if password == &quot;secret&quot;:
+    print(&quot;Match!&quot;)</code></pre>
+<blockquote>💡 Python catches `=` vs `==` errors as SyntaxError, but the intent matters.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 26</h1>
+            <h3>Extension 1: Show Remaining Attempts</h3>
+<pre data-lang="python"><code>while attempts &lt; max_attempts:
+    remaining = max_attempts - attempts
+    password = input(f&quot;Enter password ({remaining} attempts left): &quot;)
+    attempts += 1
+    if password == correct_password:
+        print(&quot;Access granted!&quot;)
+        break</code></pre>
+<h3>Extension 2: Minimum Password Length Check</h3>
+<pre data-lang="python"><code>while attempts &lt; max_attempts:
+    password = input(&quot;Enter password: &quot;)
+    if len(password) &lt; 6:
+        print(&quot;Password must be at least 6 characters.&quot;)
+        continue    # Don&#x27;t count this as an attempt
+    attempts += 1
+    if password == correct_password:
+        print(&quot;Access granted!&quot;)
+        break</code></pre>
+<p><strong>Stay in Basics Scope:</strong> Simple length check — no regex or complex validation.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 26</h1>
+            <p><strong>Exit Ticket Question:</strong> What variable must change in a while loop to avoid infinite loops?</p>
+<p><strong>Model Answer:</strong> &quot;The <strong>loop control variable</strong> — the variable tested in the <code>while</code> condition — must change inside the loop body. If it never changes, the condition remains True forever and the loop runs indefinitely.&quot;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 27: for Loops + range()</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Use for loops with range()</li>
+  <li>Explain inclusive/exclusive end in range</li>
+  <li>Use range(n), range(a, b), and range(a, b, step)</li>
+  <li>Choose between for and while loops appropriately</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>What Is a for Loop?</h1>
+            <h3>Basic Structure</h3>
+<pre data-lang="python"><code>for variable in sequence:
+    # body runs once for each item in sequence</code></pre>
+<h3>Looping Over a List</h3>
+<pre data-lang="python"><code>fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+for fruit in fruits:
+    print(fruit)</code></pre>
+<h3>Output</h3>
+<pre><code>apple
+banana
+cherry</code></pre>
+<blockquote>💡 A for loop visits each item in a sequence, one at a time.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>The range() Function</h1>
+            <h3>Three Forms of range()</h3>
+<p><strong><code>range(n)</code></strong> — 0 to n-1</p>
+<pre data-lang="python"><code>for i in range(5):
+    print(i)
+# Output: 0, 1, 2, 3, 4</code></pre>
+<p><strong><code>range(a, b)</code></strong> — a to b-1</p>
+<pre data-lang="python"><code>for i in range(1, 6):
+    print(i)
+# Output: 1, 2, 3, 4, 5</code></pre>
+<p><strong><code>range(a, b, step)</code></strong> — a to b-1, stepping by step</p>
+<pre data-lang="python"><code>for i in range(0, 10, 2):
+    print(i)
+# Output: 0, 2, 4, 6, 8</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Inclusive vs Exclusive End</h1>
+            <h3>The Rule</h3>
+<p><code>range(start, stop)</code> goes up to but <strong>does NOT include</strong> <code>stop</code>.</p>
+<h3>Why This Matters</h3>
+<pre data-lang="python"><code># Want numbers 1 through 10?
+for i in range(1, 10):
+    print(i)
+# Prints: 1, 2, 3, 4, 5, 6, 7, 8, 9
+# Missing 10!
+
+# Fix:
+for i in range(1, 11):
+    print(i)
+# Prints: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10</code></pre>
+<blockquote>⚠️ **The most common for-loop bug:** off-by-one errors from forgetting that `range()` is exclusive on the upper end.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Counting with range()</h1>
+            <h3>Useful Patterns</h3>
+<p><strong>Count from 1 to n:</strong></p>
+<pre data-lang="python"><code>n = 5
+for i in range(1, n + 1):
+    print(i)
+# 1, 2, 3, 4, 5</code></pre>
+<p><strong>Count backward:</strong></p>
+<pre data-lang="python"><code>for i in range(5, 0, -1):
+    print(i)
+# 5, 4, 3, 2, 1</code></pre>
+<p><strong>Skip every other number:</strong></p>
+<pre data-lang="python"><code>for i in range(0, 10, 2):
+    print(i)
+# 0, 2, 4, 6, 8</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>for vs while — When to Use Each</h1>
+            <h3>Use for When:</h3>
+<ul>
+  <li>You know how many times to loop</li>
+  <li>You&#x27;re iterating over a sequence (list, range, string)</li>
+  <li>You want cleaner, more predictable code</li>
+</ul>
+<h3>Use while When:</h3>
+<ul>
+  <li>You don&#x27;t know how many iterations in advance</li>
+  <li>You&#x27;re waiting for user input or a condition to change</li>
+  <li>You need a sentinel-based loop</li>
+</ul>
+<h3>Quick Comparison</h3>
+<pre data-lang="python"><code># for: known count
+for i in range(5):
+    print(i)
+
+# while: unknown count
+response = &quot;&quot;
+while response != &quot;quit&quot;:
+    response = input(&quot;Enter command: &quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Multiplication Table</h1>
+            <h3>Watch For:</h3>
+<ul>
+  <li>Using range(1, 11) for 1 through 10</li>
+  <li>Formatted output alignment</li>
+  <li>Nested loops for grid (optional, keep small)</li>
+</ul>
+<pre data-lang="python"><code>n = int(input(&quot;Enter a number: &quot;))
+
+print(f&quot;Multiplication table for {n}:&quot;)
+print(&quot;-&quot; * 20)
+
+for i in range(1, 11):
+    result = n * i
+    print(f&quot;{n} x {i:2d} = {result:3d}&quot;)</code></pre>
+<h3>Expected Output (n = 7)</h3>
+<pre><code>Multiplication table for 7:
+--------------------
+7 x  1 =   7
+7 x  2 =  14
+7 x  3 =  21
+7 x  4 =  28
+7 x  5 =  35
+7 x  6 =  42
+7 x  7 =  49
+7 x  8 =  56
+7 x  9 =  63
+7 x 10 =  70</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Multiplication Table</h1>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Task:</strong> Build a multiplication table generator.</p>
+<p><strong>Requirements:</strong></p>
+<ol>
+  <li>Ask the user for a number <code>n</code></li>
+  <li>Print the multiplication table for <code>n</code> from 1 to 10</li>
+  <li>Use <code>range()</code> to generate the multipliers</li>
+  <li>Format output so columns align</li>
+</ol>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+  <li>✅ Correct outputs for 1 through 10</li>
+  <li>✅ Formatting is readable and aligned</li>
+  <li>✅ Uses <code>range()</code> properly</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 27</h1>
+            <h3>Pitfall 1: Off-by-One in range()</h3>
+<pre data-lang="python"><code># Bug: Prints 1 to 9, not 1 to 10
+for i in range(1, 10):
+    print(f&quot;{n} x {i} = {n * i}&quot;)
+
+# Fix: Use range(1, 11) for 1 through 10
+for i in range(1, 11):
+    print(f&quot;{n} x {i} = {n * i}&quot;)</code></pre>
+<h3>Pitfall 2: Not Converting Input to int</h3>
+<pre data-lang="python"><code># Bug: n is a string, can&#x27;t multiply
+n = input(&quot;Enter a number: &quot;)
+result = n * 3   # &quot;777&quot; not 21!
+
+# Fix:
+n = int(input(&quot;Enter a number: &quot;))
+result = n * 3   # 21</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 27</h1>
+            <h3>Full Multiplication Grid</h3>
+<p>Print a full 1 through n grid using nested loops:</p>
+<pre data-lang="python"><code>n = int(input(&quot;Grid size: &quot;))
+
+# Header row
+print(&quot;    &quot;, end=&quot;&quot;)
+for j in range(1, n + 1):
+    print(f&quot;{j:4d}&quot;, end=&quot;&quot;)
+print()
+print(&quot;-&quot; * (4 * n + 4))
+
+# Table body
+for i in range(1, n + 1):
+    print(f&quot;{i:3d} |&quot;, end=&quot;&quot;)
+    for j in range(1, n + 1):
+        print(f&quot;{i * j:4d}&quot;, end=&quot;&quot;)
+    print()</code></pre>
+<p><strong>Stay in Basics Scope:</strong> Nested loops are fine for a small grid. Don&#x27;t introduce list comprehensions or string methods beyond basics.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 27</h1>
+            <p><strong>Exit Ticket Question:</strong> What does <code>range(1, 4)</code> produce?</p>
+<p><strong>Model Answer:</strong> &quot;<code>range(1, 4)</code> produces the sequence <code>1, 2, 3</code>. The start value (1) is <strong>inclusive</strong> and the stop value (4) is <strong>exclusive</strong>. To see the values, you can use <code>list(range(1, 4))</code> which gives <code>[1, 2, 3]</code>.&quot;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 28: Loop Patterns — Counters, Accumulators, Min/Max</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Apply common loop patterns reliably</li>
+  <li>Track min and max values through a loop</li>
+  <li>Use counter and accumulator patterns</li>
+  <li>Initialize variables safely before looping</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Pattern 1: Counter</h1>
+            <h3>What Is It?</h3>
+<p>A variable that counts how many times something happens.</p>
+<h3>Template</h3>
+<pre data-lang="python"><code>count = 0
+for item in collection:
+    if some_condition(item):
+        count += 1
+print(f&quot;Found {count} matches.&quot;)</code></pre>
+<h3>Example: Count Passing Scores</h3>
+<pre data-lang="python"><code>scores = [85, 42, 91, 67, 73, 55, 88]
+passing_count = 0
+
+for score in scores:
+    if score &gt;= 70:
+        passing_count += 1
+
+print(f&quot;Passing scores: {passing_count}&quot;)
+# Output: Passing scores: 4</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Pattern 2: Accumulator</h1>
+            <h3>What Is It?</h3>
+<p>A variable that accumulates (adds up) values through a loop.</p>
+<h3>Template</h3>
+<pre data-lang="python"><code>total = 0
+for item in collection:
+    total += item
+average = total / len(collection)</code></pre>
+<h3>Example: Sum and Average</h3>
+<pre data-lang="python"><code>prices = [12.50, 8.75, 15.00, 6.25, 9.50]
+total = 0
+
+for price in prices:
+    total += price
+
+average = total / len(prices)
+print(f&quot;Total: ${total:.2f}&quot;)
+print(f&quot;Average: ${average:.2f}&quot;)
+# Total: $52.00
+# Average: $10.40</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Pattern 3: Min/Max Tracking</h1>
+            <h3>What Is It?</h3>
+<p>Tracking the smallest and largest values seen so far.</p>
+<h3>Safe Initialization</h3>
+<pre data-lang="python"><code># Option 1: Initialize with first item
+numbers = [45, 23, 67, 12, 89, 34]
+current_min = numbers[0]
+current_max = numbers[0]
+
+for num in numbers:
+    if num &lt; current_min:
+        current_min = num
+    if num &gt; current_max:
+        current_max = num
+
+print(f&quot;Min: {current_min}, Max: {current_max}&quot;)
+# Min: 12, Max: 89</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Why Not Initialize Min/Max to 0?</h1>
+            <h3>The Trap</h3>
+<pre data-lang="python"><code># Bug: What if all numbers are positive?
+current_min = 0    # This is smaller than any positive number!
+
+numbers = [45, 23, 67]
+for num in numbers:
+    if num &lt; current_min:
+        current_min = num
+
+print(f&quot;Min: {current_min}&quot;)
+# Output: Min: 0 ← Wrong! 0 was never in the list.</code></pre>
+<h3>Safe Alternatives</h3>
+<pre data-lang="python"><code># Option 1: Use first element
+current_min = numbers[0]
+
+# Option 2: Use float(&#x27;inf&#x27;) / float(&#x27;-inf&#x27;)
+current_min = float(&#x27;inf&#x27;)    # Larger than any number
+current_max = float(&#x27;-inf&#x27;)   # Smaller than any number</code></pre>
+<blockquote>⚠️ **Initializing min to 0 is a classic bug.** Always use the first element or infinity.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Combining Patterns</h1>
+            <h3>All Together: Stats in One Loop</h3>
+<pre data-lang="python"><code>numbers = [45, 23, 67, 12, 89, 34]
+
+count = 0
+total = 0
+current_min = numbers[0]
+current_max = numbers[0]
+
+for num in numbers:
+    count += 1
+    total += num
+    if num &lt; current_min:
+        current_min = num
+    if num &gt; current_max:
+        current_max = num
+
+average = total / count
+print(f&quot;Count: {count}&quot;)
+print(f&quot;Sum: {total}&quot;)
+print(f&quot;Average: {average:.2f}&quot;)
+print(f&quot;Min: {current_min}&quot;)
+print(f&quot;Max: {current_max}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Number Stats</h1>
+            <h3>Watch For:</h3>
+<ul>
+  <li>Safe min/max initialization</li>
+  <li>Counter and accumulator in one loop</li>
+  <li>Clean formatted output</li>
+</ul>
+<pre data-lang="python"><code>numbers = []
+print(&quot;Enter 5 numbers:&quot;)
+
+for i in range(5):
+    num = float(input(f&quot;  Number {i + 1}: &quot;))
+    numbers.append(num)
+
+# Calculate stats
+total = 0
+current_min = numbers[0]
+current_max = numbers[0]
+
+for num in numbers:
+    total += num
+    if num &lt; current_min:
+        current_min = num
+    if num &gt; current_max:
+        current_max = num
+
+average = total / len(numbers)
+
+print(f&quot;\nResults:&quot;)
+print(f&quot;  Sum:     {total:.2f}&quot;)
+print(f&quot;  Average: {average:.2f}&quot;)
+print(f&quot;  Min:     {current_min:.2f}&quot;)
+print(f&quot;  Max:     {current_max:.2f}&quot;)</code></pre>
+<h3>Expected Output</h3>
+<pre><code>Enter 5 numbers:
+  Number 1: 10
+  Number 2: 25
+  Number 3: 7
+  Number 4: 42
+  Number 5: 18
+
+Results:
+  Sum:     102.00
+  Average: 20.40
+  Min:     7.00
+  Max:     42.00</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Number Stats</h1>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Task:</strong> Build a number statistics calculator.</p>
+<p><strong>Requirements:</strong></p>
+<ol>
+  <li>Ask the user for 5 numbers</li>
+  <li>Compute: minimum, maximum, sum, and average</li>
+  <li>Print all four results with clear labels</li>
+</ol>
+<p><strong>Completion Criteria:</strong></p>
+<ul>
+  <li>✅ Correct statistics for the given input</li>
+  <li>✅ Clean, formatted output</li>
+  <li>✅ Safe initialization of min/max (not 0)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 28</h1>
+            <h3>Pitfall 1: Initializing Min/Max to 0</h3>
+<pre data-lang="python"><code># Bug: 0 is not in the data
+current_min = 0   # Incorrect!
+current_max = 0   # Will miss negatives
+
+# Fix: Use first element
+current_min = numbers[0]
+current_max = numbers[0]</code></pre>
+<h3>Pitfall 2: Dividing by Wrong Count</h3>
+<pre data-lang="python"><code># Bug: Using hardcoded count instead of actual length
+average = total / 5   # What if the list has 4 items?
+
+# Fix: Use len()
+average = total / len(numbers)</code></pre>
+<h3>Pitfall 3: Accumulating Before Collecting</h3>
+<pre data-lang="python"><code># Bug: Trying to sum an empty list
+total = sum(numbers)   # Works, but not the pattern we&#x27;re learning
+
+# Practice the manual pattern first:
+total = 0
+for num in numbers:
+    total += num</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 28</h1>
+            <h3>Allow Variable Count with Sentinel</h3>
+<p>Let the user enter numbers until they type &quot;done&quot;:</p>
+<pre data-lang="python"><code>numbers = []
+while True:
+    entry = input(&quot;Enter a number (or &#x27;done&#x27; to finish): &quot;)
+    if entry.lower() == &#x27;done&#x27;:
+        break
+    numbers.append(float(entry))
+
+if numbers:
+    total = 0
+    current_min = numbers[0]
+    current_max = numbers[0]
+
+    for num in numbers:
+        total += num
+        if num &lt; current_min:
+            current_min = num
+        if num &gt; current_max:
+            current_max = num
+
+    average = total / len(numbers)
+    print(f&quot;Count: {len(numbers)}&quot;)
+    print(f&quot;Sum: {total:.2f}, Avg: {average:.2f}&quot;)
+    print(f&quot;Min: {current_min:.2f}, Max: {current_max:.2f}&quot;)
+else:
+    print(&quot;No numbers entered.&quot;)</code></pre>
+<p><strong>Stay in Basics Scope:</strong> Uses while + sentinel from Hour 26 and loop patterns from this hour. No list comprehensions or advanced features.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 28</h1>
+            <p><strong>Exit Ticket Question:</strong> What&#x27;s a safe way to initialize <code>min</code> before looping?</p>
+<p><strong>Model Answer:</strong> &quot;Initialize <code>min</code> to the first element of the collection (<code>current_min = numbers[0]</code>), or use <code>float(&#x27;inf&#x27;)</code> which is larger than any real number. Never initialize to 0 because 0 might be smaller than all values in the data, giving a wrong result.&quot;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrail Reminder</h1>
+            <h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> if/elif/else conditional logic</p>
+<p><span class="check">✓</span> while loops with break/continue</p>
+<p><span class="check">✓</span> for loops with range()</p>
+<p><span class="check">✓</span> Counter, accumulator, min/max patterns</p>
+<p><span class="check">✓</span> Basic input/output and string formatting</p>
+<h3>Not Yet (Later in Basics)</h3>
+<p><span class="cross">✗</span> Functions — defining and calling (Session 8)</p>
+<p><span class="cross">✗</span> Imports / modules (random, math, statistics, etc.)</p>
+<h3>Not Yet (Advanced Course)</h3>
+<p><span class="cross">✗</span> List comprehensions or generator expressions</p>
+<p><span class="cross">✗</span> try/except error handling</p>
+<p><span class="cross">✗</span> Lambda functions or decorators</p>
+<p><span class="cross">✗</span> File I/O or databases</p>
+        </section>
+
+        <section class="slide">
+            <h1>Session 7 Wrap-Up</h1>
+            <h3>What We Covered Today</h3>
+<ul>
+  <li><strong>Hour 25:</strong> Conditionals — if/elif/else ordering and boundary handling</li>
+  <li><strong>Hour 26:</strong> while loops — sentinel patterns, break/continue, infinite loop avoidance</li>
+  <li><strong>Hour 27:</strong> for loops — range() with three forms, inclusive/exclusive boundaries</li>
+  <li><strong>Hour 28:</strong> Loop patterns — counters, accumulators, min/max tracking</li>
+</ul>
+<h3>Key Takeaways</h3>
+<ul>
+  <li>Order elif branches from most specific to least specific</li>
+  <li>Always verify behavior at boundary values</li>
+  <li>A while loop needs a changing condition to terminate</li>
+  <li>range(start, stop) is exclusive on the upper end</li>
+  <li>Initialize min/max safely — never to 0</li>
+  <li>Counter, accumulator, and min/max patterns combine naturally</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Homework and Practice</h1>
+            <h3>Practice Tasks</h3>
+<ol>
+  <li><strong>Shipping Calculator V2:</strong> Add at least two more tiers and a fragile surcharge</li>
+  <li><strong>Guessing Game:</strong> Computer picks a random number 1–100; user guesses with while loop, program says &quot;higher&quot; or &quot;lower&quot;</li>
+  <li><strong>Grade Analyzer:</strong> Read 10 test scores, compute min, max, average, and count how many are A (90+), B (80+), etc.</li>
+</ol>
+<h3>Preparation for Session 8</h3>
+<ul>
+  <li>Review functions and how to define reusable blocks of code</li>
+  <li>Think about how to break today&#x27;s labs into smaller, reusable pieces</li>
+  <li>Practice combining conditionals with loops</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Next Session Preview: Session 8 (Hours 29–32)</h1>
+            <h3>Topics Coming Up</h3>
+<ul>
+  <li><strong>Hour 29:</strong> Functions — defining, calling, returning values</li>
+  <li><strong>Hour 30:</strong> Function parameters and scope</li>
+  <li><strong>Hour 31:</strong> Functions with data structures</li>
+  <li><strong>Hour 32:</strong> Checkpoint review and practice</li>
+</ul>
+<h3>Get Ready To:</h3>
+<ul>
+  <li>Write reusable functions</li>
+  <li>Structure programs with clear logic flow</li>
+  <li>Combine functions with loops and data structures</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Questions?</h1>
+            <p><strong>Session 7 Complete!</strong></p>
+<p>You&#x27;ve mastered:</p>
+<ul>
+  <li>Writing clear, well-ordered conditional logic</li>
+  <li>Using while loops for user-driven repetition</li>
+  <li>Using for loops with range() for counted repetition</li>
+  <li>Applying counter, accumulator, and min/max loop patterns</li>
+</ul>
+<p><strong>Keep practicing — see you in Session 8!</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay(updateHash = true) {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            if (updateHash) {
+                window.location.hash = currentSlide + 1;
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    currentSlide = slideNum;
+                }
+            }
+            updateSlideDisplay(false);
+        });
+    </script>
+</body>
+</html>
