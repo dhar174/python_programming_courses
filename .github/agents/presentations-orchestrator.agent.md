@@ -43,6 +43,7 @@ Map user requests to these specialists:
 | **Build scripts / CI workflow** | presentations-build   | "Create/update presentations/package.json, scripts/build-*.mjs, and .github/workflows/presentations.yml to export MD/HTML/PDF/PPTX." |
 | **QA / correctness review**     | presentations-qa      | "Validate claims vs repo sources; ensure Marp + Slidev decks match and exports are buildable."                                       |
 | **Documentation**               | presentations-docs    | "Update presentations/README.md with how to add a deck and run builds locally."                                                      |
+| **Build Pipeline**              | presentations-build-engineer | "Create and maintain a reliable, repeatable build and export pipeline."                                                       |
 
 Example delegation prompt:
 "User wants a new architecture deck. I will call presentations-content with: 'Scan docs/*.md and any PDFs; produce an outline and slide-by-slide source references.'"
