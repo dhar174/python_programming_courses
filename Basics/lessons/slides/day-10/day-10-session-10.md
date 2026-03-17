@@ -1010,17 +1010,22 @@ def update_phone(self, new_phone: str) -> bool:
 
 ### Extension: Normalize Phone Storage to Digits-Only
 ```python
+def normalize_phone(phone: str) -> str:
+    """Strip all non-digit characters for consistent storage.
+    Example: '(555) 123-4567' → '5551234567'
+    """
+    digits_only = ""
+    for ch in phone:
+        if ch.isdigit():
+            digits_only += ch
+    return digits_only
+
+
 class Contact:
     def __init__(self, name: str, phone: str) -> None:
         self.name = name
-        self.phone = self._normalize_phone(phone)
-
-    @staticmethod
-    def _normalize_phone(phone: str) -> str:
-        """Strip all non-digit characters for consistent storage.
-        Example: '(555) 123-4567' → '5551234567'
-        """
-        return "".join(ch for ch in phone if ch.isdigit())
+        # Normalize on the way in so storage is consistent
+        self.phone = normalize_phone(phone)
 
     def display(self) -> str:
         # Display in a consistent formatted style
@@ -1030,9 +1035,9 @@ class Contact:
         return f"{self.name}: {self.phone}"
 ```
 
-> 🗒️ **Speaker note:** This uses a simple join with a generator expression — briefly point to it as "a concise way to filter characters." Students don't need to master it right now. The key lesson is the *concept* of normalizing on the way in.
+> 🗒️ **Speaker note:** This example uses a plain helper function and a simple loop to "clean" the phone number before storing it. Emphasize the idea of normalizing data on the way in; students do **not** need to worry about more concise one-line versions yet.
 
-> 🚫 **Scope guardrail (Basics):** `@staticmethod` and `@property` are Advanced topics — show this extension quickly without going deep.
+> 🚫 **Scope guardrail (Basics):** In more advanced designs, helpers like `normalize_phone` might be turned into `@staticmethod`s or use more compact expressions. Those patterns are left for the Advanced module — keep the focus here on the *idea* of validation/normalization inside the class.
 
 ---
 
