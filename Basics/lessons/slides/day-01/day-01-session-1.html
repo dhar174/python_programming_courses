@@ -177,7 +177,37 @@
             margin-top: calc(var(--spacing) / 2);
             margin-bottom: calc(var(--spacing) / 2);
         }
-        
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
         /* ====================================
            CODE BLOCKS
            ==================================== */
@@ -1011,7 +1041,7 @@ print(f&quot;Per person: ${per_person:.2f}&quot;)</code></pre>
         // Initialize
         totalCounter.textContent = totalSlides;
         
-        function updateSlideDisplay() {
+        function updateSlideDisplay(updateHash = true) {
             // Hide all slides
             slides.forEach((slide, index) => {
                 slide.classList.remove('active', 'previous');
@@ -1033,7 +1063,9 @@ print(f&quot;Per person: ${per_person:.2f}&quot;)</code></pre>
             currentCounter.textContent = currentSlide + 1;
             
             // Update URL hash (for bookmarking)
-            window.location.hash = currentSlide + 1;
+            if (updateHash) {
+                window.location.hash = currentSlide + 1;
+            }
         }
         
         function nextSlide() {
@@ -1111,15 +1143,11 @@ print(f&quot;Per person: ${per_person:.2f}&quot;)</code></pre>
             if (hash) {
                 const slideNum = parseInt(hash) - 1;
                 if (!isNaN(slideNum)) {
-                    goToSlide(slideNum);
-                    return;
+                    currentSlide = slideNum;
                 }
             }
-            updateSlideDisplay();
+            updateSlideDisplay(false);
         });
-        
-        // Initialize first slide
-        updateSlideDisplay();
     </script>
 </body>
 </html>

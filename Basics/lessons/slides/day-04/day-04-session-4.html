@@ -3,16 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basics Day 4 &mdash; Session 4 (Hours 13&ndash;16)</title>
+    <title>Basics Day 4 — Session 4 (Hours 13–16)</title>
     <style>
         /* ====================================
            CSS VARIABLES - TWEAK GUIDE
-           ====================================
-           Change --accent to update the highlight color everywhere.
-           Change --bg / --fg for overall page theme.
-           Change --code-bg / --code-fg for code block colors.
-           Change --slide-padding for more/less whitespace inside slides.
-           Change --transition-speed for faster/slower animations.
            ==================================== */
         :root {
             /* Colors - Swiss Modern Palette */
@@ -24,20 +18,20 @@
             --code-fg: #f8f8f2;         /* Code text color (light) */
             --border: #cccccc;          /* Border color */
             --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
-
+            
             /* Typography */
             --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
             --font-heading: "Inter", system-ui, -apple-system, sans-serif;
             --font-code: "SF Mono", "Monaco", "Consolas", monospace;
-
+            
             /* Spacing */
             --spacing: 24px;            /* Base spacing unit */
             --slide-padding: 60px;      /* Padding inside slides */
-
+            
             /* Animation timing */
             --transition-speed: 0.3s;   /* Slide transition duration */
         }
-
+        
         /* ====================================
            BASE STYLES
            ==================================== */
@@ -46,7 +40,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: var(--font-body);
             background: var(--bg);
@@ -54,7 +48,7 @@
             line-height: 1.6;
             overflow: hidden;
         }
-
+        
         /* ====================================
            SLIDE CONTAINER
            ==================================== */
@@ -64,7 +58,7 @@
             height: 100vh;
             overflow: hidden;
         }
-
+        
         /* ====================================
            INDIVIDUAL SLIDES
            ==================================== */
@@ -82,50 +76,40 @@
             transform: translateX(100%);
             transition: opacity var(--transition-speed) ease,
                         transform var(--transition-speed) ease;
-            overflow-y: auto;
         }
-
+        
         .slide.active {
             opacity: 1;
             transform: translateX(0);
             z-index: 10;
         }
-
+        
         .slide.previous {
             opacity: 0;
             transform: translateX(-100%);
         }
-
+        
         /* Title slide special styling */
         .slide.title-slide {
             background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
             color: white;
             text-align: center;
             justify-content: center;
-            align-items: center;
         }
-
+        
         .slide.title-slide h1 {
             font-size: 3.5rem;
             font-weight: 700;
-            margin-bottom: calc(var(--spacing) * 1.5);
+            margin-bottom: calc(var(--spacing) * 2);
             line-height: 1.2;
         }
-
+        
         .slide.title-slide .subtitle {
             font-size: 1.5rem;
             opacity: 0.9;
             font-weight: 300;
         }
-
-        /* Override list styles inside title slide overview */
-        .slide.title-slide ul {
-            text-align: left;
-        }
-        .slide.title-slide ul li::before {
-            color: rgba(255,255,255,0.7);
-        }
-
+        
         /* ====================================
            TYPOGRAPHY
            ==================================== */
@@ -135,55 +119,51 @@
             line-height: 1.2;
             margin-bottom: var(--spacing);
         }
-
+        
         .slide:not(.title-slide) h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             color: var(--accent);
             border-bottom: 3px solid var(--accent);
             padding-bottom: calc(var(--spacing) / 2);
-            margin-bottom: calc(var(--spacing) * 1.2);
         }
-
+        
         .slide h2 {
-            font-size: 1.6rem;
-            margin-top: calc(var(--spacing) * 1.2);
-            margin-bottom: calc(var(--spacing) * 0.6);
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
         }
-
+        
         .slide h3 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin-top: var(--spacing);
-            margin-bottom: calc(var(--spacing) * 0.5);
-            color: #333;
         }
-
+        
         p {
-            margin-bottom: calc(var(--spacing) * 0.75);
-            font-size: 1.15rem;
-            max-width: 960px;
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
         }
-
+        
         /* ====================================
            LISTS
            ==================================== */
         ul, ol {
             margin-left: calc(var(--spacing) * 1.5);
             margin-bottom: var(--spacing);
-            max-width: 960px;
+            max-width: 900px;
         }
-
+        
         li {
-            margin-bottom: calc(var(--spacing) * 0.4);
-            font-size: 1.15rem;
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
             line-height: 1.6;
         }
-
+        
         ul li {
             list-style-type: none;
             position: relative;
             padding-left: calc(var(--spacing) * 1.5);
         }
-
+        
         ul li::before {
             content: "→";
             position: absolute;
@@ -191,13 +171,43 @@
             color: var(--accent);
             font-weight: bold;
         }
-
+        
         /* Nested lists */
-        ul ul, ol ol, ul ol, ol ul {
+        ul ul, ol ol {
             margin-top: calc(var(--spacing) / 2);
             margin-bottom: calc(var(--spacing) / 2);
         }
 
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
         /* ====================================
            CODE BLOCKS
            ==================================== */
@@ -211,36 +221,36 @@
             box-shadow: 0 4px 6px var(--shadow);
             max-width: 1000px;
         }
-
+        
         code {
             font-family: var(--font-code);
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.5;
         }
-
+        
         /* Inline code */
-        p code, li code, h1 code, h2 code, h3 code, blockquote code {
+        p code, li code {
             background: var(--accent-light);
             color: var(--accent);
             padding: 2px 6px;
             border-radius: 3px;
             font-size: 0.9em;
         }
-
+        
         /* ====================================
            BLOCKQUOTES
            ==================================== */
         blockquote {
             border-left: 4px solid var(--accent);
-            padding: var(--spacing);
-            margin: calc(var(--spacing) * 0.75) 0;
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
             font-style: italic;
-            color: #444;
+            color: #555;
             background: var(--accent-light);
+            padding: var(--spacing);
             border-radius: 4px;
-            max-width: 960px;
         }
-
+        
         /* ====================================
            IMAGES
            ==================================== */
@@ -251,7 +261,7 @@
             box-shadow: 0 4px 6px var(--shadow);
             margin: var(--spacing) 0;
         }
-
+        
         /* ====================================
            LINKS
            ==================================== */
@@ -261,11 +271,11 @@
             border-bottom: 2px solid transparent;
             transition: border-color 0.2s;
         }
-
+        
         a:hover {
             border-bottom-color: var(--accent);
         }
-
+        
         /* ====================================
            NAVIGATION CONTROLS
            ==================================== */
@@ -282,11 +292,11 @@
             opacity: 0.8;
             transition: opacity 0.3s;
         }
-
+        
         #nav-hint:hover {
             opacity: 1;
         }
-
+        
         #progress-bar {
             position: fixed;
             top: 0;
@@ -296,7 +306,7 @@
             z-index: 100;
             transition: width 0.3s ease;
         }
-
+        
         #slide-counter {
             position: fixed;
             bottom: 30px;
@@ -308,7 +318,7 @@
             font-size: 0.9rem;
             z-index: 100;
         }
-
+        
         /* ====================================
            RESPONSIVE DESIGN
            ==================================== */
@@ -316,24 +326,24 @@
             .slide {
                 padding: 30px;
             }
-
+            
             .slide.title-slide h1 {
                 font-size: 2.5rem;
             }
-
+            
             .slide h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
-
+            
             .slide h2 {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
-
+            
             p, li {
                 font-size: 1rem;
             }
         }
-
+        
         /* ====================================
            SPECIAL ELEMENTS
            ==================================== */
@@ -342,27 +352,27 @@
             border-top: 2px solid var(--border);
             margin: calc(var(--spacing) * 2) 0;
         }
-
+        
         strong, b {
             font-weight: 600;
             color: var(--accent);
         }
-
+        
         em, i {
             font-style: italic;
         }
-
+        
         /* Checkmarks and X marks for task lists */
         .check {
             color: #22c55e;
             font-weight: bold;
         }
-
+        
         .cross {
             color: #ef4444;
             font-weight: bold;
         }
-
+        
         /* Warning/Alert styling */
         .warning {
             background: #fff3cd;
@@ -371,38 +381,32 @@
             margin: var(--spacing) 0;
             border-radius: 4px;
         }
-
-        /* Speaker notes - hidden but present in DOM */
-        .speaker-notes {
-            display: none;
-        }
-
-        /* Table styling */
-        table {
-            font-size: 1rem;
-            border-collapse: collapse;
-        }
     </style>
 </head>
 <body>
     <div id="slides-container">
-
-        <section class="slide title-slide" style="justify-content:center">
+        
+        <section class="slide title-slide">
             <h1>Basics Day 4 — Session 4 (Hours 13–16)</h1>
             <div class="subtitle">Python Programming (Basic) • Lists &amp; Iteration</div>
-            <div style="margin-top:40px;text-align:left;max-width:800px">
-              <h2 style="color:rgba(255,255,255,.9);font-size:1.4rem;margin-bottom:16px">Session 4 Overview</h2>
-              <div style="color:rgba(255,255,255,.85);font-size:1.1rem"><ul>
+        </section>
+
+        <section class="slide">
+            <h1>Session 4 Overview</h1>
+            <ul>
   <li>Hour 13: Lists fundamentals — create, index, slice, mutate</li>
   <li>Hour 14: Iterating lists with <code>for</code> loops — accumulators &amp; averages</li>
   <li>Hour 15: Nested lists for table-like data — rows &amp; columns</li>
   <li>Hour 16: Checkpoint 2 — Lists + string handling</li>
-</ul></div>
-            </div>
+</ul>
         </section>
 
         <section class="slide">
-            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px">Hour 13: Lists Fundamentals</div>
+            <h1>Hour 13: Lists Fundamentals</h1>
+            
+        </section>
+
+        <section class="slide">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Explain what a list is in plain, beginner-friendly language</li>
@@ -438,7 +442,7 @@ item_5 = &quot;rice&quot;</code></pre>
 groceries = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;, &quot;tea&quot;, &quot;rice&quot;]
 
 print(groceries)
-# ['milk', 'bread', 'eggs', 'tea', 'rice']</code></pre>
+# [&#x27;milk&#x27;, &#x27;bread&#x27;, &#x27;eggs&#x27;, &#x27;tea&#x27;, &#x27;rice&#x27;]</code></pre>
 <h3>Key ideas</h3>
 <ul>
   <li>Uses square brackets <code>[ ]</code></li>
@@ -474,8 +478,8 @@ fruits[2]   # &quot;cherry&quot;  ← third item</code></pre>
 <h3>Negative indices — count from the end</h3>
 <pre data-lang="python"><code>fruits[-1]  # &quot;cherry&quot;  ← last item
 fruits[-2]  # &quot;banana&quot;  ← second to last</code></pre>
-<blockquote>⚠️ Lists start at index <strong>0</strong>, not <strong>1</strong>!</blockquote>
-<div class="speaker-notes" style="display:none">Pause and ask: &quot;What does fruits[-1] return?&quot; Let learners predict before running it.</div>
+<blockquote>⚠️ Lists start at index **0**, not **1**!</blockquote>
+<!-- Pause and ask: "What does fruits[-1] return?" Let learners predict before running it. -->
         </section>
 
         <section class="slide">
@@ -492,7 +496,7 @@ fruits[:3]    # [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]     
   <li><strong>start</strong> is included</li>
   <li><strong>stop</strong> is excluded (stop - 1 is the last item returned)</li>
 </ul>
-<blockquote>💡 This is the same rule as <code>range()</code> — you've seen it before!</blockquote>
+<blockquote>💡 This is the same rule as `range()` — you&#x27;ve seen it before!</blockquote>
         </section>
 
         <section class="slide">
@@ -501,10 +505,10 @@ fruits[:3]    # [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]     
 <pre data-lang="python"><code>groceries = [&quot;milk&quot;, &quot;bread&quot;]
 
 groceries.append(&quot;eggs&quot;)
-print(groceries)  # ['milk', 'bread', 'eggs']</code></pre>
+print(groceries)  # [&#x27;milk&#x27;, &#x27;bread&#x27;, &#x27;eggs&#x27;]</code></pre>
 <h3>Update an item by index</h3>
 <pre data-lang="python"><code>groceries[0] = &quot;oat milk&quot;
-print(groceries)  # ['oat milk', 'bread', 'eggs']</code></pre>
+print(groceries)  # [&#x27;oat milk&#x27;, &#x27;bread&#x27;, &#x27;eggs&#x27;]</code></pre>
 <h3>Lists are mutable — strings are not</h3>
 <pre data-lang="python"><code>name = &quot;Alice&quot;
 name[0] = &quot;B&quot;   # ❌ TypeError — strings are immutable!
@@ -515,22 +519,22 @@ items[0] = &quot;Bob&quot;  # ✓ Lists can be changed</code></pre>
 
         <section class="slide">
             <h1>Removing Items — remove() and pop()</h1>
-            <h3><code>remove()</code> — find and delete by value</h3>
+            <h3>`remove()` — find and delete by value</h3>
 <pre data-lang="python"><code>fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
 
 fruits.remove(&quot;banana&quot;)
-print(fruits)   # ['apple', 'cherry']</code></pre>
-<h3><code>pop()</code> — remove by index, returns the item</h3>
+print(fruits)   # [&#x27;apple&#x27;, &#x27;cherry&#x27;]</code></pre>
+<h3>`pop()` — remove by index, returns the item</h3>
 <pre data-lang="python"><code>fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
 
 last = fruits.pop()     # removes last → &quot;cherry&quot;
 first = fruits.pop(0)   # removes at index 0 → &quot;apple&quot;
-print(fruits)           # ['banana']</code></pre>
-<div class="speaker-notes" style="display:none">Coach: demonstrate the ValueError deliberately — fruits.remove(&quot;grape&quot;) when grape is not in the list. Show learners how to read that error message calmly.</div>
+print(fruits)           # [&#x27;banana&#x27;]</code></pre>
+<p>&lt;!-- Coach: demonstrate the ValueError deliberately — fruits.remove(&quot;grape&quot;) when grape is not in the list. Show learners how to read that error message calmly. --&gt;</p>
         </section>
 
         <section class="slide">
-            <h1>Membership Test — the <code>in</code> Operator</h1>
+            <h1>Membership Test — the `in` Operator</h1>
             <h3>Check if an item is in the list</h3>
 <pre data-lang="python"><code>fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
 
@@ -572,9 +576,9 @@ last_item = cart.pop()        # remove and save last
 print(cart)
 print(f&quot;Items in cart: {len(cart)}&quot;)</code></pre>
 <h3>Expected Output</h3>
-<pre><code>['milk', 'bread', 'free-range eggs']
+<pre><code>[&#x27;milk&#x27;, &#x27;bread&#x27;, &#x27;free-range eggs&#x27;]
 Items in cart: 3</code></pre>
-<div class="speaker-notes" style="display:none">Speaker note: Run this live. After appending all 5, pause and ask &quot;How many items are in cart right now?&quot; before running the rest. Builds indexing intuition.</div>
+<p>&lt;!-- Speaker note: Run this live. After appending all 5, pause and ask &quot;How many items are in cart right now?&quot; before running the rest. Builds indexing intuition. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -586,7 +590,7 @@ Items in cart: 3</code></pre>
   <li>Use <code>append()</code> to add <strong>5 items</strong> (any items you like)</li>
   <li>Print the list and its length after appending</li>
   <li>Ask the user: &quot;Which item would you like to remove?&quot;</li>
-  <li>Check if it's in the list before removing — no crashes!</li>
+  <li>Check if it&#x27;s in the list before removing — no crashes!</li>
   <li>Print the <strong>final list</strong> and <strong>final count</strong></li>
 </ol>
 <h3>Completion Criteria</h3>
@@ -595,16 +599,16 @@ Items in cart: 3</code></pre>
 <p><span class="check">✓</span> <code>in</code> check guards the <code>remove()</code> call</p>
 <p><span class="check">✓</span> Final list and count printed with an f-string</p>
 <p><span class="check">✓</span> Program does not crash on a missing item</p>
-<div class="speaker-notes" style="display:none">Speaker note: Circulate and watch for: (1) students calling remove() without an in-check; (2) students using pop() when they mean remove(). These are the two most common mistakes. Praise any student who uses the in-check proactively.</div>
+<p>&lt;!-- Speaker note: Circulate and watch for: (1) students calling remove() without an in-check; (2) students using pop() when they mean remove(). These are the two most common mistakes. Praise any student who uses the in-check proactively. --&gt;</p>
         </section>
 
         <section class="slide">
             <h1>Common Pitfalls (Hour 13)</h1>
-            <p><strong>⚠️</strong> **<code>remove()</code> on a missing item** — raises <code>ValueError</code>; always guard with <code>in</code></p>
-<p><strong>⚠️</strong> **<code>pop()</code> uses an index, not a value** — <code>fruits.pop(&quot;apple&quot;)</code> fails; use <code>fruits.remove(&quot;apple&quot;)</code></p>
+            <p><strong>⚠️</strong> <strong><code>remove()</code> on a missing item</strong> — raises <code>ValueError</code>; always guard with <code>in</code></p>
+<p><strong>⚠️</strong> <strong><code>pop()</code> uses an index, not a value</strong> — <code>fruits.pop(&quot;apple&quot;)</code> fails; use <code>fruits.remove(&quot;apple&quot;)</code></p>
 <p><strong>⚠️</strong> <strong>Index starts at 0</strong> — <code>fruits[1]</code> is the <em>second</em> item, not the first</p>
 <p><strong>⚠️</strong> <strong>Slice stop is excluded</strong> — <code>fruits[0:2]</code> returns items at index 0 and 1 only</p>
-<p><strong>⚠️</strong> **Confusing <code>append()</code> with <code>+</code>** — <code>list + item</code> raises a <code>TypeError</code>; use <code>list.append(item)</code></p>
+<p><strong>⚠️</strong> <strong>Confusing <code>append()</code> with <code>+</code></strong> — <code>list + item</code> raises a <code>TypeError</code>; use <code>list.append(item)</code></p>
 <pre data-lang="python"><code># ❌ Common mistake
 fruits = [&quot;apple&quot;, &quot;banana&quot;]
 fruits.remove(&quot;grape&quot;)    # ValueError: not in list
@@ -622,7 +626,11 @@ if &quot;grape&quot; in fruits:
         </section>
 
         <section class="slide">
-            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px">Hour 14: Iterating Lists with <code>for</code> Loops</div>
+            <h1>Hour 14: Iterating Lists with `for` Loops</h1>
+            
+        </section>
+
+        <section class="slide">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Explain what <code>for item in items:</code> does in everyday language</li>
@@ -644,13 +652,13 @@ print(grades[1])
 print(grades[2])
 print(grades[3])
 print(grades[4])</code></pre>
-<h3>The problem: it doesn't scale</h3>
+<h3>The problem: it doesn&#x27;t scale</h3>
 <ul>
   <li>100 grades → 100 lines</li>
   <li>1,000 grades → 1,000 lines</li>
   <li>If the list changes, you must rewrite everything</li>
 </ul>
-<blockquote>💡 We need one instruction that works for <em>any</em> list size.</blockquote>
+<blockquote>💡 We need one instruction that works for *any* list size.</blockquote>
         </section>
 
         <section class="slide">
@@ -659,9 +667,9 @@ print(grades[4])</code></pre>
 <pre data-lang="python"><code>for item in items:
     # do something with item</code></pre>
 <h3>Plain English translation</h3>
-<blockquote>&quot;For <strong>each</strong> item in the items list,  </blockquote>
-<blockquote>run the indented code once,  </blockquote>
-<blockquote>using that item's value.&quot;</blockquote>
+<blockquote>&quot;For **each** item in the items list,</blockquote>
+<blockquote>run the indented code once,</blockquote>
+<blockquote>using that item&#x27;s value.&quot;</blockquote>
 <pre data-lang="python"><code>colors = [&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;]
 
 for color in colors:
@@ -669,7 +677,7 @@ for color in colors:
 <pre><code>red
 blue
 green</code></pre>
-<div class="speaker-notes" style="display:none">Ask learners to predict the output before running. Reinforce that &quot;color&quot; is just a name — it changes each time around the loop.</div>
+<p>&lt;!-- Ask learners to predict the output before running. Reinforce that &quot;color&quot; is just a name — it changes each time around the loop. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -688,7 +696,7 @@ for x in colors:
 <pre data-lang="python"><code>for grade in grades:      # clear ✓
 for student in students:  # clear ✓
 for x in grades:          # works, but less readable</code></pre>
-<blockquote>💡 Use a <strong>descriptive singular</strong> name for the loop variable — it makes code readable.</blockquote>
+<blockquote>💡 Use a **descriptive singular** name for the loop variable — it makes code readable.</blockquote>
         </section>
 
         <section class="slide">
@@ -703,14 +711,46 @@ for grade in grades:
 
 print(total)            # 435</code></pre>
 <h3>Step-by-step trace</h3>
-<table style="border-collapse:collapse;margin:var(--spacing) 0;font-size:1rem">
-  <tr><th style="padding:8px 16px;border:1px solid var(--border);background:var(--accent-light);text-align:left">Loop step</th><th style="padding:8px 16px;border:1px solid var(--border);background:var(--accent-light);text-align:left"><code>grade</code></th><th style="padding:8px 16px;border:1px solid var(--border);background:var(--accent-light);text-align:left"><code>total</code></th></tr>
-  <tr><td style="padding:8px 16px;border:1px solid var(--border)">Start</td><td style="padding:8px 16px;border:1px solid var(--border)">—</td><td style="padding:8px 16px;border:1px solid var(--border)">0</td></tr>
-  <tr><td style="padding:8px 16px;border:1px solid var(--border)">Step 1</td><td style="padding:8px 16px;border:1px solid var(--border)">88</td><td style="padding:8px 16px;border:1px solid var(--border)">88</td></tr>
-  <tr><td style="padding:8px 16px;border:1px solid var(--border)">Step 2</td><td style="padding:8px 16px;border:1px solid var(--border)">92</td><td style="padding:8px 16px;border:1px solid var(--border)">180</td></tr>
-  <tr><td style="padding:8px 16px;border:1px solid var(--border)">Step 3</td><td style="padding:8px 16px;border:1px solid var(--border)">76</td><td style="padding:8px 16px;border:1px solid var(--border)">256</td></tr>
-  <tr><td style="padding:8px 16px;border:1px solid var(--border)">Step 4</td><td style="padding:8px 16px;border:1px solid var(--border)">95</td><td style="padding:8px 16px;border:1px solid var(--border)">351</td></tr>
-  <tr><td style="padding:8px 16px;border:1px solid var(--border)">Step 5</td><td style="padding:8px 16px;border:1px solid var(--border)">84</td><td style="padding:8px 16px;border:1px solid var(--border)">435</td></tr>
+<table>
+<thead>
+<tr>
+<th>Loop step</th>
+<th><code>grade</code></th>
+<th><code>total</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start</td>
+<td>—</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Step 1</td>
+<td>88</td>
+<td>88</td>
+</tr>
+<tr>
+<td>Step 2</td>
+<td>92</td>
+<td>180</td>
+</tr>
+<tr>
+<td>Step 3</td>
+<td>76</td>
+<td>256</td>
+</tr>
+<tr>
+<td>Step 4</td>
+<td>95</td>
+<td>351</td>
+</tr>
+<tr>
+<td>Step 5</td>
+<td>84</td>
+<td>435</td>
+</tr>
+</tbody>
 </table>
         </section>
 
@@ -732,7 +772,7 @@ lowest = min(grades)    # 76
 
 print(f&quot;Highest: {highest}&quot;)
 print(f&quot;Lowest:  {lowest}&quot;)</code></pre>
-<blockquote>💡 <code>max()</code> and <code>min()</code> work directly on the list — no loop needed!</blockquote>
+<blockquote>💡 `max()` and `min()` work directly on the list — no loop needed!</blockquote>
         </section>
 
         <section class="slide">
@@ -762,7 +802,7 @@ print(f&quot;Highest: {highest}&quot;)</code></pre>
 Total:   435
 Average: 87.0
 Highest: 95</code></pre>
-<div class="speaker-notes" style="display:none">Pause after typing total = 0. Ask &quot;Why do we start at zero, not any other number?&quot; Then walk through the trace table on the whiteboard or verbally.</div>
+<p>&lt;!-- Pause after typing total = 0. Ask &quot;Why do we start at zero, not any other number?&quot; Then walk through the trace table on the whiteboard or verbally. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -777,8 +817,8 @@ grades.append(int(input(&quot;Enter grade 4: &quot;)))
 grades.append(int(input(&quot;Enter grade 5: &quot;)))
 
 print(f&quot;Collected: {grades}&quot;)</code></pre>
-<blockquote>⚠️ Don't forget <code>int()</code> — <code>input()</code> always returns a <strong>string</strong>!</blockquote>
-<div class="speaker-notes" style="display:none">Speaker note: 🚫 Scope guardrail: Stay in Basics scope — no dictionaries, file I/O, or function design yet. Also, no while loops or range-based for loops for collecting input — individual appends are correct at this stage.</div>
+<blockquote>⚠️ Don&#x27;t forget `int()` — `input()` always returns a **string**!</blockquote>
+<p>&lt;!-- Speaker note: 🚫 Scope guardrail: Stay in Basics scope — no dictionaries, file I/O, or function design yet. Also, no while loops or range-based for loops for collecting input — individual appends are correct at this stage. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -799,12 +839,12 @@ print(f&quot;Collected: {grades}&quot;)</code></pre>
 <p><span class="check">✓</span> Division uses <code>len(grades)</code> — not the hard-coded number 5</p>
 <p><span class="check">✓</span> Average formatted to 1 decimal place with <code>:.1f</code></p>
 <p><span class="check">✓</span> Highest grade displayed correctly</p>
-<div class="speaker-notes" style="display:none">Speaker note: Common error to watch for: students write average = total / 5 instead of total / len(grades). Both work here, but dividing by len() is the safer habit. Coach toward len() actively.</div>
+<p>&lt;!-- Speaker note: Common error to watch for: students write average = total / 5 instead of total / len(grades). Both work here, but dividing by len() is the safer habit. Coach toward len() actively. --&gt;</p>
         </section>
 
         <section class="slide">
             <h1>Common Pitfalls (Hour 14)</h1>
-            <p><strong>⚠️</strong> **Forgetting <code>int()</code> or <code>float()</code> on <code>input()</code>** — <code>&quot;88&quot; + &quot;92&quot;</code> = <code>&quot;8892&quot;</code>, not <code>180</code></p>
+            <p><strong>⚠️</strong> <strong>Forgetting <code>int()</code> or <code>float()</code> on <code>input()</code></strong> — <code>&quot;88&quot; + &quot;92&quot;</code> = <code>&quot;8892&quot;</code>, not <code>180</code></p>
 <p><strong>⚠️</strong> <strong>Accumulator not initialized before the loop</strong> — <code>total</code> must be <code>0</code> before the <code>for</code> statement</p>
 <p><strong>⚠️</strong> <strong>Dividing by a hard-coded count</strong> — use <code>len(grades)</code> so it works for any list size</p>
 <p><strong>⚠️</strong> <strong>Indentation errors</strong> — the <code>total += grade</code> line must be <em>inside</em> the loop (4 spaces in)</p>
@@ -827,13 +867,17 @@ for grade in grades:
 <pre data-lang="python"><code>total = 0
 for x in nums:
     total += x</code></pre>
-<p>Start the accumulator at <code>0</code> <em>before</em> the loop.  </p>
-<p>Add each item to it <em>inside</em> the loop.  </p>
+<p>Start the accumulator at <code>0</code> <em>before</em> the loop.</p>
+<p>Add each item to it <em>inside</em> the loop.</p>
 <p>Read the result <em>after</em> the loop ends.</p>
         </section>
 
         <section class="slide">
-            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px">Hour 15: Nested Lists for Table-Like Data</div>
+            <h1>Hour 15: Nested Lists for Table-Like Data</h1>
+            
+        </section>
+
+        <section class="slide">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Explain what a nested list is in simple language</li>
@@ -878,7 +922,7 @@ seats_flat = [&quot;A1&quot;, &quot;A2&quot;, &quot;A3&quot;, &quot;B1&quot;, &q
 
 # Nested — structure is visible
 seats = [[&quot;A1&quot;, &quot;A2&quot;, &quot;A3&quot;], [&quot;B1&quot;, &quot;B2&quot;, &quot;B3&quot;]]</code></pre>
-<blockquote>💡 A nested list makes the <em>shape</em> of the data visible in the code.</blockquote>
+<blockquote>💡 A nested list makes the *shape* of the data visible in the code.</blockquote>
         </section>
 
         <section class="slide">
@@ -912,11 +956,11 @@ row 2 [ &quot;C1&quot;,  &quot;C2&quot;,  &quot;C3&quot; ]</code></pre>
 
 seats[1][2] = &quot;X&quot;   # row 1, col 2  →  &quot;B3&quot; → &quot;X&quot;
 
-print(seats[1])     # ['B1', 'B2', 'X']</code></pre>
+print(seats[1])     # [&#x27;B1&#x27;, &#x27;B2&#x27;, &#x27;X&#x27;]</code></pre>
 <h3>The assignment works just like a regular list</h3>
 <pre data-lang="python"><code># Single list:  items[index] = new_value
 # Nested list:  grid[row][col] = new_value</code></pre>
-<blockquote>⚠️ Remember: both indices are <strong>zero-based</strong>!</blockquote>
+<blockquote>⚠️ Remember: both indices are **zero-based**!</blockquote>
         </section>
 
         <section class="slide">
@@ -930,12 +974,12 @@ print(seats[1])     # ['B1', 'B2', 'X']</code></pre>
 
 for row in seats:
     print(row)</code></pre>
-<pre><code>['A1', 'A2', 'A3']
-['B1', 'B2', 'B3']
-['C1', 'C2', 'C3']</code></pre>
+<pre><code>[&#x27;A1&#x27;, &#x27;A2&#x27;, &#x27;A3&#x27;]
+[&#x27;B1&#x27;, &#x27;B2&#x27;, &#x27;B3&#x27;]
+[&#x27;C1&#x27;, &#x27;C2&#x27;, &#x27;C3&#x27;]</code></pre>
 <h3>Reading the loop in plain English</h3>
-<blockquote>&quot;For <strong>each row</strong> in seats, print that row.&quot;</blockquote>
-<div class="speaker-notes" style="display:none">Ask learners: &quot;What type is 'row' inside the loop?&quot; (It's a list.) This is a great discovery moment.</div>
+<blockquote>&quot;For **each row** in seats, print that row.&quot;</blockquote>
+<p>&lt;!-- Ask learners: &quot;What type is &#x27;row&#x27; inside the loop?&quot; (It&#x27;s a list.) This is a great discovery moment. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -964,15 +1008,15 @@ for row in seats:
     print(row)</code></pre>
 <h3>Expected Output</h3>
 <pre><code>Original seating chart:
-['A1', 'A2', 'A3']
-['B1', 'B2', 'B3']
-['C1', 'C2', 'C3']
+[&#x27;A1&#x27;, &#x27;A2&#x27;, &#x27;A3&#x27;]
+[&#x27;B1&#x27;, &#x27;B2&#x27;, &#x27;B3&#x27;]
+[&#x27;C1&#x27;, &#x27;C2&#x27;, &#x27;C3&#x27;]
 
 After reserving B2:
-['A1', 'A2', 'A3']
-['B1', 'X', 'B3']
-['C1', 'C2', 'C3']</code></pre>
-<div class="speaker-notes" style="display:none">Speaker note: After the demo, ask learners to predict: &quot;If I type seats[0][2], what do I get?&quot; (Answer: &quot;A3&quot;). Then ask &quot;What about seats[2][0]?&quot; (Answer: &quot;C1&quot;). Quick verbal drill builds indexing muscle memory.</div>
+[&#x27;A1&#x27;, &#x27;A2&#x27;, &#x27;A3&#x27;]
+[&#x27;B1&#x27;, &#x27;X&#x27;, &#x27;B3&#x27;]
+[&#x27;C1&#x27;, &#x27;C2&#x27;, &#x27;C3&#x27;]</code></pre>
+<p>&lt;!-- Speaker note: After the demo, ask learners to predict: &quot;If I type seats[0][2], what do I get?&quot; (Answer: &quot;A3&quot;). Then ask &quot;What about seats[2][0]?&quot; (Answer: &quot;C1&quot;). Quick verbal drill builds indexing muscle memory. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -992,14 +1036,14 @@ After reserving B2:
 <p><span class="check">✓</span> User input converted to <code>int()</code> before use as index</p>
 <p><span class="check">✓</span> Assignment uses <code>seats[row][col] = &quot;X&quot;</code> correctly</p>
 <p><span class="check">✓</span> No <code>IndexError</code> when valid indices (0–2) are entered</p>
-<div class="speaker-notes" style="display:none">Speaker note: Watch for the most common mistake: students writing seats[col][row] instead of seats[row][col]. Draw the grid visual on the board and label it. Physically pointing to rows first (top-to-bottom) then columns (left-to-right) helps. Also remind them int() is required on the input — without it, &quot;1&quot; is a string, not a valid index.</div>
+<p>&lt;!-- Speaker note: Watch for the most common mistake: students writing seats[col][row] instead of seats[row][col]. Draw the grid visual on the board and label it. Physically pointing to rows first (top-to-bottom) then columns (left-to-right) helps. Also remind them int() is required on the input — without it, &quot;1&quot; is a string, not a valid index. --&gt;</p>
         </section>
 
         <section class="slide">
             <h1>Common Pitfalls (Hour 15)</h1>
             <p><strong>⚠️</strong> <strong>Swapping row and col</strong> — <code>seats[col][row]</code> gives wrong cell; always row first, then column</p>
 <p><strong>⚠️</strong> <strong>Forgetting zero-based counting</strong> — <code>seats[3][0]</code> on a 3-row grid → <code>IndexError</code></p>
-<p><strong>⚠️</strong> **Not converting input to <code>int()</code>** — <code>seats[&quot;1&quot;][&quot;2&quot;]</code> raises a <code>TypeError</code></p>
+<p><strong>⚠️</strong> <strong>Not converting input to <code>int()</code></strong> — <code>seats[&quot;1&quot;][&quot;2&quot;]</code> raises a <code>TypeError</code></p>
 <p><strong>⚠️</strong> <strong>Off-by-one on update</strong> — want row 2 col 1 → use <code>seats[2][1]</code>, not <code>seats[3][2]</code></p>
 <pre data-lang="python"><code># ❌ Swapped indices (common beginner mistake)
 seats[col][row] = &quot;X&quot;     # wrong order
@@ -1027,7 +1071,11 @@ row = int(input(&quot;Row: &quot;))</code></pre>
         </section>
 
         <section class="slide">
-            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px">Hour 16: Checkpoint 2 — Lists + String Handling</div>
+            <h1>Hour 16: Checkpoint 2 — Lists + String Handling</h1>
+            
+        </section>
+
+        <section class="slide">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Demonstrate list creation and updates in a short checkpoint program</li>
@@ -1050,13 +1098,13 @@ row = int(input(&quot;Row: &quot;))</code></pre>
 </ul>
 <h3>What this checkpoint does NOT require</h3>
 <ul>
-  <li>✗ Looping menus (while loops) — not yet</li>
-  <li>✗ Dictionaries or files</li>
-  <li>✗ Functions or classes</li>
-  <li>✗ Any Advanced-module topics</li>
+  <li><span class="cross">✗</span> Looping menus (while loops) — not yet</li>
+  <li><span class="cross">✗</span> Dictionaries or files</li>
+  <li><span class="cross">✗</span> Functions or classes</li>
+  <li><span class="cross">✗</span> Any Advanced-module topics</li>
 </ul>
-<blockquote>💡 One clean pass through the user's chosen action is all that's needed.</blockquote>
-<div class="speaker-notes" style="display:none">🚫 Scope guardrail: Stay in Basics scope — no dictionaries, file I/O, or function design yet.</div>
+<blockquote>💡 One clean pass through the user&#x27;s chosen action is all that&#x27;s needed.</blockquote>
+<p>&lt;!-- 🚫 Scope guardrail: Stay in Basics scope — no dictionaries, file I/O, or function design yet. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -1086,14 +1134,14 @@ row = int(input(&quot;Row: &quot;))</code></pre>
 <pre data-lang="python"><code>todo_items = []
 new_item = input(&quot;Enter item to add: &quot;)
 todo_items.append(new_item)
-print(f&quot;Added: '{new_item}'&quot;)</code></pre>
+print(f&quot;Added: &#x27;{new_item}&#x27;&quot;)</code></pre>
 <h3>Remove an item (with safety check)</h3>
 <pre data-lang="python"><code>item_to_remove = input(&quot;Item to remove: &quot;)
 if item_to_remove in todo_items:
     todo_items.remove(item_to_remove)
-    print(f&quot;Removed: '{item_to_remove}'&quot;)
+    print(f&quot;Removed: &#x27;{item_to_remove}&#x27;&quot;)
 else:
-    print(f&quot;'{item_to_remove}' was not found in the list.&quot;)</code></pre>
+    print(f&quot;&#x27;{item_to_remove}&#x27; was not found in the list.&quot;)</code></pre>
 <h3>Show all items</h3>
 <pre data-lang="python"><code>for i, item in enumerate(todo_items, 1):
     print(f&quot;{i}. {item}&quot;)</code></pre>
@@ -1110,12 +1158,12 @@ for i, item in enumerate(items, 1):
 <pre><code>1. study Python
 2. buy groceries
 3. call mom</code></pre>
-<h3>What <code>enumerate(items, 1)</code> gives you</h3>
+<h3>What `enumerate(items, 1)` gives you</h3>
 <ul>
   <li><code>i</code> — the counter (starts at <code>1</code> because we passed <code>1</code>)</li>
   <li><code>item</code> — the current list item</li>
 </ul>
-<blockquote>💡 Without <code>enumerate()</code>, you'd need a separate counter variable — this is cleaner!</blockquote>
+<blockquote>💡 Without `enumerate()`, you&#x27;d need a separate counter variable — this is cleaner!</blockquote>
         </section>
 
         <section class="slide">
@@ -1128,15 +1176,15 @@ action = input(&quot;Choose: add, remove, or show: &quot;)
 if action == &quot;add&quot;:
     new_item = input(&quot;Enter item: &quot;)
     todo_items.append(new_item)
-    print(f&quot;Added: '{new_item}'&quot;)
+    print(f&quot;Added: &#x27;{new_item}&#x27;&quot;)
 
 elif action == &quot;remove&quot;:
     item_to_remove = input(&quot;Item to remove: &quot;)
     if item_to_remove in todo_items:
         todo_items.remove(item_to_remove)
-        print(f&quot;Removed: '{item_to_remove}'&quot;)
+        print(f&quot;Removed: &#x27;{item_to_remove}&#x27;&quot;)
     else:
-        print(f&quot;'{item_to_remove}' not found.&quot;)
+        print(f&quot;&#x27;{item_to_remove}&#x27; not found.&quot;)
 
 elif action == &quot;show&quot;:
     if len(todo_items) == 0:
@@ -1147,7 +1195,7 @@ elif action == &quot;show&quot;:
 
 else:
     print(&quot;Unrecognized action. Choose: add, remove, or show.&quot;)</code></pre>
-<div class="speaker-notes" style="display:none">Speaker note: Walk through this structure at a high level ONLY before the lab. Do not write it for learners. Your goal is to show the three branches exist and the numbered output pattern — then let them build it themselves.</div>
+<p>&lt;!-- Speaker note: Walk through this structure at a high level ONLY before the lab. Do not write it for learners. Your goal is to show the three branches exist and the numbered output pattern — then let them build it themselves. --&gt;</p>
         </section>
 
         <section class="slide">
@@ -1170,7 +1218,7 @@ for i, item in enumerate(todo_items, 1):
 to_remove = &quot;buy notebook&quot;
 if to_remove in todo_items:
     todo_items.remove(to_remove)
-    print(f&quot;\nRemoved '{to_remove}'.&quot;)
+    print(f&quot;\nRemoved &#x27;{to_remove}&#x27;.&quot;)
 
 print(f&quot;\nUpdated list ({len(todo_items)} items):&quot;)
 for i, item in enumerate(todo_items, 1):
@@ -1181,7 +1229,7 @@ for i, item in enumerate(todo_items, 1):
 2. buy notebook
 3. study lists
 
-Removed 'buy notebook'.
+Removed &#x27;buy notebook&#x27;.
 
 Updated list (2 items):
 1. email team
@@ -1208,27 +1256,27 @@ Updated list (2 items):
 <p><span class="check">✓</span> <code>show</code> uses <code>enumerate(items, 1)</code> for numbered output</p>
 <p><span class="check">✓</span> F-strings used for all output messages</p>
 <p><span class="check">✓</span> Program handles unrecognized action gracefully</p>
-<div class="speaker-notes" style="display:none">Speaker note: Circulate during the checkpoint. Look for: (1) missing in-check before remove; (2) students using pop() with a value — remind them pop() needs an index; (3) enumerate starting at 0 instead of 1. This is a self-contained assessment — resist solving it for students. Ask guiding questions: &quot;What does your remove branch do if the item isn't there?&quot;</div>
+<p>&lt;!-- Speaker note: Circulate during the checkpoint. Look for: (1) missing in-check before remove; (2) students using pop() with a value — remind them pop() needs an index; (3) enumerate starting at 0 instead of 1. This is a self-contained assessment — resist solving it for students. Ask guiding questions: &quot;What does your remove branch do if the item isn&#x27;t there?&quot; --&gt;</p>
         </section>
 
         <section class="slide">
             <h1>remove() vs pop() — Final Clarity</h1>
-            <h3><code>remove()</code> — by value</h3>
+            <h3>`remove()` — by value</h3>
 <pre data-lang="python"><code>items = [&quot;walk dog&quot;, &quot;read book&quot;, &quot;cook dinner&quot;]
 
 items.remove(&quot;read book&quot;)   # finds the value and removes it
 print(items)
-# ['walk dog', 'cook dinner']</code></pre>
-<h3><code>pop()</code> — by index</h3>
+# [&#x27;walk dog&#x27;, &#x27;cook dinner&#x27;]</code></pre>
+<h3>`pop()` — by index</h3>
 <pre data-lang="python"><code>items = [&quot;walk dog&quot;, &quot;read book&quot;, &quot;cook dinner&quot;]
 
 removed = items.pop(1)      # removes at index 1
 print(removed)              # &quot;read book&quot;
 print(items)
-# ['walk dog', 'cook dinner']</code></pre>
+# [&#x27;walk dog&#x27;, &#x27;cook dinner&#x27;]</code></pre>
 <h3>When to use which</h3>
 <ul>
-  <li><strong>Know the name?</strong> → <code>remove()</code>  </li>
+  <li><strong>Know the name?</strong> → <code>remove()</code></li>
   <li><strong>Know the position?</strong> → <code>pop()</code></li>
   <li><strong>Need the removed value back?</strong> → <code>pop()</code> returns it</li>
 </ul>
@@ -1236,9 +1284,9 @@ print(items)
 
         <section class="slide">
             <h1>Common Pitfalls (Hour 16)</h1>
-            <p><strong>⚠️</strong> **Calling <code>remove()</code> without an <code>in</code> guard** — raises <code>ValueError</code> if item is missing</p>
-<p><strong>⚠️</strong> **Using <code>pop(&quot;item&quot;)</code> instead of <code>remove(&quot;item&quot;)</code>** — <code>pop()</code> needs an index, not a value</p>
-<p><strong>⚠️</strong> **<code>enumerate()</code> starting at 0** — pass <code>1</code> as second argument for human-friendly numbering</p>
+            <p><strong>⚠️</strong> <strong>Calling <code>remove()</code> without an <code>in</code> guard</strong> — raises <code>ValueError</code> if item is missing</p>
+<p><strong>⚠️</strong> <strong>Using <code>pop(&quot;item&quot;)</code> instead of <code>remove(&quot;item&quot;)</code></strong> — <code>pop()</code> needs an index, not a value</p>
+<p><strong>⚠️</strong> <strong><code>enumerate()</code> starting at 0</strong> — pass <code>1</code> as second argument for human-friendly numbering</p>
 <p><strong>⚠️</strong> <strong>Forgetting to test all three branches</strong> — test add, remove, and show before calling done</p>
 <pre data-lang="python"><code># ❌ Crashes if item not found
 items.remove(&quot;missing item&quot;)   # ValueError
@@ -1269,7 +1317,11 @@ for i, item in enumerate(items, 1): # starts at 1
         </section>
 
         <section class="slide">
-            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px">Session 4 Wrap-Up</div>
+            <h1>Session 4 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide">
             <h1>What We Covered Today</h1>
             <h3>Hour 13: Lists Fundamentals</h3>
 <ul>
@@ -1278,7 +1330,7 @@ for i, item in enumerate(items, 1): # starts at 1
   <li>Mutating with <code>append()</code>, <code>remove()</code>, <code>pop()</code></li>
   <li>Membership test with <code>in</code></li>
 </ul>
-<h3>Hour 14: Iterating Lists with <code>for</code> Loops</h3>
+<h3>Hour 14: Iterating Lists with `for` Loops</h3>
 <ul>
   <li><code>for item in items:</code> — plain English mental model</li>
   <li>Accumulator pattern: <code>total = 0</code> → <code>total += item</code></li>
@@ -1371,13 +1423,12 @@ for i, item in enumerate(items, 1): # starts at 1
             <h1>Thank You!</h1>
             <p>See you in Session 5!</p>
         </section>
-
     </div>
-
+    
     <div id="progress-bar"></div>
     <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
     <div id="nav-hint">← → or Space to navigate</div>
-
+    
     <script>
         // ====================================
         // SLIDE NAVIGATION
@@ -1388,10 +1439,10 @@ for i, item in enumerate(items, 1): # starts at 1
         const progressBar = document.getElementById('progress-bar');
         const currentCounter = document.getElementById('current');
         const totalCounter = document.getElementById('total');
-
+        
         // Initialize
         totalCounter.textContent = totalSlides;
-
+        
         function updateSlideDisplay(updateHash = true) {
             // Hide all slides
             slides.forEach((slide, index) => {
@@ -1400,46 +1451,46 @@ for i, item in enumerate(items, 1): # starts at 1
                     slide.classList.add('previous');
                 }
             });
-
+            
             // Show current slide
             if (slides[currentSlide]) {
                 slides[currentSlide].classList.add('active');
             }
-
+            
             // Update progress bar
             const progress = ((currentSlide + 1) / totalSlides) * 100;
             progressBar.style.width = progress + '%';
-
+            
             // Update counter
             currentCounter.textContent = currentSlide + 1;
-
+            
             // Update URL hash (for bookmarking)
             if (updateHash) {
                 window.location.hash = currentSlide + 1;
             }
         }
-
+        
         function nextSlide() {
             if (currentSlide < totalSlides - 1) {
                 currentSlide++;
                 updateSlideDisplay();
             }
         }
-
+        
         function prevSlide() {
             if (currentSlide > 0) {
                 currentSlide--;
                 updateSlideDisplay();
             }
         }
-
+        
         function goToSlide(index) {
             if (index >= 0 && index < totalSlides) {
                 currentSlide = index;
                 updateSlideDisplay();
             }
         }
-
+        
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             switch(e.key) {
@@ -1464,20 +1515,20 @@ for i, item in enumerate(items, 1): # starts at 1
                     break;
             }
         });
-
+        
         // Touch/swipe support for mobile
         let touchStartX = 0;
         let touchEndX = 0;
-
+        
         document.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
         });
-
+        
         document.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         });
-
+        
         function handleSwipe() {
             const swipeThreshold = 50;
             if (touchEndX < touchStartX - swipeThreshold) {
@@ -1487,7 +1538,7 @@ for i, item in enumerate(items, 1): # starts at 1
                 prevSlide();
             }
         }
-
+        
         // Load slide from URL hash
         window.addEventListener('load', () => {
             const hash = window.location.hash.slice(1);
