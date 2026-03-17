@@ -91,14 +91,14 @@ Topics coming **later in Basics**:
 - File I/O — reading and writing files (Session 11)
 - More OOP patterns (Session 11–12)
 
-Topics **excluded** (covered in the Advanced course):
+Topics **excluded from full coverage** (covered in the Advanced course; only brief, optional previews may appear):
 - Inheritance and subclassing
 - Magic/dunder methods beyond `__init__` (e.g., `__str__`, `__repr__`)
 - `@property` decorators
 - `@classmethod` / `@staticmethod`
 - Multiple inheritance
 - Abstract base classes (ABC)
-- Lambda functions, list comprehensions, generators
+- Advanced use of lambda functions, list comprehensions, and generators
 
 ---
 
