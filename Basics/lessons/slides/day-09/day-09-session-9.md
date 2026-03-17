@@ -861,7 +861,10 @@ for name in raw_contacts:
 ```python
 # Bug: local rebind — does NOT modify caller's list
 def bad_normalize(names: list) -> None:
-    names = [n.strip().title() for n in names]  # local rebind!
+    new_list = []
+    for n in names:
+        new_list.append(n.strip().title())
+    names = new_list  # local rebind!
     # 'names' now points to a new list — caller's list is unchanged
     # AND nothing is returned!
 
