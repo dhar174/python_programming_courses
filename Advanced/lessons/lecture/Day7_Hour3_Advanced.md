@@ -1,19 +1,20 @@
 # Day 7, Hour 3: Row Mapping — Converting Database Rows Back into Objects (Course Hour 27)
-**Python Programming (Advanced) – Session 7**
 
-**Course:** Python Programming (Advanced)  
-**Runbook alignment:** Session 7, Course Hour 27 – Row mapping: converting rows to objects  
-**Duration:** 60 minutes  
-**Mode:** Instructor-led + live coding + guided lab  
-**Audience:** Advanced Python learners who already have basic SQLite CRUD working and now need to return domain objects cleanly
+## Instructor Notes
 
----
-
-## Instructor Deliverable Script (Use Largely Verbatim)
+- **Course:** Python Programming (Advanced)
+- **Session:** 7 (Day 7, Hour 3)
+- **Course hour:** 27 – Row mapping: converting rows to objects
+- **Runbook reference:** Python_Advanced_Instructor_Runbook_4hr_Days.md – Session 7, Course Hour 27 – Row mapping: converting rows to objects
+- **Duration:** 60 minutes
+- **Mode:** Instructor-led + live coding + guided lab
+- **Audience:** Advanced Python learners who already have basic SQLite CRUD working and now need to return domain objects cleanly
 
 > **Instructor note:** The central teaching goal this hour is architectural cleanliness. Learners have seen raw row tuples, but the rest of their application should not be forced to remember column order or stringly-typed dates. Teach row mapping as a boundary responsibility of the repository. Keep mapping code centralized, use modern Python dataclasses and type hints, and show how `sqlite3.Row` improves readability. The live demo should culminate in `get_by_id`, `update`, and `delete` methods that work with domain objects and clear missing-record behavior. Reinforce the runbook warning about mismatched column ordering and missing `WHERE` clauses.
 
 ---
+
+## Instructor Deliverable Script (Use Largely Verbatim)
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
