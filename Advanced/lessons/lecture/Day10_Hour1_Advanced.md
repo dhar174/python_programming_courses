@@ -140,11 +140,12 @@ def require_api_key():
     if not provided:
         return error_response("missing_api_key", "API key is required.", 401)
 
-    if provided != API_KEY:
+    # Use a constant-time comparison to prevent timing attacks.
+    # Also, ensure that if the server-side API_KEY is not configured, all requests are rejected.
+    if not API_KEY or not hmac.compare_digest(provided, API_KEY):
         return error_response("invalid_api_key", "API key is invalid.", 403)
 
     return None
-```
 
 ### Step 3: Use It in Write Routes
 
