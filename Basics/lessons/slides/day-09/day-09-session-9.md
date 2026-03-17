@@ -1139,14 +1139,23 @@ $ python utils.py
 $ python main.py
 ```
 
-### Error 2: Running from the Wrong Folder
+### Error 2: Filename Mismatch
+```bash
+# Project files:
+#   project/
+#     main.py
+#     helpers.py    # but in main.py you wrote:
+#
+# In main.py:
+#     import utils   # ModuleNotFoundError: No module named 'utils'
 ```
-# Wrong: running from parent folder
-$ python project/main.py   # may not find utils.py on some systems
 
-# Fix: change into the project directory first
-$ cd project
-$ python main.py
+```bash
+# Fix option 1: rename helpers.py to utils.py
+$ mv helpers.py utils.py
+
+# Fix option 2: update the import in main.py
+# import helpers
 ```
 
 ### Error 3: Module Name Conflicts
