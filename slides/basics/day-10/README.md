@@ -37,7 +37,7 @@ By the end of Session 10, learners can:
 ### Hour 39 — Basic encapsulation + data validation
 - Add validation logic inside class methods
 - Use methods to enforce business rules in one place
-- Return meaningful feedback or raise `ValueError` for invalid input
+- Return a status value (e.g., True/False) and let the caller show a message for invalid input
 - Keep UI code separate from validation logic
 
 ### Hour 40 — Checkpoint 5: Functions, modules & intro OOP
