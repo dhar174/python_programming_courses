@@ -389,6 +389,14 @@ class ContactFormApp:
                 self.email_var.get(),
                 self.role_var.get(),
             )
+        except Exception as exc:
+            # In a real app you might log this to a file; for the demo, console is enough.
+            print(f"Unexpected error while saving contact: {exc!r}")
+            self.status_var.set(
+                "Something went wrong while saving. Please try again, "
+                "or contact support if the problem persists."
+            )
+            return
         finally:
             self.save_button.state(["!disabled"])
 
