@@ -11,7 +11,7 @@
 
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
-> **Instructor note:** The central teaching goal this hour is architectural cleanliness. Learners have seen raw row tuples, but the rest of their application should not be forced to remember column order or stringly typed dates. Teach row mapping as a boundary responsibility of the repository. Keep mapping code centralized, use modern Python dataclasses and type hints, and show how `sqlite3.Row` improves readability. The live demo should culminate in `get_by_id`, `update`, and `delete` methods that work with domain objects and clear missing-record behavior. Reinforce the runbook warning about mismatched column ordering and missing `WHERE` clauses.
+> **Instructor note:** The central teaching goal this hour is architectural cleanliness. Learners have seen raw row tuples, but the rest of their application should not be forced to remember column order or stringly-typed dates. Teach row mapping as a boundary responsibility of the repository. Keep mapping code centralized, use modern Python dataclasses and type hints, and show how `sqlite3.Row` improves readability. The live demo should culminate in `get_by_id`, `update`, and `delete` methods that work with domain objects and clear missing-record behavior. Reinforce the runbook warning about mismatched column ordering and missing `WHERE` clauses.
 
 ---
 
