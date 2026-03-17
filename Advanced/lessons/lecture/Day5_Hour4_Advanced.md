@@ -361,7 +361,7 @@ class ContactBrowserApp:
         self.detail_vars["email"].set("-")
         self.detail_vars["role"].set("-")
 
-    def on_select(self, event: tk.Event) -> None:
+    def on_select(self, _event: tk.Event) -> None:
         selected_items = self.tree.selection()
         if not selected_items:
             self.clear_details()
