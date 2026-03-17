@@ -1,15 +1,11 @@
 # Day 7, Hour 4: Transactions, Integrity, and Initialization Patterns (Course Hour 28)
-**Python Programming (Advanced) – Session 7**
 
-**Course:** Python Programming (Advanced)  
-**Runbook alignment:** Session 7, Course Hour 28 – Transactions + integrity + initialization patterns  
-**Duration:** 60 minutes  
-**Mode:** Instructor-led + live coding + guided hardening lab  
-**Audience:** Advanced Python learners who have a basic SQLite repository and now need predictable startup and safer grouped writes
+## Instructor Notes
 
----
-
-## Instructor Deliverable Script (Use Largely Verbatim)
+- **Course:** Python Programming (Advanced)
+- **Session:** 7
+- **Hour:** 4 (Course Hour 28)
+- **Runbook reference:** Session 7, Course Hour 28 – Transactions + integrity + initialization patterns
 
 > **Instructor note:** This hour hardens the database layer. Keep it practical: grouped writes should succeed together or fail together, initialization should be safe to run every startup, and the database should enforce a small set of meaningful integrity rules. Do not let the session drift into heavy relational theory. Mention foreign keys lightly and accurately: SQLite supports them, but they require `PRAGMA foreign_keys = ON` per connection. The high-value outcomes are idempotent `init_db()`, sensible constraints, and a clear transaction example using a connection context manager. Learners should leave feeling that their persistence layer is no longer a fragile demo but the beginning of a dependable application component.
 
