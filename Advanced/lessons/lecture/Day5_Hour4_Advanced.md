@@ -342,8 +342,7 @@ class ContactBrowserApp:
         )
 
     def refresh_records(self) -> None:
-        for item_id in self.tree.get_children():
-            self.tree.delete(item_id)
+        self.tree.delete(*self.tree.get_children())
 
         records = self.service.list_records()
 
