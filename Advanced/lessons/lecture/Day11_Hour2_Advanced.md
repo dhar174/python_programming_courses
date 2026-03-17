@@ -157,5 +157,6 @@ Reuse the shared day-level instructor support from `Day11_Hour1_Advanced.md` for
 
 - `## Instructor Coaching Appendix`
 - `## Facilitation Toolkit`
+- `## Data Storytelling Appendix`
 
 This keeps the Day 11 coaching guidance in one maintained location while preserving this file's hour-specific lecture script.

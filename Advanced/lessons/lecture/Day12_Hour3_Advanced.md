@@ -150,5 +150,7 @@ Reuse the shared day-level instructor support from `Day12_Hour1_Advanced.md` for
 
 - `## Instructor Coaching Appendix`
 - `## Facilitation Toolkit`
+- `## Final Delivery Appendix`
+- `## Certification Review Appendix`
 
 This keeps the Day 12 coaching guidance in one maintained location while preserving this file's hour-specific lecture script.
