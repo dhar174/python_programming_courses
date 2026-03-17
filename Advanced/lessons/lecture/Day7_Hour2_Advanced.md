@@ -110,7 +110,7 @@ with sqlite3.connect(db_path) as connection:
 - We make sure the directory exists before trying to create the database file.
 - We use a connection context manager with `with`.
 
-That `with` block matters. When the block exits, the connection is closed cleanly. Also, for write operations, the context manager helps manage commits and rollbacks more safely."
+That `with` block matters. When the block exits, any pending transaction is committed (or rolled back if an error occurred). For write operations, the context manager helps manage commits and rollbacks more safely, but in longer‑running applications you should still call `connection.close()` explicitly when you're truly done with the database."
 
 ### 4.2 Explain cursor versus connection
 
