@@ -1,5 +1,5 @@
-# Basics Day 8 - Session 8 (Hours 29-32)
-Python Programming (Basic) - Menu Loops, Input Validation, and CLI Mini-Projects
+# Basics Day 8 — Session 8 (Hours 29–32)
+Python Programming (Basic) • Menu Loops, Input Validation, and CLI Mini-Projects
 
 ## Session 8 Overview
 - Hour 29: Menu loops - building simple CLI menus
