@@ -602,7 +602,7 @@ def clear_form(self) -> None:
 
 ```python
 def set_status(self, message: str) -> None:
-    self.status_var_label.set(message)
+    self.status_text.set(message)
 ```
 
 Remind learners that helper functions reduce duplication and make GUI behavior more consistent.
