@@ -87,10 +87,10 @@ An empty default is acceptable in development only if your code handles it delib
 We will use a simple custom header called `X-API-Key`. The client sends it like this:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/records ^
-  -H "Content-Type: application/json" ^
-  -H "X-API-Key: super-secret-value" ^
-  -d "{\"title\":\"Ship report\",\"category\":\"ops\",\"status\":\"open\"}"
+curl -X POST http://127.0.0.1:5000/records \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: super-secret-value" \
+  -d '{"title":"Ship report","category":"ops","status":"open"}'
 ```
 
 ### `401` vs `403`
