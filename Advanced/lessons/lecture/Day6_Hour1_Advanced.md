@@ -67,7 +67,7 @@ If they do not yet have update/delete service methods, they can still follow the
 - Python 3.11+
 - Tkinter / `ttk`
 - Existing tracker project folder
-- Optional sample JSON data file, though JSON persistence is formally emphasized in Hour 23
+- Optional sample JSON data file, though JSON persistence is formally emphasized in **Session 6 Hour 3** (Runbook Hour 23 / Day 6 Hour 3)
 - Projector-ready font size because learners need to watch selection and refresh behavior closely
 
 Recommended pre-class instructor setup:
