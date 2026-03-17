@@ -1142,7 +1142,10 @@ for name in raw_contacts:
             <h3>Pitfall 1: Reassigning a Local Variable Without Returning</h3>
 <pre data-lang="python"><code># Bug: local rebind — does NOT modify caller&#x27;s list
 def bad_normalize(names: list) -&gt; None:
-    names = [n.strip().title() for n in names]  # local rebind!
+    new_list = []
+    for n in names:
+        new_list.append(n.strip().title())
+    names = new_list  # local rebind!
     # &#x27;names&#x27; now points to a new list — caller&#x27;s list is unchanged
     # AND nothing is returned!
 
@@ -1396,13 +1399,19 @@ $ python utils.py
 
 # Fix: always run main.py
 $ python main.py</code></pre>
-<h3>Error 2: Running from the Wrong Folder</h3>
-<pre><code># Wrong: running from parent folder
-$ python project/main.py   # may not find utils.py on some systems
+<h3>Error 2: Filename Mismatch</h3>
+<pre data-lang="bash"><code># Project files:
+#   project/
+#     main.py
+#     helpers.py    # but in main.py you wrote:
+#
+# In main.py:
+#     import utils   # ModuleNotFoundError: No module named &#x27;utils&#x27;</code></pre>
+<pre data-lang="bash"><code># Fix option 1: rename helpers.py to utils.py
+$ mv helpers.py utils.py
 
-# Fix: change into the project directory first
-$ cd project
-$ python main.py</code></pre>
+# Fix option 2: update the import in main.py
+# import helpers</code></pre>
 <h3>Error 3: Module Name Conflicts</h3>
 <pre data-lang="python"><code># Wrong: you named your file &#x27;random.py&#x27; then tried:
 import random
