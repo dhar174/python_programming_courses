@@ -1,15 +1,13 @@
 # Day 7, Hour 1: From Objects to Tables — Schema Thinking + the Repository Idea (Course Hour 25)
-**Python Programming (Advanced) – Session 7**
 
-**Course:** Python Programming (Advanced)  
-**Runbook alignment:** Session 7, Course Hour 25 – From objects to tables: schema thinking + repository idea  
-**Duration:** 60 minutes  
-**Mode:** Instructor-led + live coding + guided design lab  
-**Audience:** Advanced Python learners who already have classes, service-layer logic, and basic file persistence experience
+## Instructor Notes
 
----
-
-## Instructor Deliverable Script (Use Largely Verbatim)
+- **Course:** Python Programming (Advanced)
+- **Session:** 7 (Hour 1 — Course Hour 25)
+- **Runbook reference:** Session 7, Course Hour 25 – From objects to tables: schema thinking + repository idea
+- **Duration:** 60 minutes
+- **Mode:** Instructor-led + live coding + guided design lab
+- **Audience:** Advanced Python learners who already have classes, service-layer logic, and basic file persistence experience
 
 > **Instructor note:** This document is intentionally written as a read-aloud teaching guide. Your job this hour is not to turn learners into database administrators and not to jump ahead into ORM tooling. Keep the focus on a practical bridge: we already know how to model business concepts as Python objects, and now we need a reliable way to store those objects in a relational database. Emphasize schema thinking, stable IDs, the shape of CRUD operations, and the value of a repository as a boundary between business logic and SQL details. Learners should leave with a schema draft and a clean repository interface, even if the concrete SQLite implementation comes in the next hour.
 
@@ -18,6 +16,8 @@
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
 "By the end of this hour, you will be able to:
+
+1. Explain how a Python object maps to a database row and how object attributes map to table columns.
 
 1. Explain how a Python object maps to a database row and how object attributes map to table columns.
 2. Design a simple relational schema for a core domain object, including a primary key and sensible constraints.
