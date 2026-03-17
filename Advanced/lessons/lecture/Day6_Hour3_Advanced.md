@@ -398,8 +398,7 @@ def build_menu(self) -> None:
 def show_about(self) -> None:
     messagebox.showinfo(
         "About",
-        "Full-Stack Tracker
-Tkinter milestone with JSON persistence."
+        "Full-Stack Tracker\nTkinter milestone with JSON persistence."
     )
 ```
 
