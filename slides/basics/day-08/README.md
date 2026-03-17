@@ -76,8 +76,8 @@ Inside the HTML slide deck, use:
 
 | Key | Action |
 |-----|--------|
-| `->` or `Space` | Next slide |
-| `<-` | Previous slide |
+| `→` or `Space` | Next slide |
+| `←` | Previous slide |
 | `Home` | First slide |
 | `End` | Last slide |
 | Swipe left/right | Mobile navigation |
