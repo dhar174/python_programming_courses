@@ -1,5 +1,15 @@
 # Day 6 Hour 1 Advanced — CRUD Wiring in the GUI: Update and Delete Workflows
 
+## Instructor Notes
+
+- **Course**: Python Programming (Advanced)
+- **Module / Track**: Advanced – Full-stack tracker capstone
+- **Session**: Session 6 – GUI CRUD wiring
+- **Hour**: Hour 1 of 4 (Day 6)
+- **Runbook reference**: *Python_Advanced_Instructor_Runbook_4hr_Days.md* — Day 6, Hour 1 (Hour 21 of 48)
+
+---
+
 ## Session context
 
 This hour is part of **Session 6** of the Advanced Python full-stack tracker capstone. Learners already built the essential GUI surface in Session 5: a Tkinter window, a form for entering tracker data, and a list-style display using a `Treeview` or `Listbox`. Today we move from “a screen that can add records” to “a tool that behaves like a real application.”
