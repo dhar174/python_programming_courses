@@ -409,9 +409,15 @@ class ContactFormApp:
             self.status_var.set("Please correct the highlighted fields and try again.")
             return
 
-        assert record is not None
+        if record is None:
+            # This should not happen if the service respects its contract,
+            # but we handle it explicitly instead of relying on an assert.
+            self.status_var.set("Unexpected error while saving contact. Please try again.")
+            return
+
         self.status_var.set(f"Saved contact for {record.name}.")
         self.name_var.set("")
+        self.email_var.set("")
         self.email_var.set("")
         self.role_var.set("")
         self.entry_widgets["name"].focus_set()
