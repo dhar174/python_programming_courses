@@ -636,12 +636,17 @@
     function saveAnswers(answers) {
       const validIds = new Set(QUIZ_DATA.questions.map((question) => String(question.number)));
       const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key)));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-      const count = Object.keys(filtered).length;
-      const total = QUIZ_DATA.questions.length;
-      document.getElementById("status").textContent = `Saved ${count}/${total} answers locally.`;
-      document.getElementById("progressFill").style.width = `${total > 0 ? Math.round((count / total) * 100) : 0}%`;
-      document.getElementById("progressLabel").textContent = `${count} / ${total}`;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+        const count = Object.keys(filtered).length;
+        const total = QUIZ_DATA.questions.length;
+        document.getElementById("status").textContent = `Saved ${count}/${total} answers locally.`;
+        document.getElementById("progressFill").style.width = `${total > 0 ? Math.round((count / total) * 100) : 0}%`;
+        document.getElementById("progressLabel").textContent = `${count} / ${total}`;
+      } catch (e) {
+        console.error("Failed to save answers to localStorage:", e);
+        document.getElementById("status").textContent = "Error: Could not save answers. localStorage might be full or disabled.";
+      }
     }
 
     function renderQuiz() {
