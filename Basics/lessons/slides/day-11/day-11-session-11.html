@@ -636,7 +636,9 @@ Carol|555-9999</code></pre>
         <section class="slide">
             <h1>Lab: Save and Load (Text) — continued</h1>
             <h3>Step 4 — Add a menu and test:</h3>
-<pre data-lang="python"><code>FILENAME = &quot;contacts.txt&quot;
+<pre data-lang="python"><code>import os
+
+FILENAME = &quot;contacts.txt&quot;
 
 contacts = []
 
@@ -922,7 +924,9 @@ def save_contacts(contacts: list, filename: str) -&gt; None:
         data = json.load(f)
     return [Contact.from_dict(d) for d in data]</code></pre>
 <h3>Usage Pattern in `main()`</h3>
-<pre data-lang="python"><code>FILENAME = &quot;data.json&quot;
+<pre data-lang="python"><code>import os
+
+FILENAME = &quot;data.json&quot;
 contacts = []
 
 if os.path.exists(FILENAME):
@@ -1089,7 +1093,7 @@ json.dumps(list(tags))   # works</code></pre>
 <pre data-lang="python"><code>import os
 
 # Different path separators on Windows vs Unix:
-path = &quot;data&quot; + &quot;/&quot; + &quot;contacts.json&quot;   # breaks on Windows
+path = &quot;data&quot; + &quot;/&quot; + &quot;contacts.json&quot;   # error-prone and hard to read
 path = os.path.join(&quot;data&quot;, &quot;contacts.json&quot;)   # better, but verbose
 
 # Does this file exist?
@@ -1777,7 +1781,7 @@ try:
 except FileNotFoundError:
     contacts = []
 filtered = filter_contacts(contacts, query)
-save_file(contacts)</code></pre>
+save_file(filtered)</code></pre>
         </section>
 
         <section class="slide">
@@ -1959,7 +1963,9 @@ def get_int(prompt: str) -&gt; int:
         <section class="slide">
             <h1>Session 11 Common Patterns Reference</h1>
             <h3>Text File — Save and Load a List</h3>
-<pre data-lang="python"><code>def save_lines(items: list, filename: str) -&gt; None:
+<pre data-lang="python"><code>from pathlib import Path
+
+def save_lines(items: list, filename: str) -&gt; None:
     with open(filename, &quot;w&quot;) as f:
         for item in items:
             f.write(item + &quot;\n&quot;)
@@ -1970,7 +1976,10 @@ def load_lines(filename: str) -&gt; list:
     with open(filename, &quot;r&quot;) as f:
         return [line.strip() for line in f if line.strip()]</code></pre>
 <h3>JSON — Save and Load Objects</h3>
-<pre data-lang="python"><code>def save_json(contacts: list, filepath: Path) -&gt; None:
+<pre data-lang="python"><code>import json
+from pathlib import Path
+
+def save_json(contacts: list, filepath: Path) -&gt; None:
     with open(filepath, &quot;w&quot;) as f:
         json.dump([c.to_dict() for c in contacts], f, indent=2)
 

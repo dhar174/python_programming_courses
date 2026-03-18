@@ -291,6 +291,8 @@ def load_contacts(filename: str) -> list:
 ### Step 4 — Add a menu and test:
 
 ```python
+import os
+
 FILENAME = "contacts.txt"
 
 contacts = []
@@ -596,6 +598,8 @@ def load_contacts(filename: str) -> list:
 ### Usage Pattern in `main()`
 
 ```python
+import os
+
 FILENAME = "data.json"
 contacts = []
 
@@ -796,7 +800,7 @@ json.dumps(list(tags))   # works
 import os
 
 # Different path separators on Windows vs Unix:
-path = "data" + "/" + "contacts.json"   # breaks on Windows
+path = "data" + "/" + "contacts.json"   # error-prone and hard to read
 path = os.path.join("data", "contacts.json")   # better, but verbose
 
 # Does this file exist?
@@ -1599,7 +1603,7 @@ try:
 except FileNotFoundError:
     contacts = []
 filtered = filter_contacts(contacts, query)
-save_file(contacts)
+save_file(filtered)
 ```
 
 ---
@@ -1700,6 +1704,8 @@ def get_int(prompt: str) -> int:
 ### Text File — Save and Load a List
 
 ```python
+from pathlib import Path
+
 def save_lines(items: list, filename: str) -> None:
     with open(filename, "w") as f:
         for item in items:
@@ -1715,6 +1721,9 @@ def load_lines(filename: str) -> list:
 ### JSON — Save and Load Objects
 
 ```python
+import json
+from pathlib import Path
+
 def save_json(contacts: list, filepath: Path) -> None:
     with open(filepath, "w") as f:
         json.dump([c.to_dict() for c in contacts], f, indent=2)
