@@ -1,16 +1,314 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Advanced Day3 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Advanced - Day 3 Quiz</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111827; --surface:#1f2937; --surface-hi:#253245; --border:#374151; --text:#f3f4f6; --muted:#cbd5e1; --blue:#60a5fa; --gold:#fbbf24; --ok:#34d399; --radius:18px; --space:16px; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,sans-serif; background:radial-gradient(circle at top left, rgba(96,165,250,.18), transparent 28%), radial-gradient(circle at top right, rgba(251,191,36,.16), transparent 24%), var(--bg); color:var(--text); line-height:1.6; }
+    .container { max-width:980px; margin:0 auto; padding:32px 16px 80px; }
+    .panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 12px 30px rgba(0,0,0,.35); }
+    .hero,.question-card,.action-card { padding:24px; }
+    .hero { margin-bottom:24px; border-top:5px solid var(--gold); }
+    .question-card { margin-bottom:16px; }
+    .action-card { margin-top:24px; }
+    h1 { margin:0 0 8px; color:var(--gold); }
+    h2 { margin:24px 0 8px; color:var(--blue); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; }
+    .meta,.compat-note,.progress-label,#status { color:var(--muted); }
+    .meta { display:inline-block; margin-top:16px; padding:6px 12px; border:1px solid var(--border); border-radius:999px; background:var(--surface-hi); }
+    .compat-note { margin-top:16px; padding:16px; border:1px solid rgba(96,165,250,.35); border-radius:12px; background:rgba(96,165,250,.12); }
+    .progress-wrap { display:flex; align-items:center; gap:16px; margin-top:24px; }
+    .progress-track { flex:1; height:10px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--blue),var(--gold)); }
+    .question-number { color:var(--blue); font-weight:700; margin-bottom:8px; }
+    .question-prompt { margin-bottom:16px; white-space:pre-wrap; }
+    .option-row { display:block; margin-bottom:10px; padding:12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-hi); cursor:pointer; }
+    .option-row:hover { border-color:var(--blue); }
+    .option-row input { margin-right:10px; }
+    .option-row.is-checked { border-color:var(--gold); }
+    .explanation { display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.35); }
+    .explanation.is-visible { display:block; }
+    .button-row { display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; }
+    button { border:none; border-radius:999px; padding:12px 18px; font-weight:700; cursor:pointer; }
+    .primary { background:linear-gradient(90deg,var(--blue),#2563eb); color:#fff; }
+    .secondary { background:linear-gradient(90deg,var(--gold),#d97706); color:#111827; }
+    .ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+  </style>
 </head>
 <body>
-  <h1>Advanced Day3 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <div class="container">
+    <section class="panel hero">
+      <h1>Python Advanced - Day 3 Quiz</h1>
+      <p>Certification-style checkpoint quiz aligned to the homework notebook and instructor runbook.</p>
+      <div class="meta">Total Questions: 20 | Time Estimate: 30-45 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul><li>Project structure: packages, imports, and config</li><li>Logging and error reporting (practical)</li><li>Context managers + safer file operations</li><li>Decorators (timing / authorization / validation)</li></ul>
+      <p class="compat-note">Use <strong>Save or Export Answers (JSON)</strong> to download a file with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code>.</p>
+      <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><span class="progress-label" id="progressLabel">0 / 20</span></div>
+      <p id="status">Choose answers as you go. Progress saves in this browser.</p>
+    </section>
+    <main id="quizContainer"></main>
+    <section class="panel action-card"><h2>Actions</h2><div class="button-row"><button class="primary" id="showAnswersBtn">Show Explanations</button><button class="secondary" id="exportBtn">Save or Export Answers (JSON)</button><button class="ghost" id="resetBtn">Reset Answers</button></div></section>
+  </div>
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {
+  "quizId": "Advanced_Day3_Quiz",
+  "title": "Python Advanced - Day 3 Quiz",
+  "questions": [
+    {
+      "number": 1,
+      "prompt": "Hour 9: Which topic is the main focus of this section of Day 3?",
+      "options": {
+        "A": "Project structure: packages, imports, and config",
+        "B": "Logging and error reporting (practical)",
+        "C": "Context managers + safer file operations",
+        "D": "Decorators (timing / authorization / validation)"
+      },
+      "explanation": "Hour 9 in the runbook centers on project structure: packages, imports, and config."
+    },
+    {
+      "number": 2,
+      "prompt": "Which labeled output line belongs to the Hour 9 canonical contract?",
+      "options": {
+        "A": "Hour 9 | package root: tracker_app",
+        "B": "Hour 10 | logger name: tracker.service",
+        "C": "Hour 11 | file mode: context manager used",
+        "D": "Hour 12 | timing decorator: add_task took 0.002s"
+      },
+      "explanation": "The canonical contract for Hour 9 includes the line `Hour 9 | package root: tracker_app`."
+    },
+    {
+      "number": 3,
+      "prompt": "Which practice best matches the work for Hour 9?",
+      "options": {
+        "A": "Use packages and a dedicated settings module so imports stay explicit.",
+        "B": "Use the logging module with clear levels instead of print-based debugging.",
+        "C": "Wrap file work in context managers so resources always close cleanly.",
+        "D": "Use decorators for cross-cutting concerns like timing, auth, and validation."
+      },
+      "explanation": "The best practice for Hour 9 is: Use packages and a dedicated settings module so imports stay explicit."
+    },
+    {
+      "number": 4,
+      "prompt": "Which mistake would most likely hurt the Hour 9 deliverable?",
+      "options": {
+        "A": "Relative imports sprinkled everywhere make the project harder to reason about.",
+        "B": "Dumping raw secrets or stack noise into normal logs creates confusion and risk.",
+        "C": "Opening files without a with block can leak handles and hide cleanup bugs.",
+        "D": "Stuffing business logic into decorators makes behavior opaque."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 9 is: Relative imports sprinkled everywhere make the project harder to reason about."
+    },
+    {
+      "number": 5,
+      "prompt": "What should learners be able to show by the end of Hour 9?",
+      "options": {
+        "A": "a package layout and config module that support a multi-file tracker app",
+        "B": "structured log messages that explain service events and failures",
+        "C": "a safe file operation flow that writes and reads tracker data",
+        "D": "a small decorated service function with clear reusable wrappers"
+      },
+      "explanation": "The expected deliverable for Hour 9 is a package layout and config module that support a multi-file tracker app."
+    },
+    {
+      "number": 6,
+      "prompt": "Hour 10: Which topic is the main focus of this section of Day 3?",
+      "options": {
+        "A": "Logging and error reporting (practical)",
+        "B": "Project structure: packages, imports, and config",
+        "C": "Context managers + safer file operations",
+        "D": "Decorators (timing / authorization / validation)"
+      },
+      "explanation": "Hour 10 in the runbook centers on logging and error reporting (practical)."
+    },
+    {
+      "number": 7,
+      "prompt": "Which labeled output line belongs to the Hour 10 canonical contract?",
+      "options": {
+        "A": "Hour 10 | logger name: tracker.service",
+        "B": "Hour 9 | package root: tracker_app",
+        "C": "Hour 11 | file mode: context manager used",
+        "D": "Hour 12 | timing decorator: add_task took 0.002s"
+      },
+      "explanation": "The canonical contract for Hour 10 includes the line `Hour 10 | logger name: tracker.service`."
+    },
+    {
+      "number": 8,
+      "prompt": "Which practice best matches the work for Hour 10?",
+      "options": {
+        "A": "Use the logging module with clear levels instead of print-based debugging.",
+        "B": "Use packages and a dedicated settings module so imports stay explicit.",
+        "C": "Wrap file work in context managers so resources always close cleanly.",
+        "D": "Use decorators for cross-cutting concerns like timing, auth, and validation."
+      },
+      "explanation": "The best practice for Hour 10 is: Use the logging module with clear levels instead of print-based debugging."
+    },
+    {
+      "number": 9,
+      "prompt": "Which mistake would most likely hurt the Hour 10 deliverable?",
+      "options": {
+        "A": "Dumping raw secrets or stack noise into normal logs creates confusion and risk.",
+        "B": "Relative imports sprinkled everywhere make the project harder to reason about.",
+        "C": "Opening files without a with block can leak handles and hide cleanup bugs.",
+        "D": "Stuffing business logic into decorators makes behavior opaque."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 10 is: Dumping raw secrets or stack noise into normal logs creates confusion and risk."
+    },
+    {
+      "number": 10,
+      "prompt": "What should learners be able to show by the end of Hour 10?",
+      "options": {
+        "A": "structured log messages that explain service events and failures",
+        "B": "a package layout and config module that support a multi-file tracker app",
+        "C": "a safe file operation flow that writes and reads tracker data",
+        "D": "a small decorated service function with clear reusable wrappers"
+      },
+      "explanation": "The expected deliverable for Hour 10 is structured log messages that explain service events and failures."
+    },
+    {
+      "number": 11,
+      "prompt": "Hour 11: Which topic is the main focus of this section of Day 3?",
+      "options": {
+        "A": "Context managers + safer file operations",
+        "B": "Project structure: packages, imports, and config",
+        "C": "Logging and error reporting (practical)",
+        "D": "Decorators (timing / authorization / validation)"
+      },
+      "explanation": "Hour 11 in the runbook centers on context managers + safer file operations."
+    },
+    {
+      "number": 12,
+      "prompt": "Which labeled output line belongs to the Hour 11 canonical contract?",
+      "options": {
+        "A": "Hour 11 | file mode: context manager used",
+        "B": "Hour 9 | package root: tracker_app",
+        "C": "Hour 10 | logger name: tracker.service",
+        "D": "Hour 12 | timing decorator: add_task took 0.002s"
+      },
+      "explanation": "The canonical contract for Hour 11 includes the line `Hour 11 | file mode: context manager used`."
+    },
+    {
+      "number": 13,
+      "prompt": "Which practice best matches the work for Hour 11?",
+      "options": {
+        "A": "Wrap file work in context managers so resources always close cleanly.",
+        "B": "Use packages and a dedicated settings module so imports stay explicit.",
+        "C": "Use the logging module with clear levels instead of print-based debugging.",
+        "D": "Use decorators for cross-cutting concerns like timing, auth, and validation."
+      },
+      "explanation": "The best practice for Hour 11 is: Wrap file work in context managers so resources always close cleanly."
+    },
+    {
+      "number": 14,
+      "prompt": "Which mistake would most likely hurt the Hour 11 deliverable?",
+      "options": {
+        "A": "Opening files without a with block can leak handles and hide cleanup bugs.",
+        "B": "Relative imports sprinkled everywhere make the project harder to reason about.",
+        "C": "Dumping raw secrets or stack noise into normal logs creates confusion and risk.",
+        "D": "Stuffing business logic into decorators makes behavior opaque."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 11 is: Opening files without a with block can leak handles and hide cleanup bugs."
+    },
+    {
+      "number": 15,
+      "prompt": "What should learners be able to show by the end of Hour 11?",
+      "options": {
+        "A": "a safe file operation flow that writes and reads tracker data",
+        "B": "a package layout and config module that support a multi-file tracker app",
+        "C": "structured log messages that explain service events and failures",
+        "D": "a small decorated service function with clear reusable wrappers"
+      },
+      "explanation": "The expected deliverable for Hour 11 is a safe file operation flow that writes and reads tracker data."
+    },
+    {
+      "number": 16,
+      "prompt": "Hour 12: Which topic is the main focus of this section of Day 3?",
+      "options": {
+        "A": "Decorators (timing / authorization / validation)",
+        "B": "Project structure: packages, imports, and config",
+        "C": "Logging and error reporting (practical)",
+        "D": "Context managers + safer file operations"
+      },
+      "explanation": "Hour 12 in the runbook centers on decorators (timing / authorization / validation)."
+    },
+    {
+      "number": 17,
+      "prompt": "Which labeled output line belongs to the Hour 12 canonical contract?",
+      "options": {
+        "A": "Hour 12 | timing decorator: add_task took 0.002s",
+        "B": "Hour 9 | package root: tracker_app",
+        "C": "Hour 10 | logger name: tracker.service",
+        "D": "Hour 11 | file mode: context manager used"
+      },
+      "explanation": "The canonical contract for Hour 12 includes the line `Hour 12 | timing decorator: add_task took 0.002s`."
+    },
+    {
+      "number": 18,
+      "prompt": "Which practice best matches the work for Hour 12?",
+      "options": {
+        "A": "Use decorators for cross-cutting concerns like timing, auth, and validation.",
+        "B": "Use packages and a dedicated settings module so imports stay explicit.",
+        "C": "Use the logging module with clear levels instead of print-based debugging.",
+        "D": "Wrap file work in context managers so resources always close cleanly."
+      },
+      "explanation": "The best practice for Hour 12 is: Use decorators for cross-cutting concerns like timing, auth, and validation."
+    },
+    {
+      "number": 19,
+      "prompt": "Which mistake would most likely hurt the Hour 12 deliverable?",
+      "options": {
+        "A": "Stuffing business logic into decorators makes behavior opaque.",
+        "B": "Relative imports sprinkled everywhere make the project harder to reason about.",
+        "C": "Dumping raw secrets or stack noise into normal logs creates confusion and risk.",
+        "D": "Opening files without a with block can leak handles and hide cleanup bugs."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 12 is: Stuffing business logic into decorators makes behavior opaque."
+    },
+    {
+      "number": 20,
+      "prompt": "What should learners be able to show by the end of Hour 12?",
+      "options": {
+        "A": "a small decorated service function with clear reusable wrappers",
+        "B": "a package layout and config module that support a multi-file tracker app",
+        "C": "structured log messages that explain service events and failures",
+        "D": "a safe file operation flow that writes and reads tracker data"
+      },
+      "explanation": "The expected deliverable for Hour 12 is a small decorated service function with clear reusable wrappers."
+    }
+  ],
+  "expectedAnswers": {
+    "1": "A",
+    "2": "A",
+    "3": "A",
+    "4": "A",
+    "5": "A",
+    "6": "A",
+    "7": "A",
+    "8": "A",
+    "9": "A",
+    "10": "A",
+    "11": "A",
+    "12": "A",
+    "13": "A",
+    "14": "A",
+    "15": "A",
+    "16": "A",
+    "17": "A",
+    "18": "A",
+    "19": "A",
+    "20": "A"
+  }
+};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+    function loadSavedAnswers() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch (error) { return {}; } }
+    function saveAnswers(answers) { const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number))); const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key))); localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered)); const count = Object.keys(filtered).length; const total = QUIZ_DATA.questions.length; document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`; document.getElementById('progressFill').style.width = `${total ? Math.round((count / total) * 100) : 0}%`; document.getElementById('progressLabel').textContent = `${count} / ${total}`; }
+    function renderQuiz() { const saved = loadSavedAnswers(); const container = document.getElementById('quizContainer'); container.innerHTML = QUIZ_DATA.questions.map((question) => { const optionsHtml = Object.entries(question.options).map(([key, value]) => `<label class="option-row ${saved[String(question.number)] === key ? 'is-checked' : ''}"><input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} /><strong>${key}.</strong> ${value}</label>`).join(''); return `<section class="panel question-card"><div class="question-number">Question ${question.number}</div><div class="question-prompt">${question.prompt}</div><div>${optionsHtml}</div><div class="explanation" id="explanation-${question.number}">${question.explanation}</div></section>`; }).join(''); container.querySelectorAll('input[type="radio"]').forEach((input) => { input.addEventListener('change', (event) => { const target = event.target; const formName = target.name; const answers = loadSavedAnswers(); answers[formName.replace('q', '')] = target.value; saveAnswers(answers); document.querySelectorAll(`input[name="${formName}"]`).forEach((peer) => peer.closest('.option-row').classList.toggle('is-checked', peer.checked)); }); }); saveAnswers(saved); }
+    function exportAnswers() { const studentAnswers = loadSavedAnswers(); const criteriaLikeTests = QUIZ_DATA.questions.map((question) => { const qid = String(question.number); const expected = QUIZ_DATA.expectedAnswers[qid] || null; const student = studentAnswers[qid] || null; return { name:`Question ${qid}`, points:1, expected_stdout:[expected], student_stdout:[student], pass: expected !== null && student === expected }; }); const payload = { quiz_id: QUIZ_DATA.quizId, title: QUIZ_DATA.title, exported_at: new Date().toISOString(), student_answers: studentAnswers, expected_answers: QUIZ_DATA.expectedAnswers, criteria_like_tests: criteriaLikeTests, autograder_notes:'Map each question to quiz checks in the existing autograder workflow.' }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `${QUIZ_DATA.quizId}_answers.json`; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(link.href); }
+    function showExplanations() { document.querySelectorAll('.explanation').forEach((item) => item.classList.add('is-visible')); document.getElementById('status').textContent = 'Explanations are now visible below each question.'; }
+    function resetAnswers() { localStorage.removeItem(STORAGE_KEY); renderQuiz(); document.querySelectorAll('.explanation').forEach((item) => item.classList.remove('is-visible')); document.getElementById('status').textContent = 'Answers reset for this browser.'; }
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers); document.getElementById('showAnswersBtn').addEventListener('click', showExplanations); document.getElementById('resetBtn').addEventListener('click', resetAnswers); renderQuiz();
   </script>
 </body>
 </html>
