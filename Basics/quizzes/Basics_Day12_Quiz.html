@@ -1,16 +1,733 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Basics Day12 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Basics - Day 12 Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #1e1e2e;
+      --surface: #252537;
+      --surface-hi: #2e2e45;
+      --border: #313244;
+      --text: #cdd6f4;
+      --muted: #a6adc8;
+      --blue: #4b8bbe;
+      --yellow: #ffd43b;
+      --blue-dim: rgba(75, 139, 190, 0.18);
+      --yellow-dim: rgba(255, 212, 59, 0.16);
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+      --radius-sm: 10px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(75, 139, 190, 0.16), transparent 28%),
+        radial-gradient(circle at top left, rgba(255, 212, 59, 0.14), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: var(--space-4) var(--space-2) 72px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero,
+    .question-card,
+    .action-card {
+      padding: var(--space-3);
+    }
+
+    .hero {
+      margin-bottom: var(--space-3);
+      border-top: 5px solid var(--yellow);
+    }
+
+    .action-card {
+      margin-top: var(--space-3);
+    }
+
+    h1 {
+      margin: 0 0 var(--space-1);
+      font-size: 2rem;
+      color: var(--yellow);
+    }
+
+    h2 {
+      margin: var(--space-3) 0 var(--space-1);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue);
+    }
+
+    .subtitle,
+    .meta,
+    .compat-note,
+    .progress-label,
+    #status {
+      color: var(--muted);
+    }
+
+    .meta {
+      display: inline-flex;
+      gap: var(--space-1);
+      align-items: center;
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.92rem;
+      margin-top: var(--space-2);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .compat-note {
+      margin-top: var(--space-2);
+      padding: var(--space-2);
+      background: var(--blue-dim);
+      border: 1px solid rgba(75, 139, 190, 0.28);
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+    }
+
+    .compat-note code,
+    .question-prompt code,
+    .explanation-body code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      background: rgba(203, 166, 247, 0.15);
+      color: #cba6f7;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--yellow));
+      transition: width 0.2s ease-in-out;
+    }
+
+    .question-card {
+      margin-bottom: var(--space-2);
+    }
+
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 32px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--blue-dim);
+      border: 1px solid rgba(75, 139, 190, 0.5);
+      color: var(--blue);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .question-prompt {
+      margin-bottom: var(--space-2);
+    }
+
+    .question-prompt pre,
+    .explanation-body pre {
+      overflow-x: auto;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #11111b;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.01);
+      cursor: pointer;
+    }
+
+    .option-row.is-checked {
+      border-color: rgba(255, 212, 59, 0.55);
+      background: var(--yellow-dim);
+    }
+
+    .option-row input {
+      margin-top: 4px;
+      accent-color: var(--yellow);
+    }
+
+    details.explanation {
+      margin-top: var(--space-2);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(75, 139, 190, 0.25);
+      background: rgba(75, 139, 190, 0.08);
+      overflow: hidden;
+    }
+
+    details.explanation summary {
+      cursor: pointer;
+      padding: 12px 14px;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .explanation-body {
+      padding: 0 14px 14px;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: var(--space-2);
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--blue), var(--yellow));
+      color: #11111b;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: var(--space-3) 12px 48px;
+      }
+
+      .hero,
+      .question-card,
+      .action-card {
+        padding: var(--space-2);
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Basics Day12 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <main class="container">
+    <section class="panel hero">
+      <h1>Python Basics - Day 12 Quiz</h1>
+      <p class="subtitle">Capstone kickoff, build sprint, polish/demo readiness, and final certification-style review.</p>
+      <div class="meta">Total Questions: 24 | Time Estimate: 35-50 minutes</div>
+
+      <h2>Topics Covered</h2>
+      <ul>
+        <li>Hour 45: Capstone requirements, project scaffolding, modules, one class, and JSON-safe storage</li>
+        <li>Hour 46: Core organizer actions such as add, list, search, update, and save</li>
+        <li>Hour 47: Validation, sorted output, help text, README/demo planning, and presentation readiness</li>
+        <li>Hour 48: Final review of Python Basics types, control flow, files, JSON, and targeted exceptions</li>
+      </ul>
+
+      <h2>Instructions</h2>
+      <ul>
+        <li>Answer every question with the best single choice.</li>
+        <li>Use the explanations to review all four Day 12 hours from kickoff to final recap.</li>
+        <li>Save/export your answers as JSON when you finish.</li>
+        <li>This quiz stays inside Python Basics scope: no web frameworks, no databases, and no advanced language features.</li>
+      </ul>
+
+      <p class="compat-note">Use <strong>Save/Export Answers (JSON)</strong> to download a file with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code> for the existing grading workflow.</p>
+
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <span class="progress-label" id="progressLabel"></span>
+      </div>
+    </section>
+
+    <section id="questions"></section>
+
+    <section class="panel action-card">
+      <div class="actions">
+        <button id="exportBtn" type="button">Save/Export Answers (JSON)</button>
+        <span id="status">Selections are auto-saved in localStorage.</span>
+      </div>
+    </section>
+  </main>
+
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {
+      "quizId": "Basics_Day12_Quiz",
+      "title": "Python Basics - Day 12 Quiz",
+      "questions": [
+            {
+                  "number": 1,
+                  "prompt": "What is the best Hour 45 goal for a Basics-level capstone kickoff?",
+                  "options": {
+                        "A": "Build every optional feature before testing",
+                        "B": "Get a menu idea, load/save helpers, and one working action running",
+                        "C": "Replace the CLI with a web app immediately",
+                        "D": "Optimize the program before it works"
+                  },
+                  "explanation": "Correct answer: **B**. The kickoff hour focuses on a small working foundation instead of chasing every feature at once."
+            },
+            {
+                  "number": 2,
+                  "prompt": "Which file is the clearest home for JSON load/save helper functions in the Day 12 scaffold?",
+                  "options": {
+                        "A": "`notes.txt`",
+                        "B": "`README.md`",
+                        "C": "`storage.py`",
+                        "D": "`output.log`"
+                  },
+                  "explanation": "Correct answer: **C**. A dedicated storage module keeps persistence logic separate from menu and organizer behavior."
+            },
+            {
+                  "number": 3,
+                  "prompt": "Why is `Path(\"data\") / \"tasks.json\"` a better habit than repeating raw path strings everywhere?",
+                  "options": {
+                        "A": "It avoids all imports",
+                        "B": "It builds project-relative paths more clearly and portably",
+                        "C": "It turns the file into a list automatically",
+                        "D": "It guarantees the file already exists"
+                  },
+                  "explanation": "Correct answer: **B**. `pathlib` makes path construction easier to read and safer across different machines and folders."
+            },
+            {
+                  "number": 4,
+                  "prompt": "If `data/tasks.json` does not exist yet, what is the most useful Basics-scope behavior for `load_tasks()`?",
+                  "options": {
+                        "A": "Return an empty list and keep the program running",
+                        "B": "Crash and stop immediately",
+                        "C": "Create random starter data without telling the user",
+                        "D": "Delete the whole `data/` folder"
+                  },
+                  "explanation": "Correct answer: **A**. Returning a safe default lets the organizer start cleanly on the first run."
+            },
+            {
+                  "number": 5,
+                  "prompt": "Which class fits the Python Basics Day 12 capstone scope best?",
+                  "options": {
+                        "A": "`Task(title, priority, done)`",
+                        "B": "`DatabaseConnection(host, token, retries)`",
+                        "C": "`AsyncWorker(pool_size)`",
+                        "D": "`TensorModel(weights)`"
+                  },
+                  "explanation": "Correct answer: **A**. A small data-focused class is enough for a Basics capstone and keeps the project teachable."
+            },
+            {
+                  "number": 6,
+                  "prompt": "Which loop pattern is a common Basics-friendly choice for a simple CLI menu?",
+                  "options": {
+                        "A": "`while True:` with a clear `break` on quit",
+                        "B": "`for _ in range(1000000):`",
+                        "C": "`if choice == \"quit\":` with no loop",
+                        "D": "`try:` without a body"
+                  },
+                  "explanation": "Correct answer: **A**. A `while True` loop with a clean exit path is a standard menu structure in beginner-friendly CLI programs."
+            },
+            {
+                  "number": 7,
+                  "prompt": "In CRUD, what does the letter `U` stand for?",
+                  "options": {
+                        "A": "Upload",
+                        "B": "Update",
+                        "C": "Undo",
+                        "D": "Use"
+                  },
+                  "explanation": "Correct answer: **B**. CRUD stands for Create, Read, Update, and Delete."
+            },
+            {
+                  "number": 8,
+                  "prompt": "After changing task data during the build sprint, what should happen next if you want the change to survive a restart?",
+                  "options": {
+                        "A": "Print the list twice",
+                        "B": "Restart Python right away",
+                        "C": "Save the updated data back to JSON",
+                        "D": "Rename the variable"
+                  },
+                  "explanation": "Correct answer: **C**. Data only persists across runs if you write the updated state back to storage."
+            },
+            {
+                  "number": 9,
+                  "prompt": "What does this search condition help you do?\n```python\nif search_text.lower() in task.title.lower():\n    matches.append(task)\n```",
+                  "options": {
+                        "A": "Search titles without worrying about letter case",
+                        "B": "Convert tasks into dictionaries",
+                        "C": "Sort titles alphabetically",
+                        "D": "Delete missing tasks automatically"
+                  },
+                  "explanation": "Correct answer: **A**. Lowercasing both values makes the search case-insensitive in a simple Basics-level way."
+            },
+            {
+                  "number": 10,
+                  "prompt": "If a task object stores `title = \"Pay bills\"`, `priority = \"medium\"`, and `done = False`, what is the best Day 12 display string?",
+                  "options": {
+                        "A": "`Pay bills medium False`",
+                        "B": "`Pay bills [medium] open`",
+                        "C": "`Task(Pay bills, medium)`",
+                        "D": "`medium -> Pay bills -> 0`"
+                  },
+                  "explanation": "Correct answer: **B**. The display format stays readable for a list screen and matches the capstone notebook contract."
+            },
+            {
+                  "number": 11,
+                  "prompt": "Which data shape is easiest to save directly with `json.dump(...)` in this capstone?",
+                  "options": {
+                        "A": "A list of dictionaries with simple values",
+                        "B": "A set of custom objects",
+                        "C": "A tuple of functions",
+                        "D": "A class definition"
+                  },
+                  "explanation": "Correct answer: **A**. JSON works naturally with standard Python structures like lists, dictionaries, strings, numbers, and booleans."
+            },
+            {
+                  "number": 12,
+                  "prompt": "A learner types `\"abc\"` where the program expected a number. What is the best Basics-level response?",
+                  "options": {
+                        "A": "Use `eval()` to guess the meaning",
+                        "B": "Catch `ValueError` and show a helpful message",
+                        "C": "Convert it to `True` automatically",
+                        "D": "Delete the whole task list"
+                  },
+                  "explanation": "Correct answer: **B**. Targeted `ValueError` handling keeps the program friendly without hiding unrelated problems."
+            },
+            {
+                  "number": 13,
+                  "prompt": "What should you usually show first in a short capstone demo?",
+                  "options": {
+                        "A": "The longest function in the project",
+                        "B": "A clean program start and clear menu or prompt",
+                        "C": "Only the raw JSON file contents",
+                        "D": "Every TODO comment you removed"
+                  },
+                  "explanation": "Correct answer: **B**. Starting with a clean launch proves the app runs and gives the audience immediate context."
+            },
+            {
+                  "number": 14,
+                  "prompt": "Why is it smart to test the organizer from a fresh run before the demo?",
+                  "options": {
+                        "A": "It changes Python syntax rules",
+                        "B": "It confirms startup, loading, and saved data really work",
+                        "C": "It removes the need for exception handling",
+                        "D": "It makes sorting automatic"
+                  },
+                  "explanation": "Correct answer: **B**. A fresh run catches problems that may be hidden by notebook state or old variables."
+            },
+            {
+                  "number": 15,
+                  "prompt": "What belongs in a helpful menu or help screen?",
+                  "options": {
+                        "A": "Only decorative text",
+                        "B": "Every private implementation detail",
+                        "C": "The available commands and what each one does",
+                        "D": "A full copy of the Python tutorial"
+                  },
+                  "explanation": "Correct answer: **C**. Users need to know what commands exist and how to use them."
+            },
+            {
+                  "number": 16,
+                  "prompt": "Which check best rejects a blank task title?",
+                  "options": {
+                        "A": "`if title == 0:`",
+                        "B": "`if not title.strip():`",
+                        "C": "`if len(title) < -1:`",
+                        "D": "`if title is False or 1:`"
+                  },
+                  "explanation": "Correct answer: **B**. `strip()` removes surrounding spaces, so this catches empty or all-whitespace titles."
+            },
+            {
+                  "number": 17,
+                  "prompt": "Which information is most useful in a small project README?",
+                  "options": {
+                        "A": "Only your favorite keyboard shortcuts",
+                        "B": "A list of every Python keyword",
+                        "C": "What the app does, how to run it, and where data is stored",
+                        "D": "Only the JSON file contents"
+                  },
+                  "explanation": "Correct answer: **C**. A README is most helpful when it explains purpose, run steps, and storage location clearly."
+            },
+            {
+                  "number": 18,
+                  "prompt": "Which choice is safest right before presenting the capstone?",
+                  "options": {
+                        "A": "Refactor every working function at the last minute",
+                        "B": "Add several untested features",
+                        "C": "Keep the working version stable and practice the demo flow",
+                        "D": "Remove validation so there is less code"
+                  },
+                  "explanation": "Correct answer: **C**. Demo readiness is mostly about stability, clarity, and confidence with the flow."
+            },
+            {
+                  "number": 19,
+                  "prompt": "Which exception is raised by `int(\"hello\")`?",
+                  "options": {
+                        "A": "`TypeError`",
+                        "B": "`IndexError`",
+                        "C": "`ValueError`",
+                        "D": "`KeyError`"
+                  },
+                  "explanation": "Correct answer: **C**. `int()` raises `ValueError` when the string does not contain a valid integer."
+            },
+            {
+                  "number": 20,
+                  "prompt": "Which expression safely reads a dictionary value without raising `KeyError` when the key is missing?",
+                  "options": {
+                        "A": "`task[\"priority\"]`",
+                        "B": "`task.priority`",
+                        "C": "`task.get(\"priority\", \"medium\")`",
+                        "D": "`priority(task)`"
+                  },
+                  "explanation": "Correct answer: **C**. `.get()` lets you supply a default value when the key does not exist."
+            },
+            {
+                  "number": 21,
+                  "prompt": "What does this code print?\n```python\ndef show_count(items):\n    print(len(items))\n\nresult = show_count([\"a\", \"b\"])\nprint(result)\n```",
+                  "options": {
+                        "A": "`2` and then `None`",
+                        "B": "`2` and then `2`",
+                        "C": "`None` and then `2`",
+                        "D": "Nothing at all"
+                  },
+                  "explanation": "Correct answer: **A**. The function prints `2`, but because it has no `return`, the stored result is `None`."
+            },
+            {
+                  "number": 22,
+                  "prompt": "Why is `pathlib` worth reviewing again in the final certification-style recap?",
+                  "options": {
+                        "A": "It replaces every loop in Python",
+                        "B": "It avoids hardcoded path-building habits and keeps file code readable",
+                        "C": "It only works on Windows",
+                        "D": "It automatically converts text files into JSON"
+                  },
+                  "explanation": "Correct answer: **B**. `pathlib` is a modern, readable way to work with project-relative paths."
+            },
+            {
+                  "number": 23,
+                  "prompt": "If `json.load(...)` fails because the file contains invalid JSON, what is a sensible Basics-course recovery choice?",
+                  "options": {
+                        "A": "Ignore the error and continue with undefined data",
+                        "B": "Catch `JSONDecodeError` and fall back to a safe default such as `[]`",
+                        "C": "Convert the file to a class automatically",
+                        "D": "Reboot the computer"
+                  },
+                  "explanation": "Correct answer: **B**. Catching the parsing error and using a safe default keeps the program usable and understandable."
+            },
+            {
+                  "number": 24,
+                  "prompt": "Which review checklist best matches the Day 12 final Basics scope?",
+                  "options": {
+                        "A": "Networking, async programming, and machine learning",
+                        "B": "Types, strings, data structures, flow, functions, modules, classes, files, and exceptions",
+                        "C": "Only object-oriented design patterns",
+                        "D": "Web APIs, deployment, and database administration"
+                  },
+                  "explanation": "Correct answer: **B**. Hour 48 reviews the full Python Basics toolkit used throughout the course and capstone."
+            }
+      ],
+      "expectedAnswers": {
+            "1": "B",
+            "2": "C",
+            "3": "B",
+            "4": "A",
+            "5": "A",
+            "6": "A",
+            "7": "B",
+            "8": "C",
+            "9": "A",
+            "10": "B",
+            "11": "A",
+            "12": "B",
+            "13": "B",
+            "14": "B",
+            "15": "C",
+            "16": "B",
+            "17": "C",
+            "18": "C",
+            "19": "C",
+            "20": "C",
+            "21": "A",
+            "22": "B",
+            "23": "B",
+            "24": "B"
+      }
+};
+
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatPrompt(text) {
+      let formatted = escapeHtml(text);
+      formatted = formatted.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, __, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      formatted = formatted.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      formatted = formatted.replace(/\n/g, "<br />");
+      return formatted.replace(/(<pre><code>[\s\S]*?<\/code><\/pre>)/g, (preBlock) => preBlock.replace(/<br \/>/g, "\n"));
+    }
+
+    function loadAnswers() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((question) => String(question.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key)));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+        const count = Object.keys(filtered).length;
+        const total = QUIZ_DATA.questions.length;
+        document.getElementById("status").textContent = `Saved ${count}/${total} answers locally.`;
+        document.getElementById("progressFill").style.width = `${total > 0 ? Math.round((count / total) * 100) : 0}%`;
+        document.getElementById("progressLabel").textContent = `${count} / ${total}`;
+      } catch (e) {
+        console.error("Failed to save answers to localStorage:", e);
+        document.getElementById("status").textContent = "Error: Could not save answers. localStorage might be full or disabled.";
+      }
+    }
+
+    function renderQuiz() {
+      const saved = loadAnswers();
+      const container = document.getElementById("questions");
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row ${saved[String(question.number)] === key ? "is-checked" : ""}">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? "checked" : ""} />
+            <span><strong>${key})</strong> ${formatPrompt(value)}</span>
+          </label>
+        `).join("");
+
+        return `
+          <article class="panel question-card" data-question-id="${question.number}">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div class="options">${optionsHtml}</div>
+            <details class="explanation">
+              <summary>Show explanation</summary>
+              <div class="explanation-body">${formatPrompt(question.explanation)}</div>
+            </details>
+          </article>
+        `;
+      }).join("");
+
+      container.addEventListener("change", (event) => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== "radio") {
+          return;
+        }
+
+        container.querySelectorAll(`input[name="${event.target.name}"]`).forEach((radio) => {
+          radio.closest(".option-row").classList.toggle("is-checked", radio.checked);
+        });
+
+        const answers = loadAnswers();
+        answers[event.target.name.replace("q", "")] = event.target.value;
+        saveAnswers(answers);
+      });
+
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const questionId = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[questionId] || null;
+        const student = studentAnswers[questionId] || null;
+        return {
+          name: `Question ${questionId}`,
+          points: 1,
+          expected_stdout: [expected],
+          student_stdout: [student],
+          pass: expected !== null && student === expected
+        };
+      });
+
+      const payload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: "Map each question to quiz checks in the existing autograder workflow."
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("exportBtn").addEventListener("click", exportAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>
