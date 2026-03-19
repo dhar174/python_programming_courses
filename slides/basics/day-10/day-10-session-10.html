@@ -1289,17 +1289,22 @@ def update_phone(self, new_phone: str) -&gt; bool:
         <section class="slide">
             <h1>Optional Extensions — Hour 39</h1>
             <h3>Extension: Normalize Phone Storage to Digits-Only</h3>
-<pre data-lang="python"><code>class Contact:
+<pre data-lang="python"><code>def normalize_phone(phone: str) -&gt; str:
+    &quot;&quot;&quot;Strip all non-digit characters for consistent storage.
+    Example: &#x27;(555) 123-4567&#x27; → &#x27;5551234567&#x27;
+    &quot;&quot;&quot;
+    digits_only = &quot;&quot;
+    for ch in phone:
+        if ch.isdigit():
+            digits_only += ch
+    return digits_only
+
+
+class Contact:
     def __init__(self, name: str, phone: str) -&gt; None:
         self.name = name
-        self.phone = self._normalize_phone(phone)
-
-    @staticmethod
-    def _normalize_phone(phone: str) -&gt; str:
-        &quot;&quot;&quot;Strip all non-digit characters for consistent storage.
-        Example: &#x27;(555) 123-4567&#x27; → &#x27;5551234567&#x27;
-        &quot;&quot;&quot;
-        return &quot;&quot;.join(ch for ch in phone if ch.isdigit())
+        # Normalize on the way in so storage is consistent
+        self.phone = normalize_phone(phone)
 
     def display(self) -&gt; str:
         # Display in a consistent formatted style
@@ -1307,8 +1312,8 @@ def update_phone(self, new_phone: str) -&gt; bool:
         if len(digits) == 10:
             return f&quot;{self.name}: ({digits[:3]}) {digits[3:6]}-{digits[6:]}&quot;
         return f&quot;{self.name}: {self.phone}&quot;</code></pre>
-<blockquote>🗒️ **Speaker note:** This uses a simple join with a generator expression — briefly point to it as &quot;a concise way to filter characters.&quot; Students don&#x27;t need to master it right now. The key lesson is the *concept* of normalizing on the way in.</blockquote>
-<blockquote>🚫 **Scope guardrail (Basics):** `@staticmethod` and `@property` are Advanced topics — show this extension quickly without going deep.</blockquote>
+<blockquote>🗒️ **Speaker note:** This example uses a plain helper function and a simple loop to &quot;clean&quot; the phone number before storing it. Emphasize the idea of normalizing data on the way in; students do **not** need to worry about more concise one-line versions yet.</blockquote>
+<blockquote>🚫 **Scope guardrail (Basics):** In more advanced designs, helpers like `normalize_phone` might be turned into `@staticmethod`s or use more compact expressions. Those patterns are left for the Advanced module — keep the focus here on the *idea* of validation/normalization inside the class.</blockquote>
         </section>
 
         <section class="slide">

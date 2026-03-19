@@ -104,7 +104,7 @@ fruits[-2]  # "banana"  ← second to last
 
 > ⚠️ Lists start at index **0**, not **1**!
 
-<!-- Pause and ask: "What does fruits[-1] return?" Let learners predict before running it. -->
+> 🗒️ **Speaker note:** Pause and ask: "What does `fruits[-1]` return?" Let learners predict before running it.
 
 ---
 
