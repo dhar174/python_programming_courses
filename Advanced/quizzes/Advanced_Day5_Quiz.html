@@ -301,10 +301,67 @@
     "20": "D"
   }
 };
+    function escapeHtml(str) {
+      if (str === null || str === undefined) {
+        return '';
+      }
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    function formatPrompt(text) {
+      if (text === null || text === undefined) {
+        return '';
+      }
+      // First escape any HTML special characters
+      let escaped = escapeHtml(String(text));
+      // Fenced code blocks: ```code```
+      escaped = escaped.replace(/```([\s\S]*?)```/g, function (_, code) {
+        return '<pre><code>' + code + '</code></pre>';
+      });
+      // Inline code: `code`
+      escaped = escaped.replace(/`([^`]+)`/g, function (_, code) {
+        return '<code>' + code + '</code>';
+      });
+      // Preserve line breaks for normal text
+      return escaped.replace(/\r\n|\r|\n/g, '<br>');
+    }
     const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
     function loadSavedAnswers() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch (error) { return {}; } }
     function saveAnswers(answers) { const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number))); const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key))); localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered)); const count = Object.keys(filtered).length; const total = QUIZ_DATA.questions.length; document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`; document.getElementById('progressFill').style.width = `${total ? Math.round((count / total) * 100) : 0}%`; document.getElementById('progressLabel').textContent = `${count} / ${total}`; }
-    function renderQuiz() { const saved = loadSavedAnswers(); const container = document.getElementById('quizContainer'); container.innerHTML = QUIZ_DATA.questions.map((question) => { const optionsHtml = Object.entries(question.options).map(([key, value]) => `<label class="option-row ${saved[String(question.number)] === key ? 'is-checked' : ''}"><input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} /><strong>${key}.</strong> ${value}</label>`).join(''); return `<section class="panel question-card"><div class="question-number">Question ${question.number}</div><div class="question-prompt">${question.prompt}</div><div>${optionsHtml}</div><div class="explanation" id="explanation-${question.number}">${question.explanation}</div></section>`; }).join(''); container.querySelectorAll('input[type="radio"]').forEach((input) => { input.addEventListener('change', (event) => { const target = event.target; const formName = target.name; const answers = loadSavedAnswers(); answers[formName.replace('q', '')] = target.value; saveAnswers(answers); document.querySelectorAll(`input[name="${formName}"]`).forEach((peer) => peer.closest('.option-row').classList.toggle('is-checked', peer.checked)); }); }); saveAnswers(saved); }
+    function renderQuiz() {
+      const saved = loadSavedAnswers();
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = QUIZ_DATA.questions
+        .map((question) => {
+          const promptHtml = formatPrompt(question.prompt);
+          const optionsHtml = Object.entries(question.options)
+            .map(([key, value]) => {
+              const valueHtml = formatPrompt(value);
+              return `<label class="option-row ${saved[String(question.number)] === key ? 'is-checked' : ''}"><input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} /><strong>${key}.</strong> ${valueHtml}</label>`;
+            })
+            .join('');
+          const explanationHtml = formatPrompt(question.explanation || '');
+          return `<section class="panel question-card"><div class="question-number">Question ${question.number}</div><div class="question-prompt">${promptHtml}</div><div>${optionsHtml}</div><div class="explanation" id="explanation-${question.number}">${explanationHtml}</div></section>`;
+        })
+        .join('');
+      container.querySelectorAll('input[type="radio"]').forEach((input) => {
+        input.addEventListener('change', (event) => {
+          const target = event.target;
+          const formName = target.name;
+          const answers = loadSavedAnswers();
+          answers[formName.replace('q', '')] = target.value;
+          saveAnswers(answers);
+          document.querySelectorAll(`input[name="${formName}"]`).forEach((peer) =>
+            peer.closest('.option-row').classList.toggle('is-checked', peer.checked)
+          );
+        });
+      });
+      saveAnswers(saved);
+    }
     function exportAnswers() { const studentAnswers = loadSavedAnswers(); const criteriaLikeTests = QUIZ_DATA.questions.map((question) => { const qid = String(question.number); const expected = QUIZ_DATA.expectedAnswers[qid] || null; const student = studentAnswers[qid] || null; return { name:`Question ${qid}`, points:1, expected_stdout:[expected], student_stdout:[student], pass: expected !== null && student === expected }; }); const payload = { quiz_id: QUIZ_DATA.quizId, title: QUIZ_DATA.title, exported_at: new Date().toISOString(), student_answers: studentAnswers, expected_answers: QUIZ_DATA.expectedAnswers, criteria_like_tests: criteriaLikeTests, autograder_notes:'Map each question to quiz checks in the existing autograder workflow.' }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `${QUIZ_DATA.quizId}_answers.json`; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(link.href); }
     function showExplanations() { document.querySelectorAll('.explanation').forEach((item) => item.classList.add('is-visible')); document.getElementById('status').textContent = 'Explanations are now visible below each question.'; }
     function resetAnswers() { localStorage.removeItem(STORAGE_KEY); renderQuiz(); document.querySelectorAll('.explanation').forEach((item) => item.classList.remove('is-visible')); document.getElementById('status').textContent = 'Answers reset for this browser.'; }
