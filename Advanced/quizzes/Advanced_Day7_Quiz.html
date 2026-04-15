@@ -1,16 +1,432 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Advanced Day7 Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Advanced - Day 7 Quiz</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111827; --surface:#1f2937; --surface-hi:#253245; --border:#374151; --text:#f3f4f6; --muted:#cbd5e1; --blue:#60a5fa; --gold:#fbbf24; --ok:#34d399; --radius:18px; --space:16px; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,sans-serif; background:radial-gradient(circle at top left, rgba(96,165,250,.18), transparent 28%), radial-gradient(circle at top right, rgba(251,191,36,.16), transparent 24%), var(--bg); color:var(--text); line-height:1.6; }
+    .container { max-width:980px; margin:0 auto; padding:32px 16px 80px; }
+    .panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 12px 30px rgba(0,0,0,.35); }
+    .hero,.question-card,.action-card { padding:24px; }
+    .hero { margin-bottom:24px; border-top:5px solid var(--gold); }
+    .question-card { margin-bottom:16px; }
+    .action-card { margin-top:24px; }
+    h1 { margin:0 0 8px; color:var(--gold); }
+    h2 { margin:24px 0 8px; color:var(--blue); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; }
+    .meta,.compat-note,.progress-label,#status { color:var(--muted); }
+    .meta { display:inline-block; margin-top:16px; padding:6px 12px; border:1px solid var(--border); border-radius:999px; background:var(--surface-hi); }
+    .compat-note { margin-top:16px; padding:16px; border:1px solid rgba(96,165,250,.35); border-radius:12px; background:rgba(96,165,250,.12); }
+    .progress-wrap { display:flex; align-items:center; gap:16px; margin-top:24px; }
+    .progress-track { flex:1; height:10px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--blue),var(--gold)); }
+    .question-number { color:var(--blue); font-weight:700; margin-bottom:8px; }
+    .question-prompt { margin-bottom:16px; white-space:pre-wrap; }
+    .option-row { display:block; margin-bottom:10px; padding:12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-hi); cursor:pointer; }
+    .option-row:hover { border-color:var(--blue); }
+    .option-row input { margin-right:10px; }
+    .option-row.is-checked { border-color:var(--gold); }
+    .explanation { display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.35); }
+    .explanation.is-visible { display:block; }
+    .button-row { display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; }
+    button { border:none; border-radius:999px; padding:12px 18px; font-weight:700; cursor:pointer; }
+    .primary { background:linear-gradient(90deg,var(--blue),#2563eb); color:#fff; }
+    .secondary { background:linear-gradient(90deg,var(--gold),#d97706); color:#111827; }
+    .ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+  </style>
 </head>
 <body>
-  <h1>Advanced Day7 Quiz</h1>
-  <p>TODO: Add 20-40 questions and explanations.</p>
+  <div class="container">
+    <section class="panel hero">
+      <h1>Python Advanced - Day 7 Quiz</h1>
+      <p>Certification-style checkpoint quiz aligned to the homework notebook and instructor runbook.</p>
+      <div class="meta">Total Questions: 20 | Time Estimate: 30-45 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul><li>From objects to tables: schema thinking + repository idea</li><li>sqlite3 CRUD with parameterized queries</li><li>Row mapping: converting rows to objects</li><li>Transactions + integrity + initialization patterns</li></ul>
+      <p class="compat-note">Use <strong>Save or Export Answers (JSON)</strong> to download a file with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code>.</p>
+      <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><span class="progress-label" id="progressLabel">0 / 20</span></div>
+      <p id="status">Choose answers as you go. Progress saves in this browser.</p>
+    </section>
+    <main id="quizContainer"></main>
+    <section class="panel action-card"><h2>Actions</h2><div class="button-row"><button type="button" class="primary" id="showAnswersBtn">Show Explanations</button><button type="button" class="secondary" id="exportBtn">Save or Export Answers (JSON)</button><button type="button" class="ghost" id="resetBtn">Reset Answers</button></div></section>
+  </div>
   <script>
-    // Autograder compatibility placeholder. Replace with real answers.
-    const expectedAnswers = {"1": "A"};
+    const QUIZ_DATA = {
+  "quizId": "Advanced_Day7_Quiz",
+  "title": "Python Advanced - Day 7 Quiz",
+  "questions": [
+    {
+      "number": 1,
+      "prompt": "Hour 25: Which topic is the main focus of this section of Day 7?",
+      "options": {
+        "A": "From objects to tables: schema thinking + repository idea",
+        "B": "sqlite3 CRUD with parameterized queries",
+        "C": "Row mapping: converting rows to objects",
+        "D": "Transactions + integrity + initialization patterns"
+      },
+      "explanation": "Hour 25 in the runbook centers on from objects to tables: schema thinking + repository idea."
+    },
+    {
+      "number": 2,
+      "prompt": "Which labeled output line belongs to the Hour 25 canonical contract?",
+      "options": {
+        "A": "Hour 25 | table name: tasks",
+        "B": "Hour 26 | insert result: task-101 saved",
+        "C": "Hour 27 | row type: sqlite3.Row",
+        "D": "Hour 28 | init script: schema ready"
+      },
+      "explanation": "The canonical contract for Hour 25 includes the line `Hour 25 | table name: tasks`."
+    },
+    {
+      "number": 3,
+      "prompt": "Which practice best matches the work for Hour 25?",
+      "options": {
+        "A": "Design the table shape from the domain model before writing CRUD code.",
+        "B": "Use parameterized queries for every write and lookup.",
+        "C": "Convert database rows to domain objects in one consistent place.",
+        "D": "Initialize schema early and group related writes inside a transaction."
+      },
+      "explanation": "The best practice for Hour 25 is: Design the table shape from the domain model before writing CRUD code."
+    },
+    {
+      "number": 4,
+      "prompt": "Which mistake would most likely hurt the Hour 25 deliverable?",
+      "options": {
+        "A": "Letting ad hoc columns accumulate without a clear model makes mapping harder.",
+        "B": "String-building SQL by hand invites bugs and injection issues.",
+        "C": "Leaking raw tuples upward forces the rest of the app to know DB details.",
+        "D": "Partially applied writes leave the database in an inconsistent state."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 25 is: Letting ad hoc columns accumulate without a clear model makes mapping harder."
+    },
+    {
+      "number": 5,
+      "prompt": "What should learners be able to show by the end of Hour 25?",
+      "options": {
+        "A": "a table design and repository boundary for tracker records",
+        "B": "basic sqlite CRUD functions using parameters safely",
+        "C": "a mapper that turns sqlite rows into tracker objects",
+        "D": "an initialization and transaction flow that protects data integrity"
+      },
+      "explanation": "The expected deliverable for Hour 25 is a table design and repository boundary for tracker records."
+    },
+    {
+      "number": 6,
+      "prompt": "Hour 26: Which topic is the main focus of this section of Day 7?",
+      "options": {
+        "A": "sqlite3 CRUD with parameterized queries",
+        "B": "From objects to tables: schema thinking + repository idea",
+        "C": "Row mapping: converting rows to objects",
+        "D": "Transactions + integrity + initialization patterns"
+      },
+      "explanation": "Hour 26 in the runbook centers on sqlite3 crud with parameterized queries."
+    },
+    {
+      "number": 7,
+      "prompt": "Which labeled output line belongs to the Hour 26 canonical contract?",
+      "options": {
+        "A": "Hour 26 | insert result: task-101 saved",
+        "B": "Hour 25 | table name: tasks",
+        "C": "Hour 27 | row type: sqlite3.Row",
+        "D": "Hour 28 | init script: schema ready"
+      },
+      "explanation": "The canonical contract for Hour 26 includes the line `Hour 26 | insert result: task-101 saved`."
+    },
+    {
+      "number": 8,
+      "prompt": "Which practice best matches the work for Hour 26?",
+      "options": {
+        "A": "Use parameterized queries for every write and lookup.",
+        "B": "Design the table shape from the domain model before writing CRUD code.",
+        "C": "Convert database rows to domain objects in one consistent place.",
+        "D": "Initialize schema early and group related writes inside a transaction."
+      },
+      "explanation": "The best practice for Hour 26 is: Use parameterized queries for every write and lookup."
+    },
+    {
+      "number": 9,
+      "prompt": "Which mistake would most likely hurt the Hour 26 deliverable?",
+      "options": {
+        "A": "String-building SQL by hand invites bugs and injection issues.",
+        "B": "Letting ad hoc columns accumulate without a clear model makes mapping harder.",
+        "C": "Leaking raw tuples upward forces the rest of the app to know DB details.",
+        "D": "Partially applied writes leave the database in an inconsistent state."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 26 is: String-building SQL by hand invites bugs and injection issues."
+    },
+    {
+      "number": 10,
+      "prompt": "What should learners be able to show by the end of Hour 26?",
+      "options": {
+        "A": "basic sqlite CRUD functions using parameters safely",
+        "B": "a table design and repository boundary for tracker records",
+        "C": "a mapper that turns sqlite rows into tracker objects",
+        "D": "an initialization and transaction flow that protects data integrity"
+      },
+      "explanation": "The expected deliverable for Hour 26 is basic sqlite CRUD functions using parameters safely."
+    },
+    {
+      "number": 11,
+      "prompt": "Hour 27: Which topic is the main focus of this section of Day 7?",
+      "options": {
+        "A": "Row mapping: converting rows to objects",
+        "B": "From objects to tables: schema thinking + repository idea",
+        "C": "sqlite3 CRUD with parameterized queries",
+        "D": "Transactions + integrity + initialization patterns"
+      },
+      "explanation": "Hour 27 in the runbook centers on row mapping: converting rows to objects."
+    },
+    {
+      "number": 12,
+      "prompt": "Which labeled output line belongs to the Hour 27 canonical contract?",
+      "options": {
+        "A": "Hour 27 | row type: sqlite3.Row",
+        "B": "Hour 25 | table name: tasks",
+        "C": "Hour 26 | insert result: task-101 saved",
+        "D": "Hour 28 | init script: schema ready"
+      },
+      "explanation": "The canonical contract for Hour 27 includes the line `Hour 27 | row type: sqlite3.Row`."
+    },
+    {
+      "number": 13,
+      "prompt": "Which practice best matches the work for Hour 27?",
+      "options": {
+        "A": "Convert database rows to domain objects in one consistent place.",
+        "B": "Design the table shape from the domain model before writing CRUD code.",
+        "C": "Use parameterized queries for every write and lookup.",
+        "D": "Initialize schema early and group related writes inside a transaction."
+      },
+      "explanation": "The best practice for Hour 27 is: Convert database rows to domain objects in one consistent place."
+    },
+    {
+      "number": 14,
+      "prompt": "Which mistake would most likely hurt the Hour 27 deliverable?",
+      "options": {
+        "A": "Leaking raw tuples upward forces the rest of the app to know DB details.",
+        "B": "Letting ad hoc columns accumulate without a clear model makes mapping harder.",
+        "C": "String-building SQL by hand invites bugs and injection issues.",
+        "D": "Partially applied writes leave the database in an inconsistent state."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 27 is: Leaking raw tuples upward forces the rest of the app to know DB details."
+    },
+    {
+      "number": 15,
+      "prompt": "What should learners be able to show by the end of Hour 27?",
+      "options": {
+        "A": "a mapper that turns sqlite rows into tracker objects",
+        "B": "a table design and repository boundary for tracker records",
+        "C": "basic sqlite CRUD functions using parameters safely",
+        "D": "an initialization and transaction flow that protects data integrity"
+      },
+      "explanation": "The expected deliverable for Hour 27 is a mapper that turns sqlite rows into tracker objects."
+    },
+    {
+      "number": 16,
+      "prompt": "Hour 28: Which topic is the main focus of this section of Day 7?",
+      "options": {
+        "A": "Transactions + integrity + initialization patterns",
+        "B": "From objects to tables: schema thinking + repository idea",
+        "C": "sqlite3 CRUD with parameterized queries",
+        "D": "Row mapping: converting rows to objects"
+      },
+      "explanation": "Hour 28 in the runbook centers on transactions + integrity + initialization patterns."
+    },
+    {
+      "number": 17,
+      "prompt": "Which labeled output line belongs to the Hour 28 canonical contract?",
+      "options": {
+        "A": "Hour 28 | init script: schema ready",
+        "B": "Hour 25 | table name: tasks",
+        "C": "Hour 26 | insert result: task-101 saved",
+        "D": "Hour 27 | row type: sqlite3.Row"
+      },
+      "explanation": "The canonical contract for Hour 28 includes the line `Hour 28 | init script: schema ready`."
+    },
+    {
+      "number": 18,
+      "prompt": "Which practice best matches the work for Hour 28?",
+      "options": {
+        "A": "Initialize schema early and group related writes inside a transaction.",
+        "B": "Design the table shape from the domain model before writing CRUD code.",
+        "C": "Use parameterized queries for every write and lookup.",
+        "D": "Convert database rows to domain objects in one consistent place."
+      },
+      "explanation": "The best practice for Hour 28 is: Initialize schema early and group related writes inside a transaction."
+    },
+    {
+      "number": 19,
+      "prompt": "Which mistake would most likely hurt the Hour 28 deliverable?",
+      "options": {
+        "A": "Partially applied writes leave the database in an inconsistent state.",
+        "B": "Letting ad hoc columns accumulate without a clear model makes mapping harder.",
+        "C": "String-building SQL by hand invites bugs and injection issues.",
+        "D": "Leaking raw tuples upward forces the rest of the app to know DB details."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 28 is: Partially applied writes leave the database in an inconsistent state."
+    },
+    {
+      "number": 20,
+      "prompt": "What should learners be able to show by the end of Hour 28?",
+      "options": {
+        "A": "an initialization and transaction flow that protects data integrity",
+        "B": "a table design and repository boundary for tracker records",
+        "C": "basic sqlite CRUD functions using parameters safely",
+        "D": "a mapper that turns sqlite rows into tracker objects"
+      },
+      "explanation": "The expected deliverable for Hour 28 is an initialization and transaction flow that protects data integrity."
+    }
+  ],
+  "expectedAnswers": {
+    "1": "B",
+    "2": "C",
+    "3": "D",
+    "4": "A",
+    "5": "B",
+    "6": "C",
+    "7": "D",
+    "8": "A",
+    "9": "B",
+    "10": "C",
+    "11": "D",
+    "12": "A",
+    "13": "B",
+    "14": "C",
+    "15": "D",
+    "16": "A",
+    "17": "B",
+    "18": "C",
+    "19": "D",
+    "20": "A"
+  }
+};
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatPrompt(markdownText) {
+      let text = escapeHtml(markdownText);
+      text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trimEnd()}</code></pre>`);
+      text = text.replace(/`([^`]+)`/g, (_, inlineCode) => `<code>${inlineCode}</code>`);
+      return text.replace(/\n/g, '<br />');
+    }
+
+    function loadSavedAnswers() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveAnswers(answers) {
+      const validIds = new Set(QUIZ_DATA.questions.map((question) => String(question.number)));
+      const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      const count = Object.keys(filtered).length;
+      const total = QUIZ_DATA.questions.length;
+      document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`;
+      const fill = document.getElementById('progressFill');
+      const label = document.getElementById('progressLabel');
+      if (fill) fill.style.width = `${total > 0 ? Math.min(100, Math.round((count / total) * 100)) : 0}%`;
+      if (label) label.textContent = `${count} / ${total}`;
+    }
+
+    function renderQuiz() {
+      const saved = loadSavedAnswers();
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = QUIZ_DATA.questions.map((question) => {
+        const optionsHtml = Object.entries(question.options).map(([key, value]) => `
+          <label class="option-row ${saved[String(question.number)] === key ? 'is-checked' : ''}">
+            <input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} />
+            <strong>${key}.</strong> ${formatPrompt(value)}
+          </label>
+        `).join('');
+        return `
+          <section class="panel question-card">
+            <div class="question-number">Question ${question.number}</div>
+            <div class="question-prompt">${formatPrompt(question.prompt)}</div>
+            <div>${optionsHtml}</div>
+            <div class="explanation" id="explanation-${question.number}">${formatPrompt(question.explanation)}</div>
+          </section>
+        `;
+      }).join('');
+
+      container.querySelectorAll('input[type="radio"]').forEach((input) => {
+        input.addEventListener('change', (event) => {
+          const target = event.target;
+          if (!(target instanceof HTMLInputElement)) return;
+          const answers = loadSavedAnswers();
+          const questionNumber = target.name.replace('q', '');
+          answers[questionNumber] = target.value;
+          saveAnswers(answers);
+          container.querySelectorAll(`input[name="${target.name}"]`).forEach((peer) => {
+            peer.closest('.option-row')?.classList.toggle('is-checked', peer.checked);
+          });
+        });
+      });
+
+      saveAnswers(saved);
+    }
+
+    function exportAnswers() {
+      const studentAnswers = loadSavedAnswers();
+      const criteriaLikeTests = QUIZ_DATA.questions.map((question) => {
+        const qid = String(question.number);
+        const expected = QUIZ_DATA.expectedAnswers[qid] || null;
+        const student = studentAnswers[qid] || null;
+        return {
+          name: `Question ${qid}`,
+          points: 1,
+          expected_stdout: [expected],
+          student_stdout: [student],
+          pass: expected !== null && student === expected,
+        };
+      });
+      const payload = {
+        quiz_id: QUIZ_DATA.quizId,
+        title: QUIZ_DATA.title,
+        exported_at: new Date().toISOString(),
+        student_answers: studentAnswers,
+        expected_answers: QUIZ_DATA.expectedAnswers,
+        criteria_like_tests: criteriaLikeTests,
+        autograder_notes: 'Map each question to quiz checks in the existing autograder workflow.',
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${QUIZ_DATA.quizId}_answers.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function showExplanations() {
+      document.querySelectorAll('.explanation').forEach((item) => item.classList.add('is-visible'));
+      document.getElementById('status').textContent = 'Explanations are now visible below each question.';
+    }
+
+    function resetAnswers() {
+      localStorage.removeItem(STORAGE_KEY);
+      renderQuiz();
+      document.querySelectorAll('.explanation').forEach((item) => item.classList.remove('is-visible'));
+      document.getElementById('status').textContent = 'Answers reset for this browser.';
+    }
+
+    document.getElementById('exportBtn')?.addEventListener('click', exportAnswers);
+    document.getElementById('showAnswersBtn')?.addEventListener('click', showExplanations);
+    document.getElementById('resetBtn')?.addEventListener('click', resetAnswers);
+    renderQuiz();
   </script>
 </body>
 </html>
