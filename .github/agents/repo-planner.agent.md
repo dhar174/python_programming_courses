@@ -2,7 +2,7 @@
 name: "repo-planner"
 description: "Plans repo-wide work, routes requests to the existing education and presentation specialists, and keeps validation aligned with this course repository."
 target: "github-copilot"
-tools: ["read", "search", "edit", "execute", "web", "github/*", "custom-agent"]
+tools: ["read", "search", "edit", "execute", "web", "github/*", "agent"]
 disable-model-invocation: false
 user-invocable: true
 ---
