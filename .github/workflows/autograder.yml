@@ -34,9 +34,13 @@ jobs:
         id: prepare_autograder
         run: |
           mkdir -p submission/.github/autograder
-          mapfile -t ALL_NOTEBOOKS < <(find Basics/assignments -type f -path "*/submissions/*Basics_Day*.ipynb" | sort)
+          mapfile -t ALL_NOTEBOOKS < <(
+            find Basics/assignments Advanced/assignments -type f \
+              \( -path "*/submissions/*Basics_Day*.ipynb" -o -path "*/submissions/*Advanced_Day*.ipynb" \) \
+              | sort
+          )
           if [ ${#ALL_NOTEBOOKS[@]} -eq 0 ]; then
-            echo "::notice::No assignment submission notebooks found under Basics/assignments/*/submissions. Skipping autograder action execution for this run."
+            echo "::notice::No assignment submission notebooks found under Basics/assignments/*/submissions or Advanced/assignments/*/submissions. Skipping autograder action execution for this run."
             echo "any_submission_found=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -52,7 +56,7 @@ jobs:
             fi
           done
           if [ ${#ALL_NOTEBOOKS[@]} -gt 1 ]; then
-            echo "::warning::Found ${#ALL_NOTEBOOKS[@]} notebooks across all assignment days; using first sorted match for webtech-network/autograder@v1 compatibility: ${ALL_NOTEBOOKS[0]} and ${ALL_NOTEBOOKS[1]}"
+            echo "::warning::Found ${#ALL_NOTEBOOKS[@]} notebooks across Basics and Advanced assignment days; using first sorted match for webtech-network/autograder@v1 compatibility: ${ALL_NOTEBOOKS[0]}"
           fi
           NOTEBOOK_PATH="${ALL_NOTEBOOKS[0]}"
           NOTEBOOK_NAME="$(basename "$NOTEBOOK_PATH")"
@@ -70,7 +74,7 @@ jobs:
           test -f "submission/.github/autograder/$NOTEBOOK_NAME" || (echo "Missing copied $NOTEBOOK_NAME" && exit 1)
           test -f submission/.github/autograder/criteria.json || (echo "Missing copied criteria.json" && exit 1)
           test -f submission/.github/autograder/feedback.json || (echo "Missing copied feedback.json" && exit 1)
-          python - "$NOTEBOOK_NAME" << 'PY'
+          python - "$NOTEBOOK_NAME" "$ASSIGNMENT_DIR/criteria.json" << 'PY'
           import json
           import re
           import shlex
@@ -78,22 +82,50 @@ jobs:
           from pathlib import Path
 
           notebook_name = sys.argv[1]
+          criteria_path = Path(sys.argv[2])
+
+          def parse_command(command):
+              if isinstance(command, list):
+                  return [str(part) for part in command]
+              if isinstance(command, str):
+                  return shlex.split(command)
+              return []
+
           # Defense-in-depth validation before writing shell commands into setup.json.
-          # Allow any filename that contains 'Basics_DayN' anywhere (e.g. "alex-Basics_Day1_homework.ipynb").
+          # Allow any filename that contains 'Basics_DayN' or 'Advanced_DayN' anywhere
+          # (e.g. "alex-Basics_Day1_homework.ipynb").
+          module_match = re.search(r"(Basics|Advanced)_Day(\d+)", notebook_name)
           if (
               not notebook_name.endswith(".ipynb")
-              or not re.search(r"Basics_Day\d+", notebook_name)
+              or not module_match
               or "/" in notebook_name
               or "\\" in notebook_name
               or notebook_name.startswith(".")
               or ".." in notebook_name):
               raise ValueError(f"Unsafe notebook filename: {notebook_name}")
-          # Derive the script name from the day number to match criteria.json expectations
-          # (criteria.json uses e.g. "day1.py" for Day 1, "day2.py" for Day 2, etc.).
-          day_match = re.search(r"Basics_Day(\d+)", notebook_name)
-          day_num = day_match.group(1) if day_match else "1"
-          script_stem = f"day{day_num}"
-          script_file = f"{script_stem}.py"
+
+          module_name, day_num = module_match.groups()
+          criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
+          script_file = None
+          for test in criteria.get("tests", []):
+              if not isinstance(test, dict):
+                  continue
+              command_parts = parse_command(test.get("command", []))
+              if not command_parts:
+                  continue
+              executable = Path(command_parts[0]).name.lower()
+              if not executable.startswith("python"):
+                  continue
+              for part in command_parts[1:]:
+                  if Path(part).suffix == ".py":
+                      script_file = Path(part).name
+                      break
+              if script_file:
+                  break
+
+          if script_file is None:
+              script_file = f"{module_name.lower()}_day{day_num}.py"
+          script_stem = Path(script_file).stem
           setup_json = {
               "file_checks": [notebook_name],
               "commands": [
@@ -126,11 +158,11 @@ jobs:
           import copy
           import json
           import re
+          import shlex
           import subprocess
           import sys
           from pathlib import Path
 
-          assignments_root = Path("Basics/assignments")
           output_dir = Path("submission/.github/autograder")
           output_dir.mkdir(parents=True, exist_ok=True)
           for legacy_file in output_dir.glob("*_criteria.json"):
@@ -138,40 +170,54 @@ jobs:
                   continue
               legacy_file.unlink(missing_ok=True)
 
-          assignment_dirs = sorted(assignments_root.glob("Basics_Day*_homework"))
+          assignment_roots = {
+              "Basics": Path("Basics/assignments"),
+              "Advanced": Path("Advanced/assignments"),
+          }
+          assignment_dirs = []
+          for module_name, assignments_root in assignment_roots.items():
+              assignment_dirs.extend(sorted(assignments_root.glob(f"{module_name}_Day*_homework")))
+          assignment_dirs.sort()
           if not assignment_dirs:
-              print("::notice::No assignment directories found at Basics/assignments/Basics_Day*_homework. Skipping assignment grading.")
+              print("::notice::No assignment directories found at Basics/assignments/*_Day*_homework or Advanced/assignments/*_Day*_homework. Skipping assignment grading.")
               sys.exit(0)
 
           prefix_labels = {"Student:", "Date:", "Python Version:", "Name:", "Age:"}
           filename_pattern = re.compile(r"^[A-Za-z0-9._-]+$")
 
+          def parse_command(command):
+              if isinstance(command, list):
+                  return [str(part) for part in command]
+              if isinstance(command, str):
+                  return shlex.split(command)
+              return []
+
           for assignment_dir in assignment_dirs:
-              day_match = re.search(r"Basics_Day(\d+)_homework$", assignment_dir.name)
+              day_match = re.search(r"(Basics|Advanced)_Day(\d+)_homework$", assignment_dir.name)
               if not day_match:
                   continue
-              day = day_match.group(1)
+              module_name, day = day_match.groups()
               criteria_path = assignment_dir / "criteria.json"
               if not criteria_path.exists():
-                  print(f"::warning::Missing criteria.json for day {day} in {assignment_dir}; skipping.")
+                  print(f"::warning::Missing criteria.json for {module_name} day {day} in {assignment_dir}; skipping.")
                   continue
               try:
                   criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
               except json.JSONDecodeError as exc:
-                  print(f"::error::Invalid criteria.json for day {day} ({criteria_path}): {exc}")
+                  print(f"::error::Invalid criteria.json for {module_name} day {day} ({criteria_path}): {exc}")
                   sys.exit(1)
               tests = criteria.get("tests")
               if not isinstance(tests, list) or not tests:
-                  print(f"::notice::No tests found in {criteria_path}; skipping day {day}.")
+                  print(f"::notice::No tests found in {criteria_path}; skipping {module_name} day {day}.")
                   continue
 
               submissions_dir = assignment_dir / "submissions"
               if not submissions_dir.exists():
-                  print(f"::notice::No submissions directory for day {day} ({submissions_dir}); skipping day {day}.")
+                  print(f"::notice::No submissions directory for {module_name} day {day} ({submissions_dir}); skipping {module_name} day {day}.")
                   continue
-              notebooks = sorted(submissions_dir.glob(f"*Basics_Day{day}*.ipynb"))
+              notebooks = sorted(submissions_dir.glob(f"*{module_name}_Day{day}*.ipynb"))
               if not notebooks:
-                  print(f"::notice::No valid submission notebooks found for day {day} in {submissions_dir}; skipping day {day}.")
+                  print(f"::notice::No valid submission notebooks found for {module_name} day {day} in {submissions_dir}; skipping {module_name} day {day}.")
                   continue
 
               for notebook_path in notebooks:
@@ -223,14 +269,19 @@ jobs:
                       cmd = test.get("command", [])
                       stdin_data = test.get("stdin", "")
                       expected = test.get("expected_stdout", [])
-                      runtime_cmd = [str(part) for part in cmd] if isinstance(cmd, list) else []
+                      try:
+                          runtime_cmd = parse_command(cmd)
+                      except ValueError as exc:
+                          test["student_stdout"] = [f"Invalid command for {assignment_dir.name}: {exc}"]
+                          test["pass"] = False
+                          continue
                       replaced_script = False
                       for index, part in enumerate(runtime_cmd):
-                          if re.fullmatch(r"day\d+\.py", Path(part).name):
+                          if Path(part).suffix == ".py":
                               runtime_cmd[index] = str(script_path)
                               replaced_script = True
                               break
-                      if not replaced_script and runtime_cmd and runtime_cmd[0].startswith("python"):
+                      if not replaced_script and runtime_cmd and Path(runtime_cmd[0]).name.lower().startswith("python"):
                           runtime_cmd.append(str(script_path))
                       try:
                           result = subprocess.run(
@@ -536,25 +587,32 @@ jobs:
           import sys
           from pathlib import Path
 
-          assignment_dirs = sorted(Path("Basics/assignments").glob("Basics_Day*_homework"))
+          assignment_roots = {
+              "Basics": Path("Basics/assignments"),
+              "Advanced": Path("Advanced/assignments"),
+          }
+          assignment_dirs = []
+          for module_name, root in assignment_roots.items():
+              assignment_dirs.extend(sorted(root.glob(f"{module_name}_Day*_homework")))
+          assignment_dirs.sort()
           if not assignment_dirs:
               print("::notice::No assignment config directories found.")
           for assignment_dir in assignment_dirs:
-              day_match = re.search(r"Basics_Day(\d+)_homework$", assignment_dir.name)
+              day_match = re.search(r"(Basics|Advanced)_Day(\d+)_homework$", assignment_dir.name)
               if not day_match:
                   continue
-              day = day_match.group(1)
+              module_name, day = day_match.groups()
               criteria_path = assignment_dir / "criteria.json"
               feedback_path = assignment_dir / "feedback.json"
-              template_notebook = Path("Basics/assignments") / f"Basics_Day{day}_homework.ipynb"
+              template_notebook = assignment_dir.parent / f"{module_name}_Day{day}_homework.ipynb"
               if not template_notebook.exists():
-                  print(f"Missing template notebook for day {day}: {template_notebook}")
+                  print(f"Missing template notebook for {module_name} day {day}: {template_notebook}")
                   sys.exit(1)
               if not criteria_path.exists():
-                  print(f"Missing criteria.json for day {day}: {criteria_path}")
+                  print(f"Missing criteria.json for {module_name} day {day}: {criteria_path}")
                   sys.exit(1)
               if not feedback_path.exists():
-                  print(f"Missing feedback.json for day {day}: {feedback_path}")
+                  print(f"Missing feedback.json for {module_name} day {day}: {feedback_path}")
                   sys.exit(1)
               try:
                   criteria = json.loads(criteria_path.read_text(encoding="utf-8"))
