@@ -644,3 +644,24 @@ For questions or issues:
 
 **Last Updated**: 2026-02-11  
 **Repository**: https://github.com/dhar174/python_programming_courses
+
+<!-- repo-agent-bootstrap:file-kind=agents -->
+<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap-manual-fallback-2026-04-16 -->
+<!-- repo-agent-bootstrap:managed:start -->
+
+## Agent Stack Bootstrap
+
+This repository uses a hybrid agent stack:
+
+- `AGENTS.md` and `.github/copilot-instructions.md` hold repo-wide defaults and safety rails.
+- `CLAUDE.md` mirrors the same repo context for Claude-style tools and points back to the canonical docs here.
+- `.github/instructions/*.instructions.md` carries path-specific guidance for `Basics/` and `Advanced/`.
+- `.github/agents/repo-planner.agent.md` is the repo-wide planner/orchestrator for general work, while the existing specialists in `.github/agents/` remain the preferred delegates for pedagogy, slide work, and content evaluation.
+
+Bootstrap maintenance notes:
+
+- Preserve the existing long-term memory files (`Prompt.md`, `Plans.md`, `Architecture.md`, `Implement.md`, `Documentation.md`) instead of introducing a second parallel memory system.
+- Prefer extending the existing repo agents and skills over creating near-duplicate roles.
+- Keep the instructor runbooks as the source of truth for curriculum-facing changes.
+
+<!-- repo-agent-bootstrap:managed:end -->

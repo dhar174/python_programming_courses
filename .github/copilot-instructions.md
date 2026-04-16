@@ -327,3 +327,21 @@ Use these agents for specialized tasks in their respective domains.
 - **Marp Documentation**: https://marp.app/
 - **Global Autograder**: https://github.com/webtech-network/autograder
 - **Python Institute**: https://pythoninstitute.org/
+
+<!-- repo-agent-bootstrap:file-kind=copilot-instructions -->
+<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap-manual-fallback-2026-04-16 -->
+<!-- repo-agent-bootstrap:managed:start -->
+
+## Bootstrapped Agent Routing
+
+- Use `.github/agents/repo-planner.agent.md` as the repo-wide orchestrator for general requests.
+- Route pedagogy-heavy writing to `.github/agents/python-educator.agent.md`.
+- Route deep curriculum review or quality audits to `.github/agents/technical-content-evaluator.agent.md`.
+- Route deck generation and export pipeline work to the existing presentation-focused agents under `.github/agents/`.
+- Load the path-specific instructions under `.github/instructions/` when editing `Basics/` or `Advanced/`.
+
+Maintenance notes:
+- Keep `Prompt.md`, `Plans.md`, `Architecture.md`, `Implement.md`, and `Documentation.md` as the durable project-memory set for this repo.
+- Prefer updating existing guidance files over introducing a parallel memory-bank unless the repo intentionally adopts one later.
+
+<!-- repo-agent-bootstrap:managed:end -->
