@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Day 10 — Session 10 (Hours 37–40)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Advanced Day 10 — Session 10 (Hours 37–40)</h1>
+            <div class="subtitle">Python Programming (Advanced) • API Security, Clients, and Milestone Demo</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 10 Overview</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Topics Covered Today</h1>
+            <ul>
+  <li>Hour 37: API security basics with an API key gate</li>
+  <li>Hour 38: Consuming your own API with Python client functions</li>
+  <li>Hour 39: Integration choice — GUI to API or parallel UI/API</li>
+  <li>Hour 40: Checkpoint 5 API milestone demo</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Day Goal</h1>
+            <ul>
+  <li>Move from “API exists” to “API is controlled, usable, and demo-ready”</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Alignment Sources</h1>
+            <ul>
+  <li>Runbook: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → Session 10 overview; Hours 37–40</li>
+  <li>Lecture: <code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> through <code>Day10_Hour4_Advanced.md</code></li>
+  <li>Homework: <code>Advanced/assignments/Advanced_Day10_homework.ipynb</code></li>
+  <li>Quiz: <code>Advanced/quizzes/Advanced_Day10_Quiz.html</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Session Theme</h1>
+            <ul>
+  <li>Protect the write surface</li>
+  <li>Use the API from the outside</li>
+  <li>Choose an integration path intentionally</li>
+  <li>Stabilize for checkpoint evidence</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Session Success Criteria</h1>
+            <ul>
+  <li>Write routes require an API key</li>
+  <li>Client calls use timeouts and predictable error handling</li>
+  <li>The project has a clear integration story</li>
+  <li>Checkpoint 5 shows health, CRUD, protection, and architecture explanation</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrails for Today</h1>
+            <ul>
+  <li>This is <strong>not</strong> full authentication or identity management</li>
+  <li>API keys live in configuration, not source control</li>
+  <li>Choose the architecture that best protects the milestone</li>
+  <li>Stabilize before adding extra features</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 37: API Security Basics</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Explain why writes need stronger protection than reads</li>
+  <li>Load a key from configuration</li>
+  <li>Require <code>X-API-Key</code> on <code>POST</code>, <code>PUT</code>, and <code>DELETE</code></li>
+  <li>Return clear <code>401</code> and <code>403</code> responses</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Security Framing Without Panic</h1>
+            <ul>
+  <li>We are adding a <strong>course-level gate</strong></li>
+  <li>We are <strong>not</strong> building OAuth, JWT, or full auth systems</li>
+  <li>The lesson is about:</li>
+  <li style="margin-left: 30px;">safer configuration</li>
+  <li style="margin-left: 30px;">boundary checks</li>
+  <li style="margin-left: 30px;">consistent failure responses</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Rule of thumb</h1>
+            <ul>
+  <li>Reads may be open</li>
+  <li>Writes deserve protection</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>What an API Key Is — and Is Not</h1>
+            <ul>
+  <li>A shared secret checked at the HTTP boundary</li>
+  <li>Good enough for course-level protection of write operations</li>
+  <li><strong>Not</strong> a user identity system</li>
+  <li><strong>Not</strong> a replacement for a production auth stack</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Keep the Secret Out of Source</h1>
+            <pre data-lang="python"><code>import os
+
+API_KEY = os.getenv(&quot;TRACKER_API_KEY&quot;, &quot;&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Safe handling habits</h1>
+            <ul>
+  <li>Do not hard-code the key</li>
+  <li>Do not commit real values</li>
+  <li><code>.env.example</code> may hold placeholders only</li>
+  <li>Do not log the actual secret</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Header + Status Code Pattern</h1>
+            <h3>Client sends</h3>
+<pre data-lang="text"><code>X-API-Key: &lt;value&gt;</code></pre>
+<h3>Server responds</h3>
+<ul>
+  <li><code>401</code> when the key is missing</li>
+  <li><code>403</code> when the key is present but wrong</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Key habit</h1>
+            <ul>
+  <li>Pick a rule and apply it consistently</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Guard Helper Example</h1>
+            <pre data-lang="python"><code>def require_api_key():
+    provided = request.headers.get(&quot;X-API-Key&quot;, &quot;&quot;)
+
+    if not provided:
+        return error_response(&quot;missing_api_key&quot;, &quot;API key is required.&quot;, 401)
+
+    if not API_KEY or not hmac.compare_digest(provided, API_KEY):
+        return error_response(&quot;invalid_api_key&quot;, &quot;API key is invalid.&quot;, 403)
+
+    return None</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo Flow: Hour 37</h1>
+            <ol>
+  <li>Read the key from config</li>
+  <li>Add the helper</li>
+  <li>Protect write routes</li>
+  <li>Test three cases:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">no key</li>
+  <li style="margin-left: 30px;">wrong key</li>
+  <li style="margin-left: 30px;">correct key</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Teaching point</h1>
+            <ul>
+  <li>Security work is incomplete until the failure cases are tested</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Protect the Write Surface</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Load the key from configuration</li>
+  <li>Protect <code>POST</code>, <code>PUT</code>, and <code>DELETE</code></li>
+  <li>Return structured auth failures</li>
+  <li>Add placeholder documentation for secret setup</li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Every write route is protected</li>
+  <li>Auth failures still use JSON</li>
+  <li>Learner can explain why the service layer stays header-free</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 37)</h1>
+            <p><strong>⚠️</strong> Hard-coding the key</p>
+<p><strong>⚠️</strong> Protecting some write routes but forgetting one</p>
+<p><strong>⚠️</strong> Logging the real secret</p>
+<p><strong>⚠️</strong> Treating missing and wrong keys as the same case without intention</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 37)</h1>
+            <ul>
+  <li>Homework goal: a simple API key check around write operations</li>
+  <li>Best practice: environment-based key in course scope</li>
+  <li>Pitfall to avoid: hard-coded credentials in source or logs</li>
+  <li>Quiz-ready anchor: <code>Hour 37 | protected route: POST /tasks</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: Why should the API key check live in the route layer instead of inside the service layer?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 38: Consuming Your Own API</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Write small client functions</li>
+  <li>Set request timeouts</li>
+  <li>Pass auth headers for protected operations</li>
+  <li>Turn server-side failures into readable client feedback</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Why Become Your Own Client?</h1>
+            <ul>
+  <li>An API can feel fine from the inside but awkward from the outside</li>
+  <li>Client code reveals:</li>
+  <li style="margin-left: 30px;">confusing contracts</li>
+  <li style="margin-left: 30px;">inconsistent errors</li>
+  <li style="margin-left: 30px;">missing timeouts</li>
+  <li style="margin-left: 30px;">unreliable route behavior</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Healthy mindset</h1>
+            <ul>
+  <li>Let the API prove itself from the consumer’s side</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Shape of a Simple Client Module</h1>
+            <ul>
+  <li>Keep it flat and readable</li>
+  <li>Each function should:</li>
+  <li style="margin-left: 30px;">build the URL</li>
+  <li style="margin-left: 30px;">send the request</li>
+  <li style="margin-left: 30px;">set a timeout</li>
+  <li style="margin-left: 30px;">handle errors predictably</li>
+  <li style="margin-left: 30px;">return parsed JSON or a small mapped result</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Timeout + Header Pattern</h1>
+            <pre data-lang="python"><code>import requests
+
+def create_record(payload: dict, api_key: str) -&gt; dict:
+    response = requests.post(
+        f&quot;{BASE_URL}/records&quot;,
+        json=payload,
+        headers={&quot;X-API-Key&quot;: api_key},
+        timeout=5,
+    )
+    response.raise_for_status()
+    return response.json()</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Habit to keep</h1>
+            <ul>
+  <li>Never let requests hang indefinitely</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Friendly Error Handling</h1>
+            <pre data-lang="python"><code>def safe_create_record(payload: dict, api_key: str):
+    try:
+        return create_record(payload, api_key)
+    except requests.Timeout:
+        print(&quot;The API request timed out.&quot;)
+    except requests.HTTPError as exc:
+        print(f&quot;Request failed: {exc}&quot;)
+    return None</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Teaching point</h1>
+            <ul>
+  <li>The client should help the user understand what failed</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Build the Client Module</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Required functions</h3>
+<ul>
+  <li><code>list_records</code></li>
+  <li><code>create_record</code></li>
+  <li><code>update_record</code></li>
+  <li><code>delete_record</code></li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Timeout is visible in each request path</li>
+  <li>Write operations pass the header</li>
+  <li>Learner can explain the difference between timeout and validation failure</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 38)</h1>
+            <p><strong>⚠️</strong> No timeout</p>
+<p><strong>⚠️</strong> Forgetting headers on <code>PUT</code> or <code>DELETE</code></p>
+<p><strong>⚠️</strong> Copy-pasting base URLs everywhere</p>
+<p><strong>⚠️</strong> Swallowing errors with no visible message</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 38)</h1>
+            <ul>
+  <li>Homework goal: a reusable Python client for the tracker API</li>
+  <li>Best practice: wrap requests in small client functions</li>
+  <li>Pitfall to avoid: raw requests calls scattered everywhere</li>
+  <li>Quiz-ready anchor: <code>Hour 38 | client base url: http://localhost:5000</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What problem does <code>timeout=5</code> solve that a successful happy-path demo might hide?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 39: Integration Choice</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Describe two valid integration patterns</li>
+  <li>Choose the safer path for the current project state</li>
+  <li>Prove the system stays coherent</li>
+  <li>Explain tradeoffs clearly</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Two Valid Paths</h1>
+            <h3>Option A: GUI talks to API</h3>
+<pre data-lang="text"><code>GUI -&gt; client functions -&gt; API -&gt; service -&gt; repository -&gt; database</code></pre>
+<h3>Option B: Parallel GUI and API</h3>
+<pre data-lang="text"><code>GUI -&gt; service -&gt; repository -&gt; database
+API -&gt; service -&gt; repository -&gt; database</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Important</h1>
+            <ul>
+  <li>Both are valid in this course</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Option A: GUI to API</h1>
+            <h3>Benefits</h3>
+<ul>
+  <li>One outward-facing contract</li>
+  <li>GUI exercises the same HTTP behavior as other clients</li>
+  <li>Good practice for decoupled systems</li>
+</ul>
+<h3>Tradeoffs</h3>
+<ul>
+  <li>More moving parts</li>
+  <li>More failure points</li>
+  <li>GUI must handle network-style issues</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Option B: Parallel GUI and API</h1>
+            <h3>Benefits</h3>
+<ul>
+  <li>Faster to stabilize</li>
+  <li>Lower integration friction</li>
+  <li>Still demonstrates architecture reuse</li>
+</ul>
+<h3>Tradeoffs</h3>
+<ul>
+  <li>GUI does not exercise the HTTP contract directly</li>
+  <li>Fields and behavior can drift if discipline slips</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>How to Choose Well</h1>
+            <ul>
+  <li>If the API and client are stable, Option A is reasonable</li>
+  <li>If the project still feels shaky, Option B often protects the milestone better</li>
+  <li>Choosing the safer path is a <strong>professional decision</strong>, not a weaker one</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Integration Sprint</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Choose Option A or B intentionally</li>
+  <li>Document the choice briefly</li>
+  <li>Prove both surfaces touch the same underlying data</li>
+  <li>Fix at least one mismatch if it appears</li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>The architecture choice is explicit</li>
+  <li>The system still looks like <strong>one</strong> application</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 39)</h1>
+            <p><strong>⚠️</strong> GUI and API using different field names</p>
+<p><strong>⚠️</strong> Stale GUI data after writes</p>
+<p><strong>⚠️</strong> Accidentally creating two database files</p>
+<p><strong>⚠️</strong> Drifting into a hybrid design nobody can explain</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 39)</h1>
+            <ul>
+  <li>Homework goal: an integration story that connects the interface to the API cleanly</li>
+  <li>Best practice: pick one path and document the communication flow</li>
+  <li>Pitfall to avoid: parallel flows without a clear source of truth</li>
+  <li>Quiz-ready anchor: <code>Hour 39 | chosen path: gui talks to api</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: When would Option B be the smarter choice even if Option A feels more impressive?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 40: Checkpoint 5 — API Milestone Demo</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Demonstrate a working API backed by SQLite</li>
+  <li>Show security and error handling in action</li>
+  <li>Explain the layer connections</li>
+  <li>Identify the weakest part of the milestone honestly</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>What Counts as Success</h1>
+            <ul>
+  <li>Flask API with CRUD routes</li>
+  <li>SQLite-backed persistence</li>
+  <li>Consistent JSON errors</li>
+  <li>API key protection on write operations</li>
+  <li>Optional Python client if available</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Reminder</h1>
+            <ul>
+  <li>Today rewards stability more than feature count</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Fast-Grade Demo Sequence</h1>
+            <ol>
+  <li><code>GET /health</code></li>
+  <li><code>GET /records</code></li>
+  <li><code>POST /records</code> with valid key</li>
+  <li><code>PUT /records/&lt;id&gt;</code> with valid key</li>
+  <li><code>DELETE /records/&lt;id&gt;</code> with valid key</li>
+  <li>one missing or invalid key failure</li>
+  <li>one invalid input or not-found failure</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Stabilization Checklist</h1>
+            <pre data-lang="text"><code>[ ] API starts reliably
+[ ] /health returns JSON
+[ ] Create returns 201
+[ ] Update returns 200
+[ ] Delete returns 200
+[ ] Invalid input returns 400 JSON
+[ ] Missing/wrong key returns 401/403 JSON
+[ ] Data persists in SQLite</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Rehearsal Mindset</h1>
+            <ul>
+  <li>Confirm payloads before demo time</li>
+  <li>Confirm headers before demo time</li>
+  <li>Confirm database path before demo time</li>
+  <li>Reproduce failures intentionally</li>
+  <li>Fix the weakest route first</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope guardrail</h1>
+            <ul>
+  <li>Stabilize before adding any “nice-to-have” endpoint</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Failure Modes</h1>
+            <p><strong>⚠️</strong> HTML error page instead of JSON</p>
+<p><strong>⚠️</strong> One write route forgot the API key check</p>
+<p><strong>⚠️</strong> Service exceptions leaking uncaught</p>
+<p><strong>⚠️</strong> Payload shape not matching parser rules</p>
+<p><strong>⚠️</strong> Different database paths in different environments</p>
+        </section>
+
+        <section class="slide">
+            <h1>Showcase Prompt</h1>
+            <ul>
+  <li>Show one healthy path</li>
+  <li>Show one protected failure</li>
+  <li>Explain the architecture in one minute</li>
+  <li>Name the most fragile part honestly</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Good demo standard</h1>
+            <ul>
+  <li>believable</li>
+  <li>repeatable</li>
+  <li>explainable</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 40)</h1>
+            <ul>
+  <li>Homework goal: a checkpoint demo showing the secured API and client path</li>
+  <li>Best practice: checkpoint the full request flow from caller to response</li>
+  <li>Pitfall to avoid: proving only one endpoint and calling it a milestone</li>
+  <li>Quiz-ready anchor: <code>Hour 40 | api demo health: ok</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What makes an API milestone feel maintainable, not just functional?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Day 10 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>End-of-Day Evidence</h1>
+            <ul>
+  <li>Key-based protection is working</li>
+  <li>Client code can consume the API safely</li>
+  <li>Integration choice is deliberate</li>
+  <li>Checkpoint 5 can be demoed without guesswork</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Homework Focus</h1>
+            <ul>
+  <li>Keep output deterministic in <code>Advanced_Day10_homework.ipynb</code></li>
+  <li>Rehearse the anchor lines:</li>
+  <li style="margin-left: 30px;"><code>protected route: POST /tasks</code></li>
+  <li style="margin-left: 30px;"><code>client base url: http://localhost:5000</code></li>
+  <li style="margin-left: 30px;"><code>chosen path: gui talks to api</code></li>
+  <li style="margin-left: 30px;"><code>api demo health: ok</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Exit Ticket</h1>
+            <ol>
+  <li>Which endpoint is strongest in your demo flow?</li>
+  <li>What did the client reveal about your API?</li>
+  <li>Which architecture choice did you make — and why?</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Looking Ahead</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Next Session</h1>
+            <ul>
+  <li>Turn stored data into summaries</li>
+  <li>Build report-ready charts</li>
+  <li>Try a limited regression workflow or fallback analysis</li>
+  <li>Add analytics as a real capstone feature</li>
+</ul>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay(updateHash = true) {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            if (updateHash) {
+                window.location.hash = currentSlide + 1;
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    currentSlide = slideNum;
+                }
+            }
+            updateSlideDisplay(false);
+        });
+    </script>
+</body>
+</html>

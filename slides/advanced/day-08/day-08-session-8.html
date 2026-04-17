@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Day 8 — Session 8 (Hours 29–32)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Advanced Day 8 — Session 8 (Hours 29–32)</h1>
+            <div class="subtitle">Python Programming (Advanced) • Data-Driven App Integration and Checkpoint 4</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 8 Overview</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Topics Covered Today</h1>
+            <ul>
+  <li>Hour 29: Deeper SQL practice, with ORM exposure as an optional extension</li>
+  <li>Hour 30: Plug the SQLite repository into the app</li>
+  <li>Hour 31: Search/filter + pagination patterns</li>
+  <li>Hour 32: Checkpoint 4 data-driven app milestone</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Day goal</h1>
+            <ul>
+  <li>Make SQLite the actual source of truth</li>
+  <li>Add practical search</li>
+  <li>Prove persistence end to end</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 8 overview (Hours 29–32); Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Opening Script --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis</h1>
+            <ul>
+  <li>Default to deeper SQL practice for the required build path</li>
+  <li>Treat ORM as optional exposure, not mandatory scope</li>
+  <li>Keep the service contract stable during the storage swap</li>
+  <li>Apply stable ordering before slicing pages</li>
+  <li>Prove persistence-backed behavior at the checkpoint</li>
+</ul>
+<h3>Canonical quiz/contracts to recognize</h3>
+<ul>
+  <li><code>Hour 29 | chosen path: deeper SQL practice</code></li>
+  <li><code>Hour 30 | repository plugged in: yes</code></li>
+  <li><code>Hour 31 | search term: report</code></li>
+  <li><code>Hour 32 | db path: data/tracker.db</code></li>
+</ul>
+<p>&lt;!-- Sources: Advanced/assignments/Advanced_Day8_homework.ipynb — Part 1 through Part 4; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 29 through Hour 32 canonical contract questions --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 29: Deeper SQL Practice First, ORM Optional</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Explain what an ORM does in plain language</li>
+  <li>Compare ORM convenience vs SQL transparency</li>
+  <li>Implement one practical extension safely</li>
+  <li>Stay within the course scope</li>
+</ul>
+<h3>Default class path</h3>
+<ul>
+  <li><strong>Required</strong>: deeper SQL practice</li>
+  <li><strong>Optional extension</strong>: tiny SQLAlchemy slice if the environment supports it</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 29: Optional ORM slice (SQLAlchemy) OR deeper SQL practice; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 1: Hour 29 - Deeper SQL practice (required) with ORM as an optional extension; Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>The Real Tradeoff</h1>
+            <h3>ORM advantages</h3>
+<ul>
+  <li>Less repetitive mapping code</li>
+  <li>Object-style query API</li>
+  <li>Useful abstraction for common patterns</li>
+</ul>
+<h3>ORM disadvantages</h3>
+<ul>
+  <li>Extra dependency</li>
+  <li>More abstraction to debug</li>
+  <li>Hidden SQL can slow learning if the basics are still shaky</li>
+</ul>
+<h3>SQL advantages</h3>
+<ul>
+  <li>Transparent</li>
+  <li>Portable</li>
+  <li>Great for small apps and practical summaries</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour1_Advanced.md — What an ORM Does; What Raw SQL Gives You; The Real Comparison --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Demo Path A vs Path B</h1>
+            <h3>Path A — tiny ORM exposure</h3>
+<ul>
+  <li>One model class</li>
+  <li>One session</li>
+  <li>One query</li>
+</ul>
+<h3>Path B — deeper SQL practice</h3>
+<ul>
+  <li><code>GROUP BY</code></li>
+  <li><code>COUNT(*)</code></li>
+  <li>Summary queries that answer real app questions</li>
+</ul>
+<p><strong>Recommendation</strong>: finish one path well; do not split your hour in half and complete neither.</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab (choose one); Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Message to Learners; Live Demo --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: SQL Summary Query</h1>
+            <pre data-lang="python"><code>def summarize_by_status(db_path: str) -&gt; list[tuple[str, int]]:
+    query = &quot;&quot;&quot;
+        SELECT status, COUNT(*) AS total
+        FROM records
+        GROUP BY status
+        ORDER BY total DESC, status ASC
+    &quot;&quot;&quot;</code></pre>
+<h3>Why this path fits today</h3>
+<ul>
+  <li>No extra package install</li>
+  <li>Learners still see real SQL</li>
+  <li>The database answers the question directly</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Demo Track B: Deeper SQL Practice --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Choose One Depth Path</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Required baseline</h3>
+<ul>
+  <li>Complete the deeper SQL path first</li>
+  <li>Add one safe summary or reporting query</li>
+  <li>Explain one ORM tradeoff even if you stay with SQL</li>
+</ul>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> One path completed cleanly</p>
+<p><span class="check">✓</span> Tradeoffs explained at a high level</p>
+<p><span class="check">✓</span> Query or ORM slice remains small and readable</p>
+<p><span class="check">✓</span> App stability is preserved</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Completion criteria (Hour 29); Advanced/assignments/Advanced_Day8_homework.ipynb — Part 1: Hour 29 --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 29)</h1>
+            <p><strong>⚠️</strong> Adding ORM complexity before understanding the query shape</p>
+<p><strong>⚠️</strong> Switching approaches midstream</p>
+<p><strong>⚠️</strong> Treating “more abstraction” as “automatically better”</p>
+<p><strong>⚠️</strong> Letting this hour derail the milestone path</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What is one advantage and one disadvantage of an ORM?</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 29 explanation --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 30: Integrate the DB into the App</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Swap storage without rewriting the whole app</li>
+  <li>Keep the service contract stable</li>
+  <li>Use beginner-friendly dependency injection</li>
+  <li>Avoid two conflicting sources of truth</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 30: Integrate DB into the app; Advanced/lessons/lecture/Day8_Hour2_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Same Service Contract, New Storage Engine</h1>
+            <h3>Stable pieces</h3>
+<ul>
+  <li>Model classes</li>
+  <li>Validation logic</li>
+  <li>Service method names</li>
+  <li>UI callbacks / routes</li>
+</ul>
+<h3>Pieces that change</h3>
+<ul>
+  <li>Repository implementation</li>
+  <li>SQL statements</li>
+  <li>Row mapping</li>
+  <li><code>init_db()</code> and connection setup</li>
+</ul>
+<blockquote>The service should depend on what the repo can do, not how it stores data.</blockquote>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour2_Advanced.md — The One Big Idea; What Should Stay Stable --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Beginner-Friendly Dependency Injection</h1>
+            <pre data-lang="python"><code>repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)
+service = TrackerService(repo=repo)</code></pre>
+<h3>Avoid</h3>
+<pre data-lang="python"><code>class TrackerService:
+    def __init__(self):
+        self.repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)</code></pre>
+<h3>Why</h3>
+<ul>
+  <li>Easier to test</li>
+  <li>Easier to swap storage</li>
+  <li>Cleaner architecture</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour2_Advanced.md — Dependency Injection Without the Jargon Overload --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>One Source of Truth</h1>
+            <h3>Once SQLite is live</h3>
+<ul>
+  <li>SQLite is the live persistence layer</li>
+  <li>JSON can become export/import, not parallel truth</li>
+</ul>
+<h3>Danger pattern</h3>
+<ul>
+  <li>GUI writes to JSON</li>
+  <li>Search reads from SQLite</li>
+  <li>Nobody knows which state is current</li>
+</ul>
+<p><strong>Quiz/homework cue</strong>: <code>Hour 30 | repository plugged in: yes</code></p>
+<p>&lt;!-- Sources: Advanced/assignments/Advanced_Day8_homework.ipynb — Part 2: Hour 30; Advanced/lessons/lecture/Day8_Hour2_Advanced.md — The Risk of Two Sources of Truth; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 30 canonical contract --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Storage Swap With Minimal Drama</h1>
+            <h3>Demo flow</h3>
+<ol>
+  <li>Build the repo</li>
+  <li>Call <code>repo.init_db()</code></li>
+  <li>Construct the service with that repo</li>
+  <li>Launch the app</li>
+  <li>Show that add/list/update/delete still work</li>
+  <li>Restart and verify persistence</li>
+</ol>
+<h3>Success condition</h3>
+<ul>
+  <li>UI changes very little</li>
+  <li>Storage changes a lot</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: service = TrackerService(repo=SQLiteRepo(...)); Show UI still works after swap; Advanced/lessons/lecture/Day8_Hour2_Advanced.md — Live Demo of the Storage Swap --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Wire the Repository Under the Service</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Replace JSON/in-memory persistence with SQLite</li>
+  <li>Keep the service layer interface stable</li>
+  <li>Confirm CRUD works after the swap</li>
+  <li>Remove confusion about live storage</li>
+</ul>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> App persists via SQLite</p>
+<p><span class="check">✓</span> UI/API still functions</p>
+<p><span class="check">✓</span> One source of truth is clear</p>
+<p><span class="check">✓</span> Restart behavior is verified</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Wire it up; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 2: Hour 30 --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 30)</h1>
+            <p><strong>⚠️</strong> UI calling <code>sqlite3</code> directly</p>
+<p><strong>⚠️</strong> JSON and SQLite both acting “live”</p>
+<p><strong>⚠️</strong> Forgetting to refresh after DB writes</p>
+<p><strong>⚠️</strong> Rebuilding more layers than necessary</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What interface stayed the same when you swapped storage?</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 30 explanation --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 31: Search, Filter, and Pagination</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Add a practical search feature</li>
+  <li>Use parameterized <code>LIKE</code> safely</li>
+  <li>Understand <code>LIMIT</code> and <code>OFFSET</code></li>
+  <li>Keep paging logic in the repository layer</li>
+  <li>Preserve stable ordering across pages</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 31: Search/filter + pagination patterns; Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Search vs Filter</h1>
+            <h3>Search</h3>
+<ul>
+  <li>Partial text match</li>
+  <li>e.g. title contains <code>&quot;invoice&quot;</code></li>
+</ul>
+<h3>Filter</h3>
+<ul>
+  <li>Narrow by exact or controlled value</li>
+  <li>e.g. status equals <code>&quot;open&quot;</code></li>
+</ul>
+<h3>Practical method shape</h3>
+<pre data-lang="python"><code>def search(term: str = &quot;&quot;, status: str | None = None,
+           limit: int = 20, offset: int = 0) -&gt; list[Record]:
+    ...</code></pre>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Filtering vs Searching --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Safe `LIKE` + Stable Pagination</h1>
+            <pre data-lang="python"><code>wildcard = f&quot;%{term.strip().lower()}%&quot;
+query = &quot;&quot;&quot;
+    SELECT id, title, category, status
+    FROM records
+    WHERE lower(title) LIKE ?
+    ORDER BY id ASC
+    LIMIT ? OFFSET ?
+&quot;&quot;&quot;</code></pre>
+<h3>Rules to keep</h3>
+<ul>
+  <li>Add <code>%</code> to the <strong>parameter value</strong></li>
+  <li>Normalize case for a friendlier search</li>
+  <li>Sort before paginating</li>
+</ul>
+<p><strong>Quiz/homework cue</strong>: <code>Hour 31 | search term: report</code></p>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Safe Search with <code>LIKE</code>; Why Pagination Exists; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 3: Hour 31; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 31 canonical contract --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Search Repository + Optional UI Hook</h1>
+            <h3>Demo flow</h3>
+<ul>
+  <li>Add <code>search_records(term, status, limit, offset)</code></li>
+  <li>Reset page to zero on a new search</li>
+  <li>Add optional Next/Prev buttons</li>
+  <li>Repopulate the visible table from fresh results</li>
+</ul>
+<h3>Usability guardrails</h3>
+<ul>
+  <li>Empty result sets are valid</li>
+  <li>Clear stale rows before repopulating</li>
+  <li>Do not hand-build SQL with user values</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: repo.search(q, limit, offset); Demo: next/prev buttons in UI (optional); Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Live Demo --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Practical Search Feature</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Add a search box or script input</li>
+  <li>Implement a repository search method</li>
+  <li>Optional: add paging with limit 20 and Next/Prev</li>
+  <li>Keep results predictable with stable ordering</li>
+</ul>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Search returns correct results</p>
+<p><span class="check">✓</span> No SQL injection risk</p>
+<p><span class="check">✓</span> Paging does not reorder records unpredictably</p>
+<p><span class="check">✓</span> Empty search results behave cleanly</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Search feature; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 3: Hour 31 --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 31)</h1>
+            <p><strong>⚠️</strong> Building SQL with string concatenation</p>
+<p><strong>⚠️</strong> Forgetting wildcards in <code>LIKE</code></p>
+<p><strong>⚠️</strong> Paginating unsorted results</p>
+<p><strong>⚠️</strong> Leaving stale UI rows after search</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: Where should wildcard <code>%</code> be added: in the SQL string or the parameter value?</p>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 31 explanation --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 32: Checkpoint 4 — Data-Driven App Milestone</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Required deliverables</h1>
+            <ul>
+  <li>SQLite repo with CRUD</li>
+  <li><code>init_db()</code> on startup</li>
+  <li>Database as source of truth</li>
+  <li>Basic search feature</li>
+  <li>Demo proving persistence across restarts</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 32: Checkpoint 4: Data-driven app milestone; Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Clarify the Deliverables --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Fast-Grade Demo Workflow</h1>
+            <ol>
+  <li>Launch the app</li>
+  <li>Create a record</li>
+  <li>Search for it</li>
+  <li>Close the app</li>
+  <li>Reopen the app</li>
+  <li>Confirm the record still exists</li>
+  <li>Update it</li>
+  <li>Delete it</li>
+</ol>
+<h3>Why this works</h3>
+<ul>
+  <li>It reveals path issues fast</li>
+  <li>It reveals stale in-memory state fast</li>
+  <li>It proves SQLite is really live</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Show the Fast-Grade Workflow --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Validation Checklist</h1>
+            <pre data-lang="text"><code>[ ] Database file exists in the expected path
+[ ] init_db runs safely on startup
+[ ] Add creates a new row in SQLite
+[ ] List reads from SQLite, not stale in-memory data
+[ ] Search returns expected results
+[ ] Update targets the correct record ID
+[ ] Delete removes the intended record
+[ ] Restart proves persistence
+[ ] Common errors do not crash the app</code></pre>
+<p><strong>Quiz/homework cue</strong>: <code>Hour 32 | db path: data/tracker.db</code></p>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Validation Checklist for Learners; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 32 canonical contract --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Failure Modes to Triage</h1>
+            <h3>Data disappears after restart</h3>
+<ul>
+  <li>Check commit behavior</li>
+  <li>Check DB path</li>
+  <li>Check whether the UI still reads cached objects</li>
+</ul>
+<h3>Wrong record changes</h3>
+<ul>
+  <li>Print the target ID</li>
+  <li>Verify the <code>WHERE</code> clause</li>
+  <li>Check stale selected state</li>
+</ul>
+<h3>Search returns odd results</h3>
+<ul>
+  <li>Test the repo method by itself first</li>
+  <li>Check wildcard placement</li>
+  <li>Check row clearing in the UI</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Coaching Notes for Common Failure Modes --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Session 8 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>What Success Looks Like</h1>
+            <ul>
+  <li>SQLite is now the real source of truth</li>
+  <li>Storage swaps did not break the service contract</li>
+  <li>Search is practical and safe</li>
+  <li>The checkpoint demo is honest and repeatable</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrails</h1>
+            <p><span class="check">✓</span> Stable milestone first</p>
+<p><span class="check">✓</span> Practical search and persistence</p>
+<p><span class="check">✓</span> Small optional ORM exposure only if environment allows</p>
+<p><span class="check">✓</span> Clear repo/service/UI boundaries</p>
+<p><span class="cross">✗</span> Not required: fancy joins, migrations, or advanced ORM topics</p>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Scope Guardrails; Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Stability is the priority --&gt;</p>
+        </section>
+
+        <section class="slide">
+            <h1>Thank You!</h1>
+            <p>Next milestone after Day 8:</p>
+<ul>
+  <li>refine architecture</li>
+  <li>expand data features carefully</li>
+  <li>keep reliability ahead of novelty</li>
+</ul>
+<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Opening Script; Reflection and exit ticket framing --&gt;</p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay(updateHash = true) {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            if (updateHash) {
+                window.location.hash = currentSlide + 1;
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    currentSlide = slideNum;
+                }
+            }
+            updateSlideDisplay(false);
+        });
+    </script>
+</body>
+</html>
