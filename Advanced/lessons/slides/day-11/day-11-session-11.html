@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Day 11 — Session 11 (Hours 41–44)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Advanced Day 11 — Session 11 (Hours 41–44)</h1>
+            <div class="subtitle">Python Programming (Advanced) • Analytics, Visualization, and Reporting</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 11 Overview</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Topics Covered Today</h1>
+            <ul>
+  <li>Hour 41: pandas essentials — loading, cleaning, summarizing</li>
+  <li>Hour 42: visualization with matplotlib</li>
+  <li>Hour 43: regression demo or equivalent analysis</li>
+  <li>Hour 44: integrate analytics into the capstone</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Day Goal</h1>
+            <ul>
+  <li>Turn capstone data into a repeatable reporting pipeline</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Alignment Sources</h1>
+            <ul>
+  <li>Runbook: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → Session 11 overview; Hours 41–44</li>
+  <li>Lecture: <code>Advanced/lessons/lecture/Day11_Hour1_Advanced.md</code> through <code>Day11_Hour4_Advanced.md</code></li>
+  <li>Homework: <code>Advanced/assignments/Advanced_Day11_homework.ipynb</code></li>
+  <li>Quiz: <code>Advanced/quizzes/Advanced_Day11_Quiz.html</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Session Theme</h1>
+            <ul>
+  <li>Use the <strong>same dataset</strong> all day</li>
+  <li>Clean before trusting</li>
+  <li>Visualize with intention</li>
+  <li>Package analytics as a feature, not a notebook fragment</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Session Success Criteria</h1>
+            <ul>
+  <li>Exported data loads into pandas cleanly</li>
+  <li>At least one summary artifact is saved</li>
+  <li>At least one readable chart lands in <code>reports/</code></li>
+  <li>Analysis stays within course scope</li>
+  <li>Report generation becomes repeatable</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrails for Today</h1>
+            <ul>
+  <li>Start from the capstone dataset when possible</li>
+  <li>Do not force machine learning if the data does not fit</li>
+  <li>A clear summary + one strong chart beats a flashy but shallow notebook</li>
+  <li>Repeatability matters more than manual heroics</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 41: pandas Essentials</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Load capstone data into a DataFrame</li>
+  <li>Inspect shape, columns, and types</li>
+  <li>Clean common data issues</li>
+  <li>Compute useful summaries and grouped counts</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>The Analytics Mindset</h1>
+            <ul>
+  <li>We are not leaving the capstone behind</li>
+  <li>We are adding a reporting lens to the same project</li>
+  <li>Strong analysis starts with:</li>
+  <li style="margin-left: 30px;">inspection</li>
+  <li style="margin-left: 30px;">cleaning</li>
+  <li style="margin-left: 30px;">simple, honest summaries</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Day 11 reminder</h1>
+            <ul>
+  <li>Use the same dataset from Hour 41 through Hour 44</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>First Inspection Steps</h1>
+            <pre data-lang="python"><code>import pandas as pd
+
+df = pd.read_csv(&quot;reports/records_export.csv&quot;)
+print(df.head())
+print(df.shape)
+print(df.dtypes)
+print(df.isna().sum())</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Habit</h1>
+            <ul>
+  <li>Inspect before you interpret</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Cleaning Moves</h1>
+            <pre data-lang="python"><code>df[&quot;category&quot;] = df[&quot;category&quot;].str.strip().str.lower()
+df[&quot;priority&quot;] = pd.to_numeric(df[&quot;priority&quot;], errors=&quot;coerce&quot;)
+df[&quot;status&quot;] = df[&quot;status&quot;].fillna(&quot;unknown&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Typical issues</h1>
+            <ul>
+  <li>whitespace</li>
+  <li>missing values</li>
+  <li>numeric strings</li>
+  <li>inconsistent casing</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Summary Patterns Worth Starting With</h1>
+            <ul>
+  <li>total row count</li>
+  <li>counts by category</li>
+  <li>counts by status</li>
+  <li>mean or sum of a numeric field</li>
+</ul>
+<pre data-lang="python"><code>summary = df.groupby(&quot;status&quot;).size().reset_index(name=&quot;count&quot;)
+print(summary)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo Flow: Load, Clean, Summarize</h1>
+            <ol>
+  <li>Load exported data</li>
+  <li>Inspect <code>head()</code>, <code>shape</code>, and <code>dtypes</code></li>
+  <li>Make one explainable cleaning choice</li>
+  <li>Group and summarize</li>
+  <li>Save a reusable summary artifact</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Build the First Analytics Pass</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Locate or export one CSV</li>
+  <li>Load it into pandas</li>
+  <li>Inspect the structure</li>
+  <li>Make at least one cleaning decision</li>
+  <li>Compute at least three metrics</li>
+  <li>Save a summary CSV into <code>reports/</code></li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Learner can explain one cleaning choice</li>
+  <li>Summary artifact is saved and reusable</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 41)</h1>
+            <p><strong>⚠️</strong> Analyzing before inspecting</p>
+<p><strong>⚠️</strong> Cleaning data in ways you cannot explain</p>
+<p><strong>⚠️</strong> Ignoring missing values</p>
+<p><strong>⚠️</strong> Forgetting to save the summary artifact</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 41)</h1>
+            <ul>
+  <li>Homework goal: a small cleaned DataFrame with labeled summary outputs</li>
+  <li>Best practice: normalize and clean before trusting counts</li>
+  <li>Pitfall to avoid: summarizing dirty data hides real problems</li>
+  <li>Quiz-ready anchor: <code>Hour 41 | dataframe rows: 5</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What can <code>df.dtypes</code> reveal before you compute a single summary?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 42: Visualization with Matplotlib</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Create at least one readable chart</li>
+  <li>Label title and axes clearly</li>
+  <li>Save plots into <code>reports/</code></li>
+  <li>Avoid common figure-management mistakes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Why Chart Design Matters</h1>
+            <ul>
+  <li>A chart is a compressed explanation</li>
+  <li>If the labels are weak, the chart stops helping</li>
+  <li>Good plots should stand on their own without narration</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Minimum readability checklist</h1>
+            <ul>
+  <li>title</li>
+  <li>x-axis label</li>
+  <li>y-axis label</li>
+  <li>readable categories</li>
+  <li>saved artifact path</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Start from Aggregated Data</h1>
+            <ul>
+  <li>Counts by category are often a strong first chart</li>
+  <li>Counts by status are usually easy to explain</li>
+  <li>Time-based summaries can support line charts later</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Practical rule</h1>
+            <ul>
+  <li>Plot the <strong>summary</strong>, not the raw noise</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Bar Chart Pattern</h1>
+            <pre data-lang="python"><code>import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 4))
+plt.bar(summary[&quot;category&quot;], summary[&quot;count&quot;])
+plt.title(&quot;Records by Category&quot;)
+plt.xlabel(&quot;Category&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.xticks(rotation=45, ha=&quot;right&quot;)
+plt.tight_layout()
+plt.savefig(&quot;reports/category_counts.png&quot;)
+plt.close()</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Chart Choice Is Communication</h1>
+            <ul>
+  <li>Bar chart → category comparisons</li>
+  <li>Line chart → trend over time</li>
+  <li>Choose the chart that matches the question</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Teaching point</h1>
+            <ul>
+  <li>Plotting is not just syntax; it is storytelling</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Save a Report-Ready Plot</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Reuse a cleaned dataset or summary</li>
+  <li>Create at least one chart</li>
+  <li>Label title + axes</li>
+  <li>Save the artifact into <code>reports/</code></li>
+  <li>Open the file and confirm readability</li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Another learner can understand the plot quickly</li>
+  <li>The saved file works as a reusable artifact</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 42)</h1>
+            <p><strong>⚠️</strong> Unlabeled axes</p>
+<p><strong>⚠️</strong> Overlapping category labels</p>
+<p><strong>⚠️</strong> Plotting raw data when a summary would be clearer</p>
+<p><strong>⚠️</strong> Forgetting <code>tight_layout()</code> or <code>plt.close()</code></p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 42)</h1>
+            <ul>
+  <li>Homework goal: a saved matplotlib chart that supports the tracker report</li>
+  <li>Best practice: clear labels, titles, and saved artifact path</li>
+  <li>Pitfall to avoid: an unlabeled chart communicates very little</li>
+  <li>Quiz-ready anchor: <code>Hour 42 | chart type: bar</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: Why is saving the plot to <code>reports/</code> better than leaving it only inside a notebook session?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 43: Regression Demo or Equivalent Analysis</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Explain when regression makes sense</li>
+  <li>Describe why train/test split matters</li>
+  <li>Run one small predictive workflow if appropriate</li>
+  <li>Use a fallback analysis if the data does not support regression</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrail</h1>
+            <ul>
+  <li>We are <strong>not</strong> becoming ML engineers in one hour</li>
+  <li>This is a limited workflow demo</li>
+  <li>The runbook explicitly allows a fallback analysis</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Smart decision</h1>
+            <ul>
+  <li>If the dataset does not fit, do more honest analysis instead</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>When Regression Makes Sense</h1>
+            <ul>
+  <li>Target must be numeric</li>
+  <li>Features should be numeric and clean enough</li>
+  <li>The question should genuinely involve prediction</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Keep evaluation simple</h1>
+            <ul>
+  <li>One metric is enough for today</li>
+  <li>Explain the result in plain language</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Tiny Workflow Example</h1>
+            <pre data-lang="python"><code>from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
+
+X = df[[&quot;priority&quot;]]
+y = df[&quot;hours_to_complete&quot;]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+mae = mean_absolute_error(y_test, predictions)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>What This Demo Is Really Teaching</h1>
+            <ul>
+  <li>Prepare features + target</li>
+  <li>Hold back test data</li>
+  <li>Fit a model</li>
+  <li>Predict on unseen data</li>
+  <li>Report one metric honestly</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>If regression is a bad fit</h1>
+            <ul>
+  <li>Add another summary</li>
+  <li>Add another chart</li>
+  <li>Explain why the fallback is better</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Predictive Slice or Honest Fallback</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Decide whether the data supports regression</li>
+  <li>Run the workflow or choose fallback analysis</li>
+  <li>Report one metric or observation</li>
+  <li>Write one sentence explaining the result</li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Learner can justify the method choice</li>
+  <li>The outcome is explained in plain language</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 43)</h1>
+            <p><strong>⚠️</strong> Forcing regression onto non-numeric data</p>
+<p><strong>⚠️</strong> Treating the demo as production-ready analytics</p>
+<p><strong>⚠️</strong> Skipping cleaning and blaming the tool</p>
+<p><strong>⚠️</strong> Reporting a metric without explaining it</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 43)</h1>
+            <ul>
+  <li>Homework goal: a simple regression example with one labeled prediction</li>
+  <li>Best practice: keep the forecast practical and limited</li>
+  <li>Pitfall to avoid: overstating a quick demo as production-ready analytics</li>
+  <li>Quiz-ready anchor: <code>Hour 43 | model: linear regression</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: Why is “regression is not the right fit here” sometimes the most advanced answer?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 44: Integrate Analytics into the Capstone</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Add a report-generation path to the capstone</li>
+  <li>Produce export, summary, and chart artifacts repeatably</li>
+  <li>Document how the report runs</li>
+  <li>Treat analytics as part of the product</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Analytics as a Feature</h1>
+            <ul>
+  <li>The capstone should not only store data</li>
+  <li>It should also summarize and communicate data intentionally</li>
+  <li>A report feature turns analysis into something reusable</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Product mindset</h1>
+            <ul>
+  <li>one command</li>
+  <li>or one button</li>
+  <li>same cleaned pipeline every time</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Repeatable Report Pipeline</h1>
+            <ol>
+  <li>export data</li>
+  <li>load + clean data</li>
+  <li>compute summaries</li>
+  <li>generate charts</li>
+  <li>save artifacts to <code>reports/</code></li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Anti-pattern</h1>
+            <ul>
+  <li>hidden manual steps between those stages</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Example Entry Point</h1>
+            <pre data-lang="python"><code>from reports.export_data import export_records_csv
+from reports.analyze import build_summary
+from reports.plotting import create_plots
+
+def main():
+    csv_path = export_records_csv()
+    summary_path = build_summary(csv_path)
+    create_plots(summary_path)
+    print(&quot;Report artifacts generated in reports/&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Add the Report Feature</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ul>
+  <li>Create or refine an export step</li>
+  <li>Generate a summary table</li>
+  <li>Save at least one chart</li>
+  <li>Put outputs in <code>reports/</code></li>
+  <li>Document how to run the feature</li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Another learner could trigger the report tomorrow</li>
+  <li>Artifacts appear in predictable places</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls (Hour 44)</h1>
+            <p><strong>⚠️</strong> Hard-coded paths that work on only one machine</p>
+<p><strong>⚠️</strong> Report logic scattered across scripts and notebooks</p>
+<p><strong>⚠️</strong> Missing README guidance</p>
+<p><strong>⚠️</strong> Hand-edited intermediate files</p>
+        </section>
+
+        <section class="slide">
+            <h1>Homework + Quiz Emphasis (Hour 44)</h1>
+            <ul>
+  <li>Homework goal: a report feature that connects data outputs to the tracker project</li>
+  <li>Best practice: combine summaries, charts, and predictions into one readable feature</li>
+  <li>Pitfall to avoid: disconnected notebook snippets weaken the capstone</li>
+  <li>Quiz-ready anchor: <code>Hour 44 | report file: reports/weekly_summary.txt</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check</h1>
+            <p><strong>Question</strong>: What makes a report feature repeatable instead of “works when I remember the steps”?</p>
+        </section>
+
+        <section class="slide">
+            <h1>Day 11 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>End-of-Day Evidence</h1>
+            <ul>
+  <li>Data is loaded and cleaned intentionally</li>
+  <li>Summaries answer real questions</li>
+  <li>Charts are readable and saved</li>
+  <li>The capstone now has a report-generation path</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Homework Focus</h1>
+            <ul>
+  <li>Keep outputs deterministic in <code>Advanced_Day11_homework.ipynb</code></li>
+  <li>Rehearse the anchor lines:</li>
+  <li style="margin-left: 30px;"><code>dataframe rows: 5</code></li>
+  <li style="margin-left: 30px;"><code>chart type: bar</code></li>
+  <li style="margin-left: 30px;"><code>model: linear regression</code></li>
+  <li style="margin-left: 30px;"><code>report file: reports/weekly_summary.txt</code></li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Exit Ticket</h1>
+            <ol>
+  <li>Which cleaning decision changed your analysis most?</li>
+  <li>What question does your chart answer?</li>
+  <li>Is regression the right fit for your data — why or why not?</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Looking Ahead</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Next Session</h1>
+            <ul>
+  <li>Lock in quality with pytest</li>
+  <li>Use coverage strategically</li>
+  <li>Package the project for handoff</li>
+  <li>Finish with a final capstone demo and reflection</li>
+</ul>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay(updateHash = true) {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            if (updateHash) {
+                window.location.hash = currentSlide + 1;
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    currentSlide = slideNum;
+                }
+            }
+            updateSlideDisplay(false);
+        });
+    </script>
+</body>
+</html>
