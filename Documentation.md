@@ -1,13 +1,32 @@
 # Documentation
 
-Usage: Log milestone status updates and decisions so future handoffs can continue with full context.
+_Log of milestone status updates and key decisions. Future agents and contributors should read this file first to understand where the project stands and why key choices were made._
+
+---
 
 ## Milestone Status
+
+- **2026-04-19 — Project content-complete**: Both modules are fully authored. All 96 lecture hours, 24 assignment notebooks, 24 HTML quizzes, and 24 `_answers.json` quiz export files are present. Sample student submissions added to all 24 Advanced assignment directories. See `Plans.md` for full milestone breakdown.
+
+- **2026-04-19 — Autograder fully operational on both modules**: `autograder.yml` grades assignments and quizzes for all 24 days. All `setup.json` files use the standardized bash resolution script. Results committed to timestamped `autograder-results-*` branches on manual dispatch.
+
 - **2026-02-26 — Autograder workflow review (Days 1–2)**: Completed a workflow + integration audit and drafted a manual testing plan. See the report below for findings, alignment notes, and a triggerable test suite design.
+
 - **2026-02-26 — Basics Days 1–2 alignment review**: Completed a runbook-to-courseware alignment audit for Hours 1–8. See the report below for matches, gaps, and scope drift.
 
 ## Decisions
-- _No decisions recorded yet._
+
+- **2026-01-14 — Per-hour file granularity adopted**: All lecture content must be split into one file per instructional hour (`DayX_HourY_Basics.md`). Combined session files are deprecated. Rationale: enables granular agent automation and clean curriculum traceability.
+
+- **2026-02-26 — Deterministic-only autograder outputs**: Homework assignments must produce deterministic stdout to enable CI grading. Input-driven labs from the runbook are adapted to use fixed values in the homework. The live input-driven exercises happen verbally in class.
+
+- **2026-03-10 — Day 2 lecture restructured to per-hour files**: The combined `day-02-session-2.md` was superseded by `Day2_Hour1_Basics.md` through `Day2_Hour4_Basics.md`. Each file carries a `Runbook alignment` note mapping to Session 2 / course Hours 5–8.
+
+- **2026-03-xx — Multi-AI-agent workflow adopted**: GitHub Copilot SWE agent, OpenAI Codex agent, and Anthropic Claude agent are all permitted to contribute under the governance rules in `AGENTS.md`. Copilot operates as a review/fix agent on branches created by Codex. Claude is used for quality evaluation and final review.
+
+- **2026-04-16 — Autograder setup.json standardized**: All 24 assignment `setup.json` files now use a single standardized bash glob pattern for notebook discovery. Fallback loops are removed in favour of an explicit error if zero or >1 notebooks match the discovery pattern.
+
+- **2026-04-19 — Documentation overhauled (Diátaxis framework)**: `README.md` rewritten with multi-audience sections (Learner / Instructor / Contributor), CI badges, and accurate repository contents. `Architecture.md` and `Plans.md` updated with real project content. `Architecture.md` now codifies the six guiding principles and constraint table.
 
 ## Autograder Workflow Review (2026-02-26)
 
