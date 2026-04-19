@@ -5,7 +5,7 @@
   "commands": [
     "python -m pip install --quiet --upgrade pip",
     "python -m pip install nbconvert",
-    "set --; sample_nb=''; for nb in submissions/*Advanced_Day9*.ipynb; do [ \"$nb\" = 'submissions/*Advanced_Day9*.ipynb' ] && continue; if [ \"$nb\" = 'submissions/Advanced_Day9_homework_test_filled.ipynb' ]; then sample_nb=\"$nb\"; continue; fi; set -- \"$@\" \"$nb\"; done; if [ \"$#\" -eq 0 ] && [ -n \"$sample_nb\" ]; then set -- \"$sample_nb\"; fi; if [ \"$#\" -eq 0 ]; then echo 'ERROR: No matching Day 9 notebook found; add exactly one non-sample submission or keep the bundled sample notebook for fallback grading'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 9 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output advanced_day9 --output-dir .",
-    "if [ ! -f advanced_day9.py ]; then echo 'ERROR: Notebook conversion failed - advanced_day9.py not found'; exit 1; fi"
+    "set -- submissions/*Advanced_Day9*.ipynb; if [ \"$1\" = 'submissions/*Advanced_Day9*.ipynb' ]; then echo 'ERROR: No matching Day 9 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 9 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output day9 --output-dir .",
+    "if [ ! -f day9.py ]; then echo 'ERROR: Notebook conversion failed - day9.py not found'; exit 1; fi"
   ]
 }

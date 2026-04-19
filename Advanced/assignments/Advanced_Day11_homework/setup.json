@@ -4,8 +4,8 @@
   ],
   "commands": [
     "python -m pip install --quiet --upgrade pip",
-    "python -m pip install nbconvert pandas matplotlib scikit-learn",
-    "set --; sample_nb=''; for nb in submissions/*Advanced_Day11*.ipynb; do [ \"$nb\" = 'submissions/*Advanced_Day11*.ipynb' ] && continue; if [ \"$nb\" = 'submissions/Advanced_Day11_homework_test_filled.ipynb' ]; then sample_nb=\"$nb\"; continue; fi; set -- \"$@\" \"$nb\"; done; if [ \"$#\" -eq 0 ] && [ -n \"$sample_nb\" ]; then set -- \"$sample_nb\"; fi; if [ \"$#\" -eq 0 ]; then echo 'ERROR: No matching Day 11 notebook found; add exactly one non-sample submission or keep the bundled sample notebook for fallback grading'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 11 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output advanced_day11 --output-dir .",
-    "if [ ! -f advanced_day11.py ]; then echo 'ERROR: Notebook conversion failed - advanced_day11.py not found'; exit 1; fi"
+    "python -m pip install nbconvert",
+    "set -- submissions/*Advanced_Day11*.ipynb; if [ \"$1\" = 'submissions/*Advanced_Day11*.ipynb' ]; then echo 'ERROR: No matching Day 11 notebook found'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 11 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output day11 --output-dir .",
+    "if [ ! -f day11.py ]; then echo 'ERROR: Notebook conversion failed - day11.py not found'; exit 1; fi"
   ]
 }
