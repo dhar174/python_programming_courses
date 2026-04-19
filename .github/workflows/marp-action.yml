@@ -4,9 +4,10 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "Basics/lessons/**.md"
-      - "Advanced/lessons/**.md"
+      - "Basics/lessons/slides/day-*/**"
+      - "Advanced/lessons/slides/day-*/**"
       - ".marprc.yml"
+      - ".github/workflows/marp-action.yml"
 
 permissions:
   contents: read
@@ -44,10 +45,22 @@ jobs:
         with: 
           token: ${{ secrets.GH_PAT }}
           
-      - name: Convert Markdown into HTML and PDF
+      - name: Convert Basics slide Markdown into HTML and PDF
         uses: KoharaKazuya/marp-cli-action@v4
         with:
           config-file: ./.marprc.yml
+
+      - name: Convert Advanced slide Markdown into HTML and PDF
+        if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
+        uses: KoharaKazuya/marp-cli-action@v4
+        with:
+          config-file: ./.marprc.yml
+          args: --input-dir Advanced/lessons/slides --output _site/slides/advanced
+
+      - name: Remove non-deck README artifacts
+        run: |
+          find _site/slides -maxdepth 1 -type f -name 'README*' -delete
+          find _site/slides/advanced -maxdepth 1 -type f -name 'README*' -delete 2>/dev/null || true
 
       - name: Ensure Pages root resolves to slide content
         run: |
@@ -75,7 +88,7 @@ jobs:
           if [ -f _site/slides/index.html ]; then
             echo "Found generated slide index at _site/slides/index.html."
           elif [ -d _site/slides ]; then
-            GENERATED_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
+            GENERATED_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
             if [ -n "${GENERATED_SLIDE_HTML}" ]; then
               echo "Generated slide HTML found in _site/slides; creating index.html entrypoint."
             else
@@ -106,10 +119,20 @@ jobs:
 
           if [ ! -f _site/slides/index.html ]; then
             # Use locale-independent sorting so the generated redirect is
-            # reproducible across runners and always targets the same deck.
-            # Depth 2 matches the checked-in slide site layout and Marp's
-            # current output structure without traversing unrelated content.
-            FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -name '*.html' ! -name 'index.html' | LC_ALL=C sort | head -n 1)"
+            # reproducible across runners and prefers Basics deck output first,
+            # then Advanced deck output, before considering auxiliary files.
+            FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+
+            if [ -z "${FIRST_SLIDE_HTML}" ]; then
+              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+            fi
+
+            if [ -z "${FIRST_SLIDE_HTML}" ]; then
+              # Depth 3 matches the checked-in slide site layout plus the
+              # dedicated `_site/slides/advanced/...` output for Advanced decks
+              # without traversing unrelated content.
+              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'index.html' ! -name 'README.html' | LC_ALL=C sort | head -n 1)"
+            fi
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
               echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
