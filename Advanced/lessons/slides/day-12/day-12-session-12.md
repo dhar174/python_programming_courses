@@ -277,9 +277,19 @@ def test_service_and_sqlite_repo_work_together(tmp_path):
 
 ## Fresh-Run Sequence
 
-```bash
+**Windows (cmd / PowerShell)**
+```bat
 python -m venv .venv
 .venv\Scripts\activate
+python -m pip install -r requirements.txt
+python -m pytest
+python api/app.py
+```
+
+**macOS / Linux (bash / zsh)**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m pytest
 python api/app.py

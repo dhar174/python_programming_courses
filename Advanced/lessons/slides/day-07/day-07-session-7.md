@@ -294,6 +294,7 @@ Return domain objects from the repository.
 ## Use `sqlite3.Row` + a Mapping Helper
 
 ```python
+# from datetime import date  # required for date.fromisoformat()
 connection.row_factory = sqlite3.Row
 
 def from_row(row: sqlite3.Row) -> Expense:

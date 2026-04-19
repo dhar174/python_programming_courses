@@ -179,6 +179,12 @@ class UserFactory:
 def sort_by_name(record):
     return record["name"]
 
+def sort_by_id(record):
+    return record["id"]
+
+def sort_by_date(record):
+    return record["created"]
+
 
 sorting_strategies = {
     "name": sort_by_name,

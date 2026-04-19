@@ -113,6 +113,11 @@ class Hello:
 
 
 data = {"status": "ready"}
+
+try:
+    print(data["status"])
+except KeyError:
+    print("Status not found!")
 ```
 
 - Include a class
@@ -501,11 +506,13 @@ class CSVExporter:
 ## Demo: Composition in the Caller
 
 ```python
+from typing import Any
+
 class ReportService:
-    def __init__(self, exporter) -> None:
+    def __init__(self, exporter: Any) -> None:
         self.exporter = exporter
 
-    def generate(self, data):
+    def generate(self, data: Any) -> Any:
         return self.exporter.export(data)
 ```
 

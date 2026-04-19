@@ -238,6 +238,11 @@ if payload is None:
 ## CRUD Example
 
 ```python
+# from flask import Flask, request, jsonify
+# from .services import service          # TrackerService instance
+# from .errors import error_response     # helper returning JSON error + status code
+# app = Flask(__name__)
+
 @app.post("/records")
 def create_record():
     payload = request.get_json(silent=True)
