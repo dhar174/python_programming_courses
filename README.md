@@ -66,8 +66,8 @@ Builds on Module 1 to cover professional-grade Python. Students build GUI apps, 
 
 ### Syllabi (PDF)
 
-- [Python Basics 48h Syllabus — PCEP/PCAP Aligned](Basics/Python%20Basics%20(48h)%20Syllabus%20(12x4h)%20—%20Pcep_pcap%20Aligned.pdf)
-- [Python Advanced 48h Syllabus — Path to PCPP1](Advanced/Python%20Advanced%20(48h)%20Syllabus%20(12x4h)%20—%20Pcap_path%20To%20Pcpp1.pdf)
+- [Python Basics 48h Syllabus — PCEP/PCAP Aligned](Basics/Python%20Basics%20%2848h%29%20Syllabus%20%2812x4h%29%20—%20Pcep_pcap%20Aligned.pdf)
+- [Python Advanced 48h Syllabus — Path to PCPP1](Advanced/Python%20Advanced%20%2848h%29%20Syllabus%20%2812x4h%29%20—%20Pcap_path%20To%20Pcpp1.pdf)
 
 ### Career Outcomes
 
@@ -101,13 +101,13 @@ npx @marp-team/marp-cli -c .marprc.yml
 # Output: ./_site/slides/ (HTML, PDF, PPTX, PNG)
 
 # Build and watch a single file during development
-npx @marp-team/marp-cli -w Basics/lessons/slides/Day1_Hour1_Basics.md -o preview.html
+npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-session-1.md
 
 # Build a specific file as PDF
-npx @marp-team/marp-cli Basics/lessons/slides/Day1_Hour1_Basics.md -o out.pdf --pdf
+npx @marp-team/marp-cli --no-config-file Basics/lessons/slides/day-01/day-01-session-1.md -o out.pdf --pdf
 ```
 
-Slides are published automatically to **GitHub Pages** on every push to `main` that touches lesson files or `.marprc.yml`.
+Slides are published automatically to **GitHub Pages** on every push to `main` that touches slide source files under `Basics/lessons/slides/day-*/` or `Advanced/lessons/slides/day-*/`, or updates `.marprc.yml` / the workflow file.
 
 ### Lecture Scripts
 
@@ -152,7 +152,7 @@ Basics/assignments/Basics_DayX_homework/
 
 **Critical constraints:**
 - All test outputs must be **deterministic** — no `datetime.now()`, no random seeds, no unseeded state
-- Converted script name must be `dayN.py` (e.g., `day1.py`, `day12.py`)
+- Converted script name should match the module-prefixed autograder contract (for example, `basics_day1.py` or `advanced_day12.py`)
 - Numeric precision must match `criteria.json` exactly (e.g., `85.50` not `85.5`)
 
 ### AI Agent Stack
@@ -166,10 +166,10 @@ cd Basics/assignments/Basics_Day1_homework/
 
 # Convert submission to grading script
 python -m pip install nbconvert
-jupyter nbconvert --to script submissions/<name>_Basics_Day1_homework.ipynb --output day1
+jupyter nbconvert --to script submissions/<name>_Basics_Day1_homework.ipynb --output basics_day1
 
 # Run and compare against criteria.json expectations
-python day1.py
+python basics_day1.py
 ```
 
 ---

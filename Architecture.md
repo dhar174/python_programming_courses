@@ -25,7 +25,7 @@ Naming convention: `DayX_HourY_{Module}.md` (e.g., `Day3_Hour2_Basics.md`).
 All graded outputs must be fully deterministic:
 - No `datetime.now()`, no `random` without explicit seeds, no environment-dependent output
 - Numeric precision must match `criteria.json` exactly (e.g., `85.50` not `85.5`)
-- Converted notebook script must be named `dayN.py` (e.g., `day12.py`)
+- Converted notebook script must use the module-prefixed autograder name (for example, `basics_day12.py` or `advanced_day12.py`)
 - Grading commands run the script and compare stdout character-for-character
 
 ### 4. AI Agent Governance

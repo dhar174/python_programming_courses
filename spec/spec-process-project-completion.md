@@ -29,8 +29,8 @@ The purpose of this document is to explicitly outline what has been completed in
 - **REQ-004**: Each day must feature a multiple choice quiz (`.html`).
 - **REQ-005**: All quizzes must have corresponding `_answers.json` files to enable CI/CD autograding workflows.
 - **REQ-006**: **Lecture Length & Scope** - Each per-hour lecture script must be a standalone Markdown file designed as a live speaking script, targeting a minimum length of ~4,000 words per hour.
-- **REQ-007**: **Assignment Structure** - Student notebook submissions must strictly follow the `[name]-Basics_DayX_homework.ipynb` or comparable Advanced template naming convention.
-- **REQ-008**: **Bash Execution Formatting** - Autograder scripts are to evaluate purely converted python files named exclusively as `dayN.py` (where N is the day) to remain standardized across the pipeline.
+- **REQ-007**: **Assignment Structure** - Student notebook submissions must include `Basics_DayX` or `Advanced_DayX` in the `.ipynb` filename and use only letters, numbers, dots, underscores, or hyphens so they match the workflow discovery glob safely.
+- **REQ-008**: **Bash Execution Formatting** - Autograder scripts should evaluate module-prefixed converted Python files (for example, `basics_day1.py` or `advanced_day11.py`), matching the filenames referenced in `criteria.json` or the workflow fallback naming contract.
 
 ## 4. Interfaces & Data Contracts
 
@@ -47,8 +47,8 @@ The purpose of this document is to explicitly outline what has been completed in
 - **Test Levels**: Functional verification via GitHub Actions autograding workflow.
 - **Frameworks**: Jupyter nbconvert and `webtech-network/autograder@v1`.
 - **Testing Mechanics**:
-  - `setup.json` uses a simplified bash resolution script structure: `set -- submissions/*DayX*.ipynb; if [ "$1" = 'submissions/*DayX*.ipynb' ]; then echo 'ERROR: No matching Day X notebook found'; exit 1; fi; if [ "$#" -ne 1 ]; then echo 'ERROR: Multiple matching Day X notebooks found'; exit 1; fi; jupyter nbconvert --to script "$1" --output dayX --output-dir .` without relying on fallback loops.
-  - `criteria.json` commands array must execute exactly `python dayX.py` and perform precise deterministic expected output matching.
+  - `setup.json` resolves matching notebook submissions via the module/day glob, prefers non-bundled student submissions when present, and converts the selected notebook to a module-prefixed script such as `basics_dayX.py` or `advanced_dayX.py`.
+  - `criteria.json` command arrays should execute the converted module-prefixed script (or allow the workflow to inject that script path) and perform precise deterministic expected output matching.
 - **Coverage Requirements**: The GitHub action test suite currently parses assignment notebooks and checks all matching Quiz HTML models against `_answers.json`.
 - **CI/CD Integration**: Executes deterministic notebook tests per-submission on `push`, `pull_request`, and `workflow_dispatch`.
 
@@ -75,16 +75,14 @@ Missing `_answers.json` files currently break full workflow execution verificati
 - **Advanced Assignments**: 12/12 day directories created with `.ipynb` assignment templates.
 - **Basics Quizzes**: 12/12 daily `.html` quizzes created.
 - **Advanced Quizzes**: 12/12 daily `.html` quizzes created.
-- **Basics Quiz Answers**: Only Days 1-5 have matching `_answers.json` exports. Days 6-12 are missing.
-- **Advanced Quiz Answers**: All 12 days are missing corresponding `_answers.json` export files.
+- **Basics Quiz Answers**: 12/12 `_answers.json` exports are present.
+- **Advanced Quiz Answers**: 12/12 `_answers.json` exports are present.
 
 ### Pending Tasks
-- **PEN-001**: Generate `Basics_DayX_Quiz_answers.json` for Basics Days 6 through 12.
-- **PEN-002**: Generate `Advanced_DayX_Quiz_answers.json` for all Advanced Days 1 through 12.
-- **PEN-003**: Provide sample submissions for all Advanced Module assignments to ensure CI validation testing succeeds.
+- **PEN-001**: Review and maintain the completed quiz answer exports and sample submissions as future curriculum changes land.
 
 ## 11. Related Specifications / Further Reading
 
-- [`AGENTS.md`](file:///mnt/c/Users/darf3/Documents/python_programming_courses/AGENTS.md)
-- [`autograder.yml`](file:///mnt/c/Users/darf3/Documents/python_programming_courses/.github/workflows/autograder.yml)
-- [`Documentation.md`](file:///mnt/c/Users/darf3/Documents/python_programming_courses/Documentation.md)
+- [`AGENTS.md`](../AGENTS.md)
+- [`autograder.yml`](../.github/workflows/autograder.yml)
+- [`Documentation.md`](../Documentation.md)
