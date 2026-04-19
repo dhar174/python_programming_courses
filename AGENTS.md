@@ -269,10 +269,10 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
 
    # 2. Install dependencies and convert a submission notebook (local testing example from this config directory; CI generates setup.json dynamically from the discovered staged filename)
    python -m pip install nbconvert
-   jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output day1.py  # e.g., submissions/alex_Basics_Day1_homework.ipynb
+   jupyter nbconvert --to script submissions/<your_Basics_Day1_notebook>.ipynb --output basics_day1.py  # e.g., submissions/alex_Basics_Day1_homework.ipynb
 
    # 3. Run the script and check output
-   python day1.py
+   python basics_day1.py
    Compare output to the canonical strings in `criteria.json`.
    # In CI, the workflow copies the discovered notebook into submission/ and generates setup.json using the bare filename (no submissions/ prefix).
 
