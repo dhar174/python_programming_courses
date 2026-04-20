@@ -1,172 +1,252 @@
 # Python Programming Course Package (96 Hours)
 
-This repository contains the complete instructional materials for the **Python Programming** course package delivered by **GlobalIT** and taught by **Charles Niswander**. The course is a comprehensive, instructor-led, hands-on, project-based program aligned to the **Python Institute** certification pathway.
+[![Slide Build & Deploy](https://github.com/dhar174/python_programming_courses/actions/workflows/marp-action.yml/badge.svg)](https://github.com/dhar174/python_programming_courses/actions/workflows/marp-action.yml)
+[![Autograder](https://github.com/dhar174/python_programming_courses/actions/workflows/autograder.yml/badge.svg)](https://github.com/dhar174/python_programming_courses/actions/workflows/autograder.yml)
+[![GitHub Pages](https://img.shields.io/badge/Slides-GitHub%20Pages-blue?logo=github)](https://dhar174.github.io/python_programming_courses/)
 
-The course package is comprised of two full modules:
+A complete, instructor-led **96-hour Python training package** built by **GlobalIT** and taught by **Charles Niswander**. The course delivers two sequential 48-hour modules aligned to the [Python Institute](https://pythoninstitute.org/) certification pathway (PCEP → PCAP).
 
-- **Module 1: Python Programming (Basic) – 48 Hours**
-- **Module 2: Python Programming (Advanced) – 48 Hours**
-
-This README is derived from the “Python GIT Training Course Package” description and is intended to provide a clear overview of the course scope, objectives, outcomes, and logistics for learners, instructors, and stakeholders.
-
----
-
-## Course Summary
-
-**Course Title:** Python Programming  
-**Total Duration:** 96 Hours (Instructor-led, hands-on, project-based)
-
-**Instructor:** Charles Niswander  
-**Organization:** GlobalIT
-
-This program equips learners to design, develop, test, and deploy Python applications across multiple domains including software development, automation, APIs, and data analysis. It emphasizes real-world labs, capstone projects, and certification readiness for the Python Institute’s PCEP and PCAP exams.
+> **Looking to jump in?** Jump to the section for your role:
+> [📚 I'm a Learner](#-for-learners) · [🎓 I'm an Instructor](#-for-instructors) · [🛠 I'm a Contributor or AI Agent](#-for-contributors--ai-agents)
 
 ---
 
-## Course Structure
+## Table of Contents
 
-### Module 1: Python Programming Fundamentals (48 Hours)
-
-**Course Description**  
-This foundational module introduces Python programming concepts and practical skills. Students learn how to build scripts, work with data structures, handle files, and implement basic object-oriented programming. The module includes hands-on labs and a capstone project to reinforce learning and prepare learners for entry-level certification.
-
-**Key Objectives**
-- Set up and configure a Python development environment  
-- Write Python scripts using variables, operators, data types, and control flow  
-- Work with lists, tuples, sets, and dictionaries  
-- Use functions, modules, and basic object-oriented programming  
-- Perform file I/O and error handling  
-- Build command-line programs  
-- Prepare for the Python Institute PCEP certification  
-
-**Topics Covered**
-1. Setting up Python and creating a simple application  
-2. Processing simple data types (strings, numbers)  
-3. Working with data structures (lists, tuples, sets, dictionaries)  
-4. Conditional statements and loops  
-5. Functions, classes, and modules  
-6. File and directory operations  
-7. Exception handling (built-in and custom)  
-8. Capstone project and certification prep  
+- [Course Overview](#course-overview)
+- [For Learners](#-for-learners)
+- [For Instructors](#-for-instructors)
+- [For Contributors & AI Agents](#-for-contributors--ai-agents)
+- [Repository Structure](#repository-structure)
+- [CI/CD Pipelines](#cicd-pipelines)
+- [Certification Alignment](#certification-alignment)
 
 ---
 
-### Module 2: Advanced Python Development (48 Hours)
+## Course Overview
 
-**Course Description**  
-This advanced module builds on foundational skills to introduce design patterns, GUI development, database programming, REST APIs, data analysis, and packaging. It is aligned to Python Institute’s PCAP certification and includes a full-stack capstone project.
+| | |
+|---|---|
+| **Total Duration** | 96 hours (two 48-hour modules) |
+| **Format** | Live, instructor-led; hands-on labs; capstone projects |
+| **Instructor** | Charles Niswander |
+| **Organization** | GlobalIT |
+| **Certifications** | PCEP™ (Module 1) → PCAP™ (Module 2) |
 
-**Key Objectives**
-- Apply advanced OOP design patterns and architectural principles  
-- Build GUI applications using Tkinter or PyQt  
-- Connect to and manage SQL databases  
-- Build and secure RESTful APIs with Flask or Django  
-- Perform data analysis and visualization  
-- Implement machine learning regression (intro-level)  
-- Use testing frameworks (pytest) and packaging tools  
-- Prepare for the Python Institute PCAP certification  
+### Module 1 — Python Programming: Basic (48 Hours)
 
-**Topics Covered**
-1. OOP design patterns, encapsulation, inheritance  
-2. Object creation patterns (Factory and built-ins)  
-3. GUI development with Tkinter or PyQt  
-4. Data-driven applications with SQLite/MySQL and ORMs  
-5. Web applications and REST APIs (Flask/Django)  
-6. Data science fundamentals (NumPy, Pandas, Matplotlib)  
-7. Exception handling and unit testing  
-8. Packaging and deployment  
-9. Capstone: full-stack Python application  
+Introduces Python from the ground up. Students build scripts, work with all core data structures, handle files, and implement basic OOP. Culminates in a capstone project and PCEP certification preparation.
+
+**Topics:** environment setup · data types & operators · lists/tuples/sets/dicts · control flow · functions & modules · file I/O · exception handling · basic OOP · PCEP prep
+
+### Module 2 — Python Programming: Advanced (48 Hours)
+
+Builds on Module 1 to cover professional-grade Python. Students build GUI apps, connect to databases, create REST APIs, analyze data, write unit tests, and package applications. Culminates in a full-stack capstone project and PCAP certification preparation.
+
+**Topics:** advanced OOP & design patterns · factory patterns · GUI (Tkinter/PyQt) · SQL & ORMs · Flask/Django REST APIs · NumPy/Pandas/Matplotlib · unit testing (pytest) · packaging & deployment · PCAP prep
 
 ---
 
-## Target Audience
+## 📚 For Learners
 
-This course is designed for:
+### Prerequisites
 
-- Beginners entering software or application development  
-- Technical professionals transitioning into Python  
-- Students preparing for PCEP and PCAP certification exams  
-- Developers seeking roles in automation, backend, APIs, or data science  
+| Module | Requirement |
+|---|---|
+| Module 1 (Basic) | Basic computer skills (Windows/macOS/Linux) |
+| Module 2 (Advanced) | Module 1 completion or equivalent Python experience |
+
+### Lab Setup
+
+- **OS:** Windows 10/11 64-bit (macOS and Linux supported)
+- **Python:** 3.x latest stable
+- **VM:** VirtualBox with Lubuntu VM (provided by GlobalIT)
+- **Editor:** VS Code or PyCharm
+- **Access:** Internet connection for package installation
+
+### Syllabi (PDF)
+
+- [Python Basics 48h Syllabus — PCEP/PCAP Aligned](Basics/Python%20Basics%20%2848h%29%20Syllabus%20%2812x4h%29%20—%20Pcep_pcap%20Aligned.pdf)
+- [Python Advanced 48h Syllabus — Path to PCPP1](Advanced/Python%20Advanced%20%2848h%29%20Syllabus%20%2812x4h%29%20—%20Pcap_path%20To%20Pcpp1.pdf)
+
+### Career Outcomes
+
+After completing both modules, learners are prepared for:
+
+- Junior Python Developer
+- Backend / API Developer
+- QA Automation Engineer
+- Full-Stack Python Developer
+- Data Analyst / Data Science Assistant
+- Python DevOps / Scripting Engineer
 
 ---
 
-## Prerequisites
+## 🎓 For Instructors
 
-**For Module 1 (Basic):**
-- Basic computer skills (Windows/macOS/Linux)
+### Source of Truth: Instructor Runbooks
 
-**For Module 2 (Advanced):**
-- Completion of Module 1 or equivalent Python experience  
-- Familiarity with Python syntax and OOP fundamentals  
+All lesson content must align to the runbooks. Do not modify lesson files without cross-referencing the runbook for that day.
+
+- [`Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`](Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md)
+- [`Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`](Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md)
+
+### Quick Start: Building Slides Locally
+
+No `package.json` — use `npx` directly.
+
+```bash
+# Build all slides (mirrors CI)
+npx @marp-team/marp-cli -c .marprc.yml
+# Output: ./_site/slides/ (HTML, PDF, PPTX, PNG)
+
+# Build and watch a single file during development
+npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-session-1.md
+
+# Build a specific file as PDF
+npx @marp-team/marp-cli --no-config-file Basics/lessons/slides/day-01/day-01-session-1.md -o out.pdf --pdf
+```
+
+Slides are published automatically to **GitHub Pages** on every push to `main` that touches slide source files under `Basics/lessons/slides/day-*/` or `Advanced/lessons/slides/day-*/`, or updates `.marprc.yml` / the workflow file.
+
+### Lecture Scripts
+
+Each hour of instruction has a dedicated Markdown lecture script for verbatim delivery.
+
+- **Location:** `Basics/lessons/lecture/DayX_HourY_Basics.md` or `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
+- **Standard:** ~4,000 words minimum per hour
+- **Status:** All 96 hours complete (48 Basics + 48 Advanced)
+
+### Assignments & Quizzes
+
+| Asset | Location | Count |
+|---|---|---|
+| Basics homework notebooks | `Basics/assignments/Basics_DayX_homework.ipynb` | 12 |
+| Advanced homework notebooks | `Advanced/assignments/Advanced_DayX_homework.ipynb` | 12 |
+| Basics quizzes (HTML) | `Basics/quizzes/Basics_DayX_Quiz.html` | 12 |
+| Advanced quizzes (HTML) | `Advanced/quizzes/Advanced_DayX_Quiz.html` | 12 |
 
 ---
 
-## Technical Requirements
+## 🛠 For Contributors & AI Agents
 
-**Minimum Lab Setup:**
-- Windows 10/11 64-bit (macOS/Linux supported)  
-- Python 3.x (latest stable)  
-- VirtualBox with Lubuntu VM (as provided by GlobalIT materials)  
-- Code editor: VS Code or PyCharm  
-- Internet access for package installation  
+### Essential Reading
+
+Before making any changes to this repository, read:
+
+- **[`AGENTS.md`](AGENTS.md)** — Comprehensive agent governance, repository structure, naming conventions, autograder contracts, and development workflow. This is required reading for all contributors (human and AI).
+- **[`.github/copilot-instructions.md`](.github/copilot-instructions.md)** — Copilot-specific coding instructions and build commands.
+
+### Autograder Contracts
+
+Homework notebooks are graded automatically. Every assignment directory must contain:
+
+```
+Basics/assignments/Basics_DayX_homework/
+├── criteria.json         # Test specs: command, stdin, expected_stdout, points
+├── setup.json            # Dependencies: nbconvert, file assertions
+├── feedback.json         # (optional) Custom feedback settings
+└── submissions/
+    └── *Basics_DayX*.ipynb   # Student submission (discovered by CI glob)
+```
+
+**Critical constraints:**
+- All test outputs must be **deterministic** — no `datetime.now()`, no random seeds, no unseeded state
+- Converted script name should match the module-prefixed autograder contract (for example, `basics_day1.py` or `advanced_day12.py`)
+- Numeric precision must match `criteria.json` exactly (e.g., `85.50` not `85.5`)
+
+### AI Agent Stack
+
+Ten specialized agents are defined in [`.github/agents/`](.github/agents/). The agent stack is governed by [`AGENTS.md`](AGENTS.md) and documented in [`.github/agent-stack-provenance.json`](.github/agent-stack-provenance.json).
+
+### Local Autograder Testing
+
+```bash
+cd Basics/assignments/Basics_Day1_homework/
+
+# Convert submission to grading script
+python -m pip install nbconvert
+jupyter nbconvert --to script submissions/<name>_Basics_Day1_homework.ipynb --output basics_day1
+
+# Run and compare against criteria.json expectations
+python basics_day1.py
+```
 
 ---
 
-## Outcomes & Career Readiness
+## Repository Structure
 
-Upon completion, learners will be prepared for entry-level and mid-level roles, including:
+```
+python_programming_courses/
+│
+├── Basics/                          # Module 1 — 48 hours
+│   ├── Instructor/                  #   Instructor runbook (authoritative schedule)
+│   ├── lessons/
+│   │   ├── lecture/                 #   48 per-hour lecture scripts
+│   │   └── slides/                  #   Marp slide source (Markdown → HTML/PDF/PPTX)
+│   ├── assignments/                 #   12 homework notebooks + autograder configs
+│   ├── quizzes/                     #   12 HTML quizzes + 12 _answers.json exports
+│   └── themes/                      #   CSS themes (python-dark.css, python-light.css)
+│
+├── Advanced/                        # Module 2 — 48 hours (parallel structure)
+│   ├── Instructor/
+│   ├── lessons/lecture/             #   48 per-hour lecture scripts
+│   ├── lessons/slides/              #   Generated HTML slide decks
+│   ├── assignments/
+│   └── quizzes/
+│
+├── _site/slides/                    # Build output (generated by CI, not committed)
+│
+├── .github/
+│   ├── workflows/
+│   │   ├── marp-action.yml          #   Slide build → GitHub Pages deployment
+│   │   └── autograder.yml           #   Homework + quiz grading pipeline
+│   ├── agents/                      #   10 custom AI agent definitions
+│   ├── instructions/                #   Per-module Copilot instructions
+│   └── skills/                      #   50+ repo-local agent skill definitions
+│
+├── AGENTS.md                        # ⭐ Primary contributor + agent documentation
+├── REPOSITORY_SUMMARY.md            # Technical architecture deep-dive
+├── Architecture.md                  # Design principles and constraints
+├── Plans.md                         # Milestone tracking
+├── Documentation.md                 # Decision log and milestone status
+├── .marprc.yml                      # Marp build configuration (used by CI)
+└── spec/
+    └── spec-process-project-completion.md  # Completion criteria and acceptance tests
+```
 
-- Junior Python Developer  
-- Backend/API Developer  
-- QA Automation Engineer  
-- Full-Stack Python Developer  
-- Data Analyst / Data Science Assistant  
-- Python DevOps / Scripting Engineer  
+> For a full technical architecture walkthrough, see [REPOSITORY_SUMMARY.md](REPOSITORY_SUMMARY.md).
 
-Learners will also be prepared to sit for:
+---
 
-- **PCEP™ – Certified Entry-Level Python Programmer**  
-- **PCAP™ – Certified Associate in Python Programming**  
+## CI/CD Pipelines
+
+### Slide Build & Deploy (`marp-action.yml`)
+
+| | |
+|---|---|
+| **Trigger** | Push to `main` touching `Basics/lessons/**`, `Advanced/lessons/**`, or `.marprc.yml` |
+| **Action** | Builds HTML, PDF, PPTX, and PNG from all Marp slide Markdown sources |
+| **Output** | Deployed to GitHub Pages |
+
+### Autograder (`autograder.yml`)
+
+| | |
+|---|---|
+| **Trigger** | Push to `main`, pull requests, and manual `workflow_dispatch` |
+| **Action** | Converts notebooks via `nbconvert`, runs deterministic stdout tests, grades HTML quizzes |
+| **Results** | Written to `submission/.github/autograder/assignment_grades.json` and `quiz_grades.json` |
+| **Manual dispatch** | Commits results to a timestamped `autograder-results-*` branch |
 
 ---
 
 ## Certification Alignment
 
-This course is aligned to Python Institute certification pathways:
-
-- PCEP (Module 1)  
-- PCAP (Module 2)  
-
----
-
-## Repository Contents
-
-This repository includes:
-
-- Instructor runbooks (Markdown, PDF, DOCX)  
-- Syllabi and course outlines  
-- Course package documentation  
-- Supplemental training materials  
+| Module | Certification |
+|---|---|
+| Module 1 — Basic | [PCEP™ – Certified Entry-Level Python Programmer](https://pythoninstitute.org/pcep) |
+| Module 2 — Advanced | [PCAP™ – Certified Associate in Python Programming](https://pythoninstitute.org/pcap) |
 
 ---
 
-## Instructor & Delivery
-
-This course is delivered by **Charles Niswander** on behalf of **GlobalIT**.  
-Instruction is live, instructor-led, and supported by hands-on labs, structured milestones, and capstone-based learning.
-
----
-
-## Support & Resources
-
-Learners have access to:
-
-- Instructor guidance and Q&A  
-- Lab and exercise walkthroughs  
-- Capstone project support  
-- Certification-aligned practice content  
-- Community and post-course resources (as provided by GlobalIT)  
-
----
-
-If you want this README committed to the repository, tell me which branch to use and I can proceed.
+*Delivered by **Charles Niswander** on behalf of **GlobalIT**. For questions, contact your GlobalIT course coordinator.*
