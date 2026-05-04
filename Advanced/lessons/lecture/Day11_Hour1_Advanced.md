@@ -1,427 +1,381 @@
-# Day 11, Hour 1: Pandas Essentials - Loading, Cleaning, and Summarizing
+# Day 11, Hour 1: Pandas essentials: loading, cleaning, summarizing
+
 **Python Programming Advanced - Session 11**
+**Runbook alignment:** Session 11, Hour 41
+**Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
----
+## 60-minute Timing Overview
 
-## Timing Overview
-**Total Time:** 60 minutes  
-- Frame the analytics shift: 5 minutes  
-- Direct instruction on DataFrames and cleaning basics: 15 minutes  
-- Live demo loading and summarizing exported capstone data: 10 minutes  
-- Guided analytics lab: 25 minutes  
-- Debrief and exit ticket: 5 minutes
+| Minutes | Activity | Instructor intent |
+| --- | --- | --- |
+| 0-5 | Welcome, recap, and outcome framing | Connect this hour to the previous capstone layer and name the deliverable. |
+| 5-17 | Concept briefing and vocabulary | Teach the ideas learners need before touching code. |
+| 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
+| 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
+| 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
+| 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
 
----
-
-## Learning Outcomes for This Hour
+## Learning Outcomes
 
 By the end of this hour, learners will be able to:
-1. Load exported capstone data into a pandas DataFrame
-2. Inspect shape, columns, and data types before analysis
-3. Clean a few common issues such as whitespace, missing values, or numeric strings
-4. Compute simple summaries and grouped counts
-5. Explain at least one cleaning decision and why it changed the analysis
 
----
+- Load capstone data into a pandas DataFrame.
+- Clean common issues such as missing values and numeric strings.
+- Compute and save summary metrics for the report pipeline.
 
 ## Instructor Prep Notes
 
-- Use the same dataset for Hours 41-44 to preserve the pipeline story in the runbook
-- Encourage learners to export from their capstone if possible; otherwise provide a small fallback CSV
-- Keep the focus on practical analysis, not every pandas feature
+- Confirm learners are in the correct project folder and virtual environment.
+- Keep the authoritative runbook open to Session 11, Hour 41; this script expands that hour into a near-verbatim delivery guide.
+- Use Python 3.11+ conventions: clear type hints, f-strings, `pathlib` for paths, context managers for resources, and small functions with one responsibility.
+- Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
+- For API-related examples, keep this error contract visible on the board:
 
----
+```json
+{
+  "error": {
+    "code": "validation_error",
+    "message": "name is required",
+    "request_id": "..."
+  }
+}
+```
 
-## Section 1: The Analytics Mindset (5 minutes)
-
-### Opening Script
-
-**[Instructor speaks:]**
-
-Today we move from building the application to learning from the data it produces. That does not mean we are abandoning the capstone. It means we are adding a reporting lens to it.
-
-The runbook is very intentional here: use the same dataset for cleaning, visualization, and regression so learners experience a real pipeline instead of disconnected demos.
-
----
-
-## Section 2: Direct Instruction on Pandas Basics (15 minutes)
-
-### Why Use pandas?
+## Opening Script (0-5 minutes)
 
 **[Instructor speaks:]**
+"Welcome back. In the previous parts of the advanced course, we built a layered tracker: domain model, service layer, repository, and persistence. Today we keep turning that code into a deliverable system. This hour is not about memorizing syntax. It is about making a design choice, proving it with code, and leaving the project easier to test and maintain."
 
-pandas gives us a table-oriented way to inspect and transform data quickly. For course purposes, think of a DataFrame as a labeled table with columns, rows, and useful operations for filtering, grouping, and summarizing.
+*(Action: Ask learners to open the project and run the last known-good command. For API hours, that may be `flask run` or `python -m api.app`; for analytics it may be a report script; for testing it may be `pytest -q`.)*
 
-### First Inspection Steps
+**[Instructor speaks:]**
+"Before we add anything, we want a baseline. If your project does not run at the start of the hour, adding a feature will make debugging harder. Run the smallest command that proves your project is alive. If it fails, write down the first error line and do not start editing yet."
 
-Show this pattern:
+### Bridge from prior work
+
+- The tracker already has a model/service/repository shape from earlier sessions.
+- SQLite remains the source of truth for persisted records.
+- This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
+- The class norm is still: make one small change, run it, observe the result, then continue.
+
+## Concept Briefing (5-17 minutes)
+
+**[Instructor speaks:]**
+"Here are the ideas I want you to listen for during the demo. First, where does this responsibility belong? Second, what is the happy path? Third, what is the sad path? Fourth, how will another person know how to use or verify it? Advanced Python is less about clever lines of code and more about reliable boundaries."
+
+### Talk points
+
+- Use the same dataset for cleaning, visualization, and regression to create a real pipeline.
+- DataFrames are tables with labeled columns; start every analysis by inspecting shape, head, and dtypes.
+- Cleaning decisions should be explicit and explainable.
+- A summary table saved to reports/ is an artifact the capstone can ship.
+
+### Why this matters in real projects
+
+**[Instructor speaks:]**
+"Real teams spend a surprising amount of time at boundaries: the boundary between a GUI and a service, an API and a client, a CSV and a DataFrame, or a test and the system under test. Bugs often appear where assumptions cross those boundaries. If we make contracts explicit, the next developer can reason about the program without reading every line."
+
+Use these prompts to keep the class active:
+
+- "What do you expect this function to return on success?"
+- "What should happen if the input is missing, malformed, or points to a record that does not exist?"
+- "Which layer should know about this detail?"
+- "How could we test this without clicking through the whole application?"
+
+## Live Demo (17-35 minutes)
+
+**[Instructor speaks:]**
+"I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
+
+### Demo steps
+
+1. Export records to CSV or load a prepared tracker CSV.
+2. Run df.head(), df.info(), and df.describe(include="all").
+3. Clean one numeric column and one missing categorical value.
+4. Group by status/category and save reports/summary.csv.
+
+### Demo code or command sketch
 
 ```python
+from pathlib import Path
 import pandas as pd
 
-df = pd.read_csv("reports/records_export.csv")
+DATA_PATH = Path("data/records.csv")
+REPORTS_DIR = Path("reports")
+REPORTS_DIR.mkdir(exist_ok=True)
+
+df = pd.read_csv(DATA_PATH)
 print(df.head())
-print(df.shape)
 print(df.dtypes)
-print(df.isna().sum())
-```
 
-Explain that good analysis begins with inspection, not assumptions.
-
-### Cleaning Basics
-
-**[Instructor speaks:]**
-
-Common issues in student and real-world datasets include:
-
-- leading or trailing whitespace
-- numeric values stored as strings
-- missing values
-- inconsistent category casing
-
-Example cleanup:
-
-```python
-df["category"] = df["category"].str.strip().str.lower()
-df["priority"] = pd.to_numeric(df["priority"], errors="coerce")
+df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
 df["status"] = df["status"].fillna("unknown")
+clean_df = df.dropna(subset=["amount"])
+summary = clean_df.groupby("status", as_index=False)["amount"].agg(["count", "mean", "sum"])
+summary.to_csv(REPORTS_DIR / "summary.csv")
+
 ```
 
-### Summary Patterns
-
-Useful first summaries include:
-
-- total row count
-- counts by category
-- counts by status
-- mean or sum of a numeric field
-
-Example:
-
-```python
-summary = df.groupby("status").size().reset_index(name="count")
-print(summary)
-```
-
----
-
-## Section 3: Live Demo (10 minutes)
-
-### Load, Clean, Summarize
-
-```python
-import pandas as pd
-
-df = pd.read_csv("reports/records_export.csv")
-df["category"] = df["category"].str.strip().str.lower()
-df["status"] = df["status"].fillna("unknown")
-
-summary = (
-    df.groupby(["category", "status"])
-    .size()
-    .reset_index(name="count")
-    .sort_values(["count", "category"], ascending=[False, True])
-)
-
-summary.to_csv("reports/summary.csv", index=False)
-print(summary.head())
-```
-
-Narrate:
+### Demo narration guide
 
 **[Instructor speaks:]**
+"Notice that I am not starting with the biggest possible version. I am building a thin vertical slice. A thin slice is one small feature that crosses the layers we need: input, service behavior, persistence or data handling if relevant, and a visible result. Once that slice is correct, the next route, chart, test, or packaging step is easier."
 
-This is a practical first report. It uses the same dataset our app produced, cleans obvious issues, computes grouped counts, and saves a summary artifact we can reuse in the next hours.
-
----
-
-## Section 4: Guided Analytics Lab (25 minutes)
-
-### Lab Goal
+*(Action: Run the code or command once for a happy path. Ask: "What proves this worked?")*
 
 **[Instructor speaks:]**
+"Now we need a sad path. A feature is not done just because the perfect input worked. I am going to send bad input, omit a required value, use a missing id, stop the server, or run from a clean environment depending on the hour. The goal is not to embarrass the code; the goal is to define how the program behaves when reality is messy."
 
-Export your data, load it into pandas, compute at least three metrics, and save a summary table.
+*(Action: Trigger the sad path deliberately. For API work, show JSON errors. For pandas and reports, show a missing file or bad column and discuss the message. For tests, show a failing assertion and read it carefully.)*
 
-### Required Tasks
+### Instructor checkpoints during the demo
 
-1. export or locate one CSV dataset
-2. load it into pandas
-3. inspect shape, columns, and types
-4. make at least one cleaning decision
-5. compute at least three metrics
-6. save a summary CSV into `reports/`
+- Ask learners to identify the layer being edited.
+- Ask whether the code is using project-safe paths rather than machine-specific paths.
+- Ask what a reviewer would need in order to reproduce the result.
+- Ask what test or manual check would catch a regression later.
 
-### Coaching Prompts
-
-- What did `head()` tell you?
-- Which column needed cleaning first?
-- Did any numeric-looking values arrive as strings?
-- What metric would a stakeholder actually care about?
-
-### Common Mistakes
-
-- analyzing before inspecting the data
-- forgetting to save the summary artifact
-- changing the dataset in a way the learner cannot explain
-- treating missing values as invisible instead of deliberate decisions
-
-### Recovery Script
+## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
+"Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
 
-If you feel overwhelmed, focus on one question: what are the counts by status or category? Build one clean grouped summary first, then expand.
+Suggested instructor circulation questions:
 
----
+1. "Show me the file you are editing and tell me why this responsibility belongs there."
+2. "What is your first happy-path command?"
+3. "What is your first sad-path command?"
+4. "If I review this tomorrow, where is the contract documented?"
+5. "What would you test automatically if you had ten more minutes?"
 
-## Section 5: Debrief and Exit Ticket (5 minutes)
+## Hands-on Lab (40-50 minutes)
 
-### Debrief Script
+### Lab prompt
 
-**[Instructor speaks:]**
+Analytics starter: export or load tracker records, compute at least three metrics, and save a summary table to reports/summary.csv. Learners must write one sentence explaining each cleaning decision.
 
-Strong analysis starts with honest inspection and simple summaries. You do not need a flashy notebook to get value. You need a repeatable way to load data, clean obvious issues, and answer a concrete question.
+### Required learner workflow
 
-### Exit Ticket
+1. Start from a known-good run.
+2. Make one small implementation change.
+3. Run the narrowest check possible.
+4. Add the happy-path proof.
+5. Add one sad-path proof.
+6. Commit or save the working state before attempting an extension.
 
-1. What did `DataFrame.head()` help you confirm?
-2. What cleaning step mattered most in your dataset?
-3. Which summary metric did you generate first?
+### Completion criteria
 
-### Preview of the Next Hour
+- Data loads successfully from a pathlib Path.
+- At least three metrics are computed.
+- reports/summary.csv is created.
+- Learner can explain one or two cleaning decisions and their effect.
 
-**[Instructor speaks:]**
-
-Next hour we turn those summaries into charts that can actually ship as report artifacts.
-
----
-
-## Instructor Coaching Appendix
-
-### Whiteboard Plan for Day 11
-
-Draw a simple five-step pipeline across the board: `export -> load -> clean -> summarize -> visualize/report`. Keep that diagram visible for the whole day. The runbook is very clear that the same dataset should flow through the entire sequence so students experience an honest analytics pipeline. Write `same dataset all day` underneath the diagram and refer back to it whenever students try to jump to a new CSV or a disconnected plotting example.
-
-Under the `clean` step, list the most common issues you expect to see: whitespace, missing values, mixed data types, inconsistent categories. Under the `summarize` step, list `count`, `mean/sum`, and `groupby`. Under `visualize`, list `labels`, `title`, `saved artifact`, and `close figure`. Under `report`, write `repeatable command` and `README note`. These little prompts help students treat analytics as a structured workflow rather than a series of unrelated notebook cells.
-
-For Hour 43, add a small side note that says `regression only if the data fits`. That reminder matters because some learners will assume machine learning is mandatory if it appears in the schedule. The runbook explicitly says the regression demo is limited in scope and can be replaced by additional analysis when appropriate.
-
-### Listen-Fors During Labs
-
-Positive Day 11 language sounds like this:
-
-- "I inspected `head()` and `dtypes` before deciding how to clean."
-- "I used the same exported dataset for the summary and the chart."
-- "I can explain why I filled or normalized this column."
-- "This chart answers a real question from the project."
-- "The report now runs from one command."
-
-Warning signs include:
-
-- "I changed the data until the chart looked nicer, but I am not sure what changed."
-- "I made a new manual CSV for plotting because it was easier."
-- "The chart is technically correct, but I forgot the labels."
-- "Regression did not really fit, but I forced it because I thought I had to."
-- "The report works if I remember to move files around first."
-
-When you hear these warning signs, ask follow-up questions that keep the workflow honest:
-
-- "What cleaning choice did you make and why?"
-- "Could someone else repeat this analysis tomorrow from the same source data?"
-- "What question does this chart answer?"
-- "If regression is not the right fit, what additional summary would still add value?"
-- "What exact command generates your report artifacts?"
-
-### Common Misconceptions for Day 11
-
-One misconception is that analytics begins with plotting. It does not. Analytics begins with inspection and cleaning. Students who skip inspection often end up explaining chart artifacts that are really just dirty data.
-
-Another misconception is that more complex analysis is automatically better. Day 11 is a great opportunity to model restraint. A clear grouped summary and one readable chart are more valuable than a forced, poorly explained model.
-
-A third misconception is that charts are self-explanatory. They are not. A chart without a clear title, labeled axes, and saved output path is usually only understandable to the person who created it five minutes earlier.
-
-A fourth misconception is that report generation belongs in a notebook forever. Notebooks can be fine for exploration, but the course goal is a usable report feature or script. Encourage learners to graduate useful analysis into a repeatable path.
-
-### Suggested Mini-Conferences for Each Hour
-
-For Hour 41, ask students what they learned from `head()`, `shape`, and `dtypes`. This keeps the early analysis anchored in observation instead of assumption.
-
-For Hour 42, ask students to explain why they chose a chart type. If they cannot explain the choice, the chart may be serving the code rather than the audience.
-
-For Hour 43, ask whether regression is actually appropriate for the dataset. This is one of the best moments in the course to reward thoughtful restraint.
-
-For Hour 44, ask students to show the exact command or action that generates the report. If that step is fuzzy, the integration is still incomplete.
-
-### Pacing Adjustments
-
-If learners struggle with pandas in Hour 41, simplify the required metrics. Count by category, count by status, and one numeric summary are enough to move the day forward.
-
-If Hour 42 becomes a design rabbit hole about colors, focus the class back on readability and saved artifacts. The goal is shippable charts, not endless design tweaking.
-
-If Hour 43 starts consuming too much time, treat the regression demo as instructor-led and direct learners toward the fallback additional analysis. That keeps the day within scope.
-
-If Hour 44 reveals fragile report generation, reduce ambition. One exported CSV, one summary CSV, and one chart generated by a single command already satisfy the spirit of the runbook when done repeatably.
-
-### Evidence of Mastery for Day 11
-
-Look for these signals:
-
-- The same dataset flows through multiple analysis steps.
-- The learner can explain at least one cleaning decision.
-- Summary artifacts are saved and readable.
-- Charts are labeled and saved to `reports/`.
-- The learner understands whether regression fit the data or not.
-- The report feature can be run intentionally, not by accident.
-
-### End-of-Day Instructor Wrap Script
+## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
+"Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
 
-Today you turned project data into information someone else could actually use. You exported, cleaned, summarized, visualized, and packaged analysis into report artifacts. That matters because a mature application does more than store records; it helps people understand what those records mean. If your analytics pipeline is now repeatable and your artifacts are clear, you have added a genuinely valuable capability to the capstone.
+### Common pitfalls to watch for
 
----
+- Wrong delimiter or encoding.
+- Numeric values stored as strings and summarized incorrectly.
+- Dropping missing data without understanding what was removed.
+- Hard-coded absolute paths that fail on another machine.
 
-## Facilitation Toolkit
+### Debugging script for stuck learners
 
-### Pre-Class Quick Check
+Use this sequence aloud when helping a learner:
 
-Before this hour begins, spend thirty seconds confirming that learners have the right file, environment, and mental context open. Many instruction problems that look conceptual are actually setup drift. Ask learners to open the project folder, point to the main entry file for the hour, and remind themselves which layer they are primarily working in. If the hour is centered on the API, ask them to name the route, service, and repository layers. If the hour is centered on analytics, ask them to name the dataset and report path. If the hour is centered on testing or packaging, ask them to name the target command they expect to run before the hour ends. This tiny reset reduces confusion and gives the room a shared starting line.
+1. "Read the first meaningful error message, not the last line only."
+2. "What command produced it? Can we reproduce it?"
+3. "What changed since the last working run?"
+4. "Can we test the service or helper function without the outer UI/API/report layer?"
+5. "What is the smallest rollback or fix that restores a working state?"
 
-A second quick check is motivational rather than technical. Tell learners what "done" looks like in one sentence. Students perform better when the finish line is visible. For example, say: "By the end of this hour, you should be able to show one stable route with predictable errors," or "By the end of this hour, you should have one repeatable report artifact saved in the reports folder." The clarity matters more than the elegance of the wording.
+## Optional Extensions
 
-### Layer-Specific Observation Checklist
+If learners meet the completion criteria early, offer one of these stretch goals:
 
-As you circulate, avoid scanning only for syntax errors. Look for the layer-specific habits that show whether the learner is truly aligning with the course architecture.
+- Add date parsing and records per week.
+- Compare before/after cleaning row counts.
+- Wrap the analysis in a function generate_summary(data_path, reports_dir).
 
-For interface-facing work, check whether the learner is keeping the interface thin and delegating correctly. Look for signs that they are handling input, calling a service, and formatting output rather than placing business logic directly in callbacks or route handlers.
+Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
 
-For service-layer work, check whether the learner is enforcing rules consistently and raising the right custom exceptions. Ask whether the same rule would behave the same way from multiple entry points.
+## Quick Checks and Exit Ticket (56-60 minutes)
 
-For repository or persistence work, check whether the learner is using parameterized queries, committing intentionally, and mapping rows or outputs predictably. Ask whether there is one clear source of truth.
+Ask learners to answer individually, then discuss two or three responses:
 
-For analysis and reporting work, check whether the learner can explain how data moves from source to artifact. Ask what cleaning decisions were made and whether the result could be reproduced tomorrow.
-
-For testing and packaging work, check whether the learner is proving meaningful behaviors rather than merely following a checklist. Ask what risk the test or fresh-run step is reducing.
-
-This checklist helps you stay aligned to the course outcomes instead of getting trapped in line-by-line debugging for the whole hour.
-
-### Coaching Ladder for Stuck Learners
-
-Use a three-step coaching ladder when a learner is stuck.
-
-Step one is diagnosis by description. Ask the learner to describe what they expected, what actually happened, and what they already checked. This keeps you from jumping into the wrong problem too early.
-
-Step two is scope reduction. Help the learner shrink the problem to the smallest reproducible step. If a full GUI flow is failing, test the service method alone. If the full report fails, run the export alone. If the packaged app will not start, verify imports and environment setup before touching build tools. Small proofs are often faster than large guesses.
-
-Step three is boundary identification. Ask which layer should own the fix. Many student problems persist because they keep applying the patch in the wrong layer. A route bug gets fixed in the service, a repository bug gets patched in the UI, or a packaging issue gets blamed on test code. Naming the layer often reveals the correct next action.
-
-When learners are very anxious, narrate your thought process slowly and visibly. Say things like, "I want to verify the assumption before I change the code," or "Let's confirm the source of truth first." This models calm technical reasoning and reduces the impulse to thrash.
-
-### Differentiation Moves for Mixed-Ability Cohorts
-
-In almost every class, some learners finish early while others are still stabilizing the basics. Use differentiation deliberately instead of letting the room split into boredom on one side and panic on the other.
-
-For learners who need more support, narrow the success condition without changing the underlying outcome. Replace a full feature set with the smallest honest version. One route before five. One query before search plus paging plus sorting. One report artifact before a whole dashboard. One integration test before an elaborate suite. The learner still practices the right habit, just with reduced surface area.
-
-For learners who are ready for more challenge, add a bounded extension that reinforces the same lesson rather than a completely different topic. Examples include adding one more filter option, improving error messages, adding a second chart type, or writing one additional negative test. Bound the extension tightly so it does not become an escape hatch into unrelated rabbit holes.
-
-A useful phrase for both groups is: "Keep the same architecture, change the ambition level." That sentence helps advanced learners stretch without drifting and helps struggling learners simplify without feeling like they failed.
-
-### Discussion Prompts That Reveal Understanding
-
-When you want to know whether a learner truly understands the hour, ask questions that require reasoning instead of recall. Useful prompts include:
-
-- What part of this workflow would break first if the source of truth changed unexpectedly?
-- What behavior in your code is currently easiest to explain to a teammate, and why?
-- Where is the most fragile coupling in your design right now?
-- If you had to test or demo only one thing from this hour, what would give the strongest evidence that the concept is working?
-- What did you intentionally leave out to keep the project aligned with the course scope?
-
-These prompts are helpful because they work across architecture, API, analytics, testing, and packaging topics. They also generate better class discussion than simply asking whether the code runs.
-
-### Common Classroom Risks and Soft Interventions
-
-One risk is silent divergence, where learners are working on different interpretations of the same task. You can reduce this by pausing for a thirty-second midpoint recap and restating the minimum success condition. Another risk is overbuilding, where a learner adds complexity because the simpler version feels too small. In that case, praise the initiative but redirect toward finishing the stable milestone first.
-
-A third risk is shallow success, where the code appears to work once but the learner cannot explain why. Do not ignore that just because the output looks correct. Ask for a short explanation. If the explanation is weak, there is still learning work to do.
-
-A fourth risk is perfection paralysis. Some learners freeze because they want the cleanest possible solution before they will run anything. Encourage executable increments. A visible imperfect step is often more teachable than a perfect idea still trapped in someone's head.
-
-### Evidence Collection for Informal Assessment
-
-If you need to assess quickly during the hour, look for five kinds of evidence:
-
-- A concrete artifact exists, such as a running endpoint, saved report, passing test, or updated README.
-- The learner can explain the responsibility of the layer they are touching.
-- The learner can name one failure mode and how they checked it.
-- The learner can connect the work back to the capstone architecture or delivery goals.
-- The learner can identify one next improvement without losing sight of the current milestone.
-
-This evidence-based approach is more reliable than grading on confidence or speed alone.
-
-### End-of-Hour Documentation Prompt
-
-Before learners leave the hour, ask them to capture three short notes in their own project documentation or notebook:
-
-1. What changed?
-2. What was verified?
-3. What still needs attention?
-
-This takes very little time, but it creates continuity between hours and improves final demos because learners have a record of decisions, validations, and remaining risks. It also makes the project feel like professional technical work instead of a sequence of disconnected classroom exercises.
-
-### Closing Script You Can Reuse
+- What does DataFrame.head() help you confirm before deeper analysis?
+- What is the happy path you proved this hour?
+- What sad path did you test or plan to test next?
+- Which file or module is now most important for the next hour?
 
 **[Instructor speaks:]**
+"Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
 
-The point of this hour was not only to produce code or artifacts. It was to practice the habit behind the code: keeping boundaries clear, proving behavior honestly, and making the project easier to understand for the next person who touches it. If you can explain what changed, show evidence that it works, and name what still needs improvement, then you are making real progress.
+## Instructor Wrap-up Notes
 
----
+- Reinforce the capstone through-line: each hour should leave behind a runnable artifact, not just notes.
+- Encourage frequent commits with messages such as `feat: add records endpoint`, `test: cover validation errors`, or `docs: add report quickstart`.
+- If multiple learners are blocked by the same issue, pause the room and debug one shared example rather than repeating the same fix individually.
+- Keep advanced scope boundaries: do not detour into production OAuth, complex ORMs, elaborate front-end frameworks, or advanced machine learning unless the runbook marks the topic as optional.
 
-## Data Storytelling Appendix
 
-### Helping Learners Explain Results, Not Just Produce Them
+## Expanded Facilitation Notes for a Full 60-Minute Delivery
 
-A recurring weakness in analytics lessons is that students can generate tables and charts but struggle to say what they mean. Build explanation into the instruction intentionally. After each summary or plot, ask learners to complete three short sentences:
+Use this section when the class needs more structure, when learners are unevenly paced, or when you want a more detailed speaking guide than the core hour script above. It is intentionally written as an instructor companion rather than a student handout.
 
-- "This output shows..."
-- "The most important pattern is..."
-- "One limitation or caution is..."
+### Board plan and vocabulary anchor
 
-These sentence starters are especially helpful for students who can manipulate pandas or matplotlib but have not yet built confidence in interpretation. The goal is not polished presentation language. The goal is a clear connection between artifact and meaning.
-
-### Questions That Strengthen Interpretation
-
-Use questions like these during circulation and debrief:
-
-- Which metric changed after cleaning, and why?
-- What would a stakeholder misunderstand if they saw the uncleaned version?
-- Which chart is easiest for a non-technical audience to read?
-- What does this analysis support: a decision, a warning, or a trend explanation?
-- What would you want to compare next if you had another iteration?
-
-These questions keep the lesson from collapsing into mechanical plotting.
-
-### Common Day 11 Presentation Mistakes
-
-Students often narrate the code instead of the result. If you hear, "I grouped by status and then called `size()` and then reset the index," follow up with, "And what did that reveal?" Another common mistake is treating every pattern as equally important. Encourage learners to name the most decision-relevant result rather than reading every row aloud.
-
-A third mistake is forgetting limitations. Good analysis includes an honest statement about data quality, missing values, or why a pattern should be treated carefully. That habit is more valuable than pretending the data is perfect.
-
-### Lightweight Rubric for Reports
-
-When you review Day 11 artifacts, check four things quickly:
-
-- Accuracy: does the summary or chart match the underlying data and cleaning choices?
-- Readability: are labels, titles, and file names clear?
-- Repeatability: can the learner rerun the pipeline without hidden steps?
-- Interpretation: can the learner explain the main finding in plain language?
-
-This mini-rubric helps keep the day aligned with both technical and communication outcomes.
-
-### Closing Reflection for Day 11
-
-Use this if you want a stronger end-of-session close:
+At the start of the hour, reserve one side of the board for the capstone architecture and leave it visible. Draw the same four boxes every time: interface, service, repository, and data or artifact. For API hours, the interface is Flask routes and JSON. For client or GUI integration hours, the interface may be a Tkinter callback or a Python client object. For analytics hours, the artifact is a CSV, summary file, chart, or report. For testing and packaging hours, the artifact is evidence that the project can be verified and run by another person.
 
 **[Instructor speaks:]**
+"The box we edit today is important, but the boundaries between boxes are even more important. If we keep the boundary clean, we can swap a GUI for an API, replace manual checks with pytest, or generate a report without rewriting the domain model."
 
-The value of analytics is not that the computer can produce a table or image. The value is that a human can use that artifact to understand a pattern, ask a better question, or make a better decision. If your report artifacts are now clear, repeatable, and explainable, then your capstone has become more than an application. It has become a source of insight.
+Use these vocabulary checks during the first ten minutes:
+
+- A model represents the domain data and rules that belong with the data.
+- A service coordinates use cases and raises meaningful domain exceptions.
+- A repository hides SQLite details and returns domain objects or simple records.
+- An API route translates HTTP into service calls and translates results back to JSON.
+- A client translates Python function calls into HTTP requests and translates responses into useful Python values.
+- A report pipeline turns persisted data into repeatable artifacts that can be reviewed.
+- A test is executable evidence about expected behavior.
+- A package or deliverable is successful only when another person can install and run it from instructions.
+
+### Instructor pacing detail
+
+If learners are new to this topic, spend extra time on prediction before execution. Before every run, ask, "What status code, file, chart, exception, or test result do we expect?" Prediction forces learners to state the contract. If the result differs, the class has a concrete debugging target.
+
+If learners are moving quickly, shorten the lecture and lengthen the lab, but keep the same quality gates: happy path, sad path, readable code, and a repeatable command. Do not let the hour become a feature race. A learner who can explain one clean vertical slice is better prepared than a learner with five partial features.
+
+Suggested minute-by-minute adjustment:
+
+- If setup consumes more than 8 minutes, skip optional styling and focus on one minimal deliverable.
+- If the demo fails, narrate the recovery process. This is valuable modeling, not a failure of instruction.
+- If half the room is blocked by the same problem, pause the room and solve one shared example.
+- If only one or two learners are blocked, keep the rest moving with the lab checklist while you circulate.
+
+### Deeper demo prompts
+
+Use this prompt cycle while live coding:
+
+1. "What input enters this layer?"
+2. "What output leaves this layer on success?"
+3. "What named error or status represents failure?"
+4. "Where is the rule written exactly once?"
+5. "How will we prove this behavior after class?"
+
+For API work, insist that learners show at least one JSON error body. A route that works for perfect input but returns an HTML traceback for predictable bad input is not yet a reliable API. For analytics work, insist that learners show the generated file path and explain whether it can be regenerated. For tests, insist that learners read the failing assertion aloud before editing. For packaging, insist that learners follow their own README rather than relying on memory.
+
+### Capstone quality gate
+
+Before the exit ticket, have learners mark their hour result against this quick rubric:
+
+| Category | Ready evidence | Needs attention |
+| --- | --- | --- |
+| Correctness | The feature works with a realistic happy path. | It only works with hard-coded or instructor-only data. |
+| Error handling | A sad path produces a clear exception, JSON error, message, or test failure. | The app crashes or hides the cause. |
+| Structure | The responsibility is in the correct layer. | Route, GUI, service, SQL, and reporting logic are tangled together. |
+| Repeatability | There is a command, test, or documented step to reproduce the result. | The result depends on manual memory or IDE state. |
+| Maintainability | Names are clear and the next feature has an obvious place to go. | The code works once but will be hard to extend. |
+
+**[Instructor speaks:]**
+"This rubric is not only for grading. It is a professional checklist. When you leave a feature behind, the next developer should be able to run it, understand it, and change it without fear."
+
+### Common instructor interventions
+
+When a learner puts too much logic in a Flask route or GUI callback, say: "Let us underline the business rule. Now move that sentence into the service or validation helper. The route or callback should coordinate, not own the rule."
+
+When a learner hard-codes paths, say: "This path works on your machine because your machine is currently the hidden dependency. Replace it with a project-relative pathlib Path and create the directory in code."
+
+When a learner catches Exception broadly, say: "Catching everything is like turning off the smoke alarm. Catch the error you expect, convert it into a helpful message, and let surprising errors remain visible during development."
+
+When a learner wants to add a large optional feature before the required slice works, say: "Park that idea in a comment or issue. First make the required slice boring and reliable. Advanced projects succeed through boring reliability."
+
+### Exit-ticket collection options
+
+Choose one depending on time:
+
+- Verbal round-robin: each learner states the working command and the next command.
+- Written note: learners submit three bullets: works, broken, next.
+- Pair check: partners run each other’s command from the README or lab note.
+- Demo lottery: randomly choose two learners to show one happy path and one sad path.
+
+Close the hour by connecting forward: the next hour assumes today has a runnable artifact. If a learner is behind, help them identify the smallest safe stopping point rather than encouraging a risky last-minute rewrite.
+
+## Instructor Cross-Check Concepts
+
+Preview the next analytics step: the cleaned pandas summary should be ready for matplotlib charts. Ask learners which grouped table would become the clearest bar chart or line chart before they leave this hour.
+
+## Additional Instructor-Ready Expansion
+
+Use this expansion to deepen the hour without changing the runbook mapping. The focus remains **Pandas loading, cleaning, and summarizing**. The concrete artifact for this hour is a repeatable data-loading script that creates a cleaned DataFrame and summary CSV. Keep returning to that artifact whenever discussion becomes abstract: learners should be able to point at a command, a file, a response, a chart, a test, or a README step and say, "This is the evidence that the hour worked."
+
+### Deeper instructor narration
+
+**[Instructor speaks:]**
+"The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the analytics pipeline beginning at persisted tracker data and ending in a report artifact. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
+
+**[Instructor speaks:]**
+"Before I run anything, I want us to predict the evidence. Our baseline command is execute the report script and inspect `head`, `dtypes`, row counts, and the generated summary file. A successful run should prove this happy path: numeric, categorical, and date-like fields are converted consistently and summarized accurately. A responsible implementation should also prove this sad path: missing files, missing columns, and nonnumeric values produce explicit messages or documented cleaning choices. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+
+Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
+
+### Detailed demo walkthrough
+
+Run the demo as a sequence of small predictions rather than one long typing performance. The suggested demo arc is to load CSV, inspect before cleaning, convert one numeric column, fill one category, drop only justified rows, and save summary. At each pause, ask the room to identify three things: the input entering this layer, the output leaving this layer, and the single responsibility that should not leak into neighboring layers. If learners cannot name those three things, slow down and draw the boundary again.
+
+Use this checkpoint rhythm:
+
+1. **Baseline:** Run execute the report script and inspect `head`, `dtypes`, row counts, and the generated summary file before editing. If it fails, narrate the failure honestly and recover before adding new code.
+2. **First slice:** Implement only enough to prove numeric, categorical, and date-like fields are converted consistently and summarized accurately. Do not add optional polish yet.
+3. **Read the code aloud:** Point to the function or method boundary and say what it accepts and returns.
+4. **Sad path:** Trigger missing files, missing columns, and nonnumeric values produce explicit messages or documented cleaning choices deliberately. Ask, "Is this failure understandable to the person who receives it?"
+5. **Architecture check:** Ask whether the code belongs in the route, client, service, repository, analytics helper, test fixture, or delivery documentation.
+6. **Repeatability check:** Identify the exact command or manual step that proves the result again later.
+7. **Commit-quality check:** Ask whether the current state could be saved with a clear commit message.
+
+A useful live-coding move is to introduce one small defect on purpose, such as a wrong field name, missing header, missing timeout, incorrect path, or overly broad exception handler. Then read the observed behavior with the class. This models a mature debugging posture: we do not panic; we compare expected behavior with observed behavior, isolate the layer, and make the smallest correction that restores the contract.
+
+### Guided lab checkpoints
+
+During the lab, avoid answering first with a complete solution. Ask learners to show evidence in this order:
+
+- "Show me the command you ran before editing."
+- "Show me the smallest code change that targets this hour's artifact."
+- "Show me the happy-path evidence: numeric, categorical, and date-like fields are converted consistently and summarized accurately."
+- "Show me the sad-path evidence: missing files, missing columns, and nonnumeric values produce explicit messages or documented cleaning choices."
+- "Show me where this behavior would be changed if the requirement changed next week."
+
+If a learner is ahead, direct them to this extension only after the required artifact is stable: write a cleaning log with row counts before and after each step. Make it clear that extension work must be reversible. A good extension leaves the required path cleaner or better documented. A risky extension creates a second debugging problem right before the hour closes.
+
+For pairs, assign roles for five-minute intervals. The driver types and runs commands. The navigator reads the contract and watches for boundary violations. Halfway through, switch roles. This keeps faster learners from taking over and gives quieter learners a defined speaking responsibility. Ask the navigator to use the review question: Can you explain every row that disappeared or every value that changed during cleaning?
+
+### Troubleshooting decision tree
+
+Use this decision tree when the room gets stuck:
+
+- If the first command cannot start, stop feature work and fix environment, import, or configuration issues first.
+- If the happy path fails, inspect the boundary closest to the symptom. For API work, inspect request body, headers, route pattern, and service call. For analytics work, inspect path, columns, dtypes, and row counts. For testing work, inspect fixture setup and the exact assertion. For packaging work, inspect README steps and dependency installation.
+- If the sad path returns a confusing result, improve the translation layer. Convert expected domain errors into the agreed JSON response, user message, report warning, or pytest assertion. Do not hide unexpected errors while still developing.
+- If two layers disagree, choose the service or documented contract as the source of truth and update the outer layer to match it.
+- If a learner proposes a rewrite, ask for the smallest reversible change that proves the next fact. Rewrites are sometimes necessary, but they should be chosen deliberately, not as an emotional response to a messy error.
+
+Name the common risk explicitly: cleaning silently and making the report look polished while hiding discarded or coerced data. Write it on the board as an anti-pattern, then ask learners to point to the line or step in their project that prevents it.
+
+### Formative questions and differentiation notes
+
+Use these questions for quick checks throughout the hour:
+
+- What is the contract this layer promises?
+- Which command proves the contract without relying on your memory?
+- What invalid input or missing dependency did you test?
+- Which part of the code should not know about this detail?
+- What would a teammate need in order to reproduce your result tomorrow?
+- If this breaks during the final demo, what is the first diagnostic step?
+
+For learners who need more support, narrow the task to one happy path and one sad path. Provide a partially completed function signature or checklist, but still require them to run the command and explain the result. For learners who are ready for more challenge, ask them to document the contract in README language, add a focused test, or compare two design options and justify the simpler one. Keep both groups anchored to the same hour outcome so the class does not split into unrelated projects.
+
+Close by saying: "The goal is not to make this layer impressive. The goal is to make it dependable. Dependable code has a clear contract, a repeatable proof, a known failure behavior, and an obvious next place to change it."

@@ -1,416 +1,381 @@
-# Day 12, Hour 1: Testing with pytest for the Service Layer
+# Day 12, Hour 1: Testing with pytest: unit tests for the service layer
+
 **Python Programming Advanced - Session 12**
+**Runbook alignment:** Session 12, Hour 45
+**Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
----
+## 60-minute Timing Overview
 
-## Timing Overview
-**Total Time:** 60 minutes  
-- Frame testing as quality support, not punishment: 5 minutes  
-- Direct instruction on pytest and fixtures: 15 minutes  
-- Live demo of a few focused tests: 10 minutes  
-- Guided test-writing lab: 25 minutes  
-- Debrief and exit ticket: 5 minutes
+| Minutes | Activity | Instructor intent |
+| --- | --- | --- |
+| 0-5 | Welcome, recap, and outcome framing | Connect this hour to the previous capstone layer and name the deliverable. |
+| 5-17 | Concept briefing and vocabulary | Teach the ideas learners need before touching code. |
+| 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
+| 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
+| 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
+| 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
 
----
-
-## Learning Outcomes for This Hour
+## Learning Outcomes
 
 By the end of this hour, learners will be able to:
-1. Write unit tests for core service-layer logic using pytest
-2. Use plain `assert` statements and fixtures effectively
-3. Test both successful and failing scenarios
-4. Explain why UI testing is not the priority in this course
-5. Map earlier `unittest` ideas to pytest if needed
 
----
+- Write unit tests for core service logic.
+- Use pytest fixtures for shared setup and temporary databases.
+- Assert both happy paths and expected exceptions.
 
-## Section 1: Why Testing Fits at the End (5 minutes)
+## Instructor Prep Notes
 
-### Opening Script
+- Confirm learners are in the correct project folder and virtual environment.
+- Keep the authoritative runbook open to Session 12, Hour 45; this script expands that hour into a near-verbatim delivery guide.
+- Use Python 3.11+ conventions: clear type hints, f-strings, `pathlib` for paths, context managers for resources, and small functions with one responsibility.
+- Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
+- For API-related examples, keep this error contract visible on the board:
 
-**[Instructor speaks:]**
-
-Testing belongs near the end of the capstone sequence for a reason: you now have enough structure to test something meaningful. The service layer, repository boundaries, and exception patterns are stable enough that tests can reinforce quality instead of constantly breaking during early exploration.
-
----
-
-## Section 2: Direct Instruction on pytest Basics (15 minutes)
-
-### Pytest Style
-
-**[Instructor speaks:]**
-
-pytest is friendly because test functions can stay plain and readable:
-
-```python
-def test_add_record_returns_record():
-    ...
+```json
+{
+  "error": {
+    "code": "validation_error",
+    "message": "name is required",
+    "request_id": "..."
+  }
+}
 ```
 
-You do not need a heavy test class to get value.
-
-### Arrange, Act, Assert
-
-Teach the pattern:
-
-- Arrange: prepare the input and setup
-- Act: call the thing being tested
-- Assert: check the result
-
-### Fixtures
-
-Explain fixtures as reusable setup:
-
-```python
-@pytest.fixture
-def service():
-    repo = InMemoryTrackerRepository()
-    return TrackerService(repo=repo)
-```
-
-### Negative Tests Matter
+## Opening Script (0-5 minutes)
 
 **[Instructor speaks:]**
+"Welcome back. In the previous parts of the advanced course, we built a layered tracker: domain model, service layer, repository, and persistence. Today we keep turning that code into a deliverable system. This hour is not about memorizing syntax. It is about making a design choice, proving it with code, and leaving the project easier to test and maintain."
 
-The runbook explicitly asks for negative tests. That means we should intentionally test validation failures and missing-record situations, not only happy paths.
+*(Action: Ask learners to open the project and run the last known-good command. For API hours, that may be `flask run` or `python -m api.app`; for analytics it may be a report script; for testing it may be `pytest -q`.)*
 
----
+**[Instructor speaks:]**
+"Before we add anything, we want a baseline. If your project does not run at the start of the hour, adding a feature will make debugging harder. Run the smallest command that proves your project is alive. If it fails, write down the first error line and do not start editing yet."
 
-## Section 3: Live Demo (10 minutes)
+### Bridge from prior work
+
+- The tracker already has a model/service/repository shape from earlier sessions.
+- SQLite remains the source of truth for persisted records.
+- This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
+- The class norm is still: make one small change, run it, observe the result, then continue.
+
+## Concept Briefing (5-17 minutes)
+
+**[Instructor speaks:]**
+"Here are the ideas I want you to listen for during the demo. First, where does this responsibility belong? Second, what is the happy path? Third, what is the sad path? Fourth, how will another person know how to use or verify it? Advanced Python is less about clever lines of code and more about reliable boundaries."
+
+### Talk points
+
+- Tests protect behavior while we make final changes.
+- Arrange, Act, Assert keeps tests readable.
+- Unit tests should avoid UI, network, and real shared files where possible.
+- pytest uses plain assert statements; fixtures replace repetitive setup.
+
+### Why this matters in real projects
+
+**[Instructor speaks:]**
+"Real teams spend a surprising amount of time at boundaries: the boundary between a GUI and a service, an API and a client, a CSV and a DataFrame, or a test and the system under test. Bugs often appear where assumptions cross those boundaries. If we make contracts explicit, the next developer can reason about the program without reading every line."
+
+Use these prompts to keep the class active:
+
+- "What do you expect this function to return on success?"
+- "What should happen if the input is missing, malformed, or points to a record that does not exist?"
+- "Which layer should know about this detail?"
+- "How could we test this without clicking through the whole application?"
+
+## Live Demo (17-35 minutes)
+
+**[Instructor speaks:]**
+"I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
+
+### Demo steps
+
+1. Create tests/test_service.py.
+2. Write test_create_and_get_record using tmp_path.
+3. Write test_invalid_record_raises_validation_error.
+4. Run pytest -q and read failures as feedback, not judgment.
+
+### Demo code or command sketch
 
 ```python
 import pytest
 
+@pytest.fixture
+def service(tmp_path):
+    repo = SQLiteRecordRepository(tmp_path / "test_tracker.db")
+    return TrackerService(repo)
 
-def test_add_and_get_record(service):
-    created = service.add_record("Write report", "ops", "open")
-    fetched = service.get_record(created.id)
-    assert fetched.title == "Write report"
+def test_create_and_get_record(service):
+    created = service.create_record({"name": "Demo", "status": "new"})
+    loaded = service.get_record(created.id)
+    assert loaded.name == "Demo"
+    assert loaded.status == "new"
 
-
-def test_add_record_rejects_empty_title(service):
+def test_blank_name_raises_validation_error(service):
     with pytest.raises(ValidationError):
-        service.add_record("", "ops", "open")
+        service.create_record({"name": "   ", "status": "new"})
+
 ```
 
-Narrate:
+### Demo narration guide
 
 **[Instructor speaks:]**
+"Notice that I am not starting with the biggest possible version. I am building a thin vertical slice. A thin slice is one small feature that crosses the layers we need: input, service behavior, persistence or data handling if relevant, and a visible result. Once that slice is correct, the next route, chart, test, or packaging step is easier."
 
-These tests are small on purpose. Good unit tests isolate one expectation and state it clearly.
-
----
-
-## Section 4: Guided Test-Writing Lab (25 minutes)
-
-### Lab Goal
+*(Action: Run the code or command once for a happy path. Ask: "What proves this worked?")*
 
 **[Instructor speaks:]**
+"Now we need a sad path. A feature is not done just because the perfect input worked. I am going to send bad input, omit a required value, use a missing id, stop the server, or run from a clean environment depending on the hour. The goal is not to embarrass the code; the goal is to define how the program behaves when reality is messy."
 
-Write at least five tests for the service or repository logic, including at least two negative tests.
+*(Action: Trigger the sad path deliberately. For API work, show JSON errors. For pandas and reports, show a missing file or bad column and discuss the message. For tests, show a failing assertion and read it carefully.)*
 
-### Required Tasks
+### Instructor checkpoints during the demo
 
-1. set up pytest if needed
-2. create a test file such as `tests/test_service.py`
-3. add at least five tests
-4. include two negative tests
-5. run pytest and confirm the suite passes
+- Ask learners to identify the layer being edited.
+- Ask whether the code is using project-safe paths rather than machine-specific paths.
+- Ask what a reviewer would need in order to reproduce the result.
+- Ask what test or manual check would catch a regression later.
 
-### Coaching Prompts
-
-- What behavior is this test proving?
-- Is this really a unit test, or is it reaching into the UI?
-- Could a future teammate understand the expectation from the test name alone?
-- Which edge case has caused bugs in your project already?
-
-### Common Mistakes
-
-- testing UI callbacks directly
-- one test function that checks too many behaviors
-- order-dependent assertions
-- using shared mutable state without resetting it
-
-### Recovery Script
+## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
+"Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
 
-If you do not know where to start, test add, get, update, delete, and one validation failure. That gives you immediate coverage of core behavior.
+Suggested instructor circulation questions:
 
----
+1. "Show me the file you are editing and tell me why this responsibility belongs there."
+2. "What is your first happy-path command?"
+3. "What is your first sad-path command?"
+4. "If I review this tomorrow, where is the contract documented?"
+5. "What would you test automatically if you had ten more minutes?"
 
-## Section 5: Debrief and Exit Ticket (5 minutes)
+## Hands-on Lab (40-50 minutes)
 
-### Debrief Script
+### Lab prompt
 
-**[Instructor speaks:]**
+Add tests: create at least five tests for service/repository logic, including two negative tests such as invalid input and missing record. Run pytest and confirm all pass.
 
-Testing is not about proving you never make mistakes. It is about creating fast feedback for the mistakes you inevitably will make.
+### Required learner workflow
 
-### Exit Ticket
+1. Start from a known-good run.
+2. Make one small implementation change.
+3. Run the narrowest check possible.
+4. Add the happy-path proof.
+5. Add one sad-path proof.
+6. Commit or save the working state before attempting an extension.
 
-1. What should a good unit test avoid?
-2. Which negative test did you add?
-3. What layer of your project did you focus on today?
+### Completion criteria
 
-### Preview of the Next Hour
+- At least five meaningful tests exist.
+- Negative tests assert specific exceptions.
+- Tests use isolated data such as tmp_path.
+- pytest runs without requiring the GUI or live Flask server.
 
-**[Instructor speaks:]**
-
-Next hour we look at coverage, edge cases, and one lightweight integration-style test so the suite becomes more strategic.
-
----
-
-## Instructor Coaching Appendix
-
-### Whiteboard Plan for Day 12
-
-Draw three stacked layers on the board labeled `quality`, `delivery`, and `communication`. Under quality, write `pytest`, `coverage`, and `edge cases`. Under delivery, write `requirements`, `README`, `fresh run`, and `entrypoint`. Under communication, write `demo`, `explanation`, and `retrospective`. This visual helps learners understand that the final day is not a random collection of loose ends. It is the professional closeout sequence for the capstone.
-
-Next, draw a short arrow from `tests` to `confidence`, from `packaging` to `shareability`, and from `demo` to `explainability`. Learners often undervalue explanation, but the final demo is where they prove they understand the system as a whole.
-
-Keep the board visible during the whole day. When learners get lost in tool details, point back to the layer they are working on. Ask whether the current task is increasing quality, delivery confidence, or communication clarity.
-
-### Listen-Fors During Labs
-
-Positive Day 12 language includes:
-
-- "This test proves a behavior, not just a line execution."
-- "Coverage showed me a branch I actually care about."
-- "I found a missing dependency during the fresh-run test."
-- "The README now tells another person exactly how to start the project."
-- "My demo flow shows the system, not every line of code."
-
-Concerning language includes:
-
-- "I am chasing 100 percent coverage because the number looks low."
-- "I know it runs, but I have never tried it from a fresh environment."
-- "The README is mostly fine if someone already knows the project."
-- "I will explain the architecture if there is time after the live demo."
-- "The packaging step broke something, so I stopped documenting it."
-
-When you hear the concerning version, guide learners back with questions such as:
-
-- "What important bug would this test actually catch?"
-- "What did the fresh-run test teach you that local habits were hiding?"
-- "Could a new teammate follow your README without you standing nearby?"
-- "What is the one architecture decision you want the audience to understand?"
-- "What part of the demo proves the project is reliable, not just feature-rich?"
-
-### Common Misconceptions for Day 12
-
-One misconception is that testing means proving the code is flawless. Reframe that quickly. Testing creates feedback and confidence; it does not promise perfection.
-
-Another misconception is that coverage is the goal. Coverage is a diagnostic aid. The goal is meaningful confidence in the parts of the system most likely to fail or most expensive to debug.
-
-A third misconception is that packaging is mostly about fancy build tools. The runbook says otherwise. Packaging starts with a repeatable install, a repeatable run, and complete documentation.
-
-A fourth misconception is that final demos should show as many features as possible. Strong demos are selective. They show the most convincing end-to-end flow and explain the architecture behind it.
-
-### Suggested Mini-Conferences for Each Hour
-
-For Hour 45, ask learners which behavior they most want a test to guard. This keeps testing grounded in risk and value.
-
-For Hour 46, ask what their coverage report changed in their priorities. If the answer is "nothing," they may be treating coverage as a formality instead of feedback.
-
-For Hour 47, ask a learner to walk you through the README as if you were a new teammate. This is often the fastest way to expose missing setup steps.
-
-For Hour 48, ask learners to practice one two-sentence explanation of their architecture before they demo. Students who can explain their system clearly almost always demo more effectively.
-
-### Pacing Adjustments
-
-If testing is behind in Hour 45, shrink the target to five focused tests with two negative cases. That is already meaningful and aligned to the runbook.
-
-If Hour 46 becomes a chase for percentages, stop the class and restate the purpose of coverage. Then ask them to add one test for the highest-value gap and one integration-style test. That reset usually improves quality.
-
-If packaging work in Hour 47 reveals bigger dependency or path issues, reduce optional build steps immediately. README clarity and fresh-run success are higher priority than wheels or executables.
-
-If the final demo hour feels rushed, shorten the code-reading review rather than allowing every capstone demo to spill over. Timeboxing is part of the final professional skill being practiced.
-
-### Evidence of Mastery for Day 12
-
-Look for these signals:
-
-- Tests clearly state the behavior they protect.
-- Coverage is used to improve meaningful gaps, not just inflate a number.
-- The project can be run from a fresh environment with documented steps.
-- The learner can explain one architecture decision and one tradeoff.
-- The final demo proves minimum deliverables without confusion.
-- The retrospective includes one immediate application skill and one practice goal.
-
-### End-of-Day Instructor Wrap Script
+## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
+"Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
 
-The final day is where all the hidden professional habits become visible. You tested the right things, measured what still needed attention, made the project runnable by someone else, and explained the system clearly in front of an audience. Those skills are not extras. They are how technical work becomes dependable and shareable. Leave this course remembering that the best project is not only one that works. It is one that can be tested, packaged, explained, and improved.
+### Common pitfalls to watch for
 
----
+- Testing the UI directly instead of core logic.
+- Brittle tests that depend on record ordering.
+- Using one shared real database for all tests.
+- Catching exceptions in the test instead of asserting them.
 
-## Facilitation Toolkit
+### Debugging script for stuck learners
 
-### Pre-Class Quick Check
+Use this sequence aloud when helping a learner:
 
-Before this hour begins, spend thirty seconds confirming that learners have the right file, environment, and mental context open. Many instruction problems that look conceptual are actually setup drift. Ask learners to open the project folder, point to the main entry file for the hour, and remind themselves which layer they are primarily working in. If the hour is centered on the API, ask them to name the route, service, and repository layers. If the hour is centered on analytics, ask them to name the dataset and report path. If the hour is centered on testing or packaging, ask them to name the target command they expect to run before the hour ends. This tiny reset reduces confusion and gives the room a shared starting line.
+1. "Read the first meaningful error message, not the last line only."
+2. "What command produced it? Can we reproduce it?"
+3. "What changed since the last working run?"
+4. "Can we test the service or helper function without the outer UI/API/report layer?"
+5. "What is the smallest rollback or fix that restores a working state?"
 
-A second quick check is motivational rather than technical. Tell learners what "done" looks like in one sentence. Students perform better when the finish line is visible. For example, say: "By the end of this hour, you should be able to show one stable route with predictable errors," or "By the end of this hour, you should have one repeatable report artifact saved in the reports folder." The clarity matters more than the elegance of the wording.
+## Optional Extensions
 
-### Layer-Specific Observation Checklist
+If learners meet the completion criteria early, offer one of these stretch goals:
 
-As you circulate, avoid scanning only for syntax errors. Look for the layer-specific habits that show whether the learner is truly aligning with the course architecture.
+- Add a fixture for sample valid payloads.
+- Parameterize validation cases.
+- Add tests for serializer functions from the API hours.
 
-For interface-facing work, check whether the learner is keeping the interface thin and delegating correctly. Look for signs that they are handling input, calling a service, and formatting output rather than placing business logic directly in callbacks or route handlers.
+Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
 
-For service-layer work, check whether the learner is enforcing rules consistently and raising the right custom exceptions. Ask whether the same rule would behave the same way from multiple entry points.
+## Quick Checks and Exit Ticket (56-60 minutes)
 
-For repository or persistence work, check whether the learner is using parameterized queries, committing intentionally, and mapping rows or outputs predictably. Ask whether there is one clear source of truth.
+Ask learners to answer individually, then discuss two or three responses:
 
-For analysis and reporting work, check whether the learner can explain how data moves from source to artifact. Ask what cleaning decisions were made and whether the result could be reproduced tomorrow.
-
-For testing and packaging work, check whether the learner is proving meaningful behaviors rather than merely following a checklist. Ask what risk the test or fresh-run step is reducing.
-
-This checklist helps you stay aligned to the course outcomes instead of getting trapped in line-by-line debugging for the whole hour.
-
-### Coaching Ladder for Stuck Learners
-
-Use a three-step coaching ladder when a learner is stuck.
-
-Step one is diagnosis by description. Ask the learner to describe what they expected, what actually happened, and what they already checked. This keeps you from jumping into the wrong problem too early.
-
-Step two is scope reduction. Help the learner shrink the problem to the smallest reproducible step. If a full GUI flow is failing, test the service method alone. If the full report fails, run the export alone. If the packaged app will not start, verify imports and environment setup before touching build tools. Small proofs are often faster than large guesses.
-
-Step three is boundary identification. Ask which layer should own the fix. Many student problems persist because they keep applying the patch in the wrong layer. A route bug gets fixed in the service, a repository bug gets patched in the UI, or a packaging issue gets blamed on test code. Naming the layer often reveals the correct next action.
-
-When learners are very anxious, narrate your thought process slowly and visibly. Say things like, "I want to verify the assumption before I change the code," or "Let's confirm the source of truth first." This models calm technical reasoning and reduces the impulse to thrash.
-
-### Differentiation Moves for Mixed-Ability Cohorts
-
-In almost every class, some learners finish early while others are still stabilizing the basics. Use differentiation deliberately instead of letting the room split into boredom on one side and panic on the other.
-
-For learners who need more support, narrow the success condition without changing the underlying outcome. Replace a full feature set with the smallest honest version. One route before five. One query before search plus paging plus sorting. One report artifact before a whole dashboard. One integration test before an elaborate suite. The learner still practices the right habit, just with reduced surface area.
-
-For learners who are ready for more challenge, add a bounded extension that reinforces the same lesson rather than a completely different topic. Examples include adding one more filter option, improving error messages, adding a second chart type, or writing one additional negative test. Bound the extension tightly so it does not become an escape hatch into unrelated rabbit holes.
-
-A useful phrase for both groups is: "Keep the same architecture, change the ambition level." That sentence helps advanced learners stretch without drifting and helps struggling learners simplify without feeling like they failed.
-
-### Discussion Prompts That Reveal Understanding
-
-When you want to know whether a learner truly understands the hour, ask questions that require reasoning instead of recall. Useful prompts include:
-
-- What part of this workflow would break first if the source of truth changed unexpectedly?
-- What behavior in your code is currently easiest to explain to a teammate, and why?
-- Where is the most fragile coupling in your design right now?
-- If you had to test or demo only one thing from this hour, what would give the strongest evidence that the concept is working?
-- What did you intentionally leave out to keep the project aligned with the course scope?
-
-These prompts are helpful because they work across architecture, API, analytics, testing, and packaging topics. They also generate better class discussion than simply asking whether the code runs.
-
-### Common Classroom Risks and Soft Interventions
-
-One risk is silent divergence, where learners are working on different interpretations of the same task. You can reduce this by pausing for a thirty-second midpoint recap and restating the minimum success condition. Another risk is overbuilding, where a learner adds complexity because the simpler version feels too small. In that case, praise the initiative but redirect toward finishing the stable milestone first.
-
-A third risk is shallow success, where the code appears to work once but the learner cannot explain why. Do not ignore that just because the output looks correct. Ask for a short explanation. If the explanation is weak, there is still learning work to do.
-
-A fourth risk is perfection paralysis. Some learners freeze because they want the cleanest possible solution before they will run anything. Encourage executable increments. A visible imperfect step is often more teachable than a perfect idea still trapped in someone's head.
-
-### Evidence Collection for Informal Assessment
-
-If you need to assess quickly during the hour, look for five kinds of evidence:
-
-- A concrete artifact exists, such as a running endpoint, saved report, passing test, or updated README.
-- The learner can explain the responsibility of the layer they are touching.
-- The learner can name one failure mode and how they checked it.
-- The learner can connect the work back to the capstone architecture or delivery goals.
-- The learner can identify one next improvement without losing sight of the current milestone.
-
-This evidence-based approach is more reliable than grading on confidence or speed alone.
-
-### End-of-Hour Documentation Prompt
-
-Before learners leave the hour, ask them to capture three short notes in their own project documentation or notebook:
-
-1. What changed?
-2. What was verified?
-3. What still needs attention?
-
-This takes very little time, but it creates continuity between hours and improves final demos because learners have a record of decisions, validations, and remaining risks. It also makes the project feel like professional technical work instead of a sequence of disconnected classroom exercises.
-
-### Closing Script You Can Reuse
+- What should a good unit test avoid: external dependencies, randomness, time, or all of these?
+- What is the happy path you proved this hour?
+- What sad path did you test or plan to test next?
+- Which file or module is now most important for the next hour?
 
 **[Instructor speaks:]**
+"Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
 
-The point of this hour was not only to produce code or artifacts. It was to practice the habit behind the code: keeping boundaries clear, proving behavior honestly, and making the project easier to understand for the next person who touches it. If you can explain what changed, show evidence that it works, and name what still needs improvement, then you are making real progress.
+## Instructor Wrap-up Notes
 
----
+- Reinforce the capstone through-line: each hour should leave behind a runnable artifact, not just notes.
+- Encourage frequent commits with messages such as `feat: add records endpoint`, `test: cover validation errors`, or `docs: add report quickstart`.
+- If multiple learners are blocked by the same issue, pause the room and debug one shared example rather than repeating the same fix individually.
+- Keep advanced scope boundaries: do not detour into production OAuth, complex ORMs, elaborate front-end frameworks, or advanced machine learning unless the runbook marks the topic as optional.
 
-## Final Delivery Appendix
 
-### Demo Coaching for Anxious Learners
+## Expanded Facilitation Notes for a Full 60-Minute Delivery
 
-Many learners finish the project with a working system but a shaky explanation. Help them rehearse a simple verbal pattern:
+Use this section when the class needs more structure, when learners are unevenly paced, or when you want a more detailed speaking guide than the core hour script above. It is intentionally written as an instructor companion rather than a student handout.
 
-1. "My project helps users..."
-2. "The core layers are..."
-3. "Here is one end-to-end workflow..."
-4. "Here is how I tested or packaged it..."
-5. "One tradeoff I made was..."
+### Board plan and vocabulary anchor
 
-This pattern keeps demos focused and reduces the tendency to wander into low-value details.
-
-### Fast Review Prompts for the Final Day
-
-Use prompts like these to keep the final session thoughtful:
-
-- Which test gives you the most confidence right now?
-- What did the fresh-run packaging check reveal?
-- Which architecture decision are you most comfortable defending?
-- What is one edge case your project now handles well?
-- What would be the first improvement after the course ends?
-
-These prompts work both during rehearsal and during retrospective discussion.
-
-### What to Praise Explicitly
-
-On the final day, praise not only visible features but also the habits that made them reliable. Good examples include:
-
-- a clean negative test
-- a corrected dependency list
-- a clear README quickstart
-- a demo that shows the source of truth honestly
-- a student who trimmed scope to protect stability
-
-Calling out these habits helps learners understand what professional quality looks like.
-
-### Closing Reflection for Day 12
-
-If you want a stronger ending, use this script:
+At the start of the hour, reserve one side of the board for the capstone architecture and leave it visible. Draw the same four boxes every time: interface, service, repository, and data or artifact. For API hours, the interface is Flask routes and JSON. For client or GUI integration hours, the interface may be a Tkinter callback or a Python client object. For analytics hours, the artifact is a CSV, summary file, chart, or report. For testing and packaging hours, the artifact is evidence that the project can be verified and run by another person.
 
 **[Instructor speaks:]**
+"The box we edit today is important, but the boundaries between boxes are even more important. If we keep the boundary clean, we can swap a GUI for an API, replace manual checks with pytest, or generate a report without rewriting the domain model."
 
-A complete technical project is more than functioning code. It is code that can be checked, explained, shared, and improved. The reason we finished with testing, coverage, packaging, and reflection is that these practices turn isolated effort into dependable work. Carry that lesson forward. The tools may change, but the habit of building something understandable and verifiable will keep paying off.
+Use these vocabulary checks during the first ten minutes:
 
----
+- A model represents the domain data and rules that belong with the data.
+- A service coordinates use cases and raises meaningful domain exceptions.
+- A repository hides SQLite details and returns domain objects or simple records.
+- An API route translates HTTP into service calls and translates results back to JSON.
+- A client translates Python function calls into HTTP requests and translates responses into useful Python values.
+- A report pipeline turns persisted data into repeatable artifacts that can be reviewed.
+- A test is executable evidence about expected behavior.
+- A package or deliverable is successful only when another person can install and run it from instructions.
 
-## Certification Review Appendix
+### Instructor pacing detail
 
-### Quick Code-Reading Prompts
+If learners are new to this topic, spend extra time on prediction before execution. Before every run, ask, "What status code, file, chart, exception, or test result do we expect?" Prediction forces learners to state the contract. If the result differs, the class has a concrete debugging target.
 
-Keep two or three short prompts available for the final session so you can shift smoothly between demos and review. Good prompts include predicting the output of a small class example, identifying which exception will be raised, or explaining what happens when a module-level constant is changed before a function call. The goal is not to trick learners. The goal is to practice calm reading and reasoning under light pressure.
+If learners are moving quickly, shorten the lecture and lengthen the lab, but keep the same quality gates: happy path, sad path, readable code, and a repeatable command. Do not let the hour become a feature race. A learner who can explain one clean vertical slice is better prepared than a learner with five partial features.
 
-After each prompt, ask not only for the answer but also for the reasoning path. Students benefit from hearing how a careful reader notices state changes, method calls, and exception boundaries.
+Suggested minute-by-minute adjustment:
 
-### Retrospective Questions That Lead to Action
+- If setup consumes more than 8 minutes, skip optional styling and focus on one minimal deliverable.
+- If the demo fails, narrate the recovery process. This is valuable modeling, not a failure of instruction.
+- If half the room is blocked by the same problem, pause the room and solve one shared example.
+- If only one or two learners are blocked, keep the rest moving with the lab checklist while you circulate.
 
-Avoid retrospective questions that invite only vague positivity. Use prompts that point toward action:
+### Deeper demo prompts
 
-- Which concept from the course will you apply in your next real project?
-- Which concept is still shaky enough that you want one more mini-project for practice?
-- Which artifact from your capstone best demonstrates your current level?
-- What debugging or testing habit changed the way you work?
+Use this prompt cycle while live coding:
 
-These questions make the final hour feel forward-looking rather than purely ceremonial.
+1. "What input enters this layer?"
+2. "What output leaves this layer on success?"
+3. "What named error or status represents failure?"
+4. "Where is the rule written exactly once?"
+5. "How will we prove this behavior after class?"
 
-### Final Closing Script
+For API work, insist that learners show at least one JSON error body. A route that works for perfect input but returns an HTML traceback for predictable bad input is not yet a reliable API. For analytics work, insist that learners show the generated file path and explain whether it can be regenerated. For tests, insist that learners read the failing assertion aloud before editing. For packaging, insist that learners follow their own README rather than relying on memory.
+
+### Capstone quality gate
+
+Before the exit ticket, have learners mark their hour result against this quick rubric:
+
+| Category | Ready evidence | Needs attention |
+| --- | --- | --- |
+| Correctness | The feature works with a realistic happy path. | It only works with hard-coded or instructor-only data. |
+| Error handling | A sad path produces a clear exception, JSON error, message, or test failure. | The app crashes or hides the cause. |
+| Structure | The responsibility is in the correct layer. | Route, GUI, service, SQL, and reporting logic are tangled together. |
+| Repeatability | There is a command, test, or documented step to reproduce the result. | The result depends on manual memory or IDE state. |
+| Maintainability | Names are clear and the next feature has an obvious place to go. | The code works once but will be hard to extend. |
 
 **[Instructor speaks:]**
+"This rubric is not only for grading. It is a professional checklist. When you leave a feature behind, the next developer should be able to run it, understand it, and change it without fear."
 
-You are leaving this course with more than a collection of files. You are leaving with a way of thinking about Python work: build in layers, make behavior testable, handle errors honestly, package the work so others can run it, and explain your tradeoffs clearly. That combination is what turns learning into capability.
+### Common instructor interventions
+
+When a learner puts too much logic in a Flask route or GUI callback, say: "Let us underline the business rule. Now move that sentence into the service or validation helper. The route or callback should coordinate, not own the rule."
+
+When a learner hard-codes paths, say: "This path works on your machine because your machine is currently the hidden dependency. Replace it with a project-relative pathlib Path and create the directory in code."
+
+When a learner catches Exception broadly, say: "Catching everything is like turning off the smoke alarm. Catch the error you expect, convert it into a helpful message, and let surprising errors remain visible during development."
+
+When a learner wants to add a large optional feature before the required slice works, say: "Park that idea in a comment or issue. First make the required slice boring and reliable. Advanced projects succeed through boring reliability."
+
+### Exit-ticket collection options
+
+Choose one depending on time:
+
+- Verbal round-robin: each learner states the working command and the next command.
+- Written note: learners submit three bullets: works, broken, next.
+- Pair check: partners run each other’s command from the README or lab note.
+- Demo lottery: randomly choose two learners to show one happy path and one sad path.
+
+Close the hour by connecting forward: the next hour assumes today has a runnable artifact. If a learner is behind, help them identify the smallest safe stopping point rather than encouraging a risky last-minute rewrite.
+
+## Instructor Cross-Check Concepts
+
+Preview Hour 46 by telling learners that pytest gives confidence in behavior, while coverage helps locate untested branches. Coverage is a guide for better questions, not a scoreboard for perfect code.
+
+## Additional Instructor-Ready Expansion
+
+Use this expansion to deepen the hour without changing the runbook mapping. The focus remains **pytest unit tests for service logic**. The concrete artifact for this hour is unit tests that cover core service happy paths and expected validation exceptions. Keep returning to that artifact whenever discussion becomes abstract: learners should be able to point at a command, a file, a response, a chart, a test, or a README step and say, "This is the evidence that the hour worked."
+
+### Deeper instructor narration
+
+**[Instructor speaks:]**
+"The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the verification layer around business rules independent of GUI, API server, or shared files. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
+
+**[Instructor speaks:]**
+"Before I run anything, I want us to predict the evidence. Our baseline command is `pytest -q tests/test_service.py` from a clean project root. A successful run should prove this happy path: creating, retrieving, and updating a record works through the service using an isolated test repository. A responsible implementation should also prove this sad path: invalid payloads raise expected domain exceptions and tests assert the exact behavior. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+
+Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
+
+### Detailed demo walkthrough
+
+Run the demo as a sequence of small predictions rather than one long typing performance. The suggested demo arc is to write a fixture with `tmp_path`, then implement one happy test and one exception test using Arrange, Act, Assert. At each pause, ask the room to identify three things: the input entering this layer, the output leaving this layer, and the single responsibility that should not leak into neighboring layers. If learners cannot name those three things, slow down and draw the boundary again.
+
+Use this checkpoint rhythm:
+
+1. **Baseline:** Run `pytest -q tests/test_service.py` from a clean project root before editing. If it fails, narrate the failure honestly and recover before adding new code.
+2. **First slice:** Implement only enough to prove creating, retrieving, and updating a record works through the service using an isolated test repository. Do not add optional polish yet.
+3. **Read the code aloud:** Point to the function or method boundary and say what it accepts and returns.
+4. **Sad path:** Trigger invalid payloads raise expected domain exceptions and tests assert the exact behavior deliberately. Ask, "Is this failure understandable to the person who receives it?"
+5. **Architecture check:** Ask whether the code belongs in the route, client, service, repository, analytics helper, test fixture, or delivery documentation.
+6. **Repeatability check:** Identify the exact command or manual step that proves the result again later.
+7. **Commit-quality check:** Ask whether the current state could be saved with a clear commit message.
+
+A useful live-coding move is to introduce one small defect on purpose, such as a wrong field name, missing header, missing timeout, incorrect path, or overly broad exception handler. Then read the observed behavior with the class. This models a mature debugging posture: we do not panic; we compare expected behavior with observed behavior, isolate the layer, and make the smallest correction that restores the contract.
+
+### Guided lab checkpoints
+
+During the lab, avoid answering first with a complete solution. Ask learners to show evidence in this order:
+
+- "Show me the command you ran before editing."
+- "Show me the smallest code change that targets this hour's artifact."
+- "Show me the happy-path evidence: creating, retrieving, and updating a record works through the service using an isolated test repository."
+- "Show me the sad-path evidence: invalid payloads raise expected domain exceptions and tests assert the exact behavior."
+- "Show me where this behavior would be changed if the requirement changed next week."
+
+If a learner is ahead, direct them to this extension only after the required artifact is stable: parameterize validation cases for blank names, invalid statuses, and malformed numeric fields. Make it clear that extension work must be reversible. A good extension leaves the required path cleaner or better documented. A risky extension creates a second debugging problem right before the hour closes.
+
+For pairs, assign roles for five-minute intervals. The driver types and runs commands. The navigator reads the contract and watches for boundary violations. Halfway through, switch roles. This keeps faster learners from taking over and gives quieter learners a defined speaking responsibility. Ask the navigator to use the review question: If this test fails tomorrow, will the failure message point to the broken business rule?
+
+### Troubleshooting decision tree
+
+Use this decision tree when the room gets stuck:
+
+- If the first command cannot start, stop feature work and fix environment, import, or configuration issues first.
+- If the happy path fails, inspect the boundary closest to the symptom. For API work, inspect request body, headers, route pattern, and service call. For analytics work, inspect path, columns, dtypes, and row counts. For testing work, inspect fixture setup and the exact assertion. For packaging work, inspect README steps and dependency installation.
+- If the sad path returns a confusing result, improve the translation layer. Convert expected domain errors into the agreed JSON response, user message, report warning, or pytest assertion. Do not hide unexpected errors while still developing.
+- If two layers disagree, choose the service or documented contract as the source of truth and update the outer layer to match it.
+- If a learner proposes a rewrite, ask for the smallest reversible change that proves the next fact. Rewrites are sometimes necessary, but they should be chosen deliberately, not as an emotional response to a messy error.
+
+Name the common risk explicitly: calling the real app database or relying on test order, which makes failures inconsistent across machines. Write it on the board as an anti-pattern, then ask learners to point to the line or step in their project that prevents it.
+
+### Formative questions and differentiation notes
+
+Use these questions for quick checks throughout the hour:
+
+- What is the contract this layer promises?
+- Which command proves the contract without relying on your memory?
+- What invalid input or missing dependency did you test?
+- Which part of the code should not know about this detail?
+- What would a teammate need in order to reproduce your result tomorrow?
+- If this breaks during the final demo, what is the first diagnostic step?
+
+For learners who need more support, narrow the task to one happy path and one sad path. Provide a partially completed function signature or checklist, but still require them to run the command and explain the result. For learners who are ready for more challenge, ask them to document the contract in README language, add a focused test, or compare two design options and justify the simpler one. Keep both groups anchored to the same hour outcome so the class does not split into unrelated projects.
+
+Close by saying: "The goal is not to make this layer impressive. The goal is to make it dependable. Dependable code has a clear contract, a repeatable proof, a known failure behavior, and an obvious next place to change it."
