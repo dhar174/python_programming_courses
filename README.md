@@ -4,7 +4,7 @@
 [![Autograder](https://github.com/dhar174/python_programming_courses/actions/workflows/autograder.yml/badge.svg)](https://github.com/dhar174/python_programming_courses/actions/workflows/autograder.yml)
 [![GitHub Pages](https://img.shields.io/badge/Slides-GitHub%20Pages-blue?logo=github)](https://dhar174.github.io/python_programming_courses/)
 
-A complete, instructor-led **96-hour Python training package** built by **GlobalIT** and taught by **Charles Niswander**. The course delivers two sequential 48-hour modules aligned to the [Python Institute](https://pythoninstitute.org/) certification pathway (PCEP → PCAP).
+An instructor-led **96-hour Python training package** built by **GlobalIT** and taught by **Charles Niswander**. The course delivers two sequential 48-hour modules aligned to the [Python Institute](https://pythoninstitute.org/) certification pathway (PCEP → PCAP), with active remediation tracked in GitHub Issues.
 
 > **Looking to jump in?** Jump to the section for your role:
 > [📚 I'm a Learner](#-for-learners) · [🎓 I'm an Instructor](#-for-instructors) · [🛠 I'm a Contributor or AI Agent](#-for-contributors--ai-agents)
@@ -115,7 +115,7 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 
 - **Location:** `Basics/lessons/lecture/DayX_HourY_Basics.md` or `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
 - **Standard:** ~4,000 words minimum per hour
-- **Status:** All 96 hours complete (48 Basics + 48 Advanced)
+- **Status:** 96 per-hour lecture files are present (48 Basics + 48 Advanced), but depth remediation remains open under [#269](https://github.com/dhar174/python_programming_courses/issues/269).
 
 ### Assignments & Quizzes
 
@@ -125,6 +125,9 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 | Advanced homework notebooks | `Advanced/assignments/Advanced_DayX_homework.ipynb` | 12 |
 | Basics quizzes (HTML) | `Basics/quizzes/Basics_DayX_Quiz.html` | 12 |
 | Advanced quizzes (HTML) | `Advanced/quizzes/Advanced_DayX_Quiz.html` | 12 |
+| Quiz answer exports | `Basics/quizzes/*_answers.json`, `Advanced/quizzes/*_answers.json` | 24 |
+
+Advanced sample submissions are present for all 12 days. Basics sample submissions are still missing for Days 2, 3, 4, 5, 6, and 8; see [#270](https://github.com/dhar174/python_programming_courses/issues/270). Slide and lesson-source remediation remains open under [#271](https://github.com/dhar174/python_programming_courses/issues/271).
 
 ---
 
