@@ -70,7 +70,7 @@ Instead, do this:
 ```python
 term = f"%{search_term.strip().lower()}%"
 query = """
-    SELECT id, title, category, status, priority
+    SELECT id, title, category, status
     FROM records
     WHERE lower(title) LIKE ?
        OR lower(category) LIKE ?
@@ -182,7 +182,7 @@ def search_records(
         where_clause = "WHERE " + " AND ".join(conditions)
 
     query = f"""
-        SELECT id, title, category, status, priority
+        SELECT id, title, category, status
         FROM records
         {where_clause}
         ORDER BY id ASC
@@ -311,7 +311,7 @@ Advanced learners can add sorting:
 
 **[Instructor speaks:]**
 
-If you add sorting, do it carefully. Do not pass arbitrary column names directly from user input into SQL. Use a controlled mapping of allowed choices such as `"title"`, `"created_at"`, or `"priority"`.
+If you add sorting, do it carefully. Do not pass arbitrary column names directly from user input into SQL. Use a controlled mapping of allowed choices such as `"title"`, `"category"`, or `"status"`.
 
 ---
 
@@ -346,11 +346,419 @@ Next hour is Checkpoint 4. You will use everything from today and yesterday to d
 
 ---
 
-## Shared Day 8 Instructor Reference
+## Instructor-Ready Deep Dive: Search, Filters, and Paging Without Losing the Architecture
 
-Reuse the shared day-level instructor support from `Day8_Hour1_Advanced.md` for this hour's facilitation details:
+This section expands the hour into a near-verbatim instructor script. Use it when learners need a full demonstration of how search belongs in the repository while page state belongs in the interface or controller.
 
-- `## Instructor Coaching Appendix`
-- `## Facilitation Toolkit`
+### Learning Outcomes Reinforcement
 
-This keeps the Day 8 coaching guidance in one maintained location while preserving this file's hour-specific lecture script.
+**[Instructor speaks:]**
+
+By the end of this hour, you should be able to add search without smuggling SQL into the button callback. You should be able to add a filter without trusting user input as SQL structure. You should be able to explain `LIMIT` and `OFFSET` in plain language. Most importantly, you should be able to separate two different responsibilities: the repository knows how to query data, and the UI knows what page the user is currently viewing.
+
+That last distinction is subtle but important. A repository method can accept `limit` and `offset`, but it should not know about a "Next" button or a text entry widget. The UI can remember that the current page is page 3, but it should not build the SQL string. When we keep those responsibilities separate, the same search can later be reused from a command-line script, a GUI, or a Flask route.
+
+### Repository-Owned Safe Search
+
+**[Instructor speaks:]**
+
+Let's look at a complete, safe repository method. The user provides values: a text term, a status filter, and page information. The repository owns the query. The wildcard is part of the parameter value, not something we paste into the SQL structure with user text.
+
+```python
+from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class Record:
+    record_id: int
+    title: str
+    category: str
+    status: str
+
+    @classmethod
+    def from_row(cls, row: sqlite3.Row) -> "Record":
+        return cls(
+            record_id=row["id"],
+            title=row["title"],
+            category=row["category"],
+            status=row["status"],
+        )
+
+
+class SQLiteRecordRepository:
+    def __init__(self, db_path: Path) -> None:
+        self.db_path = db_path
+
+    def _connect(self) -> sqlite3.Connection:
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        connection = sqlite3.connect(self.db_path)
+        connection.row_factory = sqlite3.Row
+        return connection
+
+    def search(
+        self,
+        term: str = "",
+        status: str | None = None,
+        category: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> list[Record]:
+        if limit < 1 or limit > 100:
+            raise ValueError("limit must be between 1 and 100")
+        if offset < 0:
+            raise ValueError("offset cannot be negative")
+
+        conditions: list[str] = []
+        parameters: list[object] = []
+
+        clean_term = term.strip().lower()
+        if clean_term:
+            wildcard = f"%{clean_term}%"
+            conditions.append(
+                "(lower(title) LIKE ? OR lower(category) LIKE ?)"
+            )
+            parameters.extend([wildcard, wildcard])
+
+        if status:
+            conditions.append("status = ?")
+            parameters.append(status)
+
+        if category:
+            conditions.append("category = ?")
+            parameters.append(category)
+
+        where_clause = ""
+        if conditions:
+            where_clause = "WHERE " + " AND ".join(conditions)
+
+        query = f"""
+            SELECT id, title, category, status
+            FROM records
+            {where_clause}
+            ORDER BY id ASC
+            LIMIT ? OFFSET ?
+        """
+        parameters.extend([limit, offset])
+
+        with self._connect() as connection:
+            rows = connection.execute(query, tuple(parameters)).fetchall()
+
+        return [Record.from_row(row) for row in rows]
+```
+
+**[Instructor speaks:]**
+
+There is a small dynamic part here: we build a `WHERE` clause from known internal fragments. We are not inserting raw user input into the SQL structure. User-provided values still travel through placeholders. That is the rule I want you to remember: values are parameters. SQL structure is controlled by our code.
+
+Also notice the deterministic `ORDER BY id ASC`. Pagination without a stable order is a bug waiting to happen. The database is allowed to return rows in different physical orders unless we tell it exactly how to order them. If page one and page two are not ordered consistently, users may see duplicates or miss records.
+
+### Demo steps
+
+Use these steps for the live demonstration:
+
+1. Seed the database with at least 30 records. Include repeated statuses such as `open`, `blocked`, and `done`.
+2. Show a plain list view first so learners understand the starting point.
+3. Add a repository `search()` method that accepts `term`, `status`, `limit`, and `offset`.
+4. Demonstrate a text search for a term that appears in several titles.
+5. Demonstrate an exact status filter, such as `status="open"`.
+6. Demonstrate search plus filter together.
+7. Set `limit=5` and `offset=0`; show the first five matching rows.
+8. Set `limit=5` and `offset=5`; show the next five matching rows.
+9. Point to `ORDER BY id ASC` and explain why it is not optional for predictable pages.
+10. Connect the method through the service layer.
+11. Connect the service to the UI or script input.
+12. Reset the UI offset to zero whenever the search term or filter changes.
+13. Show a no-results state with a term that does not match anything.
+14. Ask learners to identify which code owns query logic and which code owns current page state.
+
+### Instructor narration for the safe SQL moment
+
+**[Instructor speaks:]**
+
+This is the sentence I want burned into your brain: do not put the user's text directly into the SQL string. If the user searches for `invoice`, `invoice` is a value. It belongs in the parameters. If we want partial matching, we build the wildcard parameter value in Python: `"%invoice%"`. The SQL still says `LIKE ?`.
+
+Now compare that to this unsafe habit:
+
+```python
+query = f"SELECT * FROM records WHERE title LIKE '%{term}%'"
+```
+
+The danger is not only malicious input. The danger is also ordinary input that contains punctuation, quotes, or percent characters that behave differently than you expected. Parameterized queries give the database driver the job of treating the value as data.
+
+### Keeping Page State Separate
+
+**[Instructor speaks:]**
+
+Here is a small service and UI-style controller example. The repository does the query. The controller remembers the current term, status, and offset.
+
+```python
+class RecordService:
+    def __init__(self, repo: SQLiteRecordRepository) -> None:
+        self.repo = repo
+
+    def search_records(
+        self,
+        term: str = "",
+        status: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> list[Record]:
+        return self.repo.search(
+            term=term,
+            status=status,
+            limit=limit,
+            offset=offset,
+        )
+
+
+class RecordSearchController:
+    def __init__(self, service: RecordService) -> None:
+        self.service = service
+        self.term = ""
+        self.status: str | None = None
+        self.page_size = 20
+        self.offset = 0
+
+    def new_search(self, term: str, status: str | None) -> list[Record]:
+        self.term = term
+        self.status = status
+        self.offset = 0
+        return self._load_current_page()
+
+    def next_page(self) -> list[Record]:
+        self.offset += self.page_size
+        return self._load_current_page()
+
+    def previous_page(self) -> list[Record]:
+        self.offset = max(0, self.offset - self.page_size)
+        return self._load_current_page()
+
+    def _load_current_page(self) -> list[Record]:
+        return self.service.search_records(
+            term=self.term,
+            status=self.status,
+            limit=self.page_size,
+            offset=self.offset,
+        )
+```
+
+Point out that this controller could be a GUI class, a CLI helper, or a route helper. The principle is the same: page state is interface state; query execution is repository behavior.
+
+## Lab prompt
+
+**[Instructor speaks:]**
+
+Your lab is to add practical search to your SQLite-backed app. Start with a repository method. Do not start with the button layout. The query must work before the interface can make it useful.
+
+Minimum required work:
+
+1. Add a repository search method that accepts a text term.
+2. Use `LIKE ?` with the wildcard inside the parameter value.
+3. Return model objects, not raw database rows, unless the rest of your app already uses dictionaries consistently.
+4. Call the repository method through the service layer.
+5. Connect the search to a GUI input, CLI prompt, or small script.
+6. Show correct behavior when there are no matches.
+
+Recommended additional work:
+
+1. Add one exact-match filter such as status or category.
+2. Add `LIMIT` and `OFFSET`.
+3. Reset the offset to zero when the search term or filter changes.
+4. Add Previous and Next actions, keeping the previous page from going below offset zero.
+5. Keep `ORDER BY` deterministic.
+
+## Completion criteria
+
+Learners meet the target for this hour when they can demonstrate:
+
+- A search term returns the expected matching records.
+- A filter narrows the result set when implemented.
+- SQL uses placeholders for user-provided values.
+- The wildcard for `LIKE` is added to the parameter value, such as `f"%{term}%"`.
+- Paginated results use `LIMIT`, `OFFSET`, and a deterministic `ORDER BY`.
+- The service or repository owns search behavior; the UI does not contain SQL.
+- Page state such as current offset is reset when the user starts a new search.
+- The app handles zero matching rows without showing stale results.
+
+## Common pitfalls
+
+Use these as active coaching checkpoints:
+
+- **Unsafe SQL construction:** Learners build a query with an f-string containing user text. Redirect them to placeholders.
+- **Wildcard in the wrong place:** Learners write `LIKE '%?%'`, which does not work as intended. The placeholder should represent the whole value, including `%`.
+- **No stable ordering:** Learners paginate without `ORDER BY`, causing duplicate or missing rows between pages.
+- **Offset not reset:** A learner searches on page 4, enters a new term, and sees no results because the old offset is still high.
+- **Negative previous page:** Previous subtracts from offset without `max(0, ...)`.
+- **UI owns SQL:** The button callback builds the database query. Move that logic into the repository.
+- **Stale table rows:** The UI appends new results under old results instead of clearing first.
+- **Over-building filters:** Learners try to build a full query builder. Keep the scope to one or two filters.
+
+### Debugging Script for Search Bugs
+
+**[Instructor speaks:]**
+
+When search behaves strangely, isolate it. First call the repository directly with known values. If that fails, the problem is the query or data. If that works, call the service. If that works, the problem is probably in the UI state or display refresh. Debug from the data layer outward.
+
+Here is a tiny manual check:
+
+```python
+repo = SQLiteRecordRepository(Path("data/tracker.db"))
+results = repo.search(term="invoice", status="open", limit=5, offset=0)
+for record in results:
+    print(f"{record.record_id}: {record.title} [{record.status}]")
+```
+
+If this produces the correct rows, the SQL is not the first suspect anymore. Now look at the service call, selected status value, page offset, and table refresh code.
+
+## Optional Extension
+
+Offer these only after the core search works:
+
+- Add a controlled sort option using a dictionary of allowed columns already present in the Day 8 schema, such as `{"title": "title ASC", "category": "category ASC", "status": "status ASC, id ASC"}`.
+- Add a total-count method so the UI can display "Page 2 of 5."
+- Add a "clear search" action that resets term, filter, and offset.
+- Add an index on a commonly filtered column such as `status` after explaining that indexing is a performance topic, not a requirement for today's milestone.
+
+If learners implement sorting, emphasize that values can be parameterized but column names cannot be passed as placeholders. Therefore, column names must come from a safe allow-list controlled by the program.
+
+## Quick Check
+
+Ask:
+
+1. Where should the `%` wildcard be added: inside the SQL string or inside the parameter value?
+2. Why should a paginated query include `ORDER BY`?
+3. What should happen to `offset` when the user enters a new search term?
+4. Why should SQL stay out of the UI callback?
+5. What is the difference between a search term and an exact-match filter?
+
+Expected answer themes: wildcard belongs in the parameter value; `ORDER BY` makes pages deterministic; offset resets to zero; SQL belongs in the repository for safety and reuse; search is partial text matching while filters narrow by specific fields.
+
+## Facilitation Notes for a 60-Minute Delivery
+
+This hour has a predictable trap: learners want to start with widgets. Redirect them to the repository. A search box that calls a broken query only creates a more confusing bug. The fastest path is repository first, service second, UI third.
+
+For learners who move quickly, challenge them to explain the boundary rather than merely add features. Ask, **"Could your search work from a Flask route next week without rewriting the SQL?"** If the answer is yes, they are on the right path.
+
+Close with this reminder:
+
+**[Instructor speaks:]**
+
+Search and pagination make the app feel useful, but the deeper lesson is ownership. The repository owns safe data access. The service owns application behavior. The interface owns user state. When those boundaries stay clear, new features are less frightening.
+
+## Additional Instructor Script: Building Search One Layer at a Time
+
+Use this block when learners are tempted to implement the whole feature at once.
+
+**[Instructor speaks:]**
+
+Search feels like a UI feature because the user experiences it through a search box. But implementation-wise, search is a data access feature first. If the repository cannot return the right records for a known term, a prettier search box will not help. So our build order is deliberate: repository, service, interface.
+
+Let's rehearse that order.
+
+First, in the repository, we prove the query:
+
+```python
+records = repo.search(term="invoice", status="open", limit=10, offset=0)
+```
+
+Second, in the service, we preserve the app's language:
+
+```python
+records = service.search_records(term="invoice", status="open", limit=10, offset=0)
+```
+
+Third, in the UI or CLI, we collect user state:
+
+```python
+term = search_box_value.strip()
+status = selected_status or None
+records = service.search_records(term=term, status=status, limit=20, offset=0)
+```
+
+Notice that only the last layer knows about the search box. Only the first layer knows SQL. The service connects the user intent to the data operation without becoming a database dumping ground.
+
+### A Safe Sorting Aside
+
+If learners ask about sorting, teach it as a controlled extension. Values can be parameters, but SQL identifiers such as column names cannot be parameterized with `?`. That means we never trust arbitrary user text as a column name.
+
+Show this pattern:
+
+```python
+ALLOWED_SORTS = {
+    "title": "title ASC, id ASC",
+    "category": "category ASC, id ASC",
+    "status": "status ASC, id ASC",
+}
+
+sort_clause = ALLOWED_SORTS.get(sort_choice, "id ASC")
+query = f"""
+    SELECT id, title, category, status
+    FROM records
+    ORDER BY {sort_clause}
+    LIMIT ? OFFSET ?
+"""
+```
+
+Then say:
+
+**[Instructor speaks:]**
+
+This f-string is acceptable only because `sort_clause` comes from our own allow-list, not directly from the user. If `sort_choice` is invalid, we fall back to a safe default. That is the same design idea we used with filters: user choices are translated into program-controlled SQL fragments.
+
+### Pagination Mental Model
+
+**[Instructor speaks:]**
+
+Here is a simple way to think about offset. If the page size is 20, then:
+
+- page 1 starts at offset 0
+- page 2 starts at offset 20
+- page 3 starts at offset 40
+
+The formula is:
+
+```python
+offset = (page_number - 1) * page_size
+```
+
+However, many beginner apps do not need to store a page number at all. They can store the current offset and add or subtract the page size. The important thing is to reset the offset when the search conditions change. A new term means a new result set. Page 4 of the old result set has no meaningful relationship to page 4 of the new result set.
+
+### No-Results State Script
+
+**[Instructor speaks:]**
+
+Do not treat zero results as an error. Zero results is a valid answer to a search question. The interface should communicate it clearly. In a CLI, print "No matching records." In a GUI, clear the table and show a small label. What we must not do is leave the old rows visible, because then the user thinks the old rows are the search result.
+
+Ask learners to test these four cases:
+
+1. Empty term with no filter.
+2. Term that matches several records.
+3. Term plus status filter.
+4. Term that matches nothing.
+
+If all four behave predictably, the feature is much more trustworthy.
+
+### Mini Whiteboard Check
+
+Draw three boxes labeled UI State, Service Call, Repository Query. Ask the class where each item belongs:
+
+- current offset
+- selected status
+- `LIKE ?`
+- wildcard parameter
+- table refresh
+- row-to-object mapping
+- no-results message
+- deterministic `ORDER BY`
+
+Expected placement: current offset, selected status, table refresh, and no-results message live in UI state or interface logic; the service call coordinates the request; `LIKE ?`, wildcard parameter creation, row mapping, and `ORDER BY` live in or near the repository query. If learners debate selected status, clarify that the selected value originates in the UI, but the repository receives it as a filter value.
+
+### Final Reinforcement
+
+**[Instructor speaks:]**
+
+A search feature is successful when it is safe, predictable, and reusable. Safe means parameterized values. Predictable means deterministic order and clear page behavior. Reusable means the query is not trapped inside one button callback. That is the professional version of this feature.
