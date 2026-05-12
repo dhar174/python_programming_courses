@@ -3,14 +3,36 @@
 
 ---
 
+## Instructor Notes
+
+- **Course**: Python Programming (Advanced)
+- **Session**: Day 4, Hour 3 of 48, also Hour 15 in the Advanced runbook sequence
+- **Focus**: Helping learners lock a realistic capstone MVP, choose a delivery path, and create a one-page plan plus README skeleton before they build further.
+- **Source of truth**: `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`, Session 4, Hour 15.
+- **Prerequisites**: Learners should have enough project context to describe their core data, persistence plan, likely interface, analytics idea, and test targets.
+- **Advanced trajectory**: This is a planning workshop, not a coding hour. Learners use engineering judgment to protect scope and sequence work across core, persistence, UI, analytics, tests, and packaging.
+- **Instructor goal**: By the end of this hour, every learner has a realistic one-page capstone plan, a chosen GUI-first or API-first path, a README skeleton with run-instruction placeholders, and a named biggest risk.
+
+Important instructor positioning:
+
+- Keep students focused on deliverables they can finish. A smaller finished MVP is better than a large idea that never stabilizes.
+- Do not introduce runnable code requirements in this hour. Folder structure and README examples are planning artifacts, not a new implementation assignment.
+- Push for concrete verbs: add, update, save, load, search, calculate, validate, test, package.
+- Treat stretch goals as a pressure-release valve. Students can preserve ambition without making every idea mandatory.
+- The workshop must be long enough for writing, not just discussion. Protect the capstone planning time.
+
+---
+
 ## Timing Overview
 **Total Time:** 60 minutes  
-- Reframe the capstone and set workshop expectations: 5 minutes
-- Milestones and definition of done: 12 minutes
-- Delivery-path decision (GUI-first vs API-first): 10 minutes
-- Live Demo (sample folder structure + README skeleton + issue checklist): 8 minutes
-- Hands-On Workshop (one-page capstone plan): 20 minutes
+- Reframe the capstone and set workshop expectations: 4 minutes
+- Milestones and definition of done: 11 minutes
+- Delivery-path decision (GUI-first vs API-first): 7 minutes
+- Live Demo (sample folder structure + README skeleton + issue checklist): 7 minutes
+- Hands-On Workshop (one-page capstone plan): 26 minutes
 - Debrief & Exit Ticket: 5 minutes
+
+This one-hour workshop totals exactly 60 minutes: 4 + 11 + 7 + 7 + 26 + 5 = 60. The hands-on workshop is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect that workshop time. If discussion runs long, compress the delivery-path comparison rather than removing time from the one-page plan, because the written plan and README skeleton are the required artifacts.
 
 ---
 
@@ -28,7 +50,7 @@ By the end of this hour, you will be able to:
 
 ---
 
-## Section 1: Reframe the Capstone and Set Workshop Expectations (5 minutes)
+## Section 1: Reframe the Capstone and Set Workshop Expectations (4 minutes)
 
 ### What This Hour Is Really About
 
@@ -68,7 +90,7 @@ Give them about 30 seconds to think, then collect a few examples. Push for user-
 
 ---
 
-## Section 2: Milestones and Definition of Done (12 minutes)
+## Section 2: Milestones and Definition of Done (11 minutes)
 
 ### The Recommended Milestone Path
 
@@ -149,7 +171,7 @@ Exactly. And that is why we name the sequence explicitly.
 
 ---
 
-## Section 3: Choosing a Delivery Path – GUI-First or API-First (10 minutes)
+## Section 3: Choosing a Delivery Path – GUI-First or API-First (7 minutes)
 
 ### The Decision Matters
 
@@ -222,7 +244,7 @@ Then state the most important constraint: whichever path they choose, the core l
 
 ---
 
-## Section 4: Live Demo – Folder Structure, README Skeleton, and Issue Checklist (8 minutes)
+## Section 4: Live Demo – Folder Structure, README Skeleton, and Issue Checklist (7 minutes)
 
 ### Demo Goal
 
@@ -251,7 +273,7 @@ Explain that the exact names may vary, but the structure should make responsibil
 ### README Skeleton Demo
 
 ```markdown
-# Task Tracker Capstone
+## Task Tracker Capstone
 
 ## Project Goal
 One or two sentences describing the user problem.
@@ -309,7 +331,7 @@ Invite brief answers to keep the workshop energy active.
 
 ---
 
-## Section 5: Hands-On Workshop – One-Page Capstone Plan (20 minutes)
+## Section 5: Hands-On Workshop – One-Page Capstone Plan (26 minutes)
 
 ### Workshop Task
 
@@ -331,7 +353,7 @@ Their plan should include:
 ### Suggested Planning Template
 
 ```markdown
-# Capstone Plan
+## Capstone Plan
 
 ## Project Goal
 What user problem does this solve?
@@ -370,6 +392,21 @@ What user problem does this solve?
 - Optional feature 1
 - Optional feature 2
 ```
+
+### Workshop Mini-Budget
+
+The 26-minute workshop can feel large unless students know how to spend it. Use this mini-budget to keep them moving:
+
+- 3 minutes: write the project goal and MVP scope in user-centered language.
+- 4 minutes: identify the main data model, fields, and relationships.
+- 3 minutes: choose GUI-first or API-first and write one sentence explaining why.
+- 4 minutes: write the persistence plan, including what must survive restart.
+- 3 minutes: name one analytics idea that uses project data rather than invented sample data.
+- 4 minutes: write the test plan, including at least one core rule and one failure case.
+- 3 minutes: create the README skeleton with setup and run-instruction placeholders.
+- 2 minutes: separate stretch goals from MVP and name the biggest current risk.
+
+If students run behind, protect the data model, persistence plan, test plan, and README skeleton first. Those are the areas most likely to become vague if they are not written down during class.
 
 ### Completion Criteria
 
@@ -422,6 +459,7 @@ If a student finishes early, suggest:
 - add acceptance criteria for the top three features
 - add a “not in scope” section to defend the MVP boundary
 - sketch a user flow from launch to successful completion of one core task
+- write a one-sentence risk mitigation for the biggest current risk
 
 These extensions help strong students deepen their plan without forcing everyone into extra complexity.
 
@@ -683,6 +721,10 @@ Reinforce the central ideas:
 **[Ask students:]** What feature is definitely in your MVP, and what feature did you move to stretch goals today?
 
 That question is powerful because it reveals whether students actually protected scope.
+
+Then ask the runbook's quick-check question verbatim:
+
+**[Quick check:]** What feature is your MVP, and what is your biggest risk?
 
 ### Exit Ticket
 
