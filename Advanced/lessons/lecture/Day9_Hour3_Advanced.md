@@ -114,9 +114,15 @@ def parse_record_payload(payload: dict) -> dict:
     missing = REQUIRED_FIELDS - payload.keys()
     if missing:
         raise ValidationError(f"Missing required field: {sorted(missing)[0]}")
-    title = str(payload["title"]).strip()
-    category = str(payload["category"]).strip()
-    status = str(payload.get("status", "open")).strip().lower()
+    if not isinstance(payload["title"], str):
+        raise ValidationError("title must be a string")
+    if not isinstance(payload["category"], str):
+        raise ValidationError("category must be a string")
+    if "status" in payload and not isinstance(payload["status"], str):
+        raise ValidationError("status must be a string")
+    title = payload["title"].strip()
+    category = payload["category"].strip()
+    status = payload.get("status", "open").strip().lower()
     if not title:
         raise ValidationError("title cannot be blank")
     if not category:

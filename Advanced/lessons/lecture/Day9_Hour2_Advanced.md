@@ -120,6 +120,27 @@ def get_record(record_id: int):
     except NotFoundError:
         return error_response("not_found", f"Record {record_id} was not found", 404)
 
+@app.put("/records/<int:record_id>")
+def update_record(record_id: int):
+    payload = request.get_json(silent=True)
+    if payload is None:
+        return error_response("bad_json", "Request body must be JSON", 400)
+    try:
+        record = service.update_record(record_id, payload)
+    except ValidationError as exc:
+        return error_response("validation_error", str(exc), 400)
+    except NotFoundError:
+        return error_response("not_found", f"Record {record_id} was not found", 404)
+    return jsonify({"data": record.to_dict()})
+
+@app.delete("/records/<int:record_id>")
+def delete_record(record_id: int):
+    try:
+        service.delete_record(record_id)
+    except NotFoundError:
+        return error_response("not_found", f"Record {record_id} was not found", 404)
+    return jsonify({"data": {"deleted_id": record_id}})
+
 ```
 
 ### Demo narration guide

@@ -91,9 +91,11 @@ Use these prompts to keep the class active:
 # 1. python -m venv .venv
 # 2. source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 # 3. python -m pip install -r requirements.txt
-# 4. export TRACKER_API_KEY=dev-key  # Windows PowerShell: $env:TRACKER_API_KEY="dev-key"
-# 5. python -m api.app  # or python -m tracker_gui / python -m reports.generate_report
-# 6. pytest -q  # if dev requirements are installed
+# 4. python -m pip install -r requirements-dev.txt  # if you plan to run tests
+#    If requirements-dev.txt is not present yet: python -m pip install pytest pytest-cov
+# 5. export TRACKER_API_KEY=dev-key  # Windows PowerShell: $env:TRACKER_API_KEY="dev-key"
+# 6. python -m api.app  # or python -m tracker_gui / python -m reports.generate_report
+# 7. pytest -q
 
 ```
 
