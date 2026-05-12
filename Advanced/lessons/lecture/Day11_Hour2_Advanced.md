@@ -29,17 +29,7 @@ By the end of this hour, learners will be able to:
 - Keep the authoritative runbook open to Session 11, Hour 42; this script expands that hour into a near-verbatim delivery guide.
 - Use Python 3.11+ conventions: clear type hints, f-strings, `pathlib` for paths, context managers for resources, and small functions with one responsibility.
 - Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
-- For API-related examples, keep this error contract visible on the board:
-
-```json
-{
-  "error": {
-    "code": "validation_error",
-    "message": "name is required",
-    "request_id": "..."
-  }
-}
-```
+- Keep an analytics artifact checklist visible: saved file path, chart title, labeled axes, readable categories, and a short sentence explaining what the chart answers.
 
 ## Opening Script (0-5 minutes)
 

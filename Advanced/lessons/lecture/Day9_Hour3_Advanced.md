@@ -99,10 +99,14 @@ Use these prompts to keep the class active:
 ```python
 REQUIRED_FIELDS = {"name", "status"}
 ALLOWED_STATUSES = {"new", "active", "done"}
+ALLOWED_FIELDS = REQUIRED_FIELDS
 
 def parse_record_payload(payload: dict) -> dict:
     if not isinstance(payload, dict):
         raise ValidationError("Payload must be a JSON object")
+    unknown = payload.keys() - ALLOWED_FIELDS
+    if unknown:
+        raise ValidationError(f"Unknown field: {sorted(unknown)[0]}")
     missing = REQUIRED_FIELDS - payload.keys()
     if missing:
         raise ValidationError(f"Missing required field: {sorted(missing)[0]}")
@@ -114,8 +118,8 @@ def parse_record_payload(payload: dict) -> dict:
         raise ValidationError(f"status must be one of {sorted(ALLOWED_STATUSES)}")
     return {"name": name, "status": status}
 
-def record_to_response(record: TrackerRecord) -> dict:
-    return {"id": record.id, "name": record.name, "status": record.status}
+def record_to_response(record) -> dict:
+    return record.to_dict()
 
 ```
 

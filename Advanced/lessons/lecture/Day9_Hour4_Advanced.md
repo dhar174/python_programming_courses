@@ -103,8 +103,9 @@ from flask import Flask
 def create_app(db_path: Path | None = None) -> Flask:
     app = Flask(__name__)
     database_path = db_path or Path("data/tracker.db")
-    repository = SQLiteRecordRepository(database_path)
-    service = TrackerService(repository)
+    repo = SQLiteTrackerRepository(database_path)
+    repo.init_db()
+    service = TrackerService(repo=repo)
 
     register_routes(app, service)
     return app

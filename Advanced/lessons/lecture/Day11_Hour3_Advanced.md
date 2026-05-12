@@ -29,17 +29,7 @@ By the end of this hour, learners will be able to:
 - Keep the authoritative runbook open to Session 11, Hour 43; this script expands that hour into a near-verbatim delivery guide.
 - Use Python 3.11+ conventions: clear type hints, f-strings, `pathlib` for paths, context managers for resources, and small functions with one responsibility.
 - Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
-- For API-related examples, keep this error contract visible on the board:
-
-```json
-{
-  "error": {
-    "code": "validation_error",
-    "message": "name is required",
-    "request_id": "..."
-  }
-}
-```
+- Keep a regression suitability checklist visible: numeric input, numeric target, enough rows, no hidden categorical strings, and a plain-language explanation of what the model can and cannot claim.
 
 ## Opening Script (0-5 minutes)
 
@@ -100,20 +90,20 @@ Use these prompts to keep the class active:
 import pandas as pd
 
 df = pd.read_csv("data/records.csv")
-df["hours_spent"] = pd.to_numeric(df["hours_spent"], errors="coerce")
-df["cost"] = pd.to_numeric(df["cost"], errors="coerce")
-model_data = df.dropna(subset=["hours_spent", "cost"])
+df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
+model_data = df.dropna(subset=["amount"]).reset_index(drop=True)
+model_data["record_number"] = model_data.index + 1
 
 try:
     from sklearn.linear_model import LinearRegression
     from sklearn.metrics import mean_absolute_error
     from sklearn.model_selection import train_test_split
 except ImportError:
-    correlation = model_data["hours_spent"].corr(model_data["cost"])
+    correlation = model_data["record_number"].corr(model_data["amount"])
     print(f"scikit-learn unavailable; correlation fallback: {correlation:.2f}")
 else:
-    X = model_data[["hours_spent"]]
-    y = model_data["cost"]
+    X = model_data[["record_number"]]
+    y = model_data["amount"]
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,

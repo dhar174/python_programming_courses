@@ -97,13 +97,15 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
+from api_client import TrackerApiError
+
 # Option A sketch: GUI calls the API client
 def on_save_clicked() -> None:
     payload = {"name": name_var.get(), "status": status_var.get()}
     try:
         created = api_client.create_record(payload)
-    except ApiClientError as exc:
-        messagebox.showerror("Save failed", exc.user_message)
+    except TrackerApiError as exc:
+        messagebox.showerror("Save failed", str(exc))
         return
     refresh_table()
     status_var.set(f"Saved record {created['id']}")

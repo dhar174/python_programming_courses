@@ -117,7 +117,7 @@ class TrackerApiClient:
             headers["X-API-Key"] = self.api_key
         return headers
 
-    def _request_json(self, method: str, path: str, **kwargs) -> dict:
+    def _request_json(self, method: str, path: str, **kwargs) -> dict | None:
         url = f"{self.base_url}{path}"
         try:
             response = requests.request(
@@ -128,6 +128,11 @@ class TrackerApiClient:
                 **kwargs,
             )
             response.raise_for_status()
+            if response.status_code == 204 or not response.content:
+                return None
+            content_type = response.headers.get("Content-Type", "")
+            if "application/json" not in content_type:
+                return None
             return response.json()
         except requests.Timeout as exc:
             raise TrackerApiError("API request timed out. Check that the server is running.") from exc
@@ -140,10 +145,16 @@ class TrackerApiClient:
             raise TrackerApiError("API returned a response that was not valid JSON.") from exc
 
     def list_records(self) -> list[dict]:
-        return self._request_json("GET", "/records")["data"]
+        payload = self._request_json("GET", "/records")
+        if not payload:
+            raise TrackerApiError("API returned no record data.")
+        return payload["data"]
 
     def create_record(self, payload: dict) -> dict:
-        return self._request_json("POST", "/records", json=payload)["data"]
+        response_payload = self._request_json("POST", "/records", json=payload)
+        if not response_payload:
+            raise TrackerApiError("API returned no created record data.")
+        return response_payload["data"]
 
 ```
 
@@ -228,7 +239,7 @@ Use this sequence aloud when helping a learner:
 If learners meet the completion criteria early, offer one of these stretch goals:
 
 - Add a simple CLI command that uses the client.
-- Create a custom ApiClientError with status_code and message.
+- Extend `TrackerApiError` with status_code and parsed API error messages.
 - Add retry only for safe GET requests and discuss the tradeoff.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
@@ -376,7 +387,7 @@ During the lab, avoid answering first with a complete solution. Ask learners to 
 - "Show me the sad-path evidence: timeouts, connection errors, and non-2xx responses become helpful messages or a custom client exception."
 - "Show me where this behavior would be changed if the requirement changed next week."
 
-If a learner is ahead, direct them to this extension only after the required artifact is stable: define `ApiClientError(status_code, message)` and include parsed API error messages when available. Make it clear that extension work must be reversible. A good extension leaves the required path cleaner or better documented. A risky extension creates a second debugging problem right before the hour closes.
+If a learner is ahead, direct them to this extension only after the required artifact is stable: extend `TrackerApiError` with `status_code` and include parsed API error messages when available. Make it clear that extension work must be reversible. A good extension leaves the required path cleaner or better documented. A risky extension creates a second debugging problem right before the hour closes.
 
 For pairs, assign roles for five-minute intervals. The driver types and runs commands. The navigator reads the contract and watches for boundary violations. Halfway through, switch roles. This keeps faster learners from taking over and gives quieter learners a defined speaking responsibility. Ask the navigator to use the review question: If the API URL changes, how many files should need editing?
 
