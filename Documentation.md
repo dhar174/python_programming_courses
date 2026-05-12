@@ -6,9 +6,9 @@ _Log of milestone status updates and key decisions. Future agents and contributo
 
 ## Milestone Status
 
-- **2026-04-19 — Project content-complete**: Both modules are fully authored. All 96 lecture hours, 24 assignment notebooks, 24 HTML quizzes, and 24 `_answers.json` quiz export files are present. Sample student submissions added to all 24 Advanced assignment directories. See `Plans.md` for full milestone breakdown.
+- **2026-04-19 — Project inventory present; remediation open**: All 96 per-hour lecture files, 24 assignment notebooks, 24 HTML quizzes, and 24 `_answers.json` quiz export files are present. Lecture-depth remediation remains open under #269, Basics sample submissions for Days 2, 3, 4, 5, 6, and 8 remain open under #270, and slide/source remediation remains open under #271.
 
-- **2026-04-19 — Autograder fully operational on both modules**: `autograder.yml` grades assignments and quizzes for all 24 days. All `setup.json` files use the standardized bash resolution script. Results committed to timestamped `autograder-results-*` branches on manual dispatch.
+- **2026-04-19 — Autograder pipeline present with validation gaps tracked**: `autograder.yml` can stage assignment submissions from Basics or Advanced directories, grades Basics HTML quizzes, and writes manual-dispatch results to timestamped `autograder-results-*` branches. Advanced quiz answer exports are present, but Advanced quiz grading and PR validation are not yet wired into the workflow. End-to-end Basics sample-submission coverage is still tracked under #270.
 
 - **2026-02-26 — Autograder workflow review (Days 1–2)**: Completed a workflow + integration audit and drafted a manual testing plan. See the report below for findings, alignment notes, and a triggerable test suite design.
 
@@ -27,6 +27,8 @@ _Log of milestone status updates and key decisions. Future agents and contributo
 - **2026-04-16 — Autograder setup.json standardized**: All 24 assignment `setup.json` files now use a single standardized bash glob pattern for notebook discovery. Fallback loops are removed in favour of an explicit error if zero or >1 notebooks match the discovery pattern.
 
 - **2026-04-19 — Documentation overhauled (Diátaxis framework)**: `README.md` rewritten with multi-audience sections (Learner / Instructor / Contributor), CI badges, and accurate repository contents. `Architecture.md` and `Plans.md` updated with real project content. `Architecture.md` now codifies the six guiding principles and constraint table.
+
+- **2026-05-07 — Status language tied to live trackers**: Completion claims must distinguish present files from open remediation work. Use #269 for lecture depth, #270 for Basics sample submissions, #271 for slide/source remediation, and #272 for documentation sync and tracker hygiene.
 
 ## Autograder Workflow Review (2026-02-26)
 
