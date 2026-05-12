@@ -335,7 +335,7 @@ Use this exact instructor demo before independent work:
 6. Close the application process completely.
 7. Reopen the application.
 8. List or search again and confirm the record survived.
-9. Update the status or priority of that same record.
+9. Update the status or another field that exists in your schema for that same record.
 10. Delete it.
 11. Search for it again and confirm the app shows no result or an appropriate empty state.
 12. Show the repository code briefly and point to parameterized SQL.
@@ -352,21 +352,21 @@ from pathlib import Path
 
 
 def run_checkpoint_smoke_test() -> None:
-    repo = SQLiteTaskRepository(Path("data/checkpoint_tasks.db"))
+    repo = SQLiteRecordRepository(Path("data/checkpoint_tracker.db"))
     repo.init_db()
-    service = TaskService(repo=repo)
+    service = RecordService(repo=repo)
 
-    created = service.add_task("Checkpoint persistence proof")
-    print(f"Created: {created.task_id} {created.title}")
+    created = service.add_record("Checkpoint persistence proof", category="demo")
+    print(f"Created: {created.record_id} {created.title}")
 
-    matches = service.search_tasks("persistence", limit=10, offset=0)
+    matches = service.search_records("persistence", limit=10, offset=0)
     print(f"Search matches after create: {len(matches)}")
 
-    updated = service.mark_done(created.task_id)
-    print(f"Updated: {updated.task_id} {updated.status}")
+    updated = service.mark_done(created.record_id)
+    print(f"Updated: {updated.record_id} {updated.status}")
 
-    service.delete_task(created.task_id)
-    after_delete = service.search_tasks("persistence", limit=10, offset=0)
+    service.delete_record(created.record_id)
+    after_delete = service.search_records("persistence", limit=10, offset=0)
     print(f"Search matches after delete: {len(after_delete)}")
 
 
@@ -489,7 +489,7 @@ Keep the SQL structure controlled by your program. Put user-provided values in p
 
 Only offer these after the checkpoint is stable:
 
-- Add a second table and demonstrate one small `JOIN`, such as tasks and categories.
+- Add a second table and demonstrate one small `JOIN`, such as records and categories.
 - Add a count query for search results.
 - Add CSV export that reads from SQLite but does not replace SQLite as the source of truth.
 - Add a smoke-test script that runs the fast-grade workflow automatically on a practice database.
@@ -599,11 +599,11 @@ Show me the ID being passed to delete. Is it the database ID or the row number i
 
 Give these as short "debug stories" to normalize mistakes:
 
-**Story 1: The vanishing record.** A learner created records successfully, but they disappeared after restart. The problem was not the insert statement. The app was opening `data/tasks.db` when launched from one folder and `tasks.db` in the project root when launched from another. The fix was to use a clear `Path` relative to the project or application data directory and print the resolved path during development.
+**Story 1: The vanishing record.** A learner created records successfully, but they disappeared after restart. The problem was not the insert statement. The app was opening `data/tracker.db` when launched from one folder and `tracker.db` in the project root when launched from another. The fix was to use a clear `Path` relative to the project or application data directory and print the resolved path during development.
 
 **Story 2: The invisible schema change.** A learner added a `priority` field to the model and query, but the existing table did not have a `priority` column. The `CREATE TABLE IF NOT EXISTS` statement did not modify the old table because the table already existed. For the course practice database, the learner recreated the practice database after confirming no important data was inside. The teaching point is that schema and model evolve together.
 
-**Story 3: The list index bug.** A learner searched for open tasks, selected the first visible row, and clicked delete. The app deleted ID 1 instead of the selected task because it used the table row number. The fix was to store the selected database ID with the displayed row and pass that ID into the service.
+**Story 3: The list index bug.** A learner searched for open records, selected the first visible row, and clicked delete. The app deleted ID 1 instead of the selected record because it used the table row number. The fix was to store the selected database ID with the displayed row and pass that ID into the service.
 
 ### Professional Habits to Praise
 

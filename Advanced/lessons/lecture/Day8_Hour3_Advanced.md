@@ -70,7 +70,7 @@ Instead, do this:
 ```python
 term = f"%{search_term.strip().lower()}%"
 query = """
-    SELECT id, title, category, status
+    SELECT id, title, category, status, priority, created_at
     FROM records
     WHERE lower(title) LIKE ?
        OR lower(category) LIKE ?
@@ -126,7 +126,7 @@ The simplest version uses:
 Example:
 
 ```sql
-SELECT id, title, category, status
+SELECT id, title, category, status, priority, created_at
 FROM records
 ORDER BY id ASC
 LIMIT 20 OFFSET 40;
@@ -158,10 +158,14 @@ That is enough to teach the pattern and improve the app.
 Let me show a repository method that stays readable and safe.
 
 ```python
-def search_records(
+from contextlib import closing
+
+
+def search(
     self,
     term: str = "",
     status: str | None = None,
+    category: str | None = None,
     limit: int = 20,
     offset: int = 0,
 ) -> list[Record]:
@@ -177,12 +181,16 @@ def search_records(
         conditions.append("status = ?")
         parameters.append(status)
 
+    if category:
+        conditions.append("category = ?")
+        parameters.append(category)
+
     where_clause = ""
     if conditions:
         where_clause = "WHERE " + " AND ".join(conditions)
 
     query = f"""
-        SELECT id, title, category, status
+        SELECT id, title, category, status, priority, created_at
         FROM records
         {where_clause}
         ORDER BY id ASC
@@ -190,7 +198,7 @@ def search_records(
     """
     parameters.extend([limit, offset])
 
-    with sqlite3.connect(self.db_path) as connection:
+    with closing(sqlite3.connect(self.db_path)) as connection:
         rows = connection.execute(query, tuple(parameters)).fetchall()
 
     return [Record.from_row(row) for row in rows]
@@ -210,8 +218,11 @@ Then show a tiny GUI or script hook:
 def on_search(self):
     term = self.search_var.get()
     status = self.status_var.get() or None
+    category = self.category_var.get() or None
     self.current_offset = 0
-    records = self.service.search_records(term=term, status=status, limit=20, offset=0)
+    records = self.service.search_records(
+        term=term, status=status, category=category, limit=20, offset=0
+    )
     self.populate_table(records)
 
 
@@ -220,6 +231,7 @@ def on_next_page(self):
     records = self.service.search_records(
         term=self.search_var.get(),
         status=self.status_var.get() or None,
+        category=self.category_var.get() or None,
         limit=20,
         offset=self.current_offset,
     )
@@ -368,6 +380,7 @@ Let's look at a complete, safe repository method. The user provides values: a te
 from __future__ import annotations
 
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -378,6 +391,8 @@ class Record:
     title: str
     category: str
     status: str
+    priority: int = 3
+    created_at: str | None = None
 
     @classmethod
     def from_row(cls, row: sqlite3.Row) -> "Record":
@@ -386,6 +401,8 @@ class Record:
             title=row["title"],
             category=row["category"],
             status=row["status"],
+            priority=row["priority"],
+            created_at=row["created_at"],
         )
 
 
@@ -436,7 +453,7 @@ class SQLiteRecordRepository:
             where_clause = "WHERE " + " AND ".join(conditions)
 
         query = f"""
-            SELECT id, title, category, status
+            SELECT id, title, category, status, priority, created_at
             FROM records
             {where_clause}
             ORDER BY id ASC
@@ -444,7 +461,7 @@ class SQLiteRecordRepository:
         """
         parameters.extend([limit, offset])
 
-        with self._connect() as connection:
+        with closing(self._connect()) as connection:
             rows = connection.execute(query, tuple(parameters)).fetchall()
 
         return [Record.from_row(row) for row in rows]
@@ -462,7 +479,7 @@ Use these steps for the live demonstration:
 
 1. Seed the database with at least 30 records. Include repeated statuses such as `open`, `blocked`, and `done`.
 2. Show a plain list view first so learners understand the starting point.
-3. Add a repository `search()` method that accepts `term`, `status`, `limit`, and `offset`.
+3. Add a repository `search()` method that accepts `term`, optional `status` and `category` filters, `limit`, and `offset`.
 4. Demonstrate a text search for a term that appears in several titles.
 5. Demonstrate an exact status filter, such as `status="open"`.
 6. Demonstrate search plus filter together.
@@ -493,7 +510,7 @@ The danger is not only malicious input. The danger is also ordinary input that c
 
 **[Instructor speaks:]**
 
-Here is a small service and UI-style controller example. The repository does the query. The controller remembers the current term, status, and offset.
+Here is a small service and UI-style controller example. The repository does the query. The controller remembers the current term, filters, and offset.
 
 ```python
 class RecordService:
@@ -504,12 +521,14 @@ class RecordService:
         self,
         term: str = "",
         status: str | None = None,
+        category: str | None = None,
         limit: int = 20,
         offset: int = 0,
     ) -> list[Record]:
         return self.repo.search(
             term=term,
             status=status,
+            category=category,
             limit=limit,
             offset=offset,
         )
@@ -520,12 +539,16 @@ class RecordSearchController:
         self.service = service
         self.term = ""
         self.status: str | None = None
+        self.category: str | None = None
         self.page_size = 20
         self.offset = 0
 
-    def new_search(self, term: str, status: str | None) -> list[Record]:
+    def new_search(
+        self, term: str, status: str | None, category: str | None
+    ) -> list[Record]:
         self.term = term
         self.status = status
+        self.category = category
         self.offset = 0
         return self._load_current_page()
 
@@ -541,6 +564,7 @@ class RecordSearchController:
         return self.service.search_records(
             term=self.term,
             status=self.status,
+            category=self.category,
             limit=self.page_size,
             offset=self.offset,
         )
@@ -565,7 +589,7 @@ Minimum required work:
 
 Recommended additional work:
 
-1. Add one exact-match filter such as status or category.
+1. Add one exact-match filter such as status, then add category if your interface has a category selector.
 2. Add `LIMIT` and `OFFSET`.
 3. Reset the offset to zero when the search term or filter changes.
 4. Add Previous and Next actions, keeping the previous page from going below offset zero.
@@ -618,7 +642,7 @@ If this produces the correct rows, the SQL is not the first suspect anymore. Now
 
 Offer these only after the core search works:
 
-- Add a controlled sort option using a dictionary of allowed columns already present in the Day 8 schema, such as `{"title": "title ASC", "category": "category ASC", "status": "status ASC, id ASC"}`.
+- Add a controlled sort option using a dictionary of allowed columns already present in the Day 8 schema, such as `{"title": "title ASC", "category": "category ASC", "priority": "priority DESC, id ASC", "created": "created_at DESC, id ASC"}`.
 - Add a total-count method so the UI can display "Page 2 of 5."
 - Add a "clear search" action that resets term, filter, and offset.
 - Add an index on a commonly filtered column such as `status` after explaining that indexing is a performance topic, not a requirement for today's milestone.
@@ -676,7 +700,10 @@ Third, in the UI or CLI, we collect user state:
 ```python
 term = search_box_value.strip()
 status = selected_status or None
-records = service.search_records(term=term, status=status, limit=20, offset=0)
+category = selected_category or None
+records = service.search_records(
+    term=term, status=status, category=category, limit=20, offset=0
+)
 ```
 
 Notice that only the last layer knows about the search box. Only the first layer knows SQL. The service connects the user intent to the data operation without becoming a database dumping ground.
@@ -692,11 +719,13 @@ ALLOWED_SORTS = {
     "title": "title ASC, id ASC",
     "category": "category ASC, id ASC",
     "status": "status ASC, id ASC",
+    "priority": "priority DESC, id ASC",
+    "created": "created_at DESC, id ASC",
 }
 
 sort_clause = ALLOWED_SORTS.get(sort_choice, "id ASC")
 query = f"""
-    SELECT id, title, category, status
+    SELECT id, title, category, status, priority, created_at
     FROM records
     ORDER BY {sort_clause}
     LIMIT ? OFFSET ?

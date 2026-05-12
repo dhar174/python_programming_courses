@@ -181,6 +181,9 @@ class TrackerService:
 Now the repository implementation:
 
 ```python
+from contextlib import closing
+
+
 class SQLiteTrackerRepository:
     def __init__(self, db_path: str):
         self.db_path = db_path
@@ -190,7 +193,7 @@ class SQLiteTrackerRepository:
             INSERT INTO records (title, category, status)
             VALUES (?, ?, ?)
         """
-        with sqlite3.connect(self.db_path) as connection:
+        with closing(sqlite3.connect(self.db_path)) as connection:
             cursor = connection.execute(
                 query, (record.title, record.category, record.status)
             )
@@ -200,11 +203,11 @@ class SQLiteTrackerRepository:
 
     def list_all(self) -> list[Record]:
         query = """
-            SELECT id, title, category, status
+            SELECT id, title, category, status, priority, created_at
             FROM records
             ORDER BY id ASC
         """
-        with sqlite3.connect(self.db_path) as connection:
+        with closing(sqlite3.connect(self.db_path)) as connection:
             rows = connection.execute(query).fetchall()
         return [Record.from_row(row) for row in rows]
 ```
@@ -359,44 +362,51 @@ Here is a compact version of the pattern. This is not the only way to structure 
 from __future__ import annotations
 
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
 
 @dataclass(slots=True)
-class Task:
+class Record:
     title: str
+    category: str
     status: str = "open"
-    task_id: int | None = None
+    priority: int = 3
+    created_at: str | None = None
+    record_id: int | None = None
 
     @classmethod
-    def from_row(cls, row: sqlite3.Row) -> "Task":
+    def from_row(cls, row: sqlite3.Row) -> "Record":
         return cls(
-            task_id=row["id"],
+            record_id=row["id"],
             title=row["title"],
+            category=row["category"],
             status=row["status"],
+            priority=row["priority"],
+            created_at=row["created_at"],
         )
 
 
-class TaskRepository(Protocol):
+class RecordRepository(Protocol):
     def init_db(self) -> None:
         ...
 
-    def add(self, task: Task) -> Task:
+    def add(self, record: Record) -> Record:
         ...
 
-    def list_all(self) -> list[Task]:
+    def list_all(self) -> list[Record]:
         ...
 
-    def update_status(self, task_id: int, status: str) -> Task:
+    def update_status(self, record_id: int, status: str) -> Record:
         ...
 
-    def delete(self, task_id: int) -> None:
+    def delete(self, record_id: int) -> None:
         ...
 
 
-class SQLiteTaskRepository:
+class SQLiteRecordRepository:
     def __init__(self, db_path: Path) -> None:
         self.db_path = db_path
 
@@ -408,108 +418,129 @@ class SQLiteTaskRepository:
 
     def init_db(self) -> None:
         create_table = """
-            CREATE TABLE IF NOT EXISTS tasks (
+            CREATE TABLE IF NOT EXISTS records (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
-                status TEXT NOT NULL CHECK (status IN ('open', 'done'))
+                category TEXT NOT NULL,
+                status TEXT NOT NULL CHECK (status IN ('open', 'done')),
+                priority INTEGER NOT NULL DEFAULT 3,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         """
-        with self._connect() as connection:
+        with closing(self._connect()) as connection:
             connection.execute(create_table)
+            connection.commit()
 
-    def add(self, task: Task) -> Task:
-        insert_task = """
-            INSERT INTO tasks (title, status)
-            VALUES (?, ?)
+    def add(self, record: Record) -> Record:
+        insert_record = """
+            INSERT INTO records (title, category, status, priority)
+            VALUES (?, ?, ?, ?)
         """
-        with self._connect() as connection:
-            cursor = connection.execute(insert_task, (task.title, task.status))
+        select_record = """
+            SELECT id, title, category, status, priority, created_at
+            FROM records
+            WHERE id = ?
+        """
+        with closing(self._connect()) as connection:
+            cursor = connection.execute(
+                insert_record,
+                (record.title, record.category, record.status, record.priority),
+            )
             new_id = cursor.lastrowid
-        return Task(task_id=new_id, title=task.title, status=task.status)
+            row = connection.execute(select_record, (new_id,)).fetchone()
+            connection.commit()
+        return Record.from_row(row)
 
-    def list_all(self) -> list[Task]:
-        select_tasks = """
-            SELECT id, title, status
-            FROM tasks
+    def list_all(self) -> list[Record]:
+        select_records = """
+            SELECT id, title, category, status, priority, created_at
+            FROM records
             ORDER BY id ASC
         """
-        with self._connect() as connection:
-            rows = connection.execute(select_tasks).fetchall()
-        return [Task.from_row(row) for row in rows]
+        with closing(self._connect()) as connection:
+            rows = connection.execute(select_records).fetchall()
+        return [Record.from_row(row) for row in rows]
 
-    def update_status(self, task_id: int, status: str) -> Task:
-        update_task = """
-            UPDATE tasks
+    def update_status(self, record_id: int, status: str) -> Record:
+        update_record = """
+            UPDATE records
             SET status = ?
             WHERE id = ?
         """
-        select_task = """
-            SELECT id, title, status
-            FROM tasks
+        select_record = """
+            SELECT id, title, category, status, priority, created_at
+            FROM records
             WHERE id = ?
         """
-        with self._connect() as connection:
-            connection.execute(update_task, (status, task_id))
-            row = connection.execute(select_task, (task_id,)).fetchone()
+        with closing(self._connect()) as connection:
+            connection.execute(update_record, (status, record_id))
+            row = connection.execute(select_record, (record_id,)).fetchone()
+            connection.commit()
 
         if row is None:
-            raise ValueError(f"No task found with id {task_id}")
-        return Task.from_row(row)
+            raise ValueError(f"No record found with id {record_id}")
+        return Record.from_row(row)
 
-    def delete(self, task_id: int) -> None:
-        delete_task = """
-            DELETE FROM tasks
+    def delete(self, record_id: int) -> None:
+        delete_record = """
+            DELETE FROM records
             WHERE id = ?
         """
-        with self._connect() as connection:
-            connection.execute(delete_task, (task_id,))
+        with closing(self._connect()) as connection:
+            connection.execute(delete_record, (record_id,))
+            connection.commit()
 
 
-class TaskService:
-    def __init__(self, repo: TaskRepository) -> None:
+class RecordService:
+    def __init__(self, repo: RecordRepository) -> None:
         self.repo = repo
 
-    def add_task(self, title: str) -> Task:
+    def add_record(self, title: str, category: str, priority: int = 3) -> Record:
         clean_title = title.strip()
+        clean_category = category.strip()
         if not clean_title:
-            raise ValueError("Task title is required.")
-        return self.repo.add(Task(title=clean_title))
+            raise ValueError("Record title is required.")
+        if not clean_category:
+            raise ValueError("Record category is required.")
+        return self.repo.add(
+            Record(title=clean_title, category=clean_category, priority=priority)
+        )
 
-    def list_tasks(self) -> list[Task]:
+    def list_records(self) -> list[Record]:
         return self.repo.list_all()
 
-    def mark_done(self, task_id: int) -> Task:
-        return self.repo.update_status(task_id=task_id, status="done")
+    def mark_done(self, record_id: int) -> Record:
+        return self.repo.update_status(record_id=record_id, status="done")
 
-    def delete_task(self, task_id: int) -> None:
-        self.repo.delete(task_id)
+    def delete_record(self, record_id: int) -> None:
+        self.repo.delete(record_id)
 
 
-def build_service() -> TaskService:
-    repository = SQLiteTaskRepository(Path("data/tasks.db"))
+def build_service() -> RecordService:
+    repository = SQLiteRecordRepository(Path("data/tracker.db"))
     repository.init_db()
-    return TaskService(repo=repository)
+    return RecordService(repo=repository)
 ```
 
-Pause after showing this and ask learners to identify each responsibility. The model represents one task. The repository owns persistence and SQL. The service owns application rules such as title validation. The builder function wires the pieces together. That is dependency injection in a small, practical form.
+Pause after showing this and ask learners to identify each responsibility. The model represents one tracker record with the same fields used across the Day 8 examples. The repository owns persistence and SQL. The service owns application rules such as title and category validation. The builder function wires the pieces together. That is dependency injection in a small, practical form. Also point out `closing(self._connect())`: the `sqlite3` connection context manager handles commit/rollback, but `closing` makes the example explicit about releasing the connection.
 
 ### Demo steps
 
 Use these exact steps for the live demo. If you are teaching from a GUI app, translate "run script" into "launch the app," but keep the same evidence trail.
 
 1. Open the old app entry point and identify the existing repository construction. It may be a JSON repository, an in-memory repository, or a hard-coded list.
-2. Show learners the current service interface. Read method names aloud: `add_task`, `list_tasks`, `mark_done`, and `delete_task`.
+2. Show learners the current service interface. Read method names aloud: `add_record`, `list_records`, `mark_done`, and `delete_record`.
 3. Say: **"These method names are the contract the UI already knows."**
 4. Create or open the SQLite repository implementation.
 5. Confirm that `init_db()` creates the needed table with `CREATE TABLE IF NOT EXISTS`.
 6. Confirm that each SQL statement uses `?` placeholders for values.
-7. Change only the composition root or app startup code so it builds `SQLiteTaskRepository` and passes it into `TaskService`.
+7. Change only the composition root or app startup code so it builds `SQLiteRecordRepository` and passes it into `RecordService`.
 8. Run the app.
-9. Add a record named `Restart proof task`.
+9. Add a record named `Restart proof record`.
 10. List records and point out the new database ID.
 11. Close the app completely. Do not merely refresh the screen.
 12. Reopen the app using the same database path.
-13. List records again and show that `Restart proof task` is still present.
+13. List records again and show that `Restart proof record` is still present.
 14. Update that record to `done`.
 15. Delete the record.
 16. Close by saying: **"The service interface stayed stable; the storage implementation changed."**
@@ -563,7 +594,7 @@ Watch for these issues as you circulate:
 - **Service creates its own repository:** This makes tests and future swaps harder. Encourage passing the repository into the service.
 - **Missing `init_db()`:** The first run fails because the table does not exist.
 - **Destructive initialization:** Learners use `DROP TABLE` during startup and accidentally delete their own data.
-- **Wrong database path:** The app writes to `data/tasks.db` from one working directory and reads from another path later.
+- **Wrong database path:** The app writes to `data/tracker.db` from one working directory and reads from another path later.
 - **Row shape mismatch:** The repository returns tuples or dictionaries while the service expects model objects.
 - **ID confusion:** Update and delete use list index rather than database ID.
 - **Stale UI state:** The database changed, but the visible table was not refreshed.
@@ -575,7 +606,7 @@ When you see a pitfall, coach with questions before giving the answer. For examp
 If learners finish the core integration early, offer one of these extensions without moving beyond the hour's purpose:
 
 - Add an export command that reads from SQLite and writes a CSV or JSON file.
-- Add a tiny smoke-test script that builds the service, adds a task, lists tasks, and deletes the test task.
+- Add a tiny smoke-test script that builds the service, adds a record, lists records, and deletes the test record.
 - Add a log message at startup showing the resolved database path with `Path.resolve()`.
 - Add a repository protocol or abstract base class if the project already has multiple repository implementations.
 
@@ -611,9 +642,9 @@ Use this optional teaching block if learners finish the basic wiring but still c
 
 **[Instructor speaks:]**
 
-Let's slow down and name the boundary. The service layer is where our application language lives. In a tracker app, that language might be "add a task," "complete a task," "list open tasks," or "delete a task." The repository layer is where storage language lives. In a SQLite repository, that language is `INSERT`, `SELECT`, `UPDATE`, and `DELETE`. Good design does not mean those languages never meet. It means they meet in a controlled place.
+Let's slow down and name the boundary. The service layer is where our application language lives. In a tracker app, that language might be "add a record," "complete a record," "list open records," or "delete a record." The repository layer is where storage language lives. In a SQLite repository, that language is `INSERT`, `SELECT`, `UPDATE`, and `DELETE`. Good design does not mean those languages never meet. It means they meet in a controlled place.
 
-When the service calls `repo.add(task)`, that is the meeting point. The service does not know whether `repo.add()` writes to SQLite, a JSON file, or a test double. The repository does not decide whether an empty title is acceptable. Each layer has a job.
+When the service calls `repo.add(record)`, that is the meeting point. The service does not know whether `repo.add()` writes to SQLite, a JSON file, or a test double. The repository does not decide whether an empty title is acceptable. Each layer has a job.
 
 Here is a useful board diagram to draw:
 
@@ -637,11 +668,11 @@ After drawing it, ask learners to point to the place where the storage swap happ
 
 Run this as a five-minute verbal exercise:
 
-**Scenario 1:** A learner adds a task, sees it immediately, closes the app, reopens it, and the task is gone.
+**Scenario 1:** A learner adds a record, sees it immediately, closes the app, reopens it, and the record is gone.
 
 Ask: "Which layer do we inspect first?" The answer is not automatically the UI. Start with the source of truth. Is the app writing to SQLite? Is it committing? Is the database path the same on restart? Is startup deleting the data?
 
-**Scenario 2:** A learner adds a task and gets an error that the `tasks` table does not exist.
+**Scenario 2:** A learner adds a record and gets an error that the `records` table does not exist.
 
 Ask: "What contract did startup fail to honor?" The likely answer is `init_db()` did not run before repository methods were used, or it ran against a different database path. This is why initialization belongs in the application composition step, before the service is used.
 
@@ -667,10 +698,10 @@ This is a less clean pattern:
 
 ```python
 def on_add_button_click() -> None:
-    repo = SQLiteTaskRepository(Path("data/tasks.db"))
+    repo = SQLiteRecordRepository(Path("data/tracker.db"))
     repo.init_db()
-    service = TaskService(repo)
-    service.add_task(title_entry.get())
+    service = RecordService(repo)
+    service.add_record(title_entry.get(), category_entry.get())
 ```
 
 The second version creates and initializes storage inside a button click. That makes the program harder to reason about and easier to break. We want storage wiring to happen once at startup, then ordinary user actions should call the already-built service.
