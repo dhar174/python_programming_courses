@@ -110,6 +110,7 @@ from tracker.service import TrackerService
 def create_app(db_path: Path | None = None) -> Flask:
     app = Flask(__name__)
     database_path = db_path or Path("data/tracker.db")
+    database_path.parent.mkdir(parents=True, exist_ok=True)
     repo = SQLiteTrackerRepository(str(database_path))
     repo.init_db()
     service = TrackerService(repo=repo)

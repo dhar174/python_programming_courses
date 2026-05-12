@@ -89,7 +89,8 @@ Use these prompts to keep the class active:
 ```text
 # README quickstart checklist
 # 1. python -m venv .venv
-# 2. source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+# 2. source .venv/bin/activate  # Windows cmd.exe: .venv\Scripts\activate
+#    Windows PowerShell: .venv\Scripts\Activate.ps1
 # 3. python -m pip install -r requirements.txt
 # 4. python -m pip install -r requirements-dev.txt  # if you plan to run tests
 #    If requirements-dev.txt is not present yet: python -m pip install pytest pytest-cov

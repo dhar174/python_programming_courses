@@ -97,6 +97,7 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
+import hmac
 import os
 from functools import wraps
 from flask import request
@@ -108,7 +109,7 @@ def require_api_key(view_func):
         supplied_key = request.headers.get("X-API-Key")
         if not expected_key:
             return error_response("server_misconfigured", "API key is not configured", 500)
-        if supplied_key != expected_key:
+        if not supplied_key or not hmac.compare_digest(supplied_key, expected_key):
             return error_response("unauthorized", "Missing or invalid API key", 401)
         return view_func(*args, **kwargs)
     return wrapper
