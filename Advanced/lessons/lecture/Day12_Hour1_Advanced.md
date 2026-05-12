@@ -70,6 +70,20 @@ By the end of this hour, learners will be able to:
 - Unit tests should avoid UI, network, and real shared files where possible.
 - pytest uses plain assert statements; fixtures replace repetitive setup.
 
+### unittest to pytest bridge
+
+Use this quick mapping if learners have seen `unittest` examples before:
+
+| unittest habit | pytest equivalent |
+| --- | --- |
+| `class TestThing(unittest.TestCase)` | Plain `def test_thing():` functions or lightweight test classes |
+| `self.assertEqual(actual, expected)` | `assert actual == expected` |
+| `setUp()` / `tearDown()` | Fixtures that return prepared objects or temporary resources |
+| `python -m unittest` | `pytest -q` |
+
+**[Instructor speaks:]**
+"pytest is not asking us to forget testing fundamentals. Arrange, Act, Assert still applies. The difference is that pytest lets the test read more like ordinary Python: prepare the object, call the behavior, and use a plain assert to state the expected result."
+
 ### Why this matters in real projects
 
 **[Instructor speaks:]**

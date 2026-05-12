@@ -98,22 +98,32 @@ Use these prompts to keep the class active:
 
 ```python
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import train_test_split
 
 df = pd.read_csv("data/records.csv")
 df["hours_spent"] = pd.to_numeric(df["hours_spent"], errors="coerce")
 df["cost"] = pd.to_numeric(df["cost"], errors="coerce")
 model_data = df.dropna(subset=["hours_spent", "cost"])
 
-X = model_data[["hours_spent"]]
-y = model_data["cost"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
-model = LinearRegression()
-model.fit(X_train, y_train)
-predictions = model.predict(X_test)
-print(f"MAE: {mean_absolute_error(y_test, predictions):.2f}")
+try:
+    from sklearn.linear_model import LinearRegression
+    from sklearn.metrics import mean_absolute_error
+    from sklearn.model_selection import train_test_split
+except ImportError:
+    correlation = model_data["hours_spent"].corr(model_data["cost"])
+    print(f"scikit-learn unavailable; correlation fallback: {correlation:.2f}")
+else:
+    X = model_data[["hours_spent"]]
+    y = model_data["cost"]
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.25,
+        random_state=42,
+    )
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+    print(f"MAE: {mean_absolute_error(y_test, predictions):.2f}")
 
 ```
 

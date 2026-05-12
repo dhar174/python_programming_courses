@@ -100,6 +100,11 @@ Use these prompts to keep the class active:
 from dataclasses import dataclass
 import requests
 
+
+class TrackerApiError(RuntimeError):
+    """User-facing API client error for predictable request failures."""
+
+
 @dataclass
 class TrackerApiClient:
     base_url: str
@@ -112,15 +117,33 @@ class TrackerApiClient:
             headers["X-API-Key"] = self.api_key
         return headers
 
+    def _request_json(self, method: str, path: str, **kwargs) -> dict:
+        url = f"{self.base_url}{path}"
+        try:
+            response = requests.request(
+                method,
+                url,
+                timeout=self.timeout,
+                headers=self._headers(),
+                **kwargs,
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.Timeout as exc:
+            raise TrackerApiError("API request timed out. Check that the server is running.") from exc
+        except requests.ConnectionError as exc:
+            raise TrackerApiError("Could not connect to the API. Check the base URL and port.") from exc
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else "unknown"
+            raise TrackerApiError(f"API returned an unsuccessful status: {status}") from exc
+        except ValueError as exc:
+            raise TrackerApiError("API returned a response that was not valid JSON.") from exc
+
     def list_records(self) -> list[dict]:
-        response = requests.get(f"{self.base_url}/records", timeout=self.timeout)
-        response.raise_for_status()
-        return response.json()["data"]
+        return self._request_json("GET", "/records")["data"]
 
     def create_record(self, payload: dict) -> dict:
-        response = requests.post(f"{self.base_url}/records", json=payload, headers=self._headers(), timeout=self.timeout)
-        response.raise_for_status()
-        return response.json()["data"]
+        return self._request_json("POST", "/records", json=payload)["data"]
 
 ```
 

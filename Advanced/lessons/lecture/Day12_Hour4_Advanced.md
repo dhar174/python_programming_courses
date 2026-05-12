@@ -13,7 +13,7 @@
 | 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
-| 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+| 56-60 | Quick check / exit ticket | Verify final readiness and name post-course next steps. |
 
 ## Learning Outcomes
 
@@ -155,11 +155,11 @@ Final: deliver a 3-5 minute capstone demo, complete a short certification-style 
 ### Required learner workflow
 
 1. Start from a known-good run.
-2. Make one small implementation change.
-3. Run the narrowest check possible.
-4. Add the happy-path proof.
-5. Add one sad-path proof.
-6. Commit or save the working state before attempting an extension.
+2. Rehearse the 3-5 minute demo from the README or lab notes.
+3. Run the narrowest check that proves the demo still works.
+4. Capture the happy-path proof.
+5. Capture one sad-path proof or explain the next diagnostic step.
+6. Commit or save the final working state before adding polish.
 
 ### Completion criteria
 
@@ -207,7 +207,7 @@ Ask learners to answer individually, then discuss two or three responses:
 - Name one skill you will apply immediately at work and one skill you will keep practicing.
 - What is the happy path you proved this hour?
 - What sad path did you test or plan to test next?
-- Which file or module is now most important for the next hour?
+- Which file, command, or README step is most important for your post-course practice plan?
 
 **[Instructor speaks:]**
 "Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
@@ -301,7 +301,7 @@ Choose one depending on time:
 - Pair check: partners run each other’s command from the README or lab note.
 - Demo lottery: randomly choose two learners to show one happy path and one sad path.
 
-Close the hour by connecting forward: the next hour assumes today has a runnable artifact. If a learner is behind, help them identify the smallest safe stopping point rather than encouraging a risky last-minute rewrite.
+Close the hour by connecting forward beyond the course: today's runnable artifact becomes portfolio evidence and a practice baseline. If a learner is behind, help them identify the smallest safe stopping point rather than encouraging a risky last-minute rewrite.
 
 ## Instructor Cross-Check Concepts
 

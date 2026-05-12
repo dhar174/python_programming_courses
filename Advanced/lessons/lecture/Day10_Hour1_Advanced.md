@@ -116,7 +116,9 @@ def require_api_key(view_func):
 @app.post("/records")
 @require_api_key
 def create_record():
-    ...
+    payload = request.get_json(silent=True) or {}
+    record = tracker_service.create_record(payload)
+    return {"data": record.to_dict()}, 201
 
 ```
 

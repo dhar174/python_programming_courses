@@ -98,14 +98,27 @@ Use these prompts to keep the class active:
 
 ```python
 from pathlib import Path
+import matplotlib.pyplot as plt
 import pandas as pd
+
+
+def create_status_chart(summary: pd.DataFrame, output_path: Path) -> None:
+    fig, ax = plt.subplots()
+    ax.bar(summary["status"], summary["size"])
+    ax.set_title("Records by status")
+    ax.set_xlabel("Status")
+    ax.set_ylabel("Count")
+    fig.tight_layout()
+    fig.savefig(output_path)
+    plt.close(fig)
+
 
 def generate_report(data_path: Path, reports_dir: Path) -> None:
     reports_dir.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(data_path)
     summary = df.groupby("status", as_index=False).size()
     summary.to_csv(reports_dir / "summary.csv", index=False)
-    # Call chart helper here, for example create_status_chart(df, reports_dir / "status_counts.png")
+    create_status_chart(summary, reports_dir / "status_counts.png")
 
 def main() -> None:
     generate_report(Path("data/records.csv"), Path("reports"))
