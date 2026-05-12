@@ -91,7 +91,7 @@ from pathlib import Path
 import pandas as pd
 
 data_path = Path("data/records.csv")
-required_columns = {"amount"}
+target_column = "amount"
 
 if data_path.exists():
     df = pd.read_csv(data_path)
@@ -99,12 +99,17 @@ else:
     print(f"Using synthetic demo data because {data_path} was not found.")
     df = pd.DataFrame({"amount": [20, 35, 40, 55, 70, 80, 95, 110]})
 
-missing_columns = required_columns - set(df.columns)
-if missing_columns:
-    raise ValueError(f"Regression demo needs columns: {sorted(missing_columns)}")
+if target_column not in df.columns:
+    numeric_columns = list(df.select_dtypes(include="number").columns)
+    if numeric_columns:
+        target_column = numeric_columns[0]
+        print(f"Using numeric column {target_column!r} for the regression demo.")
+    else:
+        print("Using synthetic demo data because no numeric column was available.")
+        df = pd.DataFrame({"amount": [20, 35, 40, 55, 70, 80, 95, 110]})
 
-df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
-model_data = df.dropna(subset=["amount"]).reset_index(drop=True)
+df[target_column] = pd.to_numeric(df[target_column], errors="coerce")
+model_data = df.dropna(subset=[target_column]).reset_index(drop=True)
 if len(model_data) < 4:
     raise ValueError("Regression demo needs at least four numeric rows.")
 model_data["record_number"] = model_data.index + 1
@@ -114,11 +119,11 @@ try:
     from sklearn.metrics import mean_absolute_error
     from sklearn.model_selection import train_test_split
 except ImportError:
-    correlation = model_data["record_number"].corr(model_data["amount"])
+    correlation = model_data["record_number"].corr(model_data[target_column])
     print(f"scikit-learn unavailable; correlation fallback: {correlation:.2f}")
 else:
     X = model_data[["record_number"]]
-    y = model_data["amount"]
+    y = model_data[target_column]
     X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,

@@ -98,6 +98,7 @@ Use these prompts to keep the class active:
 
 ```python
 from api_client import TrackerApiError
+from tracker.service import ValidationError
 
 # Option A sketch: GUI calls the API client
 def on_save_clicked() -> None:
@@ -121,7 +122,11 @@ def save_directly_through_service() -> None:
         "category": category_var.get(),
         "status": status_var.get() or "open",
     }
-    record = tracker_service.create_record(payload)
+    try:
+        record = tracker_service.create_record(payload)
+    except ValidationError as exc:
+        messagebox.showerror("Save failed", str(exc))
+        return
     save_status_var.set(f"Saved record {record.id}")
 
 ```

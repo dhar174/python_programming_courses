@@ -90,11 +90,13 @@ Use these prompts to keep the class active:
 ### Demo steps
 
 1. Move route definitions into `api/routes.py` as a `register_routes(app, service)` helper.
-2. Create create_app(db_path: Path | None = None).
+2. Create `create_app(db_path: Path | None = None)`.
 3. Construct repository and service inside create_app.
 4. Run the same /health and /records smoke checks after the refactor.
 
 ### Demo code or command sketch
+
+`api/app.py`:
 
 ```python
 from pathlib import Path
@@ -114,8 +116,11 @@ def create_app(db_path: Path | None = None) -> Flask:
 
     register_routes(app, service)
     return app
+```
 
-# api/routes.py
+`api/routes.py`:
+
+```python
 from flask import Flask
 
 from tracker.service import TrackerService

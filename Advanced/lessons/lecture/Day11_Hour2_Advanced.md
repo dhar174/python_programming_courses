@@ -93,7 +93,16 @@ import pandas as pd
 
 REPORTS_DIR = Path("reports")
 REPORTS_DIR.mkdir(exist_ok=True)
-df = pd.read_csv(Path("data/records.csv"))
+data_path = Path("data/records.csv")
+if not data_path.exists():
+    raise FileNotFoundError(f"Chart input not found: {data_path}")
+
+df = pd.read_csv(data_path)
+required_columns = {"status"}
+missing_columns = required_columns - set(df.columns)
+if missing_columns:
+    raise ValueError(f"Chart data is missing columns: {sorted(missing_columns)}")
+
 counts = df["status"].fillna("unknown").value_counts().sort_index()
 
 fig, ax = plt.subplots(figsize=(8, 4))
