@@ -106,6 +106,7 @@ def search(
     self,
     term: str = "",
     status: str | None = None,
+    category: str | None = None,
     limit: int = 20,
     offset: int = 0,
 ) -> list[Record]:
@@ -162,48 +163,52 @@ import sqlite3
 from contextlib import closing
 
 
-def search(
-    self,
-    term: str = "",
-    status: str | None = None,
-    category: str | None = None,
-    limit: int = 20,
-    offset: int = 0,
-) -> list[Record]:
-    conditions = []
-    parameters: list[object] = []
+class SQLiteRecordRepository:
+    def __init__(self, db_path: str):
+        self.db_path = db_path
 
-    if term.strip():
-        wildcard = f"%{term.strip().lower()}%"
-        conditions.append("(lower(title) LIKE ? OR lower(category) LIKE ?)")
-        parameters.extend([wildcard, wildcard])
+    def search(
+        self,
+        term: str = "",
+        status: str | None = None,
+        category: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -> list[Record]:
+        conditions = []
+        parameters: list[object] = []
 
-    if status:
-        conditions.append("status = ?")
-        parameters.append(status)
+        if term.strip():
+            wildcard = f"%{term.strip().lower()}%"
+            conditions.append("(lower(title) LIKE ? OR lower(category) LIKE ?)")
+            parameters.extend([wildcard, wildcard])
 
-    if category:
-        conditions.append("category = ?")
-        parameters.append(category)
+        if status:
+            conditions.append("status = ?")
+            parameters.append(status)
 
-    where_clause = ""
-    if conditions:
-        where_clause = "WHERE " + " AND ".join(conditions)
+        if category:
+            conditions.append("category = ?")
+            parameters.append(category)
 
-    query = f"""
-        SELECT id, title, category, status, priority, created_at
-        FROM records
-        {where_clause}
-        ORDER BY id ASC
-        LIMIT ? OFFSET ?
-    """
-    parameters.extend([limit, offset])
+        where_clause = ""
+        if conditions:
+            where_clause = "WHERE " + " AND ".join(conditions)
 
-    with closing(sqlite3.connect(self.db_path)) as connection:
-        connection.row_factory = sqlite3.Row
-        rows = connection.execute(query, tuple(parameters)).fetchall()
+        query = f"""
+            SELECT id, title, category, status, priority, created_at
+            FROM records
+            {where_clause}
+            ORDER BY id ASC
+            LIMIT ? OFFSET ?
+        """
+        parameters.extend([limit, offset])
 
-    return [Record.from_row(row) for row in rows]
+        with closing(sqlite3.connect(self.db_path)) as connection:
+            connection.row_factory = sqlite3.Row
+            rows = connection.execute(query, tuple(parameters)).fetchall()
+
+        return [Record.from_row(row) for row in rows]
 ```
 
 Narrate what matters:
@@ -506,7 +511,7 @@ Now compare that to this unsafe habit:
 query = f"SELECT * FROM records WHERE title LIKE '%{term}%'"
 ```
 
-The danger is not only malicious input. The danger is also ordinary input that contains punctuation, quotes, or percent characters that behave differently than you expected. Parameterized queries give the database driver the job of treating the value as data.
+The danger is not only malicious input. The danger is also ordinary input that contains quotes or other characters that can break hand-built SQL. Parameterized queries give the database driver the job of treating the value as data. In a `LIKE` search, `%` and `_` still act as wildcards unless you explicitly escape them; for this course example, that wildcard behavior is acceptable and should be explained to learners.
 
 ### Keeping Page State Separate
 
@@ -640,11 +645,11 @@ for record in results:
 
 If this produces the correct rows, the SQL is not the first suspect anymore. Now look at the service call, selected status value, page offset, and table refresh code.
 
-## Optional Extension
+## Optional Extensions
 
 Offer these only after the core search works:
 
-- Add a controlled sort option using a dictionary of allowed columns already present in the Day 8 schema, such as `{"title": "title ASC", "category": "category ASC", "priority": "priority DESC, id ASC", "created": "created_at DESC, id ASC"}`.
+- Add a controlled sort option using a dictionary of allowed columns already present in the Day 8 schema, such as `{"title": "title ASC", "category": "category ASC", "priority": "priority DESC, id ASC", "created_at": "created_at DESC, id ASC"}`.
 - Add a total-count method so the UI can display "Page 2 of 5."
 - Add a "clear search" action that resets term, filter, and offset.
 - Add an index on a commonly filtered column such as `status` after explaining that indexing is a performance topic, not a requirement for today's milestone.
@@ -722,7 +727,7 @@ ALLOWED_SORTS = {
     "category": "category ASC, id ASC",
     "status": "status ASC, id ASC",
     "priority": "priority DESC, id ASC",
-    "created": "created_at DESC, id ASC",
+    "created_at": "created_at DESC, id ASC",
 }
 
 sort_clause = ALLOWED_SORTS.get(sort_choice, "id ASC")

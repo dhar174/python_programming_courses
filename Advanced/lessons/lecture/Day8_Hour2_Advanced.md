@@ -189,6 +189,19 @@ class SQLiteTrackerRepository:
     def __init__(self, db_path: str):
         self.db_path = db_path
 
+    def init_db(self) -> None:
+        query = """
+            CREATE TABLE IF NOT EXISTS records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                category TEXT NOT NULL,
+                status TEXT NOT NULL CHECK (status IN ('open', 'done'))
+            )
+        """
+        with closing(sqlite3.connect(self.db_path)) as connection:
+            connection.execute(query)
+            connection.commit()
+
     def add(self, record: Record) -> Record:
         query = """
             INSERT INTO records (title, category, status)
@@ -603,7 +616,7 @@ Watch for these issues as you circulate:
 
 When you see a pitfall, coach with questions before giving the answer. For example: **"What object owns this responsibility?"** and **"Can we prove which storage path the app is using?"**
 
-## Optional Extension
+## Optional Extensions
 
 If learners finish the core integration early, offer one of these extensions without moving beyond the hour's purpose:
 

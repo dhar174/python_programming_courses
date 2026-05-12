@@ -345,10 +345,14 @@ Use this exact instructor demo before independent work:
 
 ### Fast-Grade Reference Script
 
-If learners need a concrete target, show this minimal style of smoke check. Adapt names to the class project. This code assumes learners already have a service and repository with similar methods.
+If learners need a concrete target, show this pseudocode-style smoke check. Adapt imports, class names, and method names to the class project before running it.
 
 ```python
 from pathlib import Path
+
+# Example imports after learners adapt the module paths:
+# from tracker.repositories.sqlite_repo import SQLiteRecordRepository
+# from tracker.services import RecordService
 
 
 def run_checkpoint_smoke_test() -> None:
@@ -368,10 +372,6 @@ def run_checkpoint_smoke_test() -> None:
     service.delete_record(created.record_id)
     after_delete = service.search_records("persistence", limit=10, offset=0)
     print(f"Search matches after delete: {len(after_delete)}")
-
-
-if __name__ == "__main__":
-    run_checkpoint_smoke_test()
 ```
 
 **[Instructor speaks:]**
@@ -485,7 +485,7 @@ Recovery language:
 
 Keep the SQL structure controlled by your program. Put user-provided values in parameters. For search, build the wildcard value in Python and pass it as the parameter.
 
-## Optional Extension
+## Optional Extensions
 
 Only offer these after the checkpoint is stable:
 
