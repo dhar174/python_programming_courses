@@ -97,8 +97,10 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
-class ValidationError(ValueError):
-    """Raised when an API payload violates the record contract."""
+# Reuse the same domain/service exception your capstone already raises.
+# If your project uses a different module name, adjust only this import path;
+# do not define a second ValidationError just for the API layer.
+from tracker.exceptions import ValidationError
 
 
 REQUIRED_FIELDS = {"title", "category"}

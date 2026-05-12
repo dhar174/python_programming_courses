@@ -71,10 +71,10 @@ Use these prompts to keep the class active:
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
 
-## Capstone Demo and Review Prompt Model (12-35 minutes)
+## Capstone Demo and Review Prompt Model (12-18 minutes)
 
 **[Instructor speaks:]**
-"I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
+"I am going to model the final-demo flow, not add new code. Watch how I present evidence, answer reviewer prompts, and recover if one command fails. Your goal is to make the project understandable to another developer in a few minutes."
 
 ### Demo steps
 
@@ -122,40 +122,51 @@ def choose_label(status: str) -> str:
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-## Certification-Style Review and Retrospective Setup (35-48 minutes)
+## Capstone Demo Rotation Instructions (18-35 minutes)
 
 **[Instructor speaks:]**
-"Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
+"Now we move into the learner demos. Keep each demo evidence-based and timeboxed. If something fails, name the expected behavior, read the error, and explain the recovery plan instead of hiding the failure."
 
-Suggested instructor circulation questions:
+### Rotation prompt
 
-1. "Show me the file you are editing and tell me why this responsibility belongs there."
-2. "What is your first happy-path command?"
-3. "What is your first sad-path command?"
-4. "If I review this tomorrow, where is the contract documented?"
-5. "What would you test automatically if you had ten more minutes?"
+Learners rotate through 3-5 minute capstone demos. Each demo should show model/service behavior, persistence, one UI surface, report or test evidence, packaging readiness, one design tradeoff, and one future improvement.
 
-## Learner Rotation Instructions (8-57 minutes)
-
-### Lab prompt
-
-Final: learners rotate through 3-5 minute capstone demos, complete a short certification-style code-reading review, and write an individual next-step plan. Demonstrate model/service, persistence, UI surface, report, tests, and packaging readiness.
-
-### Required learner workflow
+### Required demo workflow
 
 1. Start from a known-good run.
 2. Rehearse the 3-5 minute demo from the README or lab notes.
 3. Run the narrowest check that proves the demo still works.
 4. Deliver or queue for the timeboxed demo.
-5. Complete the certification-style review prompt.
-6. Write the retrospective next-step plan and save the final working state.
+5. Answer one reviewer prompt about architecture, tradeoffs, or a sad path.
+6. Save the final working state before moving into the review block.
 
 ### Completion criteria
 
 - Capstone meets minimum deliverables or has a clearly explained gap.
 - Learner can explain architecture choices and tradeoffs.
 - Demo stays within timebox.
-- Learner names one workplace application and one skill to keep practicing.
+- Learner names one future improvement without trying to implement it during the final hour.
+
+## Certification-Style Code-Reading Review (35-48 minutes)
+
+Use short prompts that require learners to read carefully before answering. Keep the pacing brisk: prediction first, explanation second, then one sentence about how the idea appeared in the capstone.
+
+Suggested review prompts:
+
+1. Predict the output of a function that uses default arguments, truthiness, or exception handling.
+2. Identify which layer should catch a domain exception and which layer should translate it.
+3. Read a small pandas transformation and name the shape of the result.
+4. Choose the pytest assertion that best proves a sad path.
+5. Explain why a package quickstart must include setup, run, test, and artifact commands.
+
+## Retrospective and Next-Step Planning (48-57 minutes)
+
+Ask learners to write a short post-course plan:
+
+- One capstone feature they would keep improving.
+- One Python concept they will practice next.
+- One workplace or portfolio use case for this project.
+- One command or README step they will rely on when returning to the project later.
 
 ## Closing Debrief (57-60 minutes)
 
@@ -189,7 +200,7 @@ If learners meet the completion criteria early, offer one of these stretch goals
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
 
-## Quick Checks and Exit Ticket (56-60 minutes)
+### Exit-ticket prompts
 
 Ask learners to answer individually, then discuss two or three responses:
 

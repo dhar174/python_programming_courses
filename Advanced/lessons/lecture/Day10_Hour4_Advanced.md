@@ -84,7 +84,7 @@ Use these prompts to keep the class active:
 ## Instructor Model Demo (15-25 minutes)
 
 **[Instructor speaks:]**
-"I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
+"I am going to model the checkpoint demo in small slices. Please do not copy yet. First, predict what evidence the reviewer needs. Then I will run it, read the result, and decide whether the API milestone is ready for a timeboxed review."
 
 ### Demo steps
 
@@ -129,7 +129,7 @@ Use these prompts to keep the class active:
 ## Independent Stabilization and Rehearsal (25-40 minutes)
 
 **[Instructor speaks:]**
-"Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
+"Now you will stabilize and rehearse the same demo sequence, but keep the scope narrow. Do not redesign your whole capstone. Fix only blockers that prevent the checkpoint evidence. If you finish early, use the optional extensions; do not start an unrelated rewrite."
 
 Suggested instructor circulation questions:
 
@@ -161,7 +161,7 @@ Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone de
 - Security gate works for missing/wrong/correct keys.
 - Student can point to separation between routes and service logic.
 
-## Reflection and Exit Ticket (55-60 minutes)
+## Reflection, Quick Checks, and Exit Ticket (55-60 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
@@ -172,6 +172,18 @@ Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone de
 - Uncaught exceptions causing 500s for predictable validation issues.
 - No separation between route and service logic.
 - Demo exceeds time because commands are not rehearsed.
+
+### Exit-ticket prompts
+
+Ask learners to answer individually, then discuss two or three responses:
+
+- What is one concrete design choice that kept your API maintainable?
+- What is the happy path you proved this hour?
+- What sad path did you test or plan to test next?
+- Which file or module is now most important for the next hour?
+
+**[Instructor speaks:]**
+"Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
 
 ### Debugging script for stuck learners
 
@@ -192,18 +204,6 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add one Flask integration test for the demo sequence.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
-
-## Quick Checks and Exit Ticket (56-60 minutes)
-
-Ask learners to answer individually, then discuss two or three responses:
-
-- What is one concrete design choice that kept your API maintainable?
-- What is the happy path you proved this hour?
-- What sad path did you test or plan to test next?
-- Which file or module is now most important for the next hour?
-
-**[Instructor speaks:]**
-"Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
 
 ## Instructor Wrap-up Notes
 
