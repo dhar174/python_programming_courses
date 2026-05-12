@@ -101,7 +101,11 @@ from api_client import TrackerApiError
 
 # Option A sketch: GUI calls the API client
 def on_save_clicked() -> None:
-    payload = {"name": name_var.get(), "status": status_var.get()}
+    payload = {
+        "title": title_var.get(),
+        "category": category_var.get(),
+        "status": status_var.get() or "open",
+    }
     try:
         created = api_client.create_record(payload)
     except TrackerApiError as exc:
@@ -111,7 +115,14 @@ def on_save_clicked() -> None:
     status_var.set(f"Saved record {created['id']}")
 
 # Option B sketch: GUI and API both call TrackerService, sharing validation rules
-record = tracker_service.create_record(name=name, status=status)
+def save_directly_through_service() -> None:
+    payload = {
+        "title": title_var.get(),
+        "category": category_var.get(),
+        "status": status_var.get() or "open",
+    }
+    record = tracker_service.create_record(payload)
+    status_var.set(f"Saved record {record.id}")
 
 ```
 
@@ -318,7 +329,7 @@ Use this expansion to deepen the hour without changing the runbook mapping. The 
 "The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the interface architecture decision that protects learners from duplicating business logic. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
 
 **[Instructor speaks:]**
-"Before I run anything, I want us to predict the evidence. Our baseline command is one visible GUI action or equivalent script that proves the chosen path works end-to-end. A successful run should prove this happy path: the same record behavior is available from the chosen interface without conflicting persistence rules. A responsible implementation should also prove this sad path: server unavailable, stale data, or validation errors are shown to the user without hiding the cause. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+"Before I run anything, I want us to predict the evidence. Our baseline is one visible GUI action or equivalent script that proves the chosen path works end-to-end. A successful run should prove this happy path: the same record behavior is available from the chosen interface without conflicting persistence rules. A responsible implementation should also prove this sad path: server unavailable, stale data, or validation errors are shown to the user without hiding the cause. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
 
 Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
 

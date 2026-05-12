@@ -113,9 +113,9 @@ Use these prompts to keep the class active:
 ```python
 import pytest
 
-# Adjust these imports to match the cohort project structure:
-# from tracker.repository import SQLiteTrackerRepository
-# from tracker.service import TrackerService, ValidationError
+# Adjust module paths to match the cohort project structure.
+from tracker.repository import SQLiteTrackerRepository
+from tracker.service import TrackerService, ValidationError
 
 @pytest.fixture
 def service(tmp_path):
@@ -339,7 +339,7 @@ Use this expansion to deepen the hour without changing the runbook mapping. The 
 "The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the verification layer around business rules independent of GUI, API server, or shared files. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
 
 **[Instructor speaks:]**
-"Before I run anything, I want us to predict the evidence. Our baseline command is `pytest -q tests/test_service.py` from a clean project root. A successful run should prove this happy path: creating, retrieving, and updating a record works through the service using an isolated test repository. A responsible implementation should also prove this sad path: invalid payloads raise expected domain exceptions and tests assert the exact behavior. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+"Before I run anything, I want us to predict the evidence. Our baseline is `pytest -q tests/test_service.py` from a clean project root. A successful run should prove this happy path: creating, retrieving, and updating a record works through the service using an isolated test repository. A responsible implementation should also prove this sad path: invalid payloads raise expected domain exceptions and tests assert the exact behavior. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
 
 Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
 

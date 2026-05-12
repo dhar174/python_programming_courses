@@ -97,6 +97,10 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
+class ValidationError(ValueError):
+    """Raised when an API payload violates the record contract."""
+
+
 REQUIRED_FIELDS = {"title", "category"}
 ALLOWED_FIELDS = REQUIRED_FIELDS | {"status"}
 ALLOWED_STATUSES = {"open", "in_progress", "done"}
@@ -324,7 +328,7 @@ Use this expansion to deepen the hour without changing the runbook mapping. The 
 "The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the data contract between internal domain objects and API payloads. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
 
 **[Instructor speaks:]**
-"Before I run anything, I want us to predict the evidence. Our baseline command is POST payloads that include valid values, missing fields, extra fields, and incorrect types. A successful run should prove this happy path: a domain record is converted into stable JSON with the intended field names and value formats. A responsible implementation should also prove this sad path: missing required fields and invalid values return `validation_error` without a stack trace. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+"Before I run anything, I want us to predict the evidence. Our baseline is to POST payloads that include valid values, missing fields, extra fields, and incorrect types. A successful run should prove this happy path: a domain record is converted into stable JSON with the intended field names and value formats. A responsible implementation should also prove this sad path: missing required fields and invalid values return `validation_error` without a stack trace. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
 
 Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
 
@@ -334,7 +338,7 @@ Run the demo as a sequence of small predictions rather than one long typing perf
 
 Use this checkpoint rhythm:
 
-1. **Baseline:** Run POST payloads that include valid values, missing fields, extra fields, and incorrect types before editing. If it fails, narrate the failure honestly and recover before adding new code.
+1. **Baseline:** POST payloads that include valid values, missing fields, extra fields, and incorrect types before editing. If it fails, narrate the failure honestly and recover before adding new code.
 2. **First slice:** Implement only enough to prove a domain record is converted into stable JSON with the intended field names and value formats. Do not add optional polish yet.
 3. **Read the code aloud:** Point to the function or method boundary and say what it accepts and returns.
 4. **Sad path:** Trigger missing required fields and invalid values return `validation_error` without a stack trace deliberately. Ask, "Is this failure understandable to the person who receives it?"
