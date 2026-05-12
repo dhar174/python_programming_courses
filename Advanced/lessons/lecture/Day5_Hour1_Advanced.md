@@ -1,25 +1,28 @@
 # Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk
 
 ## Instructor Notes
+
 - **Course**: Python Programming (Advanced)
 - **Session**: 5
-- **Hour**: 1 of 4 for this session, corresponding to **Hour 17** in the 48-hour runbook
-- **Focus**: GUI fundamentals with Tkinter/ttk — event loop, widgets, callbacks
-- **Runbook alignment**: Create a window and basic widgets; wire callbacks to service functions; introduce event-driven thinking; show messagebox feedback; keep business logic out of callbacks
+- **Hour**: 1 of 4 for this session, corresponding to **Hour 17** in the 48-hour Advanced runbook
+- **Focus**: GUI fundamentals with Tkinter/ttk — event loop, widgets, callbacks, and service-layer wiring
+- **Runbook alignment**: Create a window and basic widgets; wire callbacks to service functions; explain event-driven GUI behavior; avoid blocking calls; use `Label`, `Entry`, and `Button`; separate UI from service logic; build a minimal GUI that adds a record through a service layer; show `messagebox` feedback; run a Hello GUI + Add form lab
 - **Prerequisites**:
-  - Students can write functions and basic classes
-  - Students understand exceptions and basic validation
-  - Students are comfortable with strings, lists, and dictionaries
-  - Students have seen separation of concerns in previous sessions
-- **Teaching goal**: Shift students from a command-line, top-to-bottom mental model into an event-driven GUI mental model without overwhelming them
-- **Demo app theme**: A small contact-entry desktop app
+  - Students can write functions and basic classes.
+  - Students understand exceptions and basic validation.
+  - Students are comfortable with strings, lists, and dictionaries.
+  - Students have seen separation of concerns in previous sessions.
+- **Teaching goal**: Shift students from a command-line, top-to-bottom mental model into an event-driven GUI mental model without overwhelming them.
+- **Demo app theme**: A small contact-entry desktop app.
 - **Key message to repeat**: “The GUI handles interaction; the service layer handles rules.”
-- **Environment note**: Tkinter ships with standard Python in most course environments; use `ttk` widgets for a cleaner, more modern default appearance
+- **Environment note**: Tkinter ships with standard Python in most course environments, including typical Windows Python installations. In a few Linux or managed lab environments, Tkinter may require an additional OS package or may not display if no graphical desktop is available. For this course hour, Tkinter availability is assumed; if one learner has an environment issue, pair them temporarily while the lab environment is corrected.
+- **Scope guard**: Do not turn this hour into advanced layout, threading, async programming, databases, or a full MVC framework discussion. Those topics either come later or are intentionally out of scope for this first GUI hour.
 - **Success criteria for the hour**:
-  - Students can explain what `mainloop()` does
-  - Students can create a simple window with `Label`, `Entry`, and `Button`
-  - Students can wire a callback to a button
-  - Students can call service logic from the UI and show success/error feedback
+  - Students can explain what `mainloop()` does.
+  - Students can create a simple window with `Label`, `Entry`, and `Button`.
+  - Students can wire a callback to a button.
+  - Students can call service logic from the UI and show success/error feedback.
+  - Students can identify why blocking work inside a callback freezes the interface.
 
 ---
 
@@ -27,14 +30,14 @@
 
 | Segment | Time |
 |---|---:|
-| Recap and transition into GUI programming | 5 minutes |
-| Event-driven programming and the Tkinter mental model | 12 minutes |
-| Core widgets, the event loop, and callback design | 10 minutes |
-| Live demo: minimal record-entry GUI with service layer | 13 minutes |
-| Hands-on lab: Hello GUI + Add Record form | 15 minutes |
-| Debrief, quick checks, exit ticket, wrap-up | 5 minutes |
+| Recap | 4 minutes |
+| GUI Mental Model | 9 minutes |
+| Core Widget/Callback/Service Design | 8 minutes |
+| Live Demo | 8 minutes |
+| Hands-On Lab | 26 minutes |
+| Debrief/Exit | 5 minutes |
 
-**Total:** 60 minutes
+**Total arithmetic:** 4 + 9 + 8 + 8 + 26 + 5 = 60 minutes exactly.
 
 ---
 
@@ -49,230 +52,278 @@ By the end of this hour, students should be able to:
 5. Connect a button click to a callback function.
 6. Keep UI code separate from service or business logic.
 7. Provide user feedback with a status label and a message box.
+8. Recognize common first-GUI mistakes: missing `mainloop()`, blocking callbacks, layout mistakes that hide widgets, and business rules buried inside button handlers.
 
 ---
 
-## Section 1: Recap and Transition (5 minutes)
+## Section 1: Recap (4 minutes)
 
-### Quick Re-entry
+### Purpose of This Opening
 
-**[Instructor speaks:]**
+This section should be brief and energetic. The goal is to connect GUI programming to the design habits students have already practiced: functions, classes, exceptions, validation, and separation of concerns. Do not begin by explaining every Tkinter feature. Begin by reminding students that the same Python design discipline still applies, but the user interaction model changes.
 
-Up to this point in the advanced course, we have built and refined command-line Python programs. Those programs gave us strong habits: organize code into functions, design classes around responsibilities, validate inputs, and separate concerns. All of that still matters today.
-
-What changes in this session is the way the user interacts with the program.
-
-A command-line script usually has a simple flow:
-
-1. start the script  
-2. read input  
-3. do work  
-4. print output  
-5. exit  
-
-A graphical user interface, or GUI, behaves differently. The program opens a window and stays alive. The user clicks, types, resizes, selects, and expects the application to respond in real time.
-
-That means we need a new mental model.
-
-### Framing the Hour
+### Instructor Script
 
 **[Instructor speaks:]**
 
-This hour is our entry point into desktop GUI programming. We are intentionally keeping the feature set small so the core ideas stay clear.
+Welcome back. In the previous parts of the advanced course, we spent a lot of time building Python programs that were organized around responsibilities. We wrote functions that did one job, classes that represented a concept, exceptions that explained failure, and service code that handled rules instead of scattering rules everywhere.
 
-Today’s essential ideas are:
+Today we keep those habits, but we change the way the user talks to the program.
 
-- a window
-- widgets
-- an event loop
-- callbacks
-- service-layer separation
-- user feedback
+Most of the Python programs you have written so far have followed a command-line style. The script starts, asks for input or reads data, performs work, prints output, and ends. That style is direct and useful, but it is not how a graphical application feels to a user.
 
-If students leave this hour able to say, “I understand why a GUI is event-driven, I can create a small form, and I know where validation should live,” then the hour has succeeded.
+A graphical user interface, or GUI, opens a window and stays alive. The user decides what happens next by clicking, typing, pressing keys, or closing the window. The program is not simply marching from line one to the final line. It is waiting for user events and responding to them.
 
-### Transition Prompt
+So this hour is not about making a beautiful application yet. It is about learning the core mechanics:
+
+- create a window,
+- place a few widgets,
+- respond to a button click,
+- call service logic,
+- show feedback,
+- and keep the interface responsive.
+
+The key design message for today is: **the GUI handles interaction; the service layer handles rules.**
+
+### Fast Warm-Up Prompt
 
 **[Ask students:]**
 
-Where have you used desktop or web interfaces that respond to clicks and form input? What kinds of user actions are actually “events”?
+Think of a desktop app, a web page, or a mobile app you used recently. What actions did you take that caused the interface to respond?
 
-**Expected examples:** button clicks, typing in a field, selecting a row, pressing Enter, resizing a window.
+**Expected answers:** clicking a button, typing into a field, pressing Enter, choosing a menu item, selecting a row, closing a dialog, resizing a window.
+
+**[Instructor continues:]**
+
+Those actions are the center of GUI programming. We call them events. Today we will build just enough Tkinter to make that event-driven idea concrete.
 
 ---
 
-## Section 2: The GUI Mental Model (12 minutes)
+## Section 2: GUI Mental Model (9 minutes)
 
-### Event-Driven Programming
+### The Shift from Script Flow to Event Flow
 
 **[Instructor speaks:]**
 
-The single most important concept in beginner GUI programming is this:
+The most important concept in this hour is this:
 
 > A GUI is event-driven.
 
-That means the application does not simply run top to bottom and finish. Instead, it creates an interface and then waits for events.
+Let’s unpack that carefully.
 
-Examples of events include:
+In a command-line script, you can often understand the program by reading from top to bottom. The program says, “Do this, then do this, then do this.” If you see an `input()` call, the program stops there and waits for the user. After the user types something, the program continues to the next line.
 
-- the user clicking a button
-- the user typing into a text field
-- the user pressing Enter
-- the user selecting an item
-- the window being resized
-- the user closing the application
+In a GUI, the program creates a window and gives control to the GUI toolkit. The toolkit listens for events: button clicks, key presses, mouse movement, text entry, window closing, and so on. When an event occurs, the toolkit calls a function that you registered for that event. That function is called a callback.
 
-In a command-line script, we often ask:
+So the question changes from:
 
-> “What does the next line of code do?”
+> What line runs next?
 
-In a GUI, we very often ask:
+to:
 
-> “What should happen when the user does this?”
+> What should happen when the user does this?
 
-That is the shift.
+That question is the GUI mental model.
+
+### Tkinter, ttk, and the Window
+
+**[Instructor speaks:]**
+
+Tkinter is Python’s standard GUI toolkit. It is included with most Python installations, which makes it reliable for a course environment. The `ttk` module provides themed widgets. The basic behavior is the same as classic Tkinter widgets, but the default appearance is usually cleaner and more native-looking.
+
+Today we will use:
+
+- `tk.Tk()` for the main application window,
+- `ttk.Label` to display text,
+- `ttk.Entry` to accept typed text,
+- `ttk.Button` to trigger an action,
+- `tk.StringVar` to hold values connected to the interface,
+- and `messagebox` for simple user feedback.
+
+We are intentionally staying small. We are not building a complex layout system today. Hour 18 goes deeper into layout and usability. Today, if the window appears, the fields appear, the button works, and the callback calls the service layer, that is success.
 
 ### What `mainloop()` Does
 
 **[Instructor speaks:]**
 
-Tkinter needs something to keep the application alive and listening for those events. That is the job of `mainloop()`.
+Every Tkinter application needs an event loop. In Tkinter, we start that event loop by calling:
 
-When you call `mainloop()`:
+```python
+root.mainloop()
+```
 
-- the window appears and remains interactive
-- Tkinter starts listening for user actions
-- callbacks are invoked when those actions occur
-- the application stays alive until the user closes it
+When `mainloop()` starts, Tkinter keeps the window alive and listens for events. If the user clicks the Add button, Tkinter notices the click and calls the callback connected to that button. If the user types in an entry field, Tkinter updates the widget state. If the user closes the window, Tkinter exits the event loop and the program can end.
 
-Without `mainloop()`, the program may create window objects in memory, but it will not function as a live interactive application.
+Without `mainloop()`, you may create Python objects that represent a window and widgets, but the application will not behave like a live GUI. In many environments the window may flash and disappear, or nothing useful may appear at all, because the script reaches the end and exits.
 
-### Quick Check
+**[Instructor board sketch:]**
 
-**[Ask students:]**
-
-If I build a Tkinter window object but never call `mainloop()`, what happens?
-
-**Expected direction:** the program ends immediately or the interface never becomes a properly interactive GUI.
+```text
+create widgets -> register callbacks -> start mainloop()
+                                      |
+                                      v
+                         wait for events and respond
+```
 
 ### Why Blocking Calls Matter
 
 **[Instructor speaks:]**
 
-There is another practical lesson hidden inside the event loop idea: **callbacks should stay reasonably small and fast**.
+The event loop also explains why we must avoid blocking calls inside callbacks.
 
-If a callback directly performs a long-running task, the interface may appear frozen. For example:
+Imagine the user clicks **Add**, and the callback does this:
 
-- `time.sleep(10)`
-- a slow network request
-- heavy file processing
-- large database work done directly inside the button handler
-
-The GUI becomes unresponsive because the event loop cannot continue handling events smoothly.
-
-Today, we will keep our callbacks short. They will gather input, call service logic, and update the interface.
-
-### Widgets and Callbacks
-
-**[Instructor speaks:]**
-
-A **widget** is a UI element. Today’s core widgets are:
-
-- `Label` — displays text
-- `Entry` — accepts text input
-- `Button` — triggers an action
-
-A **callback** is a function Tkinter calls when an event occurs.
-
-For example:
-
-- “When the Add button is clicked, call `on_add()`.”
-
-That is the central interaction pattern for today.
-
----
-
-## Section 3: Core Design Pattern for This Hour (10 minutes)
-
-### Keep UI and Service Logic Separate
-
-**[Instructor speaks:]**
-
-One of the fastest ways to make GUI code confusing is to put everything into one callback.
-
-A beginner’s `on_add()` function often grows until it:
-
-- reads the form
-- validates every field
-- transforms the data
-- stores the record
-- updates labels
-- shows popups
-- catches exceptions
-- prints debug output
-
-That kind of callback becomes difficult to test and difficult to maintain.
-
-A cleaner pattern is:
-
-1. the UI gathers input
-2. the callback calls a service function or method
-3. the service layer validates and applies business rules
-4. the UI displays the result
-
-### Instructor Board Sketch
-
-**[Instructor action:]** Draw or describe the flow.
-
-```text
-Entry widgets -> callback -> service layer -> result -> UI feedback
+```python
+time.sleep(10)
 ```
 
-**[Instructor speaks:]**
+For those ten seconds, the callback is busy. While it is busy, the GUI cannot smoothly process other events. The window may look frozen. Buttons may not respond. The user may think the app crashed.
 
-This simple flow is the backbone of our GUI work.
+The same problem can happen with long network calls, large file processing, slow database work, or heavy calculations placed directly in a button handler. Those topics require additional techniques, but not today. Today our rule is simple: callbacks should be short. They gather input, call service logic, and update feedback.
 
-### Why This Matters
+One important nuance: `messagebox.showinfo()` and `messagebox.showerror()` are modal dialogs. In plain language, **messagebox is modal**: the dialog briefly takes focus and blocks interaction with the main window until the user dismisses it. That is acceptable here because it is short, intentional user feedback. It is very different from putting a long sleep, a slow network request, or a large file operation inside a callback. A quick message box says, “Please acknowledge this result.” A long blocking task says, “The interface is stuck while Python works.” Those are not the same user experience.
 
-**[Instructor speaks:]**
+### Quick Concept Check
 
-If business rules live in the service layer, then later you can:
+**[Ask students:]**
 
-- reuse them in another interface
-- test them without clicking through the GUI
-- keep callbacks small and readable
-- avoid duplicating validation in multiple buttons or screens
+If a GUI program is event-driven, who decides what happens next: the programmer’s top-to-bottom script flow, or the user’s actions?
 
-That is why GUI programming still benefits from all the software design discipline we used earlier in the course.
+**Expected answer:** the user’s actions trigger events; our code responds through callbacks.
 
-### Example Rule Set for the Demo
+**[Instructor reinforces:]**
 
-For our small contact-entry example:
-
-- name is required
-- email is required
-- email must contain `@`
-
-The UI should not invent those rules. The service should own them.
+Exactly. We still write the code, but the user drives the sequence.
 
 ---
 
-## Section 4: Live Demo — Minimal Record Entry GUI (13 minutes)
+## Section 3: Core Widget/Callback/Service Design (8 minutes)
+
+### The Three-Part Pattern
+
+**[Instructor speaks:]**
+
+For this first GUI hour, we will use one simple design pattern repeatedly:
+
+```text
+widgets collect input -> callback responds -> service layer validates and stores
+```
+
+Then the callback updates the interface with success or error feedback.
+
+Let’s define the pieces.
+
+A **widget** is a visible user interface element. A label shows text. An entry field accepts text. A button can be clicked.
+
+A **callback** is a Python function or method that Tkinter calls when an event happens. For a button, we connect the callback with the `command` option:
+
+```python
+ttk.Button(parent, text="Add", command=self.on_add)
+```
+
+Notice the important detail: `command=self.on_add`, not `command=self.on_add()`.
+
+When we write `self.on_add`, we are passing the function itself so Tkinter can call it later. When we write `self.on_add()`, we call the function immediately while building the interface. That is one of the most common first-GUI bugs.
+
+A **service layer** is ordinary Python code that owns business rules. In today’s contact-entry example, the service layer decides that a name is required, an email is required, and an email must include `@`. The UI should not invent those rules. The UI should ask the service to add a record, then display the result.
+
+### Why We Separate UI from Service Logic
+
+**[Instructor speaks:]**
+
+One of the fastest ways to make GUI code hard to maintain is to put every rule inside the button callback.
+
+A beginner’s callback often grows into one large function that:
+
+- reads every field,
+- validates every field,
+- transforms text,
+- creates a record,
+- stores the record,
+- updates labels,
+- shows popups,
+- clears the form,
+- catches exceptions,
+- and prints debug output.
+
+That may work for a tiny script, but it becomes painful quickly. It is hard to test because you have to click through the GUI. It is hard to reuse because the rule is trapped inside a window class. It is hard to change because display code and business rules are tangled together.
+
+The better pattern is:
+
+1. The UI gathers raw input from widgets.
+2. The callback passes that input to the service.
+3. The service validates and performs the operation.
+4. The service returns a result or raises a meaningful error.
+5. The UI shows the success or error to the user.
+
+### Minimal Example of the Separation
+
+**[Instructor speaks:]**
+
+Here is the shape without all the GUI details:
+
+```python
+class ContactService:
+    def add_record(self, name: str, email: str) -> str:
+        clean_name = name.strip()
+        clean_email = email.strip().lower()
+
+        if not clean_name:
+            raise ValueError("Name is required.")
+        if "@" not in clean_email:
+            raise ValueError("Email must include '@'.")
+
+        return clean_name
+```
+
+The service does not know about labels, buttons, `StringVar`, or message boxes. That is a feature, not a limitation.
+
+The callback can stay small:
+
+```python
+def on_add(self) -> None:
+    try:
+        name = self.service.add_record(self.name_var.get(), self.email_var.get())
+    except ValueError as exc:
+        self.status_var.set(f"Error: {exc}")
+        return
+
+    self.status_var.set(f"Added {name}.")
+```
+
+This is the design habit we want to reinforce throughout the GUI unit. The callback coordinates. The service decides.
+
+### Layout Caution for Today
+
+**[Instructor speaks:]**
+
+We will use simple `pack()` calls today because they are enough for a first form. Later we will compare `pack()` and `grid()` more carefully. For now, remember two practical rules:
+
+- A widget does not appear until you place it with a layout manager such as `pack()` or `grid()`.
+- Do not mix `pack()` and `grid()` in the same parent container.
+
+That second rule is important. You can use `pack()` in one frame and `grid()` in a different frame, but do not use both inside the same parent. Mixing them in one parent commonly leads to layout errors or confusing results. Today we will keep the layout deterministic and Windows-friendly by using one main frame and `pack()` consistently.
+
+---
+
+## Section 4: Live Demo (8 minutes)
 
 ### Demo Framing
 
 **[Instructor speaks:]**
 
-I am going to build a very small desktop app that lets a user enter a contact name and email, click **Add Record**, and receive either success or error feedback.
+I am going to build a small contact-entry GUI. The user will type a name and email, click **Add Record**, and receive either a success message or a validation error.
 
-As you watch, pay attention to four things:
+This demo is intentionally small and should take about 8 minutes. Watch for four things:
 
-1. where the widgets are created
-2. where the callback lives
-3. where the validation logic lives
-4. where `mainloop()` appears
+1. where the widgets are created,
+2. where the callback is connected,
+3. where validation lives,
+4. and where `mainloop()` starts the event loop.
 
 ### Demo Code
+
+Use this as the live-coding target. If time is tight, paste the class definitions and live-code the `_build_ui()` and `on_add()` methods.
 
 ```python
 from __future__ import annotations
@@ -341,7 +392,11 @@ class ContactApp:
         ttk.Label(main_frame, text="Email").pack(anchor="w")
         ttk.Entry(main_frame, textvariable=self.email_var).pack(fill="x", pady=(0, 10))
 
-        ttk.Button(main_frame, text="Add Record", command=self.on_add).pack(pady=(4, 10))
+        ttk.Button(
+            main_frame,
+            text="Add Record",
+            command=self.on_add,
+        ).pack(pady=(4, 10))
 
         ttk.Label(
             main_frame,
@@ -362,7 +417,8 @@ class ContactApp:
             return
 
         self.status_var.set(
-            f"Added {record.name} successfully. Total records: {self.service.count_records()}."
+            f"Added {record.name} successfully. Total records: "
+            f"{self.service.count_records()}."
         )
         messagebox.showinfo("Success", f"Saved record for {record.name}.")
         self.name_var.set("")
@@ -380,111 +436,112 @@ if __name__ == "__main__":
     main()
 ```
 
-### Demo Steps
+### Demo Narration and Timing
 
-1. Create the service class first.
-2. Explain that the service owns validation and record storage.
-3. Create the `ContactApp` class.
-4. Add `StringVar` objects for form state and the status line.
-5. Build the widgets with ttk.
-6. Wire the button using `command=self.on_add`.
-7. Show the callback calling the service.
-8. Demonstrate a bad submission and the validation popup.
-9. Demonstrate a valid submission and the success message.
-10. Point to `root.mainloop()` and explain that it keeps the GUI alive.
-
-### Demo Narration
+**Minute 1: Service first.**
 
 **[Instructor speaks while coding:]**
 
-Notice that `ContactService` is plain Python. It has no knowledge of windows, buttons, or labels. That is good design.
+I am starting with the service layer because these rules are not GUI rules. A contact name is required whether the contact comes from a GUI, a command-line prompt, an API, or a file import. The service owns that rule.
 
-Now look at `ContactApp`. This class owns the UI state and user interaction.
+**Minute 2: Record and validation.**
 
-Finally, look at `on_add()`. It is short. It does not decide the email rule. It asks the service to do the domain work, then the UI decides how to present the result.
+Point out `ContactRecord`, `ValidationError`, and `ContactService.add_record()`. Emphasize that the service returns a record on success and raises a meaningful exception on invalid input.
 
-That is exactly the separation we want.
+**Minute 3: Root window.**
 
-### Live Questions to Ask During the Demo
+Create `root = tk.Tk()`, set the title, and explain that this is the main application window. Mention that `geometry()` is used here only to keep the demo predictable on Windows classroom machines.
 
-**[Ask students:]**
+**Minute 4: Variables and widgets.**
 
-Where is the rule that email must contain `@`?
+Create `StringVar` objects, labels, entries, and the button. As each widget is created, call `.pack()` so students see that creating a widget and displaying a widget are separate ideas.
 
-**Expected answer:** in `ContactService.add_record()`.
+**Minute 5: Callback wiring.**
 
-**[Ask students:]**
-
-Where does the app clear the form after a successful add?
-
-**Expected answer:** in `ContactApp.on_add()`.
+Pause at `command=self.on_add`.
 
 **[Ask students:]**
 
-What connects the Add button to the callback?
+Why is this `self.on_add` instead of `self.on_add()`?
 
-**Expected answer:** `command=self.on_add`.
+**Expected answer:** because Tkinter needs the function to call later, not the result of calling it now.
 
-### Demo Teaching Points to Repeat
+**Minute 6: Callback calls service.**
 
-- `StringVar` is convenient for connecting UI values to Python state.
-- Callbacks should be small and readable.
-- The service layer handles validation rules.
-- `messagebox` is useful for simple feedback.
-- `mainloop()` starts the event loop.
+Show `self.name_var.get()` and `self.email_var.get()`. Explain that the UI gathers strings, but it does not validate all rules itself. It asks the service.
 
----
+**Minute 7: Feedback.**
 
-## Section 5: Hands-On Lab — Hello GUI + Add Record Form (15 minutes)
+Show both feedback paths: status label and message box. Remind students that the message box is modal and briefly blocks the main window until dismissed, which is acceptable for short feedback.
 
-### Lab Framing
+**Minute 8: Run and test.**
+
+Run three cases:
+
+1. blank name,
+2. email without `@`,
+3. valid contact such as `Ada Lovelace` and `ada@example.com`.
+
+Point to `root.mainloop()` and close by saying:
 
 **[Instructor speaks:]**
 
-Now it is your turn to build a small GUI. The goal is not to build a full application yet. The goal is to become comfortable with the mechanics:
+This is a small app, but it already has the essential structure: window, widgets, callback, service, validation, feedback, and event loop.
 
-- create a window
-- place widgets
-- wire a button
-- call service logic
-- show feedback
+### Demo Questions
 
-### Student Task
+Use these questions during or immediately after the demo:
 
-Create a Tkinter app that includes:
+- Where is the rule that email must contain `@`?
+- What connects the Add button to the callback?
+- What happens if we forget `.pack()` on a widget?
+- What does the UI do after the service raises `ValidationError`?
+- Why is a short message box acceptable, but a long sleep inside the callback is not?
 
-- a window title
-- at least two input fields
-- an **Add** button
-- a status message area
-- a service class or service function for validation
-- success or error feedback after clicking **Add**
+---
 
-### Suggested Record Options
+## Section 5: Hands-On Lab (26 minutes)
 
-Students may build one of these:
+### Lab Goal
 
-- contact name + contact email
-- task title + task owner
-- item name + item category
+**[Instructor speaks:]**
 
-### Suggested Starter Shape
+Now you will build your own small GUI. The lab has two parts. First, you will make a Hello GUI to prove that your environment and event loop work. Second, you will build an Add form that sends input through a service layer and shows success or error feedback.
+
+The goal is not visual polish. The goal is a reliable event-driven flow:
+
+```text
+user types -> user clicks Add -> callback runs -> service validates -> UI shows feedback
+```
+
+### Lab Mini-Budget
+
+Use this mini-budget to keep the 26-minute lab on track:
+
+| Lab activity | Time |
+|---|---:|
+| Part A: Hello GUI launches | 5 minutes |
+| Part B: Add form widgets | 7 minutes |
+| Part C: Service validation and callback wiring | 8 minutes |
+| Part D: Test, fix, and optional extension | 6 minutes |
+
+**Lab arithmetic:** 5 + 7 + 8 + 6 = **26 minutes**.
+
+### Part A: Hello GUI Launches
+
+Create a file named something simple such as `hello_gui.py` or use the course lab file if one has been provided. Start with this minimal program:
 
 ```python
-from __future__ import annotations
-
 import tkinter as tk
 from tkinter import ttk
 
 
-class RecordService:
-    def add_record(self, field_one: str, field_two: str) -> str:
-        raise NotImplementedError
-
-
 def main() -> None:
     root = tk.Tk()
-    root.title("My First GUI")
+    root.title("Hello GUI")
+
+    ttk.Label(root, text="Hello from Tkinter!").pack(padx=16, pady=16)
+
     root.mainloop()
 
 
@@ -492,119 +549,321 @@ if __name__ == "__main__":
     main()
 ```
 
-### Hands-On Lab Guidance
+**Expected result:** a small window opens with the text “Hello from Tkinter!”.
 
-**[Instructor speaks:]**
+**Instructor circulation prompts:**
 
-Start small. First make the window appear. Then add one label. Then one entry. Then the second entry. Then the button. Then wire the callback. Then add validation.
+- Does the window launch?
+- Can you point to the line that starts the event loop?
+- What happens if you comment out `root.mainloop()` and run again?
 
-Do not try to perfect the layout yet. The important thing in this hour is understanding the event loop and the callback flow.
+If a learner’s Tkinter environment fails, confirm they are using the expected Python interpreter. In this course hour we assume Tkinter is available, but some managed environments may need instructor support.
+
+### Part B: Add Form Widgets
+
+Expand the app into a small Add form. Students may use contacts, tasks, inventory items, or notes. To preserve the demo theme, contacts are recommended.
+
+Minimum fields:
+
+- record name,
+- record detail such as email, owner, category, or note,
+- Add button,
+- status area.
+
+Starter shape:
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+
+class RecordService:
+    def __init__(self) -> None:
+        self._records: list[tuple[str, str]] = []
+
+    def add_record(self, name: str, detail: str) -> int:
+        clean_name = name.strip()
+        clean_detail = detail.strip()
+
+        if not clean_name:
+            raise ValueError("Name is required.")
+
+        if not clean_detail:
+            raise ValueError("Detail is required.")
+
+        self._records.append((clean_name, clean_detail))
+        return len(self._records)
+
+
+def main() -> None:
+    root = tk.Tk()
+    root.title("Add Record")
+    root.geometry("420x240")
+
+    service = RecordService()
+    name_var = tk.StringVar()
+    detail_var = tk.StringVar()
+    status_var = tk.StringVar(value="Ready.")
+
+    main_frame = ttk.Frame(root, padding=16)
+    main_frame.pack(fill="both", expand=True)
+
+    ttk.Label(main_frame, text="Name").pack(anchor="w")
+    ttk.Entry(main_frame, textvariable=name_var).pack(fill="x", pady=(0, 10))
+
+    ttk.Label(main_frame, text="Detail").pack(anchor="w")
+    ttk.Entry(main_frame, textvariable=detail_var).pack(fill="x", pady=(0, 10))
+
+    def on_add() -> None:
+        try:
+            count = service.add_record(name_var.get(), detail_var.get())
+        except ValueError as exc:
+            status_var.set(f"Error: {exc}")
+            return
+
+        status_var.set(f"Added record. Total records: {count}.")
+        name_var.set("")
+        detail_var.set("")
+
+    ttk.Button(main_frame, text="Add", command=on_add).pack(pady=(4, 10))
+    ttk.Label(main_frame, textvariable=status_var, wraplength=360).pack(anchor="w")
+
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+This starter uses a function callback instead of an app class. That is acceptable for the lab. The design requirement is not “must use a class.” The design requirement is “do not bury business rules directly inside the callback.” The service still validates and stores the record.
+
+### Part C: Add Messagebox Feedback
+
+After the basic status label works, add `messagebox` feedback:
+
+```python
+from tkinter import messagebox, ttk
+```
+
+Inside the error path:
+
+```python
+messagebox.showerror("Validation Error", str(exc))
+```
+
+Inside the success path:
+
+```python
+messagebox.showinfo("Success", "Record added successfully.")
+```
+
+**Instructor note:** remind students again that message boxes are modal. They briefly block interaction with the main window until dismissed. For short success or error feedback, that is fine. For long work, do not simulate progress by freezing the GUI with `sleep()`.
+
+### Part D: Test Cases Students Must Try
+
+Students should run all of these cases before calling the lab complete:
+
+1. Launch the GUI.
+2. Click **Add** with both fields blank.
+3. Fill only the first field and click **Add**.
+4. Fill both fields and click **Add**.
+5. Confirm the status area changes after each attempt.
+6. Confirm success or error feedback appears.
+7. Close and relaunch the GUI to confirm it starts reliably.
+
+For a contact form, add one domain-specific validation rule:
+
+```python
+if "@" not in clean_detail:
+    raise ValueError("Email must include '@'.")
+```
+
+Only add that rule if the detail field is email. If the learner chose task owner or category, choose a simple rule that fits the domain, such as “category is required.” Keep the validation deterministic and local. Do not introduce files, databases, web requests, random values, or external services.
 
 ### Completion Criteria
 
-A strong minimum solution should:
+A complete lab submission for this hour should:
 
-1. Launch without crashing.
-2. Show at least one label, two entry fields, and one button.
-3. Trigger a callback when the button is clicked.
-4. Validate input through a service function or class.
-5. Show success or error feedback in the interface.
+1. GUI launches reliably as a Tkinter application.
+2. Show a window with at least two record fields.
+3. Include `Label`, `Entry`, and `Button` widgets.
+4. Include a visible status area.
+5. Wire the Add button to a callback.
+6. Validate through a service function or service class.
+7. Add action works and shows feedback when the record is valid.
+8. Add action works and shows feedback when the record is invalid.
+9. Keep long-running or blocking work out of the callback.
+10. Include `root.mainloop()` exactly where the app is ready to start handling events.
 
-### Circulation Prompts
+### Instructor Circulation Prompts
 
-**[Circulate and ask:]**
+Use these prompts while walking the room:
 
-1. Show me where your callback starts.
-2. Show me where your validation rules live.
-3. What happens if the user clicks Add with blank fields?
-4. Where does the status message get updated?
-5. Where is `mainloop()`?
+- Show me the line where your window is created.
+- Show me where your widgets are placed on the screen.
+- Show me the callback connected to the Add button.
+- Is your button using `command=on_add` or accidentally using `command=on_add()`?
+- Show me where validation happens.
+- If the user enters bad data, what message appears?
+- If the user enters good data, what message appears?
+- What line starts the event loop?
+- Are all widgets in this same parent using the same layout manager?
 
 ### Common Pitfalls During the Lab
 
 #### Pitfall 1: Business logic inside the callback
-If students put all validation rules directly inside the button handler, encourage them to move those rules into a helper method or service class.
 
-#### Pitfall 2: Forgetting `mainloop()`
-The app may appear not to work at all if the event loop is missing.
+If students put all validation rules directly inside the button handler, the app may still run, but the design is moving in the wrong direction. Coach them to move the rules into a helper function or service class.
 
-#### Pitfall 3: Callback not wired correctly
-A common mistake is writing `command=self.on_add()` instead of `command=self.on_add`. The first calls the function immediately during setup.
-
-#### Pitfall 4: No visible feedback
-If the button is clicked and nothing visible changes, the user has no idea what happened.
-
-### Optional Extensions
-
-- Clear the form after a successful add
-- Bind the Enter key to submit
-- Add a small “record count” label
-- Add a second button labeled **Clear**
-
----
-
-## Section 6: Debrief, Quick Checks, Exit Ticket, and Wrap-Up (5 minutes)
-
-### Group Debrief
+Use this phrase:
 
 **[Instructor speaks:]**
 
-Let’s name the big ideas from the hour:
+The callback should coordinate the interaction. The service should decide whether the record is valid.
 
-- GUI programs are event-driven
-- widgets are the visible building blocks
-- callbacks respond to user actions
-- `mainloop()` keeps the app alive and listening
-- service logic should stay separate from UI code
+#### Pitfall 2: Forgetting `mainloop()`
 
-### Quick Checks
+If the script appears to do nothing or the window flashes and disappears, check for `root.mainloop()`. It should be called after widgets and callbacks are set up.
 
-**Prompt:** What is the difference between a widget and a callback?  
-**Expected answer:** a widget is a UI element; a callback is a function that runs in response to an event.
+#### Pitfall 3: Callback called immediately
 
-**Prompt:** Why is it helpful to keep validation out of the widget-building code?  
-**Expected answer:** clearer responsibilities, easier testing, easier maintenance.
+If the callback runs before the button is clicked, look for this:
 
-### Exit Ticket
+```python
+command=on_add()
+```
 
-**Prompt 1:** What does `mainloop()` do?  
-**Expected answer:** it starts Tkinter’s event loop and keeps the application responsive to events.
+It should be:
 
-**Prompt 2:** What is a callback in a Tkinter application?  
-**Expected answer:** a function that runs when a user action or GUI event occurs.
+```python
+command=on_add
+```
 
-**Prompt 3:** Why should business rules stay in a service layer instead of directly in the callback?  
-**Expected answer:** to keep code organized, reusable, and easier to test.
+The first version calls the function during setup. The second passes the function for Tkinter to call later.
 
-### Common Pitfalls Recap
+#### Pitfall 4: Widget not displayed due to layout mistakes
 
-- putting business rules inside callbacks
-- forgetting `mainloop()`
-- calling the callback immediately instead of passing it as a command
-- giving no visible user feedback
-- writing a callback that tries to do everything
+If a label, entry, button, or status area does not appear, check whether the student created the widget but forgot to place it with `.pack()` or `.grid()`.
+
+Also check parent containers. A widget placed in a frame appears only if the frame itself is placed. For example, if `main_frame` is never packed, the labels inside it will not be visible either.
+
+#### Pitfall 5: Mixing `pack()` and `grid()` in the same parent
+
+Do not mix `pack()` and `grid()` inside the same parent container. For example, do not call `.pack()` on one child of `main_frame` and `.grid()` on another child of `main_frame`. That can cause Tkinter layout errors or confusing behavior.
+
+It is okay to use `pack()` in one frame and `grid()` in a different frame, but that is more than we need today. For this lab, use `pack()` consistently unless the instructor explicitly provides a different starter.
+
+#### Pitfall 6: No visible feedback
+
+If the button works internally but the screen does not change, the user cannot tell what happened. Require at least a status label. A message box is also useful for this hour.
+
+### Optional Extensions
+
+Offer these only after the minimum criteria are working:
+
+1. Clear the form after a successful add.
+2. Add a small record-count label.
+3. Add a **Clear** button that clears fields and resets the status message.
+4. Bind the Enter key to submit.
+
+For the Enter key extension, make it implementable. If using the function-style starter, bind Enter on the root window after `on_add()` is defined:
+
+```python
+root.bind("<Return>", lambda event: on_add())
+```
+
+If using the `ContactApp` class from the demo, bind Enter in `__init__()` after `_build_ui()`:
+
+```python
+self.root.bind("<Return>", lambda event: self.on_add())
+```
+
+If students want to focus a specific entry after clearing the form, keep a reference to that entry:
+
+```python
+name_entry = ttk.Entry(main_frame, textvariable=name_var)
+name_entry.pack(fill="x", pady=(0, 10))
+name_entry.focus()
+```
+
+Do not require the Enter binding for completion. It is an extension for students who finish early.
+
+---
+
+## Section 6: Debrief/Exit (5 minutes)
+
+### Debrief
+
+**[Instructor speaks:]**
+
+Let’s name what we accomplished. We created a real desktop window. We added basic widgets. We connected a button to a callback. We sent the user’s input through service logic. We displayed feedback. Most importantly, we practiced the event-driven mental model.
+
+In a command-line script, the program often controls the sequence. In a GUI, the user’s events control the sequence, and our callbacks respond.
+
+### Quick Check
+
+**Prompt:** What does mainloop() do?
+
+**Expected answer:** It starts Tkinter’s event loop, keeps the window alive, listens for user events, and runs callbacks until the application closes.
+
+### Additional Exit Questions
+
+Use these if time allows:
+
+1. What is a widget?
+   - **Expected answer:** a visible UI element such as a label, entry, or button.
+2. What is a callback?
+   - **Expected answer:** a function that runs in response to a GUI event.
+3. Why should validation live in a service layer?
+   - **Expected answer:** it keeps business rules reusable, testable, and separate from display code.
+4. Why should we avoid long blocking work inside callbacks?
+   - **Expected answer:** it can freeze the GUI because the event loop cannot process other events smoothly.
+
+### Pitfalls Recap
+
+**[Instructor speaks:]**
+
+As you continue, watch for these common mistakes:
+
+- putting business logic directly inside callbacks,
+- forgetting `mainloop()`,
+- writing `command=on_add()` instead of `command=on_add`,
+- creating widgets but not displaying them with a layout manager,
+- mixing `pack()` and `grid()` in the same parent,
+- showing no success or error feedback,
+- and doing long blocking work inside a callback.
 
 ### Wrap-Up
 
 **[Instructor speaks:]**
 
-This hour was about getting the window alive and making the event-driven model feel concrete. In the next hour, we will take the same kinds of widgets and organize them into cleaner, more usable layouts using frames, `grid()`, spacing, and resizing rules.
+This hour was about getting the GUI alive and understanding how interaction flows. The big idea is not “memorize Tkinter methods.” The big idea is that a GUI is a Python program that waits for events, responds through callbacks, and still benefits from clean separation of concerns.
 
-A GUI is not magic. It is a Python program that waits for events, reacts through callbacks, and benefits from the same design discipline as any other application.
+In the next hour, we will focus on layout and usability. We will take the same basic widgets and arrange them more intentionally with frames, spacing, resizing behavior, and clearer form structure. For now, if your app launches, accepts input, calls service logic, and shows feedback, you have the foundation.
 
 ---
 
 ## Optional Instructor Reference Notes
 
 ### One-Sentence Summary
-Tkinter apps are event-driven programs where the UI gathers input, callbacks respond to user actions, and service logic should remain separate from presentation code.
+
+Tkinter apps are event-driven programs where widgets gather input, callbacks respond to user actions, service logic owns validation rules, and `mainloop()` keeps the application alive and listening.
 
 ### If Students Finish Early
+
 Invite them to:
 
-- add a third field
-- add a record counter
-- add an Enter key binding
-- compare feedback in a status label versus a message box
+- add a third field,
+- add a record counter,
+- add an Enter key binding with `root.bind("<Return>", lambda event: on_add())`,
+- compare feedback in a status label versus a message box,
+- or refactor a function-style solution into a small app class without adding new features.
 
----
+### Instructor Reminders for Scope
+
+- Keep the live demo between 5 and 10 minutes; this script budgets 8 minutes.
+- Keep the lab between 25 and 35 minutes; this script budgets 26 minutes.
+- Do not introduce database persistence yet.
+- Do not introduce background threads or async techniques yet.
+- Do not turn layout into the main topic; Hour 18 owns layout depth.
+- Keep examples deterministic and Windows-friendly.
