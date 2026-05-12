@@ -3,14 +3,36 @@
 
 ---
 
+## Instructor Notes
+
+- **Course**: Python Programming (Advanced)
+- **Session**: Day 4, Hour 4 of 48, also Hour 16 in the Advanced runbook sequence
+- **Focus**: Framing and starting Checkpoint 2: a persistence-ready core that can save, restart, load, handle errors, and log meaningful events.
+- **Source of truth**: `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`, Session 4, Hour 16.
+- **Prerequisites**: Learners should understand the Day 3 package/logging/safe-save work and the Day 4 planning work around MVP scope, persistence, and tests.
+- **Advanced trajectory**: This hour turns earlier architecture habits into checkpoint evidence. Students are not adding flashy features; they are proving the core can persist state reliably and is ready for future database integration.
+- **Instructor goal**: By the end of this hour, every learner has either implemented or clearly advanced a persistence-ready core under `src/`, with JSON save/load, file logging, custom exceptions, and a demo path that proves save -> restart -> load.
+
+Important instructor positioning:
+
+- The runbook describes Checkpoint 2 as a larger 45-60 minute checkpoint activity. This lecture contains a 26-minute in-class checkpoint build block that frames and starts the work; learners may finish or polish remaining checkpoint evidence after the hour depending on class logistics.
+- Keep grading language concrete: correctness, structure, error handling, and logging.
+- Require evidence, not claims. Students should show the saved JSON, restart the app or demo script, reload state, trigger one controlled failure, and point to a log entry.
+- Do not let students skip serialization design by trying to dump arbitrary Python objects directly to JSON.
+- If time permits after the required behavior works, mention a `version` or `schema_version` field as a future migration hook. Do not make migration the main checkpoint.
+
+---
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Checkpoint framing and grading focus: 5 minutes
-- Persistence-ready architecture and package layout under `src/`: 12 minutes
-- Safe JSON save/load, logging, and exception strategy: 13 minutes
-- Live Demo (save -> restart -> load): 10 minutes
-- Hands-On Checkpoint Build: 15 minutes
-- Debrief & Exit Ticket: 5 minutes
+- Persistence-ready architecture and package layout under `src/`: 10 minutes
+- Safe JSON save/load, logging, and exception strategy: 10 minutes
+- Live Demo (save -> restart -> load): 6 minutes
+- Hands-On Checkpoint Build: 26 minutes
+- Debrief & Exit Ticket: 3 minutes
+
+This one-hour plan totals exactly 60 minutes: 5 + 10 + 10 + 6 + 26 + 3 = 60. The in-class checkpoint build is 26 minutes, which stays inside the runbook's 25-35 minute hands-on lab window while acknowledging that the broader Checkpoint 2 deliverable may take additional completion or review time. Protect the build block. If a concept explanation runs long, shorten the demo narration rather than cutting the evidence-building time.
 
 ---
 
@@ -63,7 +85,7 @@ Exactly.
 
 ---
 
-## Section 2: Persistence-Ready Architecture and Package Layout under `src/` (12 minutes)
+## Section 2: Persistence-Ready Architecture and Package Layout under `src/` (10 minutes)
 
 ### Why `src/` Layout Matters
 
@@ -150,7 +172,7 @@ Point out that serialization works because the model gives us a clear path to an
 
 ---
 
-## Section 3: Safe JSON Save/Load, Logging, and Exception Strategy (13 minutes)
+## Section 3: Safe JSON Save/Load, Logging, and Exception Strategy (10 minutes)
 
 ### Why Not Just `json.dump()` Straight to the Final File?
 
@@ -322,7 +344,7 @@ That is exactly why this checkpoint is called persistence-ready, not persistence
 
 ---
 
-## Section 4: Live Demo – Save -> Restart -> Load (10 minutes)
+## Section 4: Live Demo – Save -> Restart -> Load (6 minutes)
 
 ### Demo Goal
 
@@ -391,7 +413,7 @@ if __name__ == "__main__":
 
 Call out the restart simulation explicitly. We are proving that the second service instance can reconstruct meaningful state from the saved JSON. That is the checkpoint.
 
-Then show quick failure cases if time allows:
+Then show the required fast-grade failure cases. Keep them brief, but do not skip them:
 
 - missing file on first load → default state
 - corrupted JSON → `PersistenceError` plus log entry
@@ -402,6 +424,20 @@ Then show quick failure cases if time allows:
 [Pause.]
 
 The answer we want is: it should not crash with a cryptic traceback in front of the user. It should handle `JSONDecodeError`, log the details, and communicate a clear failure.
+
+For the validation trigger, narrate a concrete action instead of leaving it abstract:
+
+```text
+Fast-grade validation trigger:
+1. Save a valid state.
+2. Open the JSON file.
+3. Delete one book's required `title` field.
+4. Run the load path again.
+5. Confirm the loader rejects the data through the controlled validation/persistence path.
+6. Confirm the log contains a useful failure entry.
+```
+
+If editing the file live is too risky in class, use a prepared broken JSON sample. The important requirement is that students see validation failure as part of the checkpoint evidence, not as an optional extra.
 
 ### Fast Grade Checklist
 
@@ -420,7 +456,7 @@ This gives students a practical review process they can use on their own project
 
 ---
 
-## Section 5: Hands-On Checkpoint Build (15 minutes)
+## Section 5: Hands-On Checkpoint Build (26 minutes)
 
 ### Student Task
 
@@ -439,6 +475,29 @@ Required elements:
 - custom exceptions still used
 - demo script showing save -> restart -> load
 - handling of invalid JSON with `JSONDecodeError`
+
+### Checkpoint Build Mini-Budget
+
+Use this mini-budget to keep the 26-minute build concrete:
+
+- 4 minutes: confirm package layout under `src/` and identify the model, service, persistence, logging, and error modules.
+- 4 minutes: add or review `to_dict()` / `from_dict()` conversion so JSON receives plain dictionaries and lists rather than raw objects.
+- 5 minutes: implement or repair JSON save/load with a safe-save temp file and a missing-file path.
+- 4 minutes: add file logging and verify that save/load events produce meaningful log entries.
+- 4 minutes: add controlled error handling for invalid JSON and validation failures, using custom exceptions.
+- 3 minutes: run the demo script through save -> restart -> load and inspect the saved JSON.
+- 2 minutes: write one reflection note answering what design decision they would change if starting over.
+
+If a student cannot finish every item, prioritize evidence in this order: package layout, save/load round trip, invalid JSON handling, meaningful logs, then optional polish.
+
+### Evidence Checklist
+
+Before students call the checkpoint complete, ask them to show evidence for each required outcome:
+
+- **State persists across runs:** run the app or demo, save state, restart or create a new service instance, and load the same state back.
+- **Errors are handled without uncontrolled crashing:** remove the file, corrupt the JSON, or introduce invalid loaded data and show a controlled message or custom exception path.
+- **Logs contain meaningful entries:** open the log file and point to save, load, missing-file, or failure entries.
+- **Structure supports future storage changes:** identify the module that would change most if JSON were replaced by a database.
 
 ### Completion Criteria
 
@@ -491,6 +550,7 @@ That sequence keeps the checkpoint from feeling overwhelming.
 If time remains and the foundation is solid, students may:
 
 - add a `version` field to the JSON for future migration support
+- call the field `schema_version` if they want to make future migrations easier to explain
 - record save timestamps in logs
 - add a backup file before replacement
 - write a small test covering save/load round-trips
@@ -719,7 +779,7 @@ Add a final practical note for students: if a reviewer can follow the save path,
 
 That is also a useful standard for students to reuse later: if persistence cannot survive a simple manual verification loop, it is probably not ready to support the rest of the application yet. Reliable software earns trust through repeatable checks.
 
-## Section 6: Debrief & Exit Ticket (5 minutes)
+## Section 6: Debrief & Exit Ticket (3 minutes)
 
 ### Group Debrief
 
@@ -749,7 +809,7 @@ This reflection helps them internalize architecture rather than treating it as a
 2. What should happen if the JSON file is missing?
 3. What should happen if the JSON file exists but contains invalid JSON?
 4. Why is the code called persistence-ready rather than database-complete?
-5. What is one design decision you would change if you started over?
+5. What's one design decision you would change if you started over?
 
 **[Expected direction of answers:]**
 
@@ -757,7 +817,7 @@ This reflection helps them internalize architecture rather than treating it as a
 - Missing files should usually lead to a default state or a controlled first-run path.
 - Invalid JSON should be caught, logged, and surfaced through a clear error path.
 - JSON persistence prepares the architecture, but does not provide full database capabilities.
-- The final answer should reveal thoughtful reflection on structure, validation, or logging.
+- The final answer should reveal thoughtful reflection on structure, validation, or logging. Strong answers might include "I would separate persistence earlier," "I would design `to_dict()` and `from_dict()` before writing the demo," or "I would add logging before debugging save/load failures."
 
 ### Instructor Closing Line
 
