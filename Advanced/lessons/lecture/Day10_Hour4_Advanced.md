@@ -8,12 +8,11 @@
 
 | Minutes | Activity | Instructor intent |
 | --- | --- | --- |
-| 0-5 | Welcome, recap, and outcome framing | Connect this hour to the previous capstone layer and name the deliverable. |
-| 5-17 | Concept briefing and vocabulary | Teach the ideas learners need before touching code. |
-| 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
-| 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
-| 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
-| 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+| 0-10 | Checkpoint framing and success criteria | Name exactly what the API milestone must prove. |
+| 10-15 | Fast-grade checklist walkthrough | Show the sequence learners will use for rehearsal and review. |
+| 15-40 | Independent stabilization and rehearsal | Learners fix only blockers, rehearse commands, and document evidence. |
+| 40-55 | Timeboxed learner demos / fast-grade checks | Run short demos or spot checks against the checkpoint rubric. |
+| 55-60 | Reflection and exit ticket | Capture remaining risks before analytics and testing begin. |
 
 ## Learning Outcomes
 
@@ -41,7 +40,7 @@ By the end of this hour, learners will be able to:
 }
 ```
 
-## Opening Script (0-5 minutes)
+## Opening Script (0-10 minutes)
 
 **[Instructor speaks:]**
 "Welcome back. In the previous parts of the advanced course, we built a layered tracker: domain model, service layer, repository, and persistence. Today we keep turning that code into a deliverable system. This hour is not about memorizing syntax. It is about making a design choice, proving it with code, and leaving the project easier to test and maintain."
@@ -58,7 +57,7 @@ By the end of this hour, learners will be able to:
 - This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
 - The class norm is still: make one small change, run it, observe the result, then continue.
 
-## Concept Briefing (5-17 minutes)
+## Fast-Grade Checklist Walkthrough (10-15 minutes)
 
 **[Instructor speaks:]**
 "Here are the ideas I want you to listen for during the demo. First, where does this responsibility belong? Second, what is the happy path? Third, what is the sad path? Fourth, how will another person know how to use or verify it? Advanced Python is less about clever lines of code and more about reliable boundaries."
@@ -82,7 +81,7 @@ Use these prompts to keep the class active:
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
 
-## Live Demo (17-35 minutes)
+## Instructor Model Demo (15-25 minutes)
 
 **[Instructor speaks:]**
 "I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
@@ -127,7 +126,7 @@ Use these prompts to keep the class active:
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-## Guided Practice (35-40 minutes)
+## Independent Stabilization and Rehearsal (25-40 minutes)
 
 **[Instructor speaks:]**
 "Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
@@ -140,20 +139,20 @@ Suggested instructor circulation questions:
 4. "If I review this tomorrow, where is the contract documented?"
 5. "What would you test automatically if you had ten more minutes?"
 
-## Hands-on Lab (40-50 minutes)
+## Stabilization and Demo Queue (40-55 minutes)
 
 ### Lab prompt
 
-Checkpoint 5: prepare and deliver a short API milestone demo. Deliver Flask CRUD, SQLite persistence, consistent JSON errors, API-key gate for writes, and optionally a Python client.
+Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone demos or fast-grade checks. Each learner should be ready to show Flask CRUD, SQLite persistence, consistent JSON errors, API-key gate for writes, and optionally a Python client.
 
 ### Required learner workflow
 
 1. Start from a known-good run.
-2. Make one small implementation change.
-3. Run the narrowest check possible.
-4. Add the happy-path proof.
-5. Add one sad-path proof.
-6. Commit or save the working state before attempting an extension.
+2. Run the demo sequence once privately.
+3. Fix only blockers that prevent the checkpoint evidence.
+4. Queue for a timeboxed demo or fast-grade check.
+5. Show one happy-path proof and one sad-path proof.
+6. Commit or save the stable state before attempting any optional polish.
 
 ### Completion criteria
 
@@ -162,7 +161,7 @@ Checkpoint 5: prepare and deliver a short API milestone demo. Deliver Flask CRUD
 - Security gate works for missing/wrong/correct keys.
 - Student can point to separation between routes and service logic.
 
-## Debrief and Troubleshooting (50-56 minutes)
+## Reflection and Exit Ticket (55-60 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."

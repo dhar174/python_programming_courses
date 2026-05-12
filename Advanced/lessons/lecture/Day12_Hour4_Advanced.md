@@ -8,12 +8,11 @@
 
 | Minutes | Activity | Instructor intent |
 | --- | --- | --- |
-| 0-5 | Welcome, recap, and outcome framing | Connect this hour to the previous capstone layer and name the deliverable. |
-| 5-17 | Concept briefing and vocabulary | Teach the ideas learners need before touching code. |
-| 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
-| 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
-| 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
-| 56-60 | Quick check / exit ticket | Verify final readiness and name post-course next steps. |
+| 0-8 | Final framing and demo rubric | Set expectations for supportive, evidence-based capstone demos. |
+| 8-35 | Capstone demos and reviewer prompts | Timebox learner demos and ask architecture/tradeoff questions. |
+| 35-48 | Certification-style code-reading review | Practice PCAP/PCPP-style reasoning with short code prompts. |
+| 48-57 | Retrospective and next-step planning | Convert course outcomes into an individual practice plan. |
+| 57-60 | Closing exit ticket | Name one demonstrated strength and one concrete next step. |
 
 ## Learning Outcomes
 
@@ -31,7 +30,7 @@ By the end of this hour, learners will be able to:
 - Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
 - Keep a final-demo checklist visible: setup command, working feature, persistence proof, report or test evidence, packaging note, one design tradeoff, and one post-course practice goal.
 
-## Opening Script (0-5 minutes)
+## Opening Script (0-8 minutes)
 
 **[Instructor speaks:]**
 "Welcome back. In the previous parts of the advanced course, we built a layered tracker: domain model, service layer, repository, and persistence. Today we keep turning that code into a deliverable system. This hour is not about memorizing syntax. It is about making a design choice, proving it with code, and leaving the project easier to test and maintain."
@@ -48,7 +47,7 @@ By the end of this hour, learners will be able to:
 - This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
 - The class norm is still: make one small change, run it, observe the result, then continue.
 
-## Concept Briefing (5-17 minutes)
+## Capstone Demo Rubric and Rotation Setup (8-12 minutes)
 
 **[Instructor speaks:]**
 "Here are the ideas I want you to listen for during the demo. First, where does this responsibility belong? Second, what is the happy path? Third, what is the sad path? Fourth, how will another person know how to use or verify it? Advanced Python is less about clever lines of code and more about reliable boundaries."
@@ -72,7 +71,7 @@ Use these prompts to keep the class active:
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
 
-## Live Demo (17-35 minutes)
+## Capstone Demo and Review Prompt Model (12-35 minutes)
 
 **[Instructor speaks:]**
 "I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
@@ -123,7 +122,7 @@ def choose_label(status: str) -> str:
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-## Guided Practice (35-40 minutes)
+## Certification-Style Review and Retrospective Setup (35-48 minutes)
 
 **[Instructor speaks:]**
 "Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
@@ -136,20 +135,20 @@ Suggested instructor circulation questions:
 4. "If I review this tomorrow, where is the contract documented?"
 5. "What would you test automatically if you had ten more minutes?"
 
-## Hands-on Lab (40-50 minutes)
+## Learner Rotation Instructions (8-57 minutes)
 
 ### Lab prompt
 
-Final: deliver a 3-5 minute capstone demo, complete a short certification-style code-reading review, and write an individual next-step plan. Demonstrate model/service, persistence, UI surface, report, tests, and packaging readiness.
+Final: learners rotate through 3-5 minute capstone demos, complete a short certification-style code-reading review, and write an individual next-step plan. Demonstrate model/service, persistence, UI surface, report, tests, and packaging readiness.
 
 ### Required learner workflow
 
 1. Start from a known-good run.
 2. Rehearse the 3-5 minute demo from the README or lab notes.
 3. Run the narrowest check that proves the demo still works.
-4. Capture the happy-path proof.
-5. Capture one sad-path proof or explain the next diagnostic step.
-6. Commit or save the final working state before adding polish.
+4. Deliver or queue for the timeboxed demo.
+5. Complete the certification-style review prompt.
+6. Write the retrospective next-step plan and save the final working state.
 
 ### Completion criteria
 
@@ -158,7 +157,7 @@ Final: deliver a 3-5 minute capstone demo, complete a short certification-style 
 - Demo stays within timebox.
 - Learner names one workplace application and one skill to keep practicing.
 
-## Debrief and Troubleshooting (50-56 minutes)
+## Closing Debrief (57-60 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
