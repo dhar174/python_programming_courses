@@ -36,14 +36,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GH_PAT }}
         
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-        with: 
-          token: ${{ secrets.GH_PAT }}
           
       - name: Convert Basics slide Markdown into HTML and PDF
         uses: KoharaKazuya/marp-cli-action@v4
@@ -196,6 +192,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GH_PAT }}
         
