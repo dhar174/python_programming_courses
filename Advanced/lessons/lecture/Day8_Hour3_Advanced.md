@@ -158,6 +158,7 @@ That is enough to teach the pattern and improve the app.
 Let me show a repository method that stays readable and safe.
 
 ```python
+import sqlite3
 from contextlib import closing
 
 

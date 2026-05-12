@@ -181,6 +181,7 @@ class TrackerService:
 Now the repository implementation:
 
 ```python
+import sqlite3
 from contextlib import closing
 
 
@@ -203,7 +204,7 @@ class SQLiteTrackerRepository:
 
     def list_all(self) -> list[Record]:
         query = """
-            SELECT id, title, category, status, priority, created_at
+            SELECT id, title, category, status
             FROM records
             ORDER BY id ASC
         """
