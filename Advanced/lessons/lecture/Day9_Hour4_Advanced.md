@@ -1,280 +1,397 @@
-# Day 9, Hour 4: App Structure, Blueprints, and Dependency Wiring
+# Day 9, Hour 4: App structure: blueprints and dependency wiring
+
 **Python Programming Advanced - Session 9**
+**Runbook alignment:** Session 9, Hour 36
+**Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
----
+## 60-minute Timing Overview
 
-## Timing Overview
-**Total Time:** 60 minutes  
-- Frame the maintainability problem: 5 minutes  
-- Direct instruction on application structure and factories: 15 minutes  
-- Live refactor into `create_app()` and routes module: 10 minutes  
-- Guided refactor lab: 25 minutes  
-- Debrief and exit ticket: 5 minutes
+| Minutes | Activity | Instructor intent |
+| --- | --- | --- |
+| 0-5 | Welcome, recap, and outcome framing | Connect this hour to the previous capstone layer and name the deliverable. |
+| 5-17 | Concept briefing and vocabulary | Teach the ideas learners need before touching code. |
+| 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
+| 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
+| 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
+| 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
 
----
-
-## Learning Outcomes for This Hour
+## Learning Outcomes
 
 By the end of this hour, learners will be able to:
-1. Explain why a growing Flask app needs clearer structure
-2. Refactor a single-file Flask app into a maintainable application layout
-3. Use a simple `create_app()` pattern to wire dependencies predictably
-4. Understand when Flask blueprints are helpful and when they are optional
-5. Avoid common circular-import and hidden-global-state mistakes
 
----
+- Refactor Flask code into a maintainable application structure.
+- Use an application factory to wire configuration, repository, and service dependencies.
+- Avoid circular imports and hidden global state.
 
 ## Instructor Prep Notes
 
-- Use the word "pragmatic" often; the runbook explicitly warns against overframeworking
-- Present blueprints as optional, not mandatory dogma
-- Keep the focus on dependency wiring and predictable startup
-- Prepare one example of a circular-import problem to discuss conceptually
+- Confirm learners are in the correct project folder and virtual environment.
+- Keep the authoritative runbook open to Session 9, Hour 36; this script expands that hour into a near-verbatim delivery guide.
+- Use Python 3.11+ conventions: clear type hints, f-strings, `pathlib` for paths, context managers for resources, and small functions with one responsibility.
+- Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
+- For API-related examples, keep this error contract visible on the board:
 
----
-
-## Section 1: Why Structure Starts to Matter Now (5 minutes)
-
-### Opening Script
-
-**[Instructor speaks:]**
-
-Single-file applications are great for learning and fast starts. They become fragile once the route count grows, once the service layer matters, and once configuration enters the picture. At that moment, structure stops being aesthetic and starts being practical.
-
-Today we are going to keep our API maintainable by making startup predictable, separating route definitions, and being clear about where services and repositories are created.
-
----
-
-## Section 2: Direct Instruction on App Structure (15 minutes)
-
-### The Problem With "Everything in `app.py`"
-
-**[Instructor speaks:]**
-
-When everything lives in one file, a few things tend to happen:
-
-- imports get noisy
-- route handlers get mixed with setup code
-- configuration values hide in random places
-- service and repository creation happens at import time
-- tests become harder because the application is not easy to construct in a controlled way
-
-None of that means the learner did something wrong. It means the project grew.
-
-### A Simple Application Factory
-
-**[Instructor speaks:]**
-
-The application factory pattern sounds formal, but our version is simple. It means we wrap app construction in a function:
-
-```python
-def create_app() -> Flask:
-    app = Flask(__name__)
-    repo = SQLiteTrackerRepository("data/tracker.db")
-    repo.init_db()
-    service = TrackerService(repo=repo)
-
-    register_routes(app, service)
-    return app
+```json
+{
+  "error": {
+    "code": "validation_error",
+    "message": "name is required",
+    "request_id": "..."
+  }
+}
 ```
 
-Why is this helpful?
-
-- startup happens in one place
-- dependencies are created explicitly
-- tests can construct the app when needed
-- different environments can pass different settings later
-
-### Where Blueprints Fit
+## Opening Script (0-5 minutes)
 
 **[Instructor speaks:]**
+"Welcome back. In the previous parts of the advanced course, we built a layered tracker: domain model, service layer, repository, and persistence. Today we keep turning that code into a deliverable system. This hour is not about memorizing syntax. It is about making a design choice, proving it with code, and leaving the project easier to test and maintain."
 
-Blueprints are Flask's way of grouping routes. They are useful, but optional. In this course, the most important structural win is separating routes into a module and wiring the service clearly. If learners are comfortable, blueprints are a nice next step. If they are already juggling enough, a routes module plus `create_app()` is sufficient.
-
-### Avoiding Hidden Global State
+*(Action: Ask learners to open the project and run the last known-good command. For API hours, that may be `flask run` or `python -m api.app`; for analytics it may be a report script; for testing it may be `pytest -q`.)*
 
 **[Instructor speaks:]**
+"Before we add anything, we want a baseline. If your project does not run at the start of the hour, adding a feature will make debugging harder. Run the smallest command that proves your project is alive. If it fails, write down the first error line and do not start editing yet."
 
-One common trap is creating the repository or service as a global at import time:
+### Bridge from prior work
+
+- The tracker already has a model/service/repository shape from earlier sessions.
+- SQLite remains the source of truth for persisted records.
+- This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
+- The class norm is still: make one small change, run it, observe the result, then continue.
+
+## Concept Briefing (5-17 minutes)
+
+**[Instructor speaks:]**
+"Here are the ideas I want you to listen for during the demo. First, where does this responsibility belong? Second, what is the happy path? Third, what is the sad path? Fourth, how will another person know how to use or verify it? Advanced Python is less about clever lines of code and more about reliable boundaries."
+
+### Talk points
+
+- Structure exists to reduce friction, not to impress anyone.
+- The application factory pattern lets tests create isolated apps with temporary databases.
+- A blueprint groups routes while create_app decides which dependencies they receive.
+- Import-time side effects make tests flaky and make configuration hard to change.
+
+### Why this matters in real projects
+
+**[Instructor speaks:]**
+"Real teams spend a surprising amount of time at boundaries: the boundary between a GUI and a service, an API and a client, a CSV and a DataFrame, or a test and the system under test. Bugs often appear where assumptions cross those boundaries. If we make contracts explicit, the next developer can reason about the program without reading every line."
+
+Use these prompts to keep the class active:
+
+- "What do you expect this function to return on success?"
+- "What should happen if the input is missing, malformed, or points to a record that does not exist?"
+- "Which layer should know about this detail?"
+- "How could we test this without clicking through the whole application?"
+
+## Live Demo (17-35 minutes)
+
+**[Instructor speaks:]**
+"I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
+
+### Demo steps
+
+1. Move route definitions into `api/routes.py` as a `register_routes(app, service)` helper.
+2. Create `create_app(db_path: Path | None = None)`.
+3. Construct repository and service inside create_app.
+4. Run the same /health and /records smoke checks after the refactor.
+
+### Demo code or command sketch
+
+`api/app.py`:
 
 ```python
-service = TrackerService(SQLiteTrackerRepository("data/tracker.db"))
-```
-
-That seems convenient, but it makes behavior harder to control. The moment the module is imported, the dependency is created. Tests become harder. Configuration becomes harder. Errors can occur before the app has even started properly.
-
-### Circular Imports
-
-**[Instructor speaks:]**
-
-Circular imports often appear when `app.py` imports `routes.py`, `routes.py` imports `app`, and both want access to shared objects. The easiest course-level defense is to pass the dependencies in and keep module responsibilities narrow.
-
----
-
-## Section 3: Live Refactor (10 minutes)
-
-### Starting Point
-
-Show a simplified single-file structure:
-
-```python
-app = Flask(__name__)
-repo = SQLiteTrackerRepository("data/tracker.db")
-service = TrackerService(repo)
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-@app.get("/records")
-def list_records():
-    return [record.to_dict() for record in service.list_records()]
-```
-
-Then say:
-
-**[Instructor speaks:]**
-
-This works, but it scales poorly. Let's move toward clearer construction.
-
-### Refactor Target
-
-```python
-# api/app.py
+from pathlib import Path
 from flask import Flask
-from tracker.repositories.sqlite_repo import SQLiteTrackerRepository
-from tracker.services import TrackerService
+
+# Adjust module paths to match the cohort project structure.
 from api.routes import register_routes
+from tracker.repository import SQLiteTrackerRepository
+from tracker.service import TrackerService
 
-
-def create_app() -> Flask:
+def create_app(db_path: Path | None = None) -> Flask:
     app = Flask(__name__)
-    repo = SQLiteTrackerRepository("data/tracker.db")
+    database_path = db_path or Path("data/tracker.db")
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    repo = SQLiteTrackerRepository(str(database_path))
     repo.init_db()
     service = TrackerService(repo=repo)
+
     register_routes(app, service)
     return app
-
-
-app = create_app()
 ```
 
+`api/routes.py`:
+
 ```python
-# api/routes.py
-from flask import jsonify, request
+from flask import Flask
 
+from tracker.service import TrackerService
 
-def register_routes(app, service):
+def register_routes(app: Flask, service: TrackerService) -> None:
     @app.get("/health")
     def health():
-        return jsonify({"status": "ok"})
+        return {"status": "ok"}
 
     @app.get("/records")
     def list_records():
-        return jsonify([record.to_dict() for record in service.list_records()])
+        return {"data": [r.to_dict() for r in service.list_records()]}
+
 ```
 
-### Narrated Debrief
+### Demo narration guide
 
 **[Instructor speaks:]**
+"Notice that I am not starting with the biggest possible version. I am building a thin vertical slice. A thin slice is one small feature that crosses the layers we need: input, service behavior, persistence or data handling if relevant, and a visible result. Once that slice is correct, the next route, chart, test, or packaging step is easier."
 
-This structure is not fancy, and that is exactly why it is appropriate. Construction is explicit. The routes module receives the service. The app still runs normally. We gained maintainability without disappearing into framework complexity.
-
----
-
-## Section 4: Guided Refactor Lab (25 minutes)
-
-### Lab Goal
+*(Action: Run the code or command once for a happy path. Ask: "What proves this worked?")*
 
 **[Instructor speaks:]**
+"Now we need a sad path. A feature is not done just because the perfect input worked. I am going to send bad input, omit a required value, use a missing id, stop the server, or run from a clean environment depending on the hour. The goal is not to embarrass the code; the goal is to define how the program behaves when reality is messy."
 
-Your goal is to refactor your API so a future teammate can understand startup and route wiring quickly. You do not need perfect architecture. You need architecture that is readable and predictable.
+*(Action: Trigger the sad path deliberately. For API work, show JSON errors. For pandas and reports, show a missing file or bad column and discuss the message. For tests, show a failing assertion and read it carefully.)*
 
-### Required Tasks
+### Instructor checkpoints during the demo
 
-Learners should:
+- Ask learners to identify the layer being edited.
+- Ask whether the code is using project-safe paths rather than machine-specific paths.
+- Ask what a reviewer would need in order to reproduce the result.
+- Ask what test or manual check would catch a regression later.
 
-1. Move route definitions into a dedicated module or grouping structure
-2. Add a `create_app()` function
-3. Construct the repository and service in one visible place
-4. Confirm `/health` and `/records` still work after the refactor
-
-### Optional Task
-
-If comfortable, learners may introduce a blueprint for the resource routes, but this is not required.
-
-### Suggested Refactor Order
-
-1. Create `routes.py`
-2. Move one route first and confirm imports work
-3. Add `create_app()`
-4. Pass `service` into the route registration function
-5. Run the app and verify endpoints
-
-This incremental approach is much safer than cutting everything over in one move.
-
-### Common Mistakes
-
-- Importing `app` from the routes module, which creates circular imports
-- Creating dependencies both globally and in `create_app()`
-- Moving code before confirming the original app still works
-- Refactoring too many concepts at once, such as adding config classes, blueprints, environment loading, and testing hooks all in the same hour
-
-### Coaching Prompts
-
-- Where is the one place a teammate should look to understand startup?
-- If you wanted a test database tomorrow, where would that setting enter?
-- Are you constructing the service once or in multiple places?
-- Could a reader identify which module owns routes and which module owns domain logic?
-
-### Instructor Recovery Script
+## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
+"Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
 
-If the refactor feels risky, move one route, run it, and only then move the next. Refactors are safer when you preserve a working state after each step.
+Suggested instructor circulation questions:
 
-### Fast Finishers
+1. "Show me the file you are editing and tell me why this responsibility belongs there."
+2. "What is your first happy-path command?"
+3. "What is your first sad-path command?"
+4. "If I review this tomorrow, where is the contract documented?"
+5. "What would you test automatically if you had ten more minutes?"
 
-Strong learners can add a simple config constant or configurable database path, but only after the structural refactor is stable.
+## Hands-on Lab (40-50 minutes)
 
----
+### Lab prompt
 
-## Section 5: Debrief and Exit Ticket (5 minutes)
+Refactor API structure: keep the app runnable while moving toward create_app, a route registration function or blueprint, and explicit service/repository construction.
 
-### Debrief Script
+### Required learner workflow
+
+1. Start from a known-good run.
+2. Make one small implementation change.
+3. Run the narrowest check possible.
+4. Add the happy-path proof.
+5. Add one sad-path proof.
+6. Commit or save the working state before attempting an extension.
+
+### Completion criteria
+
+- App still starts after the refactor.
+- /health and at least one CRUD endpoint still work.
+- DB path/configuration can be changed for tests or demos.
+
+## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
+"Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
 
-This hour was about maintainability, not visible features. Those hours are easy to undervalue because the app may look similar from the outside. But this kind of structural clarity is what lets the project survive future changes instead of becoming brittle.
+### Common pitfalls to watch for
 
-### Share-Out Questions
+- Circular imports between app.py and routes.py.
+- Creating the database connection at import time.
+- Moving files without updating imports.
+- Refactoring and changing behavior at the same time.
 
-- What part of your Flask app became clearer after the refactor?
-- Where do you now create the repository and service?
-- Did you use a routes module only, or routes plus blueprints?
-- What circular-import risk did you avoid?
+### Debugging script for stuck learners
 
-### Exit Ticket
+Use this sequence aloud when helping a learner:
 
-1. What is the risk of creating the repository or service at import time?
-2. Why is `create_app()` useful?
-3. When are blueprints helpful, and why are they optional in this course?
+1. "Read the first meaningful error message, not the last line only."
+2. "What command produced it? Can we reproduce it?"
+3. "What changed since the last working run?"
+4. "Can we test the service or helper function without the outer UI/API/report layer?"
+5. "What is the smallest rollback or fix that restores a working state?"
 
-### Preview of the Next Session
+## Optional Extensions
+
+If learners meet the completion criteria early, offer one of these stretch goals:
+
+- Use a Flask Blueprint for records routes.
+- Add a config object or environment variable for the database path.
+- Add a test that creates an app with tmp_path.
+
+Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
+
+## Quick Checks and Exit Ticket (56-60 minutes)
+
+Ask learners to answer individually, then discuss two or three responses:
+
+- What risk appears when a repository or database connection is created at import time?
+- What is the happy path you proved this hour?
+- What sad path did you test or plan to test next?
+- Which file or module is now most important for the next hour?
 
 **[Instructor speaks:]**
+"Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
 
-Next session we secure the API at a basic level, build a small Python client, and make a deliberate integration choice between GUI and API surfaces. Today's structure work will make that much easier.
+## Instructor Wrap-up Notes
 
----
+- Reinforce the capstone through-line: each hour should leave behind a runnable artifact, not just notes.
+- Encourage frequent commits with messages such as `feat: add records endpoint`, `test: cover validation errors`, or `docs: add report quickstart`.
+- If multiple learners are blocked by the same issue, pause the room and debug one shared example rather than repeating the same fix individually.
+- Keep advanced scope boundaries: do not detour into production OAuth, complex ORMs, elaborate front-end frameworks, or advanced machine learning unless the runbook marks the topic as optional.
 
-## Shared Day 9 Instructor Reference
 
-Reuse the shared day-level instructor support from `Day9_Hour1_Advanced.md` for this hour's facilitation details:
+## Expanded Facilitation Notes for a Full 60-Minute Delivery
 
-- `## Instructor Coaching Appendix`
-- `## Facilitation Toolkit`
+Use this section when the class needs more structure, when learners are unevenly paced, or when you want a more detailed speaking guide than the core hour script above. It is intentionally written as an instructor companion rather than a student handout.
 
-This keeps the Day 9 coaching guidance in one maintained location while preserving this file's hour-specific lecture script.
+### Board plan and vocabulary anchor
+
+At the start of the hour, reserve one side of the board for the capstone architecture and leave it visible. Draw the same four boxes every time: interface, service, repository, and data or artifact. For API hours, the interface is Flask routes and JSON. For client or GUI integration hours, the interface may be a Tkinter callback or a Python client object. For analytics hours, the artifact is a CSV, summary file, chart, or report. For testing and packaging hours, the artifact is evidence that the project can be verified and run by another person.
+
+**[Instructor speaks:]**
+"The box we edit today is important, but the boundaries between boxes are even more important. If we keep the boundary clean, we can swap a GUI for an API, replace manual checks with pytest, or generate a report without rewriting the domain model."
+
+Use these vocabulary checks during the first ten minutes:
+
+- A model represents the domain data and rules that belong with the data.
+- A service coordinates use cases and raises meaningful domain exceptions.
+- A repository hides SQLite details and returns domain objects or simple records.
+- An API route translates HTTP into service calls and translates results back to JSON.
+- A client translates Python function calls into HTTP requests and translates responses into useful Python values.
+- A report pipeline turns persisted data into repeatable artifacts that can be reviewed.
+- A test is executable evidence about expected behavior.
+- A package or deliverable is successful only when another person can install and run it from instructions.
+
+### Instructor pacing detail
+
+If learners are new to this topic, spend extra time on prediction before execution. Before every run, ask, "What status code, file, chart, exception, or test result do we expect?" Prediction forces learners to state the contract. If the result differs, the class has a concrete debugging target.
+
+If learners are moving quickly, shorten the lecture and lengthen the lab, but keep the same quality gates: happy path, sad path, readable code, and a repeatable command. Do not let the hour become a feature race. A learner who can explain one clean vertical slice is better prepared than a learner with five partial features.
+
+Suggested minute-by-minute adjustment:
+
+- If setup consumes more than 8 minutes, skip optional styling and focus on one minimal deliverable.
+- If the demo fails, narrate the recovery process. This is valuable modeling, not a failure of instruction.
+- If half the room is blocked by the same problem, pause the room and solve one shared example.
+- If only one or two learners are blocked, keep the rest moving with the lab checklist while you circulate.
+
+### Deeper demo prompts
+
+Use this prompt cycle while live coding:
+
+1. "What input enters this layer?"
+2. "What output leaves this layer on success?"
+3. "What named error or status represents failure?"
+4. "Where is the rule written exactly once?"
+5. "How will we prove this behavior after class?"
+
+For API work, insist that learners show at least one JSON error body. A route that works for perfect input but returns an HTML traceback for predictable bad input is not yet a reliable API. For analytics work, insist that learners show the generated file path and explain whether it can be regenerated. For tests, insist that learners read the failing assertion aloud before editing. For packaging, insist that learners follow their own README rather than relying on memory.
+
+### Capstone quality gate
+
+Before the exit ticket, have learners mark their hour result against this quick rubric:
+
+| Category | Ready evidence | Needs attention |
+| --- | --- | --- |
+| Correctness | The feature works with a realistic happy path. | It only works with hard-coded or instructor-only data. |
+| Error handling | A sad path produces a clear exception, JSON error, message, or test failure. | The app crashes or hides the cause. |
+| Structure | The responsibility is in the correct layer. | Route, GUI, service, SQL, and reporting logic are tangled together. |
+| Repeatability | There is a command, test, or documented step to reproduce the result. | The result depends on manual memory or IDE state. |
+| Maintainability | Names are clear and the next feature has an obvious place to go. | The code works once but will be hard to extend. |
+
+**[Instructor speaks:]**
+"This rubric is not only for grading. It is a professional checklist. When you leave a feature behind, the next developer should be able to run it, understand it, and change it without fear."
+
+### Common instructor interventions
+
+When a learner puts too much logic in a Flask route or GUI callback, say: "Let us underline the business rule. Now move that sentence into the service or validation helper. The route or callback should coordinate, not own the rule."
+
+When a learner hard-codes paths, say: "This path works on your machine because your machine is currently the hidden dependency. Replace it with a project-relative pathlib Path and create the directory in code."
+
+When a learner catches Exception broadly, say: "Catching everything is like turning off the smoke alarm. Catch the error you expect, convert it into a helpful message, and let surprising errors remain visible during development."
+
+When a learner wants to add a large optional feature before the required slice works, say: "Park that idea in a comment or issue. First make the required slice boring and reliable. Advanced projects succeed through boring reliability."
+
+### Exit-ticket collection options
+
+Choose one depending on time:
+
+- Verbal round-robin: each learner states the working command and the next command.
+- Written note: learners submit three bullets: works, broken, next.
+- Pair check: partners run each other’s command from the README or lab note.
+- Demo lottery: randomly choose two learners to show one happy path and one sad path.
+
+Close the hour by connecting forward: the next hour assumes today has a runnable artifact. If a learner is behind, help them identify the smallest safe stopping point rather than encouraging a risky last-minute rewrite.
+
+## Additional Instructor-Ready Expansion
+
+Use this expansion to deepen the hour without changing the runbook mapping. The focus remains **App structure and dependency wiring**. The concrete artifact for this hour is an application factory, blueprints or route modules, and explicit service/repository wiring. Keep returning to that artifact whenever discussion becomes abstract: learners should be able to point at a command, a file, a response, a chart, a test, or a README step and say, "This is the evidence that the hour worked."
+
+### Deeper instructor narration
+
+**[Instructor speaks:]**
+"The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the composition root that connects infrastructure without hiding dependencies in globals. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
+
+**[Instructor speaks:]**
+"Before I run anything, I want us to predict the evidence. Our baseline is to start the app from a clean shell and run one endpoint proving the wired repository is used. A successful run should prove this happy path: routes receive a working service dependency and the app can be created in tests without starting a server. A responsible implementation should also prove this sad path: a missing database path or miswired import produces a clear configuration error. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+
+Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
+
+### Detailed demo walkthrough
+
+Run the demo as a sequence of small predictions rather than one long typing performance. The suggested demo arc is to move from a single-file Flask app to `create_app`, register a blueprint, and inject the service object. At each pause, ask the room to identify three things: the input entering this layer, the output leaving this layer, and the single responsibility that should not leak into neighboring layers. If learners cannot name those three things, slow down and draw the boundary again.
+
+Use this checkpoint rhythm:
+
+1. **Baseline:** Start the app from a clean shell and run one endpoint proving the wired repository is used before editing. If it fails, narrate the failure honestly and recover before adding new code.
+2. **First slice:** Implement only enough to prove routes receive a working service dependency and the app can be created in tests without starting a server. Do not add optional polish yet.
+3. **Read the code aloud:** Point to the function or method boundary and say what it accepts and returns.
+4. **Sad path:** Trigger a missing database path or miswired import fails with a clear configuration error deliberately. Ask, "Is this failure understandable to the person who receives it?"
+5. **Architecture check:** Ask whether the code belongs in the route, client, service, repository, analytics helper, test fixture, or delivery documentation.
+6. **Repeatability check:** Identify the exact command or manual step that proves the result again later.
+7. **Commit-quality check:** Ask whether the current state could be saved with a clear commit message.
+
+A useful live-coding move is to introduce one small defect on purpose, such as a wrong field name, missing header, missing timeout, incorrect path, or overly broad exception handler. Then read the observed behavior with the class. This models a mature debugging posture: we do not panic; we compare expected behavior with observed behavior, isolate the layer, and make the smallest correction that restores the contract.
+
+### Guided lab checkpoints
+
+During the lab, avoid answering first with a complete solution. Ask learners to show evidence in this order:
+
+- "Show me the command you ran before editing."
+- "Show me the smallest code change that targets this hour's artifact."
+- "Show me the happy-path evidence: routes receive a working service dependency and the app can be created in tests without starting a server."
+- "Show me the sad-path evidence: a missing database path or miswired import fails with a clear configuration error."
+- "Show me where this behavior would be changed if the requirement changed next week."
+
+If a learner is ahead, direct them to this extension only after the required artifact is stable: add a `testing=True` configuration path that wires a temporary or in-memory database for pytest. Make it clear that extension work must be reversible. A good extension leaves the required path cleaner or better documented. A risky extension creates a second debugging problem right before the hour closes.
+
+For pairs, assign roles for five-minute intervals. The driver types and runs commands. The navigator reads the contract and watches for boundary violations. Halfway through, switch roles. This keeps faster learners from taking over and gives quieter learners a defined speaking responsibility. Ask the navigator to use the review question: Where is the one place a reader can see how the app is assembled?
+
+### Troubleshooting decision tree
+
+Use this decision tree when the room gets stuck:
+
+- If the first command cannot start, stop feature work and fix environment, import, or configuration issues first.
+- If the happy path fails, inspect the boundary closest to the symptom. For API work, inspect request body, headers, route pattern, and service call. For analytics work, inspect path, columns, dtypes, and row counts. For testing work, inspect fixture setup and the exact assertion. For packaging work, inspect README steps and dependency installation.
+- If the sad path returns a confusing result, improve the translation layer. Convert expected domain errors into the agreed JSON response, user message, report warning, or pytest assertion. Do not hide unexpected errors while still developing.
+- If two layers disagree, choose the service or documented contract as the source of truth and update the outer layer to match it.
+- If a learner proposes a rewrite, ask for the smallest reversible change that proves the next fact. Rewrites are sometimes necessary, but they should be chosen deliberately, not as an emotional response to a messy error.
+
+Name the common risk explicitly: circular imports caused by route modules importing the app while the app imports the route modules. Write it on the board as an anti-pattern, then ask learners to point to the line or step in their project that prevents it.
+
+### Formative questions and differentiation notes
+
+Use these questions for quick checks throughout the hour:
+
+- What is the contract this layer promises?
+- Which command proves the contract without relying on your memory?
+- What invalid input or missing dependency did you test?
+- Which part of the code should not know about this detail?
+- What would a teammate need in order to reproduce your result tomorrow?
+- If this breaks during the final demo, what is the first diagnostic step?
+
+For learners who need more support, narrow the task to one happy path and one sad path. Provide a partially completed function signature or checklist, but still require them to run the command and explain the result. For learners who are ready for more challenge, ask them to document the contract in README language, add a focused test, or compare two design options and justify the simpler one. Keep both groups anchored to the same hour outcome so the class does not split into unrelated projects.
+
+Close by saying: "The goal is not to make this layer impressive. The goal is to make it dependable. Dependable code has a clear contract, a repeatable proof, a known failure behavior, and an obvious next place to change it."

@@ -1,549 +1,388 @@
-# Day 9, Hour 1: REST Fundamentals and Flask App Setup
+# Day 9, Hour 1: REST fundamentals + Flask app setup
+
 **Python Programming Advanced - Session 9**
+**Runbook alignment:** Session 9, Hour 33
+**Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
----
+## 60-minute Timing Overview
 
-## Timing Overview
-**Total Time:** 60 minutes  
-- Reframe the capstone as a service: 5 minutes  
-- REST and Flask concept lecture: 15 minutes  
-- Live build of the first Flask app and `/health` endpoint: 10 minutes  
-- Guided lab and API smoke testing: 25 minutes  
-- Debrief and exit ticket: 5 minutes
+| Minutes | Activity | Instructor intent |
+| --- | --- | --- |
+| 0-5 | Welcome, recap, and outcome framing | Connect this hour to the previous capstone layer and name the deliverable. |
+| 5-17 | Concept briefing and vocabulary | Teach the ideas learners need before touching code. |
+| 17-35 | Live demo with happy and sad paths | Model careful implementation, prediction, and debugging. |
+| 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
+| 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
+| 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
 
----
-
-## Learning Outcomes for This Hour
+## Learning Outcomes
 
 By the end of this hour, learners will be able to:
-1. Explain what a REST-style resource is in plain language
-2. Distinguish common HTTP methods such as `GET` and `POST`
-3. Create a minimal Flask application with a JSON health endpoint
-4. Return consistent JSON error payloads instead of default HTML errors
-5. Test a small API using a browser, `curl`, or a Python client script
 
----
+- Create a small Flask application with a reliable health endpoint.
+- Explain resources, HTTP verbs, status codes, and JSON response contracts.
+- Use one consistent JSON error shape for every sad path.
 
 ## Instructor Prep Notes
 
-- Keep the framing practical: learners are exposing the same capstone logic through a new interface, not building a second unrelated project
-- Default example resource name: `records`
-- Use the same tracker domain from the service and SQLite work
-- Have one terminal ready for the Flask app and another for `curl` commands
-- Prewrite a request ID helper so the error response pattern feels real without becoming a detour
-
----
-
-## Vocabulary for This Hour
-
-- Resource: a thing the API exposes, such as a record, task, contact, or expense entry
-- Route: a URL pattern connected to code in the Flask app
-- Method: the HTTP verb such as `GET`, `POST`, `PUT`, or `DELETE`
-- Status code: a numeric result that tells the client what happened
-- JSON contract: the expected request and response shape
-- Request ID: a lightweight identifier that helps connect logs to user-facing errors
-
----
-
-## Section 1: Why an API Matters for This Capstone (5 minutes)
-
-### Opening Script
-
-**[Instructor speaks:]**
-
-Up to this point, our application has been gaining capability: richer models, service-layer logic, validation, logging, SQLite persistence, and practical search. Today we are changing the surface area again. Instead of only interacting through local scripts or a GUI, we are going to expose our application's capabilities through a web API.
-
-That does not mean we are abandoning the architecture we built. In fact, the reason today is possible is that we already separated the service layer from the storage layer. Flask is just going to become another consumer of the same service methods.
-
-### Why Learners Should Care
-
-**[Instructor speaks:]**
-
-An API matters because it lets other systems, scripts, interfaces, or teammates interact with your application in a standard way. A GUI is for human users. An API is for structured communication. Once you have an API, you can:
-
-- build a separate client later
-- connect a GUI to the service over HTTP
-- automate workflows with scripts
-- document your application behavior more clearly
-
-That is why REST fundamentals fit naturally after persistence. An API without a stable core is chaos. A stable core without an API is still useful, but less flexible.
-
----
-
-## Section 2: REST and Flask Concepts (15 minutes)
-
-### REST in Plain English
-
-**[Instructor speaks:]**
-
-REST can sound intimidating, but in our course we are using a lightweight meaning: organize your API around resources, use standard HTTP methods, and return predictable responses.
-
-A resource is the thing the API is about. In our tracker example, the resource is `records`. So routes might look like:
-
-- `GET /records` to list records
-- `POST /records` to create a new record
-- `GET /records/12` to fetch one record
-- `PUT /records/12` to update record 12
-- `DELETE /records/12` to delete record 12
-
-That is already enough to feel REST-like and useful.
-
-### Method Semantics
-
-**[Instructor speaks:]**
-
-Teach the verbs in a grounded way:
-
-- `GET` asks for data and should not change state
-- `POST` creates something new
-- `PUT` updates or replaces an existing thing
-- `DELETE` removes something
-
-You can mention `PATCH` exists, but do not let the class disappear into an HTTP standards rabbit hole. For this course, `PUT` is enough.
-
-### Status Codes That Matter Today
-
-**[Instructor speaks:]**
-
-We only need a small status code vocabulary for this hour:
-
-- `200 OK` for a successful read or update response
-- `201 Created` for a successful create
-- `400 Bad Request` when the request body or input is invalid
-- `404 Not Found` when the resource ID does not exist
-- `500 Internal Server Error` for unexpected failures we did not handle cleanly
-
-Explain that one sign of a professional API is that it does not return `200` for everything. The status code should help the client understand the outcome quickly.
-
-### Why Flask
-
-**[Instructor speaks:]**
-
-Flask is a good fit for this course because it is small, readable, and easy to explain on one screen. Learners can focus on routes, request handling, and responses without a heavy framework ceremony.
-
-The basic structure is:
-
-```python
-from flask import Flask
-
-app = Flask(__name__)
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-```
-
-That small amount of code lets us talk about the important parts without distraction.
-
-### JSON Error Contracts
-
-**[Instructor speaks:]**
-
-The runbook asks us to standardize error responses. That is not a cosmetic detail. It means the client can depend on a consistent structure. Instead of random strings, HTML error pages, or one-off shapes, we want something like:
+- Confirm learners are in the correct project folder and virtual environment.
+- Keep the authoritative runbook open to Session 9, Hour 33; this script expands that hour into a near-verbatim delivery guide.
+- Use Python 3.11+ conventions: clear type hints, f-strings, `pathlib` for paths, context managers for resources, and small functions with one responsibility.
+- Use the tracker capstone vocabulary consistently: model objects express domain data, services enforce workflow rules, repositories handle SQLite persistence, Flask routes expose JSON contracts, and reports/tests/packaging prove the app can be delivered.
+- For API-related examples, keep this error contract visible on the board:
 
 ```json
 {
   "error": {
-    "code": "not_found",
-    "message": "Record 12 was not found.",
-    "request_id": "a1b2c3d4"
+    "code": "validation_error",
+    "message": "name is required",
+    "request_id": "..."
   }
 }
 ```
 
-That structure gives us three wins:
-
-1. the client gets a readable message
-2. the application has a machine-readable code
-3. the request ID helps correlate logs and troubleshooting
-
-### What We Are Not Doing Yet
+## Opening Script (0-5 minutes)
 
 **[Instructor speaks:]**
+"Welcome back. In the previous parts of the advanced course, we built a layered tracker: domain model, service layer, repository, and persistence. Today we keep turning that code into a deliverable system. This hour is not about memorizing syntax. It is about making a design choice, proving it with code, and leaving the project easier to test and maintain."
 
-Today is not the day for deployment pipelines, OpenAPI generators, background workers, or production-scale API versioning. We are building a solid course-level API with good habits.
+*(Action: Ask learners to open the project and run the last known-good command. For API hours, that may be `flask run` or `python -m api.app`; for analytics it may be a report script; for testing it may be `pytest -q`.)*
 
----
+**[Instructor speaks:]**
+"Before we add anything, we want a baseline. If your project does not run at the start of the hour, adding a feature will make debugging harder. Run the smallest command that proves your project is alive. If it fails, write down the first error line and do not start editing yet."
 
-## Section 3: Live Build of the First Flask App (10 minutes)
+### Bridge from prior work
 
-### Step 1: Create the App Skeleton
+- The tracker already has a model/service/repository shape from earlier sessions.
+- SQLite remains the source of truth for persisted records.
+- This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
+- The class norm is still: make one small change, run it, observe the result, then continue.
 
-**[Instructor speaks while coding:]**
+## Concept Briefing (5-17 minutes)
 
-I am going to start with the smallest honest Flask app I can.
+**[Instructor speaks:]**
+"Here are the ideas I want you to listen for during the demo. First, where does this responsibility belong? Second, what is the happy path? Third, what is the sad path? Fourth, how will another person know how to use or verify it? Advanced Python is less about clever lines of code and more about reliable boundaries."
+
+### Talk points
+
+- REST is not magic; it is a convention for naming resources and using HTTP methods predictably.
+- Routes should translate HTTP details into service calls, not contain all business rules.
+- A health endpoint is the simplest production habit: it proves the process is up before we test deeper behavior.
+- Every error should return JSON, never a surprise HTML traceback.
+
+### Why this matters in real projects
+
+**[Instructor speaks:]**
+"Real teams spend a surprising amount of time at boundaries: the boundary between a GUI and a service, an API and a client, a CSV and a DataFrame, or a test and the system under test. Bugs often appear where assumptions cross those boundaries. If we make contracts explicit, the next developer can reason about the program without reading every line."
+
+Use these prompts to keep the class active:
+
+- "What do you expect this function to return on success?"
+- "What should happen if the input is missing, malformed, or points to a record that does not exist?"
+- "Which layer should know about this detail?"
+- "How could we test this without clicking through the whole application?"
+
+## Live Demo (17-35 minutes)
+
+**[Instructor speaks:]**
+"I am going to demo this in small slices. Please do not copy yet. First, predict what should happen. Then I will run it. Then we will decide whether the result matches the contract. After that, I will pause so you can implement the same pattern in your project."
+
+### Demo steps
+
+1. Show the project folders: api/, src/, tests/, data/, reports/.
+2. Create a Flask app with /health returning {status: ok}.
+3. Add error_response(code, message, status) with a request_id.
+4. Call /health, then intentionally call a missing route or failing route and discuss the JSON error.
+
+### Demo code or command sketch
 
 ```python
-from flask import Flask, jsonify
+from __future__ import annotations
+
 from uuid import uuid4
-
-
-app = Flask(__name__)
+from flask import Flask, jsonify
 
 
 def error_response(code: str, message: str, status: int):
-    request_id = uuid4().hex[:8]
-    payload = {
-        "error": {
-            "code": code,
-            "message": message,
-            "request_id": request_id,
-        }
-    }
+    payload = {"error": {"code": code, "message": message, "request_id": str(uuid4())}}
     return jsonify(payload), status
 
 
-@app.get("/health")
-def health():
-    return jsonify({"status": "ok"})
+def create_app() -> Flask:
+    app = Flask(__name__)
 
+    @app.get("/health")
+    def health():
+        return jsonify({"status": "ok", "service": "tracker-api"})
+
+    @app.errorhandler(404)
+    def not_found(_error):
+        return error_response("not_found", "Route not found", 404)
+
+    return app
+
+
+app = create_app()
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 ```
 
-### Step 2: Explain the Pieces
+### Demo narration guide
 
 **[Instructor speaks:]**
+"Notice that I am not starting with the biggest possible version. I am building a thin vertical slice. A thin slice is one small feature that crosses the layers we need: input, service behavior, persistence or data handling if relevant, and a visible result. Once that slice is correct, the next route, chart, test, or packaging step is easier."
 
-Let's name what just happened:
-
-- `app = Flask(__name__)` creates the Flask application
-- `@app.get("/health")` connects a URL and method to a function
-- `jsonify(...)` ensures we return JSON cleanly
-- `error_response(...)` standardizes the shape of failures
-- `if __name__ == "__main__":` gives us a simple local run path
-
-### Step 3: Test the Endpoint
-
-Run the app and then test it:
-
-```bash
-python api/app.py
-curl http://127.0.0.1:5000/health
-```
-
-Then narrate:
+*(Action: Run the code or command once for a happy path. Ask: "What proves this worked?")*
 
 **[Instructor speaks:]**
+"Now we need a sad path. A feature is not done just because the perfect input worked. I am going to send bad input, omit a required value, use a missing id, stop the server, or run from a clean environment depending on the hour. The goal is not to embarrass the code; the goal is to define how the program behaves when reality is messy."
 
-A health endpoint is boring on purpose. It gives us a quick way to verify that the app starts and responds before we add business logic.
+*(Action: Trigger the sad path deliberately. For API work, show JSON errors. For pandas and reports, show a missing file or bad column and discuss the message. For tests, show a failing assertion and read it carefully.)*
 
-### Step 4: Demonstrate a Consistent Error
+### Instructor checkpoints during the demo
 
-Temporarily add:
+- Ask learners to identify the layer being edited.
+- Ask whether the code is using project-safe paths rather than machine-specific paths.
+- Ask what a reviewer would need in order to reproduce the result.
+- Ask what test or manual check would catch a regression later.
 
-```python
-@app.get("/boom")
-def boom():
-    return error_response(
-        code="demo_error",
-        message="This is a sample structured error.",
-        status=400,
-    )
-```
-
-Then test it and emphasize:
+## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
+"Now you will implement the same idea, but keep the scope narrow. Do not redesign your whole capstone. Pick the smallest slice that satisfies the hour outcome. If you finish early, use the optional extensions; do not start an unrelated rewrite."
 
-Even our error examples should look like part of the same application. Consistency is one of the easiest ways to make an API feel professional.
+Suggested instructor circulation questions:
 
----
+1. "Show me the file you are editing and tell me why this responsibility belongs there."
+2. "What is your first happy-path command?"
+3. "What is your first sad-path command?"
+4. "If I review this tomorrow, where is the contract documented?"
+5. "What would you test automatically if you had ten more minutes?"
 
-## Section 4: Guided Lab and API Smoke Testing (25 minutes)
+## Hands-on Lab (40-50 minutes)
 
-### Lab Goal
+### Lab prompt
 
-**[Instructor speaks:]**
+Flask starter: learners create api/app.py, run the app, test /health in a browser or with curl, and record one happy-path response plus one JSON error response.
 
-Your goal for this lab is to create a working Flask starter application for your own project. At minimum, it should run, respond to `/health`, and return JSON-formatted errors in a consistent structure.
+### Required learner workflow
 
-### Required Tasks
+1. Start from a known-good run.
+2. Make one small implementation change.
+3. Run the narrowest check possible.
+4. Add the happy-path proof.
+5. Add one sad-path proof.
+6. Commit or save the working state before attempting an extension.
 
-Learners should:
+### Completion criteria
 
-1. Create `api/app.py` or an equivalent entry file
-2. Initialize a Flask app
-3. Add a `GET /health` route
-4. Add an `error_response` helper
-5. Run the app locally
-6. Test it with a browser, `curl`, or a script
+- /health returns JSON with status ok.
+- At least one error path returns the shared error contract.
+- Learner can explain GET vs POST and why 201 is used for create.
 
-### Recommended Build Sequence
-
-Guide learners in this order:
-
-1. Make the file runnable
-2. Make `/health` return JSON
-3. Add the error helper
-4. Trigger one controlled error path
-5. Only then begin thinking about real resource routes
-
-This sequence keeps the mental load low and gives fast wins.
-
-### Circulation Questions
-
-Ask learners:
-
-- Can you explain the difference between a route and a resource?
-- Why is `/health` useful before CRUD routes exist?
-- What status code should a successful create return later?
-- Why is JSON consistency important even when the API is small?
-
-### Common Problems and How to Coach Them
-
-#### Problem: Port Conflict
-
-What to say:
+## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
+"Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
 
-If the default port is already in use, do not panic. Change the port in `app.run(port=5001)` or stop the other process. This is an environment problem, not a design failure.
+### Common pitfalls to watch for
 
-#### Problem: Returning Plain Dictionaries vs `jsonify`
+- Port already in use; choose a different port rather than restarting the whole lab.
+- Debug mode exposes tracebacks; helpful locally, inappropriate as an API contract.
+- Returning plain strings makes clients harder to write.
 
-What to say:
+### Debugging script for stuck learners
 
-**[Instructor speaks:]**
+Use this sequence aloud when helping a learner:
 
-Flask can return dictionaries directly in modern versions, but `jsonify` keeps the intent obvious for beginners and helps us stay consistent in teaching examples.
+1. "Read the first meaningful error message, not the last line only."
+2. "What command produced it? Can we reproduce it?"
+3. "What changed since the last working run?"
+4. "Can we test the service or helper function without the outer UI/API/report layer?"
+5. "What is the smallest rollback or fix that restores a working state?"
 
-#### Problem: Learner Puts Database Logic into the Health Route
+## Optional Extensions
 
-What to say:
+If learners meet the completion criteria early, offer one of these stretch goals:
 
-**[Instructor speaks:]**
+- Add /version from a constant.
+- Log the request_id before returning errors.
+- Add a tiny smoke test for /health using Flask test_client().
 
-Keep `/health` simple. The point is to check if the service is up. It is not a checkpoint for all business logic.
+Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
 
-#### Problem: Debug Mode Confusion
+## Quick Checks and Exit Ticket (56-60 minutes)
 
-What to say:
+Ask learners to answer individually, then discuss two or three responses:
 
-**[Instructor speaks:]**
-
-Debug mode is useful for development, but do not treat it as a production setup. For the course, it is a convenience, not part of the API contract.
-
-### Fast Finishers
-
-If learners finish early, let them add:
-
-- `/version` endpoint from a constant
-- a starter `/records` route that returns an empty list
-- a README note showing how to launch the API
-
----
-
-## Section 5: Debrief and Exit Ticket (5 minutes)
-
-### Debrief Script
+- What HTTP status code fits a successful create, and why is it not just 200?
+- What is the happy path you proved this hour?
+- What sad path did you test or plan to test next?
+- Which file or module is now most important for the next hour?
 
 **[Instructor speaks:]**
+"Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command. That habit will keep your capstone moving as the system gets larger."
 
-Today was the beginning of a new interface, not a replacement for the architecture you already built. If your Flask starter is working, you are in a strong position for the next hour because the hard part is not typing route decorators. The hard part is keeping the route layer thin and the service layer central.
+## Instructor Wrap-up Notes
 
-### Share-Out Prompts
+- Reinforce the capstone through-line: each hour should leave behind a runnable artifact, not just notes.
+- Encourage frequent commits with messages such as `feat: add records endpoint`, `test: cover validation errors`, or `docs: add report quickstart`.
+- If multiple learners are blocked by the same issue, pause the room and debug one shared example rather than repeating the same fix individually.
+- Keep advanced scope boundaries: do not detour into production OAuth, complex ORMs, elaborate front-end frameworks, or advanced machine learning unless the runbook marks the topic as optional.
 
-- What part of Flask felt simpler than you expected?
-- What status code would you return for a successful create?
-- What structure did you choose for API files and folders?
-- How are you going to keep error responses consistent as you add routes?
 
-### Exit Ticket
+## Expanded Facilitation Notes for a Full 60-Minute Delivery
 
-1. What is a resource in your API?
-2. What is the difference between `GET` and `POST` in today's terms?
-3. What HTTP status code should represent a successful create?
+Use this section when the class needs more structure, when learners are unevenly paced, or when you want a more detailed speaking guide than the core hour script above. It is intentionally written as an instructor companion rather than a student handout.
 
-### Preview of the Next Hour
+### Board plan and vocabulary anchor
 
-**[Instructor speaks:]**
-
-Next hour we turn the starter into something useful by adding CRUD endpoints for the main resource. The big challenge will not be route quantity. The big challenge will be correct status codes, validation, and keeping the API layer thin.
-
----
-
-## Instructor Coaching Appendix
-
-### Whiteboard Plan for Day 9
-
-Draw a horizontal flow across the board that reads `client -> route -> service -> repository -> database`. Underneath it, draw the reverse response flow: `database -> repository -> service -> serializer -> JSON response`. Spend a minute on each boundary. Explain that Day 9 is about making these boundaries predictable enough that another interface can trust them.
-
-Beside the client box, list the tools students are using to talk to the API: browser, curl, PowerShell, or a later Python client. Beside the route box, list `methods`, `status codes`, and `JSON parsing`. Beside the service box, list `validation rules`, `exceptions`, and `business behavior`. Beside the serializer area, list `consistent shape` and `error contract`. This picture helps students see why route handlers should stay thin.
-
-In Hour 33, emphasize the health endpoint and the request-response contract. In Hour 34, add the CRUD route set to the board and underline the difference between `400` and `404`. In Hour 35, draw two smaller boxes labeled `parse` and `serialize` and connect them to the route layer. In Hour 36, circle the left side of the diagram and label it `API structure`, then note that maintainability improves when startup and route registration happen in one predictable place.
-
-### Listen-Fors During Labs
-
-Strong Day 9 language sounds like this:
-
-- "This handler just parses the request and calls the service."
-- "We return `201` because the record was created."
-- "This is a validation error, so it should be `400`."
-- "The route no longer builds the response shape itself; the serializer does."
-- "We moved the app construction into `create_app()` so testing and startup are clearer."
-
-Concerning language sounds like this:
-
-- "I wrote SQL in the Flask route because it was nearby."
-- "Everything returns `200` for now and I'll clean it later."
-- "This route returns a string here and a dictionary there, but it works."
-- "I import the app from routes and routes from app, and it mostly runs."
-- "I added more logic to the handler because I wasn't sure where else it belonged."
-
-When you hear those warning signs, ask questions that move learners back toward architectural clarity:
-
-- "What is the one responsibility of this route?"
-- "Which layer should own this validation rule?"
-- "Could another endpoint reuse this parsing logic?"
-- "If you changed the response shape, how many files would you edit?"
-- "What happens if a teammate reads this route cold tomorrow morning?"
-
-### Common Misconceptions for Day 9
-
-Students often think REST means memorizing a large ruleset. Keep reminding them that for this course REST means resource-oriented thinking, standard verbs, and predictable responses. That is enough.
-
-Another common misconception is that adding more endpoints automatically means stronger API design. Counter that quickly. A small API with consistent contracts and honest status codes is stronger than a large API with improvised behavior.
-
-A third misconception is that validation belongs only in the route because the route sees the raw request. In practice, some normalization belongs in parsing helpers and some domain rules still belong in the service layer. Students need to learn that "where data first appears" is not the same as "where every rule should live."
-
-Finally, many learners think refactoring structure is secondary to visible feature work. Day 9 is a good place to explain that a clear app factory, explicit dependency wiring, and route grouping are not extras. They are how the project stays teachable and testable.
-
-### Suggested Mini-Conferences for Each Hour
-
-For Hour 33, ask students to define a resource using their own project language. If they cannot name the resource clearly, their route design often becomes fuzzy.
-
-For Hour 34, ask one student to explain when `400` is correct and when `404` is correct. Then ask another student to identify where the service layer is being called. This keeps both HTTP reasoning and architecture reasoning active.
-
-For Hour 35, ask students what changed after they introduced parsing and serialization helpers. Good answers mention fewer duplicated shapes, easier cleanup, or clearer route handlers. Weak answers reveal that helpers exist but are not actually central.
-
-For Hour 36, ask learners to point to the exact place dependencies are created and the exact place routes are registered. If they can do that quickly, their structure is probably improving.
-
-### Pacing Adjustments
-
-If the cohort struggles with Flask startup in Hour 33, do not rush into multiple resource routes. Make sure the app runs, `/health` works, and structured errors are visible first. Those early wins reduce the anxiety that often shows up when students first touch web frameworks.
-
-If Hour 34 becomes a status-code tangle, pause and do a mini whole-class sorting exercise. Give three scenarios and ask the class to vote on `200`, `201`, `400`, or `404`. This short reset often saves more time than letting confusion continue silently.
-
-If students are overwhelmed in Hour 35, let them centralize only one route first. Once the pattern is visible, the remaining routes are much easier to clean. This keeps the lesson about repeatable design rather than perfection.
-
-If Hour 36 reveals a lot of import confusion, temporarily defer blueprints. A routes module plus a simple application factory is enough. The runbook explicitly allows blueprints to remain optional.
-
-### Evidence of Mastery for Day 9
-
-Look for these evidence signals:
-
-- Students can explain their route set without looking at the code.
-- Their API returns structured JSON instead of accidental HTML errors.
-- They understand why `201` is different from `200`.
-- Their parsing and serialization logic is not scattered everywhere.
-- Their application startup is visible and predictable.
-- They can explain where a validation rule lives and why.
-
-Students do not need a perfect web architecture to succeed. They need a coherent one. Coherence is the standard.
-
-### End-of-Day Instructor Wrap Script
+At the start of the hour, reserve one side of the board for the capstone architecture and leave it visible. Draw the same four boxes every time: interface, service, repository, and data or artifact. For API hours, the interface is Flask routes and JSON. For client or GUI integration hours, the interface may be a Tkinter callback or a Python client object. For analytics hours, the artifact is a CSV, summary file, chart, or report. For testing and packaging hours, the artifact is evidence that the project can be verified and run by another person.
 
 **[Instructor speaks:]**
+"The box we edit today is important, but the boundaries between boxes are even more important. If we keep the boundary clean, we can swap a GUI for an API, replace manual checks with pytest, or generate a report without rewriting the domain model."
 
-Today you transformed your capstone from a local application into a service that can be spoken to over HTTP. More importantly, you practiced an architectural habit that matters far beyond Flask: keep the boundaries honest. The route handles the request. The service handles the rules. The repository handles persistence. The serializer handles the outward shape. When those boundaries stay clear, the whole project becomes easier to reason about.
+Use these vocabulary checks during the first ten minutes:
 
-As learners leave, ask them to write down one route that feels clean and one route they still want to simplify. That reflection will help them tremendously in the security and client work coming next.
+- A model represents the domain data and rules that belong with the data.
+- A service coordinates use cases and raises meaningful domain exceptions.
+- A repository hides SQLite details and returns domain objects or simple records.
+- An API route translates HTTP into service calls and translates results back to JSON.
+- A client translates Python function calls into HTTP requests and translates responses into useful Python values.
+- A report pipeline turns persisted data into repeatable artifacts that can be reviewed.
+- A test is executable evidence about expected behavior.
+- A package or deliverable is successful only when another person can install and run it from instructions.
 
----
+### Instructor pacing detail
 
-## Facilitation Toolkit
+If learners are new to this topic, spend extra time on prediction before execution. Before every run, ask, "What status code, file, chart, exception, or test result do we expect?" Prediction forces learners to state the contract. If the result differs, the class has a concrete debugging target.
 
-### Pre-Class Quick Check
+If learners are moving quickly, shorten the lecture and lengthen the lab, but keep the same quality gates: happy path, sad path, readable code, and a repeatable command. Do not let the hour become a feature race. A learner who can explain one clean vertical slice is better prepared than a learner with five partial features.
 
-Before this hour begins, spend thirty seconds confirming that learners have the right file, environment, and mental context open. Many instruction problems that look conceptual are actually setup drift. Ask learners to open the project folder, point to the main entry file for the hour, and remind themselves which layer they are primarily working in. If the hour is centered on the API, ask them to name the route, service, and repository layers. If the hour is centered on analytics, ask them to name the dataset and report path. If the hour is centered on testing or packaging, ask them to name the target command they expect to run before the hour ends. This tiny reset reduces confusion and gives the room a shared starting line.
+Suggested minute-by-minute adjustment:
 
-A second quick check is motivational rather than technical. Tell learners what "done" looks like in one sentence. Students perform better when the finish line is visible. For example, say: "By the end of this hour, you should be able to show one stable route with predictable errors," or "By the end of this hour, you should have one repeatable report artifact saved in the reports folder." The clarity matters more than the elegance of the wording.
+- If setup consumes more than 8 minutes, skip optional styling and focus on one minimal deliverable.
+- If the demo fails, narrate the recovery process. This is valuable modeling, not a failure of instruction.
+- If half the room is blocked by the same problem, pause the room and solve one shared example.
+- If only one or two learners are blocked, keep the rest moving with the lab checklist while you circulate.
 
-### Layer-Specific Observation Checklist
+### Deeper demo prompts
 
-As you circulate, avoid scanning only for syntax errors. Look for the layer-specific habits that show whether the learner is truly aligning with the course architecture.
+Use this prompt cycle while live coding:
 
-For interface-facing work, check whether the learner is keeping the interface thin and delegating correctly. Look for signs that they are handling input, calling a service, and formatting output rather than placing business logic directly in callbacks or route handlers.
+1. "What input enters this layer?"
+2. "What output leaves this layer on success?"
+3. "What named error or status represents failure?"
+4. "Where is the rule written exactly once?"
+5. "How will we prove this behavior after class?"
 
-For service-layer work, check whether the learner is enforcing rules consistently and raising the right custom exceptions. Ask whether the same rule would behave the same way from multiple entry points.
+For API work, insist that learners show at least one JSON error body. A route that works for perfect input but returns an HTML traceback for predictable bad input is not yet a reliable API. For analytics work, insist that learners show the generated file path and explain whether it can be regenerated. For tests, insist that learners read the failing assertion aloud before editing. For packaging, insist that learners follow their own README rather than relying on memory.
 
-For repository or persistence work, check whether the learner is using parameterized queries, committing intentionally, and mapping rows or outputs predictably. Ask whether there is one clear source of truth.
+### Capstone quality gate
 
-For analysis and reporting work, check whether the learner can explain how data moves from source to artifact. Ask what cleaning decisions were made and whether the result could be reproduced tomorrow.
+Before the exit ticket, have learners mark their hour result against this quick rubric:
 
-For testing and packaging work, check whether the learner is proving meaningful behaviors rather than merely following a checklist. Ask what risk the test or fresh-run step is reducing.
-
-This checklist helps you stay aligned to the course outcomes instead of getting trapped in line-by-line debugging for the whole hour.
-
-### Coaching Ladder for Stuck Learners
-
-Use a three-step coaching ladder when a learner is stuck.
-
-Step one is diagnosis by description. Ask the learner to describe what they expected, what actually happened, and what they already checked. This keeps you from jumping into the wrong problem too early.
-
-Step two is scope reduction. Help the learner shrink the problem to the smallest reproducible step. If a full GUI flow is failing, test the service method alone. If the full report fails, run the export alone. If the packaged app will not start, verify imports and environment setup before touching build tools. Small proofs are often faster than large guesses.
-
-Step three is boundary identification. Ask which layer should own the fix. Many student problems persist because they keep applying the patch in the wrong layer. A route bug gets fixed in the service, a repository bug gets patched in the UI, or a packaging issue gets blamed on test code. Naming the layer often reveals the correct next action.
-
-When learners are very anxious, narrate your thought process slowly and visibly. Say things like, "I want to verify the assumption before I change the code," or "Let's confirm the source of truth first." This models calm technical reasoning and reduces the impulse to thrash.
-
-### Differentiation Moves for Mixed-Ability Cohorts
-
-In almost every class, some learners finish early while others are still stabilizing the basics. Use differentiation deliberately instead of letting the room split into boredom on one side and panic on the other.
-
-For learners who need more support, narrow the success condition without changing the underlying outcome. Replace a full feature set with the smallest honest version. One route before five. One query before search plus paging plus sorting. One report artifact before a whole dashboard. One integration test before an elaborate suite. The learner still practices the right habit, just with reduced surface area.
-
-For learners who are ready for more challenge, add a bounded extension that reinforces the same lesson rather than a completely different topic. Examples include adding one more filter option, improving error messages, adding a second chart type, or writing one additional negative test. Bound the extension tightly so it does not become an escape hatch into unrelated rabbit holes.
-
-A useful phrase for both groups is: "Keep the same architecture, change the ambition level." That sentence helps advanced learners stretch without drifting and helps struggling learners simplify without feeling like they failed.
-
-### Discussion Prompts That Reveal Understanding
-
-When you want to know whether a learner truly understands the hour, ask questions that require reasoning instead of recall. Useful prompts include:
-
-- What part of this workflow would break first if the source of truth changed unexpectedly?
-- What behavior in your code is currently easiest to explain to a teammate, and why?
-- Where is the most fragile coupling in your design right now?
-- If you had to test or demo only one thing from this hour, what would give the strongest evidence that the concept is working?
-- What did you intentionally leave out to keep the project aligned with the course scope?
-
-These prompts are helpful because they work across architecture, API, analytics, testing, and packaging topics. They also generate better class discussion than simply asking whether the code runs.
-
-### Common Classroom Risks and Soft Interventions
-
-One risk is silent divergence, where learners are working on different interpretations of the same task. You can reduce this by pausing for a thirty-second midpoint recap and restating the minimum success condition. Another risk is overbuilding, where a learner adds complexity because the simpler version feels too small. In that case, praise the initiative but redirect toward finishing the stable milestone first.
-
-A third risk is shallow success, where the code appears to work once but the learner cannot explain why. Do not ignore that just because the output looks correct. Ask for a short explanation. If the explanation is weak, there is still learning work to do.
-
-A fourth risk is perfection paralysis. Some learners freeze because they want the cleanest possible solution before they will run anything. Encourage executable increments. A visible imperfect step is often more teachable than a perfect idea still trapped in someone's head.
-
-### Evidence Collection for Informal Assessment
-
-If you need to assess quickly during the hour, look for five kinds of evidence:
-
-- A concrete artifact exists, such as a running endpoint, saved report, passing test, or updated README.
-- The learner can explain the responsibility of the layer they are touching.
-- The learner can name one failure mode and how they checked it.
-- The learner can connect the work back to the capstone architecture or delivery goals.
-- The learner can identify one next improvement without losing sight of the current milestone.
-
-This evidence-based approach is more reliable than grading on confidence or speed alone.
-
-### End-of-Hour Documentation Prompt
-
-Before learners leave the hour, ask them to capture three short notes in their own project documentation or notebook:
-
-1. What changed?
-2. What was verified?
-3. What still needs attention?
-
-This takes very little time, but it creates continuity between hours and improves final demos because learners have a record of decisions, validations, and remaining risks. It also makes the project feel like professional technical work instead of a sequence of disconnected classroom exercises.
-
-### Closing Script You Can Reuse
+| Category | Ready evidence | Needs attention |
+| --- | --- | --- |
+| Correctness | The feature works with a realistic happy path. | It only works with hard-coded or instructor-only data. |
+| Error handling | A sad path produces a clear exception, JSON error, message, or test failure. | The app crashes or hides the cause. |
+| Structure | The responsibility is in the correct layer. | Route, GUI, service, SQL, and reporting logic are tangled together. |
+| Repeatability | There is a command, test, or documented step to reproduce the result. | The result depends on manual memory or IDE state. |
+| Maintainability | Names are clear and the next feature has an obvious place to go. | The code works once but will be hard to extend. |
 
 **[Instructor speaks:]**
+"This rubric is not only for grading. It is a professional checklist. When you leave a feature behind, the next developer should be able to run it, understand it, and change it without fear."
 
-The point of this hour was not only to produce code or artifacts. It was to practice the habit behind the code: keeping boundaries clear, proving behavior honestly, and making the project easier to understand for the next person who touches it. If you can explain what changed, show evidence that it works, and name what still needs improvement, then you are making real progress.
+### Common instructor interventions
+
+When a learner puts too much logic in a Flask route or GUI callback, say: "Let us underline the business rule. Now move that sentence into the service or validation helper. The route or callback should coordinate, not own the rule."
+
+When a learner hard-codes paths, say: "This path works on your machine because your machine is currently the hidden dependency. Replace it with a project-relative pathlib Path and create the directory in code."
+
+When a learner catches Exception broadly, say: "Catching everything is like turning off the smoke alarm. Catch the error you expect, convert it into a helpful message, and let surprising errors remain visible during development."
+
+When a learner wants to add a large optional feature before the required slice works, say: "Park that idea in a comment or issue. First make the required slice boring and reliable. Advanced projects succeed through boring reliability."
+
+### Exit-ticket collection options
+
+Choose one depending on time:
+
+- Verbal round-robin: each learner states the working command and the next command.
+- Written note: learners submit three bullets: works, broken, next.
+- Pair check: partners run each other’s command from the README or lab note.
+- Demo lottery: randomly choose two learners to show one happy path and one sad path.
+
+Close the hour by connecting forward: the next hour assumes today has a runnable artifact. If a learner is behind, help them identify the smallest safe stopping point rather than encouraging a risky last-minute rewrite.
+
+## Additional Instructor-Ready Expansion
+
+Use this expansion to deepen the hour without changing the runbook mapping. The focus remains **Flask setup and REST fundamentals**. The concrete artifact for this hour is a minimal Flask application with a `/health` endpoint and JSON 404 handling. Keep returning to that artifact whenever discussion becomes abstract: learners should be able to point at a command, a file, a response, a chart, a test, or a README step and say, "This is the evidence that the hour worked."
+
+### Deeper instructor narration
+
+**[Instructor speaks:]**
+"The most important habit in this hour is separating the visible surface from the rule underneath it. Today we are working at the API boundary around the existing tracker service. That layer matters because it is where another human or another part of the system forms expectations. If we leave the expectation implicit, the next person has to guess. If we make it explicit, the project becomes easier to test, easier to debug, and easier to explain during the final capstone review."
+
+**[Instructor speaks:]**
+"Before I run anything, I want us to predict the evidence. Our baseline is `flask --app api.app run --debug` or the project-specific `python -m api.app` command. A successful run should prove this happy path: `GET /health` returns HTTP 200 with `{"status": "ok"}` and a service name. A responsible implementation should also prove this sad path: a missing route returns the shared JSON error envelope instead of an HTML traceback. Notice that we are not adding sad paths to be negative. We are adding them because production code spends much of its life receiving imperfect input, missing configuration, stale data, or unexpected user behavior."
+
+Pause after that statement and ask learners to write a one-sentence contract in their own words. For example: "When this input arrives, this layer returns this result or this named error." Circulate quickly and listen for vague language such as "it works" or "it fails." Coach those learners to replace vague language with observable evidence: a status code, exception type, saved filename, printed message, chart title, pytest result, or README command.
+
+### Detailed demo walkthrough
+
+Run the demo as a sequence of small predictions rather than one long typing performance. The suggested demo arc is to create the app factory, register `/health`, add `error_response`, then call both a real and missing route. At each pause, ask the room to identify three things: the input entering this layer, the output leaving this layer, and the single responsibility that should not leak into neighboring layers. If learners cannot name those three things, slow down and draw the boundary again.
+
+Use this checkpoint rhythm:
+
+1. **Baseline:** Run `flask --app api.app run --debug` or the project-specific `python -m api.app` command before editing. If it fails, narrate the failure honestly and recover before adding new code.
+2. **First slice:** Implement only enough to prove `GET /health` returns HTTP 200 with `{"status": "ok"}` and a service name. Do not add optional polish yet.
+3. **Read the code aloud:** Point to the function or method boundary and say what it accepts and returns.
+4. **Sad path:** Trigger a missing route returns the shared JSON error envelope instead of an HTML traceback deliberately. Ask, "Is this failure understandable to the person who receives it?"
+5. **Architecture check:** Ask whether the code belongs in the route, client, service, repository, analytics helper, test fixture, or delivery documentation.
+6. **Repeatability check:** Identify the exact command or manual step that proves the result again later.
+7. **Commit-quality check:** Ask whether the current state could be saved with a clear commit message.
+
+A useful live-coding move is to introduce one small defect on purpose, such as a wrong field name, missing header, missing timeout, incorrect path, or overly broad exception handler. Then read the observed behavior with the class. This models a mature debugging posture: we do not panic; we compare expected behavior with observed behavior, isolate the layer, and make the smallest correction that restores the contract.
+
+### Guided lab checkpoints
+
+During the lab, avoid answering first with a complete solution. Ask learners to show evidence in this order:
+
+- "Show me the command you ran before editing."
+- "Show me the smallest code change that targets this hour's artifact."
+- "Show me the happy-path evidence: `GET /health` returns HTTP 200 with `{"status": "ok"}` and a service name."
+- "Show me the sad-path evidence: a missing route returns the shared JSON error envelope instead of an HTML traceback."
+- "Show me where this behavior would be changed if the requirement changed next week."
+
+If a learner is ahead, direct them to this extension only after the required artifact is stable: add `/version` or `/metadata` that reports a safe app name and schema version without exposing secrets. Make it clear that extension work must be reversible. A good extension leaves the required path cleaner or better documented. A risky extension creates a second debugging problem right before the hour closes.
+
+For pairs, assign roles for five-minute intervals. The driver types and runs commands. The navigator reads the contract and watches for boundary violations. Halfway through, switch roles. This keeps faster learners from taking over and gives quieter learners a defined speaking responsibility. Ask the navigator to use the review question: Does every route response look like a deliberate contract rather than whatever Flask happened to return?
+
+### Troubleshooting decision tree
+
+Use this decision tree when the room gets stuck:
+
+- If the first command cannot start, stop feature work and fix environment, import, or configuration issues first.
+- If the happy path fails, inspect the boundary closest to the symptom. For API work, inspect request body, headers, route pattern, and service call. For analytics work, inspect path, columns, dtypes, and row counts. For testing work, inspect fixture setup and the exact assertion. For packaging work, inspect README steps and dependency installation.
+- If the sad path returns a confusing result, improve the translation layer. Convert expected domain errors into the agreed JSON response, user message, report warning, or pytest assertion. Do not hide unexpected errors while still developing.
+- If two layers disagree, choose the service or documented contract as the source of truth and update the outer layer to match it.
+- If a learner proposes a rewrite, ask for the smallest reversible change that proves the next fact. Rewrites are sometimes necessary, but they should be chosen deliberately, not as an emotional response to a messy error.
+
+Name the common risk explicitly: letting Flask defaults leak implementation details before the class has agreed on an API contract. Write it on the board as an anti-pattern, then ask learners to point to the line or step in their project that prevents it.
+
+### Formative questions and differentiation notes
+
+Use these questions for quick checks throughout the hour:
+
+- What is the contract this layer promises?
+- Which command proves the contract without relying on your memory?
+- What invalid input or missing dependency did you test?
+- Which part of the code should not know about this detail?
+- What would a teammate need in order to reproduce your result tomorrow?
+- If this breaks during the final demo, what is the first diagnostic step?
+
+For learners who need more support, narrow the task to one happy path and one sad path. Provide a partially completed function signature or checklist, but still require them to run the command and explain the result. For learners who are ready for more challenge, ask them to document the contract in README language, add a focused test, or compare two design options and justify the simpler one. Keep both groups anchored to the same hour outcome so the class does not split into unrelated projects.
+
+Close by saying: "The goal is not to make this layer impressive. The goal is to make it dependable. Dependable code has a clear contract, a repeatable proof, a known failure behavior, and an obvious next place to change it."
