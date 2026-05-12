@@ -113,20 +113,26 @@ Use these prompts to keep the class active:
 ```python
 import pytest
 
+# Adjust these imports to match the cohort project structure:
+# from tracker.repository import SQLiteTrackerRepository
+# from tracker.service import TrackerService, ValidationError
+
 @pytest.fixture
 def service(tmp_path):
-    repo = SQLiteRecordRepository(tmp_path / "test_tracker.db")
-    return TrackerService(repo)
+    repo = SQLiteTrackerRepository(str(tmp_path / "test_tracker.db"))
+    repo.init_db()
+    return TrackerService(repo=repo)
 
 def test_create_and_get_record(service):
-    created = service.create_record({"name": "Demo", "status": "new"})
+    created = service.create_record({"title": "Demo", "category": "Lab", "status": "open"})
     loaded = service.get_record(created.id)
-    assert loaded.name == "Demo"
-    assert loaded.status == "new"
+    assert loaded.title == "Demo"
+    assert loaded.category == "Lab"
+    assert loaded.status == "open"
 
-def test_blank_name_raises_validation_error(service):
+def test_blank_title_raises_validation_error(service):
     with pytest.raises(ValidationError):
-        service.create_record({"name": "   ", "status": "new"})
+        service.create_record({"title": "   ", "category": "Lab", "status": "open"})
 
 ```
 

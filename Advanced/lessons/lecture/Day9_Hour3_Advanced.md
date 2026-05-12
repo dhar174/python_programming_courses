@@ -97,9 +97,9 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
-REQUIRED_FIELDS = {"name", "status"}
-ALLOWED_STATUSES = {"new", "active", "done"}
-ALLOWED_FIELDS = REQUIRED_FIELDS
+REQUIRED_FIELDS = {"title", "category"}
+ALLOWED_FIELDS = REQUIRED_FIELDS | {"status"}
+ALLOWED_STATUSES = {"open", "in_progress", "done"}
 
 def parse_record_payload(payload: dict) -> dict:
     if not isinstance(payload, dict):
@@ -110,13 +110,16 @@ def parse_record_payload(payload: dict) -> dict:
     missing = REQUIRED_FIELDS - payload.keys()
     if missing:
         raise ValidationError(f"Missing required field: {sorted(missing)[0]}")
-    name = str(payload["name"]).strip()
-    if not name:
-        raise ValidationError("name cannot be blank")
-    status = str(payload["status"]).strip().lower()
+    title = str(payload["title"]).strip()
+    category = str(payload["category"]).strip()
+    status = str(payload.get("status", "open")).strip().lower()
+    if not title:
+        raise ValidationError("title cannot be blank")
+    if not category:
+        raise ValidationError("category cannot be blank")
     if status not in ALLOWED_STATUSES:
         raise ValidationError(f"status must be one of {sorted(ALLOWED_STATUSES)}")
-    return {"name": name, "status": status}
+    return {"title": title, "category": category, "status": status}
 
 def record_to_response(record) -> dict:
     return record.to_dict()

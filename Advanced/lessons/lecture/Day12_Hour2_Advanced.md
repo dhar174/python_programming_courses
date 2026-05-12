@@ -97,16 +97,34 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
+import pytest
+
+# Adjust these imports to match the cohort project structure:
+# from tracker.repository import SQLiteTrackerRepository
+# from tracker.service import TrackerService, NotFoundError
+
+def build_test_service(db_path):
+    repo = SQLiteTrackerRepository(str(db_path))
+    repo.init_db()
+    return TrackerService(repo=repo)
+
+@pytest.fixture
+def service(tmp_path):
+    return build_test_service(tmp_path / "tracker.db")
+
 def test_record_persists_across_service_instances(tmp_path):
     db_path = tmp_path / "tracker.db"
-    first_service = TrackerService(SQLiteRecordRepository(db_path))
-    created = first_service.create_record({"name": "Persist me", "status": "active"})
+    first_service = build_test_service(db_path)
+    created = first_service.create_record(
+        {"title": "Persist me", "category": "Lab", "status": "open"}
+    )
 
-    second_service = TrackerService(SQLiteRecordRepository(db_path))
+    second_service = build_test_service(db_path)
     loaded = second_service.get_record(created.id)
 
-    assert loaded.name == "Persist me"
-    assert loaded.status == "active"
+    assert loaded.title == "Persist me"
+    assert loaded.category == "Lab"
+    assert loaded.status == "open"
 
 def test_missing_record_raises(service):
     with pytest.raises(NotFoundError):

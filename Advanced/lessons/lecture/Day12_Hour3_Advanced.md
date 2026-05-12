@@ -86,7 +86,7 @@ Use these prompts to keep the class active:
 
 ### Demo code or command sketch
 
-```python
+```text
 # README quickstart checklist
 # 1. python -m venv .venv
 # 2. source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
