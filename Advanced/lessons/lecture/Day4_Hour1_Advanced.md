@@ -3,14 +3,36 @@
 
 ---
 
+## Instructor Notes
+
+- **Course**: Python Programming (Advanced)
+- **Session**: Day 4, Hour 1 of 48, also Hour 13 in the Advanced runbook sequence
+- **Focus**: Building a reliable HTTP client with `requests`, explicit timeouts, structured error handling, and JSON contract checks.
+- **Source of truth**: `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`, Session 4, Hour 13.
+- **Prerequisites**: Learners should have completed the Day 3 tracker work or have equivalent familiarity with small service wrappers, logging, exceptions, and validating data before trusting it.
+- **Advanced trajectory**: This hour moves from local application reliability into external-service reliability. Learners are not building a full API server yet; they are learning how a Python program responsibly consumes another service.
+- **Instructor goal**: By the end of this hour, every learner can write a small API consumer that sets a timeout, handles network and HTTP failures, validates JSON shape, and prints friendly messages for timeout, 404, 500, and invalid JSON situations.
+
+Important instructor positioning:
+
+- Keep repeating the phrase **outside data is untrusted until checked**. It links directly to the JSON contract idea.
+- The required lab must be protected. Students need time to implement the happy path and then exercise distinct failure branches.
+- Do not let the hour drift into Flask routes, authentication systems, advanced retries/backoff, async clients, or production API architecture. Those topics can be named as future directions, but Hour 13 is about one reliable HTTP client wrapper.
+- If internet access is unreliable, use an instructor-provided local endpoint or prepared response examples. The learning target is the client behavior, not dependence on a specific public service.
+- Friendly user messages and developer diagnostics are different audiences. This is a useful bridge from Day 3 logging into Session 4 API work.
+
+---
+
 ## Timing Overview
 **Total Time:** 60 minutes  
-- Recap & Transition from Session 3: 5 minutes
-- HTTP client fundamentals: 12 minutes
-- JSON contracts, status codes, and timeout patterns: 13 minutes
-- Live Demo (public API consumer with wrapper function): 10 minutes
-- Hands-On Lab (API consumer): 15 minutes
-- Debrief & Exit Ticket: 5 minutes
+- Recap & Transition from Session 3: 4 minutes
+- HTTP client fundamentals: 9 minutes
+- JSON contracts, status codes, and timeout patterns: 10 minutes
+- Live Demo (public API consumer with wrapper function): 8 minutes
+- Hands-On Lab (API consumer with failure-branch checks): 26 minutes
+- Debrief & Exit Ticket: 3 minutes
+
+This one-hour plan totals exactly 60 minutes: 4 + 9 + 10 + 8 + 26 + 3 = 60. The hands-on lab is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the concept discussion runs long, shorten the demo narration rather than reducing the student practice, because the lab is where learners prove they can handle success, timeout, 404, 500, and invalid JSON cases.
 
 ---
 
@@ -27,7 +49,7 @@ By the end of this hour, you will be able to:
 
 ---
 
-## Section 1: Recap & Transition from Session 3 (5 minutes)
+## Section 1: Recap & Transition from Session 3 (4 minutes)
 
 ### Quick Re-entry
 
@@ -61,7 +83,7 @@ Exactly. Nearly every serious application is, in some form, an HTTP client.
 
 ---
 
-## Section 2: HTTP Client Fundamentals (12 minutes)
+## Section 2: HTTP Client Fundamentals (9 minutes)
 
 ### What an HTTP Client Does
 
@@ -140,7 +162,7 @@ All of those are different. Good client code distinguishes them where it is usef
 
 ---
 
-## Section 3: JSON Contracts, Timeouts, and Status Codes (13 minutes)
+## Section 3: JSON Contracts, Timeouts, and Status Codes (10 minutes)
 
 ### Always Set a Timeout
 
@@ -242,7 +264,7 @@ The benefit is not just less typing. The benefit is consistency. When you later 
 
 ---
 
-## Section 4: Live Demo – Public API Consumer with a Wrapper Function (10 minutes)
+## Section 4: Live Demo – Public API Consumer with a Wrapper Function (8 minutes)
 
 ### Demo Setup
 
@@ -310,7 +332,11 @@ def fetch_post(post_id: int) -> dict[str, Any] | None:
     except requests.ConnectionError:
         logger.error("The service appears unreachable.")
     except requests.HTTPError as error:
-        status_code = error.response.status_code if error.response else "unknown"
+        status_code = (
+            error.response.status_code
+            if error.response is not None
+            else "unknown"
+        )
         logger.error("The service returned an HTTP error: %s", status_code)
     except requests.exceptions.JSONDecodeError:
         logger.error("The service returned invalid JSON.")
@@ -375,7 +401,7 @@ If students answer those questions correctly, they are moving beyond syntax into
 
 ---
 
-## Section 5: Hands-On Lab – API Consumer (15 minutes)
+## Section 5: Hands-On Lab – API Consumer with Failure-Branch Checks (26 minutes)
 
 ### Lab Framing
 
@@ -397,12 +423,35 @@ Students should build a script that:
 - handles non-200 responses with a friendly message
 - distinguishes at least these failure cases:
   - timeout
+  - connection or network failure
   - 404
   - 500
   - invalid JSON
 - validates that required keys exist before using them
 
 If students are unsure which endpoint to use, provide one. A simple public JSON endpoint or instructor-provided local endpoint is fine.
+
+### Required Lab Milestones
+
+Use these milestones to make the 26-minute lab concrete. Students should not stop after the first successful request.
+
+1. **Happy path first.** Call a known-good endpoint, parse the JSON, validate at least one required field, and print selected fields in a user-friendly format.
+2. **Timeout path.** Confirm that every request call includes `timeout=...`. If a real timeout is hard to trigger in class, have students point to the `except requests.Timeout` block and explain the message it would show.
+3. **404 path.** Change the URL or identifier to something missing and verify the program prints a friendly "not found" style message rather than a traceback.
+4. **500 path.** Use an instructor-provided endpoint, mock response, or prepared discussion case if the public API does not offer a stable 500. The required habit is that 5xx responses are handled separately from success.
+5. **Invalid JSON path.** Use a non-JSON endpoint, local sample, or instructor-provided response to verify that JSON parsing failures do not crash the program.
+6. **Contract mismatch path.** Adjust the expected key name temporarily and confirm the program catches missing or wrong-typed data before using it.
+7. **Connection failure path.** Use a deliberately invalid host, a stopped local endpoint, or an instructor-provided scenario to verify the program reports "service unreachable" instead of crashing.
+
+The point is not that every student must find a perfect public endpoint for every failure. The point is that every student can show where each failure is handled and can demonstrate at least the happy path plus one real failure during class.
+
+### Suggested Lab Timing
+
+- First 5 minutes: choose endpoint, run one successful request, and print a status or small payload summary.
+- Next 6 minutes: move request logic into `fetch_resource()` with `timeout=...`, `raise_for_status()`, and `response.json()`.
+- Next 6 minutes: add contract checks for required keys and expected types.
+- Next 6 minutes: add friendly branches for timeout, connection failure, 404/500 HTTP errors, invalid JSON, and contract mismatch.
+- Final 3 minutes: run one success case and one failure case, then write a short note explaining the difference between timeout and retry.
 
 ### Suggested Starter Shape
 
@@ -446,7 +495,7 @@ A student solution is complete when:
 - the request succeeds and prints parsed output
 - the client does not hang indefinitely
 - at least one required field is validated before use
-- timeout, 404, 500, and invalid JSON each produce a friendly user-facing message
+- timeout, connection failure, 404, 500, and invalid JSON each produce a friendly user-facing message
 - the code avoids duplicating request logic all over the script
 
 ### Circulation Notes
@@ -623,7 +672,7 @@ That means students should walk away from this hour with a new default instinct.
 
 If those questions become habits, this hour has paid off far beyond a single exercise.
 
-## Section 6: Debrief & Exit Ticket (5 minutes)
+## Section 6: Debrief & Exit Ticket (3 minutes)
 
 ### Group Debrief
 
