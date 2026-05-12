@@ -90,9 +90,9 @@ _Track milestones and validations in order, updating status as work progresses._
   - Comprehensive contributor and AI agent governance documentation authored
   - **Validation:** `AGENTS.md` at repo root; covers naming, structure, autograder contracts, workflow
 
-- [ ] **Milestone 5.2 — README.md and Status Docs**
-  - Multi-audience README, root memory files, and completion spec need to reflect current tracker state
-  - **Validation:** close #351-#354 only after completion claims match #269, #270, #271, and live inventory
+- [x] **Milestone 5.2 — README.md and Status Docs**
+  - Multi-audience README, root memory files, and completion spec now reflect current tracker state
+  - **Validation:** #351-#354 are ready to close once this docs-sync PR merges
 
 - [x] **Milestone 5.3 — Architecture & Memory Files**
   - `Architecture.md`, `Plans.md`, `Documentation.md` contain real project content

@@ -77,13 +77,13 @@ Missing or corrupt `_answers.json` files should break full workflow execution ve
 - **Advanced Quizzes**: 12/12 daily `.html` quizzes created.
 - **Basics Quiz Answers**: 12/12 `_answers.json` exports are present.
 - **Advanced Quiz Answers**: 12/12 `_answers.json` exports are present.
-- **Advanced Sample Submissions**: all 12 Advanced assignment directories have matching sample submissions.
+- **Advanced Sample Submissions**: 12/12 assignment directories have matching sample submissions.
 
 ### Remaining Gaps
 - **Lecture Depth**: hourly scripts below the ~4,000-word target remain tracked under #269.
 - **Basics Sample Submissions**: Days 2, 3, 4, 5, 6, and 8 still need matching sample submissions; see #270.
 - **Slides and Lesson Sources**: published Basics slide coverage and source-layout cleanup remain tracked under #271.
-- **Documentation Sync**: repo-root status files and tracker hygiene remain tracked under #272 and child issues #351-#355.
+- **Documentation Sync**: repo-root status files and tracker hygiene aligned via #351-#355; ongoing hygiene remains tracked under #272.
 
 ## 11. Related Specifications / Further Reading
 

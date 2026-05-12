@@ -8,7 +8,7 @@ _Log of milestone status updates and key decisions. Future agents and contributo
 
 - **2026-04-19 — Project inventory present; remediation open**: All 96 per-hour lecture files, 24 assignment notebooks, 24 HTML quizzes, and 24 `_answers.json` quiz export files are present. Lecture-depth remediation remains open under #269, Basics sample submissions for Days 2, 3, 4, 5, 6, and 8 remain open under #270, and slide/source remediation remains open under #271.
 
-- **2026-04-19 — Autograder pipeline present with validation gaps tracked**: `autograder.yml` grades assignments and quizzes across both modules, all `setup.json` files use the standardized bash resolution script, and manual dispatch writes results to timestamped `autograder-results-*` branches. End-to-end Basics sample-submission coverage is still tracked under #270.
+- **2026-04-19 — Autograder pipeline present with validation gaps tracked**: `autograder.yml` can stage assignment submissions from Basics or Advanced directories, grades Basics HTML quizzes, and writes manual-dispatch results to timestamped `autograder-results-*` branches. Advanced quiz answer exports are present, but Advanced quiz grading and PR validation are not yet wired into the workflow. End-to-end Basics sample-submission coverage is still tracked under #270.
 
 - **2026-02-26 — Autograder workflow review (Days 1–2)**: Completed a workflow + integration audit and drafted a manual testing plan. See the report below for findings, alignment notes, and a triggerable test suite design.
 
