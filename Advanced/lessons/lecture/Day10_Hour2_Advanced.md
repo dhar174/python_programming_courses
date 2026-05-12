@@ -249,7 +249,12 @@ Build a client: create client/api_client.py with list_records, create_record, up
 
 ### Completion criteria
 
-- Client can list and create records end-to-end.
+250:### Completion criteria
+251:
+252:- Client can list, create, update, and delete records end-to-end.
+253:- Timeouts are present on every request.
+254:- Write operations pass the API key header when configured.
+255:- Connection and HTTP errors do not produce confusing tracebacks for end users.
 - Timeouts are present on every request.
 - Write operations pass the API key header when configured.
 - Connection and HTTP errors do not produce confusing tracebacks for end users.
