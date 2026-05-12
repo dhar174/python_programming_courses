@@ -11,7 +11,8 @@ Python Programming (Basic) • Capstone Delivery and Final Review
 
 # Day 12 Goal
 
-## Finish With a Working Story
+**Finish With a Working Story**
+
 - Build a small command-line capstone project
 - Save and load data with JSON in a `data/` folder
 - Organize code with functions, modules, and at least one class
@@ -22,12 +23,14 @@ Python Programming (Basic) • Capstone Delivery and Final Review
 
 # Capstone Theme Choices
 
-## Choose One CLI Personal Organizer
+**Choose One CLI Personal Organizer**
+
 - Tasks
 - Contacts
 - Notes
 
-## Keep It Basics-Scope
+**Keep It Basics-Scope**
+
 - No web frameworks
 - No databases
 - No GUI frameworks
@@ -37,7 +40,8 @@ Python Programming (Basic) • Capstone Delivery and Final Review
 
 # Required Capstone Features
 
-## Minimum Requirements
+**Minimum Requirements**
+
 - Menu loop
 - Functions split into modules
 - At least one class
@@ -51,13 +55,15 @@ Build the minimum viable product first, then polish.
 
 # Hour 45: Kickoff + Scaffold
 
-## Learning Outcomes
+**Learning Outcomes**
+
 - Define capstone requirements
 - Plan the first build steps
 - Create the project skeleton
 - Make one action work end to end
 
-## Deliverable
+**Deliverable**
+
 Skeleton + load/save + one CRUD action working.
 
 ---
@@ -134,19 +140,22 @@ If add/update/delete works during the run but disappears after restart, check wh
 
 # Hour 46: Build Sprint
 
-## Learning Outcomes
+**Learning Outcomes**
+
 - Complete the required CRUD feature set
 - Improve UX and robustness
 - Test features as they are added
 
-## Build Order
+**Build Order**
+
 Add → list → search → update/delete → save/load retest
 
 ---
 
 # Build Sprint Checklist
 
-## Required Actions
+**Required Actions**
+
 - Add an item
 - List items
 - Search or view one item
@@ -195,19 +204,22 @@ What is one bug you fixed today, and how did you find it?
 
 # Hour 47: Polish + Demo Readiness
 
-## Learning Outcomes
+**Learning Outcomes**
+
 - Finalize capstone quality
 - Prepare a short demo walkthrough
 - Test from a fresh run
 
-## Deliverable
+**Deliverable**
+
 A project that runs cleanly from scratch and supports a demo flow in under 3 minutes.
 
 ---
 
 # Polish Checklist
 
-## Before Demo
+**Before Demo**
+
 - Prompts are clear
 - Output is readable
 - Invalid menu choices are handled
@@ -222,7 +234,8 @@ Last-minute refactors that break working code.
 
 # Demo Script
 
-## Recommended Flow
+**Recommended Flow**
+
 1. Start the program
 2. Add an item
 3. List items
@@ -257,12 +270,14 @@ Run instructions make your project easier to grade, demo, and revisit.
 
 # Hour 48: Final Assessment + Review
 
-## Learning Outcomes
+**Learning Outcomes**
+
 - Demonstrate Basics competency end to end
 - Explain project structure at a high level
 - Identify next study targets
 
-## Final Activities
+**Final Activities**
+
 - Capstone demo + rubric scoring
 - Short certification-style review
 - Individual feedback
@@ -283,7 +298,8 @@ Run instructions make your project easier to grade, demo, and revisit.
 
 # Certification-Style Review Domains
 
-## Review Agenda
+**Review Agenda**
+
 - Types + conversions
 - Strings + formatting
 - Data structures: list, tuple, set, dict
@@ -296,7 +312,8 @@ Run instructions make your project easier to grade, demo, and revisit.
 
 # Code Reading Practice
 
-## Predict or Explain
+**Predict or Explain**
+
 - String slicing + `len()`
 - f-strings with numeric conversion
 - `range()` boundaries
@@ -309,11 +326,13 @@ Run instructions make your project easier to grade, demo, and revisit.
 
 # Final Exit Ticket
 
-## Reflection Prompts
+**Reflection Prompts**
+
 - One concept I feel strong about is...
 - One concept I should review is...
 - One debugging habit I will keep using is...
 - One improvement I would add to my capstone next is...
 
-## Course Close
+**Course Close**
+
 You now have the full Basics toolkit for building small, useful Python programs.

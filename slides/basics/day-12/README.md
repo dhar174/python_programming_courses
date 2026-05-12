@@ -3,7 +3,7 @@
 **Course:** Python Programming (Basic)<br>
 **Day:** 12 · Session 12<br>
 **Hours covered:** 45–48<br>
-**Slides:** [`day-12-session-12.html`](day-12-session-12.html) &nbsp;(54 slides)
+**Slides:** [`day-12-session-12.html`](day-12-session-12.html) &nbsp;(35 slides)
 
 ---
 
@@ -63,7 +63,7 @@ By the end of Session 12, learners can:
 
 | File | Description |
 |------|-------------|
-| [`day-12-session-12.html`](day-12-session-12.html) | Self-contained HTML slide deck (54 slides) |
+| [`day-12-session-12.html`](day-12-session-12.html) | Self-contained HTML slide deck (35 slides) |
 | [`index.html`](index.html) | Session index / landing page |
 | [`README.md`](README.md) | This file |
 

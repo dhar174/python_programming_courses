@@ -516,17 +516,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }}
         }}
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {{
-            const hash = window.location.hash.slice(1);
-            if (hash) {{
-                const slideNum = parseInt(hash) - 1;
-                if (!isNaN(slideNum)) {{
-                    currentSlide = slideNum;
-                }}
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {{
+            const slideNum = parseInt(hash) - 1;
+            if (!isNaN(slideNum)) {{
+                currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
             }}
-            updateSlideDisplay(false);
-        }});
+        }}
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>"""
