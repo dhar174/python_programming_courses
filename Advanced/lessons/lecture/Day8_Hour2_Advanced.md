@@ -209,6 +209,7 @@ class SQLiteTrackerRepository:
             ORDER BY id ASC
         """
         with closing(sqlite3.connect(self.db_path)) as connection:
+            connection.row_factory = sqlite3.Row
             rows = connection.execute(query).fetchall()
         return [Record.from_row(row) for row in rows]
 ```
@@ -523,7 +524,7 @@ def build_service() -> RecordService:
     return RecordService(repo=repository)
 ```
 
-Pause after showing this and ask learners to identify each responsibility. The model represents one tracker record with the same fields used across the Day 8 examples. The repository owns persistence and SQL. The service owns application rules such as title and category validation. The builder function wires the pieces together. That is dependency injection in a small, practical form. Also point out `closing(self._connect())`: the `sqlite3` connection context manager handles commit/rollback, but `closing` makes the example explicit about releasing the connection.
+Pause after showing this and ask learners to identify each responsibility. The model represents one tracker record with the same fields used across the Day 8 examples. The repository owns persistence and SQL. The service owns application rules such as title and category validation. The builder function wires the pieces together. That is dependency injection in a small, practical form. Also point out `closing(self._connect())`: `closing` releases the connection explicitly, while the explicit `connection.commit()` calls are what persist write operations in this pattern.
 
 ### Demo steps
 

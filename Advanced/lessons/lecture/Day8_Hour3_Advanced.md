@@ -200,6 +200,7 @@ def search(
     parameters.extend([limit, offset])
 
     with closing(sqlite3.connect(self.db_path)) as connection:
+        connection.row_factory = sqlite3.Row
         rows = connection.execute(query, tuple(parameters)).fetchall()
 
     return [Record.from_row(row) for row in rows]
@@ -324,7 +325,7 @@ Advanced learners can add sorting:
 
 **[Instructor speaks:]**
 
-If you add sorting, do it carefully. Do not pass arbitrary column names directly from user input into SQL. Use a controlled mapping of allowed choices such as `"title"`, `"category"`, or `"status"`.
+If you add sorting, do it carefully. Do not pass arbitrary column names directly from user input into SQL. Use a controlled mapping of allowed choices such as `"title"`, `"category"`, `"status"`, `"priority"`, or `"created_at"`.
 
 ---
 
@@ -478,7 +479,7 @@ Also notice the deterministic `ORDER BY id ASC`. Pagination without a stable ord
 
 Use these steps for the live demonstration:
 
-1. Seed the database with at least 30 records. Include repeated statuses such as `open`, `blocked`, and `done`.
+1. Seed the database with at least 30 records. Include repeated statuses that match the Day 8 schema, such as `open` and `done`.
 2. Show a plain list view first so learners understand the starting point.
 3. Add a repository `search()` method that accepts `term`, optional `status` and `category` filters, `limit`, and `offset`.
 4. Demonstrate a text search for a term that appears in several titles.
