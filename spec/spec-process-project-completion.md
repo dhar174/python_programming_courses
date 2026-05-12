@@ -39,7 +39,7 @@ The purpose of this document is to explicitly outline what has been completed in
 
 ## 5. Acceptance Criteria
 
-- **AC-001**: Given the Basics module is fully authored, When we check the `Basics/lessons/lecture/` directory, Then 48 distinct per-hour lecture script files should be present.
+- **AC-001**: Given the Basics module lecture inventory is present, When we check the `Basics/lessons/lecture/` directory, Then 48 distinct per-hour lecture script files should be present; depth remediation remains tracked separately under #269.
 - **AC-002**: Given the automated grading workflow runs, When the quizzes are validated, Then every quiz must have a corresponding `_answers.json` file in the same directory or within the root `quizzes` folder.
 
 ## 6. Test Automation Strategy
@@ -64,22 +64,26 @@ To ensure the automated grading pipeline and course structure are scalable, stan
 
 ## 9. Examples & Edge Cases
 
-Missing `_answers.json` files currently break full workflow execution verification as the CI action looks for them during grading steps.
+Missing or corrupt `_answers.json` files should break full workflow execution verification clearly when the CI action looks for them during grading steps. The current repository inventory includes 12 Basics and 12 Advanced answer exports.
 
 ## 10. Validation Criteria
 
-### Completed Tasks Status
-- **Basics Lectures**: 48/48 per-hour lecture files completed (`Basics/lessons/lecture/`).
-- **Advanced Lectures**: 48/48 per-hour lecture files completed (`Advanced/lessons/lecture/`).
+### Current Inventory Status
+- **Basics Lectures**: 48/48 per-hour lecture files are present (`Basics/lessons/lecture/`); depth remediation remains open under #269.
+- **Advanced Lectures**: 48/48 per-hour lecture files are present (`Advanced/lessons/lecture/`); depth remediation remains open under #269.
 - **Basics Assignments**: 12/12 day directories created with `.ipynb` assignment templates. 
 - **Advanced Assignments**: 12/12 day directories created with `.ipynb` assignment templates.
 - **Basics Quizzes**: 12/12 daily `.html` quizzes created.
 - **Advanced Quizzes**: 12/12 daily `.html` quizzes created.
 - **Basics Quiz Answers**: 12/12 `_answers.json` exports are present.
 - **Advanced Quiz Answers**: 12/12 `_answers.json` exports are present.
+- **Advanced Sample Submissions**: 12/12 assignment directories have matching sample submissions.
 
-### Pending Tasks
-- **PEN-001**: Review and maintain the completed quiz answer exports and sample submissions as future curriculum changes land.
+### Remaining Gaps
+- **Lecture Depth**: hourly scripts below the ~4,000-word target remain tracked under #269.
+- **Basics Sample Submissions**: Days 2, 3, 4, 5, 6, and 8 still need matching sample submissions; see #270.
+- **Slides and Lesson Sources**: published Basics slide coverage and source-layout cleanup remain tracked under #271.
+- **Documentation Sync**: repo-root status files and tracker hygiene aligned via #351-#355; ongoing hygiene remains tracked under #272.
 
 ## 11. Related Specifications / Further Reading
 
