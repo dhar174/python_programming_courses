@@ -195,7 +195,9 @@ class SQLiteTrackerRepository:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 category TEXT NOT NULL,
-                status TEXT NOT NULL CHECK (status IN ('open', 'done'))
+                status TEXT NOT NULL CHECK (status IN ('open', 'done')),
+                priority INTEGER NOT NULL DEFAULT 3,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         """
         with closing(sqlite3.connect(self.db_path)) as connection:
