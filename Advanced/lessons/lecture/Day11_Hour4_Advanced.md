@@ -91,6 +91,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+REQUIRED_COLUMNS = {"status"}
+
 
 def create_status_chart(summary: pd.DataFrame, output_path: Path) -> None:
     fig, ax = plt.subplots()
@@ -104,8 +106,19 @@ def create_status_chart(summary: pd.DataFrame, output_path: Path) -> None:
 
 
 def generate_report(data_path: Path, reports_dir: Path) -> None:
+    if not data_path.exists():
+        raise FileNotFoundError(
+            f"Report input not found: {data_path}. Export tracker records before running the report."
+        )
+
     reports_dir.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(data_path)
+    missing_columns = REQUIRED_COLUMNS - set(df.columns)
+    if missing_columns:
+        raise ValueError(f"Report CSV is missing columns: {sorted(missing_columns)}")
+    if df.empty:
+        raise ValueError("Report CSV contains no records to summarize.")
+
     summary = df.groupby("status", as_index=False).size()
     summary.to_csv(reports_dir / "summary.csv", index=False)
     create_status_chart(summary, reports_dir / "status_counts.png")

@@ -104,6 +104,19 @@ import requests
 class TrackerApiError(RuntimeError):
     """User-facing API client error for predictable request failures."""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        code: str | None = None,
+        request_id: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.code = code
+        self.request_id = request_id
+
 
 @dataclass
 class TrackerApiClient:
@@ -131,16 +144,45 @@ class TrackerApiClient:
             if response.status_code == 204 or not response.content:
                 return None
             content_type = response.headers.get("Content-Type", "")
-            if "application/json" not in content_type:
-                return None
+            if "json" not in content_type.lower():
+                snippet = response.text[:200].replace("\n", " ")
+                raise TrackerApiError(
+                    f"API returned {content_type or 'an unknown content type'} instead of JSON: {snippet}",
+                    status_code=response.status_code,
+                )
             return response.json()
         except requests.Timeout as exc:
             raise TrackerApiError("API request timed out. Check that the server is running.") from exc
         except requests.ConnectionError as exc:
             raise TrackerApiError("Could not connect to the API. Check the base URL and port.") from exc
         except requests.HTTPError as exc:
-            status = exc.response.status_code if exc.response is not None else "unknown"
-            raise TrackerApiError(f"API returned an unsuccessful status: {status}") from exc
+            if exc.response is None:
+                raise TrackerApiError("API returned an unsuccessful status: unknown") from exc
+            status = exc.response.status_code
+            code = None
+            request_id = None
+            message = f"API returned an unsuccessful status: {status}"
+            try:
+                body = exc.response.json()
+            except ValueError:
+                snippet = exc.response.text[:200].replace("\n", " ")
+                message = f"API returned {status}: {snippet}"
+            else:
+                error_payload = body.get("error", {}) if isinstance(body, dict) else {}
+                if isinstance(error_payload, dict):
+                    code = error_payload.get("code")
+                    request_id = error_payload.get("request_id")
+                    message = error_payload.get("message", message)
+                    if code:
+                        message = f"{message} ({code})"
+                else:
+                    message = f"API returned {status}: {error_payload}"
+            raise TrackerApiError(
+                message,
+                status_code=status,
+                code=code,
+                request_id=request_id,
+            ) from exc
         except ValueError as exc:
             raise TrackerApiError("API returned a response that was not valid JSON.") from exc
 

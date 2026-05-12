@@ -112,7 +112,7 @@ def on_save_clicked() -> None:
         messagebox.showerror("Save failed", str(exc))
         return
     refresh_table()
-    status_var.set(f"Saved record {created['id']}")
+    save_status_var.set(f"Saved record {created['id']}")  # Bound to a separate feedback label/status bar.
 
 # Option B sketch: GUI and API both call TrackerService, sharing validation rules
 def save_directly_through_service() -> None:
@@ -122,7 +122,7 @@ def save_directly_through_service() -> None:
         "status": status_var.get() or "open",
     }
     record = tracker_service.create_record(payload)
-    status_var.set(f"Saved record {record.id}")
+    save_status_var.set(f"Saved record {record.id}")
 
 ```
 

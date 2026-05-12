@@ -89,7 +89,7 @@ Use these prompts to keep the class active:
 
 ### Demo steps
 
-1. Move route definitions into api/routes.py or an equivalent module.
+1. Move route definitions into `api/routes.py` as a `register_routes(app, service)` helper.
 2. Create create_app(db_path: Path | None = None).
 3. Construct repository and service inside create_app.
 4. Run the same /health and /records smoke checks after the refactor.
@@ -101,6 +101,7 @@ from pathlib import Path
 from flask import Flask
 
 # Adjust module paths to match the cohort project structure.
+from api.routes import register_routes
 from tracker.repository import SQLiteTrackerRepository
 from tracker.service import TrackerService
 
@@ -113,6 +114,11 @@ def create_app(db_path: Path | None = None) -> Flask:
 
     register_routes(app, service)
     return app
+
+# api/routes.py
+from flask import Flask
+
+from tracker.service import TrackerService
 
 def register_routes(app: Flask, service: TrackerService) -> None:
     @app.get("/health")

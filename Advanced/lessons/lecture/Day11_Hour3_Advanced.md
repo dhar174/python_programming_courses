@@ -87,11 +87,26 @@ Use these prompts to keep the class active:
 ### Demo code or command sketch
 
 ```python
+from pathlib import Path
 import pandas as pd
 
-df = pd.read_csv("data/records.csv")
+data_path = Path("data/records.csv")
+required_columns = {"amount"}
+
+if data_path.exists():
+    df = pd.read_csv(data_path)
+else:
+    print(f"Using synthetic demo data because {data_path} was not found.")
+    df = pd.DataFrame({"amount": [20, 35, 40, 55, 70, 80, 95, 110]})
+
+missing_columns = required_columns - set(df.columns)
+if missing_columns:
+    raise ValueError(f"Regression demo needs columns: {sorted(missing_columns)}")
+
 df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
 model_data = df.dropna(subset=["amount"]).reset_index(drop=True)
+if len(model_data) < 4:
+    raise ValueError("Regression demo needs at least four numeric rows.")
 model_data["record_number"] = model_data.index + 1
 
 try:
