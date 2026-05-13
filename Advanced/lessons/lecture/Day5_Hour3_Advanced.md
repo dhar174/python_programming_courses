@@ -1,252 +1,323 @@
-# Day 5, Hour 3: Forms, Validation, and User Feedback Patterns
+# Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced)
 
-## Instructor Notes
-- **Course**: Python Programming (Advanced)
-- **Session**: 5
-- **Hour**: 3 of 4 for this session, corresponding to **Hour 19** in the 48-hour runbook
-- **Focus**: Form validation, inline feedback, actionable error messages, and clean UI/service responsibilities
-- **Runbook alignment**: Validate input before saving; display validation errors clearly; discuss inline validation versus message boxes; trim/normalize input before validation; disable/enable buttons when useful
-- **Prerequisites**:
-  - Students can build a small Tkinter GUI
-  - Students understand functions, exceptions, and service-layer separation
-  - Students are comfortable with dictionaries and basic control flow
-- **Teaching goal**: Show that validation is both a technical responsibility and a communication responsibility
-- **Demo app theme**: Continue the contact form from the earlier hours
-- **Key message to repeat**: “Good validation helps the user succeed.”
-- **Success criteria for the hour**:
-  - Students validate before saving
-  - Students display field-specific or summary feedback clearly
-  - Students avoid crashing or showing tracebacks to end users
-  - Students can explain the difference between service-layer validation and UI presentation
+## Instructor script purpose and scope
 
----
+This hour is the practical bridge between “a form exists” and “a form is trustworthy.”
+Students already built layout structure in the previous hour. In this hour, they build form behavior that protects data quality and helps users recover quickly from mistakes.
 
-## Timing Overview
+Runbook source of truth for this hour: Hour 19 in `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`.
 
-| Segment | Time |
-|---|---:|
-| Recap and transition from layout to form quality | 5 minutes |
-| Validation principles and good feedback patterns | 12 minutes |
-| Designing UI and service responsibilities for validation | 10 minutes |
-| Live demo: inline validation and clean error handling | 13 minutes |
-| Hands-on lab: add actionable validation feedback | 15 minutes |
-| Debrief, quick checks, exit ticket, wrap-up | 5 minutes |
+Core outcomes for this hour are explicit and non-negotiable:
 
-**Total:** 60 minutes
+- Validate input before saving.
+- Display validation errors clearly.
 
----
+Required talk points for this hour:
 
-## Learning Outcomes for This Hour
+- Inline validation vs messagebox.
+- Actionable error messages.
+- Disable/enable buttons when needed.
 
-By the end of this hour, students should be able to:
+Required live demo elements for this hour:
 
-1. Validate form input before saving data.
-2. Explain the difference between service-layer validation and UI feedback.
-3. Trim and normalize user input before validating it.
-4. Display clear, actionable error messages in a GUI.
-5. Use inline validation feedback instead of relying only on message boxes.
-6. Avoid exposing stack traces or raw exceptions to end users.
-7. Disable or re-enable buttons appropriately during save actions when needed.
+- Highlight invalid field + show message.
+- Show trimming/normalizing input before validation.
 
----
+Required lab outcomes for this hour:
 
-## Section 1: Recap and Transition (5 minutes)
+- Add required-field checks (non-empty).
+- Show validation feedback without crashing.
+- Ensure service-layer errors are surfaced cleanly.
 
-### Quick Re-entry
+Required completion criteria for this hour:
 
-**[Instructor speaks:]**
+- Invalid entries show clear feedback.
+- Valid entries save successfully.
 
-Last hour, we made our GUI cleaner. This hour, we make it safer and kinder.
+Required pitfalls to teach explicitly:
 
-A form is not complete just because it has text boxes and a Save button. A good form helps the user succeed. That means:
+- Silent failure (button does nothing).
+- Stack trace shown to user.
 
-- checking input before saving
-- explaining what is wrong
-- pointing toward the next step
-- staying stable after errors
+Required optional extension:
 
-### Framing the Hour
+- Add a Clear form button.
 
-**[Instructor speaks:]**
+Required quick-check concept:
 
-Today’s central question is:
+- Good validation message vs bad validation message.
 
-> When the user enters bad input, what should happen?
+Anti-drift guardrail for instructor delivery:
 
-The wrong answers include:
+- Do not re-teach Hour 18 layout mechanics (grid weight tuning, spacing deep dive, frame choreography).
+- Do not drift into Hour 20 list/table selection patterns (Listbox, Treeview, selection events, detail pane sync).
+- Keep this hour centered on form submission quality, validation feedback patterns, and a clean UI/service boundary.
 
-- the app crashes
-- nothing happens
-- the user sees a traceback
-- the message is vague, such as “Invalid input”
+## Timing plan (must total exactly 60 minutes)
 
-The better answer is:
+Use this exact pacing unless class conditions require very minor adjustment:
 
-- validate early
-- normalize input first
-- show specific feedback
-- keep the app stable
-- help the user recover immediately
+- Recap/transition: 4 minutes
+- Validation principles & feedback quality: 9 minutes
+- UI/service responsibility design: 8 minutes
+- Live demo: 8 minutes
+- Hands-on lab: 26 minutes
+- Debrief/quick check/exit: 5 minutes
 
----
+Runbook talk-point window alignment (10-20 minutes):
 
-## Section 2: Validation Principles (12 minutes)
+- Required talk points are delivered across Segment 2 and the opening of Segment 3 (minute 4 through minute 21 total = 17 minutes).
+- This keeps inline-vs-messagebox, actionable messaging, and disable/enable behavior inside the required 10-20 minute instruction window.
 
-### Validation Should Be Helpful, Not Punitive
+Arithmetic shown explicitly:
 
-**[Instructor speaks:]**
+**4 + 9 + 8 + 8 + 26 + 5 = 60**
 
-Validation is not there to scold the user. Validation is there to guide the user.
+## Learning outcomes (student-facing)
 
-A good validation message is:
+By the end of this hour, students can:
 
-- specific
-- actionable
-- calm in tone
-- tied to the relevant field or action
+1. Explain why validation must happen before save operations.
+2. Normalize input values before applying validation rules.
+3. Implement required-field checks for non-empty values.
+4. Show clear, actionable inline validation feedback near fields.
+5. Move focus to the first invalid field so correction starts immediately.
+6. Disable and re-enable the Save button at appropriate points in the save flow.
+7. Surface service-layer failures to users without exposing technical stack traces.
+8. Verify both failure path and success path with explicit pass/fail checks.
 
-Examples:
+## Instructor setup and delivery posture
 
-**Bad:** `Invalid input.`  
-**Better:** `Email is required.`  
-**Best:** `Enter an email address such as name@example.com.`
+Before class, prepare a starter GUI with three fields and one Save button:
 
-### Normalize Before You Validate
+- Name
+- Email
+- Role
+- Save
 
-**[Instructor speaks:]**
+Students should already be able to run a Tkinter app.
+You are not teaching raw widget layout from scratch here.
+You are teaching form behavior quality and architecture boundaries.
 
-Users do not always type data in a perfectly clean format. Before validating, it is often useful to normalize.
+Delivery posture for this hour:
 
-Examples:
+- Keep language practical and concrete.
+- Repeat that validation is both technical and communicative.
+- Treat every bad input path as an expected user journey, not as an edge case.
+- Model calm language. The user is not “wrong”; the form needs to guide.
 
-- strip surrounding spaces
-- lowercase an email address
-- collapse accidental extra whitespace
-- standardize capitalization if appropriate
+Short framing line to open the hour:
 
-This is usually service logic, not layout logic.
+“Last hour we made the form look organized. This hour we make it reliable, kind, and hard to misuse.”
 
-### Inline Feedback vs Message Boxes
+## Segment 1 (4 minutes): Recap and transition
 
-**[Instructor speaks:]**
+Use this speaking flow nearly verbatim:
 
-Message boxes are useful, but they interrupt the user. For many predictable form mistakes, inline feedback is better.
+- “Quick recap: we have form controls on screen and a Save interaction.”
+- “Today we add behavior quality: when input is invalid, the app should guide, not punish.”
+- “A strong form does three things every time: normalize, validate, then communicate clearly.”
+- “Our focus is not on visual polish only; our focus is on trust and recoverability.”
 
-Inline feedback might be:
+Ask two fast warm-up questions:
 
-- a small error label under a field
-- a summary message near the Save button
-- focus moved to the first invalid field
+1. “If Save does nothing and gives no message, what does the user think happened?”
+2. “If a traceback appears in front of a user, what confidence impact does that create?”
 
-Message boxes are more appropriate for:
+Expected responses:
 
-- save completed successfully
-- delete confirmation
-- serious unexpected failure
+- User confusion, repeated clicks, possible duplicate submissions.
+- Reduced trust, anxiety, and no clear next step.
 
-### Service Errors vs UI Errors
+Transition line into next segment:
 
-**[Instructor speaks:]**
+“Let’s define what good validation feedback sounds like and where it should appear.”
 
-The service layer should decide whether the data is valid.
+## Segment 2 (9 minutes): Validation principles and feedback quality
 
-The UI layer should decide how that result is presented.
+### 2.1 Inline validation vs messagebox (required talk point)
 
-That means the service might return:
+Teach this contrast clearly:
 
-- a saved object
-- a dictionary of field errors
-- or raise an exception for something unexpected
+Inline validation strengths:
 
-The UI then chooses how to display that outcome.
+- Keeps user attention in context.
+- Connects each error to the exact field.
+- Reduces interruption and cognitive reset.
+- Supports correction flow without modal popups.
 
-### Quick Check
+Messagebox strengths:
 
-**[Ask students:]**
+- Useful for major state changes (success confirmations in some apps, destructive actions, severe failures).
+- Useful when one global action failed for a reason not tied to a single field.
+- Useful when you must force acknowledgement for safety reasons.
 
-Why is “Enter an email address such as name@example.com” better than “Invalid email”?
+Instructor emphasis:
 
-**Expected answer:** because it tells the user what to fix and gives a useful example.
+“For expected input mistakes, inline is usually better. For major cross-form or system-level issues, messagebox may be appropriate.”
 
----
+Practical rule for students:
 
-## Section 3: A Clean Validation Pattern (10 minutes)
+- Field-level problems -> inline field message + focus behavior.
+- App-level unexpected failure -> concise global status or controlled popup, never raw traceback.
 
-### Suggested Submission Flow
+### 2.2 Actionable error messages (required talk point)
 
-**[Instructor speaks:]**
+Define “actionable”:
 
-A clean form-submission flow looks like this:
+A message is actionable when it tells the user exactly what to do next.
 
-1. Read values from the UI.
-2. Normalize them.
-3. Validate them in the service layer.
-4. If errors exist, return them without crashing.
-5. The UI displays field-level and summary feedback.
-6. If the data is valid, save it and reset the form.
+Bad examples:
 
-### Why Structured Errors Help
+- “Invalid input.”
+- “Error.”
+- “Email wrong.”
 
-**[Instructor speaks:]**
+Good examples:
 
-For predictable user mistakes, a structure like this is often easier to work with than generic exceptions:
+- “Email is required.”
+- “Enter an email like name@example.com.”
+- “Role is required before saving.”
+
+Even better examples include context and expected format:
+
+- “Name is required. Use at least 2 letters.”
+- “Email must include @ and a domain, for example name@example.com.”
+
+Teach message design checklist:
+
+- Specific field reference.
+- Clear correction action.
+- Neutral tone.
+- No blame.
+- No developer jargon.
+
+### 2.3 Disable/enable buttons when needed (required talk point)
+
+State this as behavior, not decoration:
+
+- Save button should disable when save process begins.
+- Save button should re-enable when processing ends, including failure path.
+- This prevents accidental duplicate actions and creates clear interaction state.
+
+Common student mistake:
+
+- Disabling Save but forgetting to re-enable on exception path.
+
+Instructor line:
+
+“If you disable a control, you own re-enabling it on every path. `finally` is your safety net.”
+
+### 2.4 Feedback stack: what user should see
+
+When a user clicks Save with invalid input, they should see all of this:
+
+- Clear summary feedback near Save or status area.
+- Inline message under each invalid field.
+- Focus moved to first invalid field.
+- No crash, no console-only message as primary user signal.
+
+Rubber Duck critique integration (required behavior):
+
+- “Highlight invalid field” must be explicit and testable:
+  - Move focus to first invalid field.
+  - Show visible indication (focus + inline error text).
+
+### 2.5 Micro-practice prompt (1 minute inside this segment)
+
+Ask class:
+
+“Which is better and why?”
+
+A: “Invalid email.”
+B: “Enter an email like name@example.com.”
+
+Expected answer:
+
+B is better because it names the expected format and gives an example.
+
+Transition line:
+
+“Now let’s separate responsibilities so your code stays maintainable.”
+
+## Segment 3 (8 minutes): UI/service responsibility design
+
+### 3.1 Why this boundary matters
+
+If validation logic is scattered directly across button handlers and widget callbacks, code becomes fragile:
+
+- Rules duplicated in multiple places.
+- Inconsistent behavior across screens.
+- Harder testing.
+- Harder migration to other interfaces later.
+
+Architecture target for this hour:
+
+- UI layer handles interaction and presentation.
+- Service layer handles normalization + validation + persistence decision.
+- UI displays returned validation errors and catches service exceptions for user-friendly output.
+
+### 3.2 Recommended service contract
+
+Teach one clear contract:
+
+- Input: raw strings from UI.
+- Service normalizes values (trim, normalize case where appropriate).
+- Service validates required fields and format rules.
+- If validation fails: returns structured error map.
+- If validation passes: saves and returns success payload.
+- If unexpected infra/system issue: raises service exception.
+
+Structured error map example:
 
 ```python
 {
     "name": "Name is required.",
-    "email": "Enter an email address such as name@example.com.",
+    "email": "Enter an email like name@example.com."
 }
 ```
 
-That gives the UI something concrete to display next to the right fields.
+UI then:
 
-### When Exceptions Still Make Sense
+- Clears old errors.
+- Applies new field errors.
+- Moves focus to first invalid field.
+- Sets summary status line.
+- Keeps app responsive.
 
-**[Instructor speaks:]**
+### 3.3 Responsibility matrix to speak through
 
-Not every problem is just a field-level validation issue. Some failures are unexpected:
+- UI owns:
+  - Reading field values.
+  - Clearing old UI error state.
+  - Disabling/enabling Save control.
+  - Rendering inline errors and summary messages.
+  - Focus management.
+- Service owns:
+  - Input normalization.
+  - Validation rule decisions.
+  - Persistence call.
+  - Raising controlled service errors for unexpected conditions.
 
-- file I/O problems
-- network issues
-- database errors
-- corrupted external input
+### 3.4 Guardrail against drift
 
-Those are good candidates for exceptions. But even then, the UI should catch them and present a calm message instead of a traceback.
+Say this explicitly:
 
-### Disabling and Re-Enabling Buttons
+“We are not doing list/table selection in this hour. That belongs to the next hour.
+We are also not redoing layout fundamentals from the previous hour.
+This hour is about form submission quality and clear user feedback.”
 
-**[Instructor speaks:]**
+Transition line:
 
-Even in a simple form, disabling a button temporarily can prevent accidental double-clicks or repeated submissions.
+“Let’s implement the complete pattern end to end.”
 
-The flow can be:
+## Segment 4 (8 minutes): Live demo (required elements included)
 
-- disable Save
-- run validation/save logic
-- re-enable Save
-- show result
+Demo objective:
 
-This pattern becomes even more useful when saving later involves slower work.
+Build a form flow that validates before save, surfaces errors clearly, highlights first invalid field through focus + inline message, normalizes input before validation, and requires Save button disable/enable behavior.
 
----
-
-## Section 4: Live Demo — Inline Validation and Actionable Feedback (13 minutes)
-
-### Demo Framing
-
-**[Instructor speaks:]**
-
-I will build a contact form that:
-
-- trims and normalizes input
-- validates required fields
-- shows field-specific errors
-- shows a summary status message
-- keeps service logic separate from UI logic
-
-Watch for the division of responsibilities between the service and the UI.
-
-### Demo Code
+### 4.1 Demo code (runnable)
 
 ```python
 from __future__ import annotations
@@ -256,176 +327,225 @@ import tkinter as tk
 from tkinter import ttk
 
 
+class ServiceSaveError(Exception):
+    pass
+
+
 @dataclass(slots=True)
-class ContactRecord:
+class Contact:
     name: str
     email: str
     role: str
 
 
-class ContactFormService:
-    def __init__(self) -> None:
-        self._records: list[ContactRecord] = []
+@dataclass(slots=True)
+class ValidationResult:
+    ok: bool
+    errors: dict[str, str]
+    record: Contact | None = None
 
-    def validate_and_save(
-        self,
-        name: str,
-        email: str,
-        role: str,
-    ) -> tuple[ContactRecord | None, dict[str, str]]:
-        clean_name = name.strip()
+
+class ContactService:
+    def __init__(self) -> None:
+        self._records: list[Contact] = []
+        self._simulate_failure = False
+
+    def set_failure_mode(self, enabled: bool) -> None:
+        self._simulate_failure = enabled
+
+    def validate_and_save(self, name: str, email: str, role: str) -> ValidationResult:
+        clean_name = " ".join(name.strip().split())
         clean_email = email.strip().lower()
-        clean_role = role.strip()
+        clean_role = " ".join(role.strip().split())
 
         errors: dict[str, str] = {}
 
         if not clean_name:
             errors["name"] = "Name is required."
+        elif len(clean_name) < 2:
+            errors["name"] = "Name must contain at least 2 letters."
 
         if not clean_email:
             errors["email"] = "Email is required."
-        elif "@" not in clean_email:
-            errors["email"] = "Enter an email address such as name@example.com."
+        elif "@" not in clean_email or "." not in clean_email.split("@")[-1]:
+            errors["email"] = "Enter an email like name@example.com."
 
         if not clean_role:
             errors["role"] = "Role is required."
 
         if errors:
-            return None, errors
+            return ValidationResult(ok=False, errors=errors)
 
-        record = ContactRecord(
-            name=clean_name,
-            email=clean_email,
-            role=clean_role,
-        )
+        if self._simulate_failure:
+            raise ServiceSaveError("Storage service unavailable")
+
+        record = Contact(name=clean_name, email=clean_email, role=clean_role)
         self._records.append(record)
-        return record, {}
+        return ValidationResult(ok=True, errors={}, record=record)
+
+    def count(self) -> int:
+        return len(self._records)
 
 
 class ContactFormApp:
-    def __init__(self, root: tk.Tk, service: ContactFormService) -> None:
+    def __init__(self, root: tk.Tk, service: ContactService) -> None:
         self.root = root
         self.service = service
 
-        self.root.title("Validated Contact Form")
-        self.root.geometry("540x320")
+        self.root.title("Hour 19 Validation Demo")
+        self.root.geometry("620x390")
 
         self.name_var = tk.StringVar()
         self.email_var = tk.StringVar()
         self.role_var = tk.StringVar()
-        self.status_var = tk.StringVar(value="Enter contact information.")
+        self.status_var = tk.StringVar(value="Fill the form, then select Save.")
+        self.failure_var = tk.BooleanVar(value=False)
 
-        self.error_vars = {
-            "name": tk.StringVar(),
-            "email": tk.StringVar(),
-            "role": tk.StringVar(),
+        self.error_vars: dict[str, tk.StringVar] = {
+            "name": tk.StringVar(value=""),
+            "email": tk.StringVar(value=""),
+            "role": tk.StringVar(value=""),
         }
 
-        self.entry_widgets: dict[str, ttk.Entry] = {}
+        self.entries: dict[str, ttk.Entry] = {}
 
         self._build_ui()
+        self._wire_live_validation_state()
 
     def _build_ui(self) -> None:
         style = ttk.Style()
-        style.configure("Error.TLabel", foreground="firebrick")
-        style.configure("Status.TLabel", foreground="navy")
+        style.configure("Error.TLabel", foreground="#b00020")
+        style.configure("Status.TLabel", foreground="#1a237e")
 
+        container = ttk.Frame(self.root, padding=16)
+        container.grid(row=0, column=0, sticky="nsew")
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
+        container.columnconfigure(1, weight=1)
 
-        main_frame = ttk.Frame(self.root, padding=16)
-        main_frame.grid(row=0, column=0, sticky="nsew")
-        main_frame.columnconfigure(1, weight=1)
+        ttk.Label(container, text="Contact Form").grid(row=0, column=0, columnspan=3, sticky="w")
 
-        self._add_field(main_frame, "Name", "name", self.name_var, 0)
-        self._add_field(main_frame, "Email", "email", self.email_var, 2)
-        self._add_field(main_frame, "Role", "role", self.role_var, 4)
+        self._add_field(container, row=1, label="Name", field_key="name", variable=self.name_var)
+        self._add_field(container, row=3, label="Email", field_key="email", variable=self.email_var)
+        self._add_field(container, row=5, label="Role", field_key="role", variable=self.role_var)
 
-        self.save_button = ttk.Button(
-            main_frame,
-            text="Save Contact",
-            command=self.on_save,
-        )
-        self.save_button.grid(row=6, column=0, columnspan=2, sticky="ew", pady=(12, 8))
+        self.save_btn = ttk.Button(container, text="Save", command=self.on_save)
+        self.save_btn.grid(row=7, column=0, columnspan=2, sticky="ew", pady=(10, 6))
+
+        self.clear_btn = ttk.Button(container, text="Clear", command=self.on_clear)
+        self.clear_btn.grid(row=7, column=2, sticky="ew", pady=(10, 6), padx=(8, 0))
+
+        ttk.Checkbutton(
+            container,
+            text="Simulate service failure",
+            variable=self.failure_var,
+            command=self._on_toggle_failure_mode,
+        ).grid(row=8, column=0, columnspan=3, sticky="w", pady=(4, 6))
 
         ttk.Label(
-            main_frame,
+            container,
             textvariable=self.status_var,
             style="Status.TLabel",
-            wraplength=460,
-        ).grid(row=7, column=0, columnspan=2, sticky="w")
+            wraplength=580,
+        ).grid(row=9, column=0, columnspan=3, sticky="w")
 
     def _add_field(
         self,
         parent: ttk.Frame,
-        label_text: str,
-        field_name: str,
-        variable: tk.StringVar,
         row: int,
+        label: str,
+        field_key: str,
+        variable: tk.StringVar,
     ) -> None:
-        ttk.Label(parent, text=label_text).grid(row=row, column=0, sticky="w", pady=(0, 2))
-
+        ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w")
         entry = ttk.Entry(parent, textvariable=variable)
-        entry.grid(row=row, column=1, sticky="ew", pady=(0, 2))
-        self.entry_widgets[field_name] = entry
+        entry.grid(row=row, column=1, columnspan=2, sticky="ew", pady=(0, 2))
+        self.entries[field_key] = entry
 
         ttk.Label(
             parent,
-            textvariable=self.error_vars[field_name],
+            textvariable=self.error_vars[field_key],
             style="Error.TLabel",
-        ).grid(row=row + 1, column=1, sticky="w", pady=(0, 8))
+            wraplength=420,
+        ).grid(row=row + 1, column=1, columnspan=2, sticky="w", pady=(0, 8))
 
-    def clear_errors(self) -> None:
-        for error_var in self.error_vars.values():
-            error_var.set("")
+    def _wire_live_validation_state(self) -> None:
+        for var in (self.name_var, self.email_var, self.role_var):
+            var.trace_add("write", lambda *args: self._update_save_enabled_state())
+        self._update_save_enabled_state()
+
+    def _update_save_enabled_state(self) -> None:
+        has_any_text = any(
+            value.strip() for value in (self.name_var.get(), self.email_var.get(), self.role_var.get())
+        )
+        if has_any_text:
+            self.save_btn.state(["!disabled"])
+        else:
+            self.save_btn.state(["disabled"])
+
+    def _on_toggle_failure_mode(self) -> None:
+        self.service.set_failure_mode(self.failure_var.get())
+
+    def _clear_inline_errors(self) -> None:
+        for var in self.error_vars.values():
+            var.set("")
+
+    def _focus_first_invalid(self, errors: dict[str, str]) -> None:
+        if not errors:
+            return
+        order = ["name", "email", "role"]
+        for key in order:
+            if key in errors:
+                self.entries[key].focus_set()
+                return
 
     def on_save(self) -> None:
-        self.clear_errors()
-        self.save_button.state(["disabled"])
+        self._clear_inline_errors()
+        self.status_var.set("Saving...")
+        self.save_btn.state(["disabled"])
 
         try:
-            record, errors = self.service.validate_and_save(
-                self.name_var.get(),
-                self.email_var.get(),
-                self.role_var.get(),
+            result = self.service.validate_and_save(
+                name=self.name_var.get(),
+                email=self.email_var.get(),
+                role=self.role_var.get(),
             )
-        except Exception as exc:
-            # In a real app you might log this to a file; for the demo, console is enough.
-            print(f"Unexpected error while saving contact: {exc!r}")
+        except ServiceSaveError:
             self.status_var.set(
-                "Something went wrong while saving. Please try again, "
-                "or contact support if the problem persists."
+                "We could not save right now due to a service issue. Please try again in a moment."
             )
             return
         finally:
-            self.save_button.state(["!disabled"])
+            self._update_save_enabled_state()
 
-        if errors:
-            for field_name, message in errors.items():
-                self.error_vars[field_name].set(message)
-
-            first_field = next(iter(errors))
-            self.entry_widgets[first_field].focus_set()
-            self.status_var.set("Please correct the highlighted fields and try again.")
+        if not result.ok:
+            for field, message in result.errors.items():
+                self.error_vars[field].set(message)
+            self._focus_first_invalid(result.errors)
+            self.status_var.set("Please fix the highlighted fields, then select Save again.")
             return
 
-        if record is None:
-            # This should not happen if the service respects its contract,
-            # but we handle it explicitly instead of relying on an assert.
-            self.status_var.set("Unexpected error while saving contact. Please try again.")
-            return
+        assert result.record is not None
+        self.status_var.set(
+            f"Saved {result.record.name}. Total saved records in this run: {self.service.count()}."
+        )
+        self.on_clear(move_focus=False)
+        self.entries["name"].focus_set()
 
-        self.status_var.set(f"Saved contact for {record.name}.")
+    def on_clear(self, move_focus: bool = True) -> None:
         self.name_var.set("")
         self.email_var.set("")
-        self.email_var.set("")
         self.role_var.set("")
-        self.entry_widgets["name"].focus_set()
+        self._clear_inline_errors()
+        self.status_var.set("Form cleared. Enter values and select Save.")
+        self._update_save_enabled_state()
+        if move_focus:
+            self.entries["name"].focus_set()
 
 
 def main() -> None:
     root = tk.Tk()
-    service = ContactFormService()
+    service = ContactService()
     ContactFormApp(root, service)
     root.mainloop()
 
@@ -434,216 +554,543 @@ if __name__ == "__main__":
     main()
 ```
 
-### Demo Steps
+### 4.2 Live demo narration script (minute by minute)
 
-1. Define the data model.
-2. Build the service method so it normalizes input and returns structured errors.
-3. Create `StringVar` values for the fields and status line.
-4. Add inline error labels beneath each field.
-5. Wire the Save button to `on_save()`.
-6. Clear old errors before each attempt.
-7. Disable and re-enable the Save button during submission.
-8. On error, populate field-specific messages and move focus to the first invalid field.
-9. On success, clear the form and show a confirmation message in the status line.
+Minute 0-1:
 
-### Demo Narration
+- “I start with a service method called `validate_and_save`.”
+- “Notice normalization first: trim whitespace and normalize email case.”
+- “Validation decisions live here, not in the widget layout code.”
 
-**[Instructor speaks while coding:]**
+Minute 1-2:
 
-Notice that predictable validation problems do not crash the program. Instead, the service returns structured information, and the UI shows that information where it is useful.
+- “Required field checks are explicit: name, email, role.”
+- “Errors come back as a dictionary keyed by field.”
+- “The UI can map each field to a visible inline label.”
 
-Also notice that the UI is responsible for presentation details:
+Minute 2-3:
 
-- clearing previous errors
-- placing messages near the right fields
-- moving focus
-- resetting the form after success
+- “Now in `on_save`, I clear old errors first.”
+- “Then I disable Save immediately.”
+- “This is required behavior, not optional polish.”
 
-That work belongs in the GUI layer.
+Minute 3-4:
 
-### Live Questions to Ask During the Demo
+- “I call service in a `try` block.”
+- “Unexpected service failure is caught and translated into a calm user message.”
+- “No traceback shown to users.”
 
-**[Ask students:]**
+Minute 4-5:
 
-Why do we call `.strip()` before validating?
+- “In `finally`, I restore Save state using centralized logic.”
+- “If no text remains in the form, Save can stay disabled. If text exists, it re-enables.”
 
-**Expected answer:** to remove accidental surrounding spaces so validation uses the intended value.
+Minute 5-6:
 
-**[Ask students:]**
+- “If validation fails, I set inline messages and move focus to the first invalid field.”
+- “This is our explicit ‘highlight invalid field’ behavior: focus plus inline error.”
 
-Why is inline feedback often better than a popup for common form mistakes?
+Minute 6-7:
 
-**Expected answer:** because it keeps the user in context and points directly to the problem.
+- “If validation passes, record saves, status confirms success, and form resets cleanly.”
+- “User gets immediate confirmation and can continue.”
 
-**[Ask students:]**
+Minute 7-8:
 
-Why is the Save button disabled and then re-enabled?
+- “I show failure mode toggle to simulate service outage.”
+- “Notice the app still behaves cleanly: user sees understandable message and app does not crash.”
 
-**Expected answer:** to control the interaction flow and prevent accidental repeat actions during submission.
+### 4.3 Required demo test steps (visible, explicit, testable)
 
-### Important Instructor Note
+Run these in front of class:
 
-If students ask about changing entry field colors directly, explain that ttk widget styling can vary by platform and theme. For a course-friendly, portable approach, inline error labels, summary text, and focus placement are excellent validation patterns.
+1. Leave all fields blank, click Save.
+   - Expected:
+     - Inline messages appear under required fields.
+     - Focus moves to Name.
+     - Status tells user to fix highlighted fields.
+2. Enter only spaces in Name and Role, invalid email text in Email.
+   - Expected:
+     - Trimming catches non-empty illusion.
+     - Email format message appears with actionable example.
+3. Enter valid Name, Email, Role.
+   - Expected:
+     - Save succeeds.
+     - Success status shown.
+     - Form clears.
+4. Enable simulated service failure and enter valid data.
+   - Expected:
+     - User sees clean service issue message.
+     - No crash.
+     - No stack trace in UI.
+5. Verify Save button behavior.
+   - Expected:
+     - Save disabled while processing.
+     - Save state returns appropriately after processing.
 
----
+Instructor line after test steps:
 
-## Section 5: Hands-On Lab — Add Validation Feedback Without Crashing (15 minutes)
+“If your class implementation does not pass these five checks, it is not complete yet.”
 
-### Lab Framing
+## Segment 5 (26 minutes): Hands-on lab (required 25-35, set to 26)
 
-**[Instructor speaks:]**
+### 5.1 Lab objective statement for students
 
-Now enhance your own form so that bad input is handled gracefully and helpfully.
+“Add validation behavior to your form so that invalid input is guided clearly, valid input saves successfully, and service-layer failures are surfaced cleanly without crashing.”
 
-The guiding rule for this lab is:
+### 5.2 Lab constraints and required deliverables
 
-> No silent failure, and no traceback shown to the user.
+Students must implement all of the following:
 
-### Student Task
+1. Required-field checks for non-empty values.
+2. Input normalization before validation (at least trim whitespace).
+3. Inline validation feedback near invalid fields.
+4. Focus movement to first invalid field.
+5. Save button disable/enable behavior in submission flow.
+6. User-friendly handling of service-layer error conditions.
+7. No user-facing stack traces.
+8. Demonstrable valid save path.
 
-Update your GUI so that it:
+### 5.3 Lab timeline inside the 26-minute block
 
-- checks required fields before saving
-- normalizes input where appropriate
-- displays at least one inline field-level error
-- displays a summary status message
-- keeps the application running after invalid input
-- surfaces service-layer errors cleanly
+- Minute 0-3: Read lab goal, open starter app, identify save flow location.
+- Minute 3-9: Implement service normalization + required validation.
+- Minute 9-14: Add UI inline error mapping and summary status line.
+- Minute 14-18: Implement focus-to-first-invalid behavior.
+- Minute 18-21: Add Save disable/enable behavior with safe restoration.
+- Minute 21-24: Add service failure handling path with clean message.
+- Minute 24-26: Run pass/fail checklist and prepare one-minute share.
 
-### Hands-On Lab Guidance
+### 5.4 Lab starter architecture guidance (say aloud while circulating)
 
-**[Instructor speaks:]**
+- “If your Save handler is too long, split helper functions.”
+- “Keep rule decisions in service, display decisions in UI.”
+- “Return structured errors when input is fixable.”
+- “Raise controlled service exception for infrastructure issues.”
+- “Catch service exception in UI and convert to user-safe message.”
 
-Do not start by adding lots of edge cases. First, handle one or two clear rules well.
+### 5.5 Instructor circulation checklist
 
-A good minimum is:
+As you move through the room, verify these quickly:
 
-- one required text field
-- one required email-like field
-- one summary message
-- one service method that returns errors
+- Are they trimming strings before required checks?
+- Are blank-space-only values rejected?
+- Do messages mention the field and next action?
+- Does first invalid field receive focus?
+- Do inline messages disappear on subsequent successful save?
+- Is Save state restored after both success and failure?
+- Is there any path where button click appears to do nothing?
+- Is any traceback visible to user-facing UI?
 
-Then improve the user experience:
+### 5.6 Required lab acceptance tests (students must run)
 
-- clear old errors before new validation
-- move focus to the first invalid field
-- leave the form available for correction
+Students should execute these exact tests:
 
-### Completion Criteria
+Test A: Invalid path (empty fields)
 
-A strong minimum solution should:
+- Action: Leave fields empty, click Save.
+- Required result:
+  - Clear feedback appears.
+  - First invalid field is focused.
+  - Save does not crash app.
+  - Save button state follows input rules and re-enables immediately after user enters valid correction input.
 
-1. Reject missing required data.
-2. Show clear validation messages.
-3. Avoid crashing on bad input.
-4. Keep business rules out of widget layout code.
-5. Let the user correct the form and try again immediately.
+Test B: Invalid path (whitespace and malformed email)
 
-### Circulation Prompts
+- Action: Name = spaces, Email = “abc”, Role = spaces, click Save.
+- Required result:
+  - Whitespace is trimmed then rejected.
+  - Email message gives actionable format guidance.
+  - UI remains stable.
 
-**[Circulate and ask:]**
+Test C: Valid path
 
-1. Which errors are predictable user mistakes?
-2. Are you trimming input before validating?
-3. Is your error message actionable?
-4. What does the user see if validation fails?
-5. What changes visibly after a successful save?
+- Action: Name = “Ava Stone”, Email = “Ava.Stone@Example.com”, Role = “Data Lead”, click Save.
+- Required result:
+  - Save succeeds.
+  - Normalized value behavior is applied where implemented.
+  - Success feedback appears.
+  - Inline errors are cleared.
 
-### Common Pitfalls During the Lab
+Test D: Service error path
 
-#### Pitfall 1: Silent failure
-If the button is clicked and nothing changes, the user cannot tell what happened.
+- Action: Trigger service failure mode and submit valid data.
+- Required result:
+  - User sees clean service failure message.
+  - No stack trace shown in UI.
+  - App remains interactive.
 
-#### Pitfall 2: Stack trace shown to the user
-Predictable form mistakes should become user-friendly feedback, not raw technical output.
+Test E: Save control behavior
 
-#### Pitfall 3: Vague messages
-“Invalid field” is too broad. The user needs a direct next step.
+- Action: Click Save during processing path.
+- Required result:
+  - Save disables while processing.
+  - Save re-enables correctly when done.
 
-#### Pitfall 4: Old errors remain after success
-Students should clear previous error messages before applying new ones.
+### 5.7 Explicit pass/fail completion checklist (required by critique)
 
-### Optional Extensions
+Use this exact checklist at the end of lab.
 
-- Add a **Clear Form** button
-- Disable Save until at least one field contains text
-- Add a duplicate-email rule in the service layer
-- Add a short error-summary banner at the top of the form
+#### Invalid-path checklist (must all pass)
 
----
+- Pass/Fail: Invalid entries show clear feedback.
+- Pass/Fail: Inline error appears for each invalid required field.
+- Pass/Fail: Focus moves to first invalid field.
+- Pass/Fail: Summary status explains next action.
+- Pass/Fail: Save button behavior is correct (disabled during processing, enabled appropriately after).
+- Pass/Fail: App does not crash on invalid input.
+- Pass/Fail: No silent failure (button does nothing).
 
-## Section 6: Debrief, Quick Checks, Exit Ticket, and Wrap-Up (5 minutes)
+#### Valid-path checklist (must all pass)
 
-### Group Debrief
+- Pass/Fail: Valid entries save successfully.
+- Pass/Fail: Success message is visible and specific.
+- Pass/Fail: Prior error messages are cleared.
+- Pass/Fail: Form state is ready for next entry.
+- Pass/Fail: Save control returns to correct enabled state.
 
-**[Instructor speaks:]**
+Instructor instruction:
 
-A usable form does not just collect data. It teaches the user how to succeed.
+“A solution is complete only when both invalid-path and valid-path checklists pass.”
 
-Validation is both technical and communicative:
+### 5.8 Required lab checklist item for Save button behavior
 
-- the code checks correctness
-- the interface explains the result
+State this explicitly during lab kickoff:
 
-### Quick Checks
+“Disabling and re-enabling Save is required in this lab. It is not optional and not only a discussion point.”
 
-**Prompt:** What makes a validation message good?  
-**Expected answer:** it is specific, actionable, and helps the user fix the issue.
+### 5.9 Service-layer error surfacing pattern (student coaching script)
 
-**Prompt:** Why is normalization often done before validation?  
-**Expected answer:** because it removes accidental formatting issues like extra spaces and gives cleaner input to validate.
+If a student asks, “Should I just `print(e)` and move on?” answer:
 
-### Exit Ticket
+- Print can help developers during development.
+- User still needs a clear on-screen message.
+- The UI must never expose raw technical exceptions as user feedback.
+- Use concise phrasing:
+  - “We could not save right now. Please try again.”
+  - Add more detail only if it helps user action.
 
-**Prompt 1:** What is the difference between service-layer validation and UI feedback?  
-**Expected answer:** the service decides whether the data is valid; the UI decides how to show that result.
+### 5.10 Common student implementation traps during lab
 
-**Prompt 2:** What is a better validation message: `Invalid email` or `Enter an email address such as name@example.com`? Why?  
-**Expected answer:** the second one, because it is more specific and actionable.
+Trap 1: Validation in too many places
 
-**Prompt 3:** Why should predictable user mistakes usually not appear as raw exceptions to the user?  
-**Expected answer:** because users need guidance, not developer diagnostics.
+- Symptom: one rule in UI, another in service.
+- Risk: inconsistent outcomes.
+- Fix: put canonical rule in service; UI displays results.
 
-### Common Pitfalls Recap
+Trap 2: Old errors remain after success
 
-- silent failure
-- vague messages
-- showing technical errors to users
-- validating without normalizing
-- forgetting to clear prior errors
+- Symptom: success message appears but old field errors still visible.
+- Fix: clear inline errors at start of save and on success.
 
-### Wrap-Up
+Trap 3: Button lockout bug
 
-**[Instructor speaks:]**
+- Symptom: Save stays disabled forever after exception.
+- Fix: restore state in `finally` or centralized state updater.
 
-We now have forms that look better and behave better. In the next hour, we will make the app feel more complete by displaying multiple records in a list or table and reacting to user selection.
+Trap 4: Missing normalization
 
-A strong pattern to carry forward is:
+- Symptom: “  Ava  ” accepted as odd formatting or blank spaces accepted as non-empty.
+- Fix: normalize first, validate second.
 
-- normalize
-- validate in the service layer
-- return structured results
-- present field-level feedback in the UI
-- keep the application stable
+Trap 5: Non-actionable feedback
 
----
+- Symptom: “Invalid value.”
+- Fix: include field and correction guidance.
 
-## Optional Instructor Reference Notes
+### 5.11 Optional extension for early finishers (required runbook extension)
 
-### Strong Student Solution Characteristics
-Look for solutions where:
+Optional extension:
 
-- service methods return structured validation results
-- the UI visibly responds to errors
-- focus moves to the first invalid field
-- the feedback language is polite and specific
+- Add a **Clear form** button.
 
-### If Students Finish Early
-Invite them to:
+Extension success criteria:
 
-- add duplicate-record detection
-- add a reset button that clears errors too
-- disable Save until required fields are non-empty
-- compare a popup-only approach with an inline approach
+- Clears all field values.
+- Clears inline errors.
+- Resets summary status.
+- Returns focus to first field.
+- Recomputes Save enabled state.
 
----
+## Segment 6 (5 minutes): Debrief, quick check, exit
+
+### 6.1 Debrief talking points
+
+Use this concise summary:
+
+- “Validation before save protects data integrity.”
+- “Feedback quality protects user confidence.”
+- “Service decides rules; UI decides presentation.”
+- “A complete feature includes invalid path and valid path.”
+
+Reinforce anti-drift closure:
+
+“Next hour we move to record list/table selection behavior. That is separate from this hour’s form validation responsibility.”
+
+### 6.2 Quick check (required prompt included)
+
+Ask this required question:
+
+“Give me a good validation message and a bad validation message for email.”
+
+Expected answers:
+
+- Bad: “Invalid email.”
+- Good: “Enter an email like name@example.com.”
+
+Follow-up prompt:
+
+“What makes the good one better?”
+
+Expected:
+
+- Specific.
+- Actionable.
+- Gives example format.
+
+### 6.3 Exit ticket (fast verbal or written)
+
+Prompt 1:
+
+“Where should normalization and validation rules live by default in this app architecture?”
+
+Expected:
+
+- Service layer.
+
+Prompt 2:
+
+“What are the two required completion truths for this hour?”
+
+Expected exact ideas:
+
+- Invalid entries show clear feedback.
+- Valid entries save successfully.
+
+Prompt 3:
+
+“What is one behavior that proves your UI highlights invalid field in a testable way?”
+
+Expected:
+
+- Focus moves to first invalid field and inline error is visible.
+
+## Instructor reference: concise rubric for grading in-class implementations
+
+Use this rubric when evaluating student submissions during or right after class.
+
+### Category A: Validation correctness
+
+- Required checks exist for non-empty fields.
+- Trimming/normalization occurs before validation.
+- Invalid path does not write data.
+- Valid path writes data.
+
+### Category B: Feedback clarity
+
+- Inline field error messages visible.
+- Summary status line communicates what to do next.
+- Messages are actionable, not generic.
+- Tone is neutral and user-centered.
+
+### Category C: Interaction quality
+
+- Focus moves to first invalid field.
+- Save button disable/enable behavior works correctly.
+- App remains responsive after failures.
+- Old errors cleared on subsequent attempts.
+
+### Category D: Error handling boundary
+
+- Service-layer failures are caught and surfaced cleanly.
+- No stack trace shown to user.
+- No silent failure path.
+
+Pass recommendation:
+
+- All items in A and C pass.
+- At least 3 of 4 in B pass.
+- All items in D pass.
+
+## Extended speaking notes for deeper instructor confidence
+
+Use these notes if students ask “why not just validate in the UI directly?”
+
+Answer structure:
+
+1. UI-level validation alone is brittle.
+2. Service-level validation is reusable and testable.
+3. Another interface can reuse same service rules.
+4. UI still plays critical role by communicating errors clearly.
+
+If students ask “why show both summary and inline errors?”:
+
+- Summary gives global state and next action.
+- Inline gives precise field correction.
+- Together they reduce confusion and speed recovery.
+
+If students ask “should we validate on every keystroke?”:
+
+- Not required for this hour.
+- Start with submit-time validation.
+- Add real-time validation later when it clearly improves UX and avoids noisy feedback.
+- Keep rules and messages consistent across modes.
+
+If students ask “can we just use messagebox for everything?”:
+
+- You can, but it often hurts flow for predictable field errors.
+- Inline keeps context and supports quick correction.
+- Reserve modal interruptions for cases where interruption is useful.
+
+If students ask “how strict should validation be?”:
+
+- Be strict enough to protect data quality.
+- Be lenient enough to avoid blocking valid user intent unnecessarily.
+- Keep rules explicit and predictable.
+- Provide examples in messages for format-sensitive fields.
+
+## Practical language bank for instructor and students
+
+Helpful phrases to model during class:
+
+- “Please fix the highlighted fields, then save again.”
+- “Email is required.”
+- “Enter an email like name@example.com.”
+- “Name must contain at least 2 letters.”
+- “We could not save right now. Please try again.”
+
+Phrases to avoid:
+
+- “Invalid input.”
+- “Something broke.”
+- “Bad value.”
+- Technical internals as user feedback.
+
+## Required pitfalls section (must be spoken and shown)
+
+### Silent failure (button does nothing)
+
+What it looks like:
+
+- User clicks Save.
+- No message appears.
+- No visible change in UI.
+- User cannot tell if action happened.
+
+Why it is harmful:
+
+- User retries unpredictably.
+- Trust drops.
+- Duplicate attempts may occur.
+- Support load increases.
+
+How to prevent:
+
+- Always set status text after Save attempt.
+- Always show inline errors for invalid fields.
+- Always handle catch path with user-visible message.
+
+### Stack trace shown to user
+
+What it looks like:
+
+- Raw exception details appear in UI.
+- Technical file paths or traceback lines visible.
+
+Why it is harmful:
+
+- Confusing and alarming for users.
+- Leaks technical details.
+- Does not help correction.
+
+How to prevent:
+
+- Catch known service exceptions in UI.
+- Convert to clean, user-centered message.
+- Keep technical logging separate from user presentation.
+
+## Scripted mini walk-through of good vs bad messaging (2-minute insert if needed)
+
+Say:
+
+“I will show two versions of the same outcome.”
+
+Version 1:
+
+- Status: “Error.”
+- Field: none highlighted.
+- Result: user confusion.
+
+Version 2:
+
+- Email inline: “Enter an email like name@example.com.”
+- Focus moved to email field.
+- Status: “Please fix the highlighted fields, then select Save again.”
+- Result: user knows exactly what to do.
+
+Ask:
+
+“Which version reduces retries and support requests?”
+
+Expected:
+
+- Version 2.
+
+## Reinforcement of required behaviors for this hour
+
+Before ending class, restate these as checklist truths:
+
+- Validation happens before save.
+- Errors are shown clearly and actionably.
+- First invalid field gets focus and inline message.
+- Save button disables/enables correctly during save flow.
+- Service-layer failures are surfaced cleanly.
+- Invalid entries show clear feedback.
+- Valid entries save successfully.
+
+If any student solution misses one of these, coach revision immediately.
+
+## Anti-drift closing note for instructor planning
+
+For lesson continuity:
+
+- End this hour after form validation and feedback quality are working.
+- Do not begin table/list selection mechanics here.
+- Carry forward saved data concepts only as context, not as new list UI implementation.
+
+Bridge sentence to next hour:
+
+“Now that form input is reliable, next we will show saved records in list/table views and react to selection events.”
+
+## Compact one-page delivery checklist (for your podium notes)
+
+- Time arithmetic visible: 4 + 9 + 8 + 8 + 26 + 5 = 60
+- Talk points covered:
+  - Inline validation vs messagebox
+  - Actionable messages
+  - Disable/enable buttons
+- Demo includes:
+  - Trim/normalize before validate
+  - Focus first invalid field + inline message
+  - Save disable/enable behavior
+  - Clean service-error surfacing
+- Lab includes:
+  - Required-field checks
+  - Non-crashing invalid path
+  - Service-layer error handling
+  - Required Save button state behavior
+  - Pass/fail checklist for invalid and valid path
+- Completion criteria spoken:
+  - Invalid entries show clear feedback
+  - Valid entries save successfully
+- Pitfalls spoken:
+  - Silent failure (button does nothing)
+  - Stack trace shown to user
+- Optional extension offered:
+  - Clear form button
+- Quick check asked:
+  - Good validation message vs bad validation message
+
+This completes Hour 19 delivery with strict runbook alignment and explicit, testable validation behavior.
+
+(agent_id: issue297-hour3-rewrite — use write_agent to send follow-up messages)
