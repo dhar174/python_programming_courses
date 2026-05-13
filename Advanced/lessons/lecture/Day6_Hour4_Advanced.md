@@ -1,661 +1,1091 @@
-# Day 6 Hour 4 Advanced — Checkpoint 3: GUI Milestone Demo
+# Day 6 Hour 4 Advanced — Checkpoint 3: GUI Milestone Demo Facilitation Script
 
-## Session context
+## Hour identity and facilitation purpose
 
-This hour is the capstone checkpoint for **Session 6** of the Advanced Python course. Learners have spent the last two sessions building a Tkinter-based GUI for their full-stack tracker capstone. Session 5 established the GUI foundations: layout, usability, forms, validation, and a record list interface. Session 6 added update/delete workflows, cleaner architecture, and JSON persistence plus polish.
+This document is the instructor facilitation script for Hour 24 in the Advanced Python runbook, defined as Checkpoint 3: GUI milestone demo. It is intentionally written as a checkpoint operations guide, not as a normal concept lecture. Your primary role in this hour is to collect evidence of milestone readiness, score consistently, coach quickly, and route learners to the right remediation path without derailing the whole cohort.
 
-The purpose of this hour is to verify that the GUI milestone is real, not theoretical. Learners should be able to launch the app, perform end-to-end CRUD through the interface, restart the program, and show that data persists. Just as important, they should be able to explain the architecture choices that make the app maintainable.
+Use this script as both your speaking guide and your grading operations playbook. You can read large portions nearly verbatim. The language is designed to keep the room calm, focused, and fair while still enforcing concrete technical standards.
 
-This checkpoint is not meant to be punitive. It is a structured proof of progress and an opportunity to surface issues before Session 7 introduces SQLite.
+The runbook source of truth for this hour defines these core expectations and they are treated as non negotiable:
 
----
+- Outcome: deliver a working GUI CRUD app wired to the service layer.
+- Talk points window: 10 to 20 minutes, with grading focus on UI works, CRUD complete, errors handled, and code organization.
+- Live demo window: 5 to 10 minutes, featuring a fast grading checklist run.
+- Hands on lab window: 25 to 35 minutes.
+- Checkpoint 3 block: 45 to 60 minutes in operational terms, where demo evidence is collected and scored.
+- Deliverables: GUI launches reliably, CRUD works through UI, load and save works with JSON allowed, clean separation between ui and core, and a short demo flow add then list then update then delete then restart then load.
+- Completion criteria: end to end workflow demonstrated and no crashes in typical use.
+- Required pitfalls to evaluate: UI only validation with no service validation, and unstable IDs causing wrong updates or deletes.
+- Optional extension: search and filter UI.
+- Closing quick check prompt: If you had one more hour, what would you improve first in your GUI?
 
-## Learning objectives
+Keep scope strictly inside Hour 24 checkpoint facilitation. Do not teach new persistence technology in this hour and do not pivot into next session content.
 
-By the end of this checkpoint hour, learners should be able to:
+## Contract alignment note for Day 6 artifact consistency
 
-1. Demonstrate a working GUI tracker app that performs CRUD through the interface.
-2. Show that data persists across restarts using JSON save/load.
-3. Explain how their UI is separated from their service layer or core logic.
-4. Handle normal error paths without crashing in typical use.
-5. Reflect on one improvement they would make next.
+Contract alignment note: this script preserves canonical Hour 24 language and the canonical demo sequence used across Day 6 artifacts. The milestone wording remains consistent with the runbook phrase “Checkpoint 3: GUI milestone demo,” and the required short demo path remains exactly “add -> list -> update -> delete -> restart -> load.” If you adapt local classroom phrasing, keep those two anchors unchanged so rubric evidence remains comparable across sections and instructors.
 
-For instructors, the goal is to evaluate milestone readiness using consistent prompts and a concrete rubric.
+## What success looks like in this checkpoint hour
 
----
+At the end of this hour, you should be able to answer yes to the following operational questions for each learner or team submission:
 
-## Prerequisites and minimum expected deliverable
+1. Can the GUI be launched reliably from a normal project start command without instructor patching?
+2. Can the learner perform all CRUD actions through UI controls and show visible state changes that match intent?
+3. Can the learner demonstrate load and save behavior with JSON accepted, including restart and reload evidence?
+4. Can the learner explain where service or core logic lives, and show that UI callbacks delegate to that layer?
+5. Can the learner handle common error paths without crashing in typical use?
+6. Does update and delete target stable IDs, not transient row indexes, including after restart and load?
 
-Learners should arrive at this hour with a project that can do the following:
+If all six are supported by direct evidence, the learner is checkpoint ready. If some are partial, use the partial credit and remediation routing sections in this script.
 
-- launch a Tkinter GUI reliably
-- add a record through the form
-- list records in a visual control such as `Treeview` or `Listbox`
-- update a selected record through the GUI
-- delete a selected record with confirmation
-- save/load records using JSON
-- keep a stable ID per record
-- maintain some separation between UI and service/core logic
+## Instructor stance for this hour
 
-If a learner is missing one piece, you can still evaluate partial progress. The checkpoint is designed to distinguish between “working milestone,” “partially working with clear structure,” and “not yet checkpoint-ready.”
+Use a coaching evaluator stance. You are rigorous on evidence, calm on process, and precise on feedback.
 
----
+Recommended opening language:
 
-## Section navigation
+“This checkpoint is a proof of working software and maintainable structure, not a perfection contest. I will score what you demonstrate. If something breaks, narrate your expected behavior and what you would inspect first. Good engineering communication still earns credit.”
 
-1. Purpose and tone of the checkpoint
-2. Instructor run-of-show
-3. Learner demo prompt
-4. Concrete grading rubric
-5. Observation checklist and follow-up questions
-6. Common failure modes and triage guidance
-7. Debrief and next-step reflection
+“Today I care most about five things: GUI reliability, complete CRUD through the interface, persistence behavior, error handling, and clean organization between UI and service logic.”
 
----
+“I am also enforcing two must pass technical gates: stable identity for update and delete, and business validation in service or core rather than only inside UI widgets.”
 
-## Suggested timing
+This language sets a fair tone and reduces fear while still preserving standards.
 
-- **0–8 min:** reset expectations, explain rubric, and give demo order
-- **8–45 min:** learner demos, pair demos, or instructor spot-checks depending on class size
-- **45–55 min:** targeted remediation, quick feedback, and self-reflection
-- **55–60 min:** whole-group debrief and bridge to Session 7
+## Explicit timing crosswalk from runbook windows to checkpoint schedule
 
-If the class is large, use a mixed model:
+The runbook defines four windows that overlap in practical delivery. Use the crosswalk below to show where each required window is satisfied inside your 60 minute checkpoint block. This table is mandatory for consistency and for issue traceability.
 
-- pair demos for peer observation
-- instructor rotates through a rubric checklist
-- a few full live demos for the whole class
+| Runbook requirement window | Required duration | Where it appears in Hour 24 checkpoint schedule | Evidence that window is satisfied |
+| --- | --- | --- | --- |
+| Instructor talk points | 10 to 20 min | Minute 0 to minute 14 whole group briefing, rubric framing, and risk reminders | Learners hear grading focus: UI works, CRUD complete, errors handled, code organization. Instructor confirms must pass gates and demo sequence. |
+| Live demo | 5 to 10 min | Minute 14 to minute 21 instructor fast checklist run using canonical flow | Instructor demonstrates fast grading checklist run add then list then update then delete then restart then load and narrates what counts as evidence. |
+| Hands on lab | 25 to 35 min | Minute 21 to minute 52 supervised prep and execution sprint while instructor circulates with triage prompts | Learners run their own demo path, fix blockers, and gather evidence. Instructor performs rapid coaching and captures provisional scoring notes. |
+| Checkpoint 3 block | 45 to 60 min | Minute 0 to minute 60 entire hour is treated as checkpoint operations | Formal scoring decisions are made during demos and spot checks, with pass, partial, or not yet outcomes plus remediation routes. |
 
----
+Important facilitation clarification: these windows are not four separate standalone hours. They are operational components inside one checkpoint hour. The crosswalk above documents compliance explicitly.
 
-## Instructor speaking script
+## Run of show with minute by minute facilitation language
 
-### 1) Set the tone: this is a milestone review, not a surprise attack
+### Minute 0 to 3: reset and expectation lock
 
-**Say:** “This hour is about showing a working milestone. I am not looking for enterprise-scale software. I am looking for evidence that your GUI is usable, your architecture choices are deliberate, and your data survives restart.”
+Say:
 
-**Say:** “The most important habits to demonstrate are correctness, clarity, and recoverability. If something small goes wrong, narrate what you see and how you would debug it. That is still valuable evidence of engineering maturity.”
+“We are now in Checkpoint 3, the GUI milestone demo. Your goal is to show a working GUI CRUD app wired to your service layer.”
 
-This framing reduces panic and encourages honest demos.
+“I will score based on observable evidence, not on claims. If your app does not show a behavior in demo, I cannot award full credit for that behavior.”
 
-### 2) Clarify the success path
+“This is not punitive. It is a quality gate to ensure you can safely continue the capstone.”
 
-Read the demo path aloud so everyone knows exactly what counts.
+Then display:
 
-**Say:** “Your standard demonstration path is: launch the app, add a record, confirm it appears in the list, update that record, delete another record, restart the app, and show that saved data loads correctly.”
+- Canonical demo sequence.
+- Deliverables list.
+- Must pass gates.
+- Rubric bands.
 
-**Say:** “After the demo flow, be ready to explain where the service layer lives and how your GUI identifies the correct record for update and delete.”
+### Minute 3 to 8: grading focus briefing
 
-### 3) Explain what you are grading
+Say:
 
-Tie your evaluation to the runbook’s focus areas.
+“Grading focus is exactly this: UI works, CRUD complete, errors handled, code organization.”
 
-**Say:** “I’m grading four big things: does the GUI work, does persistence work, are errors handled reasonably, and is the code organized clearly enough that you can keep building on it.”
+“You can still earn strong partial credit if one area fails but your architecture is explainable and your troubleshooting is coherent.”
 
-This is a good moment to distribute or display the rubric.
+“Two critical failures can cap your score: unstable IDs for update and delete, and business rules that only exist in the UI layer.”
 
----
+Reinforce:
 
-## Concrete learner demo prompt
+- Stable IDs must remain stable after restart and load.
+- Validation must exist in service or core, not only in button handlers.
+- Typical error paths must not crash.
 
-Read or paste this prompt directly. This is the required demo sequence for Checkpoint 3.
+### Minute 8 to 14: demo protocol and fairness protocol
 
-### Checkpoint 3 Demo Prompt
+Explain exact protocol:
 
-You have up to **5 minutes** for the core demo and **2–3 minutes** for code explanation and questions.
+1. Each learner or team gets a short evidence window.
+2. They must run the canonical flow in order unless a technical blocker forces a recovery step.
+3. They answer one architecture question and one reliability question.
+4. Instructor records evidence and score decision immediately.
 
-#### Part A — Launch and orient
+Fairness protocol:
 
-1. Launch your tracker application.
-2. Briefly state the tracker domain you chose: tasks, inventory, contacts, notes, expenses, or another approved variation.
-3. Point out the form area, list area, and one user feedback feature such as a status bar or dialog.
+- Same prompts for all learners.
+- Same must pass gates for all learners.
+- Same evidence to score rules for all learners.
+- No hidden bonus for speaking style alone.
 
-#### Part B — CRUD workflow
+### Minute 14 to 21: instructor live demo, fast checklist run
 
-Perform the following actions live through the GUI:
+Use your own minimal sample or a prepared reference build. Demonstrate quickly:
 
-1. Add a new record.
-2. Show that the new record appears in the list.
-3. Select a record and update at least one field.
-4. Show that the correct record changed.
-5. Delete a record using the GUI’s delete path.
-6. Show that the record is removed from the visible list.
+1. Launch app.
+2. Add record.
+3. Confirm list update.
+4. Update selected record.
+5. Delete selected record.
+6. Restart app.
+7. Confirm load.
 
-#### Part C — Persistence workflow
+Narrate what the checklist captures:
 
-1. Save if your app uses an explicit save command, or explain that your app auto-saves after changes.
-2. Close the application.
-3. Relaunch the application.
-4. Show that previously saved records load successfully.
+- Visible state change after each action.
+- Correct record targeted.
+- Persistence confirmed after restart.
+- No crash on a typical error path.
+- Architecture explanation tied to actual files.
 
-#### Part D — Code explanation
+State explicitly:
 
-Be ready to answer these questions:
+“This is what a fast grading checklist run looks like. Your demo should produce this level of evidence.”
 
-1. Where is your service layer or core logic?
-2. How does your GUI know which record to update or delete?
-3. How do you avoid relying on the list index as the true record identity?
-4. What happens if the JSON file is missing or invalid?
-5. If you had one more hour, what would you improve first?
+### Minute 21 to 35: hands on lab sprint part one
 
----
+This is structured lab time, not free drift. Learners prepare demo readiness while you circulate.
 
-## Concrete grading rubric
+Instructor circulation prompts:
 
-Use the rubric below consistently. A 100-point scale works well and maps cleanly to partial completion.
+- “Show me where the selected record ID is captured.”
+- “What layer enforces non empty name and numeric bounds?”
+- “If no row is selected and user clicks update, what happens?”
+- “If the JSON file cannot parse, what does the user see?”
 
-### Rubric summary table
+Use a triage card mindset:
 
-| Category | Points | What strong performance looks like |
-| --- | ---: | --- |
-| GUI launches and basic usability | 15 | App opens reliably; layout is understandable; form and list are usable. |
-| CRUD through the UI | 30 | Add, list, update, and delete all work correctly through the GUI. |
-| Persistence with JSON | 20 | Data saves and loads across restart; no hidden manual steps beyond what the learner explains. |
-| Architecture and code organization | 20 | UI and service/core logic are separated; stable IDs are used; callbacks are reasonably thin. |
-| Error handling and user feedback | 10 | Validation/no-selection/file errors are handled without crashing; user messages are clear. |
-| Demo clarity and reflection | 5 | Learner can explain decisions and identify one next improvement. |
+- Green: likely checkpoint pass with minor polish.
+- Yellow: partial risk, one critical area shaky.
+- Red: must pass gate at risk.
 
-### Detailed rubric descriptors
+### Minute 35 to 52: hands on lab sprint part two with rolling checkpoint checks
 
-#### 1) GUI launches and basic usability — 15 points
+Start rolling checks while others continue fixing.
 
-**13–15 points**
+For each learner:
 
-- app launches on first attempt
-- form and list areas are visually clear
-- controls are labeled in a way a user can understand
-- at least one usability enhancement is present, such as status feedback, About dialog, menu, clear form, or shortcut
+1. Observe canonical flow.
+2. Trigger one typical error path.
+3. Ask one architecture question.
+4. Record evidence and provisional score.
 
-**8–12 points**
+When a learner is blocked:
 
-- app launches, but layout or labels are somewhat rough
-- usability is functional but not polished
-- minor awkwardness does not prevent use
+- Stop debugging depth after two minutes.
+- Assign a specific remediation target.
+- Move on and return in rotation.
 
-**0–7 points**
+This prevents one team from consuming the entire checkpoint.
 
-- launch is unreliable
-- major UI confusion prevents normal use
-- instructor must intervene significantly to reach the interface
+### Minute 52 to 57: score finalize and feedback delivery
 
-#### 2) CRUD through the UI — 30 points
+Give concise decision language:
 
-**26–30 points**
+- “Checkpoint pass: working and stable, continue as planned.”
+- “Checkpoint partial: core works but must pass gate unresolved.”
+- “Checkpoint not yet: significant reliability gaps, remediation required before next milestone.”
 
-- add works through the form
-- records appear correctly in the list
-- update changes the intended selected record
-- delete removes the intended selected record
-- delete includes confirmation or similarly safe behavior
-- list refresh stays in sync after each operation
+Always include:
 
-**16–25 points**
+- One strength statement.
+- One highest priority fix.
+- One concrete next action within 30 minutes of independent work.
 
-- most CRUD actions work, but one area is inconsistent
-- refresh or selection behavior may be rough
-- correctness is mostly present, but there is at least one notable weakness
+### Minute 57 to 60: quick check and close
 
-**0–15 points**
+Ask every learner:
 
-- only add/list work
-- update or delete target the wrong record or fail completely
-- major sync issues make the app hard to trust
+“If you had one more hour, what would you improve first in your GUI?”
 
-#### 3) Persistence with JSON — 20 points
+Collect short answers verbally or in chat. Prioritize answers that mention reliability, architecture boundaries, and user trust over cosmetic tweaks.
 
-**17–20 points**
+## Required runbook coverage translated into operational checklist language
 
-- app loads existing JSON data on startup
-- app saves after changes or provides an explicit save that clearly works
-- restart confirms persistence
-- saved IDs remain stable across runs
+Use this section to ensure all required runbook elements are explicitly present in your facilitation.
 
-**10–16 points**
+### Outcomes coverage
 
-- some persistence exists, but one path is unreliable
-- for example, add saves but update/delete do not
-- or restart works only with extra manual steps the learner only partly explains
+Required outcome statement to read:
 
-**0–9 points**
+“Today the expected outcome is a working GUI CRUD app wired to the service layer.”
 
-- no true persistence across restart
-- persistence is claimed but not demonstrated
-- the app crashes or loses data during the persistence workflow
+Operational interpretation:
 
-#### 4) Architecture and code organization — 20 points
+- UI does not contain all business logic.
+- CRUD commands route through service calls.
+- Service remains source of truth for validation and data mutation.
 
-**17–20 points**
+### Talk points coverage, 10 to 20 minutes
 
-- clear separation between GUI layer and service/core logic
-- stable IDs are used for update/delete operations
-- callbacks are reasonably thin
-- learner can point to where responsibilities live
+Required focus phrase:
 
-**10–16 points**
+“Grading focus is UI works, CRUD complete, errors handled, code organization.”
 
-- some separation exists, but boundaries blur
-- callbacks may still contain some business logic
-- code is understandable enough to continue with support
+Elaboration prompts:
 
-**0–9 points**
+- UI works means launch reliability and usable controls.
+- CRUD complete means add list update delete all through GUI.
+- Errors handled means expected user mistakes do not crash app.
+- Code organization means clean separation between ui and core responsibilities.
 
-- GUI directly manipulates data structures in fragile ways
-- update/delete rely on list position instead of stable identity
-- architecture is too tangled to explain clearly
+### Live demo coverage, 5 to 10 minutes
 
-#### 5) Error handling and user feedback — 10 points
+Required activity:
 
-**8–10 points**
+Fast grading checklist run by instructor before learner demos begin.
 
-- common errors produce clear messages instead of crashes
-- examples include no-selection warnings, validation feedback, or load/save errors
-- the app keeps running in typical error cases
+Purpose:
 
-**4–7 points**
+- Set shared expectation for acceptable evidence.
+- Reduce ambiguity.
+- Lower anxiety through concrete demonstration.
 
-- some errors are handled, but others still crash or confuse the user
-- feedback may exist but be inconsistent
+### Hands on lab coverage, 25 to 35 minutes
 
-**0–3 points**
+Required shape:
 
-- normal mistakes cause a crash
-- the user receives little or no useful feedback
+Guided prep plus supervised execution where learners run their own demos and resolve blockers.
 
-#### 6) Demo clarity and reflection — 5 points
+Your job:
 
-**5 points**
+- Route fixes toward must pass gates first.
+- Avoid deep refactor detours.
+- Capture evidence while coaching.
 
-- learner explains the architecture clearly and names one next improvement thoughtfully
+### Checkpoint 3 block coverage, 45 to 60 minutes
 
-**3–4 points**
+Required shape:
 
-- explanation is mostly clear but incomplete
+The hour is treated as a checkpoint operations block with scoring decisions and remediation routing.
 
-**0–2 points**
+Your job:
 
-- learner cannot explain how the app is organized or what they would improve next
+- Make explicit pass or partial or not yet decisions.
+- Tie every decision to observed evidence.
+- Keep milestone language consistent with Day 6 artifacts.
 
----
+### Deliverables coverage
 
-## Instructor observation checklist
+Each learner must demonstrate, not just describe, these items:
 
-Use this checklist during demos for quick consistency.
+- GUI launches reliably.
+- CRUD works through UI.
+- Load and save works with JSON accepted.
+- Clean separation between ui and core.
+- Short demo flow add then list then update then delete then restart then load.
 
-### Launch and UI checklist
+### Completion coverage
 
-- [ ] App launches without instructor repair.
-- [ ] Form fields are visible and understandable.
-- [ ] Record list is visible and readable.
-- [ ] Buttons or menu actions are discoverable.
+Explicit completion statements:
 
-### CRUD checklist
+- End to end workflow demonstrated.
+- No crashes in typical use.
 
-- [ ] Add creates a visible new record.
-- [ ] Selecting a record loads or clearly targets that record.
-- [ ] Update changes the intended record.
-- [ ] Delete removes the intended record.
-- [ ] The UI refreshes after changes.
+### Pitfalls coverage
 
-### Persistence checklist
+Required pitfalls to evaluate explicitly:
 
-- [ ] Save behavior is demonstrated or clearly explained.
-- [ ] App restart occurs during demo or via instructor-approved equivalent.
-- [ ] Data appears after restart.
+- UI only validation with no service validation.
+- Unstable IDs causing wrong updates or deletes.
 
-### Architecture checklist
+### Optional extension coverage
 
-- [ ] Learner identifies service/core layer.
-- [ ] Learner explains use of stable IDs.
-- [ ] UI callbacks are not the only place where business rules exist.
+Optional only:
 
-### Error-handling checklist
+- Search and filter UI.
 
-- [ ] No-selection or validation path is handled.
-- [ ] App does not crash during normal mistakes.
-- [ ] User feedback is understandable.
+Only evaluate this for bonus commentary, never as a baseline requirement for checkpoint pass.
 
----
+### Quick check coverage
 
-## Follow-up questions for instructors
+Required closing prompt:
 
-Ask one or two depending on time. These questions help distinguish between copied wiring and understood architecture.
+“If you had one more hour, what would you improve first in your GUI?”
 
-1. “If the list order changes, why do update and delete still hit the correct record?”
-2. “What role does your service layer play compared with your Tkinter callbacks?”
-3. “If your JSON file were corrupted, what does your app do now?”
-4. “Which part of your app would change most when we switch to SQLite next session?”
-5. “What repeated UI behavior did you factor into a helper method?”
+## Must pass gates for critical reliability and architecture risks
 
-Strong answers show that the learner understands responsibility boundaries, not just button wiring.
+These gates come from blocker findings and must be applied consistently.
 
----
+### Gate 1: stable identity gate for update and delete
 
-## Common failure modes and how to respond
+Gate statement:
 
-### Failure mode 1: app only works if started from a very specific directory
+Update and delete must target stable IDs, not row index, including after restart and load.
 
-If this is a classroom-wide issue, remind learners to use `Path` objects and relative paths anchored clearly. For scoring, note the issue but do not necessarily zero out the checkpoint if the app is otherwise functional and the learner understands the problem.
+Minimum evidence:
 
-### Failure mode 2: update/delete rely on visible row index
+1. Learner selects a visible row.
+2. App maps selection to stable record ID.
+3. Update affects correct entity even if list ordering changes.
+4. Delete removes intended entity.
+5. After restart and load, same record ID mapping still holds.
 
-This is a major architecture concern because it directly conflicts with the session objective. Ask a probing question:
+Fail indicators:
 
-**Ask:** “If I sort or insert a record, how do you know the right record still gets updated?”
+- App uses list position as identity.
+- Wrong record changes after insertion or sorting.
+- Update or delete behavior changes incorrectly after reload.
 
-If the learner cannot answer or the app misbehaves, score architecture and CRUD accordingly.
+Score impact rule:
 
-### Failure mode 3: persistence only works for add
+If Gate 1 fails, full checkpoint pass is not allowed. Maximum decision is partial until corrected.
 
-This is a very common bug. Ask the learner to explain when save is triggered. If update/delete do not persist, mark down persistence but still recognize what works.
+### Gate 2: service or core validation gate
 
-### Failure mode 4: JSON corruption causes crash
+Gate statement:
 
-If the crash occurs during the checkpoint, stop the demo kindly and ask the learner what should happen instead. This allows partial credit for understanding even when implementation is incomplete.
+Validation and business rules must exist in service or core, not only in UI callbacks.
 
-### Failure mode 5: code is extremely hard to explain even though the GUI works
+Minimum evidence:
 
-This often means the project grew without refactoring. Score working behavior fairly, but note weaker architecture. Encourage cleanup before Session 7 so the SQLite transition does not become painful.
+1. Learner shows at least one business rule in service or model layer.
+2. UI calls service and handles raised errors.
+3. Equivalent invalid input through different UI paths yields consistent rule enforcement.
 
----
+Fail indicators:
 
-## Remediation guidance if a learner is not checkpoint-ready
+- All validation only in entry widget checks.
+- Service accepts invalid states when called directly.
+- Different UI paths bypass rules.
 
-If a learner is missing the milestone, give practical next steps rather than vague criticism.
+Score impact rule:
 
-### Fast remediation priorities
+If Gate 2 fails, architecture band cannot exceed partial credit band. Learner must receive remediation route before next checkpoint.
 
-1. Make sure the app launches reliably.
-2. Fix stable ID handling for update/delete.
-3. Centralize save behavior so add/update/delete all persist.
-4. Add minimum error messaging for no-selection and load/save problems.
-5. Separate one layer of UI from service logic before next session.
+### Gate 3: typical error path resilience gate
 
-You can say:
+Gate statement:
 
-**Say:** “You are closer than it may feel. The next step is not a rewrite. The next step is to stabilize identity, persistence, and one clean boundary between the UI and the service.”
+At least one typical error path must be demonstrated without crash.
 
----
+Examples of typical error path:
 
-## Suggested delivery formats based on class size
+- Update with no selected item.
+- Delete with no selected item.
+- Invalid field value.
+- Missing JSON file on first launch.
 
-### Small class format
+Pass evidence:
 
-- each learner demos live to the room or instructor
-- use the full rubric per learner
-- allow 6–8 minutes per person if schedule permits
+- User gets clear message.
+- App remains responsive.
+- State remains coherent.
 
-### Medium class format
+Fail indicators:
 
-- learners demo in pairs while the instructor rotates
-- each learner still completes the full prompt
-- peers use a simplified checklist
-- instructor scores a subset live and spot-checks the rest
+- Traceback shown to end user during normal mistakes.
+- App terminates or freezes on expected user error.
 
-### Large class format
+Score impact rule:
 
-- require a standard demo path
-- instructor performs timed spot-checks
-- peers complete rubric-aligned feedback forms
-- select a few representative full demos for shared discussion
+If Gate 3 fails, error handling category is capped at low band and checkpoint pass requires immediate recovery proof or targeted remediation assignment.
 
-In all cases, maintain consistent expectations. The rubric should not change depending on delivery format.
+## Canonical demo protocol for learner evidence collection
 
----
+Use this as your standard prompt for every learner.
 
-## Peer observation prompt
+Say:
 
-If using peer review, give learners a simple, aligned prompt:
+“Please run the canonical Hour 24 sequence now: add, list, update, delete, restart, load.”
 
-1. Did the app launch cleanly?
-2. Did you see all four CRUD actions through the GUI?
-3. Did the learner prove persistence across restart?
-4. Did the learner explain how the app identifies the correct record for update/delete?
-5. Name one thing that felt polished.
-6. Name one next improvement you would suggest.
+Then ask:
 
-Peer observers should comment on evidence, not just impressions.
+1. “Show where your service layer performs validation.”
+2. “Show how selected rows map to stable IDs.”
+3. “Trigger one typical error path and show no crash behavior.”
 
----
+Time discipline:
 
-## Debrief script for the last 10 minutes
+- Core flow target: five minutes.
+- Question and explanation target: two to three minutes.
+- Recovery overhead target: two minutes maximum.
 
-Bring the room together after demos.
+If a learner exceeds time:
 
-**Say:** “Checkpoint 3 is not the end of the capstone. It is the point where your GUI becomes trustworthy enough to carry more serious persistence next session. The best projects today did three things well: they used stable IDs, they kept the service layer in charge of business operations, and they treated persistence as part of correctness, not as an optional extra.”
+- Stop and mark unobserved criteria as unproven.
+- Offer a follow up remediation slot.
 
-Ask the room:
+## Evidence to score decision rules for consistent grading
 
-- “What was one design choice that made your GUI easier to demo?”
-- “What was one bug pattern that showed up repeatedly today?”
-- “If you had one extra improvement hour before SQLite, what would you choose?”
+This section defines explicit decision logic so grading remains consistent across instructors and sections.
 
-Capture answers visibly if possible. Good common answers include:
+### Evidence first rule
 
-- clearer selection handling
-- status messages
-- central save helper
-- better file path handling
-- cleaner app class structure
-- search/filter as a future enhancement
+Only score behaviors directly observed in the checkpoint or clearly demonstrated in a required artifact run within the same hour.
 
-### Instructor closing language
+Do not award full points for:
 
-**Say:** “Next session, we shift from JSON files to SQLite. If your architecture is clean, that transition will feel like replacing a storage mechanism, not rebuilding the whole app. That is exactly why today’s checkpoint matters.”
+- “It worked earlier.”
+- “The code should do this.”
+- “I can explain how it would work.”
 
----
+Explanation can support partial understanding credit but not replace execution evidence.
 
-## Quick check / exit ticket
+### Decision matrix for final checkpoint status
 
-To close the hour, ask each learner to write or say one response:
+| Status | Required evidence conditions | Typical action |
+| --- | --- | --- |
+| Pass | Canonical flow completed, all deliverables observed, all three must pass gates satisfied, no crash in typical use | Mark checkpoint pass and provide one stretch recommendation |
+| Partial | Core workflow mostly works but one must pass gate unresolved or one major deliverable not fully demonstrated | Mark partial, assign targeted remediation route and recheck deadline |
+| Not yet | Multiple core failures, canonical flow incomplete, or repeated crashes in typical use | Mark not yet, require structured recovery plan and focused coaching block |
 
-1. If you had one more hour, what would you improve first in your GUI?
-2. What part of your current architecture will help most when moving to SQLite?
+### Category scoring rules
 
-Encourage answers that connect to design rather than only appearance.
+Use this weighted rubric for consistency:
 
-Strong examples:
+- GUI launch and usability: 15 points.
+- CRUD through UI: 30 points.
+- Persistence and restart load: 20 points.
+- Code organization and ui core separation: 20 points.
+- Error handling and reliability: 10 points.
+- Demo clarity and engineering reflection: 5 points.
 
-- “I would add search/filter because my stable IDs and refresh helper already make list updates manageable.”
-- “My service layer will help most because the UI already delegates CRUD there, so I can change storage without rewriting button logic.”
+Total: 100 points.
 
----
+### Hard cap rules tied to must pass gates
 
-## Instructor notes
+1. If stable ID gate fails, maximum overall status is Partial, regardless of point total.
+2. If service validation gate fails, architecture category capped at 10 out of 20.
+3. If typical error path resilience fails, error handling category capped at 3 out of 10 unless fixed live during checkpoint.
 
-- Keep the checkpoint supportive but evidence-based.
-- Score what is demonstrated, not what is promised.
-- When in doubt, ask the learner to narrate what their app is doing. Explanation often reveals understanding gaps faster than scrolling through code silently.
-- Preserve time for a closing reflection. Learners often need help seeing that the checkpoint is preparing them for the database integration to come.
-- Be especially alert for unstable-ID designs. That is the one issue most likely to create pain in later sessions if left uncorrected.
+These caps prevent inflated scores for fragile apps.
 
+### Point band interpretation rules
 
----
+For each major category, use consistent band language:
 
-## Expanded run-of-show and facilitation notes
+- Strong band: behavior repeatable, explainable, and reliable under mild perturbation.
+- Partial band: behavior works in basic path but brittle in edge path.
+- Low band: behavior missing, incorrect, or untrustworthy.
 
-Use this section when you want more operational detail for running the checkpoint smoothly.
+Never jump directly from low to full points based only on confident explanation.
 
-### Before demos begin
+### Handling unobserved criteria
 
-Have the following visible:
+If time expires before a criterion is observed:
 
-- the core demo path
-- the rubric summary table
-- the time limit
-- the order of presenters or pairs
+- Mark criterion as unobserved.
+- Assign provisional zero for that criterion at checkpoint close.
+- Offer optional recheck window if course policy allows.
 
-**Say:** “Your goal is not to narrate every line of code. Your goal is to provide evidence. Show the app working, then explain the key design choices.”
+This keeps grading evidence based and transparent.
 
-If learners are nervous, remind them that the rubric rewards explanation and architecture clarity in addition to raw feature success.
+## Detailed rubric with behavioral anchors
 
-### Suggested presenter instructions
+### Category 1: GUI launches reliably and is operable, 15 points
 
-Tell each learner or pair:
+Strong evidence:
 
-- start with the app already closed unless time constraints require otherwise
-- avoid editing code during the demo unless debugging is itself the point of the question
-- narrate what you are doing in short phrases
-- if something goes wrong, do not panic; explain what you expected and what you would inspect next
+- Launch succeeds first attempt.
+- Main controls visible and labeled.
+- User can identify form and list quickly.
+- No manual interpreter switching or path surgery during demo.
 
-This guidance helps the checkpoint measure maturity, not just perfect performance under stress.
+Partial evidence:
 
-### Running pair demos efficiently
+- Launch works but requires minor workaround.
+- Layout usable but confusing in spots.
 
-If the class is large, pair demos can still be rigorous if you structure them well.
+Low evidence:
 
-- Learner A demos while Learner B scores with the checklist.
-- Learner B demos while Learner A scores.
-- Instructor circulates and performs rubric spot-checks.
-- Require each learner to answer at least one architecture question individually.
+- Repeated launch failure.
+- App opens but key controls unusable.
 
-This prevents one partner from carrying the whole checkpoint.
+Scoring suggestion:
 
-### Time-saving instructor moves
+- 13 to 15 strong.
+- 8 to 12 partial.
+- 0 to 7 low.
 
-If time is tight, use the following abbreviations without losing rigor:
+### Category 2: CRUD through UI complete and correct, 30 points
 
-- ask learners to restart the app only once after a grouped set of CRUD operations
-- ask one architecture question instead of three, but make it specific
-- use the checklist live and fill out detailed comments afterward only where needed
+Strong evidence:
 
----
+- Add creates new record through form.
+- List reflects add without stale state.
+- Update modifies intended record.
+- Delete removes intended record.
+- Selection state and refresh behavior remain coherent.
 
-## Sample feedback language by rubric category
+Partial evidence:
 
-Having ready-made language speeds grading and keeps feedback consistent.
+- Add and list stable, one of update or delete unreliable.
+- Refresh requires manual workaround.
 
-### Strong performance examples
+Low evidence:
 
-- “Your app demonstrated the full CRUD workflow cleanly, and your update/delete actions clearly targeted stable IDs rather than row position.”
-- “Persistence was convincing because you showed restart behavior instead of only describing it.”
-- “Your code organization is strong for this stage; the service layer boundaries are clear and your callbacks are thin.”
-- “You handled normal user mistakes calmly, which made the app feel trustworthy.”
+- Only add works.
+- Update or delete targets wrong records.
 
-### Partial-credit feedback examples
+Scoring suggestion:
 
-- “Your GUI launches and basic CRUD is present, but update persistence needs work because changes did not survive restart.”
-- “The interface works, but your architecture explanation suggests the GUI still owns too much business logic. That will become painful in the SQLite session if not cleaned up.”
-- “Your delete flow works, but the app still depends on visible row position more than I would want for a stable milestone.”
+- 26 to 30 strong.
+- 16 to 25 partial.
+- 0 to 15 low.
 
-### Growth-oriented feedback examples
+### Category 3: Load and save persistence through restart, 20 points
 
-- “Your next best improvement is to centralize save behavior so add, update, and delete all persist consistently.”
-- “Before Session 7, invest in preserving stable IDs through load/save and separating the service logic more clearly from Tkinter callbacks.”
-- “A small refactor now will save you a much larger rewrite later.”
+Strong evidence:
 
----
+- Save occurs on command or auto save path.
+- Restart and load restore expected records.
+- ID continuity preserved after reload.
 
-## Evidence guide: what counts as proof during demo
+Partial evidence:
 
-Sometimes learners describe features they intended to finish. Keep the checkpoint grounded in evidence.
+- Persistence works for some operations only.
+- Restart requires undocumented manual step.
 
-### Evidence that CRUD is really working
+Low evidence:
 
-- you see a new record appear after Add
-- you see an existing record change after Update
-- you see a record disappear after Delete
-- the learner can point to the selected row or explain how the app identified it
+- No persistence proof.
+- Data lost on restart.
 
-### Evidence that persistence is really working
+Scoring suggestion:
 
-- the learner restarts the app and the saved records reappear
-- or the learner clearly demonstrates a save command followed by restart and load
-- the app does not depend on re-running seed code or manually reconstructing in-memory data during the checkpoint
+- 17 to 20 strong.
+- 10 to 16 partial.
+- 0 to 9 low.
 
-### Evidence that architecture is really present
+### Category 4: clean separation between ui and core, 20 points
 
-- the learner can open a file or describe a module that acts as the service/core layer
-- the learner can explain where the stable ID lives
-- callbacks are not the only location where domain rules exist
+Strong evidence:
 
-### Evidence that error handling is really present
+- UI handlers call service operations.
+- Service or model hosts core validation and mutation rules.
+- Learner can point to files and responsibilities clearly.
 
-- no-selection path triggers a warning rather than a crash
-- validation issues show a useful message
-- malformed load behavior is described accurately if not demonstrated live
+Partial evidence:
 
-Keep reminding yourself: score what is shown or convincingly explained, not what is promised vaguely.
+- Some separation present but with boundary leakage.
+- UI still carries some business logic.
 
----
+Low evidence:
 
-## Intervention rules when a demo goes off track
+- Callbacks directly mutate storage structures with little abstraction.
+- Responsibilities not explainable.
 
-Instructors often need a plan for when something fails live.
+Scoring suggestion:
 
-### If the app fails to launch
+- 17 to 20 strong.
+- 10 to 16 partial.
+- 0 to 9 low.
 
-Give the learner up to one minute to correct a simple path or typo issue if the class format allows. If the problem is deeper, shift to code explanation and partial-credit evaluation.
+### Category 5: error handling and no crash in typical use, 10 points
 
-Suggested language:
+Strong evidence:
 
-**Say:** “Let’s pause the launch attempt there. Walk me through your architecture and tell me what you would inspect first.”
+- One typical error path demonstrated without crash.
+- User feedback is actionable.
+- App continues operation after error.
 
-### If CRUD partly works but one action fails
+Partial evidence:
 
-Do not end the checkpoint immediately. Ask the learner to explain the intended flow and the likely bug source. This distinguishes incomplete implementation from total misunderstanding.
+- Some error paths safe, others crash or confuse.
 
-### If persistence fails on restart
+Low evidence:
 
-Ask:
+- Typical mistakes terminate app.
 
-- “When is save triggered?”
-- “What path does the app write to?”
-- “Does update/delete call the same save path as add?”
+Scoring suggestion:
 
-These questions often surface whether the issue is a missing hook or a path mismatch.
+- 8 to 10 strong.
+- 4 to 7 partial.
+- 0 to 3 low.
 
-### If the learner freezes during explanation
+### Category 6: demo clarity and reflection quality, 5 points
 
-Offer one scaffolding question:
+Strong evidence:
 
-- “Which file or class should I open first if I want to see your core logic?”
+- Learner explains design choices concisely.
+- Learner identifies highest leverage next improvement.
 
-That usually gives them a stable starting point.
+Partial evidence:
 
----
+- Explanation present but vague or incomplete.
 
-## Optional peer and self-assessment rubric prompts
+Low evidence:
 
-If you want learners to evaluate themselves or peers in parallel with the checkpoint, use these prompts.
+- No coherent explanation.
 
-### Self-assessment
+Scoring suggestion:
 
-Rate yourself from 1 to 4 on each statement:
+- 5 strong.
+- 3 to 4 partial.
+- 0 to 2 low.
 
-1. My GUI can perform all four CRUD actions reliably.
-2. My app preserves data across restart.
-3. I can explain how my app identifies the correct record for update/delete.
-4. My UI and service/core logic are meaningfully separated.
-5. I know the first improvement I should make next.
+## Partial credit handling and fairness mechanics
 
-Then ask learners to write one sentence starting with:
+Partial credit is expected in a checkpoint environment. Use it to distinguish progress while preserving standards.
 
-- “The strongest part of my milestone is…”
-- “The first thing I need to improve before SQLite is…”
+### Partial credit principles
 
-### Peer review
+1. Reward demonstrated progress, not promise.
+2. Preserve must pass gates as quality boundaries.
+3. Give remediation targets that are specific and short horizon.
 
-Ask peers to note:
+### Common partial credit patterns
 
-- one piece of evidence that the app is checkpoint-ready
-- one specific improvement suggestion tied to the rubric
+Pattern A: everything works except stable IDs after reload.
 
-This keeps peer feedback concrete and useful.
+- Expected status: Partial.
+- Feedback anchor: “Your UI flow is strong, but identity mapping is brittle after load.”
+- Required fix: persist stable IDs and map selection by ID.
 
----
+Pattern B: UI path validates but service accepts invalid state.
 
-## Bridge to Session 7: how to frame the next step
+- Expected status: Partial.
+- Feedback anchor: “Validation is visible in UI, but business rule is not enforced in service.”
+- Required fix: move or duplicate rule to service and normalize error handling.
 
-End the checkpoint by helping learners see the upcoming transition as evolution, not replacement.
+Pattern C: crash on no selection update.
 
-**Say:** “If your architecture is sound, next session is not ‘throw away the GUI and start over.’ It is ‘swap the storage strategy behind a service layer that already knows how to manage records cleanly.’” 
+- Expected status: Partial or Not yet depending on severity.
+- Feedback anchor: “Typical error path must not crash.”
+- Required fix: guard selection and show message while keeping app responsive.
 
-**Say:** “That is why I have been pushing stable IDs and thin callbacks so hard. Those choices are what make future persistence changes manageable.”
+Pattern D: add list update works, delete missing.
 
-You can also give a short preview of the next questions learners will answer in Session 7:
+- Expected status: Partial.
+- Feedback anchor: “CRUD incomplete at checkpoint.”
+- Required fix: finish delete path with confirmation and refresh.
 
-- How does a record map to a row in a table?
-- How do we preserve stable IDs in a relational store?
-- How can the service layer talk to a repository instead of in-memory data or JSON?
+### Recheck policy suggestion
 
-That preview helps the checkpoint feel like a launchpad rather than just an evaluation stop.
+If your local delivery policy allows recheck:
+
+- Offer one short recheck slot within 24 to 48 hours.
+- Reevaluate only failed criteria plus dependent criteria.
+- Preserve original observed strengths.
+
+If no recheck policy exists, still provide written remediation route for coaching continuity.
+
+## Triage playbooks for common checkpoint blockers
+
+Use these playbooks during circulation and during live scoring to keep interventions short and effective.
+
+### Blocker playbook 1: unstable IDs and wrong row updates
+
+Symptoms:
+
+- Update changes wrong row after insert.
+- Delete removes wrong item when sorted or filtered.
+- Behavior changes after restart.
+
+Rapid diagnostic questions:
+
+1. “What value uniquely identifies a record in your core model?”
+2. “Where is that value stored in the UI list state?”
+3. “When you select a row, what exact ID do you pass to service update?”
+
+Two minute triage action:
+
+- Have learner print or log selected ID and target ID before update.
+- Compare with visual row position.
+- Confirm service call uses ID argument.
+
+Remediation route:
+
+- Persist IDs in stored records.
+- Bind UI selection to ID, not visual index.
+- Re run canonical flow after restart to confirm stability.
+
+### Blocker playbook 2: UI only validation and service bypass risk
+
+Symptoms:
+
+- Entry fields prevent bad input, but backend accepts invalid values when called through alternate path.
+- Different buttons enforce different rules.
+
+Rapid diagnostic questions:
+
+1. “Where is the authoritative validation function?”
+2. “If another UI view calls service directly, does the rule still hold?”
+3. “What exception or error object is raised for invalid data?”
+
+Two minute triage action:
+
+- Request direct service invocation through a quick test harness or debug console call.
+- Feed known invalid value.
+- Observe acceptance or rejection.
+
+Remediation route:
+
+- Move rule into service or model validator.
+- UI handles error and displays message.
+- Keep lightweight UI pre validation for user experience, but not as only guard.
+
+### Blocker playbook 3: crash on typical error path
+
+Symptoms:
+
+- Clicking update with no selection crashes.
+- Loading malformed JSON crashes.
+- Invalid number conversion throws uncaught exception.
+
+Rapid diagnostic questions:
+
+1. “Which exception is thrown here?”
+2. “Where is it caught?”
+3. “What does user see and can they continue?”
+
+Two minute triage action:
+
+- Wrap fragile boundary in targeted exception handling.
+- Return user feedback message.
+- Preserve event loop responsiveness.
+
+Remediation route:
+
+- Add guard clauses before service calls.
+- Add targeted catches for expected failures.
+- Keep broad catch only as last resort with visible message and logging.
+
+### Blocker playbook 4: launch reliability inconsistency
+
+Symptoms:
+
+- App only starts from one specific folder.
+- Relative file path assumptions break on different launch context.
+
+Rapid diagnostic questions:
+
+1. “How do you resolve your data file path at runtime?”
+2. “What working directory assumptions are hard coded?”
+3. “Can you launch from project root cleanly?”
+
+Two minute triage action:
+
+- Normalize path resolution strategy.
+- Re launch from standard course location.
+
+Remediation route:
+
+- Establish one canonical start command.
+- Centralize path resolution.
+- Verify persistence path consistently.
+
+## Facilitation prompts that reveal understanding quickly
+
+Use short high signal questions. Avoid long theory detours.
+
+### Architecture prompts
+
+- “Walk me through one button click from UI event to service mutation and back to list refresh.”
+- “Which file owns business rule X?”
+- “If I changed the input form tomorrow, which layer would remain unchanged?”
+
+### Reliability prompts
+
+- “Show me one expected user mistake and how the app recovers.”
+- “How do you know update changed the intended record?”
+- “What data survives restart and why?”
+
+### Maintainability prompts
+
+- “What code duplication did you remove during polish?”
+- “What one part is still messy and what is your refactor plan?”
+
+### Reflection prompt, required quick check
+
+- “If you had one more hour, what would you improve first in your GUI?”
+
+Encourage responses that tie to trust, correctness, and usability.
+
+## Demonstration evidence template you can use live
+
+Use this concise structure in your notes for each learner:
+
+- Launch reliable: yes or no and any caveat.
+- Add and list evidence: observed action and result.
+- Update evidence: observed target correctness.
+- Delete evidence: observed target correctness.
+- Restart and load evidence: observed continuity.
+- Stable ID gate: pass or fail with reason.
+- Service validation gate: pass or fail with reason.
+- Error resilience gate: pass or fail with reason.
+- Architecture explanation quality: clear, partial, unclear.
+- Final decision: pass, partial, not yet.
+- One strength.
+- One priority fix.
+
+This format helps preserve consistency across multiple demos.
+
+## Evidence to score examples for calibration
+
+These examples are for instructor calibration and consistency.
+
+### Calibration example 1: strong pass
+
+Observed:
+
+- App launches first try.
+- Full canonical flow completed smoothly.
+- Restart load works.
+- Learner shows service validator and ID mapping structure.
+- No selection delete shows warning and app continues.
+
+Decision:
+
+- Status pass.
+- Likely score band 88 to 98 depending on polish and explanation depth.
+
+### Calibration example 2: partial due to ID instability
+
+Observed:
+
+- Add list update delete appear to work initially.
+- After restart, update changes wrong record.
+- Learner admits row index mapping.
+
+Decision:
+
+- Status partial due to Gate 1 fail.
+- Score likely 65 to 79 depending on other strengths.
+- Required remediation: stable ID mapping and reload proof.
+
+### Calibration example 3: partial due to service validation gap
+
+Observed:
+
+- UI blocks empty fields.
+- Service direct call accepts invalid record.
+- Learner cannot show central rule.
+
+Decision:
+
+- Status partial due to Gate 2 fail.
+- Architecture score capped.
+- Required remediation: move rule to service and re demonstrate.
+
+### Calibration example 4: not yet due to repeated crash
+
+Observed:
+
+- Launch unstable.
+- Update with no selection crashes.
+- Restart load not demonstrated.
+
+Decision:
+
+- Status not yet.
+- Focused recovery plan required.
+- Coaching priority on launch and error resilience before feature expansion.
+
+## Remediation routing matrix after checkpoint decisions
+
+Use this routing matrix immediately after each decision.
+
+| Decision profile | Immediate remediation route | Timebox guidance |
+| --- | --- | --- |
+| Pass with minor polish gaps | Assign optional extension search or filter UI and one maintainability cleanup task | 20 to 40 minutes independent follow through |
+| Partial due to stable ID gate | Pair with identity mapping mini clinic and require restart load retest | 30 to 60 minutes focused |
+| Partial due to service validation gate | Service boundary mini clinic and rule centralization exercise | 30 to 60 minutes focused |
+| Partial due to error resilience gate | Error path hardening checklist and guard clause patch cycle | 20 to 45 minutes focused |
+| Not yet due to multiple failures | Structured rebuild path: launch path, add list, stable update, stable delete, restart load | 60 to 120 minutes with instructor checkpoints |
+
+Keep remediation specific and sequential. Do not give broad “clean up everything” guidance.
+
+## Instructor language for high pressure moments
+
+Use these scripts when learners are stressed or defensive.
+
+### When learner says “it worked before class”
+
+Say:
+
+“I believe you. For scoring, I need live evidence now. Let us reproduce quickly and score what we can observe.”
+
+### When learner says “I know the bug but cannot fix now”
+
+Say:
+
+“That is useful context. I will score demonstrated behavior today and tag a remediation target so you know the shortest path to upgrade this result.”
+
+### When learner freezes during demo
+
+Say:
+
+“Take ten seconds and narrate your expected result. We can continue from there. Clear reasoning still earns credit.”
+
+### When pair dynamics are uneven
+
+Say:
+
+“I need each person to answer one architecture question and one reliability question so scoring is fair.”
+
+## Checkpoint operations for different class sizes
+
+### Small cohort operations
+
+If cohort size is small, run full live demos for all learners. Advantages:
+
+- Richer evidence per learner.
+- Better coaching precision.
+- Easier calibration.
+
+Use full rubric scoring in real time and provide verbal feedback immediately.
+
+### Medium cohort operations
+
+For medium groups:
+
+- Run half class live, half in rotating stations.
+- Use peer observer checklist to maintain activity.
+- Instructor performs spot checks plus full checks for borderline cases.
+
+Ensure every learner still demonstrates must pass gates directly.
+
+### Large cohort operations
+
+For large groups:
+
+- Use timed stations with strict canonical sequence.
+- Assign assistants or peer leads for evidence capture.
+- Instructor validates all gate decisions personally.
+
+Do not delegate final gate pass or fail to peers. Gate decisions remain instructor responsibility.
+
+## Peer observation integration without weakening standards
+
+Peer observation can increase learning if structured carefully.
+
+Peer checklist items:
+
+1. Did launch succeed?
+2. Did canonical flow run in order?
+3. Did update or delete target correct record?
+4. Did restart and load show persistence?
+5. Was one error path handled without crash?
+6. Could learner explain service versus UI responsibilities?
+
+Peer comments should be descriptive and evidence based:
+
+- “When update was clicked, selected record ID remained X and changed title only.”
+- “No selection delete showed warning and app remained usable.”
+
+Discourage vague praise without evidence.
+
+## Preventing rubric drift across instructors
+
+If multiple instructors teach different sections, run a five minute rubric calibration before demos begin.
+
+Calibration protocol:
+
+1. Read must pass gates aloud.
+2. Review cap rules tied to gate failures.
+3. Agree on one sample partial case and one sample pass case.
+4. Confirm unobserved criteria policy.
+
+This prevents section to section score inflation or deflation.
+
+## Boundaries and out of scope reminders for Hour 24
+
+Keep this hour focused on GUI milestone evidence. Out of scope in this checkpoint:
+
+- New data storage architecture overhauls.
+- Long redesign discussions.
+- Introducing next session implementation details.
+- Non essential feature expansions that risk core reliability.
+
+If a learner proposes major architecture changes mid demo, redirect:
+
+“Great future idea. For this checkpoint, show reliable baseline behavior first.”
+
+## Optional extension handling: search or filter UI
+
+Search and filter UI is an optional extension in this hour. Treat it as bonus commentary only after baseline deliverables and must pass gates are met.
+
+If learner includes it:
+
+- Ask how filtering interacts with stable IDs.
+- Confirm filtered views do not break update and delete targeting.
+- Praise extension, but do not let it mask baseline weaknesses.
+
+If learner does not include it:
+
+- No penalty.
+- Encourage as next improvement candidate if baseline is strong.
+
+## High quality feedback phrasing examples
+
+### Feedback for pass
+
+“Your checkpoint evidence is strong. Launch was reliable, CRUD was complete through UI, restart load worked, and your service boundary is clear. Your highest leverage next step is improving user feedback messages for edge cases.”
+
+### Feedback for partial due to stable IDs
+
+“You are close. Core flow works, but update and delete depend on row position after reload, which creates correctness risk. Move selection mapping to stable IDs and rerun canonical flow to convert this to full pass.”
+
+### Feedback for partial due to validation boundary
+
+“Your UI validation is thoughtful, but business rules are not yet authoritative in service or core. Centralize validation there and keep UI as presentation and feedback. Once that is done, your architecture score will rise quickly.”
+
+### Feedback for not yet
+
+“You have a workable starting shell, but today we need a reliable baseline. Focus first on launch consistency and one safe error path. Then complete canonical flow in order. We will recheck once those are stable.”
+
+## Debrief script for final group close
+
+Use this debrief language in the final minutes:
+
+“Checkpoint 3 is where your GUI becomes trustworthy. The strongest demos today did not just click buttons. They showed predictable behavior, stable identity, and clear responsibility boundaries.”
+
+“The two biggest risk patterns remain the same every cohort: using row index as identity, and placing business validation only in UI code. If you address those two, your project reliability rises sharply.”
+
+“Remember the quick check: if you had one more hour, what would you improve first in your GUI? Choose the change that increases user trust most, not just visual polish.”
+
+## Instructor self audit before ending the hour
+
+Before closing the session, confirm you can answer yes to each item:
+
+- Did I run the required timing windows and crosswalk components?
+- Did I state grading focus exactly as runbook language requires?
+- Did I demonstrate the fast grading checklist run?
+- Did learners have hands on lab time with active coaching?
+- Did I evaluate all required deliverables explicitly?
+- Did I enforce all three must pass gates?
+- Did I use evidence to score rules consistently?
+- Did I capture partial credit and remediation routes clearly?
+- Did I close with the required quick check prompt?
+
+If any answer is no, document it and adjust next cohort delivery immediately.
+
+## Appendix: practical checkpoint checklist for rapid use
+
+This appendix is a concise checkpoint script you can keep visible while facilitating.
+
+Phase 1, kickoff briefing:
+
+- State outcome and grading focus.
+- Show canonical sequence.
+- State must pass gates.
+
+Phase 2, live model demo:
+
+- Run add list update delete restart load.
+- Narrate checklist evidence.
+
+Phase 3, lab and circulation:
+
+- Ask stable ID question.
+- Ask service validation question.
+- Ask no crash question.
+
+Phase 4, scoring:
+
+- Record evidence first.
+- Apply gate caps if needed.
+- Mark pass partial or not yet.
+
+Phase 5, close:
+
+- Deliver one strength and one priority fix.
+- Ask quick check question.
+
+## Final instructor reminder
+
+This hour is successful when learners leave with clear truth about their current software quality and a concrete path forward. Your consistency is more important than speed, and your evidence discipline is more important than presentation polish. Keep the milestone language canonical, keep the demo sequence canonical, enforce the gates, and coach with precision.
+
+End of Hour 24 checkpoint facilitation script.
+
+(agent_id: issue299-hour4-rewrite — use write_agent to send follow-up messages)
