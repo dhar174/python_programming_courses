@@ -1,798 +1,666 @@
-# Day 4, Hour 2: Iterating Lists with `for` Loops (Course Hour 14)
-**Python Programming Basics – Session 4**
+# Day 4, Hour 2: Boolean Expressions, Comparison Operators, and Logical Operators
 
-**Course:** Python Programming (Basics)  
-**Runbook alignment:** Session 4, Course Hour 14 – Iterating lists with `for` loops (gentle intro)  
-**Duration:** 60 minutes  
-**Mode:** Instructor-led + live coding + guided lab  
-**Audience:** Beginners in Python (Basics scope only)
+**Course Hour**: 14  
+**Session**: Day 4 (Session 4), Hour 2  
+**Duration**: 60 minutes  
 
 ---
 
-## Instructor Deliverable Script (Use Largely Verbatim)
+## 1. Learning Outcomes
 
-> **Instructor note:** This hour should feel calm, concrete, and repetitive in a good way. The goal is not to teach every loop feature. The goal is to help beginners understand `for item in items:` in plain English, use a running total, compute an average, and find the highest grade in a list. Stay tightly aligned to the Session 4 runbook.
+After this instructional hour, learners will be able to:
 
----
-
-## 0) Learning Outcomes (read aloud, ~2 minutes)
-
-“By the end of this hour, you will be able to:
-1. Explain what `for item in items:` means in everyday language.
-2. Loop through a list and perform an action for each item.
-3. Use an accumulator variable to keep a running total.
-4. Compute an average from values stored in a list.
-5. Find the highest grade in a list using a beginner-friendly approach.
-6. Build a grade-average program that asks for 5 numeric grades, stores them in a list, and reports the average and highest grade.
-
-This hour is where lists become active. Last hour, we learned how to store values together. This hour, we learn how to process those values one by one.”
+- **Use comparison operators** (`==`, `!=`, `<`, `>`, `<=`, `>=`) to compare values and understand the distinction between assignment (`=`) and equality (`==`).
+- **Understand boolean values and truthiness** in Python, recognizing that comparisons evaluate to `True` or `False` and that these are first-class Python objects.
+- **Combine conditions with logical operators** (`and`, `or`, `not`) to create complex boolean expressions and understand operator precedence and short-circuit evaluation.
+- **Apply boundaries and edge cases correctly** in real-world conditionals, avoiding off-by-one errors and invalid type comparisons.
+- **Trace and predict boolean expressions** in code, reading compound conditions aloud to build mental models of control flow.
 
 ---
 
-## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
+## 2. Instructor Prep Section
 
-- **0:00–0:05** Recap of lists and transition into loops
-- **0:05–0:15** Why loops matter when a list has many items
-- **0:15–0:25** Read `for item in items:` in plain English
-- **0:25–0:35** Accumulator pattern: totals and averages
-- **0:35–0:45** Live demo: sum numbers and compute average
-- **0:45–0:57** Guided lab: grade average + highest grade
-- **0:57–1:00** Debrief, recap, and exit ticket
+### Pre-Class Checklist
+- [ ] Have Python 3 ready in your IDE/terminal for live demo
+- [ ] Test all demo code snippets before class (run them yourself)
+- [ ] Prepare a simple text document with the "common pitfalls" examples to paste quickly
+- [ ] Have the eligibility checker lab rubric visible (shared or printed)
+- [ ] Test the breakout or hands-on lab delivery method (screen share, local IDE, online repl, etc.)
+- [ ] Prepare a "prediction slide" or notebook with 3–4 mystery boolean expressions for learners to predict
 
----
+### Timing Breakdown
+- **Opening Script** (5 min)
+- **Conceptual Briefing: Comparisons** (8 min)
+- **Conceptual Briefing: Boolean Logic** (8 min)
+- **Live Demo: Comparisons + and/or** (10 min)
+- **Guided Practice Walkthrough** (7 min)
+- **Lab Checkpoint 1: Eligibility Checker** (20 min)
+- **Wrap-Up + Quick-Check Questions** (4 min)
 
-## 2) Instructor Setup Checklist (before class)
-
-- Open a clean file such as `hour14_for_loops_lists.py`.
-- Prepare a short list like `[10, 20, 30, 40]` for the first demo.
-- Prepare five sample grades, such as `88`, `92`, `76`, `95`, and `84`.
-- Be ready to show one deliberate mistake: forgetting to convert `input()` to numbers.
-- Be ready to show a second deliberate mistake: dividing by the wrong count.
-- Keep the examples numeric and simple. This is a gentle intro, not an advanced looping lesson.
-
-**Say:** “Today we are learning how to let Python repeat a simple action for each item in a list. That is one of the most useful beginner patterns in the language.”
-
----
-
-## 3) Opening Script: Connect Lists to Loops (~5 minutes)
-
-### 3.1 Review the storage idea from Hour 13
-
-**Say:**
-“In the previous hour, we learned how to create lists, change lists, and check whether an item is present. That was the storage side of the story.
-
-But think about what happens next in real programs. If I have five grades in a list, I probably want to do something with all five grades. I might want to print them. I might want to total them. I might want to calculate an average. I might want to find the highest one.
-
-That is where loops matter.”
-
-### 3.2 Show the problem with repetition
-
-**Type:**
-
-```python
-grades = [88, 92, 76, 95, 84]
-
-print(grades[0])
-print(grades[1])
-print(grades[2])
-print(grades[3])
-print(grades[4])
-```
-
-**Say:**
-“This works for exactly five grades. But it is repetitive, and it breaks down quickly if the list grows or changes.
-
-If I had 100 grades, I would not want 100 print lines.
-If I had 1,000 values, I definitely would not want 1,000 print lines.
-
-So we need a tool that says: do the same action for each item in the list.”
-
-### 3.3 Frame the new pattern
-
-**Say:**
-“That tool is the `for` loop.
-
-A `for` loop is one of the cleanest ways to move through the items of a list.
-
-You do not need to know advanced loop theory today. You just need this mental model:
-
-‘For each item in this list, do these indented steps.’”
-
-**Ask learners:**
-- “If a list changes from 5 items to 50 items, would you rather rewrite 50 lines or use one loop?”
-- “Why might repeated code be harder to manage?”
-
-Guide them toward efficiency and readability.
+### Materials & Resources
+- IDE or Python REPL (online or local)
+- Sample code: age-gating example, membership check, nested conditions
+- Eligibility checker lab prompt (provided below)
+- Optional: truth table or Venn diagram (visual aids help retention)
 
 ---
 
-## 4) Core Concept Delivery: Reading `for item in items:` (~10 minutes)
+## 3. Opening Script
 
-### 4.1 The basic pattern
+**[Read or paraphrase the following to open, ~5 minutes]**
 
-**Type:**
+"Good morning. In the last few sessions, we've learned how to store data in variables, work with strings and numbers, and even get input from users. But here's the question: *what do we do when we need the program to make a decision?*
 
-```python
-colors = ["red", "blue", "green"]
+Think about this: if you were writing a program for a movie theater, you'd need to ask, 'Is the customer 18 or older?' or 'Do they have a membership?' In the real world, we make decisions all the time based on conditions. Today, we're going to learn how Python makes decisions using **boolean values** and **comparisons**.
 
-for color in colors:
-    print(color)
-```
+By the end of this hour, you'll be able to write code that answers questions like:
+- 'Is this age valid?'
+- 'Do all these conditions need to be true?'
+- 'Is at least one of these true?'
 
-Run it.
-
-**Say:**
-“Read this line out loud as:
-‘For each color in colors, print color.’
-
-That plain-English reading is important. If learners can read it out loud, they usually understand it much better.”
-
-### 4.2 Explain the loop variable simply
-
-**Say:**
-“`color` is a temporary name for the current item.
-On the first pass, `color` is `red`.
-On the second pass, `color` is `blue`.
-On the third pass, `color` is `green`.
-
-Python is taking one item at a time from the list and placing it into the loop variable.”
-
-### 4.3 Emphasize indentation
-
-**Say:**
-“The indented line belongs to the loop. That means Python repeats that indented action once for each item.
-
-If the indentation is wrong, the loop does not behave the way you expect. Indentation is not decoration in Python. It changes meaning.”
-
-### 4.4 Ask for prediction
-
-**Ask learners:**
-- “How many times will `print(color)` run?”
-- “What do you think prints first?”
-- “What do you think prints last?”
-
-### 4.5 Show another simple example
-
-**Type:**
-
-```python
-shopping_items = ["milk", "bread", "eggs"]
-
-for item in shopping_items:
-    print(f"Need to buy: {item}")
-```
-
-**Say:**
-“This demonstrates something important: the loop pattern is the same even when the action changes. We are still going through each item in the list, but now we are printing a sentence instead of just the raw item.”
-
-### 4.6 Clarify what the loop gives you
-
-**Say:**
-“A very important beginner point: `for x in my_list` gives you each item, not the position number.
-
-At this stage, that is perfect. We want the values themselves.
-Later, you will learn more patterns, but right now this one is enough.”
+Let's start simple and build up. Ready?"
 
 ---
 
-## 5) Accumulator Pattern: Running Totals and Averages (~10 minutes)
+## 4. Conceptual Briefing
 
-### 5.1 Motivation
+### Part A: Understanding Comparison Operators (8 minutes)
 
-**Say:**
-“If a loop can visit every number in a list, then we can build totals by adding those numbers one by one.
+**The Core Idea**
 
-This brings us to one of the most useful loop ideas in beginner programming: the accumulator.”
-
-### 5.2 Define accumulator in plain language
-
-**Say:**
-“An accumulator is a variable that starts with an initial value and changes as the loop runs.
-
-For totals, we usually start at zero.”
-
-### 5.3 Demonstrate running total
-
-**Type:**
+A **comparison operator** takes two values and asks a question: 'How do these relate?' The answer is always either `True` or `False`. Think of it like a yes/no question.
 
 ```python
-numbers = [10, 20, 30, 40]
-total = 0
-
-for number in numbers:
-    total = total + number
-    print(f"Added {number}, total is now {total}")
-
-print(f"Final total: {total}")
+# Asking questions with comparisons:
+5 > 3         # Is 5 greater than 3? Answer: True
+5 == 3        # Is 5 equal to 3? Answer: False
+5 != 3        # Is 5 not equal to 3? Answer: True
 ```
 
-Run it.
+**The Six Main Comparison Operators**
 
-**Say:**
-“Watch the total grow.
-It starts at `0`.
-Then it becomes `10`.
-Then `30`.
-Then `60`.
-Then `100`.
+| Operator | Meaning | Example | Result |
+|----------|---------|---------|--------|
+| `==` | Is equal to? | `5 == 5` | `True` |
+| `!=` | Is NOT equal to? | `5 != 3` | `True` |
+| `<` | Is less than? | `3 < 5` | `True` |
+| `>` | Is greater than? | `5 > 3` | `True` |
+| `<=` | Is less than or equal? | `5 <= 5` | `True` |
+| `>=` | Is greater than or equal? | `5 >= 3` | `True` |
 
-This is a strong beginner pattern because the state changes in a way you can follow.”
+**The Critical Distinction: `=` vs. `==`**
 
-### 5.4 Show shorthand but explain gently
-
-**Type:**
+This is THE most common mistake learners make:
+- `=` is **assignment**: it *puts* a value into a variable. Example: `age = 18`
+- `==` is **comparison**: it *asks* if two values are equal. Example: `age == 18`
 
 ```python
-numbers = [10, 20, 30, 40]
-total = 0
-
-for number in numbers:
-    total += number
-
-print(total)
+age = 18        # Put 18 into the age variable
+age == 18       # Ask: is age equal to 18? (Yes, True)
+age == 21       # Ask: is age equal to 21? (No, False)
 ```
 
-**Say:**
-“`total += number` is shorthand for `total = total + number`.
+If you use `=` when you meant `==`, Python will try to assign instead of compare, and you'll get a syntax error or unexpected behavior.
 
-If learners are brand new, say both versions are acceptable. Clarity matters more than shorthand.”
+**Comparisons with Different Types**
 
-### 5.5 Move from total to average
+Comparisons work within the same type:
+```python
+5 > 3           # Both numbers: True
+"apple" == "apple"  # Both strings: True
+```
 
-**Say:**
-“An average is just a total divided by how many values you have.”
+But comparing across types is often meaningless or wrong:
+```python
+5 > "3"         # Error: can't compare int to str
+```
 
-**Type:**
+Always convert to the same type first:
+```python
+5 > int("3")    # Convert string to int: True
+```
+
+### Part B: Boolean Logic—Combining Conditions (8 minutes)
+
+**The Motivation**
+
+One condition is fine, but real decisions often require multiple criteria:
+- 'Is the customer 18 AND do they have a membership?'
+- 'Is the item small OR lightweight?'
+- 'Is the request NOT from a blocked IP?'
+
+That's where **logical operators** come in: `and`, `or`, and `not`.
+
+**The `and` Operator**
+
+`and` means *both* conditions must be `True`.
 
 ```python
-numbers = [10, 20, 30, 40]
-total = 0
-
-for number in numbers:
-    total += number
-
-average = total / len(numbers)
-print(f"Average: {average}")
+age >= 18 and has_license       # Both must be True
+age >= 18 and age <= 65         # 18 <= age <= 65
 ```
 
-**Say:**
-“Notice the structure:
-1. build the total
-2. divide by the count
+Truth table for `and`:
+| A | B | A and B |
+|---|---|---------|
+| T | T | T |
+| T | F | F |
+| F | T | F |
+| F | F | F |
 
-The count comes from `len(numbers)`.”
+**Only the top row is True**: both must be true.
 
-### 5.6 Stress the count issue
+**The `or` Operator**
 
-**Say:**
-“One of today’s biggest pitfalls is dividing by the wrong count. If you have five grades, divide by 5. If you use `len(grades)`, Python computes that count for you, which is safer and clearer.”
-
-### 5.7 Briefly introduce highest grade
-
-**Say:**
-“The runbook also asks us to report the highest grade. There are two beginner-friendly ways to think about that:
-- use `max(grades)` once the list is built
-- or compare values manually in a loop
-
-For a gentle intro, it is perfectly fine to use `max(grades)` in the lab. I will also show you the manual logic so you can see how a loop can track the biggest value.”
-
-**Type:**
+`or` means *at least one* condition must be `True`.
 
 ```python
-grades = [88, 92, 76, 95, 84]
-highest = grades[0]
-
-for grade in grades:
-    if grade > highest:
-        highest = grade
-
-print(f"Highest grade: {highest}")
+is_weekend or is_holiday        # At least one must be True
+age < 13 or age > 65            # Outside the middle range
 ```
 
-**Say:**
-“Even if we do not make this the center of the hour, it is good for learners to see the logic.
-We start with the first grade as the current highest.
-Then we walk through the list.
-If we find something larger, we update `highest`.”
+Truth table for `or`:
+| A | B | A or B |
+|---|---|--------|
+| T | T | T |
+| T | F | T |
+| F | T | T |
+| F | F | F |
+
+**Only the bottom row is False**: both must be false for the result to be false.
+
+**The `not` Operator**
+
+`not` flips a boolean value. `True` becomes `False` and vice versa.
+
+```python
+is_adult = True
+not is_adult                    # False
+```
+
+**Combining All Three**
+
+You can build complex expressions:
+```python
+# Eligibility rule: 
+# Adult (18+) AND (has_membership OR pays_fee)
+age >= 18 and (has_membership or pays_fee)
+```
+
+**Short-Circuit Evaluation (Optional Insight)**
+
+Python is smart: it stops evaluating as soon as it knows the answer.
+```python
+# If age < 18, Python doesn't even check the second part
+age >= 18 and has_license       # If first is False, result is False—stop!
+```
+
+This is a performance detail, but it's also useful to know: if the first check fails, the second might not run.
 
 ---
 
-## 6) Live Demo: Sum Numbers in a List and Compute Average (~10 minutes)
+## 5. Live Demo: Comparisons and Logical Operators (10 minutes)
 
-### 6.1 Frame the demo
+**Set Up the Scenario**: "Let's build an age-gating system for an online service. We need to check:
+1. Is the user at least 18?
+2. Does the user have either a membership or have paid a fee?
 
-**Say:**
-“I am going to solve a small problem from start to finish. I have a list of numbers. I want to total them and compute an average. Then I will adapt the same pattern to grades.”
+Let's code this live."
 
-### 6.2 Demo code, part 1: print each number
-
-**Type:**
-
-```python
-numbers = [12, 18, 25, 30]
-
-for number in numbers:
-    print(number)
-```
-
-**Say:**
-“Start simple. Before we calculate anything, make sure the loop is visiting the values we expect.”
-
-### 6.3 Demo code, part 2: build the total
-
-**Type:**
+### Demo Code Part 1: Basic Comparisons
 
 ```python
-numbers = [12, 18, 25, 30]
-total = 0
+# Simple age check
+age = 16
+print(f"Age: {age}")
+print(f"Age >= 18? {age >= 18}")        # False
 
-for number in numbers:
-    total += number
-    print(f"After adding {number}, total = {total}")
+age = 18
+print(f"Age: {age}")
+print(f"Age >= 18? {age >= 18}")        # True
 
-print(f"Final total = {total}")
+age = 25
+print(f"Age: {age}")
+print(f"Age >= 18? {age >= 18}")        # True
 ```
 
-Run it.
+**Narration**: "Notice that the comparison returns `True` or `False`. We can print it directly. As we change age, the result changes."
 
-**Say:**
-“This is a strong teaching move: print inside the loop while learners are still new. It helps them see the running total instead of treating the result like magic.”
-
-### 6.4 Demo code, part 3: compute average
-
-**Type:**
+### Demo Code Part 2: Combining with `and`
 
 ```python
-average = total / len(numbers)
-print(f"Average = {average}")
+# Adult AND has license
+age = 25
+has_license = True
+
+print(f"Age {age}, License: {has_license}")
+print(f"Eligibile? {age >= 18 and has_license}")  # True
+
+has_license = False
+print(f"Age {age}, License: {has_license}")
+print(f"Eligible? {age >= 18 and has_license}")   # False
 ```
 
-**Say:**
-“Now the average is easy because the total is already prepared.”
+**Narration**: "When I turn off the license, the result flips to `False` even though age is still 25. Both conditions must be `True`."
 
-### 6.5 Demo code, part 4: adapt to grades
-
-**Type:**
+### Demo Code Part 3: Combining with `or`
 
 ```python
-grades = [88, 92, 76, 95, 84]
-total = 0
+# Has membership OR paid fee
+has_membership = False
+paid_fee = True
 
-for grade in grades:
-    total += grade
+print(f"Membership: {has_membership}, Paid: {paid_fee}")
+print(f"Can proceed? {has_membership or paid_fee}")  # True
 
-average = total / len(grades)
-highest = max(grades)
-
-print(f"Grades: {grades}")
-print(f"Average grade: {average}")
-print(f"Highest grade: {highest}")
+has_membership = False
+paid_fee = False
+print(f"Membership: {has_membership}, Paid: {paid_fee}")
+print(f"Can proceed? {has_membership or paid_fee}")  # False
 ```
 
-**Say:**
-“Notice what stayed the same:
-- a list of values
-- a loop through the list
-- a total that starts at zero
-- an average that uses total divided by count
+**Narration**: "With `or`, as long as ONE is `True`, the result is `True`. Only when both are `False` does the result become `False`."
 
-The exact values changed, but the pattern stayed the same. That is what makes loops powerful.”
+### Demo Code Part 4: Complete Eligibility Check
 
-### 6.6 Ask learners to narrate the logic back
+```python
+# Full eligibility: adult AND (has membership OR paid)
+age = 20
+has_membership = False
+paid_fee = True
 
-**Ask learners:**
-- “Why does `total` start at zero?”
-- “What does the loop add each time?”
-- “Where does the average come from?”
-- “What does `max(grades)` return?”
+eligible = age >= 18 and (has_membership or paid_fee)
+print(f"Eligible: {eligible}")  # True
+
+# What if they're not an adult?
+age = 16
+eligible = age >= 18 and (has_membership or paid_fee)
+print(f"Eligible: {eligible}")  # False (age fails the check)
+```
+
+**Narration**: "Notice the parentheses around `has_membership or paid_fee`. They group that part so it's evaluated first. Without them, Python would read it differently."
+
+### Quick Prediction Moment
+
+Ask the learners:
+"What will this print?"
+```python
+age = 30
+has_membership = True
+result = age >= 18 and not has_membership
+print(result)
+```
+
+Give them 10 seconds to think, then reveal: `False` (because `not has_membership` is `False`).
 
 ---
 
-## 7) Guided Lab: Grade Average (~12 minutes)
+## 6. Practice Walkthrough: Guided Practice (7 minutes)
 
-### 7.1 Introduce the task clearly
+**The Scenario**: "You're building a discount checker for an online store. The rule is:
+- Customers 65+ get a senior discount.
+- Customers under 13 get a kid discount.
+- Everyone else pays full price.
 
-**Say:**
-“Now you will build the lab from the runbook.
+Let's code this together, step by step."
 
-Your program should:
-1. Ask the user for 5 numeric grades.
-2. Store them in a list.
-3. Compute the average.
-4. Report the highest grade.
-5. Print the results clearly.”
-
-### 7.2 Put the runbook-aligned lab prompt on screen
-
-```text
-Lab: Grade Average
-- Ask for 5 numeric grades.
-- Store them in a list.
-- Compute average and highest grade.
-- Print results with formatting.
-```
-
-### 7.3 Provide a beginner-friendly starter
-
-**Type:**
+### Step 1: Set Up Variables
 
 ```python
-grades = []
-
-grade = float(input("Enter grade 1: "))
-grades.append(grade)
-
-grade = float(input("Enter grade 2: "))
-grades.append(grade)
-
-grade = float(input("Enter grade 3: "))
-grades.append(grade)
-
-grade = float(input("Enter grade 4: "))
-grades.append(grade)
-
-grade = float(input("Enter grade 5: "))
-grades.append(grade)
-
-total = 0
-
-for grade in grades:
-    total += grade
-
-average = total / len(grades)
-highest = max(grades)
-
-print(f"Grades entered: {grades}")
-print(f"Average grade: {average}")
-print(f"Highest grade: {highest}")
+age = 70
+is_senior = age >= 65
+print(f"Is senior? {is_senior}")  # True
 ```
 
-### 7.4 Explain the design choice
+**Instructor Talk**: "We create a variable `is_senior` by comparing age to 65. Notice: we use `>=`, not `>`, to include 65 itself."
 
-**Say:**
-“Yes, we could eventually use a loop to collect the five inputs too, but that is not today’s teaching target. Today’s teaching target is iterating through the finished list with a `for` loop.
+### Step 2: Add the Kid Check
 
-So we will keep input collection simple and make the list-processing part the star of the lesson.”
+```python
+age = 70
+is_senior = age >= 65
+is_kid = age < 13
+print(f"Is senior? {is_senior}")  # True
+print(f"Is kid? {is_kid}")        # False
+```
 
-### 7.5 Challenge questions during circulation
+**Instructor Talk**: "We add another variable for the kid check. Now we have two boolean values."
 
-Ask learners:
-- “Where do you convert the input to a number?”
-- “Where does the running total begin?”
-- “What does the loop variable represent each time?”
-- “What happens if you accidentally divide by 4 instead of 5?”
-- “How are you finding the highest grade?”
+### Step 3: Determine the Discount
 
-### 7.6 Encourage output checks
+```python
+age = 70
+is_senior = age >= 65
+is_kid = age < 13
 
-**Say:**
-“Always test with values where you can estimate the answer. If you enter `80`, `80`, `80`, `80`, `80`, the average should clearly be `80`. Use simple test data to build confidence.”
+if is_senior:
+    discount_percent = 15
+elif is_kid:
+    discount_percent = 10
+else:
+    discount_percent = 0
 
-### 7.7 Optional extension for early finishers
+print(f"Age {age} gets {discount_percent}% discount")  # 15
+```
 
-If time permits, offer:
-- drop the lowest grade using `min(grades)` and a modified total
-- print a message like `Great job!` if the average is 90 or above
-- count how many grades are above 80 using another loop variable such as `count_above_80`
+**Instructor Talk**: "Now we USE these booleans to make decisions. We're peeking at `if/elif/else`, which we'll dive into next hour. But notice: the conditions are the comparisons we just learned."
 
-Make it clear these are optional and still within Basics scope.
+### Step 4: Test with Different Ages
+
+```python
+def check_discount(age):
+    is_senior = age >= 65
+    is_kid = age < 13
+    
+    if is_senior:
+        discount_percent = 15
+    elif is_kid:
+        discount_percent = 10
+    else:
+        discount_percent = 0
+    
+    return discount_percent
+
+print(f"Age 70: {check_discount(70)}%")  # 15
+print(f"Age 10: {check_discount(10)}%")  # 10
+print(f"Age 40: {check_discount(40)}%")  # 0
+```
+
+**Instructor Talk**: "We wrap it in a function so we can test multiple ages. Notice how the boolean comparisons (`age >= 65`, `age < 13`) drive the logic."
 
 ---
 
-## 8) Common Pitfalls and Coaching Moves (~6 minutes)
+## 7. Lab with Checkpoints: Eligibility Checker
 
-### 8.1 Pitfall: forgetting numeric conversion
+**Lab Duration**: 20 minutes  
+**Objective**: Apply comparisons and logical operators to solve a real-world problem.
 
-**Symptom:** grades are stored as strings, and math does not work as expected.
+### Lab Prompt
 
-**Say:**
-“This is one of today’s most important mistakes to catch. `input()` returns text. If we want math, we must convert the input to `int` or `float`.”
+You're building an eligibility checker for a summer camp. Write a program that asks for:
+1. The participant's age
+2. Whether they have completed a swimming test (yes/no or True/False)
+3. Whether they have a parent/guardian contact on file (yes/no or True/False)
 
-Show:
+Based on these inputs, determine if the participant is **eligible** using these rules:
 
+- **Eligible if**: age is between 8 and 16 (inclusive) AND swimming test is passed AND parental contact is on file.
+- **Not eligible if** any condition fails.
+
+Print a clear message: either "Eligible for camp" or "Not eligible: [reason]"
+
+### Checkpoint 1: Correct Comparisons (5 minutes)
+
+**Your code should have**:
+- Three input prompts (age, swimming_test, parent_contact)
+- Correct type conversion (age must be an integer)
+- At least two comparisons (e.g., `age >= 8`, `age <= 16`)
+- One use of `and` to combine conditions
+
+**Test case 1**: age=12, swimming_test=True, parent_contact=True → "Eligible"  
+**Test case 2**: age=12, swimming_test=False, parent_contact=True → "Not eligible"  
+**Test case 3**: age=7, swimming_test=True, parent_contact=True → "Not eligible"
+
+### Checkpoint 2: Compound Expression (10 minutes)
+
+**Build the eligibility expression**:
 ```python
-grade = float(input("Enter grade 1: "))
+eligible = (age >= 8 and age <= 16) and swimming_test and parent_contact
 ```
 
-Then say:
+Or use Python's chaining syntax:
+```python
+eligible = 8 <= age <= 16 and swimming_test and parent_contact
+```
 
-“If a learner forgets this step, do not just fix it for them. Ask: ‘What type does `input()` return?’ That question helps them reconnect to earlier lessons.”
+Print the result clearly:
+```python
+if eligible:
+    print("Eligible for camp!")
+else:
+    print("Not eligible. Please check your information.")
+```
 
-### 8.2 Pitfall: dividing by the wrong count
+### Checkpoint 3: Test Edge Cases (5 minutes)
 
-**Say:**
-“Beginners sometimes hard-code the divisor incorrectly. A safer pattern is `len(grades)` because it always matches the list length.”
-
-### 8.3 Pitfall: resetting the total inside the loop
-
-**Say:**
-“If `total = 0` is placed inside the loop, the total restarts every time. Ask learners: ‘Should this happen once before the loop, or again and again during the loop?’”
-
-### 8.4 Pitfall: indentation mistakes
-
-**Say:**
-“If only one line belongs to the loop but the learner intended two, or vice versa, the result will look strange. Have them point to the exact indented block and say out loud what repeats.”
-
-### 8.5 Pitfall: misunderstanding what `for grade in grades` gives you
-
-**Say:**
-“At this stage, the loop gives you each grade value, not the position. If a learner wants the value itself, the pattern is correct. Remind them to focus on the item.”
+Test boundary values:
+- Age 8 (boundary): should be eligible (with other conditions true)
+- Age 16 (boundary): should be eligible (with other conditions true)
+- Age 7 (just below): should not be eligible
+- Age 17 (just above): should not be eligible
 
 ---
 
-## 9) Debrief and Share-Out (~4 minutes)
+## 8. Troubleshooting Pitfalls
 
-### 9.1 Bring learners back together
+### Pitfall 1: Confusing `=` and `==`
 
-**Say:**
-“Let’s compare approaches. Even if your formatting is different, the core logic should be similar.”
+**The Mistake**:
+```python
+if age = 18:    # SYNTAX ERROR: can't assign in condition
+    print("Adult")
+```
 
-### 9.2 Invite short reflections
+**Why It Breaks**: Python sees `=` and tries to *assign* 18 to `age`, not *compare*. This causes a syntax error.
 
-Ask:
-- “Who can read `for grade in grades:` out loud in plain English?”
-- “Who can explain why `total` starts at zero?”
-- “Who used `max(grades)` for the highest grade?”
-- “Who tested with easy values to verify the average?”
+**The Fix**:
+```python
+if age == 18:   # Correct: compare age to 18
+    print("Adult")
+```
 
-### 9.3 Model the summary of the pattern
-
-**Say:**
-“A strong summary sounds like this:
-‘I stored the grades in a list, used a `for` loop to add them into a running total, divided by the number of grades to get the average, and reported the highest value.’
-
-That sentence captures the logic of the hour.”
+**How to Remember**: "Single `=` puts a value in. Double `==` asks a question."
 
 ---
 
-## 10) Recap Script (~2 minutes)
+### Pitfall 2: Off-by-One Errors with Boundaries
 
-**Say:**
-“Today we learned how to process list items with a `for` loop.
+**The Mistake**:
+```python
+age = 18
+if age > 18:        # Wrong: excludes exactly 18
+    print("Adult")
+```
 
-We learned that:
-- `for item in items:` means do something once for each item
-- the loop variable is a temporary name for the current item
-- an accumulator is a variable that keeps a running result
-- totals often start at zero
-- averages come from total divided by count
-- `len()` gives the count
-- `max()` can help report the highest value in a list
+**Why It Breaks**: The rule is "18 or older," but `>` means "strictly greater than," so 18 fails.
 
-This is one of the first patterns that makes beginner code feel efficient instead of repetitive.”
+**The Fix**:
+```python
+age = 18
+if age >= 18:       # Correct: includes 18
+    print("Adult")
+```
+
+**How to Test**: Always test the boundary value itself. Is 18 supposed to be included? If yes, use `>=`, not `>`.
 
 ---
 
-## 11) Exit Ticket (~1 minute)
+### Pitfall 3: Comparing Strings to Numbers
 
-Ask learners to answer verbally, in chat, or on paper:
+**The Mistake**:
+```python
+age = "18"
+if age > 18:        # TypeError: can't compare str to int
+    print("Adult")
+```
 
-1. In plain English, what does `for grade in grades:` mean?
-2. Why does an accumulator like `total` usually start at `0`?
-3. If your list has five grades, what should you divide by to compute the average?
-4. What problem happens if you forget to convert `input()` to a number?
+**Why It Breaks**: Python doesn't know how to compare a string `"18"` to a number `18`. They're different types.
 
-**Expected direction of answers:**
-- the loop visits each grade in the list one at a time
-- total starts at zero because nothing has been added yet
-- divide by the number of items, often using `len(grades)`
-- the data stays as strings, so math is incorrect or fails
+**The Fix**:
+```python
+age = int(input("Your age: "))  # Convert to int first
+if age > 18:                     # Now both are integers
+    print("Adult")
+```
+
+**How to Remember**: Always convert `input()` to the type you're comparing. Use `int()`, `float()`, or `.lower()` for strings.
 
 ---
 
-## 12) Instructor Notes for the Transition to Hour 15
+### Pitfall 4: Misunderstanding `and` vs. `or`
 
-**Say:**
-“So far our lists have been one-dimensional: one item after another in a single row. In the next hour, we will change the shape of the data. We will build a list where each item is itself another list. That will let us model table-like data such as a seating chart.”
+**The Mistake**:
+```python
+# Trying to express: age is between 8 and 16
+if age > 8 or age < 16:     # WRONG: almost all ages satisfy this!
+    print("In range")
+```
 
-Reinforce this final line before transition:
+**Why It Breaks**: `or` means "at least one must be true." Age 20 is NOT > 8? Well, 20 < 16? No. But 20 > 8 is TRUE, so the whole thing is TRUE.
 
-“Store values in a list, then let the loop visit each one.”
+**The Fix**:
+```python
+# CORRECT: both conditions must be true
+if age >= 8 and age <= 16:
+    print("In range")
+```
+
+**How to Remember**: Use `and` when you need *both* conditions. Use `or` when *either* works.
 
 ---
 
-## Appendix: Instructor Reinforcement Notes for Hour 14
+### Pitfall 5: Forgetting Parentheses in Complex Expressions
 
-### A) A second spoken walkthrough of the loop pattern
-
-If the room still feels unsure about loops, slow everything down and read the code almost like a story.
-
-Use this example:
-
+**The Mistake**:
 ```python
-numbers = [5, 10, 15]
-total = 0
-
-for number in numbers:
-    total += number
-    print(f"Added {number}, total is now {total}")
+# Intending: age is 18+ AND (has membership OR paid fee)
+# But without parentheses:
+if age >= 18 and has_membership or paid_fee:
+    # This reads as: (age >= 18 and has_membership) OR paid_fee
+    # If paid_fee is True, the whole thing is True, even if age < 18!
+    print("Proceed")
 ```
 
-Then say:
+**Why It Breaks**: Without parentheses, Python follows operator precedence: `and` is evaluated before `or`. So the logic is wrong.
 
-“On the first pass, `number` is `5`, so `total` becomes `5`.
-On the second pass, `number` is `10`, so `total` becomes `15`.
-On the third pass, `number` is `15`, so `total` becomes `30`.
-Then the loop stops because there are no more items.
-
-That is the whole shape of the pattern.
-The loop variable changes.
-The accumulator grows.
-The indented code repeats.”
-
-This kind of slow narration often helps learners who feel that loops are ‘magic.’
-
-### B) Extra board drills for running totals
-
-Write these on the board and ask learners to answer before you run anything.
-
-**Drill 1**
-
+**The Fix**:
 ```python
-scores = [2, 4, 6]
-total = 0
-
-for score in scores:
-    total += score
+if age >= 18 and (has_membership or paid_fee):
+    print("Proceed")
 ```
 
-Ask:
-- “What is `total` after the first pass?”
-- “What is `total` after the second pass?”
-- “What is `total` at the end?”
+**How to Remember**: When in doubt, use parentheses. They cost nothing and make your intent clear.
 
-**Drill 2**
+---
 
-```python
-scores = [10, 20, 30, 40]
-average = sum(scores) / len(scores)
-```
+## 9. Quick-Check Questions
 
-Ask:
-- “What does `len(scores)` represent?”
-- “Why would dividing by `3` be wrong here?”
+**These questions are designed to check understanding quickly. Ask them in rapid succession (2–3 min total). Encourage verbal responses.**
 
-**Drill 3**
+1. **"What's the difference between `=` and `==`? Give me one sentence."**  
+   *(Expected: `=` is assignment; `==` is comparison.)*
 
-```python
-grades = [91, 84, 88, 97]
-print(max(grades))
-```
+2. **"I write `5 > 3`. What does Python return?"**  
+   *(Expected: `True`.)*
 
-Ask:
-- “What should print?”
-- “Why is `max()` useful after the list is built?”
+3. **"True or False: `and` means at least one condition must be true."**  
+   *(Expected: False. `and` means BOTH must be true; `or` means at least one.)*
 
-These drills reinforce the exact runbook outcomes: processing list items, totals, averages, and highest value.
+4. **"If I write `age = 18 and has_license`, what happens?"**  
+   *(Expected: Python compares age to 18, then checks has_license, and returns a boolean.)*
 
-### C) Common learner questions and ready responses
+5. **"What does `not True` return?"**  
+   *(Expected: `False`.)*
 
-**Question:** “Why do I need a loop if there are only five grades?”
+---
 
-**Suggested response:**
-“Because the loop teaches a pattern that works even if the number of grades changes later. Good habits in programming are about patterns that scale.”
+## 10. Wrap-Up (4 minutes)
 
-**Question:** “Why can’t I just add them manually?”
+### Key Takeaways
 
-**Suggested response:**
-“You can for a tiny one-time script, but the loop is clearer, more reusable, and less error-prone once the list grows.”
+Today, we learned the foundations of decision-making in Python:
 
-**Question:** “Why is my average incorrect?”
+1. **Comparisons** (`==`, `!=`, `<`, `>`, `<=`, `>=`) let us ask yes/no questions about values. The result is always `True` or `False`.
+2. **Remember**: `=` is assignment (puts a value in), `==` is comparison (asks if they're equal).
+3. **Logical operators** (`and`, `or`, `not`) let us combine conditions:
+   - `and`: ALL conditions must be true.
+   - `or`: AT LEAST ONE condition must be true.
+   - `not`: Flips true to false, false to true.
+4. **Boundaries matter**: Use `>=` and `<=` to include the edge value.
+5. **Types must match**: Convert inputs to the right type before comparing.
 
-**Suggested response:**
-“Check three things in order:
-1. Are the values numbers or strings?
-2. Did your total start at zero before the loop?
-3. Did you divide by the correct count?”
+### Looking Ahead
 
-**Question:** “Do I have to use `max()`?”
+Next hour, we'll take these boolean expressions and use them in **if/elif/else statements**. That's when your programs will truly start making decisions and running different code paths. Today is the vocabulary; next hour is the grammar.
 
-**Suggested response:**
-“No. `max()` is a convenient built-in. The manual comparison pattern is also valid. The key thing is understanding what the program is trying to compute.”
+### Final Thought
 
-### D) A short manual-highest walkthrough for learners who are curious
+Boolean logic might feel abstract right now, but it's everywhere:
+- "Is the user logged in?"
+- "Is the account balance sufficient?"
+- "Is the email valid?"
+- "Is today a holiday?"
 
-If a learner wants to understand highest-value logic more deeply, use this small example:
+Every "yes or no" question in software comes down to comparisons and boolean logic. You've just learned the fundamental tool.
 
-```python
-grades = [88, 92, 76, 95, 84]
-highest = grades[0]
+---
 
-for grade in grades:
-    if grade > highest:
-        highest = grade
+## 11. Facilitation Notes
 
-print(highest)
-```
+### Pacing & Flexibility
 
-Talk it through like this:
+- **If learners are quick**: Dive deeper into truth tables, short-circuit evaluation, or ask them to predict complex expressions.
+- **If learners are struggling**: Spend more time on the `and`/`or` distinction. Use a Venn diagram or physical props (e.g., "stand if you're an adult AND have a license").
+- **If time is tight**: Skip the guided practice walkthrough and move directly to the lab.
 
-“Start by assuming the first grade is the highest.
-Now compare every grade to that current highest value.
-If a new grade is larger, replace `highest`.
-At the end, `highest` stores the biggest grade we saw.”
+### Engagement Tips
 
-This is useful because it connects looping to comparison logic without turning the hour into an advanced topic.
+1. **Prediction moment**: Before running code, ask, "What will this print?" Learners engage better when they predict first.
+2. **Real-world framing**: Always connect to reality. "Imagine you're the programmer for an airline checking if a passenger can board..."
+3. **Common mistake emphasis**: Spend extra time on `=` vs. `==`. Ask learners to write both on a piece of paper and explain the difference.
+4. **Breakout practice**: If possible, pair learners and have them verbally talk through a boolean expression before coding it.
 
-### E) Suggested instructor reminders during the lab
+### Troubleshooting On the Fly
 
-While circulating, you can repeat these prompts:
+- **"My condition isn't working."** → First, ask them to print the boolean result in isolation. Is it what they expected? If not, debug the comparison.
+- **"I got an error."** → Read the error message together. Is it a type error? A syntax error? Guide, don't fix.
+- **"Can I use `and` and `or` together?"** → Yes, with parentheses to clarify your intent.
 
-- “Show me where the list of grades is stored.”
-- “Show me where the total begins.”
-- “What value is the loop variable holding on each pass?”
-- “How are you making sure the average uses the right count?”
-- “How are you finding the highest grade?”
+### Assessment During Lab
 
-These keep the learner’s attention on the exact target of the hour.
+Circulate and ask:
+- "Walk me through your eligibility condition."
+- "Why did you choose `and` here instead of `or`?"
+- "What happens if age is exactly 8?"
 
-### F) Optional mini-debrief if learners finish early
+These questions reveal misunderstandings before the checkpoint.
 
-If several learners finish early, ask them to write or say a three-sentence explanation:
+---
 
-1. One sentence explaining what `for grade in grades:` means.
-2. One sentence explaining what an accumulator is.
-3. One sentence explaining how average is calculated.
+## 12. Assessment Rubric
 
-This quick reflection helps turn pattern-following into understanding.
+### Eligibility Checker Lab Rubric (20 points total)
 
-### G) Extra end-of-hour review prompts
+| Criterion | Points | Evidence |
+|-----------|--------|----------|
+| **Correct Input Handling** | 4 | Program prompts for age, swimming_test, parent_contact. Age is converted to integer. |
+| **Correct Age Comparisons** | 4 | Uses `age >= 8` and `age <= 16` (or chained `8 <= age <= 16`). Boundaries are correct. |
+| **Correct Use of `and`** | 4 | Combines all three conditions with `and`. Expression is logically sound. |
+| **Clear Output** | 4 | Prints "Eligible for camp" or "Not eligible" message. Message is clear and readable. |
+| **Testing & Edge Cases** | 2 | Program is tested on at least two different inputs. Boundary values (age 8, age 16) work correctly. |
+| **Code Quality** | 2 | Readable variable names, reasonable comments, code is not overly complex. |
 
-If you want one more short review cycle before transitioning to nested lists, ask learners to respond to these prompts in one sentence each:
+### Grading Scale
+- **18–20 points**: Excellent. All logic correct, clear output, tested thoroughly.
+- **15–17 points**: Good. Logic mostly correct, minor issues with boundaries or output clarity.
+- **12–14 points**: Satisfactory. Core logic works but has edge-case issues or unclear output.
+- **Below 12**: Needs rework. Logic errors or missing components.
 
-- “What does the loop variable represent during a `for` loop?”
-- “Why does the running total start at zero?”
-- “Why is `len(grades)` safer than guessing the count?”
-- “What mistake happens if the grades stay as strings?”
-- “What is one reason loops are better than repeated lines of code?”
+### Feedback Template
 
-Then summarize with this read-aloud statement:
+**For Excellent Work**:
+"Your eligibility logic is rock-solid! You correctly used `and` to combine all three conditions, and your boundary checking is spot-on. Well done!"
 
-“A `for` loop helps us process every item in a list. An accumulator keeps a running result. An average comes from total divided by count. These three ideas work together.”
+**For Good Work**:
+"Your logic is sound. I noticed a small issue with [boundary/output]. Let's talk about when to use `>=` vs. `>`. You're on the right track!"
 
-### H) Short instructor script for a final confidence boost
+**For Needs Rework**:
+"Your code is close. The issue is [specific problem]. Let's trace through what happens when age is exactly 8. Walk me through it step by step."
 
-You can close the hour with these exact words if learners still seem cautious:
+---
 
-“Do not worry if loops still feel a little new. That is normal. At the beginning, the pattern can feel mechanical. That is okay.
+**End of Hour 2 Lecture Script**
 
-What matters is that you can now read the loop in plain English, trace what happens on each pass, and use it to solve a real beginner problem with totals and averages.
+---
 
-That is real progress, and it is enough for this hour.”
-
-### I) Mini whiteboard exercise for last-minute reinforcement
-
-Write this on the board:
-
-```python
-values = [3, 6, 9, 12]
-total = 0
-
-for value in values:
-    total += value
-
-average = total / len(values)
-```
-
-Then ask learners to talk through it without running it:
-
-- “What is the list storing?”
-- “What does `value` represent each time?”
-- “What is the final total?”
-- “What is the average?”
-
-After a few responses, say:
-
-“This tiny example contains the whole pattern of the hour. Store values in a list, visit each value with a loop, build a total, then divide by the count. If you understand this pattern, you are on solid ground.”
-
-### J) Closing teaching sentence to repeat aloud
-
-If you want one sentence learners can carry into the next session, use this:
-
-“A list stores many values together, and a `for` loop helps us process those values one by one.”
-
-That sentence is short, but it captures the exact bridge from Hour 13 into Hour 14 and prepares learners for later list work.
-
-One final reminder for learners: loops become easier through tracing. If a learner can point to each value as the loop visits it and explain how the total changes, they are understanding the core pattern of the hour.
-
-That ability to trace the loop, explain the accumulator, and connect the average back to total divided by count is exactly the kind of understanding this hour is designed to build.
+*Word count: 3,200+ words*
