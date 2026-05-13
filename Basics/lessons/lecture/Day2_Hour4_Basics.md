@@ -1,70 +1,192 @@
 # Day 2, Hour 4: Checkpoint 1 — Fundamentals Mini-Assessment (Course Hour 8)
-**Python Programming Basics – Session 2**
 
+**Python Programming Basics – Session 2**  
 **Course:** Python Programming (Basics)  
 **Runbook alignment:** Session 2, Course Hour 8  
 **Duration:** 60 minutes (assessment-centric)  
-**Mode:** Brief instructor framing + timeboxed individual checkpoint + debrief
+**Mode:** Instructor framing + timeboxed individual checkpoint + debrief  
+**Instructor Deliverable Script:** Designed for direct delivery, aligned with the runbook assessment model for Hour 8.
 
 ---
 
-## Instructor Deliverable Script (Largely Verbatim)
+## Learning Outcomes
 
-> This script is designed for direct delivery and aligns with the runbook assessment model for Hour 8.
+By the end of this hour, learners will:
 
----
+1. **Consolidate learning from Day 1 and Day 2 (Hours 1–7):** Synthesize all fundamentals covered in the previous 7 hours into a cohesive mini-project.
+2. **Apply fundamentals (variables, data types, operators, strings, input/output) in combination:** Demonstrate practical use of variables, numbers, strings, input, and numeric conversion in a single working script.
+3. **Debug multi-step programs:** Build a small complete program from requirements, test incrementally, and show clear, readable output formatting.
+4. **Explain design decisions and best practices:** Reflect on variable naming, type choices, and one debugging step they used during implementation.
+5. **Prepare for Day 3 (conditional logic):** Establish a solid foundation in fundamentals that will support conditional structures and loops in the next session.
 
-## 0) Learning Outcomes (read aloud)
-
-“By the end of this hour, learners will:
-1. Demonstrate practical use of variables, numbers, strings, input, and conversion.
-2. Build a small complete program from requirements.
-3. Show clear, readable output formatting for a simple receipt.
-4. Reflect on one debugging step they used during implementation.”
+This checkpoint is **open-book and individual**. You can use your notes, your previous scripts, and class materials. The purpose is not memorization; the purpose is demonstration of basic competence with independent synthesis.
 
 ---
 
-## 1) Agenda + Timing
+## Instructor Prep & Setup Checklist
 
-- **0:00–0:08** Checkpoint framing, rules, rubric walkthrough
-- **0:08–0:50** Individual checkpoint lab (Simple Receipt Generator)
-- **0:50–0:57** Debrief + quick oral checks
-- **0:57–1:00** Session 2 wrap + Session 3 preview
+### Before the hour begins
+
+- [ ] Print or display the **Simple Receipt Generator** problem statement (provided below).
+- [ ] Have the **Reference Solution** open in an editor for quick access during debrief or recovery.
+- [ ] Review the **Rubric** (4 categories: correctness 35%, math/types 35%, formatting 20%, code clarity 10%).
+- [ ] Prepare timer or clock for 50-minute checkpoint window (0:08–0:50).
+- [ ] Test that `input()`, `int()`, `float()`, f-strings with `:.2f`, and `print()` work in your environment.
+- [ ] Have submission portal ready (GitHub Classroom, file upload, or local folder).
+- [ ] Brief any TAs or co-instructors on monitoring milestones (10-min, 20-min, 30-min, 38-min, 45-min checks).
+- [ ] Optional: Print the **Guided Recovery Path** to display if class stalls.
+
+### Materials needed
+
+- Student machines with Python 3.x and a code editor.
+- Blank script template or empty file for each learner named `checkpoint1_receipt.py`.
+- Internet access for documentation (if allowed per checkpoint rules).
 
 ---
 
-## 2) Checkpoint Rules Script (verbatim)
+## Opening Script
 
-“Welcome to Checkpoint 1. This is open-book and individual. You can use your notes, your previous scripts, and class materials. The purpose is not memorization; the purpose is demonstration of basic competence.
+"Welcome to Checkpoint 1. This is an open-book, individual assessment. You can use your notes, your previous scripts, and class materials. The purpose is not memorization; the purpose is demonstration of basic competence.
 
-This checkpoint is timeboxed. Focus on correctness first, then formatting. If you get stuck, simplify your approach and make sure the core requirements are working before adding extras.
+This checkpoint is timeboxed: you have 50 minutes to build and test a complete program. Focus on correctness first, then formatting. If you get stuck, simplify your approach and make sure the core requirements are working before adding extras.
 
-I can clarify requirements, but I will not provide direct solutions. Think of this as a low-pressure simulation of real coding work: read requirements, build incrementally, test, and submit.”
+I can clarify requirements, but I will not provide direct solutions. Think of this as a low-pressure simulation of real coding work: read requirements, build incrementally, test, and submit.
+
+Here's what we'll do:
+1. I'll walk through the problem and rubric (8 minutes).
+2. You'll work on your receipt generator (50 minutes).
+3. We'll debrief and share insights (7 minutes).
+4. Final wrap and preview of Day 3 (3 minutes).
+
+Let's start. Open a new file called `checkpoint1_receipt.py` and keep your notes nearby. You are ready for this."
 
 ---
 
-## 3) Assessment Task: Simple Receipt Generator
+## Core Concepts
 
-## 3.1 Problem statement (read aloud slowly)
+### Checkpoint purpose
 
-“Build a Python script that generates a simple receipt for one item purchase.
-### Requirements
-- Input: item name, quantity, price per item
-- Compute subtotal
-- Print a receipt with aligned lines; money values rounded to 2 decimals using `round()`
+This assessment combines all fundamentals from Day 1 and Day 2 (Hours 1–7) into a single working program. It tests:
+- **Input and conversion:** Reading user input as text and converting to appropriate types.
+- **Variable naming:** Choosing clear, descriptive names that reflect purpose.
+- **Arithmetic:** Computing subtotal as quantity × price per item.
+- **String formatting:** Displaying money values to 2 decimal places using f-strings.
+- **Output design:** Creating a readable receipt structure with clear labels.
+
+### Assessment model
+
+- **Timeboxed:** 50 minutes to plan, code, test, and submit.
+- **Incremental:** Encouraged to build and test frequently (not write 30 lines then run once).
+- **Open-book:** Class materials, notes, and previous scripts are available.
+- **Individual:** Each learner submits their own work.
+
+### Design principles for this hour
+
+1. **Requirements first:** Translate the written problem into variable names and logic before coding.
+2. **Types matter:** Choosing the right type (`int` vs `float`) clarifies intent and prevents bugs.
+3. **Readable output:** Users read labels and formatted values; output is not just data, it's communication.
+4. **Baseline sufficiency:** A correct, simple solution is better than a half-finished advanced one.
+5. **Debugging as learning:** Errors during implementation are normal and reveal understanding.
+
+---
+
+## Live Coding Demo
+
+### Demo: Walk through the Simple Receipt Generator solution step-by-step
+
+"I'll show you one way to approach this. This is not the only way, but it demonstrates the concepts clearly.
+
+#### Step 1: Outline your variables
+
+Before touching code, think about what you need:
+- Item name (text)
+- Quantity (a count, so integer)
+- Price per item (decimal, so float)
+- Subtotal (quantity × price)
+- Total (subtotal, no tax yet)
+
+#### Step 2: Write prompts and collect input
+
+```python
+# Checkpoint 1: Simple Receipt Generator
+print("=== Receipt Generator ===")
+
+item_name = input("Enter item name: ").strip()
+quantity = int(input("Enter quantity: "))
+price_per_item = float(input("Enter price per item: "))
+```
+
+Notice: I call `.strip()` on the name to remove accidental spaces. I convert quantity to `int` and price to `float` immediately.
+
+#### Step 3: Compute subtotal and total
+
+```python
+subtotal = quantity * price_per_item
+# Baseline requirement: no tax/discount yet
+total = subtotal
+```
+
+At this point, if something is wrong, print these values to debug: `print(quantity, price_per_item, subtotal)`.
+
+#### Step 4: Format and print the receipt
+
+```python
+print()
+print("========== RECEIPT ==========")
+print(f"Item:     {item_name}")
+print(f"Quantity: {quantity}")
+print(f"Price:    ${price_per_item:.2f} each")
+print("-----------------------------")
+print(f"Subtotal: ${subtotal:.2f}")
+print(f"Total:    ${total:.2f}")
+print("=============================")
+```
+
+The f-string `:.2f` ensures all money values display with exactly 2 decimal places. The labels make the receipt readable.
+
+#### Step 5: Test with sample data
+
+```
+Sample input:
+  Item: Widget
+  Quantity: 3
+  Price per item: 9.99
+
+Expected output:
+  Subtotal: $29.97
+  Total: $29.97
+```
+
+Test it yourself. If you get 29.97, you're correct. If you get something else (2997, 9.999.999.99, etc.), there's a type mismatch or missing conversion.
+
+That's the full solution. The key moves are: plan variables → collect input with conversion → compute → format output."
+
+---
+
+## Guided Lab with Checkpoints
+
+### Problem statement (read aloud slowly)
+
+"Build a Python script that generates a simple receipt for one item purchase.
+
+**Requirements:**
+- Input: item name, quantity, price per item.
+- Compute subtotal as quantity × price per item.
+- Compute total. In this baseline version, there is no tax or discount, so total equals subtotal.
+- Print a neat receipt with aligned lines; money values rounded to 2 decimals using f-strings with `:.2f`.
 
 Your script must:
 1. Ask for item name.
 2. Ask for quantity.
 3. Ask for price per item.
 4. Compute **subtotal** as quantity × price per item.
-5. Compute **total**. In this baseline version, there is no tax or discount, so **total equals subtotal**.
-6. Print a neat receipt that includes item, quantity, unit price, subtotal, and total.
-7. Format money values to two decimal places.”
+5. Compute **total**. In the baseline version, total equals subtotal.
+6. Print a receipt that includes item, quantity, unit price, subtotal, and total.
+7. Format money values to exactly two decimal places.
 
-> **Accuracy consistency note for instructor:** In the required version, `total` must be present and must equal `subtotal`. If tax/discount is added, that is extension only, not baseline.
+**Accuracy consistency note:** In the required version, `total` must be present and must equal `subtotal`. If tax/discount is added, that is extension only, not baseline."
 
-## 3.2 Required output format (example)
+### Required output format (example)
 
 ```text
 === Receipt Generator ===
@@ -82,256 +204,336 @@ Total:    $29.97
 =============================
 ```
 
-**Instructor emphasis:**
-- “Both subtotal and total are required output lines.”
-- “In the baseline, they match.”
+"Both subtotal and total are required output lines. In the baseline, they match."
 
----
+### Three checkpoints with timing
 
-## 4) Rubric Walkthrough (5–8 minutes)
+Use these milestones to monitor progress and offer guidance. Announce each checkpoint aloud.
 
-### Rubric categories
+#### **Checkpoint 1: Input collection and variable setup (~10 minutes into lab)**
 
-1. **Program runs end-to-end (35%)**
-   - Starts and finishes without crash on valid input.
-   - Prompts and output appear in logical order.
+"Checkpoint: everyone should have prompts and variable assignments complete."
 
-2. **Correct math and types (35%)**
-   - `quantity` converted to integer.
-   - `price_per_item` converted to float.
-   - `subtotal = quantity * price_per_item`.
-   - `total = subtotal` in baseline requirements.
+At this point, students should have:
+- Print title statement.
+- Three `input()` calls with clear prompts.
+- Variables assigned from input (with conversion for quantity and price).
 
-3. **Readable output formatting (20%)**
-   - Money shown to 2 decimals.
-   - Labels are clear.
-   - Receipt structure is easy to read.
-
-4. **Code clarity (10%)**
-   - Meaningful variable names.
-   - Logical sectioning with minimal helpful comments.
-
-### Rubric script to read aloud
-
-“I will grade for correctness, readability, and basic code quality—not for advanced features. If your script is simple but correct, that is excellent for this stage.”
-
----
-
-## 5) Suggested Build Sequence (project this as guidance)
-
-1. Print title.
-2. Collect inputs as text.
-3. Convert numeric fields.
-4. Compute subtotal.
-5. Set total equal to subtotal (baseline).
-6. Print receipt lines with formatting.
-7. Test with sample data.
-
-**Say:**
-“Build in this order and run after each step. Frequent small runs prevent large debugging sessions.”
-
----
-
-## 6) Reference Solution (for instructor debrief)
-
-> Do **not** show this at start unless needed for accommodations. Use after checkpoint or for guided recovery.
-
+**Example code to look for:**
 ```python
-# Checkpoint 1: Simple Receipt Generator
-print("=== Receipt Generator ===")
-
 item_name = input("Enter item name: ").strip()
 quantity = int(input("Enter quantity: "))
 price_per_item = float(input("Enter price per item: "))
+```
 
+**Quick check:** Ask a learner: "What type is `quantity` and why did you choose that?"
+
+#### **Checkpoint 2: Type conversion and computation (~20 minutes into lab)**
+
+"Checkpoint: make sure `quantity` and `price_per_item` are numeric types before multiplication. Compute subtotal and set total equal to subtotal."
+
+At this point, students should have:
+- Correct type conversions (quantity as `int`, price as `float`).
+- Subtotal computed as `subtotal = quantity * price_per_item`.
+- Total assigned as `total = subtotal`.
+
+**Example code to look for:**
+```python
 subtotal = quantity * price_per_item
-# Baseline requirement: no tax/discount yet
 total = subtotal
+```
 
-print()
-print("========== RECEIPT ==========")
-print(f"Item:     {item_name}")
-print(f"Quantity: {quantity}")
-print(f"Price:    ${price_per_item:.2f} each")
-print("-----------------------------")
+**Quick check:** Have students print subtotal with a sample input and verify with a calculator. Example: quantity 3, price 9.99 → expected subtotal 29.97.
+
+#### **Checkpoint 3: Output formatting and verification (~40 minutes into lab)**
+
+"Checkpoint: add total line and confirm total equals subtotal in baseline version. Polish output formatting to two decimals and clear labels."
+
+At this point, students should have:
+- Receipt header and body text.
+- All required output lines (item, quantity, price, subtotal, total).
+- Money values formatted with `:.2f` inside f-strings.
+- Readable layout with separators and alignment.
+
+**Example code to look for:**
+```python
 print(f"Subtotal: ${subtotal:.2f}")
 print(f"Total:    ${total:.2f}")
-print("=============================")
 ```
 
----
-
-## 7) Instructor Monitoring Script During Work Time
-
-### At minute 10
-
-“Checkpoint: everyone should have prompts and variable assignments complete.”
-
-### At minute 20
-
-“Checkpoint: make sure `quantity` and `price_per_item` are numeric types before multiplication.”
-
-### At minute 30
-
-“Checkpoint: verify your subtotal with a calculator for one sample input.”
-
-### At minute 38
-
-“Checkpoint: add total line and confirm total equals subtotal in baseline version.”
-
-### At minute 45
-
-“Checkpoint: polish output formatting to two decimals and clear labels.”
+**Quick check:** Print the receipt and visually inspect for clarity, alignment, and two-decimal money formatting.
 
 ---
 
-## 8) Common Pitfalls + Instructor Responses
+## Assessment Rubric
 
-### Pitfall 1: forgetting numeric conversion
+### Rubric walkthrough (5–8 minutes at start of checkpoint)
 
+"I will grade for correctness, readability, and basic code quality—not for advanced features. If your script is simple but correct, that is excellent for this stage."
+
+### Rubric categories and scoring
+
+| Category | Points | Criteria |
+|----------|--------|----------|
+| **Program runs end-to-end (35%)** | 35 | Starts and finishes without crash on valid input. Prompts and output appear in logical order. |
+| **Correct math and types (35%)** | 35 | Quantity converted to integer. Price converted to float. Subtotal computed correctly as quantity × price. Total equals subtotal in baseline. |
+| **Readable output formatting (20%)** | 20 | Money shown to exactly 2 decimals using `:.2f`. Labels are clear and helpful. Receipt structure is easy to read with proper separators. |
+| **Code clarity (10%)** | 10 | Meaningful variable names (e.g., `subtotal`, not `c`). Logical flow with minimal, helpful comments. |
+| **Total** | **100** | |
+
+### Rubric script to read aloud
+
+"I will grade for correctness, readability, and basic code quality—not for advanced features. If your script is simple but correct, that is excellent for this stage.
+
+**Program runs end-to-end:** Does it start without error and produce output? 35 points.
+
+**Correct math and types:** Are the type conversions right? Is subtotal computed correctly? Is total equal to subtotal in the baseline? 35 points.
+
+**Readable output formatting:** Are all money values shown to 2 decimals? Are labels clear? Is the layout easy to read? 20 points.
+
+**Code clarity:** Are your variable names meaningful? Is your logic easy to follow? 10 points.
+
+If all four are solid, you have a full 100-point submission. If one area is weak, that reflects in that category's score. Make sure baseline correctness is your priority."
+
+---
+
+## Troubleshooting Pitfalls
+
+### Pitfall 1: Forgetting numeric conversion
+
+**Issue:** Student reads price as text and tries arithmetic, resulting in string repetition instead of math.
+
+**Example bug:**
 ```python
 price = input("Enter price: ")
-subtotal = price * 3
+subtotal = price * 3  # Results in "9.999.999.99" (string repetition)
 ```
 
-**Issue:** text repetition, not arithmetic.
+**Root cause:** `input()` always returns a string. Arithmetic on strings repeats, not adds.
 
-**Response script:**
-“Check your variable types with `print(type(variable))`. Convert price with `float()`.”
+**Prevention:** Convert immediately: `price = float(input("Enter price: "))`.
 
-### Pitfall 2: quantity read as float unnecessarily
+**Instructor response script:** "Check your variable types with `print(type(variable))`. If you see `<class 'str'>`, convert it with `float()` or `int()` before multiplication."
 
-Not fatal, but for count values `int` is clearer.
+### Pitfall 2: Quantity read as float unnecessarily
 
-**Response:**
-“Use `int` for quantity to communicate that count is whole-number.”
+**Issue:** Not a fatal error, but using `float` for quantity (a count) obscures intent.
 
-### Pitfall 3: subtotal and total inconsistency
+**Example:** `quantity = float(input("Enter quantity: "))` (results in 3.0 instead of 3).
 
-Example bug:
+**Prevention:** Use `int` for counts and whole numbers. `int` communicates that quantity is discrete, not continuous.
 
+**Instructor response:** "For a quantity (a count), use `int`. It makes your code's intent clearer. Counts are whole numbers, and `int` says that."
+
+### Pitfall 3: Subtotal and total inconsistency
+
+**Issue:** Student adds unintended math to total, breaking the baseline requirement that total equals subtotal.
+
+**Example bug:**
 ```python
 subtotal = quantity * price
-total = subtotal + price  # unintended extra item
+total = subtotal + price  # Unintended extra item added!
 ```
 
-**Response script:**
-“Re-read requirement: baseline has no tax/discount. Total should equal subtotal exactly.”
+**Root cause:** Misunderstanding of the baseline requirement or copy-paste error.
 
-### Pitfall 4: formatting omitted
+**Prevention:** Re-read the requirement: "baseline has no tax/discount. Total should equal subtotal exactly."
 
+**Instructor response script:** "Re-read the requirement: in this baseline, total should equal subtotal. No tax, no discount, no extra math. If you are adding tax or discount, save that as an optional extension after baseline works."
+
+### Pitfall 4: Formatting omitted or incorrect
+
+**Issue:** Student prints money values without the `:.2f` format specifier, resulting in inconsistent decimal places.
+
+**Example bug:**
 ```python
-print("Subtotal:", subtotal)
+print("Subtotal:", subtotal)  # Outputs "Subtotal: 29.97" or "Subtotal: 29.970000001"
 ```
 
-**Response:**
-“Use f-strings with `:.2f` for money. It improves clarity and grading consistency.”
+**Prevention:** Use f-strings with `:.2f`: `print(f"Subtotal: ${subtotal:.2f}")`.
 
-### Pitfall 5: unhelpful variable names
+**Instructor response:** "Use f-strings with `:.2f` for all money. It improves clarity and ensures consistent formatting. Example: `f'${price:.2f}'`."
 
+### Pitfall 5: Unhelpful variable names
+
+**Issue:** Using single-letter or vague names like `a`, `b`, `c`, or `x`, `y`, `z` obscures code intent.
+
+**Example bug:**
 ```python
 a = int(input())
 b = float(input())
 c = a * b
+print(c)
 ```
 
-**Response:**
-“Choose names that explain purpose: `quantity`, `price_per_item`, `subtotal`.”
+**Root cause:** Rush or lack of familiarity with naming conventions.
+
+**Prevention:** Choose names that explain purpose: `quantity`, `price_per_item`, `subtotal`.
+
+**Instructor response:** "Choose names that explain what each variable holds. Instead of `a`, `b`, `c`, use `quantity`, `price_per_item`, `subtotal`. Naming is not cosmetic; naming is thinking."
+
+### Pitfall 6: Logic errors in multi-step calculations
+
+**Issue:** Correct types but incorrect formula or wrong order of operations.
+
+**Example bug:**
+```python
+subtotal = quantity + price_per_item  # Should be multiplication!
+total = subtotal
+```
+
+**Prevention:** Manually verify the formula before coding. Example: "3 items at $9.99 each should be $29.97, not $12.99."
+
+**Instructor response:** "Verify your math with a calculator for one sample. If input is quantity 3 and price 9.99, subtotal should be 29.97. If you get 12.99, you're adding instead of multiplying."
 
 ---
 
-## 9) Optional 10-minute Quiz Segment (if schedule allows)
+## Exit Ticket & Quick-Check Questions
 
-Use this only if class pace supports it after coding.
+### Immediate debrief (7 minutes after submissions close)
 
-### Sample questions
+"Let's debrief quickly. This checkpoint tested real fundamentals: input, types, arithmetic, and output formatting.
 
-1. What is the type of `input()` return value?  
-   **Answer:** `str`
+Raise your hand if your first run worked end-to-end. Great. If it didn't, that is normal. Debugging is part of coding, not a sign of failure.
 
-2. What does `len("Python")` return?  
-   **Answer:** `6`
+Now, pair-share for one minute: what error did you hit first, and how did you fix it?"
 
-3. Which expression is true for `text = "Hello"`?  
-   - A) `"he" in text`
-   - B) `"He" in text`  
-   **Answer:** B (case-sensitive)
+After pair-share, ask **2 learners**:
+1. "What was the issue?"
+2. "How did you diagnose it?"
+3. "What exact code change fixed it?"
 
-4. What happens with `int("3.5")`?  
-   **Answer:** `ValueError`
+This reinforces debugging as a skill, not a failure.
 
-5. Which line formats price to 2 decimals?  
-   **Answer:** `f"${price:.2f}"`
+### Quick-check questions (1–2 minutes each)
 
----
+Ask these to verify understanding and guide reflection:
 
-## 10) Debrief Script (7 minutes)
+1. **"What is the type of `input()` return value?"**  
+   **Expected answer:** `str` (string). All input is text until converted.
 
-“Let’s debrief quickly. This checkpoint tested real fundamentals: input, types, arithmetic, and output formatting.
+2. **"Why did you use `int` for quantity and `float` for price?"**  
+   **Expected answer:** Quantity is a count (whole number), price includes decimals. Types clarify intent.
 
-Raise your hand if your first run worked end-to-end. Great. If it didn’t, that is normal. Debugging is part of coding, not a sign of failure.
+3. **"How did you format money to 2 decimals?"**  
+   **Expected answer:** Used f-string with `:.2f`, e.g., `f"${subtotal:.2f}"`.
 
-Now, pair-share for one minute: what error did you hit first, and how did you fix it?”
+4. **"What happens if you multiply a string by a number?"**  
+   **Expected answer:** String repetition, not arithmetic. Example: `"abc" * 3` gives `"abcabcabc"`, not 3 × abc.
 
-After pair-share, ask 2 learners:
-1. “What was the issue?”
-2. “How did you diagnose it?”
-3. “What exact code change fixed it?”
+5. **"Why is total equal to subtotal in this checkpoint?"**  
+   **Expected answer:** No tax or discount in baseline version. Total and subtotal are the same by design.
 
 ---
 
-## 11) Session 2 Wrap Script (verbatim)
+## Wrap-Up & Recap
 
-“In Session 2, we built a strong fundamentals stack:
-- Hour 5: string indexing, slicing, and `len()`.
-- Hour 6: method-based text normalization and search.
-- Hour 7: interactive input and numeric conversion.
-- Hour 8: a mini-assessment that combines all of the above.
+### Session 2 summary script (verbatim)
 
-If today felt challenging, that is expected. You are building real programming habits, not memorizing isolated commands.”
+"In Session 2, we built a strong fundamentals stack:
+- **Hour 5:** String indexing, slicing, and `len()`.
+- **Hour 6:** Method-based text normalization and search.
+- **Hour 7:** Interactive input and numeric conversion.
+- **Hour 8:** A mini-assessment that combines all of the above.
 
----
+If today felt challenging, that is expected. You are building real programming habits, not memorizing isolated commands. Every error you debugged today is an investment in your coding intuition."
 
-## 12) Session 3 Preview (must match runbook sequence)
+### Key takeaways to reinforce
 
-“Next session follows this exact sequence:
-1. **Hour 9:** comparisons and boolean logic.
-2. **Hour 10:** string formatting with f-strings.
-3. **Hour 11:** text operations with `split()` and `join()`.
-4. **Hour 12:** debugging habits at Basics level.
+1. **Plan before you code:** Translate requirements into variable names and logic.
+2. **Types matter:** Choose the right type to prevent bugs and clarify intent.
+3. **Build incrementally:** Write 5 lines, run, test. Don't write 30 lines then debug.
+4. **Output is communication:** Users read labels and formatted values, not raw variables.
+5. **Debugging is learning:** Errors are information, not failure.
 
-That progression will help you write clearer decisions, cleaner output, and stronger troubleshooting workflows.”
+### Connection to Day 3
 
----
+"Next session follows this exact sequence:
+- **Hour 9:** Comparisons and boolean logic (decisions in code).
+- **Hour 10:** String formatting with f-strings (you've seen this; we'll go deeper).
+- **Hour 11:** Text operations with `split()` and `join()` (breaking text apart and rebuilding).
+- **Hour 12:** Debugging habits at Basics level (systematic approaches to finding and fixing bugs).
 
-## 13) Extended Verbatim Facilitation Script (for full instructor support)
-
-“Before you code, pause and translate the requirement into variable language. We need one item name, one quantity, one unit price. That suggests variables named `item_name`, `quantity`, and `price_per_item`. Then we need `subtotal` and `total`. Naming is not cosmetic; naming is thinking.
-
-Next, think type expectations. Item name is text (`str`). Quantity is a count (`int`). Price per item may include decimals (`float`). If we start with correct types, the calculation step becomes straightforward.
-
-Now, build incrementally. Don’t write 30 lines before your first run. Write 5 lines, run once. Add 5 lines, run again. This is how professionals avoid deep debugging traps.
-
-When you format output, remember that users read labels, not variables. A line like `29.97` is technically right but context-poor. A line like `Subtotal: $29.97` is right and understandable. Communication is part of correctness.
-
-If your output value seems strange, perform a plausibility check. Example: quantity 3 and price 9.99 should produce around 30. If you get 2997 or 9.999.999.99, you likely have either multiplication by wrong value or string repetition from missing conversion.
-
-About `subtotal` and `total`: in many real systems, total includes tax, discounts, and fees. In our baseline task, we explicitly keep those out so fundamentals remain the focus. Therefore total equals subtotal. Do not invent extra math in the required version.
-
-If you finish early, you may add optional features. But only after baseline is correct and tested. In engineering, delivering a complete baseline is better than delivering half-finished advanced features.
-
-I also want you to notice your own debugging language. Instead of ‘it doesn’t work,’ say: ‘my script crashes on line 8 with ValueError when converting price.’ That precision speeds up help and builds professional communication skills.
-
-As instructor, I will answer requirement clarifications and process questions. I won’t provide direct final code during assessment time, because the goal is independent synthesis. You are ready for this. Start with a clean file, use meaningful names, and run early and often.”
+That progression will help you write clearer decisions, cleaner output, and stronger troubleshooting workflows. Keep your receipt script—it is valuable material for practicing those upcoming concepts."
 
 ---
 
-## 14) Guided Recovery Path (if class is struggling)
+## Facilitation Notes & Pacing Checkpoints
+
+### Minute-by-minute facilitation guide
+
+#### **0:00–0:03 Settling and emotional framing**
+
+"Take a breath. This is a checkpoint, not a trap. You are expected to think, test, and revise. Real programming looks like that.
+
+Open a new script file named `checkpoint1_receipt.py` and keep your notes nearby."
+
+#### **0:03–0:08 Rules and expectations**
+
+"Welcome to Checkpoint 1. This is open-book and individual. You can use your notes, your previous scripts, and class materials. The purpose is not memorization; the purpose is demonstration of basic competence.
+
+This checkpoint is timeboxed. Focus on correctness first, then formatting. If you get stuck, simplify your approach and make sure the core requirements are working before adding extras.
+
+I can clarify requirements, but I will not provide direct solutions. Think of this as a low-pressure simulation of real coding work: read requirements, build incrementally, test, and submit."
+
+#### **0:08–0:10 Rubric walkthrough**
+
+"Here's how I'll grade:
+- 35% for correctness (runs, no crashes, prompts in order).
+- 35% for correct math and types (right conversions, right formula).
+- 20% for readable output (2-decimal money, clear labels).
+- 10% for code clarity (good variable names, logical flow).
+
+If all four are solid, you have 100 points."
+
+#### **0:10–0:50 Checkpoint lab (monitor milestones)**
+
+Before starting: "Build in this order and run after each step. Frequent small runs prevent large debugging sessions."
+
+**At 0:10 (minute 10):** "Checkpoint: everyone should have prompts and variable assignments complete."
+
+**At 0:20 (minute 20):** "Checkpoint: make sure quantity and price_per_item are numeric types before multiplication."
+
+**At 0:30 (minute 30):** "Checkpoint: verify your subtotal with a calculator for one sample input."
+
+**At 0:38 (minute 38):** "Checkpoint: add total line and confirm total equals subtotal in baseline version."
+
+**At 0:45 (minute 45):** "Checkpoint: polish output formatting to two decimals and clear labels. You're in the home stretch."
+
+**At 0:50:** "Time is up. Wrap up and submit your script."
+
+#### **0:50–0:57 Debrief**
+
+"Let's debrief quickly. Raise your hand if your first run worked end-to-end. If it didn't, that is normal. Debugging is part of coding.
+
+Pair-share for one minute: what error did you hit first, and how did you fix it?"
+
+Ask 2–3 learners their debugging stories.
+
+#### **0:57–1:00 Final wrap and Day 3 preview**
+
+"Checkpoint complete. Whether your first attempt was smooth or messy, you did real programming work: read requirements, implemented logic, tested output, and debugged under time constraints. That is exactly how competence grows.
+
+Next session we continue with comparisons and booleans, then f-strings, then split/join, and then dedicated debugging habits.
+
+Keep your checkpoint script—it is a reference artifact for Day 3."
+
+### Pacing checkpoints for instructor awareness
+
+| Time | Milestone | Action |
+|------|-----------|--------|
+| 0:00–0:03 | Settling | Emotional framing, students open editor |
+| 0:03–0:08 | Rules | Explain checkpoint mode and expectations |
+| 0:08–0:10 | Rubric | Walk through 4 categories and scoring |
+| 0:10–0:50 | Lab | Monitor 5 milestones (10, 20, 30, 38, 45 min) |
+| 0:50–0:57 | Debrief | Pair-share, ask 2–3 debugging stories |
+| 0:57–1:00 | Wrap | Recap and Day 3 preview |
+
+### Guided recovery path (if class is struggling)
 
 If many learners stall, use this scaffold publicly without giving complete final solution immediately.
 
-### Step 1: just prompt and print
-
+**Step 1: Just prompt and print**
 ```python
 item_name = input("Enter item name: ")
 quantity_text = input("Enter quantity: ")
@@ -340,8 +542,7 @@ price_text = input("Enter price per item: ")
 print(item_name, quantity_text, price_text)
 ```
 
-### Step 2: convert types and print types
-
+**Step 2: Convert types and print types**
 ```python
 quantity = int(quantity_text)
 price_per_item = float(price_text)
@@ -349,8 +550,7 @@ price_per_item = float(price_text)
 print(type(quantity), type(price_per_item))
 ```
 
-### Step 3: compute and print raw numbers
-
+**Step 3: Compute and print raw numbers**
 ```python
 subtotal = quantity * price_per_item
 total = subtotal
@@ -358,8 +558,7 @@ total = subtotal
 print(subtotal, total)
 ```
 
-### Step 4: format final receipt
-
+**Step 4: Format final receipt**
 ```python
 print(f"Subtotal: ${subtotal:.2f}")
 print(f"Total:    ${total:.2f}")
@@ -369,9 +568,50 @@ This keeps rigor while helping learners recover.
 
 ---
 
-## 15) Optional Extension (post-baseline only)
+## Real-World Context & Applications
 
-### Tax extension example
+### Industry relevance
+
+Receipt generation is one of the most common beginner tasks in retail, POS (Point of Sale) systems, e-commerce, and financial software:
+
+- **Retail:** Every cash register generates receipts. This checkpoint mirrors that logic.
+- **E-commerce:** Online stores print order summaries with item totals.
+- **Invoicing:** Business software calculates line items, subtotals, and totals.
+- **Financial apps:** Banking and budgeting apps track purchases and balances.
+
+The skills you practiced today—input, types, arithmetic, formatting—are foundational to all of these domains.
+
+### Career connection
+
+Competence with this checkpoint demonstrates:
+1. **Requirement translation:** Reading specs and breaking them into code.
+2. **Type discipline:** Choosing appropriate data types to prevent bugs.
+3. **Output design:** Making output readable for end users, not just developers.
+4. **Testing mindset:** Validating output and debugging incrementally.
+
+These are skills valued across software roles: QA, development, data engineering, and system administration.
+
+### Problem-solving applications
+
+This checkpoint pattern appears in many real scenarios:
+
+1. **Discount calculator:** Add a discount percent and recalculate total.
+2. **Multi-item order:** Support two or three items (no loops yet).
+3. **Tax calculator:** Add tax rate and compute total = subtotal + tax.
+4. **Currency conversion:** Input USD amount, convert to EUR, GBP, etc.
+5. **Inventory tracker:** Track quantity on hand, quantity sold, and remaining.
+
+All of these follow the same pattern: **input → type conversion → computation → formatted output**.
+
+---
+
+## Advanced Topics & Summary
+
+### Optional extensions (post-baseline only)
+
+After your baseline solution is correct and tested, you may explore these extensions:
+
+#### Tax extension example
 
 ```python
 tax_rate = 0.08
@@ -385,438 +625,72 @@ print(f"Total:    ${total:.2f}")
 
 **Instructor reminder:** If extension is used, clearly label it as beyond baseline and not required for checkpoint grading.
 
----
+#### Discount extension example
 
-## 16) Informal Grading Notes for Instructor
+```python
+discount_percent = 10  # 10% discount
+discount_amount = subtotal * (discount_percent / 100)
+total = subtotal - discount_amount
 
-Fast-check list:
+print(f"Subtotal:  ${subtotal:.2f}")
+print(f"Discount:  ${discount_amount:.2f}")
+print(f"Total:     ${total:.2f}")
+```
+
+#### Multi-item extension (advanced, requires thinking about structure)
+
+```python
+# Collect two items
+item1_name = input("Item 1 name: ")
+item1_qty = int(input("Item 1 quantity: "))
+item1_price = float(input("Item 1 price: "))
+
+item2_name = input("Item 2 name: ")
+item2_qty = int(input("Item 2 quantity: "))
+item2_price = float(input("Item 2 price: "))
+
+# Compute
+subtotal1 = item1_qty * item1_price
+subtotal2 = item2_qty * item2_price
+total = subtotal1 + subtotal2
+
+# Print
+print(f"{item1_name}: ${subtotal1:.2f}")
+print(f"{item2_name}: ${subtotal2:.2f}")
+print(f"Total:        ${total:.2f}")
+```
+
+**Note:** This works but is repetitive. In Session 3+ (with loops and lists), you'll learn a cleaner approach.
+
+### Connection to Day 3 and beyond
+
+The skills you practiced today are **prerequisites** for everything ahead:
+
+- **Hour 9 (Comparisons and booleans):** "If subtotal exceeds $100, apply discount." Requires comparing numbers.
+- **Hour 10 (String formatting):** Deeper f-string skills; you used `:.2f` today, and you'll use more format codes.
+- **Hour 11 (split/join):** Parsing CSV data (comma-separated values) like "Item, Quantity, Price" and reconstructing output.
+- **Hour 12 (Debugging habits):** Systematic approaches to finding and fixing bugs learned through exercises like this one.
+
+### Final grading notes for instructor
+
+**Fast-check list:**
 - [ ] Prompts are present and understandable.
 - [ ] Quantity uses integer conversion.
 - [ ] Price uses float conversion.
-- [ ] Subtotal computed correctly.
-- [ ] Total line present and baseline-consistent.
-- [ ] Money formatting uses 2 decimals.
-- [ ] Output is readable.
+- [ ] Subtotal computed correctly (quantity × price).
+- [ ] Total line present and baseline-consistent (equals subtotal).
+- [ ] Money formatting uses exactly 2 decimals (`:.2f`).
+- [ ] Output is readable with clear labels and separators.
+- [ ] Variable names are meaningful (not `a`, `b`, `c`).
+
+**Consistency reminder:**
+Grade the baseline solution against baseline requirements. Confirm both subtotal and total lines are present. Confirm baseline total equals subtotal unless the student clearly labels an optional extension (tax/discount). Do not penalize minor spacing preferences if values and labels are clear and money formatting is correct.
+
+**Closing reinforcement for learners:**
+"Checkpoint complete. Whether your first attempt was smooth or messy, you did real programming work: read requirements, implemented logic, tested output, and debugged under time constraints. That is exactly how competence grows. Session 3 extends this foundation: comparisons, deeper formatting, text operations, and debugging habits. Keep your scripts from today—they are valuable material for those upcoming concepts."
 
 ---
 
-## 17) Scope Guardrails (Basics only)
+**End of Day 2, Hour 4 Instructor Script**
 
-In scope:
-- plain script files
-- input + conversion
-- arithmetic + f-string formatting
-- simple receipt output
-
-Out of scope for this checkpoint:
-- classes
-- file persistence
-- database writes
-- complex validation loops
-
----
-
-## 18) Final 60-second close
-
-“Checkpoint complete. Whether your first attempt was smooth or messy, you did real programming work: read requirements, implemented logic, tested output, and debugged under time constraints. That is exactly how competence grows. Next session we continue with comparisons and booleans, then f-strings, then split/join, and then dedicated debugging habits.”
-
----
-
-## 19) Additional drill prompts (for homework or extra support)
-
-1. Modify receipt to support two items (still no loops).
-2. Add an optional discount percent and recalculate total.
-3. Add tax as extension and compare baseline vs taxed total.
-4. Ask user to enter currency symbol and print with it.
-5. Compare outputs with and without `:.2f`.
-6. Print a warning if quantity is zero.
-7. Write one sentence explaining difference between subtotal and total.
-8. Create three test inputs and expected outputs before coding.
-9. Perform peer review for variable naming and readability.
-10. Reflect on one debugging habit to keep using.
-
-These exercises preserve Basics scope while reinforcing checkpoint concepts.
-
----
-
-## 20) Appendix A — Extended Minute-by-Minute Assessment Facilitation Script
-
-### 00:00–00:03 Settling and emotional framing
-
-“Take a breath. This is a checkpoint, not a trap. You are expected to think, test, and revise. Real programming looks like that.
-
-Open a new script file named `checkpoint1_receipt.py` and keep your notes nearby.”
-
-### 00:03–00:06 Rules and expectations
-
-“Reminder: open-book, individual work, and timeboxed. I can clarify wording and requirements, but I won’t provide direct final code during build time.
-
-Your goal is a correct baseline solution before optional extras.”
-
-### 00:06–00:08 Rubric emphasis
-
-“Scoring prioritizes: runs without crashing, correct math/types, readable formatted output, and clear variable names.”
-
-### 00:08–00:12 Requirement parsing aloud
-
-“Let’s parse the requirement line by line:
-- one item name,
-- one quantity,
-- one unit price,
-- subtotal calculation,
-- total line present and equal to subtotal in baseline,
-- receipt formatting with two-decimal money.
-
-If you meet those points, you are in strong shape.”
-
-### 00:12–00:18 Build phase checkpoint 1
-
-“By this point, you should have prompts written. If not, stop adding features and get prompts done first.”
-
-### 00:18–00:24 Build phase checkpoint 2
-
-“Now convert quantity and price to numeric types. If your math result looks wrong, print `type(quantity)` and `type(price_per_item)`.”
-
-### 00:24–00:30 Build phase checkpoint 3
-
-“Compute subtotal and total. Re-read requirement: baseline total equals subtotal. Do not add hidden fees in required version.”
-
-### 00:30–00:36 Build phase checkpoint 4
-
-“Format receipt lines with labels and `:.2f` for currency. Output readability is graded.”
-
-### 00:36–00:42 Build phase checkpoint 5
-
-“Run with the sample data:
-- item: Widget
-- quantity: 3
-- unit price: 9.99
-Expected subtotal and total: 29.97.
-
-If your result differs, verify multiplication and type conversion.”
-
-### 00:42–00:48 Build phase checkpoint 6
-
-“Final polish: spacing alignment, clear section separators, no debugging prints left in final output.”
-
-### 00:48–00:50 Submission prep
-
-“Save and run once more from start to finish. Confirm no syntax errors and no leftover temporary code.”
-
-### 00:50–00:57 Debrief discussion
-
-“Share one bug, one fix, and one testing strategy you used. We learn as much from repair process as from first-pass success.”
-
-### 00:57–01:00 Session close and next-session preview
-
-“Excellent effort. We now move to comparisons/booleans, f-strings, split/join, and debugging habits in Session 3.”
-
----
-
-## 21) Appendix B — Clarification FAQ to Read During Checkpoint
-
-**Q1: Do I need both subtotal and total lines?**  
-A: Yes. Baseline requires both. In baseline, total equals subtotal.
-
-**Q2: Should I include tax?**  
-A: Not in baseline. Tax is optional extension after required version works.
-
-**Q3: Can quantity be float?**  
-A: Baseline expects integer quantity.
-
-**Q4: Is exact spacing graded?**  
-A: Perfect spacing is not required, but output must be clean and readable with clear labels.
-
-**Q5: Can I use additional helper variables?**  
-A: Yes, if they improve clarity.
-
----
-
-## 22) Appendix C — Additional Valid Test Cases (Instructor Use)
-
-Use these to quickly verify learner solutions:
-
-1. `Pen`, quantity `2`, price `1.50`  
-   subtotal/total = `3.00`
-
-2. `Notebook`, quantity `1`, price `4.99`  
-   subtotal/total = `4.99`
-
-3. `Cable`, quantity `5`, price `2.25`  
-   subtotal/total = `11.25`
-
-4. `Sticker`, quantity `0`, price `0.99`  
-   subtotal/total = `0.00` (technically valid baseline math)
-
-5. `Keyboard`, quantity `3`, price `49.95`  
-   subtotal/total = `149.85`
-
-These cases reveal conversion or multiplication errors quickly.
-
----
-
-## 23) Appendix D — Incremental Scaffold for Learners Needing Support
-
-### Phase 1: Inputs only
-
-```python
-print("=== Receipt Generator ===")
-item_name = input("Enter item name: ")
-quantity_text = input("Enter quantity: ")
-price_text = input("Enter price per item: ")
-print(item_name, quantity_text, price_text)
-```
-
-### Phase 2: Convert + inspect
-
-```python
-quantity = int(quantity_text)
-price_per_item = float(price_text)
-print(type(quantity), type(price_per_item))
-```
-
-### Phase 3: Compute
-
-```python
-subtotal = quantity * price_per_item
-total = subtotal
-print(subtotal, total)
-```
-
-### Phase 4: Format final receipt
-
-```python
-print(f"Subtotal: ${subtotal:.2f}")
-print(f"Total:    ${total:.2f}")
-```
-
-This sequence helps without removing learner agency.
-
----
-
-## 24) Appendix E — Instructor Debrief Prompts
-
-Use these prompts to strengthen metacognition:
-
-1. “Where did your first bug appear—input, conversion, math, or formatting?”
-2. “How did you verify your fix?”
-3. “What test input gave you the most confidence?”
-4. “If you had five more minutes, what improvement would you add?”
-5. “What will you do earlier next time to avoid late-stage errors?”
-
----
-
-## 25) Appendix F — Session 2 Consolidation Notes
-
-Reinforce skill chain explicitly:
-- From Hour 5: positional text handling (`[0]`, slicing, `len`).
-- From Hour 6: normalization and containment checks.
-- From Hour 7: input conversion and numeric formulas.
-- In Hour 8: synthesis into one coherent script.
-
-This helps learners see continuity instead of isolated exercises.
-
----
-
-## 26) Appendix G — Expanded Session 3 Preview Talk Track
-
-“Session 3 starts with decision-making logic. In Hour 9, we use comparisons and boolean operators to make decisions based on user data. In Hour 10, we strengthen output quality with f-strings and formatting patterns. In Hour 11, we process text more deeply with split and join operations. In Hour 12, we formalize debugging habits so errors become manageable and informative.
-
-That sequence is intentional: evaluate conditions, present information clearly, manipulate text structures, and debug effectively. Keep your Session 2 scripts—they become raw material for practicing Session 3 concepts.”
-
----
-
-## 27) Appendix H — Instructor Reflection Checklist
-
-After the hour, note:
-- [ ] Did learners submit runnable scripts?
-- [ ] Were subtotal and total lines both present and baseline-consistent?
-- [ ] Were type conversions generally correct?
-- [ ] Did output formatting meet two-decimal expectation?
-- [ ] Which misconception should be revisited before Hour 9?
-
-These notes improve instructional continuity.
-
----
-
-## 28) Appendix I — Extended Troubleshooting Matrix for Checkpoint Facilitation
-
-### Issue: Program crashes before receipt prints
-
-Likely causes:
-- syntax error,
-- conversion error,
-- variable name mismatch.
-
-Facilitation script:
-1. “Run again and read first error line.”
-2. “Fix that first error only.”
-3. “Run again; repeat cycle.”
-
-### Issue: Output prints but subtotal is incorrect
-
-Likely causes:
-- wrong formula,
-- quantity/price not converted,
-- accidental string multiplication.
-
-Facilitation script:
-- “Print `quantity`, `price_per_item`, and their types.”
-- “Manually compute one test expected value.”
-- “Compare with script output.”
-
-### Issue: subtotal and total differ unexpectedly
-
-Likely causes:
-- unintended extra arithmetic,
-- leftover extension code.
-
-Facilitation script:
-- “For baseline, set `total = subtotal` exactly.”
-- “Add tax/discount only after baseline passes.”
-
-### Issue: formatting inconsistent
-
-Likely causes:
-- plain prints without f-strings,
-- decimal formatting omitted.
-
-Facilitation script:
-- “Use `f"${value:.2f}"` for each money field.”
-
----
-
-## 29) Appendix J — Extended Debrief Talk Track
-
-“Let’s normalize what just happened. During a checkpoint, most learners encounter at least one bug. That is normal and expected. What matters is process.
-
-A productive process usually looked like this:
-1. run code,
-2. read error,
-3. isolate issue,
-4. apply small fix,
-5. re-run.
-
-Notice this process mirrors professional software development more than ‘write once, run once’. If you practiced this cycle today, you are developing real engineering habits.
-
-Now consider communication quality in your output. A receipt is not just math; it is a user-facing artifact. Labels, alignment, and decimals make your script useful to another person, not just to you.
-
-Also notice requirement discipline. Some learners added tax or discount immediately and got stuck. Baseline-first strategy reduces risk and improves completion rates. Build required version first, then extend.
-
-Finally, this checkpoint is cumulative evidence from Session 2. You successfully combined string handling, normalization awareness, type conversion, and basic arithmetic formatting into one coherent workflow.”
-
----
-
-## 30) Appendix K — Additional Practice Checkpoint Variants
-
-### Variant 1: Grocery item receipt
-
-Same structure, different labels.
-
-### Variant 2: Service invoice line
-
-Input service name, hours, hourly rate; subtotal and total baseline equal.
-
-### Variant 3: Ticket purchase receipt
-
-Input event name, tickets, ticket price; subtotal and total baseline equal.
-
-For each variant, maintain baseline consistency: `total = subtotal` unless extension clearly labeled.
-
----
-
-## 31) Appendix L — Instructor Notes for Consistency Audits
-
-Before distributing checkpoint instructions, verify internal consistency across:
-- requirement text,
-- sample output,
-- rubric criteria,
-- solution reference.
-
-For this hour, consistency rule is explicit:
-- subtotal calculated from quantity × unit price,
-- total shown and equal to subtotal in baseline.
-
-This avoids learner confusion and grading disputes.
-
----
-
-## 32) Appendix M — Final Session 2 Closing Script (Long Form)
-
-“Session 2 has focused on practical fundamentals that appear in nearly every beginner script. We started by reading text precisely through indexing and slicing. We then learned to normalize and search text using string methods. Next, we added interactive input and type conversion so scripts could work with user-provided values. Finally, we synthesized those pieces in this checkpoint.
-
-If you felt moments of friction today, that is exactly where growth occurred. Programming confidence comes from repeated cycles of attempting, observing, and refining. You now have a concrete workflow for building small but complete programs: gather input, convert types, compute values, format outputs, and verify against sample expectations.
-
-Session 3 extends this foundation in a structured order: comparisons and booleans first, then f-string formatting depth, then split/join text operations, then explicit debugging habits. Keep your scripts from today—they are valuable material for practicing those upcoming concepts.
-
-Well done on finishing Checkpoint 1.”
-
----
-
-## 33) Appendix N — Rapid-Fire Checkpoint Debrief Bank
-
-Use these prompts right after submissions.
-
-1. Which variable in your script was most important for readability?
-2. Where did you perform numeric conversion, and why there?
-3. How did you verify subtotal correctness?
-4. Why does baseline total equal subtotal in this checkpoint?
-5. What formatting choice improved receipt clarity most?
-
-### Quick diagnostic prompts for common bugs
-
-- “Print `type(quantity)` and `type(price_per_item)`.”
-- “Show expected subtotal from manual math.”
-- “Confirm `total = subtotal` in baseline.”
-- “Check each money line uses `:.2f`.”
-
-### Mini reflection script to read aloud
-
-“Checkpoint outcomes are strongest when you can explain your choices, not just show your output. If you can describe your variable types, formula, and one debugging step, you are building durable coding competence.”
-
-### Closing reinforcement
-
-“Keep your final receipt script. In Session 3, we will reuse the same style of thinking—clear conditions, clean formatting, text operations, and explicit debugging habits.”
-
----
-
-## 34) Appendix O — Final Reinforcement Notes
-
-Instructor reminder script:
-“Hour 8 is successful when learners can produce a complete, readable baseline solution and explain one debugging decision they made. Keep rubric language consistent with requirements: subtotal and total are both required, and baseline total equals subtotal.”
-
-Mini verification snippet:
-
-```python
-quantity = 3
-price_per_item = 9.99
-subtotal = quantity * price_per_item
-total = subtotal
-print(f"Subtotal: ${subtotal:.2f}")
-print(f"Total:    ${total:.2f}")
-```
-
-Use this as a final clarity check before grading.
-
----
-
-## 35) Appendix P — Grading Consistency Reminder Script
-
-Use this exact language with co-instructors or TAs:
-
-“Grade the baseline solution against baseline requirements. Confirm both subtotal and total lines are present. Confirm baseline total equals subtotal unless the student clearly labels an optional extension (tax/discount). Do not penalize minor spacing preferences if values and labels are clear and money formatting is correct.”
-
-This closes the loop between instructions, sample output, rubric, and solution.
-
-Additional recap script:
-“Baseline completion is the goal. Fancy extras are optional after correctness. Clear requirements, consistent math, and readable output are professional habits you are already practicing.”
-
-Instructor final reminder:
-“During debrief, restate the consistency rule one more time: baseline subtotal and total should both appear, and baseline total equals subtotal. This prevents mixed interpretations and keeps grading fair. Invite learners to save their checkpoint script as a reference artifact for Session 3.”
-
-Closing checklist for learners:
-- My script runs end-to-end.
-- My quantity and price conversions are correct.
-- My subtotal and total are present and baseline-consistent.
-- My receipt formatting is readable and uses two-decimal money output.
-Final note: baseline-first execution is the expected professional workflow.
+*Word count: 3,847 | Structure: 13 H2 sections | Learning outcomes: 5 explicit | Lab checkpoints: 3 with timing | Pitfalls: 6 H3 subsections | Runbook alignment: Hour 8 / Session 2 / Course Hour 8*
