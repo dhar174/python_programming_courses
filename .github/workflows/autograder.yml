@@ -30,6 +30,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
       - name: Prepare autograder configuration
         id: prepare_autograder
         run: |
@@ -126,11 +131,21 @@ jobs:
           if script_file is None:
               script_file = f"{module_name.lower()}_day{day_num}.py"
           script_stem = Path(script_file).stem
+           
+          # Helper function to add retry logic to pip install commands
+          def retry_pip_install(module_name):
+              return (
+                  "for attempt in 1 2 3; do "
+                  "echo 'Installing {}: Attempt $attempt of 3...' && "
+                  "python -m pip install --quiet --upgrade {} && break; "
+                  "if [ $attempt -lt 3 ]; then sleep $((2 ** attempt)); fi; done".format(module_name, module_name)
+              )
+           
           setup_json = {
               "file_checks": [notebook_name],
               "commands": [
-                  "python -m pip install --quiet --upgrade pip",
-                  "python -m pip install nbconvert",
+                  "python -m pip install --quiet --upgrade pip || python -m pip install --upgrade pip",
+                  retry_pip_install("nbconvert"),
                   f"jupyter nbconvert --to script {shlex.quote(notebook_name)} --output {shlex.quote(script_stem)}",
                   f"if [ ! -f {shlex.quote(script_file)} ]; then echo 'ERROR: Conversion failed'; exit 1; fi",
               ],
@@ -153,7 +168,11 @@ jobs:
       - name: Evaluate assignment tests
         if: steps.prepare_autograder.outputs.any_submission_found == 'true'
         run: |
-          python -m pip install --quiet nbconvert || { echo "::error::Failed to install nbconvert; cannot run notebook conversion."; exit 1; }
+          for attempt in 1 2 3; do
+            echo "Installing nbconvert: Attempt $attempt of 3..."
+            python -m pip install --quiet nbconvert && break
+            if [ $attempt -lt 3 ]; then sleep $((2 ** attempt)); fi
+          done || { echo "::error::Failed to install nbconvert after 3 attempts; cannot run notebook conversion."; exit 1; }
           python - << 'PYEVAL'
           import copy
           import json
@@ -578,6 +597,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
       - name: Validate autograder source configuration
         run: |
