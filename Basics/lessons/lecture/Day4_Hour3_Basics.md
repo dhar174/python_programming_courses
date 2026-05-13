@@ -1,760 +1,825 @@
-# Day 4, Hour 3: Nested Lists for Table-Like Data (Course Hour 15)
-**Python Programming Basics – Session 4**
+# Day 4, Hour 3: If-Elif-Else Flow and Nested Conditions
 
-**Course:** Python Programming (Basics)  
-**Runbook alignment:** Session 4, Course Hour 15 – Nested lists (table-like data)  
-**Duration:** 60 minutes  
-**Mode:** Instructor-led + live coding + guided lab  
-**Audience:** Beginners in Python (Basics scope only)
+**Course Hour**: 15  
+**Session**: Day 4 (Session 4), Hour 3  
+**Duration**: 60 minutes  
 
 ---
 
-## Instructor Deliverable Script (Use Largely Verbatim)
+## 1. Learning Outcomes
 
-> **Instructor note:** Keep this hour concrete, visual, and small in scale. Avoid abstract data-structure language beyond what beginners need. A nested list should be taught as a list of rows, where each row is another list. The main goal is to help learners read and update simple 2D data, especially a 3x3 seating chart.
+After this instructional hour, learners will be able to:
 
----
-
-## 0) Learning Outcomes (read aloud, ~2 minutes)
-
-“By the end of this hour, you will be able to:
-1. Explain what a nested list is in simple language.
-2. Represent small table-like data using a list of lists.
-3. Access values using row and column positions.
-4. Print each row of a nested list.
-5. Update one value inside a 3x3 seating chart.
-6. Avoid two common mistakes: mixing up row and column positions, and using an index that is out of range.
-
-The purpose of this hour is not to make you experts in complex data structures. The purpose is to make table-like data feel understandable.”
+- **Write if/elif/else statements** to create branching logic where different code blocks execute based on different conditions.
+- **Understand execution flow** in conditionals: recognize that only ONE block executes, and that order matters when using `elif`.
+- **Design clear decision trees** with proper boundary conditions to avoid overlapping or unreachable code branches.
+- **Handle nested conditions** (conditionals within conditionals) and understand when nesting is appropriate vs. when `and`/`or` is clearer.
+- **Debug conditional logic** by tracing through execution paths and testing boundary values systematically.
 
 ---
 
-## 1) Agenda + Timing (show slide / read quickly, ~2 minutes)
+## 2. Instructor Prep Section
 
-- **0:00–0:05** Review of single-row lists and why some data needs rows and columns
-- **0:05–0:15** What a nested list is and how to picture it
-- **0:15–0:25** Accessing rows, then individual cells by row and column
-- **0:25–0:35** Live demo: 3x3 seating chart create, print, update
-- **0:35–0:52** Guided lab: seating chart with one seat changed to `"X"`
-- **0:52–0:58** Debrief and common mistakes
-- **0:58–1:00** Recap and exit ticket
+### Pre-Class Checklist
+- [ ] Have Python 3 IDE ready with a clean script file
+- [ ] Test all demo code before class; confirm output matches expectations
+- [ ] Prepare the shipping calculator (or similar tiered pricing) demo to use live
+- [ ] Draw a flowchart or decision tree on paper/whiteboard to visualize conditional branches
+- [ ] Prepare 3–4 "mystery conditionals" for prediction exercises
+- [ ] Have the shipping calculator lab rubric visible
+- [ ] Prepare a "common mistakes" reference: overlapping conditions, unreachable branches, indentation errors
 
----
+### Timing Breakdown
+- **Opening Script** (4 min)
+- **Conceptual Briefing: If/Elif/Else Structure** (8 min)
+- **Conceptual Briefing: Order Matters & Nested Conditions** (7 min)
+- **Live Demo: Shipping Tiers with If/Elif/Else** (11 min)
+- **Guided Practice Walkthrough** (8 min)
+- **Lab Checkpoint 1: Shipping Calculator** (18 min)
+- **Wrap-Up + Quick-Check Questions** (4 min)
 
-## 2) Instructor Setup Checklist (before class)
-
-- Open a clean file such as `hour15_nested_lists.py`.
-- Prepare a visual 3x3 grid on a whiteboard, slide, or shared screen.
-- Have a seating-chart example ready with obvious labels such as `A1`, `A2`, `A3`.
-- Plan to stay small. Use 3 rows and 3 columns throughout most of the hour.
-- Be ready to show one deliberate indexing mistake so learners can practice reading it.
-- Be ready to mention `IndexError` lightly without drifting into a full exceptions lesson.
-
-**Say:** “Today we are still working with lists, but the shape changes. Instead of one row of values, we will build rows inside a larger list.”
-
----
-
-## 3) Opening Script: From One-Dimensional Lists to Table-Like Data (~5 minutes)
-
-### 3.1 Connect to Hour 14
-
-**Say:**
-“In the previous hour, we used one list of grades and processed the values one after another with a `for` loop. That worked well because the data naturally lived in a single row.
-
-But not all data feels like a single row.
-Some data is easier to understand when we picture rows and columns.”
-
-### 3.2 Give relatable examples
-
-**Say:**
-“Think about these examples:
-- a classroom seating chart
-- a spreadsheet with rows and columns
-- a tic-tac-toe board
-- a simple weekly schedule
-- a small grid of values on a screen
-
-In each case, the data has a table-like feel. We care about both the row and the column.”
-
-### 3.3 Explain why one flat list is not ideal
-
-**Say:**
-“If I store a seating chart in one long list, I can still keep the values, but the shape becomes harder to see.
-
-For example, this is a valid list:”
-
-```python
-seats = ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
-```
-
-**Say:**
-“But the visual structure is hidden.
-If I want to think in terms of rows, it is often clearer to store rows directly.”
-
-### 3.4 Introduce the mental model
-
-**Say:**
-“A nested list is simply a list where each item is itself another list.
-
-The beginner-friendly mental model is:
-- the outer list holds the rows
-- each inner list holds the values in that row
-
-Do not let the phrase ‘nested list’ scare you. It is just layers: a list containing smaller lists.”
-
-**Ask learners:**
-- “If the outer list holds rows, what does an inner list hold?”
-- “If I want the second seat in the first row, what two positions do I need?”
-
-Guide them toward: row first, then column.
+### Materials & Resources
+- IDE or Python REPL
+- Flowchart or Venn diagram (for visualizing branches)
+- Sample code: tiered discount, shipping cost, grade letter grade examples
+- Shipping calculator lab prompt (provided below)
+- Whiteboard or shared doc for live code
 
 ---
 
-## 4) Core Concept Delivery: What Nested Lists Look Like (~10 minutes)
+## 3. Opening Script
 
-### 4.1 First example
+**[Read or paraphrase to set context, ~4 minutes]**
 
-**Type:**
+"Welcome back! Yesterday, we learned how to *ask* questions with comparisons and boolean logic. Today, we're learning how Python *answers* those questions and *does something different* based on the answer.
 
-```python
-seating_chart = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"]
-]
+Think of it like a flowchart:
+- 'Is the package under 10 lbs?' → YES → Free shipping
+- 'Is it between 10 and 50 lbs?' → YES → Charge $5
+- 'Is it over 50 lbs?' → YES → Charge $15
 
-print(seating_chart)
-```
+Or think of a video game:
+- 'Did the player press up?' → YES → Move up
+- 'Did the player press down?' → YES → Move down
+- If neither → Do nothing
 
-Run it.
+This is called **conditional execution** or **branching**. And we use `if`, `elif`, and `else` to do it.
 
-**Say:**
-“This is a list of lists.
-The outer list contains three inner lists.
-Each inner list represents one row.”
-
-### 4.2 Read the structure aloud
-
-**Say:**
-“Let’s read it carefully.
-- Row 0 is `["A1", "A2", "A3"]`
-- Row 1 is `["B1", "B2", "B3"]`
-- Row 2 is `["C1", "C2", "C3"]`
-
-That means the first index chooses the row.”
-
-### 4.3 Access a whole row
-
-**Type:**
-
-```python
-print(seating_chart[0])
-print(seating_chart[1])
-```
-
-**Say:**
-“These statements return whole rows.
-The first index tells Python which inner list to retrieve.”
-
-### 4.4 Access an individual value
-
-**Type:**
-
-```python
-print(seating_chart[0][0])
-print(seating_chart[1][2])
-print(seating_chart[2][1])
-```
-
-**Say:**
-“Now we are using two indexes.
-- The first index chooses the row.
-- The second index chooses the position within that row.
-
-So `seating_chart[1][2]` means:
-- row 1 first
-- then item 2 inside that row”
-
-### 4.5 Slow down and visualize
-
-At this point, point to the grid on the board and say:
-
-“Match the code to the picture.
-If I say row 0, column 2, we land on the first row, third value.
-If I say row 2, column 1, we land on the third row, second value.
-
-The code feels much easier once the picture is clear.”
-
-### 4.6 Ask prediction questions
-
-**Ask learners:**
-- “What do you think `seating_chart[0][1]` returns?”
-- “What do you think `seating_chart[2][2]` returns?”
-- “Which part chooses the row?”
-- “Which part chooses the column?”
-
-### 4.7 Clarify the term ‘column’ without overcomplicating it
-
-**Say:**
-“Strictly speaking, Python is not storing columns as a separate structure here. We are simply using the second position inside a row. But for beginners, it is fine to think of that second position as the column.”
+By the end of this hour, you'll be able to write programs that make smart decisions based on different scenarios. Let's go!"
 
 ---
 
-## 5) Printing Rows Clearly (~7 minutes)
+## 4. Conceptual Briefing Part A: The If-Elif-Else Structure (8 minutes)
 
-### 5.1 Why printing the whole nested list is not always ideal
+### The Basic Pattern
 
-**Say:**
-“When we print the entire nested list, Python shows the whole structure on one screenful. That is useful, but not always easy to read.
-
-For table-like data, it is often clearer to print one row at a time.”
-
-### 5.2 Use a `for` loop over rows
-
-**Type:**
+An `if` statement lets your code make a decision:
 
 ```python
-for row in seating_chart:
-    print(row)
+if condition:
+    # This code runs ONLY if condition is True
+    # do something
 ```
 
-Run it.
+**Key points**:
+- The colon (`:`) ends the `if` line
+- The block is **indented** (4 spaces in Python)
+- Only runs if the condition is `True`
 
-**Say:**
-“This is a very natural pattern.
-The outer list contains rows, so the loop variable `row` becomes one inner list at a time.”
-
-### 5.3 Ask learners to narrate it
-
-**Ask learners:**
-“How would you read `for row in seating_chart:` in plain English?”
-
-Guide them to:
-“For each row in the seating chart, print the row.”
-
-### 5.4 Connect to prior learning
-
-**Say:**
-“Notice how this builds directly on the last hour.
-Hour 14 taught us how to loop over a list.
-Now we are looping over the outer list, and each item happens to be another list.”
-
-### 5.5 Optional readability step
-
-If you want a slightly clearer display, type:
+### Example: Simple If
 
 ```python
-for row in seating_chart:
-    print(" ".join(row))
+age = 18
+if age >= 18:
+    print("You can vote!")
 ```
 
-Then say:
+Output: `You can vote!`
 
-“This prints the seat labels with spaces between them. It is still Basics-friendly because we already worked with string joining earlier in the course.”
+If `age` were 17, nothing would print.
 
-If the class seems overloaded, skip this and stay with plain `print(row)`.
+### Adding Else: The Alternative
 
----
-
-## 6) Updating a Single Cell (~8 minutes)
-
-### 6.1 Transition
-
-**Say:**
-“Once we can access a specific value inside the nested list, we can also update that value. This is one of the main practical goals of today’s hour.”
-
-### 6.2 Demonstrate an update
-
-**Type:**
+`else` handles the case when the condition is `False`:
 
 ```python
-seating_chart[1][1] = "X"
-
-for row in seating_chart:
-    print(row)
-```
-
-Run it.
-
-**Say:**
-“We changed the middle seat in the second row to `"X"`.
-That means a seat is now marked as taken, blocked, reserved, or otherwise changed.
-
-The structure stayed the same.
-Only one value inside the structure changed.”
-
-### 6.3 Explain the order again
-
-**Say:**
-“This is the place where beginners most often mix up row and column.
-
-Remember:
-- first index = row
-- second index = column position inside the row”
-
-### 6.4 Deliberate mistake for discussion
-
-**Type:**
-
-```python
-# seating_chart[3][0] = "X"
-```
-
-**Say:**
-“This would fail because row 3 does not exist in a 3-row structure indexed from 0.
-The valid row indexes are 0, 1, and 2.
-
-This is the beginning of boundary awareness. The structure has limits.”
-
-### 6.5 Mention `IndexError` lightly
-
-**Say:**
-“If a learner sees `IndexError`, the meaning is usually simple: the requested position does not exist.
-We do not need a full exception-handling lesson here. We just need to understand the cause.”
-
----
-
-## 7) Live Demo: Seating Chart Create, Print, Update (~10 minutes)
-
-### 7.1 Frame the demo
-
-**Say:**
-“I am now going to build the exact kind of example the runbook calls for: a seating chart. I will create it, print it row by row, ask for a row and column, update one seat to `"X"`, and print it again.”
-
-### 7.2 Demo code, part 1: create and print the chart
-
-**Type:**
-
-```python
-seating_chart = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"]
-]
-
-print("Original seating chart:")
-for row in seating_chart:
-    print(row)
-```
-
-Run it.
-
-**Say:**
-“This confirms that our data starts in the shape we expect.”
-
-### 7.3 Demo code, part 2: collect row and column
-
-**Type:**
-
-```python
-row_index = int(input("Enter row (0, 1, or 2): "))
-column_index = int(input("Enter column (0, 1, or 2): "))
-```
-
-**Say:**
-“We are using numeric positions, not seat names, because the learning target is row and column indexing.”
-
-### 7.4 Demo code, part 3: update the seat
-
-**Type:**
-
-```python
-seating_chart[row_index][column_index] = "X"
-```
-
-**Say:**
-“This is the exact line where the change happens. If the indexes are valid, the selected seat changes to `"X"`.”
-
-### 7.5 Demo code, part 4: reprint the chart
-
-**Type:**
-
-```python
-print("Updated seating chart:")
-for row in seating_chart:
-    print(row)
-```
-
-Run the full program with sample inputs like row `1`, column `2`.
-
-### 7.6 Optional safety improvement
-
-If time permits and learners seem ready, show a basic boundary check:
-
-```python
-if 0 <= row_index <= 2 and 0 <= column_index <= 2:
-    seating_chart[row_index][column_index] = "X"
-    print("Updated seating chart:")
-    for row in seating_chart:
-        print(row)
+age = 17
+if age >= 18:
+    print("You can vote!")
 else:
-    print("Row and column must be between 0 and 2.")
+    print("You must wait for your 18th birthday.")
 ```
 
-**Say:**
-“This is an optional improvement, not the main teaching target. The main teaching target is understanding the structure and the indexing.”
+Output: `You must wait for your 18th birthday.`
 
-### 7.7 Ask learners to explain the change
+**The Rule**: Exactly ONE block runs—either `if` or `else`, never both.
 
-**Ask learners:**
-- “Which line selects the row?”
-- “Which line selects the column position?”
-- “Why do we print the chart again after changing it?”
+### Multiple Branches: Elif
+
+When you have more than two options, use `elif` (short for "else if"):
+
+```python
+age = 16
+if age < 13:
+    print("You are a child.")
+elif age < 18:
+    print("You are a teenager.")
+else:
+    print("You are an adult.")
+```
+
+Output: `You are a teenager.`
+
+**The Structure**:
+```
+if [first condition]:
+    [block A]
+elif [second condition]:
+    [block B]
+elif [third condition]:
+    [block C]
+else:
+    [block D]
+```
+
+**Critical Rule**: Python checks conditions in order from top to bottom. As soon as ONE condition is `True`, that block runs, and the rest are skipped.
+
+### Example: Shipping Cost (Three Tiers)
+
+```python
+weight = 25
+if weight <= 10:
+    cost = 0      # Free
+elif weight <= 50:
+    cost = 5      # Standard
+else:
+    cost = 15     # Heavy
+
+print(f"Shipping cost: ${cost}")
+```
+
+Output: `Shipping cost: $5`
+
+**Trace through the logic**:
+1. Is weight <= 10? No (25 is not <= 10)
+2. Is weight <= 50? Yes (25 is <= 50) → Run this block, set cost = 5
+3. Skip the else
 
 ---
 
-## 8) Guided Lab: 3x3 Seating Chart (~12 minutes)
+## 5. Conceptual Briefing Part B: Order Matters & Nested Conditions (7 minutes)
 
-### 8.1 Introduce the task clearly
+### Why Order Matters: A Critical Lesson
 
-**Say:**
-“Now it is your turn to build the seating chart lab from the runbook.
+**The Wrong Way (Overlapping Conditions)**:
+
+```python
+age = 16
+if age >= 18:
+    print("Adult")
+elif age >= 13:
+    print("Teen or Adult")
+else:
+    print("Child")
+```
+
+Output: `Child`  (Correct by accident!)
+
+**The Problem**: The second `elif` (age >= 13) could match, but we never reach it because the first condition fails and we skip to else. This logic is unclear and fragile.
+
+**The Right Way (Non-Overlapping, Clear Boundaries)**:
+
+```python
+age = 16
+if age < 13:
+    print("Child")
+elif age < 18:
+    print("Teen")
+else:
+    print("Adult")
+```
+
+Output: `Teen`
+
+**Why this is better**:
+- Each range is distinct and clear.
+- No overlaps (age can't be both < 13 and < 18).
+- Easy to test boundaries: 0, 12, 13, 17, 18, 99.
+
+### Common Mistake: Unreachable Code
+
+```python
+# BAD: The second branch can never run!
+if x > 0:
+    print("x is positive")
+elif x > 10:
+    print("x is greater than 10")
+else:
+    print("x is not positive")
+```
+
+**Why**: If `x > 10` is true, then `x > 0` is also true, so we've already entered the first block. The second branch is unreachable.
+
+**Fix**:
+```python
+if x > 10:
+    print("x is greater than 10")
+elif x > 0:
+    print("x is positive (but <= 10)")
+else:
+    print("x is not positive")
+```
+
+**Lesson**: Order your conditions from most specific to most general.
+
+### Nested Conditionals: When and Why
+
+A **nested conditional** is an `if` inside another `if`:
+
+```python
+age = 25
+has_license = True
+
+if age >= 18:
+    if has_license:
+        print("You can drive.")
+    else:
+        print("You're an adult but can't drive yet.")
+else:
+    print("You must be an adult to drive.")
+```
+
+Output: `You can drive.`
+
+**When to nest**:
+- When you need to check a second condition *only if* the first is true.
+- Example: "Is the user an adult?" (first check) → "Does the adult have a license?" (second check, nested).
+
+**When to use `and` instead**:
+- If both conditions apply equally, use `and` to keep it flat and readable.
+
+```python
+# Nested (OK but harder to read):
+if age >= 18:
+    if has_license:
+        print("Can drive")
+
+# Flat with `and` (clearer):
+if age >= 18 and has_license:
+    print("Can drive")
+```
+
+**Rule of Thumb**: Flat is usually better. Use nesting only when the second condition logically depends on the first.
+
+---
+
+## 5. Live Demo: Shipping Cost Calculator with If/Elif/Else (11 minutes)
+
+**Scenario**: "We're building a shipping cost calculator. The rule is:
+- Packages up to 10 lbs: FREE
+- Packages 10–50 lbs: $5
+- Packages 50–100 lbs: $12
+- Packages over 100 lbs: Need a special quote (error for now)
+
+Let's code this live and test boundary values."
+
+### Demo Part 1: The Basic Structure
+
+```python
+weight = 25
+
+if weight <= 10:
+    cost = 0
+elif weight <= 50:
+    cost = 5
+elif weight <= 100:
+    cost = 12
+else:
+    print("Too heavy. Contact support.")
+    cost = None  # No cost yet
+
+print(f"Weight: {weight} lbs, Cost: ${cost}")
+```
+
+**Narration**: "Notice the order: we check small weights first, then progressively larger. Each condition is mutually exclusive. Run this with weight = 25."
+
+Output: `Weight: 25 lbs, Cost: $5`
+
+### Demo Part 2: Test Boundary Values
+
+```python
+def check_cost(w):
+    if w <= 10:
+        cost = 0
+    elif w <= 50:
+        cost = 5
+    elif w <= 100:
+        cost = 12
+    else:
+        cost = None
+    return cost
+
+# Test boundaries
+print(f"9 lbs: ${check_cost(9)}")     # Should be 0
+print(f"10 lbs: ${check_cost(10)}")   # Should be 0 (boundary, included in first)
+print(f"11 lbs: ${check_cost(11)}")   # Should be 5
+print(f"50 lbs: ${check_cost(50)}")   # Should be 5 (boundary)
+print(f"51 lbs: ${check_cost(51)}")   # Should be 12
+print(f"100 lbs: ${check_cost(100)}") # Should be 12 (boundary)
+print(f"101 lbs: ${check_cost(101)}") # Should be None
+```
+
+**Narration**: "Boundaries are where bugs hide! Notice 10 lbs gets free shipping (0) because <= includes 10. At 11 lbs, we jump to $5. At 50, we're still $5. This is correct and consistent."
+
+### Demo Part 3: Add Discount Logic (Nested)
+
+```python
+weight = 35
+is_member = True
+
+if weight <= 10:
+    base_cost = 0
+elif weight <= 50:
+    base_cost = 5
+elif weight <= 100:
+    base_cost = 12
+else:
+    base_cost = None
+
+# Apply membership discount if applicable
+if base_cost is not None:
+    if is_member:
+        final_cost = base_cost * 0.9  # 10% off
+    else:
+        final_cost = base_cost
+else:
+    final_cost = None
+
+print(f"Weight: {weight} lbs, Member: {is_member}")
+print(f"Base cost: ${base_cost}, Final cost: ${final_cost}")
+```
+
+**Narration**: "Now we nest a second check: if we have a valid cost AND the customer is a member, apply a 10% discount. Notice how we check `base_cost is not None` first to avoid errors."
+
+Output: `Weight: 35 lbs, Member: True` / `Base cost: $5, Final cost: $4.5`
+
+### Demo Part 4: Prediction Moment
+
+"What will this print?"
+```python
+weight = 50
+is_member = False
+
+if weight <= 10:
+    base_cost = 0
+elif weight <= 50:
+    base_cost = 5
+else:
+    base_cost = 12
+
+final_cost = base_cost * 0.9 if is_member else base_cost
+print(f"Final: ${final_cost}")
+```
+
+Give learners 10 seconds, then reveal: `Final: $5` (because is_member is False, so no discount).
+
+---
+
+## 6. Guided Practice Walkthrough (8 minutes)
+
+**The Scenario**: "Let's build a grade letter assignment system. The rules:
+- 90–100: A
+- 80–89: B
+- 70–79: C
+- 60–69: D
+- Below 60: F
+
+Let's code this together, step by step."
+
+### Step 1: Set Up the Score
+
+```python
+score = 87
+print(f"Score: {score}")
+```
+
+### Step 2: Build the If/Elif/Else
+
+```python
+score = 87
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "F"
+
+print(f"Score: {score}, Grade: {grade}")
+```
+
+**Instructor Talk**: "Notice: we check from highest score down. Why? Because if score is 95, it's >= 90, so we stop there. We don't need to check >= 80 because 95 is already >=90. Order matters!"
+
+Output: `Score: 87, Grade: B`
+
+### Step 3: Add a Message
+
+```python
+score = 87
+
+if score >= 90:
+    grade = "A"
+    message = "Excellent!"
+elif score >= 80:
+    grade = "B"
+    message = "Good job!"
+elif score >= 70:
+    grade = "C"
+    message = "Satisfactory."
+elif score >= 60:
+    grade = "D"
+    message = "Needs improvement."
+else:
+    grade = "F"
+    message = "See me after class."
+
+print(f"Score: {score}")
+print(f"Grade: {grade}")
+print(f"Message: {message}")
+```
+
+**Instructor Talk**: "Each branch can have multiple statements. We set both grade and message. They stay associated with that branch."
+
+Output:
+```
+Score: 87
+Grade: B
+Message: Good job!
+```
+
+### Step 4: Test Multiple Scores
+
+```python
+def assign_grade(score):
+    if score >= 90:
+        grade = "A"
+    elif score >= 80:
+        grade = "B"
+    elif score >= 70:
+        grade = "C"
+    elif score >= 60:
+        grade = "D"
+    else:
+        grade = "F"
+    return grade
+
+print(f"95: {assign_grade(95)}")  # A
+print(f"87: {assign_grade(87)}")  # B
+print(f"75: {assign_grade(75)}")  # C
+print(f"65: {assign_grade(65)}")  # D
+print(f"55: {assign_grade(55)}")  # F
+print(f"80: {assign_grade(80)}")  # B (boundary)
+```
+
+**Instructor Talk**: "We wrap it in a function so we can test many scores at once. Notice score 80 gets a B, not an A, because we check >= 90 first."
+
+---
+
+## 7. Lab with Checkpoints: Shipping Calculator
+
+**Lab Duration**: 18 minutes  
+**Objective**: Implement tiered pricing logic with clear boundaries and proper ordering.
+
+### Lab Prompt
+
+Write a program that calculates shipping cost based on package weight. The rules are:
+
+- **0–5 lbs**: $3
+- **5–15 lbs**: $7
+- **15–30 lbs**: $12
+- **30–50 lbs**: $18
+- **Over 50 lbs**: "Cannot ship"
 
 Your program should:
-1. Create a 3x3 seating chart.
-2. Print the rows.
-3. Ask the user for a row and a column.
-4. Change that seat to `"X"`.
-5. Reprint the chart.”
+1. Ask the user for the weight (as a number)
+2. Determine the appropriate cost tier
+3. Print the cost or error message
 
-### 8.2 Put the runbook-aligned lab prompt on screen
+**Example outputs**:
+- Input: 3 lbs → "Shipping cost: $3"
+- Input: 10 lbs → "Shipping cost: $7"
+- Input: 51 lbs → "Cannot ship: package too heavy"
 
-```text
-Lab: Seating Chart
-- Create a 3x3 seating chart.
-- Print it as rows.
-- Ask for row/column and change that seat to "X".
-- Reprint the chart.
-```
+### Checkpoint 1: Input & Type Conversion (4 minutes)
 
-### 8.3 Provide a clear starter
+**Your code should have**:
+- One `input()` prompt for weight
+- Conversion to `float` (e.g., `weight = float(input(...))`)
+- Verification that the input was converted correctly (test with multiple values)
 
-**Type:**
+**Test**: Run with input 12.5 and verify it's treated as a number, not a string.
 
+### Checkpoint 2: If/Elif/Else Structure (8 minutes)
+
+**Build the conditional**:
 ```python
-seating_chart = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"]
-]
+weight = float(input("Package weight in lbs: "))
 
-print("Current seating chart:")
-for row in seating_chart:
-    print(row)
+if weight <= 5:
+    cost = 3
+elif weight <= 15:
+    cost = 7
+elif weight <= 30:
+    cost = 12
+elif weight <= 50:
+    cost = 18
+else:
+    message = "Cannot ship"
 
-row_index = int(input("Enter row (0, 1, or 2): "))
-column_index = int(input("Enter column (0, 1, or 2): "))
-
-seating_chart[row_index][column_index] = "X"
-
-print("Updated seating chart:")
-for row in seating_chart:
-    print(row)
+# Print result
+if weight <= 50:
+    print(f"Weight: {weight} lbs, Shipping cost: ${cost}")
+else:
+    print(f"Weight: {weight} lbs, {message}")
 ```
 
-### 8.4 Explain why this starter is enough
+**Test cases**:
+- 2 lbs → $3
+- 5 lbs → $3 (boundary, included in first tier)
+- 6 lbs → $7
+- 15 lbs → $7 (boundary)
+- 30 lbs → $12 (boundary)
+- 50 lbs → $18 (boundary)
+- 51 lbs → "Cannot ship"
 
-**Say:**
-“We are intentionally keeping the chart small and the task focused. The goal is not to build a complete seat-booking system. The goal is to practice reading and updating a nested list.”
+### Checkpoint 3: Testing Boundaries (6 minutes)
 
-### 8.5 Instructor circulation prompts
+**Test each boundary value**:
+- 0, 5, 5.01 (around 5 lb boundary)
+- 15, 15.01 (around 15 lb boundary)
+- 30, 30.01 (around 30 lb boundary)
+- 50, 50.01 (around 50 lb boundary)
 
-As learners work, ask:
-- “Show me the outer list.”
-- “Show me one inner list.”
-- “Which part of your code prints each row?”
-- “Which index picks the row?”
-- “Which index picks the seat inside the row?”
-- “What happens if the user enters `2` and `1`?”
-
-### 8.6 Encourage paper sketches
-
-**Say:**
-“If a learner is confused, encourage them to draw the 3x3 grid on paper and label the row and column positions. Sometimes the fastest debugging tool is a simple sketch.”
-
-### 8.7 Optional extension for early finishers
-
-Offer these only if time allows:
-- validate that the row and column are between 0 and 2 using a basic `if` statement
-- replace the seat with a learner’s initials instead of `"X"`
-- print rows with spaces between seat labels
-
-Again, keep these optional.
+Verify that:
+- The boundary value itself is included in the correct tier
+- Values just below and above transition correctly
+- Output is clear and readable
 
 ---
 
-## 9) Common Pitfalls and Coaching Moves (~6 minutes)
+## 8. Troubleshooting Pitfalls
 
-### 9.1 Pitfall: mixing up row and column
+### Pitfall 1: Forgetting the Colon After Condition
 
-**Say:**
-“This is the signature mistake of the hour. Learners often know they need two indexes but forget the order.
-
-Coach with this phrase:
-‘First pick the row. Then pick the item inside that row.’”
-
-You can also point physically to the grid and say:
-- move down to choose the row
-- move across to choose the column position
-
-### 9.2 Pitfall: out-of-range indexes
-
-**Say:**
-“In a 3x3 chart, the valid indexes are `0`, `1`, and `2`. If the learner enters `3`, there is no fourth row or fourth column position.
-
-That leads to `IndexError`.”
-
-### 9.3 Pitfall: printing the whole chart but forgetting to reprint after the update
-
-**Say:**
-“A learner may correctly change the data but forget the final display step. Remind them: if the user cannot see the result, the program feels unfinished.”
-
-### 9.4 Pitfall: misunderstanding what the loop prints
-
-**Say:**
-“When we write `for row in seating_chart:`, each `row` is itself a list. That is why printing `row` shows one row at a time.”
-
-### 9.5 Pitfall: confusing labels with indexes
-
-**Say:**
-“Learners sometimes look at `A1` and think the code should somehow use `A` and `1`. That is not today’s task. Today’s task uses numeric row and column positions. The seat labels are just values stored inside the structure.”
-
----
-
-## 10) Debrief and Share-Out (~4 minutes)
-
-### 10.1 Bring the class together
-
-**Say:**
-“Let’s pause and compare results. If your program is not perfect yet, that is okay. The important question is whether you can explain the structure.”
-
-### 10.2 Ask for learner explanations
-
-Ask:
-- “Who can explain what the outer list represents?”
-- “Who can explain what one inner list represents?”
-- “Who can say, in one sentence, how to access the middle seat in a 3x3 chart?”
-
-### 10.3 Model the answer
-
-**Say:**
-“A strong answer sounds like this:
-‘The outer list stores the rows. Each inner list stores the seats in one row. To access a seat, use the row index first and the column position second.’
-
-That explanation matters because it shows understanding, not just copying.”
-
----
-
-## 11) Recap Script (~2 minutes)
-
-**Say:**
-“Today we learned how to model table-like data with nested lists.
-
-We learned that:
-- a nested list is a list of lists
-- the outer list can represent rows
-- each inner list can represent values in a row
-- `chart[row][column]` is the basic access pattern
-- we can print each row with a `for` loop
-- we can update one specific cell by assigning a new value
-- the biggest beginner risks are row/column confusion and out-of-range indexes
-
-That is exactly the understanding we need before moving into the checkpoint hour.”
-
----
-
-## 12) Exit Ticket (~1 minute)
-
-Ask learners to answer verbally, in chat, or on paper:
-
-1. In a nested list used like a seating chart, what does the outer list usually represent?
-2. In `chart[1][2]`, which part selects the row?
-3. What two mistakes are most common when beginners work with nested lists?
-4. Why might printing each row separately be easier to read than printing the full nested list all at once?
-
-**Expected direction of answers:**
-- the outer list represents rows
-- the first index selects the row
-- row/column confusion and `IndexError`
-- row-by-row output matches the visual table more clearly
-
----
-
-## 13) Instructor Notes for the Transition to Hour 16
-
-**Say:**
-“We have now worked with lists in three ways:
-- creating and changing them
-- looping through them
-- arranging them into small table-like structures
-
-Next comes Checkpoint 2, where learners show they can use lists and strings together in a practical mini-program with clean output.”
-
-Close with this final reminder:
-
-“Nested lists are not a different universe. They are still lists. They just have rows inside them.”
-
----
-
-## Appendix: Instructor Reinforcement Notes for Hour 15
-
-### A) A board-first visualization routine
-
-If learners feel overwhelmed by the brackets in a nested list, stop coding for a moment and move to a diagram.
-
-Draw this:
-
-```text
-        column 0   column 1   column 2
-row 0      A1         A2         A3
-row 1      B1         B2         B3
-row 2      C1         C2         C3
-```
-
-Then say:
-
-“This picture and the code describe the same structure.
-The rows on the left correspond to the first index.
-The column positions across the top correspond to the second index.
-
-So when I write `seating_chart[1][2]`, I am saying:
-- go to row 1 first
-- then go to item 2 inside that row”
-
-Many learners need this visual translation before double indexing feels natural.
-
-### B) Simple verbal drills that fit the hour
-
-Use these quick questions during instruction or lab time:
-
-- “What does the outer list hold?”
-- “What does one inner list hold?”
-- “If I want the first value in the third row, what index pair should I use?”
-- “If I want the middle value in a 3x3 chart, what index pair should I use?”
-- “What is the difference between printing the whole nested list and printing one row at a time?”
-
-These questions are small, but they reveal whether learners truly see the structure.
-
-### C) Micro-drills with numbers instead of seat names
-
-Some learners understand the shape better when the values are plain numbers. If needed, show this alternate example:
-
+**The Mistake**:
 ```python
-grid = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-]
+if age >= 18        # Missing colon!
+    print("Adult")
 ```
 
-Then ask:
-- “What is `grid[0][0]`?”
-- “What is `grid[1][2]`?”
-- “What is `grid[2][1]`?”
-- “How would I change the center value to `0`?”
+**Error**: `SyntaxError: invalid syntax`
 
-This can reduce cognitive load because the learner no longer has to interpret seat labels and indexing at the same time.
+**Why**: Python uses the colon to mark the start of a block. Without it, Python doesn't know a block is coming.
 
-### D) A calm troubleshooting script for `IndexError`
-
-When a learner sees `IndexError`, resist the urge to jump straight to the fix. Instead, say:
-
-“Let’s read the position you requested.
-What row did you ask for?
-What column did you ask for?
-Which indexes are actually valid in a 3x3 structure?”
-
-Then reinforce:
-- valid row indexes: `0`, `1`, `2`
-- valid column indexes: `0`, `1`, `2`
-
-This helps learners connect the error to the structure instead of treating it like random failure.
-
-### E) Instructor phrasing that tends to work well
-
-Try these short coaching lines:
-
-- “Pick the row first.”
-- “Now pick the value inside that row.”
-- “Print one row to see what Python is looking at.”
-- “Draw the grid if the code feels too abstract.”
-- “After you update the data, show the data again.”
-
-These phrases are especially helpful for beginners because they turn a potentially abstract problem into a sequence of manageable steps.
-
-### F) Optional extension discussion without drifting off-scope
-
-If a learner finishes early and wants a small extension, you can suggest one of these:
-- validate that row and column must be between 0 and 2
-- let the user mark the seat with initials instead of `"X"`
-- print the chart with spaces for a slightly cleaner display
-
-But keep reminding the class that the core goal is simple: understand the list-of-lists structure, access values with two indexes, and update one seat correctly.
-
-### G) Strong end-of-hour summary to repeat out loud
-
-If you want one final sentence learners can remember, use this:
-
-“A nested list is still just a list; it simply stores rows, and each row stores values.”
-
-That sentence keeps the topic grounded in what learners already know instead of making it feel like a completely new world.
-
-### H) Final review prompts before the checkpoint
-
-Before moving into Checkpoint 2, you can ask learners to answer these quickly:
-
-- “What does the outer list represent in our seating chart?”
-- “What does one inner list represent?”
-- “In `chart[2][1]`, which number chooses the row?”
-- “Why do we print the chart again after changing one value?”
-- “What usually causes `IndexError` in this hour?”
-
-Then restate the key idea:
-
-“The first index chooses the row. The second index chooses the value inside that row. That is the whole access pattern.”
-
-### I) Extra confidence statement for beginners
-
-If the room seems hesitant, say:
-
-“Nested lists can look more complex than they really are because there are more brackets on the screen. But the underlying idea is still familiar. You already know what a list is. Today you simply learned that a list can hold rows, and each row can hold values.
-
-That means you are not starting from zero. You are extending what you already know.”
-
-### J) One more quick practice grid
-
-If learners need a final simple check, show this 2x2 example:
-
+**The Fix**:
 ```python
-boxes = [
-    ["top-left", "top-right"],
-    ["bottom-left", "bottom-right"]
-]
+if age >= 18:       # Colon included
+    print("Adult")
 ```
 
-Ask:
-- “What is `boxes[0][1]`?”
-- “What is `boxes[1][0]`?”
-- “How would I change `bottom-right` to `X`?”
+---
 
-Then say:
+### Pitfall 2: Incorrect Indentation
 
-“Notice how the exact values change, but the access pattern does not. First choose the row. Then choose the value inside the row. That is the consistent rule learners should leave with.”
+**The Mistake**:
+```python
+if age >= 18:
+print("Adult")      # Not indented!
+```
 
-### K) Closing teaching sentence to repeat aloud
+**Error**: `IndentationError: expected an indented block`
 
-Use this short summary if you want one last anchor before the checkpoint:
+**Why**: Python requires consistent indentation (usually 4 spaces). Without it, Python doesn't recognize the block as part of the `if`.
 
-“A nested list is a list of rows. The first index chooses the row. The second index chooses the value inside that row.”
+**The Fix**:
+```python
+if age >= 18:
+    print("Adult")  # Indented with 4 spaces
+```
 
-That sentence keeps the concept stable and memorable for beginners.
+**Tip**: Use an IDE that auto-indents. After you type a colon and press Enter, most IDEs indent automatically.
 
-A final reminder for beginners: the extra brackets in a nested list can make the code look more intimidating than it really is. Underneath the syntax, the logic is simple. Choose the row first. Then choose the value inside that row. If learners can say that confidently and update one seat correctly, they have met the essential goal of this hour.
+---
 
-If you need one more last review question, ask learners this: “If I point to the bottom-left item in a 3x3 chart, what row am I in, and what column position am I choosing?” Questions like that reveal whether the learner truly sees the grid or is still guessing. End by reminding them that printing rows one at a time and updating one selected value are the two most practical skills from this hour.
+### Pitfall 3: Unreachable Elif Branches
 
-A final instructor reminder: keep the examples small, the language concrete, and the indexing visible. When the grid stays 3x3, learners can focus on the row-and-column idea without being distracted by size. The purpose is confidence with structure, not complexity for its own sake.
+**The Mistake**:
+```python
+score = 95
+if score > 90:
+    grade = "A"
+elif score > 80:
+    grade = "B"    # This will never execute for scores > 90
+else:
+    grade = "C"
+```
 
-If you want one last closing check, ask learners to point to the middle item, the top-right item, and the bottom-left item in the same chart. That fast verbal exercise often confirms whether the structure is really clear. When they can answer those confidently and update one selected value correctly, they are ready to move on.
+**Why**: If `score > 90` is true, we enter the first block and never check `elif score > 80`. For a score of 95, the first condition is true, so the second is never evaluated.
 
-That is enough for a strong Basics-level nested-list introduction.
+**The Problem**: This happens when you order conditions from general to specific, allowing earlier conditions to "catch" values that later conditions could also match.
+
+**The Fix** (order from most specific to most general):
+```python
+score = 95
+if score >= 90:
+    grade = "A"    # Check most restrictive first
+elif score >= 80:
+    grade = "B"    # Then less restrictive
+else:
+    grade = "C"
+```
+
+**Test this**: Score 95 → A (correct). Score 85 → B (correct). Score 75 → C (correct).
+
+---
+
+### Pitfall 4: Overlapping Boundaries
+
+**The Mistake**:
+```python
+weight = 15
+if weight < 15:
+    cost = 5
+elif weight <= 15:
+    cost = 7
+```
+
+**Problem**: At exactly 15 lbs, the first condition is false (15 < 15 is false), so we check the second (15 <= 15 is true) and get $7. But this is inconsistent design. Is 15 lbs in the first tier or second?
+
+**The Fix** (use non-overlapping ranges):
+```python
+weight = 15
+if weight <= 5:
+    cost = 3
+elif weight <= 15:
+    cost = 7    # Now 15 is clearly in this tier
+elif weight <= 30:
+    cost = 12
+```
+
+**Test**: 5 lbs → $3, 15 lbs → $7, 16 lbs → $12. All boundaries are consistent and clear.
+
+---
+
+### Pitfall 5: Using `==` Instead of Comparison Ranges
+
+**The Mistake**:
+```python
+score = 87
+if score == 90:
+    grade = "A"
+elif score == 80:
+    grade = "B"    # This only matches exactly 80!
+```
+
+**Problem**: You're checking for exact values, not ranges. Score 87 matches none of these, so grade is never set.
+
+**The Fix** (use `>=` to define ranges):
+```python
+score = 87
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+```
+
+---
+
+## 9. Quick-Check Questions
+
+**Ask these in rapid succession (2–3 min total). Encourage verbal responses or quick polling.**
+
+1. **"What does this print?"**
+   ```python
+   x = 15
+   if x < 10:
+       print("Small")
+   elif x < 20:
+       print("Medium")
+   else:
+       print("Large")
+   ```
+   *(Expected: "Medium")*
+
+2. **"True or False: Both the `if` and `elif` blocks can run in the same execution."**  
+   *(Expected: False. Only ONE block runs.)*
+
+3. **"Why do we order conditions from most specific to most general in an if/elif chain?"**  
+   *(Expected: To avoid unreachable code and ensure consistent logic.)*
+
+4. **"What's the colon (`:`) for at the end of `if age >= 18:`?"**  
+   *(Expected: It marks the start of a block that will be indented.)*
+
+5. **"If I have a weight boundary at 50 lbs, should I use `weight < 50` or `weight <= 50`?"**  
+   *(Expected: It depends on your rule, but be consistent. If 50 is supposed to be in the lower tier, use `<=`.)*
+
+---
+
+## 10. Wrap-Up (4 minutes)
+
+### Key Takeaways
+
+1. **If/elif/else structure**: Branching logic where only ONE block executes.
+2. **Order matters**: Check from most specific to most general. Once a condition is true, the rest are skipped.
+3. **Boundaries are critical**: Use `<=` and `>=` to include edge values. Test boundary values to catch bugs.
+4. **One block, one time**: Remember, if age >= 18 is true, elif age >= 65 is never checked. They're mutually exclusive paths.
+5. **Nested vs. flat**: Use flat (`and`/`or`) when conditions are independent. Use nesting when one logically depends on the other.
+6. **Unreachable code**: If an `elif` or `else` never runs in your tests, check your condition order.
+
+### Real-World Connections
+
+Conditional logic is everywhere:
+- **E-commerce**: Discount tiers based on order value
+- **Banking**: Account types based on balance
+- **Games**: Different actions based on user input
+- **Automation**: Different responses based on sensor data
+- **Grading systems**: Letter grades based on numeric scores
+
+### Looking Ahead
+
+Next hour is Checkpoint 1, where you'll apply boolean logic, comparisons, and conditionals all together in a comprehensive mini-project. Everything you've learned in the past two hours comes together.
+
+---
+
+## 11. Facilitation Notes
+
+### Pacing & Flexibility
+
+- **If learners are quick**: Introduce nested conditions more deeply, or ask them to trace complex if/elif/else chains.
+- **If learners are struggling**: Spend more time on the concept that "only one block runs." Use a physical analogy: "You're at a fork in the road. You choose one path and never look back."
+- **If time is tight**: Skip the nested conditions section and focus on if/elif/else.
+
+### Engagement Tips
+
+1. **Prediction before running**: Always ask "What will this print?" before executing code.
+2. **Flowchart drawing**: Sketch decision trees on the whiteboard. Visual learners benefit greatly.
+3. **Boundary testing**: Emphasize that bugs hide at boundaries. Make testing a habit.
+4. **Real-world scenarios**: "Imagine you're programming the checkout process for an online store. How would you tier shipping costs?"
+
+### Troubleshooting On the Fly
+
+- **"Nothing is printing."** → Check if the condition is true. Add a print statement before the if to verify.
+- **"The wrong block is running."** → Trace through the conditions in order. Is the first one actually true?
+- **"IndentationError."** → Check that every line in the block has the same indentation (usually 4 spaces).
+
+### Encouraging Code Tracing
+
+Teach learners to trace their own code:
+1. Read the condition aloud.
+2. Evaluate it (true or false).
+3. If true, follow that block. If false, skip to the next condition.
+4. Stop as soon as you find a true condition.
+
+---
+
+## 12. Assessment Rubric
+
+### Shipping Calculator Lab Rubric (20 points total)
+
+| Criterion | Points | Evidence |
+|-----------|--------|----------|
+| **Input & Type Conversion** | 3 | Program prompts for weight. Uses `float()` to convert. Input is treated as a number. |
+| **Correct If/Elif/Else Structure** | 5 | All five weight tiers are checked in correct order. Conditions are mutually exclusive and correctly bounded. |
+| **Boundary Correctness** | 4 | Boundary values (5, 15, 30, 50 lbs) are correctly assigned to tiers. No off-by-one errors. |
+| **Clear Output** | 4 | Prints shipping cost or error message. Output is readable and correctly formatted. |
+| **Testing & Edge Cases** | 2 | Program tested on at least 3 different weights. Boundaries are tested. |
+| **Code Quality** | 2 | Readable variable names, reasonable comments, logical structure. |
+
+### Grading Scale
+- **18–20 points**: Excellent. All tiers correct, all boundaries tested, output is clear.
+- **15–17 points**: Good. Logic correct, minor boundary issues or unclear output.
+- **12–14 points**: Satisfactory. Core logic works, but edge cases or output clarity issues.
+- **Below 12**: Needs rework. Significant logic errors or missing components.
+
+### Feedback Template
+
+**For Excellent Work**:
+"Your shipping calculator is perfect! You correctly ordered the conditions from smallest to largest weight, and your boundaries are spot-on. Your code is clean and easy to read."
+
+**For Good Work**:
+"You've got the logic right! I noticed a small issue with [specific boundary]. Let's trace through what happens at exactly [boundary value]. You're close!"
+
+**For Needs Rework**:
+"Your structure is on the right track, but I see an issue with [specific problem]. Let's trace through the conditions together step by step. What happens when weight is [test value]?"
+
+---
+
+**End of Hour 3 Lecture Script**
+
+---
+
+*Word count: 3,300+ words*
