@@ -1,98 +1,80 @@
-# Day 7, Hour 4: Loop Patterns: Counters, Accumulators, Min/Max (Course Hour 28)
-**Python Programming Basics – Session 7**
+# Day 7, Hour 4: Loop Patterns - Counters, Accumulators, Min/Max
 
-**Course:** Python Programming (Basics)
-**Runbook alignment:** Session 7, Course Hour 28 – Loop patterns: counters, accumulators, min/max
-**Duration:** 60 minutes
-**Mode:** Instructor-led + live coding + guided lab
-**Audience:** Beginners in Python (Basics scope only)
+**Instructor:** Charles Niswander  
+**Course:** Python Programming (Basic) - PCEP Aligned  
+**Duration:** 60 minutes  
+**Target:** 25+ students, beginner level
 
----
+## Learning Outcomes
 
-## Instructor Deliverable Script (Use Largely Verbatim)
+By the end of this hour, students will be able to:
 
-> **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on three essential loop patterns: counters (counting items that meet a condition), accumulators (summing or building values), and min/max tracking (finding extremes). Stay within Basics scope — do not introduce functional programming concepts like map/filter/reduce, lambda functions, or comprehensions. The key outcomes are recognizing these patterns, initializing variables correctly, and applying them to compute statistics from user input. The lab reinforces all of this in a number statistics calculator.
-
----
-
-## 0) Learning Outcomes (read aloud, ~2 minutes)
-
-"By the end of this hour, you will be able to:
-
-1. Use a counter pattern to count items that meet a specific condition.
-2. Use an accumulator pattern to compute sums, products, or concatenate strings.
-3. Find the minimum and maximum values in a collection, initializing trackers safely.
-4. Compute an average by combining an accumulator and a counter.
-5. Build a number statistics program that reads 5 numbers and computes min, max, sum, and average."
+1. **Implement counter patterns** – Create variables that increment inside conditionals to count specific items in a loop.
+2. **Build accumulators** – Initialize and update variables that collect values (sum, product, concatenation) across iterations.
+3. **Develop min/max tracking** – Write code to find minimum and maximum values while iterating through data.
+4. **Calculate averages programmatically** – Combine counters and accumulators to compute the average of a dataset.
+5. **Build a real number statistics program** – Integrate all four patterns into a single, cohesive application.
 
 ---
 
-## 1) Agenda + Timing
+## 1. Instructor Prep & Setup Checklist
 
-- **0:00–0:05** Reconnect to Hour 3 for loops; introduce common patterns
-- **0:05–0:18** Talk points (10-15 min target): counter, accumulator, safe min/max initialization
-- **0:18–0:26** Live demo (5-10 min target): read 5 numbers and compute sum/min/max
-- **0:26–0:55** Guided lab (25-35 min target): Number Stats implementation
-- **0:55–1:00** Debrief, recap, and exit ticket
+### Preparation (15 minutes before class)
+
+**Setup Checklist:**
+
+- [ ] **IDE open and ready** – Python interpreter running, VS Code with Markdown preview enabled
+- [ ] **Sample files prepared:**
+  - `counter_demo.py` – Counter pattern walkthrough (no student intervention)
+  - `accumulator_demo.py` – Accumulator pattern walkthrough
+  - `minmax_demo.py` – Min/Max pattern walkthrough
+  - `stats_program.py` – Complete number statistics program (result demo, not editable)
+- [ ] **Terminal clear** – Previous commands hidden for clean demo
+- [ ] **Breakout rooms configured** – 4-5 students per room for guided lab
+- [ ] **Timing plan visible** – Instructor notes with checkpoint schedule
+- [ ] **Backup plan ready** – Static code snippets in case IDE fails; printed runbook in hand
+
+### Room Setup
+
+- **Projection**: Live Python IDE visible to all students
+- **Audio/Chat**: Enabled; monitor for "I'm stuck" or hand-raise signals
+- **Learner resources**: Lab worksheet printed/shared in chat
+
+**Contingency**: If live demo fails, paste pre-prepared code blocks from `counter_demo.py` into interpreter.
 
 ---
 
-## 2) Instructor Setup Checklist
+## 2. Opening Script
 
-- Open a clean file called `hour28_patterns_demo.py` before class begins.
-- Have a second file called `hour28_lab_stats.py` ready with empty comments as a starter.
-- Have the Python REPL ready for quick experiments.
-- Plan to show common initialization mistakes (like initializing min to 0).
-- Plan to demonstrate the difference between counting all items versus counting items that meet a condition.
-- Have examples ready for sum, product, and string concatenation accumulators.
-
-**Say:** "Please have your editor open and an empty file ready. Today we learn three fundamental loop patterns that you will use in almost every program: counting, accumulating, and finding min/max. You will build a statistics calculator."
-
----
-
-## 3) Opening Script: Reconnect to Earlier Learning (~5 minutes)
-
-### 3.1 Quick recap from Hour 3
+### Hook (2 minutes)
 
 **Say:**
-"Welcome back. In Hour 3, we learned for loops: iterating over lists and using range() to repeat code a specific number of times. We built a multiplication table using nested loops.
 
-Today we focus on three patterns that come up constantly in programming: counting, accumulating, and finding extremes. These are not new Python features. They are problem-solving strategies that use the loops you already know.
+"Imagine you're a teacher grading 100 papers. You need to count how many pass, find the highest and lowest scores, and compute the class average. You can't do that with a single print statement—you need *patterns*. Today, you'll learn four loop patterns that professional programmers use every day to solve problems like this."
 
-Every time you need to process a collection of data and compute a result — whether it is summing numbers, finding the largest value, or counting how many items meet a condition — you will use one of these patterns."
-
-### 3.2 Motivating the need
+### Learning Objectives Recap (1 minute)
 
 **Say:**
-"Let me give you a few real-world situations where you need these patterns:
 
-- A teacher needs to compute the average grade from a list of scores (accumulator + counter).
-- A store manager needs to count how many products are out of stock (counter).
-- A sports app needs to find the highest score in a game (min/max).
-- A financial app needs to sum all transactions for the month (accumulator).
+"In this hour, you'll master loop patterns: counters, accumulators, min/max tracking, and average calculations. By the end, you'll write a complete program that processes a list of numbers and reports statistics—the same logic used in data analysis, game development, and finance."
 
-In each case, you loop through data and build up a result. The pattern you choose depends on what result you need."
-
-### 3.3 Set expectations for the hour
+### Real-World Connection (1 minute)
 
 **Say:**
-"In this hour, we will learn:
-- how to count items that meet a condition
-- how to accumulate values (sum, product, concatenation)
-- how to track minimum and maximum values safely
-- how to combine these patterns to compute statistics
-- and how to build a number statistics calculator that does all three
 
-By the end, you will recognize these patterns in code and know how to apply them to new problems."
+"Your stock portfolio app needs to track gains/losses (accumulator), your fitness app counts workouts (counter), your grade tracker finds your highest and lowest scores (min/max), and your banking app computes average monthly spending (average). All use loop patterns."
 
 ---
 
-## 4) Pattern 1: Counter
+## 3. Core Concepts: Counter, Accumulator, Min/Max, Average
 
-### 4.1 What is a counter?
+### 3.1 Counter Pattern
 
-**Say:**
-"A counter is a variable that starts at zero and increases by one every time a condition is met. The structure is:
+**Concept:**
+
+A counter is a variable that increments when a specific condition is met inside a loop. Use it to count how many items satisfy a condition.
+
+**Structure:**
 
 ```python
 count = 0
@@ -101,57 +83,29 @@ for item in items:
     if condition:
         count = count + 1
 
-print(f'Found {count} items matching condition')
+print(f'Total matches: {count}')
 ```
 
-The key steps:
-
-1. Initialize count to 0 before the loop.
-2. Inside the loop, check if the item meets your condition.
-3. If yes, increment count by 1.
-4. After the loop, count holds the total number of matching items."
-
-### 4.2 Example: Counting even numbers
-
-**Say:**
-"Let me show you a concrete example:
+**Example: Count even numbers**
 
 ```python
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
+numbers = [10, 5, 20, 15, 30]
 even_count = 0
 
 for num in numbers:
-    if num % 2 == 0:
+    if num % 2 == 0:  # Check if even
         even_count = even_count + 1
 
-print(f'There are {even_count} even numbers')
+print(f'Even numbers: {even_count}')  # Output: 3
 ```
 
-Output:
-```
-There are 5 even numbers
-```
+**Key Points:**
 
-We loop through the list. For each number, we check if it is even (divisible by 2). If yes, we increment even_count. After the loop, even_count is 5, because there are five even numbers: 2, 4, 6, 8, 10."
+- Initialize counter to 0 (or appropriate starting value).
+- Increment *inside* the `if` block so it only counts when the condition is true.
+- Increment *after* the loop is complete to get the final count.
 
-### 4.3 Common mistakes
-
-**Say:**
-"Two common mistakes with counters:
-
-**1. Not initializing to 0:**
-
-```python
-# WRONG: count not initialized
-for num in numbers:
-    if num % 2 == 0:
-        count = count + 1  # NameError: count not defined
-```
-
-You must initialize count before the loop.
-
-**2. Incrementing unconditionally:**
+**Common Mistake:**
 
 ```python
 # WRONG: increments every iteration, not just when condition is true
@@ -162,16 +116,13 @@ for num in numbers:
         # nothing here
 ```
 
-The increment must be inside the if block, so it only runs when the condition is true."
+### 3.2 Accumulator Pattern
 
----
+**Concept:**
 
-## 5) Pattern 2: Accumulator
+An accumulator is a variable that starts at an initial value and grows by adding (or multiplying, or appending) each item. Use it to collect or combine values across iterations.
 
-### 5.1 What is an accumulator?
-
-**Say:**
-"An accumulator is a variable that starts at an initial value and grows by adding (or multiplying, or appending) each item. The structure is:
+**Structure:**
 
 ```python
 total = 0
@@ -182,233 +133,99 @@ for item in items:
 print(f'Total: {total}')
 ```
 
-The key steps:
-
-1. Initialize the accumulator to an appropriate starting value (0 for sums, 1 for products, empty string for concatenation).
-2. Inside the loop, update the accumulator by adding/multiplying/appending the current item.
-3. After the loop, the accumulator holds the final result."
-
-### 5.2 Example: Sum of numbers
-
-**Say:**
-"Let me show you the most common accumulator: summing numbers.
+**Example: Sum a list**
 
 ```python
 numbers = [10, 20, 30, 40, 50]
-
 total = 0
 
 for num in numbers:
     total = total + num
 
-print(f'Total: {total}')
+print(f'Sum: {total}')  # Output: 150
 ```
 
-Output:
-```
-Total: 150
-```
+**Initialization Rules:**
 
-We start with total = 0. Then we add each number: 0 + 10 = 10, then 10 + 20 = 30, then 30 + 30 = 60, then 60 + 40 = 100, then 100 + 50 = 150."
+- **For addition**: Initialize to 0
+- **For multiplication**: Initialize to 1
+- **For string concatenation**: Initialize to empty string `""`
+- **For lists**: Initialize to empty list `[]`
 
-### 5.3 Other accumulator types
+**Key Points:**
 
-**Say:**
-"Accumulators are not just for sums. Here are other common uses:
+- Choose the correct initial value based on the operation.
+- Update the accumulator inside the loop.
+- The final result is ready after the loop completes.
 
-**Product (multiply):**
-```python
-numbers = [2, 3, 4]
+### 3.3 Min/Max Pattern
 
-product = 1  # start at 1, not 0!
+**Concept:**
 
-for num in numbers:
-    product = product * num
+Track the minimum and maximum values as you iterate. Initialize with the first item, then update only if a new extreme is found.
 
-print(product)  # Output: 24 (2 * 3 * 4)
-```
-
-**String concatenation:**
-```python
-words = ['Hello', 'world', '!']
-
-sentence = ''
-
-for word in words:
-    sentence = sentence + word + ' '
-
-print(sentence)  # Output: 'Hello world ! '
-```
-
-**Building a list:**
-```python
-numbers = [1, 2, 3, 4, 5]
-
-evens = []
-
-for num in numbers:
-    if num % 2 == 0:
-        evens.append(num)
-
-print(evens)  # Output: [2, 4]
-```
-
-The pattern is the same: start with an appropriate initial value, then update it in each iteration."
-
-### 5.4 Common mistakes
-
-**Say:**
-"Two common mistakes with accumulators:
-
-**1. Wrong initial value:**
+**Structure:**
 
 ```python
-# WRONG: sum starts at 1 instead of 0
-total = 1
-for num in numbers:
-    total = total + num
+minimum = numbers[0]
+maximum = numbers[0]
+
+for num in numbers[1:]:  # Skip first item (already assigned)
+    if num < minimum:
+        minimum = num
+    if num > maximum:
+        maximum = num
+
+print(f'Min: {minimum}, Max: {maximum}')
 ```
 
-Your sum is now 1 too high. For sums, always start at 0. For products, start at 1.
-
-**2. Initializing inside the loop:**
+**Example:**
 
 ```python
-# WRONG: total resets to 0 every iteration
-for num in numbers:
-    total = 0
-    total = total + num
+numbers = [10, 5, 20, 15, 30]
+minimum = numbers[0]  # Start with first value
+maximum = numbers[0]
+
+for num in numbers[1:]:  # Loop from second item onward
+    if num < minimum:
+        minimum = num
+    if num > maximum:
+        maximum = num
+
+print(f'Min: {minimum}, Max: {maximum}')  # Output: Min: 5, Max: 30
 ```
 
-The accumulator must be initialized before the loop, not inside it."
+**Key Points:**
 
----
+- Initialize min and max with the first list item (not 0 or infinity).
+- Iterate through the remaining items.
+- Update min/max only when a new extreme is found.
+- Works for any comparable data (numbers, strings, dates).
 
-## 6) Pattern 3: Min/Max Tracking
+### 3.4 Average Pattern
 
-### 6.1 What is min/max tracking?
+**Concept:**
 
-**Say:**
-"To find the minimum or maximum value in a collection, you keep track of the best value seen so far. The structure is:
+Combine a counter and accumulator to compute the average: `average = total / count`.
+
+**Structure:**
 
 ```python
-min_value = first_item
+total = 0
+count = 0
 
 for item in items:
-    if item < min_value:
-        min_value = item
+    total = total + item
+    count = count + 1
 
-print(f'Minimum: {min_value}')
+average = total / count
+print(f'Average: {average}')
 ```
 
-The key steps:
-
-1. Initialize min_value to the first item in the collection.
-2. Loop through the rest of the items.
-3. If the current item is smaller than min_value, update min_value.
-4. After the loop, min_value holds the smallest value."
-
-### 6.2 Example: Finding minimum
-
-**Say:**
-"Let me show you how to find the minimum value:
+**Example:**
 
 ```python
-numbers = [45, 12, 67, 23, 89, 5, 34]
-
-min_value = numbers[0]  # start with the first number
-
-for num in numbers:
-    if num < min_value:
-        min_value = num
-
-print(f'Minimum: {min_value}')
-```
-
-Output:
-```
-Minimum: 5
-```
-
-We start with min_value = 45 (the first number). Then we compare each number:
-
-- 12 < 45? Yes, so min_value = 12.
-- 67 < 12? No, so min_value stays 12.
-- 23 < 12? No, so min_value stays 12.
-- 89 < 12? No, so min_value stays 12.
-- 5 < 12? Yes, so min_value = 5.
-- 34 < 5? No, so min_value stays 5.
-
-Final min_value is 5."
-
-### 6.3 Finding maximum
-
-**Say:**
-"Finding the maximum is the same pattern, but with a greater-than comparison:
-
-```python
-numbers = [45, 12, 67, 23, 89, 5, 34]
-
-max_value = numbers[0]
-
-for num in numbers:
-    if num > max_value:
-        max_value = num
-
-print(f'Maximum: {max_value}')
-```
-
-Output:
-```
-Maximum: 89
-```
-
-Same logic, but we update max_value only when the current number is larger."
-
-### 6.4 Common mistakes
-
-**Say:**
-"The most common mistake with min/max is initializing to 0:
-
-```python
-# WRONG: min initialized to 0
-min_value = 0
-
-for num in numbers:
-    if num < min_value:
-        min_value = num
-```
-
-If all numbers are positive, min_value stays 0, which is wrong. With all-negative numbers this particular code still happens to update min_value below 0, but that’s just luck — the opposite pattern (starting max_value at 0 and using >) fails for all-negative data. In general, initializing to a “magic” value like 0 makes correctness depend on what numbers actually appear.
-
-The safe approach: initialize to the first item in the collection. That way, you are guaranteed to find the true minimum for any mix of positive and negative values."
-
-### 6.5 Using built-in functions
-
-**Say:**
-"Python provides built-in min() and max() functions:
-
-```python
-numbers = [45, 12, 67, 23, 89, 5, 34]
-
-print(f'Minimum: {min(numbers)}')
-print(f'Maximum: {max(numbers)}')
-```
-
-These do the same thing as our loops, but are more concise. However, it is important to understand the pattern, because sometimes you need to track min/max based on a more complex condition, and the built-in functions are not enough."
-
----
-
-## 7) Combining Patterns: Computing Average
-
-### 7.1 Average requires two patterns
-
-**Say:**
-"To compute an average, you need both an accumulator (to sum the values) and a counter (to count how many values there are). Then divide the sum by the count.
-
-```python
-numbers = [10, 20, 30, 40, 50]
-
+numbers = [10, 5, 20, 15, 30]
 total = 0
 count = 0
 
@@ -417,479 +234,433 @@ for num in numbers:
     count = count + 1
 
 average = total / count
-
-print(f'Average: {average}')
+print(f'Average: {average}')  # Output: 16.0
 ```
 
-Output:
-```
-Average: 30.0
-```
-
-We accumulate the sum (150) and count the items (5), then divide: 150 / 5 = 30."
-
-### 7.2 Simplification
-
-**Say:**
-"In this case, we know the count in advance (it is len(numbers)), so we could simplify:
+**Formatting the average:**
 
 ```python
-numbers = [10, 20, 30, 40, 50]
-
-total = 0
-
-for num in numbers:
-    total = total + num
-
-average = total / len(numbers)
-
-print(f'Average: {average}')
+average = total / count
+print(f'Average: {average:.2f}')  # Output: 16.00 (two decimal places)
 ```
 
-But if you are reading numbers from user input and do not know the count in advance, you must count them inside the loop."
+**Key Points:**
+
+- Use accumulator for the sum, counter for the number of items.
+- Divide only *after* the loop completes.
+- Format to two decimal places for clarity: `{average:.2f}`.
+- Watch for division by zero if the list is empty.
 
 ---
 
-## 8) Live Coding Demo: Number Statistics (~10 minutes)
+## 4. Live Coding Demo
 
-### 8.1 Announce the demo
+### Setup (1 minute)
 
 **Say:**
-"Now I am going to build a number statistics calculator. The program will:
 
-1. Ask the user to enter 5 numbers.
-2. Compute and display:
-   - Minimum
-   - Maximum
-   - Sum
-   - Average
+"I'm going to write a program that processes a list of numbers and computes statistics using all four patterns. Watch how I build it step by step, then you'll do the same in the lab."
 
-I will use all three patterns: accumulator (for sum), min/max tracking, and a counter (for average). Watch how I initialize each variable and update it in the loop."
+### Demo Code: Number Statistics Program
 
-### 8.2 Code the solution
+**Say:**
 
-**Type aloud:**
+"Here's the program:"
 
 ```python
-# Number statistics calculator
+# Number Statistics Program
+# Demonstrates: counter, accumulator, min/max, average
 
-print("Enter 5 numbers:")
+numbers = [10, 5, 20, 15, 30]
 
-numbers = []
-
-for i in range(5):
-    num = float(input(f"Number {i+1}: "))
-    numbers.append(num)
-
-# Initialize trackers
+# Initialize variables
 total = 0
-min_value = numbers[0]
-max_value = numbers[0]
+count = 0
+minimum = numbers[0]
+maximum = numbers[0]
 
-# Loop through numbers and update trackers
-for num in numbers:
+# Process the numbers
+for num in numbers[1:]:
     total = total + num
-    if num < min_value:
-        min_value = num
-    if num > max_value:
-        max_value = num
+    count = count + 1
+    if num < minimum:
+        minimum = num
+    if num > maximum:
+        maximum = num
+
+# Don't forget the first number in calculations!
+total = total + numbers[0]
+count = count + 1
 
 # Compute average
-average = total / len(numbers)
+average = total / count
 
 # Display results
-print()
-print(f"Minimum: {min_value}")
-print(f"Maximum: {max_value}")
-print(f"Sum: {total}")
-print(f"Average: {average:.2f}")
+print(f'Min: {minimum:.1f}')
+print(f'Max: {maximum:.1f}')
+print(f'Sum: {total:.1f}')
+print(f'Average: {average:.2f}')
 ```
 
-**Say:**
-"Let me explain the key parts:
+**Expected Output:**
 
-1. **Collect numbers:** We ask the user for 5 numbers and store them in a list.
-
-2. **Initialize trackers:** We set total to 0, and min_value and max_value to the first number in the list.
-
-3. **Loop through numbers:** For each number, we:
-   - Add it to total (accumulator)
-   - Check if it is smaller than min_value (update if yes)
-   - Check if it is larger than max_value (update if yes)
-
-4. **Compute average:** Divide total by the count of numbers.
-
-5. **Display results:** Print all statistics with formatting."
-
-### 8.3 Test the code
-
-**Say:**
-"Let me test this with some numbers."
-
-**Test input:**
-- 10
-- 5
-- 20
-- 15
-- 30
-
-**Output:**
 ```
-Minimum: 5.0
-Maximum: 30.0
+Min: 5.0
+Max: 30.0
 Sum: 80.0
 Average: 16.00
 ```
 
-**Say:**
-"All statistics are correct. The program uses three patterns: accumulator (sum), min/max tracking, and count (for average)."
-
-### 8.4 Common mistake: Initializing min to 0
+### Demo Walkthrough (5 minutes)
 
 **Say:**
-"A common bug is initializing min_value to 0:
+
+"Line by line:
+- We start with `numbers = [10, 5, 20, 15, 30]`.
+- We initialize: `total = 0` (accumulator), `count = 0` (counter), and min/max to the first value.
+- In the loop, we add each remaining number to the total, count it, and check for new min/max.
+- After the loop, we handle the first number (which we skipped in the loop).
+- We compute `average = total / count = 80 / 5 = 16.00`.
+- Finally, we print the results with proper formatting."
+
+**Interactive Question:**
+
+"Why do we start the loop at `numbers[1:]` instead of `numbers[0]`?"
+
+*Pause for student input. Expected answer: "Because we already used `numbers[0]` for min/max initialization."*
+
+---
+
+## 5. Guided Lab with 3 Explicit Checkpoints
+
+### Lab Instructions
+
+**Activity:** Build a number statistics program from scratch using counter, accumulator, and min/max patterns.
+
+**Starter Code:**
 
 ```python
-min_value = 0  # WRONG
+# Student Lab: Number Statistics Program
+# Your task: Complete this program to process a list of numbers
 
-for num in numbers:
-    if num < min_value:
-        min_value = num
+numbers = [12, 8, 25, 9, 18, 14, 22]
+
+# TODO: Initialize variables for total, count, minimum, maximum
+# Hint: Initialize minimum and maximum to the first number
+
+
+# TODO: Write a for loop to process the numbers
+# Hint: Update total and count for every number
+# Hint: Check if the current number is less than minimum or greater than maximum
+
+
+# TODO: Calculate average after the loop
+
+
+# TODO: Print results in this format:
+# Minimum: X.X
+# Maximum: X.X
+# Sum: X.X
+# Average: X.XX
 ```
 
-If I enter numbers like 10, 20, 30, the minimum should be 10. But because min_value starts at 0, and no number is less than 0, min_value stays 0. This is wrong.
+### Checkpoint 1 (Minute 5)
 
-The fix: initialize to the first number in the list, not to 0."
+**Objective:** Students initialize variables correctly.
 
----
+**Success Criteria:**
+- [ ] `total`, `count`, `minimum`, `maximum` are declared and initialized
+- [ ] `minimum` and `maximum` are set to `numbers[0]`
+- [ ] Loop structure begins (for loop created)
 
-## 9) Guided Lab: Number Stats (~25 minutes)
+**Instructor Action:**
+- Walk around and check student screens for correct initialization.
+- Say: "Show me your initialized variables. Do they match the hints?"
+- Stop and clarify common mistakes: forgetting `numbers[0]` for min/max, or initializing min to 0.
 
-### 9.1 Announce the lab
+### Checkpoint 2 (Minute 20)
 
-**Say:**
-"Now it is your turn. You will build a number statistics calculator. Here is the specification:
+**Objective:** Students complete the loop with all four patterns.
 
-**Lab: Number Stats**
+**Success Criteria:**
+- [ ] Loop iterates through all numbers
+- [ ] `total = total + num` and `count = count + 1` inside loop
+- [ ] Min/max comparisons implemented (`if num < minimum` and `if num > maximum`)
+- [ ] Loop completes without syntax errors
 
-**Goal:** Ask the user to enter 5 numbers, then compute and display min, max, sum, and average.
+**Instructor Action:**
+- Check if loops are running without errors (run each student's code).
+- Say: "Run your code. Do you see any errors? If yes, read the error message and tell me what line has the problem."
+- Pause demo at 22 minutes for quick check-in.
 
-**Rules:**
+### Checkpoint 3 (Minute 25)
 
-- Prompt for 5 numbers (use float() to allow decimals)
-- Store numbers in a list
-- Compute min, max, sum, and average using loop patterns (not built-in functions like min() or sum())
-- Display results with clear labels
-- Format average to 2 decimal places
+**Objective:** Students compute average and format output.
 
-**Optional extensions (if you finish early):**
+**Success Criteria:**
+- [ ] `average = total / count` calculated after loop
+- [ ] Print statements formatted with correct decimal places
+- [ ] Program produces expected output:
+  ```
+  Minimum: 8.0
+  Maximum: 25.0
+  Sum: 108.0
+  Average: 15.43
+  ```
 
-1. Allow the user to choose how many numbers to enter.
-2. Allow variable count until the user types a `done` sentinel.
-3. Add validation: if the user enters invalid input, re-prompt.
+**Instructor Action:**
+- Run each student's program and verify output matches expected result.
+- Say: "Compare your output to the expected result. Do they match?"
+- Celebrate completion: "Excellent! You've built a complete statistics program using all four loop patterns."
 
-**Completion criteria:**
+### Troubleshooting Hints
 
-- Program computes correct statistics for any set of 5 numbers
-- Uses loop patterns (accumulator, min/max)
-- Clean, formatted output
-
-You have about 29 minutes for implementation and testing. I will circulate and help."
-
-### 9.1b Instructor pacing guide for the 25-minute lab
-
-Use this mini-budget to keep the lab aligned to the runbook expectation (25-35 minutes) while still leaving time for debrief:
-
-- **Minutes 0-5:** students scaffold input loop and store numbers in a list.
-- **Minutes 6-12:** students implement sum accumulator and verify output.
-- **Minutes 13-18:** students implement min/max tracking with safe initialization from first item.
-- **Minutes 19-22:** students compute average and format clean output.
-- **Minutes 23-25:** students run one final test case and self-check completion criteria.
-
-**Say:**
-"If you finish one step early, do not jump ahead randomly. First verify your current step with a simple test. Correct intermediate results reduce debugging later."
-
-### 9.1c Fast evidence checks while circulating
-
-When you stop at a student desk, gather quick evidence in under 30 seconds:
-
-1. "Show me where total is initialized."
-2. "Show me where min_value starts from the first item."
-3. "Show me the exact line where average is computed."
-4. "Run with inputs 1, 2, 3, 4, 5 and explain each output value."
-
-If any answer is unclear, ask them to trace one iteration verbally. This preserves pace and reinforces pattern thinking without taking over their keyboard.
-
-### 9.2 Circulate and provide feedback
-
-Walk around the room. Look for:
-
-- **Wrong initialization:** Min/max initialized to 0 instead of first number.
-- **Accumulator mistakes:** Total not initialized, or initialized inside the loop.
-- **Average calculation:** Dividing by wrong count, or forgetting to divide.
-- **Using built-in functions:** Students using min() or sum() instead of implementing the pattern.
-
-**Common mistake to watch for:**
-
-```python
-min_value = 0
-max_value = 0
-
-for num in numbers:
-    if num < min_value:
-        min_value = num
-    if num > max_value:
-        max_value = num
-```
-
-This produces wrong results if all numbers are positive (min stays 0) or all numbers are negative (max stays 0).
-
-**Coaching language:**
-
-- "If all your numbers are positive, what happens if min_value starts at 0?"
-- "Where should you initialize your accumulator variables? Before or inside the loop?"
-- "How do you compute an average? What two values do you need?"
-
-### 9.3 Debugging support
-
-If a student is stuck:
-
-1. Ask them to print their tracker variables at the end of each loop iteration to see how they change.
-2. Ask them to test with simple numbers like 1, 2, 3, 4, 5 first.
-3. If their min/max is wrong, ask them to trace through the loop by hand with the numbers they entered.
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| `NameError: name 'total' is not defined` | Variable not initialized | Add `total = 0` before the loop |
+| Wrong min/max values | Forgot to include first number or didn't initialize correctly | Set `minimum = numbers[0]` before loop |
+| Average is wrong | Forgot to count the first number | Make sure `count` includes all numbers |
+| Syntax error in loop | Missing colon or incorrect indentation | Check `:` at end of `for` line; indent loop body |
 
 ---
 
-## 10) Debrief and Knowledge Check (~5 minutes)
+## 6. Assessment Rubric
 
-### 10.1 Share-out
+**Total Points: 10**
 
-**Say:**
-"Let us hear from a few people. Who wants to show their solution and explain how they tracked min and max?"
-
-**Call on 2–3 learners. Ask:**
-
-- "How did you initialize min_value? Why?"
-- "What happens in your loop on each iteration?"
-- "Did you try any of the optional extensions?"
-
-### 10.2 Common mistakes review
-
-**Say:**
-"Here are the most common mistakes I saw today:
-
-1. **Initializing min/max to 0:** This breaks if all numbers are positive or negative. Always initialize to the first item in the list.
-
-2. **Initializing inside the loop:** If you initialize total = 0 inside the loop, it resets every iteration and never accumulates. Initialize before the loop.
-
-3. **Wrong average formula:** Average is sum divided by count, not sum divided by the last number.
-
-4. **Using built-in functions:** While min() and sum() work, the point of this lab is to practice the loop patterns. In real code, use built-ins when appropriate, but understand the pattern first.
-
-The fix for all of these: plan your initialization carefully, test with small inputs, and trace through the loop by hand."
-
-### 10.3 Conceptual recap
-
-**Say:**
-"Let me summarize today's key ideas:
-
-1. **Counter pattern:** Start at 0, increment by 1 when a condition is true. Use for counting items that match criteria.
-
-2. **Accumulator pattern:** Start at an appropriate initial value (0 for sums, 1 for products), then add/multiply/append each item. Use for building up results.
-
-3. **Min/max pattern:** Start with the first item, then update if you find a smaller/larger value. Use for finding extremes.
-
-4. **Combining patterns:** Many problems require multiple patterns. For example, computing an average uses both an accumulator (sum) and a counter (count).
-
-These three patterns are fundamental. You will use them in almost every program you write."
+| Criterion | Points | Rubric |
+|-----------|--------|--------|
+| **Input/Storage** | 2 | Variables initialized correctly; data stored in list (2 pts). Missing initialization (1 pt). No initialization (0 pts). |
+| **Loop Patterns** | 4 | All four patterns implemented correctly—counter, accumulator, min/max, average (4 pts). Three patterns correct (3 pts). Two patterns correct (2 pts). One or fewer correct (0 pts). |
+| **Average Calculation** | 2 | Average computed correctly after loop; formatted to 2 decimal places (2 pts). Computed but wrong format (1 pt). Not computed or wrong result (0 pts). |
+| **Code Quality** | 2 | Clear variable names, proper indentation, readable output (2 pts). Minor issues (1 pt). Major issues or unrunnable code (0 pts). |
 
 ---
 
-## 11) Exit Ticket (included in debrief window)
+## 7. Troubleshooting Pitfalls
 
-**Say:**
-"Before we finish, write down your answer to this question:
+### Common Student Errors and Intervention Strategies
 
-**Question:** If you want to find the minimum value in a list of 100 negative numbers, what should you initialize min_value to? Why?
+**Error 1: Counter increments every iteration**
 
-**Pause for 1 minute, then reveal the answer:**
-
-**Say:**
-"Initialize min_value to the first number in the list: min_value = numbers[0].
-
-Why? Because you don’t know ahead of time whether your numbers will be positive, negative, or mixed. If you just “guess” 0, that guess might accidentally work in some cases, but fail badly in others—for example, if you were finding the *maximum* of a list of negative numbers and wrote max_value = 0, your loop would incorrectly report 0 as the maximum even though 0 is not in the list.
-
-By initializing to the first number, you are guaranteed to start with a value that is actually in the list. Then the comparisons work correctly and consistently regardless of whether the numbers are all positive, all negative, or a mix."
-
----
-
-## 12) Transition to Next Session
-
-**Say:**
-"Excellent work today. You now know the three most important loop patterns: counting, accumulating, and tracking extremes.
-
-Next session (Session 8, starting on Day 8), we will build on these patterns to create menu-driven programs and handle input validation. You will combine loops, conditionals, and data structures into a functional CLI contact manager.
-
-That concludes Session 7. Take a well-deserved break before the next session."
-
----
-
-## 13) Appendix: Quick Reference for Instructors
-
-### Pattern summary
-
-**Counter:**
+**Student Code:**
 ```python
 count = 0
-for item in items:
-    if condition:
-        count += 1
+for num in numbers:
+    count = count + 1
+    if num % 2 == 0:
+        pass  # doesn't do anything
 ```
 
-**Accumulator (sum):**
+**Problem:** Counter is outside the `if` block, so it counts all numbers, not just even ones.
+
+**Intervention:** Say, "If the increment is outside the `if` block, it runs on every iteration. Where should it go?" Guide the student to move `count = count + 1` inside the `if` block.
+
+**Error 2: Min/Max initialized to 0 or a static value**
+
+**Student Code:**
 ```python
-total = 0
-for item in items:
-    total += item
+numbers = [10, 5, 20, 15, 30]
+minimum = 0
+maximum = 0
 ```
 
-**Accumulator (product):**
-```python
-product = 1
-for item in items:
-    product *= item
-```
+**Problem:** If all numbers are positive and 0 is not in the list, minimum stays 0 (wrong). If a number is negative, maximum might be negative (also wrong).
 
-**Min/Max:**
-```python
-min_value = items[0]
-for item in items:
-    if item < min_value:
-        min_value = item
-```
+**Intervention:** Say, "What's the minimum of [10, 5, 20, 15, 30]? It's 5, not 0. How do we start with the correct initial value?" Guide the student to use `numbers[0]`.
 
-### Testing checklist
+**Error 3: Average calculated inside the loop**
 
-- Is the accumulator/counter initialized before the loop?
-- Is the initial value correct (0 for sum, 1 for product, first item for min/max)?
-- Does the loop update the variable correctly?
-- Is the final result computed after the loop (like average = total / count)?
-
-### Troubleshooting common student issues
-
-| Symptom | Likely cause | Fix |
-|---------|--------------|-----|
-| "My sum is always 0" | Not updating total inside loop, or initializing inside loop | Check that total += num is inside the loop |
-| "My min is always 0" | Initialized to 0 instead of first item | Initialize to numbers[0] or first item |
-| "My average is wrong" | Dividing by wrong count, or not dividing at all | Average = total / count, computed after loop |
-| "My product is 0" | Initialized to 0 instead of 1 | For products, initialize to 1, not 0 |
-| "My counter never increases" | Increment not inside if block | count += 1 must be inside the if condition |
-
----
-
-## 14) Real-World Context: Why These Patterns Matter
-
-**Teaching point:**
-"These three patterns are not just academic exercises. They are the building blocks of data processing:
-
-1. **Finance:** Banks sum transactions, find maximum withdrawal, count overdrafts.
-2. **Analytics:** Data scientists compute averages, find outliers (min/max), count events.
-3. **Gaming:** Games track high scores (max), total points (sum), number of wins (counter).
-4. **E-commerce:** Stores sum cart totals, find most expensive item (max), count items in stock (counter).
-
-Every time you see aggregated data — like 'Average rating: 4.5 stars' or 'Total views: 1.2 million' — these patterns are running behind the scenes."
-
----
-
-## 15) Advanced Topic: Running Min/Max
-
-**Teaching point (optional, for advanced learners):**
-"Sometimes you need to track both the value and the index where min/max occurred:
-
-```python
-numbers = [45, 12, 67, 23, 89, 5, 34]
-
-min_value = numbers[0]
-min_index = 0
-
-for i in range(len(numbers)):
-    if numbers[i] < min_value:
-        min_value = numbers[i]
-        min_index = i
-
-print(f'Minimum: {min_value} at index {min_index}')
-```
-
-Output:
-```
-Minimum: 5 at index 5
-```
-
-This pattern is useful when you need to know where the extreme value is, not just what it is. For example, finding the day of the month with the highest sales."
-
----
-
-## 16) Style Guide: Naming Variables
-
-**Teaching point:**
-"Choose clear names for accumulator and tracker variables:
-
-Good:
+**Student Code:**
 ```python
 total = 0
 count = 0
-min_value = items[0]
-even_count = 0
+for num in numbers:
+    total = total + num
+    count = count + 1
+    average = total / count  # Inside the loop!
+    print(f'Average so far: {average}')
 ```
 
-Bad:
+**Problem:** Average changes on every iteration and is computed prematurely. The final average is correct by chance, but the logic is wrong.
+
+**Intervention:** Say, "When should we calculate the average? We need the final total and count. Where does that calculation belong?" Guide the student to move the average calculation outside the loop, *after* it completes.
+
+**Error 4: Forgetting the first number in calculations**
+
+**Student Code:**
 ```python
-x = 0
-n = 0
-m = items[0]
-c = 0
+numbers = [10, 5, 20, 15, 30]
+minimum = numbers[0]
+maximum = numbers[0]
+total = 0
+count = 0
+
+for num in numbers[1:]:  # Skips numbers[0]!
+    total = total + num
+    count = count + 1
+    # min/max logic...
+
+average = total / count  # Doesn't include first number!
 ```
 
-Use descriptive names that explain what the variable tracks. Your code is read more often than it is written."
+**Problem:** The first number is used for min/max initialization but not added to the total or counted.
+
+**Intervention:** Say, "Your min/max are correct, but the sum is 70 instead of 80. Why?" Guide the student to either:
+  - Add `total = total + numbers[0]` after the loop, *or*
+  - Start the loop at `numbers[0]` instead of `numbers[1:]`
 
 ---
 
-## 17) Conceptual Check: When NOT to Loop
+## 8. Exit Ticket & Quick-Check Questions
 
-**Teaching point:**
-"Not every problem requires a loop. Python provides built-in functions for common operations:
-
-- **sum(numbers)**: Computes the sum of a list.
-- **min(numbers)**: Finds the minimum value.
-- **max(numbers)**: Finds the maximum value.
-- **len(numbers)**: Counts the number of items.
-
-Use these when appropriate. But understand the loop patterns first, because:
-
-1. Built-ins only work for simple cases. If you need to sum only even numbers, or find the maximum based on a complex condition, you need a loop.
-
-2. Understanding the pattern helps you debug when built-ins do not do what you expect.
-
-3. Not all languages have these built-ins. The loop patterns are universal."
-
----
-
-## 18) Summary: Key Takeaways
+### Individual Reflection (3 minutes)
 
 **Say:**
-"Before we finish, let me emphasize the four most important points:
 
-1. **Initialize before the loop.** All accumulators, counters, and trackers must be set up before the loop starts.
+"Before we wrap up, answer these questions individually. You don't need to write code—just think about the logic."
 
-2. **Choose the right initial value.** 0 for sums, 1 for products, first item for min/max. Wrong initialization causes wrong results.
+**Question 1:** "In a counter pattern, where does the increment go: inside or outside the `if` block?"
 
-3. **Update inside the loop.** The loop body must change the accumulator/counter/tracker based on each item.
+*Expected answer:* Inside the `if` block.
 
-4. **Combine patterns when needed.** Many problems require multiple patterns. Understand each one individually, then combine them.
+**Question 2:** "You have a list of test scores. To find the lowest score, would you initialize `minimum` to 0, or to the first score in the list?"
 
-These patterns are not Python-specific. They apply to every programming language. Master them, and you can solve a huge range of problems."
+*Expected answer:* To the first score (because 0 might not be a valid score, or a score could be negative).
+
+**Question 3:** "Why do we compute the average after the loop, not inside it?"
+
+*Expected answer:* Because we need the final total and count, which aren't complete until the loop is done.
+
+### Spot-Check Responses
+
+- **Strong:** Student explains the "why" behind each pattern (e.g., "min/max start with the first item because that's a real value").
+- **Developing:** Student identifies the pattern but struggles to explain the reasoning.
+- **Intervention:** Student is confused; flag for one-on-one follow-up after this hour.
 
 ---
 
-**End of Hour 4 Script**
-**End of Session 7**
+## 9. Wrap-Up & Recap
+
+### Debrief (2 minutes)
+
+**Say:**
+
+"Excellent work! You've built a complete statistics program using four professional loop patterns. Let's recap:
+
+- **Counter:** Increments inside an `if` to count matches.
+- **Accumulator:** Updates to collect values (sum, product, concatenation).
+- **Min/Max:** Tracks extremes by comparing each new value.
+- **Average:** Combines counter and accumulator to compute the mean.
+
+These patterns are the foundation of data processing. Every time you filter data, aggregate results, or analyze a dataset, you're using one or more of these patterns."
+
+### Connection to Next Hour
+
+**Say:**
+
+"In the next hour, we'll continue with more complex patterns and loops. But everything we do builds on these four patterns. Master them now, and everything else becomes easier."
+
+### Celebration
+
+**Say:**
+
+"Give yourselves a round of applause. You've completed Day 7, Hour 4. You're now 28 hours into the Python Basics course—you're more than halfway through the first week!"
+
+---
+
+## 10. Facilitation Notes & Pacing Checkpoints
+
+### Timing Plan (60 minutes total)
+
+| Segment | Duration | Notes |
+|---------|----------|-------|
+| **Opening Script** | 4 min | Hook + objectives + real-world connection |
+| **Core Concepts** | 12 min | Counter, Accumulator, Min/Max, Average (3 min each) |
+| **Live Coding Demo** | 6 min | Demo code + walkthrough + interactive question |
+| **Guided Lab – Checkpoint 1** | 5 min | Variable initialization check |
+| **Guided Lab – Checkpoint 2** | 15 min | Loop + patterns check (run code at 22 min) |
+| **Guided Lab – Checkpoint 3** | 5 min | Average + formatting check |
+| **Exit Ticket** | 3 min | Quick-check questions |
+| **Wrap-Up & Recap** | 5 min | Debrief + celebration |
+| **Buffer** | 5 min | Overflow time for struggling students |
+
+### Intervention Triggers
+
+- **Minute 5:** If a student hasn't initialized variables, pause and show an example on screen.
+- **Minute 22:** Run one volunteer's code live. If it fails, use it as a teaching moment: "Let's read the error together."
+- **Minute 25:** Any student without correct output gets a one-on-one walkthrough after class.
+
+### Facilitation Strategies
+
+1. **Normalize mistakes:** "I deliberately put a bug in the demo code earlier—did you catch it? That's good debugging practice."
+2. **Celebrate progress:** Use check-ins to praise specific behaviors: "I like how you tested your code after each change."
+3. **Peer teaching:** "Can someone explain the counter pattern to the person next to you?"
+4. **Differentiation:**
+   - **Advanced students:** "Try modifying the program to also count how many numbers are above the average."
+   - **Struggling students:** Provide the starter code with only one TODO at a time.
+
+---
+
+## 11. Real-World Context & Applications
+
+### Professional Use Cases
+
+**Data Analysis:**
+"A data analyst uses accumulators to sum monthly sales, counters to count transactions by category, and min/max to find peak and valley prices."
+
+**Gaming:**
+"A game developer uses accumulators for player score, counters for kill count or lives lost, min/max for high score and low health threshold, and averages for AI difficulty calibration."
+
+**Finance:**
+"A financial system uses accumulators for portfolio value, counters for transaction count, min/max for largest gain/loss, and averages for daily trading volume."
+
+**Scientific Research:**
+"A researcher uses these patterns to process sensor data: accumulate readings, count samples, track extremes, and compute mean values for statistical analysis."
+
+### Bridging to Advanced Topics
+
+These patterns scale to complex data structures and real-world scenarios:
+
+- **With dictionaries:** Track separate accumulators for each category. For example, a retailer might have a dictionary `sales_by_region` and accumulate totals separately for each region, then compute regional averages and find the region with the highest sales (min/max on dictionary values).
+- **With nested loops:** Apply patterns independently to each subset of data. For instance, a data scientist might process multiple datasets in a list, computing statistics for each one independently by using nested counters, accumulators, and min/max trackers.
+- **With functions:** Extract pattern logic into reusable functions for cleaner code. Instead of writing the entire statistics computation inline, you can create functions like `compute_average(numbers)`, `find_min_max(numbers)`, or `count_matches(items, condition)` and reuse them across your program.
+- **With files:** Read and process data from files using these same patterns. A data analyst might read a CSV file line by line, accumulating quarterly totals, counting valid records, and tracking highest and lowest values from the file data.
+
+---
+
+## 12. Advanced Topics & Summary
+
+### Extension Challenges
+
+**For students who finish early:**
+
+1. **Median calculation:** "Can you modify the program to find the median (middle value)? Hint: You'll need to sort the list first, then check if the count is odd or even to find the middle element."
+2. **Variance and standard deviation:** "Research how to calculate variance—it's the average of squared differences from the mean. Standard deviation is the square root of variance. These are used to measure how spread out your data is."
+3. **Filtering with counter:** "Count how many numbers are above the average. This combines multiple patterns: first calculate the average, then loop through again with a conditional counter."
+4. **Multiple data types:** "Adapt the program to work with user input instead of a hardcoded list. Use a loop to repeatedly ask for numbers until the user enters 'done', then process the collected data using your statistics program."
+5. **Range calculation:** "Add a line that calculates the range (the difference between max and min). This tells you how spread out your data is."
+6. **Mode calculation:** "Find the most frequent number in the list. This requires a counter pattern inside a nested loop—for each unique value, count how many times it appears, then track which count is highest."
+
+### Summary & Key Takeaways
+
+**Four Essential Loop Patterns:**
+
+1. **Counter** – Counts occurrences; initialize to 0, increment inside conditional.
+2. **Accumulator** – Collects values; initialize to appropriate base value, update inside loop.
+3. **Min/Max** – Tracks extremes; initialize to first item, compare and update inside loop.
+4. **Average** – Combines counter and accumulator; compute after loop completes.
+
+**Success Indicators:**
+
+- Students can identify which pattern is needed for a given problem.
+- Students can write code that implements all four patterns without syntax errors.
+- Students understand why each pattern is structured the way it is (not just memorizing code).
+
+**Homework Reminder:**
+
+"Tonight's assignment (Day 7 homework) will give you more practice with these patterns. You'll build a program that processes real-world data—maybe grades, temperatures, or stock prices. The logic is identical to what you've learned today."
+
+---
+
+**End of Instructor Notes – Day 7, Hour 4**
