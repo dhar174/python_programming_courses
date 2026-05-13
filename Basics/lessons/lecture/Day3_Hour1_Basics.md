@@ -1,33 +1,58 @@
 # Day 3, Hour 1: Comparisons + Boolean Logic
 **Python Programming Basics – Session 3**
 
----
-
-## Timing Overview
-**Total Time:** 60 minutes  
-- Recap & Transition from Day 2: 3 minutes
-- Comparison Operators: 10-12 minutes
-- Boolean Logic (and/or/not): 8-10 minutes
-- Truthy/Falsey Preview: 3-5 minutes
-- Live Demo (Age Gating): 5-10 minutes
-- Hands-On Lab (Eligibility Checker): 25-35 minutes
-- Debrief & Exit Ticket: 5 minutes
-
----
-
-## Learning Outcomes for This Hour
-
+**Learning Outcomes for This Hour:**
 By the end of this hour, you will be able to:
 1. Use comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`) to compare values
 2. Explain the critical difference between `==` (comparison) and `=` (assignment)
 3. Combine conditions using `and`, `or`, and `not`
 4. Chain comparison operators in Python
 5. Apply comparison logic to build eligibility checks and decision rules
-6. Identify and avoid common boundary condition mistakes (off-by-one errors)
 
 ---
 
-## Section 1: Recap & Transition from Day 2 (3 minutes)
+## Section 1: Instructor Prep & Setup Checklist
+
+### Pre-Class Checklist
+- [ ] Have Python 3 IDE or REPL ready with a clean script file
+- [ ] Test all demo code before class; confirm output matches expectations
+- [ ] Prepare the age-gating demo (`age_gate.py`) to use live
+- [ ] Prepare the eligibility checker rubric (scoring criteria visible to learners)
+- [ ] Draw a truth table or decision tree on paper/whiteboard to visualize `and`/`or`/`not`
+- [ ] Prepare 3–4 "mystery conditionals" for prediction exercises
+- [ ] Have boundary value test cases written out (ages 12, 13, 18, 65 exactly)
+- [ ] Prepare a "common mistakes" reference (type mixing, string comparisons, logic errors)
+
+### Timing Breakdown
+- **Opening & Recap** (3 min)
+- **Comparison Operators** (10 min)
+- **Boolean Logic (and/or/not)** (8 min)
+- **Truthy/Falsey Preview** (3 min)
+- **Live Demo (Age Gating)** (5 min)
+- **Lab Checkpoint Work** (20 min with 3 checkpoints)
+- **Debrief & Exit Ticket** (3 min)
+- **Total: 52 minutes** (8 min buffer for questions)
+
+### Materials & Resources
+- IDE or Python REPL
+- Truth table or decision tree diagram (for whiteboard)
+- Sample code: age gating, eligibility checker
+- Eligibility checker lab prompt (provided below)
+- Timer (visible to learners)
+
+### Session Timing Overview
+**Total Time:** 60 minutes (52 min core + 8 min buffer)  
+- Recap & Transition from Day 2: 3 minutes
+- Comparison Operators: 10 minutes
+- Boolean Logic (and/or/not): 8 minutes
+- Truthy/Falsey Preview: 3 minutes
+- Live Demo (Age Gating): 5 minutes
+- Hands-On Lab (Eligibility Checker): 20 minutes (3 checkpoints)
+- Debrief & Exit Ticket: 3 minutes
+
+---
+
+## Section 2: Opening Script & Recap (3 minutes)
 
 ### Quick Review
 
@@ -66,7 +91,7 @@ Let's dive in!
 
 ---
 
-## Section 2: Comparison Operators (10-12 minutes)
+## Section 3: Comparison Operators (10-12 minutes)
 
 ### The Foundation: What Is a Comparison?
 
@@ -308,7 +333,7 @@ This reads almost like math notation: "18 is less than or equal to age, and age 
 
 ---
 
-## Section 3: Boolean Logic – and, or, not (8-10 minutes)
+## Section 4: Boolean Logic – and, or, not (8-10 minutes)
 
 ### Combining Conditions with Boolean Operators
 
@@ -541,7 +566,7 @@ Now the logic is crystal clear: the username must be `"admin"`, AND the password
 
 ---
 
-## Section 4: Truthy and Falsey Values – A Preview (3-5 minutes)
+## Section 5: Truthy and Falsey Values – A Preview (3-5 minutes)
 
 ### Beyond True and False
 
@@ -652,7 +677,7 @@ Because `0` is falsey, this prints the "empty" message. It's the same as writing
 
 ---
 
-## Section 5: Live Demo – Age Gating (5-10 minutes)
+## Section 6: Live Demo – Age Gating (5-10 minutes)
 
 ### Demo Script: Age-Based Access Control
 
@@ -755,7 +780,7 @@ This is how you verify your logic is correct. We'll talk more about this in the 
 
 ---
 
-## Section 6: Hands-On Lab – Eligibility Checker (25-35 minutes)
+## Section 7: Hands-On Lab – Eligibility Checker (20 minutes, 3 checkpoints)
 
 ### Lab Overview
 
@@ -809,11 +834,46 @@ resident_input = input("Are you a local resident? (yes/no): ")
 age = int(age_input)
 is_resident = resident_input.lower() == "yes"
 
-# Your eligibility logic goes here
+# Determine eligibility
 print("\n--- Checking eligibility ---")
 
-# TODO: Add your if/elif/else conditions here
+if 5 <= age <= 12:
+    print("✓ You qualify for the Children's Program!")
+elif 13 <= age <= 17:
+    print("✓ You qualify for the Teen Program!")
+elif 18 <= age <= 64 and is_resident:
+    print("✓ You qualify for the Adult Program!")
+elif 18 <= age <= 64 and not is_resident:
+    print("✗ Sorry, the Adult Program requires local residency.")
+    print("  You can apply for residency at City Hall!")
+elif age >= 65:
+    print("✓ You qualify for the Senior Program!")
+else:
+    print("✗ Sorry, you must be at least 5 years old for our programs.")
 ```
+
+### Lab Checkpoints
+
+#### **Checkpoint 1: Input & Type Conversion (5 minutes)**
+- Get age and residency input from the user
+- Convert age to integer
+- Convert residency answer to boolean with `.lower()`
+- Test with at least two different inputs
+- **Success criteria**: Both inputs are received and converted correctly with no type errors
+
+#### **Checkpoint 2: Build Core If/Elif Logic (10 minutes)**
+- Implement the eligibility rules using if/elif/else
+- Test boundary values: ages 12, 13, 18, 65 (exactly)
+- Verify only ONE program prints per user
+- Check at least 4 different age values
+- **Success criteria**: All four age ranges print correct program names; boundary values work correctly
+
+#### **Checkpoint 3: Debug & Optimize (5 minutes)**
+- Run through at least one non-resident adult case
+- Verify the residency check works for the Adult Program only
+- Test with invalid input (optional: add error handling)
+- Add comments explaining the boundary checks
+- **Success criteria**: All test cases pass; code is readable with clear comments
 
 ### Example Output
 
@@ -917,16 +977,16 @@ If you finish early, try these:
 
 **[Instructor speaks:]**
 
-Alright, you have 25-35 minutes. Remember:
-- Test your code with different ages, especially the boundary values
-- Read error messages carefully
-- Ask for help if you're stuck
+Alright, you have 20 minutes with three checkpoints. Focus on:
+- Getting input and converting types first (Checkpoint 1)
+- Building correct logic for each age bracket (Checkpoint 2)
+- Testing boundary values thoroughly (Checkpoint 3)
 
 Let's build!
 
 ---
 
-## Section 7: Debrief & Exit Ticket (5 minutes)
+## Section 8: Debrief & Exit Ticket (3 minutes)
 
 ### Solution Walkthrough
 
@@ -992,6 +1052,204 @@ Before we wrap up Hour 9, answer this in your notes or in the chat:
 **Question:** What's the difference between `==` and `=`? And why does this matter?
 
 **Expected answer:** `=` is assignment (storing a value), `==` is comparison (checking equality). This matters because using `=` in an `if` statement causes a syntax error and doesn't test the condition you intended.
+
+
+
+---
+
+## Section 9: Troubleshooting Pitfalls & Common Mistakes
+
+### Pitfall 1: Confusing `=` (Assignment) with `==` (Comparison)
+**The mistake:**
+```python
+if age = 18:  # SYNTAX ERROR
+    print("Adult")
+```
+**Why it happens:** Muscle memory from math class; in programming, `=` is assignment, not comparison.
+
+**How to catch it:** IDE highlighting; Python raises `SyntaxError: invalid syntax`. Read the error message carefully—it tells you the exact line.
+
+**The fix:**
+```python
+if age == 18:  # Correct comparison
+    print("Adult")
+```
+
+### Pitfall 2: Type Mixing (Comparing String to Integer)
+**The mistake:**
+```python
+age = input("Enter your age: ")  # Returns a STRING
+if age > 18:  # ALWAYS False (string comparison, not numeric)
+    print("Adult")
+```
+**Why it happens:** `input()` returns a string; students forget the `int()` conversion.
+
+**How to catch it:** Test with edge values like age 20; if the program says "Not Adult," you have a type issue.
+
+**The fix:**
+```python
+age = int(input("Enter your age: "))  # Convert to integer
+if age > 18:
+    print("Adult")
+```
+
+### Pitfall 3: Off-by-One Errors in Boundary Conditions
+**The mistake:**
+```python
+if age > 18:  # Missing equality; age 18 falls through
+    print("Adult")
+else:
+    print("Not Adult")
+# For age 18, this prints "Not Adult" – wrong!
+```
+**Why it happens:** Confusion about whether boundaries are inclusive or exclusive; `<` vs. `<=`.
+
+**How to catch it:** Write a test case for the boundary value itself (age 18, 13, 65, 5). Trace through your code line by line.
+
+**The fix:**
+```python
+if age >= 18:  # Include equality
+    print("Adult")
+```
+
+### Pitfall 4: Incorrect Operator Precedence in Complex Conditions
+**The mistake:**
+```python
+if age >= 18 and is_resident or income > 50000:
+    # This reads as: (age >= 18 AND is_resident) OR (income > 50000)
+    # Not the intended: (age >= 18 AND is_resident AND income > 50000)
+```
+**Why it happens:** Operator precedence: `and` binds tighter than `or`.
+
+**How to catch it:** Add parentheses to clarify intent during testing; trace through with sample inputs.
+
+**The fix:**
+```python
+if (age >= 18 and is_resident) or income > 50000:
+    # Explicitly group; still might not be your intent; re-read
+if age >= 18 and (is_resident or income > 50000):
+    # Or this grouping—which logic did you want?
+```
+
+### Pitfall 5: Not Handling Truthy/Falsey in Boolean Expressions
+**The mistake:**
+```python
+is_resident = "yes"  # String, not boolean
+if is_resident:  # Truthy—any non-empty string is True
+    print("Resident")
+# This always prints, even if is_resident = "no" (which is truthy!)
+```
+**Why it happens:** Not distinguishing between string values and boolean `True`/`False`.
+
+**How to catch it:** Test with `is_resident = "no"` or `is_resident = False`; see which branches execute.
+
+**The fix:**
+```python
+is_resident = True  # Use boolean, or
+is_resident = input("Are you a resident? (yes/no): ").lower() == "yes"  # Convert string to boolean
+```
+
+---
+
+## Section 10: Wrap-Up & Recap
+
+### What We Covered Today
+
+**Hour 9: Comparisons & Boolean Logic**
+- **Comparisons:** `==`, `!=`, `<`, `>`, `<=`, `>=` let your programs make decisions based on values
+- **Boolean Logic:** `and`, `or`, `not` let you combine multiple conditions
+- **Chaining:** Python allows `5 < age < 18`, which is elegant and readable
+- **Truthy/Falsey:** Every value in Python has a truth value; understand the hidden rules to avoid subtle bugs
+
+### Why This Matters
+
+You just wrote your first **decision-making program**. Comparisons and boolean logic are the **foundation of all conditionals**. By Hour 11 (tomorrow), you'll use these same operators inside `if`-statements to control program flow. By Day 4, you'll use them in loops. Every professional program on Earth uses this logic—in web apps, mobile apps, embedded systems, AI, everything.
+
+### Looking Ahead
+
+- **Hour 10 (today, afternoon):** We'll introduce `if`-statements—the final piece of Day 3's puzzle. Your programs will start asking questions and making decisions.
+- **Day 4 (tomorrow):** Checkpoint 1 Assessment. We'll revisit everything from Days 1-3 to ensure you have the fundamentals locked down.
+- **Advanced Path:** Once conditionals are solid, you'll tackle loops, functions, data structures—all built on this foundation.
+
+### Encourage Reflection
+
+**Quick thought exercise:**
+- Think of a decision *you* make every day (e.g., "If it's raining and I'm going out, I take an umbrella").
+- Can you write it as a Python condition? Try it—talk to a peer or jot it down.
+
+---
+
+## Section 11: Facilitation Notes
+
+### Classroom Management & Timing
+
+- **Start Lab by minute 35** to ensure 20 minutes of focused checkpoint work
+- Use a visible timer projected on screen during lab; announce "5 minutes remaining"
+- Watch for students stuck on boundary values; pair them with students who've passed Checkpoint 2
+- Common interruption: students testing with invalid input (non-numeric age). Have them add a comment in their code: `# Note: This version assumes valid integer input`
+
+### Intervention Strategies
+
+**If most students are behind at Checkpoint 1 (minute 7):**
+- Model the first 3 lines of code on the board while students code along
+- Re-emphasize: "Try typing the code line by line, don't copy-paste yet"
+
+**If students are confused about boundary checks (Checkpoint 2):**
+- Draw a number line on the whiteboard showing 5, 12, 13, 17, 18, 64, 65
+- Mark the ranges with colors: green (5-12), blue (13-17), yellow (18-64), purple (65+)
+- Ask: "If I'm exactly 13, which range do I fall into?" (NOT blue—ask them to pick between green and blue to re-engage)
+
+**If a student forgets the residency check:**
+- Don't fix it; ask: "Which program is the ONLY one that checks residency?" (Wait for answer: Adult)
+- Then: "Where in your code do you check for Adult?" (Guide them to add `and is_resident`)
+
+### Pacing Checkpoints
+
+- **Checkpoint 1 (5 min):** Expect most students done by minute 7. Those slower might finish by minute 9.
+- **Checkpoint 2 (10 min):** Should see boundary value testing by minute 17. If debugging `age <= 17` vs. `age < 18`, point them to the number line.
+- **Checkpoint 3 (5 min):** Leave time for adding comments. If a student wants to add input validation, that's an extension, not core.
+
+### Troubleshooting Tips
+
+- **"I got a TypeError on line X"**: Almost always a missing `int()` conversion. Ask: "What type is the input?" (String) → "What type do you need?" (Integer) → "What function converts it?"
+- **"My code runs but the wrong program prints"**: Likely an off-by-one error. Ask them to trace through with age 18: does `age < 18` print? (Should not.)
+- **"It works for age 20 but not age 18"**: Classic boundary value bug. Ask: "At what exact age does the condition change?" → Trace through the edge case together.
+
+---
+
+## Section 12: Assessment Rubric
+
+### Lab Submission Grading (Total: 10 points)
+
+#### **Correctness: Input & Type Conversion (2 points)**
+- ✅ **Full (2 pts)**: Both inputs collected; age converted to `int()` with no errors; residency converted to boolean with `.lower()`
+- ⚠️ **Partial (1 pt)**: Age converted but residency not; OR inputs collected but only one converted
+- ❌ **Missing (0 pts)**: Inputs not collected or no conversions attempted
+
+#### **Correctness: If/Elif/Else Logic (4 points)**
+- ✅ **Full (4 pts)**: All four age ranges (5-12, 13-17, 18-64 with residency, 65+) produce correct output; boundary values (ages 12, 13, 18, 65) handled correctly
+- ⚠️ **Partial (2 pts)**: 3 out of 4 ranges work OR all ranges work but at least one boundary value fails
+- ❌ **Missing (0 pts)**: Fewer than 3 ranges implemented OR logic fundamentally broken (e.g., all outputs identical)
+
+#### **Correctness: Residency Check (2 points)**
+- ✅ **Full (2 pts)**: Adult Program (18-64) ONLY checks `is_resident` AND non-residents over 18 see helpful message
+- ⚠️ **Partial (1 pt)**: Residency check present but only partially applied (e.g., checks all ages or misses the message)
+- ❌ **Missing (0 pts)**: No residency check OR residency check applied incorrectly
+
+#### **Code Quality: Comments & Clarity (2 points)**
+- ✅ **Full (2 pts)**: Code includes comments on at least one boundary check; variable names are clear (`age`, `is_resident`, not `a`, `x`)
+- ⚠️ **Partial (1 pt)**: Either minimal comments OR variable names could be clearer
+- ❌ **Missing (0 pts)**: No comments; unclear variable names throughout
+
+---
+
+### Checkpoint Success Criteria (Self-Assessment for Students)
+
+| Checkpoint | Success Looks Like | How to Check |
+|------------|-------------------|--------------|
+| **1: Input & Conversion** | You entered an age, got a yes/no answer, and both printed back correctly as the right type | Type `print(type(age))` — should be `<class 'int'>` |
+| **2: Core Logic** | Your program prints ONE program name for ages 10, 15, 25, and 70. Age 18 prints "Adult," age 13 prints "Teen." | Manually test with ages 12, 13, 18, 65; verify output |
+| **3: Residency Check & Comments** | A 30-year-old non-resident sees the residency message. Your code has at least one comment explaining a boundary check. | Type `python eligibility_checker.py` with age 30, residency "no" |
 
 ---
 
