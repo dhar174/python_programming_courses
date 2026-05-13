@@ -446,7 +446,7 @@ jobs:
               except json.JSONDecodeError as exc:
                   raise ValueError(f"Malformed QUIZ_DATA JSON in {html_path}: {exc}") from exc
 
-          def load_student_answers(quiz_id: str, html_path: Path) -> tuple[dict, str]:
+          def load_student_answers(quiz_id: str, html_path: Path) -> tuple[dict | None, str]:
               candidates = [
                   html_path.with_name(f"{quiz_id}_answers.json"),
                   html_path.with_name(f"{quiz_id.lower()}_answers.json"),
@@ -457,12 +457,20 @@ jobs:
                       continue
                   try:
                       payload = json.loads(candidate.read_text(encoding="utf-8"))
-                      answers = payload.get("student_answers") if isinstance(payload, dict) else None
-                      if isinstance(answers, dict):
-                          return {str(k): str(v) for k, v in answers.items()}, str(candidate)
-                  except json.JSONDecodeError:
-                      continue
-              return {}, "missing_submission"
+                      if not isinstance(payload, dict):
+                          raise ValueError(f"Expected JSON object (dict), got {type(payload).__name__}")
+                      answers = payload.get("student_answers")
+                      if answers is None:
+                          raise ValueError("Required field 'student_answers' is missing from JSON")
+                      if not isinstance(answers, dict):
+                          raise ValueError(f"Expected 'student_answers' to be dict, got {type(answers).__name__}")
+                      if not answers:
+                          raise ValueError("'student_answers' dict is empty - no answers provided")
+                      return {str(k): str(v) for k, v in answers.items()}, str(candidate)
+                  except (json.JSONDecodeError, ValueError) as exc:
+                      print(f"::error::Malformed or invalid answer export at {candidate}: {exc}")
+                      sys.exit(1)
+              return None, "missing_submission"
 
           quiz_candidates: dict[str, list[Path]] = {}
           for quiz_path in sorted(Path("Basics/quizzes").glob("Basics_Day*_Quiz.html")):
@@ -471,8 +479,8 @@ jobs:
               quiz_candidates.setdefault(quiz_path.stem, []).append(quiz_path)
 
           if not quiz_candidates:
-              print("::notice::No Basics quiz HTML files found. Skipping quiz grading.")
-              sys.exit(0)
+              print("::error::No Basics quiz HTML files found. Cannot proceed with quiz grading.")
+              sys.exit(1)
 
           def quiz_sort_key(quiz_id: str) -> tuple[int, str]:
               match = re.search(r"Basics_Day(\d+)_Quiz$", quiz_id)
@@ -485,13 +493,13 @@ jobs:
               candidates = quiz_candidates[quiz_id]
               html_path = next((path for path in candidates if path.exists()), None)
               if html_path is None:
-                  print(f"::notice::Missing HTML quiz file for {quiz_id}. Skipping.")
-                  continue
+                  print(f"::error::Missing HTML quiz file for {quiz_id}. Cannot proceed with grading.")
+                  sys.exit(1)
 
               student_answers, answer_source = load_student_answers(quiz_id, html_path)
               if answer_source == "missing_submission":
-                  print(f"::notice::No answer export found for {quiz_id}. Skipping quiz grading for this quiz.")
-                  continue
+                  print(f"::error::No answer export found for {quiz_id}. Answers must be exported to {quiz_id}_answers.json")
+                  sys.exit(1)
 
               try:
                   quiz_data = load_quiz_data(html_path)
