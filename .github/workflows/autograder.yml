@@ -18,6 +18,7 @@ env:
   # See https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/ for Node 24 opt-in details.
   # Remove this once GitHub Actions' default JavaScript runner is Node.js 24+ and this opt-in is deprecated.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  AUTOGRADER_MAX_WORKERS: "4"
 
 jobs:
   grade:
@@ -25,6 +26,7 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     
     steps:
       - name: Checkout repository
@@ -168,18 +170,22 @@ jobs:
       - name: Evaluate assignment tests
         if: steps.prepare_autograder.outputs.any_submission_found == 'true'
         run: |
-          for attempt in 1 2 3; do
-            echo "Installing nbconvert: Attempt $attempt of 3..."
-            python -m pip install --quiet nbconvert && break
-            if [ $attempt -lt 3 ]; then sleep $((2 ** attempt)); fi
-          done || { echo "::error::Failed to install nbconvert after 3 attempts; cannot run notebook conversion."; exit 1; }
+          python -c "import nbconvert" >/dev/null 2>&1 || {
+            for attempt in 1 2 3; do
+              echo "Installing nbconvert: Attempt $attempt of 3..."
+              python -m pip install --quiet nbconvert && break
+              if [ $attempt -lt 3 ]; then sleep $((2 ** attempt)); fi
+            done
+          } || { echo "::error::Failed to install nbconvert after 3 attempts; cannot run notebook conversion."; exit 1; }
           python - << 'PYEVAL'
           import copy
           import json
+          import os
           import re
           import shlex
           import subprocess
           import sys
+          from concurrent.futures import ThreadPoolExecutor, as_completed
           from pathlib import Path
 
           output_dir = Path("submission/.github/autograder")
@@ -203,6 +209,7 @@ jobs:
 
           prefix_labels = {"Student:", "Date:", "Python Version:", "Name:", "Age:"}
           filename_pattern = re.compile(r"^[A-Za-z0-9._-]+$")
+          max_workers = max(1, int(os.environ.get("AUTOGRADER_MAX_WORKERS", "4")))
 
           def parse_command(command):
               if isinstance(command, list):
@@ -211,6 +218,7 @@ jobs:
                   return shlex.split(command)
               return []
 
+          notebook_jobs = []
           for assignment_dir in assignment_dirs:
               day_match = re.search(r"(Basics|Advanced)_Day(\d+)_homework$", assignment_dir.name)
               if not day_match:
@@ -247,92 +255,108 @@ jobs:
                   if notebook_name.startswith(".") or ".." in notebook_name:
                       print(f"::error::Invalid submission filename '{notebook_name}'. Relative path-like names are not allowed.")
                       sys.exit(1)
+                  notebook_jobs.append((assignment_dir, notebook_path, criteria))
 
-                  script_dir = output_dir / "generated_scripts"
-                  script_dir.mkdir(parents=True, exist_ok=True)
-                  script_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", notebook_path.stem)
-                  script_path = script_dir / f"{script_stem}.py"
-                  convert_cmd = [
-                      "jupyter",
-                      "nbconvert",
-                      "--to",
-                      "script",
-                      str(notebook_path),
-                      "--output",
-                      script_path.stem,
-                      "--output-dir",
-                      str(script_dir),
-                  ]
-                  conversion = subprocess.run(convert_cmd, capture_output=True, text=True)
-                  evaluated = copy.deepcopy(criteria)
-                  eval_tests = evaluated.get("tests")
-                  if conversion.returncode != 0 or not script_path.exists():
-                      details = (
-                          conversion.stderr.strip()
-                          or conversion.stdout.strip()
-                          or f"Notebook conversion failed for {notebook_path} with command: {' '.join(convert_cmd)}"
-                      )
-                      print(f"::warning::Notebook conversion failed for {notebook_path}: {details}")
-                      if isinstance(eval_tests, list):
-                          for test in eval_tests:
-                              if isinstance(test, dict):
-                                  test["student_stdout"] = [details]
-                                  test["pass"] = False
-                      output_path = output_dir / f"{notebook_path.stem}_criteria.json"
-                      output_path.write_text(json.dumps(evaluated, indent=2), encoding="utf-8")
+          if not notebook_jobs:
+              print("::notice::No valid assignment notebooks discovered for evaluation. Skipping assignment grading.")
+              sys.exit(0)
+
+          script_dir = output_dir / "generated_scripts"
+          script_dir.mkdir(parents=True, exist_ok=True)
+
+          def evaluate_notebook(job):
+              assignment_dir, notebook_path, criteria = job
+              output_stem = re.sub(r"[^A-Za-z0-9._-]+", "_", f"{assignment_dir.name}__{notebook_path.stem}")
+              script_path = script_dir / f"{output_stem}.py"
+              convert_cmd = [
+                  "jupyter",
+                  "nbconvert",
+                  "--to",
+                  "script",
+                  str(notebook_path),
+                  "--output",
+                  script_path.stem,
+                  "--output-dir",
+                  str(script_dir),
+              ]
+              conversion = subprocess.run(convert_cmd, capture_output=True, text=True)
+              evaluated = copy.deepcopy(criteria)
+              eval_tests = evaluated.get("tests")
+              if conversion.returncode != 0 or not script_path.exists():
+                  details = (
+                      conversion.stderr.strip()
+                      or conversion.stdout.strip()
+                      or f"Notebook conversion failed for {notebook_path} with command: {' '.join(convert_cmd)}"
+                  )
+                  if isinstance(eval_tests, list):
+                      for test in eval_tests:
+                          if isinstance(test, dict):
+                              test["student_stdout"] = [details]
+                              test["pass"] = False
+                  return notebook_path, assignment_dir.name, evaluated, details, False
+
+              for test in eval_tests:
+                  if not isinstance(test, dict):
                       continue
+                  cmd = test.get("command", [])
+                  stdin_data = test.get("stdin", "")
+                  expected = test.get("expected_stdout", [])
+                  try:
+                      runtime_cmd = parse_command(cmd)
+                  except ValueError as exc:
+                      test["student_stdout"] = [f"Invalid command for {assignment_dir.name}: {exc}"]
+                      test["pass"] = False
+                      continue
+                  replaced_script = False
+                  for index, part in enumerate(runtime_cmd):
+                      if Path(part).suffix == ".py":
+                          runtime_cmd[index] = str(script_path)
+                          replaced_script = True
+                          break
+                  if not replaced_script and runtime_cmd and Path(runtime_cmd[0]).name.lower().startswith("python"):
+                      runtime_cmd.append(str(script_path))
+                  try:
+                      result = subprocess.run(
+                          runtime_cmd,
+                          input=stdin_data,
+                          capture_output=True,
+                          text=True,
+                          timeout=30,
+                      )
+                      stdout_text = result.stdout or ""
+                      stdout_lines = stdout_text.splitlines()
+                      test["student_stdout"] = stdout_lines
+                      if result.returncode != 0:
+                          pass_flag = False
+                      else:
+                          matches = []
+                          for exp_line in expected:
+                              if not isinstance(exp_line, str):
+                                  continue
+                              if exp_line in prefix_labels:
+                                  match = any(line.startswith(exp_line) for line in stdout_lines)
+                              else:
+                                  match = any(line == exp_line for line in stdout_lines)
+                              matches.append(match)
+                          pass_flag = all(matches) if expected else True
+                      test["pass"] = pass_flag
+                  except Exception as exc:
+                      test["student_stdout"] = [str(exc)]
+                      test["pass"] = False
 
-                  for test in eval_tests:
-                      if not isinstance(test, dict):
-                          continue
-                      cmd = test.get("command", [])
-                      stdin_data = test.get("stdin", "")
-                      expected = test.get("expected_stdout", [])
-                      try:
-                          runtime_cmd = parse_command(cmd)
-                      except ValueError as exc:
-                          test["student_stdout"] = [f"Invalid command for {assignment_dir.name}: {exc}"]
-                          test["pass"] = False
-                          continue
-                      replaced_script = False
-                      for index, part in enumerate(runtime_cmd):
-                          if Path(part).suffix == ".py":
-                              runtime_cmd[index] = str(script_path)
-                              replaced_script = True
-                              break
-                      if not replaced_script and runtime_cmd and Path(runtime_cmd[0]).name.lower().startswith("python"):
-                          runtime_cmd.append(str(script_path))
-                      try:
-                          result = subprocess.run(
-                              runtime_cmd,
-                              input=stdin_data,
-                              capture_output=True,
-                              text=True,
-                              timeout=30,
-                          )
-                          stdout_text = result.stdout or ""
-                          stdout_lines = stdout_text.splitlines()
-                          test["student_stdout"] = stdout_lines
-                          if result.returncode != 0:
-                              pass_flag = False
-                          else:
-                              matches = []
-                              for exp_line in expected:
-                                  if not isinstance(exp_line, str):
-                                      continue
-                                  if exp_line in prefix_labels:
-                                      match = any(line.startswith(exp_line) for line in stdout_lines)
-                                  else:
-                                      match = any(line == exp_line for line in stdout_lines)
-                                  matches.append(match)
-                              pass_flag = all(matches) if expected else True
-                          test["pass"] = pass_flag
-                      except Exception as exc:
-                          test["student_stdout"] = [str(exc)]
-                          test["pass"] = False
+              return notebook_path, assignment_dir.name, evaluated, None, True
 
-                  output_path = output_dir / f"{notebook_path.stem}_criteria.json"
+          worker_count = min(max_workers, len(notebook_jobs))
+          print(f"Evaluating {len(notebook_jobs)} notebook(s) with {worker_count} worker(s).")
+          with ThreadPoolExecutor(max_workers=worker_count) as executor:
+              futures = [executor.submit(evaluate_notebook, job) for job in notebook_jobs]
+              for future in as_completed(futures):
+                  notebook_path, assignment_name, evaluated, conversion_details, converted = future.result()
+                  output_name = re.sub(r"[^A-Za-z0-9._-]+", "_", f"{assignment_name}__{notebook_path.stem}")
+                  output_path = output_dir / f"{output_name}_criteria.json"
                   output_path.write_text(json.dumps(evaluated, indent=2), encoding="utf-8")
+                  if not converted:
+                      print(f"::warning::Notebook conversion failed for {notebook_path}: {conversion_details}")
                   print(f"Wrote evaluated test results to {output_path}")
           PYEVAL
 
@@ -601,6 +625,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
