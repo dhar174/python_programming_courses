@@ -30,12 +30,10 @@
 ## 1) Agenda + Timing
 
 - **0:00–0:05** Reconnect to Hour 3 for loops; introduce common patterns
-- **0:05–0:15** Counter pattern: counting items that meet a condition
-- **0:15–0:25** Accumulator pattern: building up a result
-- **0:25–0:38** Min/max pattern: tracking extremes
-- **0:38–0:48** Live demo: number statistics calculator
-- **0:48–0:57** Guided lab: Number Stats
-- **0:57–1:00** Debrief, recap, and exit ticket
+- **0:05–0:18** Talk points (10-15 min target): counter, accumulator, safe min/max initialization
+- **0:18–0:26** Live demo (5-10 min target): read 5 numbers and compute sum/min/max
+- **0:26–0:55** Guided lab (25-35 min target): Number Stats implementation
+- **0:55–1:00** Debrief, recap, and exit ticket
 
 ---
 
@@ -587,7 +585,8 @@ The fix: initialize to the first number in the list, not to 0."
 **Optional extensions (if you finish early):**
 
 1. Allow the user to choose how many numbers to enter.
-2. Add validation: if the user enters invalid input, re-prompt.
+2. Allow variable count until the user types a `done` sentinel.
+3. Add validation: if the user enters invalid input, re-prompt.
 
 **Completion criteria:**
 
@@ -595,7 +594,31 @@ The fix: initialize to the first number in the list, not to 0."
 - Uses loop patterns (accumulator, min/max)
 - Clean, formatted output
 
-You have 25 minutes. I will circulate and help."
+You have about 29 minutes for implementation and testing. I will circulate and help."
+
+### 9.1b Instructor pacing guide for the 25-minute lab
+
+Use this mini-budget to keep the lab aligned to the runbook expectation (25-35 minutes) while still leaving time for debrief:
+
+- **Minutes 0-5:** students scaffold input loop and store numbers in a list.
+- **Minutes 6-12:** students implement sum accumulator and verify output.
+- **Minutes 13-18:** students implement min/max tracking with safe initialization from first item.
+- **Minutes 19-22:** students compute average and format clean output.
+- **Minutes 23-25:** students run one final test case and self-check completion criteria.
+
+**Say:**
+"If you finish one step early, do not jump ahead randomly. First verify your current step with a simple test. Correct intermediate results reduce debugging later."
+
+### 9.1c Fast evidence checks while circulating
+
+When you stop at a student desk, gather quick evidence in under 30 seconds:
+
+1. "Show me where total is initialized."
+2. "Show me where min_value starts from the first item."
+3. "Show me the exact line where average is computed."
+4. "Run with inputs 1, 2, 3, 4, 5 and explain each output value."
+
+If any answer is unclear, ask them to trace one iteration verbally. This preserves pace and reinforces pattern thinking without taking over their keyboard.
 
 ### 9.2 Circulate and provide feedback
 
@@ -637,7 +660,7 @@ If a student is stuck:
 
 ---
 
-## 10) Debrief and Knowledge Check (~12 minutes)
+## 10) Debrief and Knowledge Check (~5 minutes)
 
 ### 10.1 Share-out
 
@@ -682,7 +705,7 @@ These three patterns are fundamental. You will use them in almost every program 
 
 ---
 
-## 11) Exit Ticket (~3 minutes)
+## 11) Exit Ticket (included in debrief window)
 
 **Say:**
 "Before we finish, write down your answer to this question:
