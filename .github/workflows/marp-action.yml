@@ -26,29 +26,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       pages: write
       id-token: write
-      attestations: write
       artifact-metadata: write
-      actions: write
-      deployments: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@4b4b3252e8485a70c0d6d199d42f96a281b5537d # v4.2.2
         
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@1f0637fc664c5490c91b9a5026c2584ffc27c7c7 # v4.0.0
           
       - name: Convert Basics slide Markdown into HTML and PDF
-        uses: KoharaKazuya/marp-cli-action@v4
+        uses: KoharaKazuya/marp-cli-action@82da1c97c35e7903eca6ac9f18ad0e0e1e883b55 # v4 pinned
         with:
           config-file: ./.marprc.yml
 
       - name: Convert Advanced slide Markdown into HTML and PDF
         if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
-        uses: KoharaKazuya/marp-cli-action@v4
+        uses: KoharaKazuya/marp-cli-action@82da1c97c35e7903eca6ac9f18ad0e0e1e883b55 # v4 pinned
         with:
           config-file: ./.marprc.yml
           args: --input-dir Advanced/lessons/slides --output _site/slides/advanced
@@ -175,12 +171,8 @@ jobs:
 
   deploy:
     permissions:
-      contents: write
       pages: write
       id-token: write
-      attestations: write
-      artifact-metadata: write
-      actions: write
       deployments: write
     runs-on: ubuntu-latest
     needs: build
@@ -191,5 +183,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@b7916b2ef26ba01c6e3e76d94b080e36d56b0626 # v4 pinned
         
