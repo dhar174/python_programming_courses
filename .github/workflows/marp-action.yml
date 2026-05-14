@@ -68,6 +68,7 @@ jobs:
       - name: Ensure Pages root resolves to slide content
         run: |
           mkdir -p _site
+          sudo chown -R "$(id -u):$(id -g)" _site
 
           # Clean up only if index.html exists as a non-file entry.
           if [ -e _site/slides/index.html ] && [ ! -f _site/slides/index.html ]; then
