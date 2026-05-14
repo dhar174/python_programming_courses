@@ -47,9 +47,11 @@ jobs:
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
           
       - name: Convert Basics slide Markdown into HTML and PDF
+        if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
         uses: KoharaKazuya/marp-cli-action@0810e250c2fcf4e81b17012e35cffacd1b9e976b # v4
         with:
           config-file: ./.marprc.yml
+          args: --input-dir Basics/lessons/slides --output _site/slides
 
       - name: Convert Advanced slide Markdown into HTML and PDF
         if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
