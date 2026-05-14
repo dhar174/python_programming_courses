@@ -1,6 +1,6 @@
 ---
 name: repo-quality-gates
-description: 'Run the repository's test, lint, and typecheck commands, then summarize failures and next actions for coding agents.'
+description: 'Run the repositorys test, lint, and typecheck commands, then summarize failures and next actions for coding agents.'
 ---
 
 # Repo Quality Gates
