@@ -116,8 +116,6 @@ jobs:
           mkdir -p _site/slides
 
           if [ ! -f _site/slides/index.html ]; then
-            rm -rf _site/slides/index.html
-
             FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
