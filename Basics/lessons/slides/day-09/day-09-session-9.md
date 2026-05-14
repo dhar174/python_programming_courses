@@ -1,7 +1,11 @@
 # Basics Day 9 — Session 9 (Hours 33–36)
-Python Programming (Basic) • Functions, Scope & Modules
+Functions, Scope, Collections, Modules
 
-## Session 9 Overview
+---
+
+# Session 9 Overview
+
+## Topics Covered Today
 - Hour 33: Functions — def, parameters, return
 - Hour 34: Scope + common function mistakes
 - Hour 35: Functions with collections
@@ -12,1385 +16,810 @@ Python Programming (Basic) • Functions, Scope & Modules
 # Hour 33: Functions — def, parameters, return
 
 ## Learning Outcomes
-- Write simple functions using `def`
-- Pass arguments and receive parameters
-- Return values from functions and store results
-- Understand the difference between `return` and `print`
-
----
-
-## Why Write Functions?
-
-### The Problem Without Functions
-```python
-# Without functions — repeated logic everywhere
-name1 = input("Name: ").strip().title()
-print(f"Hello, {name1}!")
-
-name2 = input("Name: ").strip().title()
-print(f"Hello, {name2}!")
-
-name3 = input("Name: ").strip().title()
-print(f"Hello, {name3}!")
-# Same 2 lines repeated 3 times — hard to update!
-```
-
-### The Solution — Define Once, Call Many Times
-```python
-def greet(name: str) -> None:
-    formatted = name.strip().title()
-    print(f"Hello, {formatted}!")
-
-greet("alice")
-greet("BOB")
-greet("  carol  ")
-```
-
-> 💡 **Functions give you reuse + clarity.** Change the logic once, every call benefits.
+- Write a function using `def` with parameters and a body
+- Distinguish parameters (the placeholder) from arguments (the value passed)
+- Use `return` to send a value back to the caller
+- Contrast `print()` (displays to human) with `return` (delivers to program)
+- Refactor repeated procedural code into named, reusable functions
 
 ---
 
 ## Anatomy of a Function
 
-### The def Statement
+### Definition (stored in memory — runs nothing yet)
 ```python
-def function_name(parameter1, parameter2):
-    """Docstring: what this function does."""
-    # function body
-    return result
+#  keyword  name       parameter
+#     |       |            |
+def greet_user(name):
+    message = f"Hello, {name}!"   # body — indented 4 spaces
+    return message                # sends data back to the caller
 ```
 
-### Breaking It Down
-| Part | Purpose |
-|------|---------|
-| `def` | Keyword that starts a function definition |
-| `function_name` | Name you choose — use `snake_case` |
-| `(parameter1, ...)` | Inputs the function receives |
-| `"""..."""` | Docstring explaining the function |
-| `return result` | Sends a value back to the caller |
+### Call (triggers execution)
+```python
+result = greet_user("Alice")   # argument "Alice" -> parameter name
+print(result)                  # Hello, Alice!
 
-> 💡 **Parameters** are the placeholders in the `def` line. **Arguments** are the actual values you pass when you call the function.
+greet_user("Bob")              # call as many times as needed
+greet_user("Charlie")
+```
+
+> **Defining** stores the function. **Calling** runs it.
 
 ---
 
 ## Parameters and Arguments
 
-### Defining Parameters
 ```python
-def add_numbers(a: int, b: int) -> int:
-    """Return the sum of a and b."""
-    return a + b
+# One parameter
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Alice")    # "Alice" is the argument
+greet("Bob")
+
+# Multiple parameters (matched by position)
+def add_two_numbers(a, b):
+    total = a + b
+    print(f"{a} + {b} = {total}")
+
+add_two_numbers(5, 3)    # a=5, b=3
+add_two_numbers(10, 20)  # a=10, b=20
 ```
 
-### Calling with Arguments
-```python
-result = add_numbers(3, 5)
-print(result)   # 8
+- **Parameter** — placeholder variable in the function signature (`name`, `a`, `b`)
+- **Argument** — the actual value you supply at call time (`"Alice"`, `5`, `3`)
 
-print(add_numbers(10, 20))   # 30
-print(add_numbers(100, -5))  # 95
+---
+
+## The return Statement
+
+```python
+def multiply(a, b):
+    result = a * b
+    return result              # sends the value back to the caller
+
+# The call expression is REPLACED by the returned value
+answer = multiply(5, 4)        # answer = 20
+bigger = answer + 10           # bigger = 30
+
+# return exits immediately — useful for early exit
+def safe_divide(a, b):
+    if b == 0:
+        return "Error: division by zero"
+    return a / b               # only reached when b != 0
+
+print(safe_divide(10, 2))      # 5.0
+print(safe_divide(10, 0))      # Error: division by zero
 ```
 
-### Positional vs Keyword Arguments
+> Once Python hits `return`, the function stops. Everything after is skipped.
+
+---
+
+## return vs. print()
+
+| | `print()` | `return` |
+|---|---|---|
+| Who receives the data? | Human (screen) | The program (caller) |
+| Can the caller use the value? | No | Yes |
+| Function stops after? | No | Yes |
+
 ```python
-def describe_item(name: str, price: float) -> str:
-    return f"{name} costs ${price:.2f}"
+def bad_sum(a, b):
+    print(a + b)          # shows 8 on screen
 
-# Positional — order matters
-print(describe_item("Apple", 0.99))
+result = bad_sum(3, 5)    # result is None — not 8!
+print(result)             # None
 
-# Keyword — order doesn't matter
-print(describe_item(price=1.49, name="Banana"))
+def good_sum(a, b):
+    return a + b          # gives 8 to the caller
+
+result = good_sum(3, 5)   # result is 8
+print(result)             # 8
 ```
 
 ---
 
-## return vs print — The Key Difference
+## Demo: Refactoring a Calculator
 
-### print Only Shows on Screen
+### Before — logic buried in a big menu loop, hard to test
 ```python
-def bad_double(n: int) -> None:
-    print(n * 2)    # Only displays; you can't use the value
-
-result = bad_double(5)   # Prints: 10
-print(result)            # Prints: None  ← problem!
+if choice == "1":
+    result = num1 + num2
+    print(f"Result: {result}")
+elif choice == "2":
+    result = num1 - num2
+    print(f"Result: {result}")
 ```
 
-### return Sends the Value Back
+### After — each operation is an isolated, testable function
 ```python
-def good_double(n: int) -> int:
-    return n * 2    # Sends value back to caller
+def add(x, y):
+    return x + y
 
-result = good_double(5)  # result = 10
-print(result)            # Prints: 10
-total = good_double(5) + good_double(3)   # total = 16
-```
+def subtract(x, y):
+    return x - y
 
-> ⚠️ **Key rule:** If you need to use the result later — store it, combine it, pass it on — use `return`. Only `print` when you're done with the value and just want to display it.
+def get_float_input(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Please enter a valid number.")
 
----
-
-## Return Values and Storing Results
-
-### Functions Are Just Expressions
-```python
-def celsius_to_fahrenheit(c: float) -> float:
-    """Convert Celsius to Fahrenheit."""
-    return (c * 9 / 5) + 32
-
-# Store the result
-boiling = celsius_to_fahrenheit(100)
-print(f"100°C = {boiling}°F")     # 100°C = 212.0°F
-
-# Use inline
-freezing = celsius_to_fahrenheit(0)
-body_temp = celsius_to_fahrenheit(37)
-
-print(f"Freezing: {freezing}°F")   # Freezing: 32.0°F
-print(f"Body:     {body_temp}°F")  # Body:     98.6°F
-```
-
-### A Function Without return Returns None
-```python
-def show_name(name: str) -> None:
-    print(f"Name: {name}")
-
-value = show_name("Alice")  # Prints: Name: Alice
-print(value)                # Prints: None
+# main() becomes a clear traffic director
+def main():
+    num1 = get_float_input("First number: ")
+    num2 = get_float_input("Second number: ")
+    print(f"Sum: {add(num1, num2)}")
 ```
 
 ---
 
-## Demo: Refactor a Calculator Into Functions
+## Lab: Refactor Contact Manager (Hour 33)
 
-### Watch For:
-- Each function does one job
-- Each function returns (not prints) its result
-- The `main` block calls the functions and displays results
+**Time: 13 minutes**
 
-```python
-def add(a: float, b: float) -> float:
-    """Return a + b."""
-    return a + b
+### Tasks
+Refactor a menu-driven contact manager into named functions:
+- `add_contact(contact_list, name)` — appends name; returns nothing
+- `list_contacts(contact_list)` — prints all contacts; returns nothing
+- `search_contact(contact_list, query)` — **returns** `True`/`False` (no print inside)
+- `main()` — contains the `while True` menu loop and calls all three functions
 
-def subtract(a: float, b: float) -> float:
-    """Return a - b."""
-    return a - b
-
-def multiply(a: float, b: float) -> float:
-    """Return a * b."""
-    return a * b
-
-# Manual testing — call each function and print the result
-print("Testing add:")
-print(add(3, 4))          # Expected: 7
-print(add(-1, 1))         # Expected: 0
-print(add(0.1, 0.2))      # Expected: ~0.3
-
-print("\nTesting subtract:")
-print(subtract(10, 3))    # Expected: 7
-print(subtract(0, 5))     # Expected: -5
-
-print("\nTesting multiply:")
-print(multiply(4, 5))     # Expected: 20
-print(multiply(-2, 3))    # Expected: -6
-```
-
-### Expected Output
-```
-Testing add:
-7
-0
-0.30000000000000004
-
-Testing subtract:
-7
--5
-
-Testing multiply:
-20
--6
-```
+### Completion Criteria
+✓ Each function does exactly one thing  
+✓ `search_contact()` uses `return`, not `print()`  
+✓ Main loop uses the returned boolean in an `if` statement  
+✓ No logic is duplicated across menu branches
 
 ---
 
-## Lab: Refactor Contact Manager
+## Common Pitfalls (Hour 33)
 
-### Instructions (30 minutes)
-
-**Task:** Refactor a contact manager program by extracting repeated logic into named functions.
-
-**Starting Point — messy, repeated code:**
-```python
-contacts = {}
-
-# Add a contact
-name = input("Name: ").strip().title()
-phone = input("Phone: ").strip()
-contacts[name] = phone
-print(f"Added {name}.")
-
-# List contacts
-for name, phone in contacts.items():
-    print(f"  {name}: {phone}")
-
-# Search a contact
-search = input("Search: ").strip().title()
-if search in contacts:
-    print(f"Found: {search} → {contacts[search]}")
-else:
-    print(f"{search} not found.")
-```
+⚠️ **Defining but never calling** — `def greet()` stores the code; you must write `greet()` to run it  
+⚠️ **Missing colon after `def`** — `def greet(name)` without `:` raises `SyntaxError`  
+⚠️ **Using `print()` when `return` is needed** — the value looks right on screen, but the caller gets `None`  
+⚠️ **Confusing parameters and arguments** — `name` in `def greet(name)` is a parameter; `"Alice"` in `greet("Alice")` is the argument  
+⚠️ **Indentation errors in the body** — all function body lines must be indented exactly 4 spaces
 
 ---
 
-## Lab: Refactor Contact Manager (continued)
+## Quick Check (Hour 33)
 
-**Your Task — extract these three functions:**
-```python
-def add_contact(contacts: dict, name: str, phone: str) -> None:
-    """Add a contact to the contacts dictionary."""
-    ...  # your code here
+**Q1:** What is the difference between `print(result)` and `return result` inside a function?
 
-def list_contacts(contacts: dict) -> None:
-    """Print all contacts."""
-    ...  # your code here
+**Q2:** In `def add(a, b): return a + b`, what are the parameters and what are the arguments in `add(10, 5)`?
 
-def search_contact(contacts: dict, name: str) -> str | None:
-    """Return phone number if found, else None."""
-    ...  # your code here
-```
-
-**Requirements:**
-1. Each function takes `contacts` as its first parameter — no globals
-2. `add_contact` stores the entry and prints a confirmation
-3. `list_contacts` prints every name/phone pair
-4. `search_contact` **returns** the phone number (or `None`) — caller decides to print
-
-**Completion Criteria:**
-- ✅ Functions called from a menu loop
-- ✅ No logic is duplicated
-- ✅ `search_contact` returns a value; calling code handles the print
-
----
-
-## Common Pitfalls — Hour 33
-
-### Pitfall 1: Relying on a Global Variable Unintentionally
-```python
-# Bug: function reads contacts from global scope
-contacts = {}
-
-def add_contact(name, phone):
-    contacts[name] = phone   # works... but contacts isn't a parameter!
-    # If caller passes a different dict, this ignores it
-```
-
-```python
-# Fix: always pass data explicitly
-def add_contact(contacts: dict, name: str, phone: str) -> None:
-    contacts[name] = phone
-    print(f"Added {name}.")
-```
-
-### Pitfall 2: Returning None by Mistake
-```python
-# Bug: missing return statement
-def search_contact(contacts, name):
-    if name in contacts:
-        print(contacts[name])  # prints but doesn't return!
-    # implicitly returns None
-
-result = search_contact(contacts, "Alice")
-print(result)   # None — can't use it later
-```
-
-```python
-# Fix: return the value
-def search_contact(contacts: dict, name: str) -> str | None:
-    if name in contacts:
-        return contacts[name]
-    return None
-```
-
----
-
-## Optional Extensions — Hour 33
-
-### Extension 1: Normalize Name on Add
-```python
-def normalize_name(name: str) -> str:
-    """Strip whitespace and title-case a name."""
-    return name.strip().title()
-
-def add_contact(contacts: dict, name: str, phone: str) -> None:
-    clean_name = normalize_name(name)
-    contacts[clean_name] = phone.strip()
-    print(f"Added {clean_name}.")
-```
-
-### Extension 2: Validate Phone Format (Simple)
-```python
-def is_valid_phone(phone: str) -> bool:
-    """Return True if phone is digits only and 7–15 chars."""
-    digits_only = phone.replace("-", "").replace(" ", "")
-    return digits_only.isdigit() and 7 <= len(digits_only) <= 15
-
-# Usage
-phone = input("Phone: ").strip()
-if is_valid_phone(phone):
-    add_contact(contacts, name, phone)
-else:
-    print("Invalid phone number — digits only please.")
-```
-
-**Stay in Basics Scope:** Simple string checks only — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.
-
----
-
-## Quick Check — Hour 33
-
-**Exit Ticket Question:** When should a function return a value instead of printing?
-
-**Model Answer:** "A function should **return** a value when the result needs to be used by the caller — stored in a variable, passed to another function, displayed later, or combined with other values. Use `print` inside a function only when the sole purpose of the function is to display output and the result will never be needed again. As a general rule, prefer `return` — it makes functions more flexible and testable."
+**Q3:** A function outputs the correct answer on screen, but `result = my_func(3)` gives `None`. What is the bug?
 
 ---
 
 # Hour 34: Scope + Common Function Mistakes
 
 ## Learning Outcomes
-- Explain local vs global scope in Python
-- Avoid unintended reliance on global variables
-- Use default parameters for optional behavior
-- Handle divide-by-zero with a simple `if` check
+- Explain local scope and identify which variables belong to which scope
+- Avoid bugs by passing data explicitly instead of relying on global variables
+- Diagnose `UnboundLocalError` caused by variable shadowing
+- Apply default parameters with correct syntax — required params before defaults
+- Recognise the mutable default argument trap with lists and dicts
 
 ---
 
-## What Is Scope?
+## Local Scope — The Function Bubble
 
-### The Rule
-A **variable's scope** is the region of code where it exists and can be used.
+Variables created **inside** a function are **local** — they disappear when the function ends.
 
-### Local vs Global
 ```python
-greeting = "Hello"       # global — accessible everywhere
-
-def say_hi(name: str) -> None:
-    message = f"{greeting}, {name}!"   # message is LOCAL
+def make_greeting():
+    message = "Good morning!"   # LOCAL variable
     print(message)
 
-say_hi("Alice")      # Hello, Alice!
-print(message)       # NameError: name 'message' is not defined
+make_greeting()     # Good morning!
+print(message)      # NameError: name "message" is not defined
 ```
 
-> 💡 **Local variables live inside the function only.** They are created when the function runs and disappear when it returns.
+> What happens inside a function **stays** inside — unless you explicitly `return` it.
+
+Local variables in different functions are completely independent and can share the same name without conflict.
 
 ---
 
-## Local Scope in Detail
+## Global Scope and Why Globals Are Risky
 
-### Every Function Has Its Own "Space"
 ```python
-def compute_area(width: float, height: float) -> float:
-    area = width * height    # 'area' is local to compute_area
-    return area
+discount_rate = 0.10   # GLOBAL — readable inside any function
 
-def compute_perimeter(width: float, height: float) -> float:
-    perimeter = 2 * (width + height)  # different 'area' variable in scope
-    return perimeter
+def calculate_price(base_price):
+    return base_price - (base_price * discount_rate)   # reads global
 
-print(compute_area(5, 3))        # 15
-print(compute_perimeter(5, 3))   # 16
-# Neither 'area' nor 'perimeter' exists outside their functions
+print(calculate_price(100))   # 90.0
 ```
 
-### The Scope Lookup Order
-Python looks for a variable in this order:
-1. **Local** — inside the current function
-2. **Enclosing** — outer function (if nested — not common yet)
-3. **Global** — module level
-4. **Built-in** — Python's built-ins like `print`, `len`
+✓ Reading a global is technically allowed.  
+✗ If `discount_rate` is changed anywhere in 500 lines, every function is silently affected.  
+✗ Functions with hidden global dependencies are nearly impossible to test in isolation.
 
-> 💡 This is called **LEGB** rule — Local → Enclosing → Global → Built-in.
+> **Best practice:** pass data in through parameters, return data out through `return`.
 
 ---
 
-## The Global Variable Trap
+## Variable Shadowing and UnboundLocalError
 
-### A Subtle Bug
 ```python
-# Global list — function reads it silently
-contacts = ["Alice", "Bob", "Charlie"]
+score = 0   # global
 
-def show_first():
-    print(contacts[0])   # reads global 'contacts'
-
-show_first()    # Works... but only with the global!
+def add_points(points):
+    score = score + points   # CRASH — UnboundLocalError!
+    return score
 ```
 
-### Why This Is a Problem
-```python
-# You want to test with different data
-test_contacts = ["Dave", "Eve"]
-show_first()   # Still prints "Alice" — ignores test_contacts!
-```
+**Why it crashes:** Python sees `score = ...` and marks ALL uses of `score` in this function as local. Then it tries to read the local `score` on the right side before it has been assigned.
 
-### The Fix — Pass Data as a Parameter
+### The fix — pass in, return out
 ```python
-def show_first(contacts: list) -> None:
-    if contacts:
-        print(contacts[0])
+def add_points(current_score, points):
+    return current_score + points   # no globals, no surprises
 
-show_first(contacts)        # Works with real data
-show_first(test_contacts)   # Works with test data
-show_first([])              # Safely handles empty list
+score = 0
+score = add_points(score, 50)
+print(score)   # 50
 ```
 
 ---
 
-## Demo: Bug Caused by Global, Then Fixed
-
-### Watch For:
-- First version silently reads global list
-- Bug: adding items to wrong list
-- Fix: pass the list explicitly
+## The Professional Pattern
 
 ```python
-# --- Bug Version ---
-inventory = []
+# BAD — global state creates invisible side-effects
+player_health = 100
 
-def add_item(name: str) -> None:
-    inventory.append(name)    # silently mutates global!
+def take_damage(damage):
+    global player_health
+    player_health = player_health - damage   # who changed health? hard to track
 
-add_item("Widget")
-add_item("Gadget")
-print(inventory)   # ['Widget', 'Gadget'] — looks fine...
+# GOOD — explicit in, explicit out
+def take_damage(current_health, damage):
+    return current_health - damage
 
-# What if we wanted a DIFFERENT inventory?
-test_inv = []
-add_item("Test Item")   # Still modifies global inventory, not test_inv!
-print(test_inv)         # []  ← test_inv was never used
+def heal(current_health, amount):
+    return current_health + amount
+
+player_health = 100
+player_health = take_damage(player_health, 25)   # 75
+player_health = heal(player_health, 10)          # 85
 ```
 
-```python
-# --- Fixed Version ---
-def add_item(inventory: list, name: str) -> None:
-    inventory.append(name)
-
-production = []
-testing = []
-
-add_item(production, "Widget")
-add_item(testing, "Test Item")
-
-print(production)  # ['Widget']
-print(testing)     # ['Test Item']
-```
+Every input is visible in the function call. Every output is captured. No hidden dependencies.
 
 ---
 
 ## Default Parameters
 
-### Making Arguments Optional
 ```python
-def greet(name: str, greeting: str = "Hello") -> str:
-    """Greet someone with an optional custom greeting."""
-    return f"{greeting}, {name}!"
+def greet(name, greeting="Hello"):
+    print(f"{greeting}, {name}!")
 
-print(greet("Alice"))              # Hello, Alice!
-print(greet("Bob", "Good morning"))  # Good morning, Bob!
-print(greet("Carol", "Hi"))        # Hi, Carol!
+greet("Alice", "Good morning")   # Good morning, Alice!
+greet("Bob")                     # Hello, Bob!  <- uses default
+greet("Charlie", greeting="Hey") # Hey, Charlie!
 ```
 
-### Practical Example
+### Critical rule — required parameters FIRST, defaults LAST
 ```python
-def format_price(amount: float, currency: str = "USD",
-                 decimals: int = 2) -> str:
-    """Format a price with optional currency and decimal places."""
-    return f"{currency} {amount:.{decimals}f}"
+# WRONG — SyntaxError: non-default argument follows default argument
+# def broken(greeting="Hello", name):
+#     ...
 
-print(format_price(9.99))             # USD 9.99
-print(format_price(9.99, "EUR"))      # EUR 9.99
-print(format_price(9.99, "JPY", 0))  # JPY 10
-```
-
-> ⚠️ **Rule:** Default parameters must come **after** required parameters in the function signature.
-
----
-
-## Lab: Calculator Functions
-
-### Instructions (30 minutes)
-
-**Task:** Build a calculator as a set of clean, testable functions, then connect them in a small CLI.
-
-**Requirements:**
-```python
-def add(a: float, b: float) -> float:
-    """Return a + b."""
+# CORRECT
+def greet(name, greeting="Hello"):
     ...
-
-def subtract(a: float, b: float) -> float:
-    """Return a - b."""
-    ...
-
-def multiply(a: float, b: float) -> float:
-    """Return a * b."""
-    ...
-
-def divide(a: float, b: float) -> float | None:
-    """Return a / b, or None if b is zero."""
-    if b == 0:
-        print("Error: cannot divide by zero.")
-        return None
-    return a / b
 ```
 
-> ⚠️ Handle divide-by-zero with a simple `if b == 0` check — exceptions/try-except are NOT introduced here.
+Without this rule Python cannot tell whether `greet("Alice")` fills `greeting` or `name`.
 
 ---
 
-## Lab: Calculator Functions (continued)
+## Mutable Default Argument Trap
 
-**Build the CLI that uses your functions:**
 ```python
-def main() -> None:
-    print("Simple Calculator")
-    print("Operations: add, subtract, multiply, divide")
+# DANGEROUS — the list [] is created once when the function is defined
+def append_item(item, my_list=[]):
+    my_list.append(item)
+    return my_list
 
-    a = float(input("Enter first number: "))
-    op = input("Enter operation: ").strip().lower()
-    b = float(input("Enter second number: "))
-
-    if op == "add":
-        result = add(a, b)
-    elif op == "subtract":
-        result = subtract(a, b)
-    elif op == "multiply":
-        result = multiply(a, b)
-    elif op == "divide":
-        result = divide(a, b)
-    else:
-        print("Unknown operation.")
-        return
-
-    if result is not None:
-        print(f"Result: {result}")
-
-main()
+append_item("A")   # ["A"]
+append_item("B")   # ["A", "B"]  <- same list persists across calls!
 ```
 
-**Completion Criteria:**
-- ✅ All four functions work and return values
-- ✅ No crash on divide by zero (`if b == 0` guard in `divide`)
-- ✅ CLI calls functions correctly and displays results
+### Safe pattern — use `None` as the default sentinel
+```python
+def append_item(item, my_list=None):
+    if my_list is None:
+        my_list = []           # fresh list every call
+    my_list.append(item)
+    return my_list
+
+append_item("A")   # ["A"]
+append_item("B")   # ["B"]  <- independent lists
+```
+
+> Never use a mutable object (`list`, `dict`, `set`) as a default argument value.
 
 ---
 
-## Common Pitfalls — Hour 34
+## Lab: Calculator Functions (Hour 34)
 
-### Pitfall 1: Shadowing Variable Names
-```python
-# Bug: local 'result' shadows intention, but this is fine...
-# The real trap is shadowing built-in names
-list = [1, 2, 3]     # 'list' now hides the built-in!
-print(list([4, 5]))  # TypeError — 'list' is your variable now
-```
+**Time: 14 minutes**
 
-```python
-# Fix: never use built-in names as variables
-numbers = [1, 2, 3]   # clear, descriptive name
-```
+### Tasks
+Build four isolated math functions with no global variables:
+- `add(num1, num2)`, `subtract(num1, num2)`, `multiply(num1, num2=1)`, `divide(num1, num2)`
+- `divide()` must **return** `"Error: Cannot divide by zero!"` when `num2 == 0` — no crash
+- `multiply()` uses a default so `multiply(5)` returns `5`
+- A `while True` main loop reads operation choice, converts input to `float`, calls the right function, and prints the result
 
-### Pitfall 2: Not Returning the Computed Value
-```python
-# Bug: computes the answer but throws it away
-def multiply(a: float, b: float) -> float:
-    product = a * b
-    # Missing return!
-
-result = multiply(4, 5)
-print(result)   # None — not 20!
-```
-
-```python
-# Fix: always return the result
-def multiply(a: float, b: float) -> float:
-    product = a * b
-    return product    # or simply: return a * b
-```
-
-> ⚠️ **Speaker note:** Stay in Basics scope — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.
+### Completion Criteria
+✓ No `global` keyword anywhere in the file  
+✓ All four functions use `return`, not `print()`  
+✓ `divide(10, 0)` returns the error string — does not crash  
+✓ `multiply(7)` returns `7` (default param kicks in)
 
 ---
 
-## Optional Extensions — Hour 34
+## Common Pitfalls (Hour 34)
 
-### Extension: Power and Modulus
-```python
-def power(base: float, exponent: float) -> float:
-    """Return base raised to the power of exponent."""
-    return base ** exponent
-
-def modulus(a: int, b: int) -> int | None:
-    """Return a mod b, or None if b is zero."""
-    if b == 0:
-        print("Error: modulus by zero undefined.")
-        return None
-    return a % b
-
-# Test them:
-print(power(2, 10))     # 1024.0
-print(power(9, 0.5))    # 3.0 (square root)
-print(modulus(17, 5))   # 2
-print(modulus(10, 0))   # Error + None
-```
-
-**Stay in Basics Scope:** Simple arithmetic and `if` checks only — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.
+⚠️ **Accessing a local variable from outside** — `NameError`; fix by returning the value  
+⚠️ **UnboundLocalError** — triggered by assigning to a name locally while also trying to read it from global scope; fix by passing as a parameter  
+⚠️ **Using `global` keyword** — almost always a design smell; restructure to pass data in instead  
+⚠️ **Default param order violated** — required params must precede defaults or `SyntaxError` at definition time  
+⚠️ **Mutable default (list or dict)** — use `None` sentinel and create the mutable object inside the function body
 
 ---
 
-## Quick Check — Hour 34
+## Quick Check (Hour 34)
 
-**Exit Ticket Question:** If you create a variable inside a function, can you use it outside?
+**Q1:** What prints and why?
+```python
+def double(n):
+    n = n * 2
+x = 5
+double(x)
+print(x)
+```
 
-**Model Answer:** "No. A variable created inside a function is **local** to that function. It only exists while the function is running and disappears when the function returns. To make a value available outside, you must `return` it from the function and capture it in a variable at the calling scope. Attempting to access a local variable from outside its function raises a `NameError`."
+**Q2:** Why does `score = score + points` crash with `UnboundLocalError` when `score` is a global variable?
+
+**Q3:** Write the correct signature for `greet` that has a required `name` and an optional `title` defaulting to `"Ms."`.
 
 ---
 
 # Hour 35: Functions with Collections
 
 ## Learning Outcomes
-- Pass lists and dictionaries into functions
-- Decide when to mutate a collection in-place vs return a new one
-- Write clear docstrings explaining expectations
-- Avoid accidental mutation bugs
+- Recognise that lists and dicts are passed by reference — the function sees the original, not a copy
+- Distinguish mutating a collection in-place from returning a new one
+- Choose the right pattern for each context using a clear decision guide
+- Write docstrings that declare whether a function mutates or returns (function contracts)
+- Apply the filter pattern to extract matching items into a new list
 
 ---
 
-## Passing Collections to Functions
+## Collections Are Passed by Reference
 
-### Lists Are Passed by Reference
 ```python
-def double_all(numbers: list) -> None:
-    """Double every number in the list in-place."""
-    for i in range(len(numbers)):
-        numbers[i] = numbers[i] * 2
+def empty_the_list(my_list):
+    my_list.clear()          # modifies the ORIGINAL — no copy was made
 
-scores = [10, 20, 30]
+groceries = ["Milk", "Eggs", "Bread"]
+print(groceries)             # ["Milk", "Eggs", "Bread"]
+
+empty_the_list(groceries)
+print(groceries)             # []  <- original was destroyed!
+```
+
+> Python passes a **reference** to the collection. Your function and your main code share the **same** list object.
+
+| Type | Behaviour when passed to a function |
+|---|---|
+| `int`, `str`, `float`, `bool` | Effectively pass by value — safe |
+| `list`, `dict`, `set` | Pass by reference — original can change |
+
+---
+
+## Pattern 1: Mutate In-Place
+
+Directly modify the list your function received.
+
+```python
+def clean_names_inplace(name_list):
+    """
+    MUTATES the list by cleaning all names in-place.
+    The original list is modified. No return value.
+    """
+    for i in range(len(name_list)):
+        name_list[i] = name_list[i].strip().title()
+
+raw = ["  alice smith", "BOB  JONES", " cHarLiE bRoWn "]
+clean_names_inplace(raw)
+print(raw)   # ["Alice Smith", "Bob Jones", "Charlie Brown"]
+```
+
+**When to use:** sorting existing data, memory-critical operations (millions of items), explicit destructive intent documented in the docstring.
+
+---
+
+## Pattern 2: Return a New Collection
+
+Build and return a fresh list — leave the original untouched.
+
+```python
+def clean_names_return_new(name_list):
+    """
+    Returns a NEW list of cleaned, title-cased names.
+    Original list is never modified.
+    """
+    cleaned = []
+    for name in name_list:
+        cleaned.append(name.strip().title())
+    return cleaned
+
+raw = ["  alice smith", "BOB  JONES", " cHarLiE bRoWn "]
+result = clean_names_return_new(raw)
+
+print(result)   # ["Alice Smith", "Bob Jones", "Charlie Brown"]
+print(raw)      # ["  alice smith", "BOB  JONES", " cHarLiE bRoWn "] <- unchanged
+```
+
+**When to use:** transforming or filtering data, keeping original as a reference, any time safety matters more than memory.
+
+---
+
+## Decision Guide + Function Contracts
+
+### When to use each pattern
+| Situation | Recommended pattern |
+|---|---|
+| Transform or filter data | Return new collection |
+| Sort or shuffle existing list | Mutate in-place |
+| Keep original as a reference | Return new collection |
+| Memory critical (millions of items) | Mutate in-place |
+| Default choice for beginners | **Return new collection** |
+
+### Docstrings make the contract explicit
+```python
+def remove_empty_strings(my_list):
+    """
+    Returns a NEW list with all empty strings removed.
+    Does NOT modify the original list.
+    """
+    result = []
+    for item in my_list:
+        if item != "":
+            result.append(item)
+    return result
+```
+
+---
+
+## Demo: Filtering a Collection
+
+```python
+scores = [45, 87, 92, 65, 78, 91, 55, 88]
+
+def get_passing_scores(score_list):
+    """
+    Returns a NEW list containing only scores >= 70.
+    Original list is not modified.
+    """
+    passing = []
+    for score in score_list:
+        if score >= 70:
+            passing.append(score)
+    return passing
+
+print("All scores:", scores)
+result = get_passing_scores(scores)
+print("Passing scores:", result)
+# All scores:    [45, 87, 92, 65, 78, 91, 55, 88]
+# Passing scores: [87, 92, 78, 91, 88]
+```
+
+> Core pattern: empty list → loop → conditional append → return new list. You will use this hundreds of times.
+
+---
+
+## Lab: Normalize Contacts (Hour 35)
+
+**Time: 25 minutes**
+
+### Task
+Write `normalize_contacts(contacts)` that cleans a list of messy contact names:
+1. Strip leading and trailing whitespace from each name
+2. Convert each name to title case
+3. Return a new list (or mutate in-place — declare your choice in the docstring)
+
+```python
+raw = ["  sarah jones ", "MARK smith", " tina turner  "]
+# Expected: ["Sarah Jones", "Mark Smith", "Tina Turner"]
+```
+
+### Completion Criteria
+✓ Function has a docstring that states whether it mutates or returns  
+✓ Output matches the expected result exactly  
+✓ No extra whitespace in any name  
+✓ Stretch: test on a second list to confirm general correctness
+
+---
+
+## Common Pitfalls (Hour 35)
+
+⚠️ **Forgetting to capture the return value** — `normalize(names)` does nothing visible; you need `cleaned = normalize(names)`  
+⚠️ **Loop variable reassignment** — `for name in contacts: name = name.strip()` reassigns the loop variable, NOT the list item; use `contacts[i] = ...` or build a new list  
+⚠️ **Assuming a copy was made** — calling `.clear()` or `.append()` inside a function always modifies the original list  
+⚠️ **Skipping the docstring** — without a mutation statement, future readers cannot tell whether the original data is safe
+
+---
+
+## Quick Check (Hour 35)
+
+**Q1:** After this runs, what does `scores` contain? Why?
+```python
+def double_all(lst):
+    for i in range(len(lst)):
+        lst[i] = lst[i] * 2
+
+scores = [1, 2, 3]
 double_all(scores)
-print(scores)    # [20, 40, 60] — original was modified!
+print(scores)
 ```
 
-### The Key Insight
-- When you pass a list to a function, **both the caller and the function share the same list object**.
-- Changes made inside the function **affect the original list**.
-- This is called **mutation** — you changed the object in-place.
-
-> 💡 This is different from integers and strings, which are **immutable** — you can't change them in-place.
-
----
-
-## Mutate In-Place vs Return a New Collection
-
-### Option A — Mutate In-Place (Modify the Original)
+**Q2:** What is wrong with this mutation attempt?
 ```python
-def uppercase_names(names: list) -> None:
-    """Uppercase all names in the list in-place."""
-    for i in range(len(names)):
-        names[i] = names[i].upper()
-
-team = ["alice", "bob", "carol"]
-uppercase_names(team)
-print(team)   # ['ALICE', 'BOB', 'CAROL'] — team is changed
+for name in contacts:
+    name = name.strip().title()
 ```
 
-### Option B — Return a New Collection (Leave Original Alone)
-```python
-def uppercase_names_new(names: list) -> list:
-    """Return a new list of uppercased names."""
-    result = []
-    for name in names:
-        result.append(name.upper())
-    return result
-
-team = ["alice", "bob", "carol"]
-upper_team = uppercase_names_new(team)
-print(team)        # ['alice', 'bob', 'carol'] — unchanged
-print(upper_team)  # ['ALICE', 'BOB', 'CAROL'] — new list
-```
-
----
-
-## When to Choose Which Approach
-
-### Prefer Returning a New Collection When:
-- You want to keep the original data intact
-- The function should be predictable with no side-effects
-- You plan to test the function in isolation
-- You need both old and new versions at the same time
-
-### Prefer Mutating In-Place When:
-- The collection is very large (copying would waste memory)
-- The intent is clearly "update this structure"
-- The function is a "modifier" (e.g., `sort()` in Python's standard library)
-
-### Document Your Choice — Use a Docstring
-```python
-def normalize_contacts(contacts: list) -> list:
-    """Return a new list of contacts with stripped, title-cased names.
-
-    The original contacts list is NOT modified.
-    """
-    result = []
-    for name in contacts:
-        result.append(name.strip().title())
-    return result
-```
-
-> 💡 A good docstring answers: **What goes in? What comes out? Is anything modified?**
-
----
-
-## Demo: Normalize a List of Names
-
-### Watch For:
-- In-place version modifies the original list
-- New-list version leaves original untouched
-- Print before/after to confirm the difference
-
-```python
-def normalize_inplace(names: list) -> None:
-    """Normalize names in-place: strip whitespace and title-case."""
-    for i in range(len(names)):
-        names[i] = names[i].strip().title()
-
-def normalize_new(names: list) -> list:
-    """Return a new list of normalized names."""
-    result = []
-    for name in names:
-        result.append(name.strip().title())
-    return result
-
-raw_names = ["  alice SMITH ", "BOB jones", " carol  "]
-
-# --- In-place ---
-copy1 = raw_names.copy()    # copy so we can demo both
-print("Before:", copy1)
-normalize_inplace(copy1)
-print("After (in-place):", copy1)
-
-# --- New list ---
-print("\nOriginal:", raw_names)
-clean = normalize_new(raw_names)
-print("Original after new-list:", raw_names)   # unchanged
-print("New list:", clean)
-```
-
-### Expected Output
-```
-Before: ['  alice SMITH ', 'BOB jones', ' carol  ']
-After (in-place): ['Alice Smith', 'Bob Jones', 'Carol']
-
-Original: ['  alice SMITH ', 'BOB jones', ' carol  ']
-Original after new-list: ['  alice SMITH ', 'BOB jones', ' carol  ']
-New list: ['Alice Smith', 'Bob Jones', 'Carol']
-```
-
----
-
-## Lab: Normalize Contacts
-
-### Instructions (30 minutes)
-
-**Task:** Write a function that normalizes a list of contact names and demonstrate it.
-
-**Requirements:**
-```python
-def normalize_contacts(contacts: list) -> list:
-    """Return a new list with each name stripped of whitespace
-    and converted to title case.
-
-    The original contacts list is NOT modified.
-    """
-    ...  # your code here
-```
-
-**Sample Data to Use:**
-```python
-raw_contacts = [
-    "  alice smith  ",
-    "BOB JONES",
-    "carol white   ",
-    "  DAVE BROWN",
-    "eve  ",
-]
-```
-
----
-
-## Lab: Normalize Contacts (continued)
-
-**Print Before and After:**
-```python
-print("=== Before Normalization ===")
-for name in raw_contacts:
-    print(f"  {repr(name)}")
-
-cleaned = normalize_contacts(raw_contacts)
-
-print("\n=== After Normalization ===")
-for name in cleaned:
-    print(f"  {name}")
-
-print("\n=== Original List (should be unchanged) ===")
-for name in raw_contacts:
-    print(f"  {repr(name)}")
-```
-
-**Completion Criteria:**
-- ✅ Names are stripped and title-cased in the returned list
-- ✅ Original `raw_contacts` is NOT modified
-- ✅ Learner can explain: "I returned a new list so the original is preserved"
-
----
-
-## Common Pitfalls — Hour 35
-
-### Pitfall 1: Reassigning a Local Variable Without Returning
-```python
-# Bug: local rebind — does NOT modify caller's list
-def bad_normalize(names: list) -> None:
-    new_list = []
-    for n in names:
-        new_list.append(n.strip().title())
-    names = new_list  # local rebind!
-    # 'names' now points to a new list — caller's list is unchanged
-    # AND nothing is returned!
-
-data = ["  alice ", "BOB"]
-bad_normalize(data)
-print(data)   # ['  alice ', 'BOB']  ← unchanged and no return!
-```
-
-```python
-# Fix: return the new list (and capture it at the call site)
-def normalize(names: list) -> list:
-    result = []
-    for n in names:
-        result.append(n.strip().title())
-    return result
-
-data = ["  alice ", "BOB"]
-data = normalize(data)   # capture the return value!
-print(data)   # ['Alice', 'Bob']
-```
-
----
-
-## Common Pitfalls — Hour 35 (continued)
-
-### Pitfall 2: Modifying a List While Iterating Over It
-```python
-# Bug: removing from a list while looping causes skips
-names = ["Alice", "", "Bob", "", "Carol"]
-
-for name in names:
-    if name == "":
-        names.remove(name)   # modifies list mid-loop!
-
-print(names)   # ['Alice', 'Bob', '', 'Carol'] ← one blank remains!
-```
-
-```python
-# Fix: build a new list with only the items you want
-names = ["Alice", "", "Bob", "", "Carol"]
-cleaned = []
-
-for name in names:
-    if name != "":
-        cleaned.append(name)
-
-print(cleaned)   # ['Alice', 'Bob', 'Carol']
-```
-
-> ⚠️ **Never remove items from a list while iterating over it with a for loop.** Build a new list instead.
-
----
-
-## Optional Extensions — Hour 35
-
-### Extension: Remove Duplicate Names
-```python
-def remove_duplicates(contacts: list) -> list:
-    """Return a new list with duplicate names removed.
-
-    Case-insensitive: 'Alice' and 'alice' are treated as the same.
-    Preserves order of first occurrence.
-    """
-    seen = set()
-    result = []
-    for name in contacts:
-        key = name.strip().lower()
-        if key not in seen:
-            seen.add(key)
-            result.append(name.strip().title())
-    return result
-
-contacts = ["Alice", "alice", "BOB", "Alice", "Carol", "bob"]
-unique = remove_duplicates(contacts)
-print(unique)   # ['Alice', 'Bob', 'Carol']
-```
-
-**Stay in Basics Scope:** Using a `set` for lookup is fine at this level — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.
-
----
-
-## Quick Check — Hour 35
-
-**Exit Ticket Question:** What's one advantage of returning a new list instead of modifying in place?
-
-**Model Answer:** "Returning a new list preserves the original data unchanged, which means: (1) you can compare before and after, (2) the function has no side-effects — it won't accidentally alter data used elsewhere in the program, and (3) the function is easier to test in isolation. This style is sometimes called a **pure function** — same input always produces the same output without modifying anything outside the function."
+**Q3:** You need `filter_even(nums)` to return even numbers without changing the original. Which pattern should you use?
 
 ---
 
 # Hour 36: Modules — Imports and Creating utils.py
 
 ## Learning Outcomes
-- Import from the Python standard library
-- Use `import` vs `from ... import`
-- Create your own module and import from it
-- Avoid common import mistakes (name conflicts, wrong directory)
+- Import from the standard library using `import`, `from ... import`, and `as` alias forms
+- Explain the `__name__` variable and how it controls code execution on import vs. direct run
+- Create a custom `utils.py` module with focused, reusable functions
+- Import from a custom module using correct file organisation
+- Troubleshoot common import errors — naming conflicts, path issues, circular imports
 
 ---
 
-## What Is a Module?
+## Three Import Forms
 
-### The Idea
-A **module** is just a Python file (`.py`) that contains functions, variables, or classes that you can reuse in other programs.
-
-### Two Categories
-| Type | Examples |
-|------|---------|
-| **Standard library** | `math`, `random`, `datetime`, `os` |
-| **Your own modules** | `utils.py`, `contacts.py`, `helpers.py` |
-
-### Why Use Modules?
-- **Reuse:** write a helper once, import it anywhere
-- **Organization:** keep related functions together
-- **Testing:** test a module independently of your main program
-
-> 💡 When you write `import math`, Python finds `math.py` (or the built-in equivalent) and makes its contents available to your program.
-
----
-
-## import vs from ... import
-
-### `import module` — Access Through the Module Name
+### Form 1 — Full module import
 ```python
 import math
-
-print(math.pi)           # 3.141592653589793
-print(math.sqrt(16))     # 4.0
-print(math.floor(3.7))   # 3
-print(math.ceil(3.2))    # 4
-```
-
-### `from module import name` — Use the Name Directly
-```python
-from math import pi, sqrt
-
-print(pi)         # 3.141592653589793
-print(sqrt(16))   # 4.0
-# No 'math.' prefix needed
-```
-
-### Which to Choose?
-| Style | When to use |
-|-------|------------|
-| `import math` | Namespace is clearer — `math.sqrt` tells you where it came from |
-| `from math import sqrt` | Fine for a few well-known names you'll use repeatedly |
-| `from math import *` | **Avoid** — pollutes your namespace unpredictably |
-
----
-
-## Standard Library Tour: math, random, datetime
-
-### math — Numeric Utilities
-```python
-import math
-
-print(math.pi)          # 3.141592653589793
-print(math.sqrt(25))    # 5.0
-print(math.pow(2, 8))   # 256.0
-print(math.floor(4.9))  # 4
-print(math.ceil(4.1))   # 5
-```
-
-### random — Random Values
-```python
 import random
 
-print(random.randint(1, 6))       # Simulate a dice roll: 1–6
-print(random.choice(["a", "b", "c"]))  # Random item from list
-print(random.random())            # Float between 0.0 and 1.0
+result = math.sqrt(25)          # clear: sqrt comes from math
+value = random.randint(1, 10)   # clear: randint comes from random
 ```
 
-### datetime — Dates and Times (Light Touch)
+### Form 2 — Targeted import
 ```python
-from datetime import datetime, date
+from math import sqrt, pi
+from random import choice
 
-today = date.today()
-print(today)                          # e.g., 2025-01-15
+result = sqrt(25)               # concise; source less obvious
+```
+
+### Form 3 — Aliased import
+```python
+import math as m
+import datetime as dt
+
+area = m.pi * m.sqrt(radius)
+now = dt.datetime.now()
+```
+
+Use Form 1 for clarity; Form 2 for frequent focused calls; Form 3 for long module names.
+
+---
+
+## The __name__ Special Variable
+
+Every Python file has `__name__`. Its value depends on **how** the file is executed.
+
+| Execution method | Value of `__name__` |
+|---|---|
+| Run directly (`python utils.py`) | `"__main__"` |
+| Imported (`import utils`) | `"utils"` |
+
+### Making a file work as both a script and an importable module
+```python
+def add(a, b):
+    return a + b
+
+def multiply(a, b):
+    return a * b
+
+if __name__ == "__main__":
+    # Only runs when the file is executed directly
+    # Skipped when the file is imported
+    print(f"add(3, 5) = {add(3, 5)}")
+    print(f"multiply(4, 7) = {multiply(4, 7)}")
+```
+
+---
+
+## Naming Best Practices + File Organisation
+
+### Avoid shadowing the standard library
+```python
+# If your file is named random.py in the project folder:
+import random
+random.randint(1, 10)   # AttributeError — your file has no randint!
+# Python finds YOUR random.py before the stdlib random module
+```
+
+### Safe naming conventions
+- ✅ `utils.py`, `math_helpers.py`, `validators.py`, `formatters.py`
+- ❌ `random.py`, `string.py`, `math.py` — shadow stdlib modules
+
+### Standard layout for the Basics course
+```
+project_folder/
+├── main.py      <- user interaction and control flow (orchestrates)
+└── utils.py     <- reusable helper functions (provides tools)
+```
+
+`main.py` calls `utils.py`. `utils.py` never imports `main.py`.
+
+---
+
+## Demo: Standard Library Imports
+
+```python
+import math
+import random
+from datetime import datetime
+from random import choice
+
+# math module
+print(math.sqrt(25))          # 5.0
+print(math.pi)                # 3.14159...
+print(math.ceil(3.2))         # 4
+
+# random module
+nums = [1, 2, 3, 4, 5]
+print(random.choice(nums))    # random item
+print(random.randint(1, 10))  # random int
+
+# datetime
 now = datetime.now()
-print(now.strftime("%Y-%m-%d %H:%M")) # e.g., 2025-01-15 09:30
+print(f"Year: {now.year}, Month: {now.month}")
+
+# from-import form (no prefix required)
+selected = choice(["apple", "banana", "cherry"])
+print(selected)
 ```
 
 ---
 
-## Creating Your Own Module
+## Demo: Creating a Custom Module
 
-### Step 1 — Write utils.py
+### math_helpers.py
 ```python
-# utils.py  (put this in the same folder as your main program)
+def add(a, b):
+    """Add two numbers."""
+    return a + b
 
-def safe_int(prompt: str) -> int:
-    """Prompt the user until a valid integer is entered."""
+def power(base, exponent):
+    """Raise base to exponent."""
+    return base ** exponent
+
+if __name__ == "__main__":
+    print(f"add(3, 5) = {add(3, 5)}")
+    print(f"power(2, 8) = {power(2, 8)}")
+```
+
+### use_math_helpers.py (same folder)
+```python
+from math_helpers import add, power
+
+print(f"add(10, 20) = {add(10, 20)}")    # 30
+print(f"power(3, 4) = {power(3, 4)}")   # 81
+```
+
+Running `math_helpers.py` directly shows the test output. Importing it skips the `__name__` block — only the functions are available.
+
+---
+
+## Lab: Build utils.py (Hour 36)
+
+**Time: 25 minutes — 4 checkpoints**
+
+**Checkpoint 1 (5 min):** Create `utils.py` and `main.py` in the same folder; add a module docstring to each file
+
+**Checkpoint 2 (8 min):** Implement `safe_int(prompt)` in `utils.py`
+```python
+def safe_int(prompt):
+    """Loops until the user provides a valid integer."""
     while True:
-        raw = input(prompt).strip()
-        if raw.lstrip("-").isdigit():
-            return int(raw)
-        print("Please enter a whole number.")
-
-def format_money(value: float, currency: str = "USD") -> str:
-    """Return a formatted money string, e.g. 'USD 12.50'."""
-    return f"{currency} {value:.2f}"
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("   ERROR: Please enter an integer.")
 ```
 
-### Step 2 — Import in main.py
+**Checkpoint 3 (8 min):** Implement `format_money(value)` in `utils.py`
 ```python
-# main.py  (same folder as utils.py)
-from utils import safe_int, format_money
-
-price = safe_int("Enter price in cents: ")
-dollars = price / 100
-print(format_money(dollars))
+def format_money(value):
+    """Returns value formatted as USD currency string."""
+    return f"${value:,.2f}"
 ```
 
-> ⚠️ **Do NOT name your file `random.py`, `math.py`, `json.py`, or any other standard library name.** Python finds YOUR file first, breaking the built-in import.
+**Checkpoint 4 (4 min):** Add `if __name__ == "__main__":` guard to `utils.py`; import and use both functions in `main.py`
 
 ---
 
-## Demo: Create utils.py and Import Into main.py
+## Common Pitfalls (Hour 36)
 
-### Watch For:
-- File structure — both files in the same directory
-- Running `main.py` (not `utils.py`) from the project root
-- What happens if you run from the wrong directory
-
-```
-project/
-├── main.py
-└── utils.py
-```
-
-```python
-# utils.py
-def safe_int(prompt: str) -> int:
-    """Prompt until a valid integer is entered."""
-    while True:
-        raw = input(prompt).strip()
-        if raw.lstrip("-").isdigit():
-            return int(raw)
-        print("Please enter a whole number.")
-
-def format_money(value: float, currency: str = "USD") -> str:
-    """Return formatted money string."""
-    return f"{currency} {value:.2f}"
-```
-
-```python
-# main.py
-from utils import safe_int, format_money
-
-amount = safe_int("Enter amount in cents: ")
-print(format_money(amount / 100))
-```
-
-### Expected Interaction
-```
-Enter amount in cents: abc
-Please enter a whole number.
-Enter amount in cents: 1499
-USD 14.99
-```
+⚠️ **Naming your file after a stdlib module** — `random.py` in your project shadows `import random`; Python finds your file first  
+⚠️ **ImportError: cannot import name** — the function does not exist yet in `utils.py`; implement it first, then re-run  
+⚠️ **No output when running utils.py directly** — you need a `if __name__ == "__main__":` block with test calls  
+⚠️ **Circular import** — `main.py` imports `utils.py` and `utils.py` imports `main.py`; keep `utils.py` self-contained  
+⚠️ **Files in different folders** — both `main.py` and `utils.py` must be in the same directory, otherwise `ModuleNotFoundError`
 
 ---
 
-## Common Import Errors and Fixes
+## Quick Check (Hour 36)
 
-### Error 1: Running the Wrong File as Main
-```
-# Wrong: running utils.py directly — there's no main logic there
-$ python utils.py
-# No output or unexpected behavior
+**Q1:** Write one example of each import form: `import`, `from ... import`, and `import ... as`.
 
-# Fix: always run main.py
-$ python main.py
-```
+**Q2:** A student creates `math.py` in their project folder and then gets `AttributeError: module has no attribute sqrt`. What went wrong?
 
-### Error 2: Filename Mismatch
-```bash
-# Project files:
-#   project/
-#     main.py
-#     helpers.py    # but in main.py you wrote:
-#
-# In main.py:
-#     import utils   # ModuleNotFoundError: No module named 'utils'
-```
-
-```bash
-# Fix option 1: rename helpers.py to utils.py
-$ mv helpers.py utils.py
-
-# Fix option 2: update the import in main.py
-# import helpers
-```
-
-### Error 3: Module Name Conflicts
-```python
-# Wrong: you named your file 'random.py' then tried:
-import random
-random.randint(1, 6)   # AttributeError — Python found YOUR random.py!
-```
-
-```python
-# Fix: rename your file (e.g., helpers.py, utils.py)
-# Never use names like: random.py, math.py, json.py, os.py, pathlib.py
-```
+**Q3:** What is `__name__` equal to when a Python file is run directly? What is it equal to when the same file is imported?
 
 ---
 
-## Lab: Create a utils Module
+# Session 9 Wrap-Up
 
-### Instructions (30 minutes)
+## What We Covered Today
 
-**Task:** Build a reusable `utils.py` module and use its helpers inside an existing program.
+### Hour 33: Functions — def, parameters, return
+- `def`, parameters vs. arguments, `return` vs. `print()`
+- Refactoring repeated code into clean, testable functions
 
-**Step 1 — Create `utils.py` with these two functions:**
-```python
-# utils.py
+### Hour 34: Scope + Common Mistakes
+- Local scope isolates variables; globals create hidden bugs
+- Variable shadowing and `UnboundLocalError`; default parameters; mutable default trap
 
-def safe_int(prompt: str) -> int:
-    """Keep prompting until the user enters a valid integer.
-    Returns the integer value."""
-    ...  # your code here
+### Hour 35: Functions with Collections
+- Lists and dicts pass by reference — mutation is real and immediate
+- Mutate in-place vs. return new collection; docstring contracts declare intent
 
-def format_money(value: float, currency: str = "USD") -> str:
-    """Return a formatted money string.
-    Example: format_money(9.5) → 'USD 9.50'"""
-    ...  # your code here
-```
-
----
-
-## Lab: Create a utils Module (continued)
-
-**Step 2 — Use them in a tip calculator or to-do manager:**
-```python
-# main.py (Tip Calculator example)
-from utils import safe_int, format_money
-
-def calculate_tip(subtotal: float, tip_percent: int) -> float:
-    """Return the tip amount."""
-    return subtotal * (tip_percent / 100)
-
-def main() -> None:
-    print("=== Tip Calculator ===")
-    cents = safe_int("Enter bill amount in cents: ")
-    subtotal = cents / 100
-    tip_pct = safe_int("Enter tip percentage (e.g. 15): ")
-
-    tip = calculate_tip(subtotal, tip_pct)
-    total = subtotal + tip
-
-    print(f"Subtotal: {format_money(subtotal)}")
-    print(f"Tip ({tip_pct}%): {format_money(tip)}")
-    print(f"Total:    {format_money(total)}")
-
-main()
-```
-
-**Completion Criteria:**
-- ✅ `utils.py` exists and imports correctly into `main.py`
-- ✅ `safe_int` rejects non-numeric input and loops until valid
-- ✅ `format_money` produces correctly formatted output
-- ✅ Both helpers are called **at least twice** in the program
+### Hour 36: Modules — Imports and utils.py
+- Three import forms; `__name__` guard for dual-purpose files
+- Safe naming, `main.py` + `utils.py` layout, import troubleshooting
 
 ---
 
-## Common Pitfalls — Hour 36
+## Scope Guardrail Reminder
 
-### Pitfall 1: File Named After a Standard Library Module
-```python
-# Bug: you created 'random.py' in your project folder
-# Then at the top of main.py you wrote:
-import random
-print(random.randint(1, 6))
-# AttributeError: module 'random' has no attribute 'randint'
-# Python found YOUR random.py, which has no randint!
-```
+### Stay in Basics Scope
+✓ `def`, parameters, `return` — core function mechanics  
+✓ Local and global scope — pass data in, return data out  
+✓ Default parameters with scalar defaults (`None`, `0`, `""`)  
+✓ `import`, `from ... import`, `import ... as` — three standard forms  
+✓ Single-file custom modules (`utils.py`) with `if __name__ == "__main__":`
 
-```python
-# Fix: rename your file
-# ✅ Good names: utils.py, helpers.py, my_tools.py, contact_utils.py
-# ❌ Bad names: random.py, math.py, os.py, json.py, pathlib.py, string.py
-```
-
-### Pitfall 2: Running utils.py Instead of main.py
-```bash
-# Bug: running the module file directly
-$ python utils.py   # nothing happens — no main() call here
-
-# Fix: run the file that contains your main logic
-$ python main.py
-```
-
-> ⚠️ **Speaker note:** Stay in Basics scope — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.
-
----
-
-## Optional Extensions — Hour 36
-
-### Extension: Add a menu_choice Helper
-```python
-# Add to utils.py
-
-def menu_choice(prompt: str, options: list) -> str:
-    """Show a menu and return the user's valid choice.
-
-    Example:
-        choice = menu_choice("Select:", ["add", "list", "quit"])
-    """
-    while True:
-        print(prompt)
-        for i, option in enumerate(options, start=1):
-            print(f"  {i}. {option}")
-        raw = input("Enter choice number: ").strip()
-        if raw.isdigit():
-            index = int(raw) - 1
-            if 0 <= index < len(options):
-                return options[index]
-        print(f"Please enter a number between 1 and {len(options)}.")
-
-# Usage in main.py
-from utils import safe_int, format_money, menu_choice
-
-action = menu_choice("What would you like to do?",
-                     ["add contact", "list contacts", "quit"])
-print(f"You chose: {action}")
-```
-
-**Stay in Basics Scope:** Simple `while` loop with integer parsing — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.
-
----
-
-## Quick Check — Hour 36
-
-**Exit Ticket Question:** What's the difference between `import math` and `from math import sqrt`?
-
-**Model Answer:** "Both load the `math` module into memory. The difference is how you access its contents. With `import math`, you access functions through the module name: `math.sqrt(16)`. With `from math import sqrt`, you import the name `sqrt` directly into your namespace and call it as just `sqrt(16)` — no prefix needed. The first style is generally preferred because it makes the origin of the function clear. Use `from ... import` when you have a few frequently-used names and the source is obvious from context."
-
----
-
-## Session 9 Recap
-
-### What We Covered Today
-
-| Hour | Topic | Key Takeaway |
-|------|-------|-------------|
-| 33 | Functions — def, parameters, return | Use `return` to send values back; avoid globals |
-| 34 | Scope + common mistakes | Local variables are local; pass data in via parameters |
-| 35 | Functions with collections | Choose in-place vs new list deliberately; document it |
-| 36 | Modules — imports and utils.py | One module = one responsibility; don't shadow stdlib names |
-
----
-
-## Session 9 Key Concepts
-
-### The Four Big Ideas
-
-**1. Functions are for reuse AND clarity**
-Write a function when you'd otherwise copy-paste logic — or when naming the logic makes code easier to read.
-
-**2. Return values, don't just print**
-`print` is for display. `return` is for sending data back to the caller. Prefer `return` — it makes functions more flexible and testable.
-
-**3. Scope: local variables stay local**
-Pass data in through parameters. Avoid silently relying on globals — it makes code hard to test and debug.
-
-**4. Modules organize and enable reuse**
-Split related helpers into their own `.py` file. `import` them where needed. Never name your file after a standard library module.
-
----
-
-## Session 9 Common Patterns Reference
-
-### Function That Returns a Value
-```python
-def calculate_discount(price: float, percent: int) -> float:
-    """Return the discounted price."""
-    return price * (1 - percent / 100)
-
-sale_price = calculate_discount(100.0, 20)
-print(f"Sale price: ${sale_price:.2f}")   # Sale price: $80.00
-```
-
-### Function That Takes and Returns a Collection
-```python
-def filter_short_names(names: list, max_len: int = 5) -> list:
-    """Return a new list of names shorter than max_len characters."""
-    result = []
-    for name in names:
-        if len(name) <= max_len:
-            result.append(name)
-    return result
-
-short = filter_short_names(["Alice", "Bob", "Christopher", "Eve"])
-print(short)   # ['Alice', 'Bob', 'Eve']
-```
-
-### Import Pattern
-```python
-# Standard library
-import math
-from datetime import date
-
-# Your own module
-from utils import safe_int, format_money
-```
-
----
-
-## Looking Ahead — Day 10
-
-### Next Session Builds On Today
-
-**Hour 37: String Methods Deep Dive**
-- `split()`, `join()`, `strip()`, `replace()`, `find()`
-- String cleaning pipelines using functions from today
-
-**Hour 38: String Formatting + f-strings**
-- Format specs: `{value:.2f}`, `{value:>10}`, `{value:,}`
-- Building formatted reports
-
-**Hour 39: Working With Files — Reading**
-- `open()`, `with` statement, reading lines
-- Process file data using the functions you wrote today
-
-**Hour 40: Working With Files — Writing**
-- Writing and appending to files
-- Save and load contact data to disk
-
-> 💡 **Homework suggestion:** Add a third helper to your `utils.py` — a `menu_choice(prompt, options)` function that displays a numbered menu and returns the chosen option. You'll use it in Day 10.
+### Not Yet (Advanced Topics)
+✗ `*args` and `**kwargs` — variadic arguments  
+✗ Lambda functions  
+✗ Decorators  
+✗ Closures and nested function factories  
+✗ Packages (`__init__.py`) and relative imports  
+✗ List comprehensions as function return values

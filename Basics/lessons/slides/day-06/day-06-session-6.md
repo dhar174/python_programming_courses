@@ -1,1051 +1,776 @@
 # Basics Day 6 — Session 6 (Hours 21–24)
-Python Programming (Basic) • Data Structure Selection & Mini-Projects
+Python Programming (Basic) • Choosing Structures, Drills, Tracker & Checkpoint
 
-## Session 6 Overview
-- Hour 21: Choosing the right structure — list vs set vs dict
+---
+
+# Session 6 Overview
+
+## Topics Covered Today
+- Hour 21: Choosing the right structure — list, tuple, set, dict
 - Hour 22: Data-structure drill circuit (guided practice)
-- Hour 23: Mini-project: In-memory tracker
-- Hour 24: Checkpoint 3: Data structures assessment
+- Hour 23: Mini-project — in-memory book tracker
+- Hour 24: Checkpoint 3 — data structures assessment
 
 ---
 
 # Hour 21: Choosing the Right Structure
 
 ## Learning Outcomes
-- Select list vs set vs dict based on task requirements
-- Refactor an approach using a better-fitting structure
-- Explain tradeoffs between structures in terms of readability and simplicity
-- Apply a decision checklist: order, duplicates, key lookup, mutability
+- Explain in plain language what problem each core structure solves best
+- Choose list vs set based on whether order and duplicates matter
+- Choose list vs dictionary based on whether key lookup matters
+- Explain when a tuple fits better than a list for a small, fixed record
+- Refactor a working solution to a better-fitting structure and explain one tradeoff
 
 ---
 
-## The Structure-Choice Problem
+## The Four Core Structures
 
-### What We've Covered So Far
-By the end of Session 5, you learned:
-- **Lists** — ordered, mutable sequences
-- **Tuples** — ordered, immutable sequences (fixed records)
-- **Sets** — unordered collections of unique items
-- **Dictionaries** — key-value mappings for fast lookup
+| Structure | Ordered? | Mutable? | Duplicates? | Best For |
+| --- | --- | --- | --- | --- |
+| List | Yes | Yes | Allowed | sequences that change |
+| Tuple | Yes | No | Allowed | small fixed records |
+| Set | No | Yes | Not allowed | uniqueness and membership |
+| Dictionary | Insertion order | Yes | Keys must be unique | lookup by key |
 
-### Today's Shift
-From knowing **what** each structure is → choosing **when** to use each structure
-
-> 💡 Good programmers ask: "What structure makes this simpler, clearer, and safer?"
+> Source: Day6_Hour1_Basics.md §4.5 — one-minute comparison table
 
 ---
 
 ## Decision Checklist
 
-### Five Key Questions
-1. **Does order matter?** → List or Tuple
-2. **Can duplicates happen?** → If unwanted, use Set
-3. **Do I need to look something up by a key?** → Dictionary
-4. **Is this a fixed record with a small number of parts?** → Tuple
-5. **Will the collection change over time?** → List (mutable) or Set (mutable)
+### Five Questions Before You Choose
+1. **Does order matter?** — Yes → List or Tuple
+2. **Are duplicates allowed?** — No → Set
+3. **Do I need lookup by a meaningful key?** — Yes → Dictionary
+4. **Is this one small fixed record?** — Yes → Tuple
+5. **Will this collection change over time?** — No → Tuple; Yes → List / Set / Dict
+
+> Source: Day6_Hour1_Basics.md §5.6 — decision checklist
 
 ---
 
-## Comparing Structures: Quick Reference
+## Demo: Duplicate Detection — List First, Then Set
 
-| Structure | Ordered? | Mutable? | Duplicates? | Best For |
-| --- | --- | --- | --- | --- |
-| **List** | ✅ Yes | ✅ Yes | ✅ Yes | Sequences, ordered collections |
-| **Tuple** | ✅ Yes | ❌ No | ✅ Yes | Fixed records (coordinates, dates) |
-| **Set** | ❌ No | ✅ Yes | ❌ No | Removing duplicates, membership tests |
-| **Dict** | ✅ Insertion order* | ✅ Yes | ❌ No (keys) | Lookup by name/ID, key-value pairs |
-
-*Python 3.7+ maintains insertion order for dicts.*
-
----
-
-## Example 1: Checking for Duplicates
-
-### The Task
-You have a list of email addresses and need to identify if any are duplicates.
-
-### Approach 1: Using a List
 ```python
-emails = ["alice@example.com", "bob@example.com", "alice@example.com"]
+usernames = ["ava", "liam", "ava", "mia", "liam", "noah"]
+seen = []
 
-# Check for duplicates by counting
-for email in emails:
-    if emails.count(email) > 1:
-        print(f"{email} is duplicated!")
+for username in usernames:
+    if username in seen:
+        print(f"Duplicate found: {username}")
+    else:
+        seen.append(username)
+        print(f"New user: {username}")
+
+print(f"Seen users: {seen}")
 ```
 
-**Problem:** `count()` scans the entire list for each email — inefficient and harder to read.
+### Why consider a refactor?
+- Are we using the order in `seen` for anything? No.
+- Do we want duplicates in `seen`? No.
+- Are we mainly using `in` for membership? Yes.
+
+> Source: Day6_Hour1_Basics.md §7.2–§7.4
 
 ---
 
-## Example 1: Better Approach with Set
+## Refactored: Set Expresses the Intent
 
-### Approach 2: Using a Set
 ```python
-emails = ["alice@example.com", "bob@example.com", "alice@example.com"]
+usernames = ["ava", "liam", "ava", "mia", "liam", "noah"]
+seen: set[str] = set()
 
-# Convert to set to see unique items
-unique_emails = set(emails)
+for username in usernames:
+    if username in seen:
+        print(f"Duplicate found: {username}")
+    else:
+        seen.add(username)
+        print(f"New user: {username}")
 
-if len(emails) != len(unique_emails):
-    print("Duplicates found!")
-    print(f"Original: {len(emails)}, Unique: {len(unique_emails)}")
+print(f"Seen users: {seen}")
 ```
 
-**Better because:**
-- Clearer intent: "I care about uniqueness"
-- Simpler logic
-- More efficient for large lists
+**Same behavior — better structure choice.** The set now expresses the rule of uniqueness directly.
+
+> Source: Day6_Hour1_Basics.md §7.4
 
 ---
 
-## Example 2: Looking Up Phone Numbers
+## Demo: Phone Lookup — List First, Then Dictionary
 
-### The Task
-Store contacts and look up phone numbers by name.
-
-### Approach 1: Using a List of Tuples
 ```python
-contacts = [
-    ("Alice", "555-1234"),
-    ("Bob", "555-5678"),
-    ("Charlie", "555-9012")
+contacts: list[tuple[str, str]] = [
+    ("Ava", "555-0111"),
+    ("Liam", "555-0222"),
+    ("Mia", "555-0333"),
 ]
 
-# Lookup by name
-name = "Bob"
-for contact_name, phone in contacts:
-    if contact_name == name:
-        print(f"{name}: {phone}")
+search_name: str = input("Enter a contact name: ")
+found_phone = None
+
+for name, phone in contacts:
+    if name == search_name:
+        found_phone = phone
         break
+
+if found_phone is None:
+    print("Contact not found")
+else:
+    print(f"{search_name}: {found_phone}")
 ```
 
-**Problem:** Have to loop through every contact until found.
+**Problem:** The task is lookup by name — but we loop every time.
+
+> Source: Day6_Hour1_Basics.md §8.1
 
 ---
 
-## Example 2: Better Approach with Dictionary
+## Refactored: Dictionary Makes Lookup Direct
 
-### Approach 2: Using a Dictionary
 ```python
-contacts = {
-    "Alice": "555-1234",
-    "Bob": "555-5678",
-    "Charlie": "555-9012"
+contacts: dict[str, str] = {
+    "Ava": "555-0111",
+    "Liam": "555-0222",
+    "Mia": "555-0333",
 }
 
-# Direct lookup by name
-name = "Bob"
-if name in contacts:
-    print(f"{name}: {contacts[name]}")
-else:
-    print(f"{name} not found")
+search_name: str = input("Enter a contact name: ")
+phone: str = contacts.get(search_name, "Contact not found")
+print(f"Result: {phone}")
 ```
 
-**Better because:**
-- Direct lookup by key (no loop needed)
-- Clear mapping: name → phone
-- Easier to extend (add/remove/update)
+**One line, clear meaning, safe missing-key handling with `get()`.**
 
----
-
-## Tradeoffs to Consider
-
-### Simplicity vs Power
-- **Don't overengineer:** If a simple list works and is readable, use it
-- **Don't underengineer:** If you're looping repeatedly to find items, consider a dict
-
-### Readability
-- Choose the structure that makes your intent clearest to other programmers
-- A dict says "I'm mapping keys to values"
-- A set says "I care about uniqueness"
-
-### Performance (Basic-level awareness)
-- Lists: Good for small collections and sequential access
-- Sets: Fast membership testing (`item in set`)
-- Dicts: Fast lookup by key
-
-> ⚠️ **Basics Scope:** We're not doing performance benchmarking or Big O analysis — just building intuition.
-
----
-
-## Demo: Membership Lookup — List vs Set
-
-### Scenario
-Check if a visitor is on a VIP list.
-
-```python
-# Using a list
-vip_list = ["Alice", "Bob", "Charlie", "Diana", "Eve"]
-
-if "Charlie" in vip_list:
-    print("VIP found in list!")
-
-# Using a set
-vip_set = {"Alice", "Bob", "Charlie", "Diana", "Eve"}
-
-if "Charlie" in vip_set:
-    print("VIP found in set!")
-```
-
-### Key Insight
-Both work! For small collections, either is fine. For hundreds or thousands of items, sets are faster for membership tests — but that's not the point today. The point is **clarity of intent.**
+> Source: Day6_Hour1_Basics.md §8.3–§8.4
 
 ---
 
 ## Lab: Refactor Challenge
 
-### Instructions (30 minutes)
+**Time: 13 minutes**
 
-**Task:** Given a small problem, first solve it using a list, then refactor to use a better structure (set or dict) and explain why the refactor improves the solution.
-
-**Problem:** Check for duplicate names in a list of students.
-
+### Part A — Duplicate Checker
 ```python
-students = ["Alice", "Bob", "Charlie", "Alice", "Diana", "Bob"]
-
-# Step 1: Solve using a list (hint: use .count() or nested loops)
-
-# Step 2: Refactor using a set
-
-# Step 3: Write a comment explaining at least one tradeoff
+raw_names = ["Ana", "Ben", "Ana", "Chris", "Ben", "Dana"]
 ```
+1. Build a list-based version using `seen_names` to report duplicates
+2. Refactor to use a set instead
+3. Print the final unique names
+4. Add a comment explaining why the set version is a better fit
 
----
+### Part B — Score Lookup
+```python
+score_pairs = [("Ava", 91), ("Liam", 88), ("Mia", 95)]
+```
+1. Search the list of tuples for one student name
+2. Refactor to use a dictionary; use safe access
+3. Add a comment explaining the tradeoff
 
-## Lab: Completion Criteria
+### Completion Criteria
+✓ Both parts run without crashing  
+✓ Dictionary version handles a missing name safely  
+✓ Explanation mentions at least one tradeoff: order, duplicates, or key lookup
 
-### You Must:
-✓ Produce a working list-based solution
-✓ Produce a working set-based refactor
-✓ Write an explanation that includes at least one tradeoff (e.g., readability, simplicity, efficiency)
-
-### Example Explanation
-> "The list approach uses `.count()` which works but scans the list repeatedly. The set approach converts the list to a set and compares lengths. This is clearer because it directly expresses the concept of 'uniqueness.' The tradeoff is that we lose the order information, but for this task, order doesn't matter."
+> Source: Day6_Hour1_Basics.md §9.2–§9.3
 
 ---
 
 ## Common Pitfalls — Hour 21
 
-### Pitfall 1: Overengineering
-```python
-# Overkill: using a dict when a list is simplest
-items = {"item1": "milk", "item2": "bread", "item3": "eggs"}
+⚠️ Empty set written as `{}` accidentally creates a dictionary — use `set()` instead  
+⚠️ Using `append()` on a set — sets use `add()`  
+⚠️ Refactoring the structure but forgetting to change the method calls  
+⚠️ Assuming the set will print in the same order as the original list  
+⚠️ Explaining only that one version is "better" without saying *why*
 
-# Better: just use a list if you don't need key-based lookup
-items = ["milk", "bread", "eggs"]
-```
-
-### Pitfall 2: Choosing the wrong structure for lookup
-```python
-# Inefficient: looping through a list to find an item repeatedly
-# Better: use a dict if you need frequent lookups by key
-```
-
----
-
-## Optional Extensions — Hour 21
-
-### Add a Feature
-- Add a search or filter feature to your refactored solution
-- Example: Find all students whose names start with a certain letter
-
-### Stay in Basics Scope
-✓ Use basic loops and conditionals
-✗ Don't use list comprehensions (Advanced topic)
-✗ Don't use lambda functions or advanced filtering
+> Source: Day6_Hour1_Basics.md §9.5
 
 ---
 
 ## Quick Check — Hour 21
 
-**Exit Ticket Question:** If you need fast lookup by name, which structure fits best?
-
-**Model Answer:** "A dictionary is the best fit because it allows direct lookup by key (the name) without needing to loop through all items. This makes the code clearer and more efficient."
-
-**Recap:**
-- Use lists for ordered sequences
-- Use sets for removing duplicates or membership testing
-- Use dicts for key-value lookups
-- Choose the structure that makes your intent clearest
+**Question:** If I need to check whether a name has already been seen, and order doesn't matter, which structure is the better fit — a list or a set?
 
 ---
 
 # Hour 22: Data-Structure Drill Circuit
 
 ## Learning Outcomes
-- Practice with lists, tuples, sets, and dicts in short timed tasks
-- Apply the right structure to solve focused problems
-- Complete coding tasks under time constraints
-- Explain solutions verbally to reinforce understanding
+- Complete short practice tasks using lists, tuples, sets, and dicts with increasing confidence
+- Recognize the core pattern behind each structure quickly
+- Test small pieces of code with sample values before deciding a task is finished
+- Explain verbally why a given structure fits a specific short problem
+- Share one working solution and describe one mistake you corrected
 
 ---
 
-## The Circuit Format
+## Circuit Format
 
-### What Is a Drill Circuit?
-A rotation through 4 coding stations — 12 minutes per station:
-1. **Station 1:** Filter numbers > 10 (list)
-2. **Station 2:** Unique emails (set)
-3. **Station 3:** Word frequency (dict)
-4. **Station 4:** Coordinates unpacking (tuple)
+### Four Stations — Work Through Them in Order
+1. **Station 1:** Filter numbers > 10 — list pattern
+2. **Station 2:** Unique emails — set pattern
+3. **Station 3:** Word frequency — dictionary pattern
+4. **Station 4:** Coordinates unpacking — tuple pattern
 
-### Goal
-Finish at least 3 of 4 stations with working code. At the end, share one solution verbally with the class.
+### Success Target
+Complete at least **three of four** stations. At each station: code runs, output matches the prompt, and you can explain why the structure fits.
 
----
-
-## Circuit Goals and Mindset
-
-### Finish Before Optimizing
-- Get a working solution first
-- Then improve if time allows
-- Don't get stuck perfecting Station 1 — move on!
-
-### Test with Small Examples
-- Run your code with 2-3 test inputs
-- Make sure it produces the expected output
-- Fix bugs before moving to the next station
-
-### No Collaboration During Stations
-Work independently during the 12-minute rotations. Share and discuss during the 5-minute debrief at the end.
-
----
-
-## Demo: Station 1 Example (Quick Walkthrough)
-
-### Task: Filter Numbers > 10
-Given a list of numbers, create a new list containing only numbers greater than 10.
-
-```python
-numbers = [5, 12, 3, 18, 7, 21, 9, 15]
-
-# Create a new list with only numbers > 10
-filtered = []
-for num in numbers:
-    if num > 10:
-        filtered.append(num)
-
-print(filtered)   # [12, 18, 21, 15]
-```
-
-### Expected Output
-`[12, 18, 21, 15]`
+> Source: Day6_Hour2_Basics.md §4.1–§4.2
 
 ---
 
 ## Station 1: Filter Numbers > 10 (List)
 
-### Task (12 minutes)
-Given this list of numbers, create a new list containing only numbers greater than 10.
-
 ```python
-numbers = [5, 12, 3, 18, 7, 21, 9, 15, 2, 25, 8, 30]
+numbers = [4, 11, 9, 15, 22, 3, 10, 18]
+filtered: list[int] = []
 
-# Your code here:
-# 1. Create an empty list
-# 2. Loop through numbers
-# 3. If number > 10, add it to the new list
-# 4. Print the result
+for number in numbers:
+    if number > 10:
+        filtered.append(number)
+
+print(filtered)
 ```
 
-**Expected Output:** `[12, 18, 21, 15, 25, 30]`
+### Tasks
+1. Create a new list containing only numbers greater than 10
+2. Print the filtered list
+3. Print how many numbers made it into the filtered list (`len()`)
+
+### Completion Criteria
+✓ Second list contains only values above 10  
+✓ Output shows filtered values and count  
+
+> Source: Day6_Hour2_Basics.md §6.1–§6.4
 
 ---
 
 ## Station 2: Unique Emails (Set)
 
-### Task (12 minutes)
-Given a list of email addresses (with duplicates), print only the unique emails.
-
 ```python
 emails = [
-    "alice@example.com",
-    "bob@example.com",
-    "alice@example.com",
-    "charlie@example.com",
-    "bob@example.com",
-    "diana@example.com"
+    "ana@example.com",
+    "ben@example.com",
+    "ana@example.com",
+    "chris@example.com",
+    "ben@example.com",
+    "dana@example.com",
 ]
-
-# Your code here:
-# 1. Convert the list to a set
-# 2. Print the unique emails (order doesn't matter)
 ```
 
-**Expected Output:** A set or list with 4 unique emails (order may vary).
+### Tasks
+1. Convert the list into a set of unique email addresses
+2. Print the unique emails
+3. Print the original count and the unique count
+4. Add a short comment explaining why a set fits this task
+
+### Completion Criteria
+✓ Set created from the list successfully  
+✓ Program prints the unique collection and both counts  
+✓ Comment explains that the set removes duplicates automatically
+
+> Source: Day6_Hour2_Basics.md §7.1–§7.4
 
 ---
 
-## Station 3: Word Frequency (Dict)
-
-### Task (12 minutes)
-Given a list of words, count how many times each word appears.
+## Station 3: Word Frequency (Dictionary)
 
 ```python
-words = ["apple", "banana", "apple", "orange", "banana", "apple"]
+words = ["red", "blue", "red", "green", "blue", "red"]
+counts: dict[str, int] = {}
 
-# Your code here:
-# 1. Create an empty dictionary
-# 2. Loop through words
-# 3. If word is in dict, increment count; otherwise, set count to 1
-# 4. Print the dictionary
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+for word, count in counts.items():
+    print(f"{word}: {count}")
 ```
 
-**Expected Output:** `{'apple': 3, 'banana': 2, 'orange': 1}`
+### Tasks
+1. Build a dictionary counting how many times each word appears
+2. Print the dictionary
+3. Print each word and count on its own line
+4. Add a comment explaining why a dictionary fits better than a list
+
+### Completion Criteria
+✓ Correct frequency dictionary built  
+✓ Loop through `items()` to print each word with its count
+
+> Source: Day6_Hour2_Basics.md §8.1–§8.4
 
 ---
 
 ## Station 4: Coordinates Unpacking (Tuple)
 
-### Task (12 minutes)
-Given a list of (x, y) coordinate tuples, print each coordinate and calculate the total distance from the origin (0, 0).
-
 ```python
-coordinates = [(2, 3), (5, 1), (3, 4), (1, 2)]
+points = [(2, 3), (5, 8), (1, 4), (7, 2)]
+largest_x = None
 
-# Your code here:
-# 1. Loop through coordinates
-# 2. Unpack each tuple into x and y
-# 3. Print x and y
-# 4. Calculate distance: sqrt(x*x + y*y) — use math.sqrt
-# 5. Sum all distances and print total
+for x, y in points:
+    print(f"Point at x={x}, y={y}")
+    if largest_x is None or x > largest_x:
+        largest_x = x
 
-import math
+print(f"Largest x value: {largest_x}")
 ```
 
-**Expected Output:** Print each coordinate and a total distance sum.
+### Tasks
+1. Loop through the points
+2. Unpack each tuple into `x` and `y`
+3. Print each point in a sentence
+4. Track and print the largest `x` value
+
+### Completion Criteria
+✓ Each tuple unpacked into `x` and `y`  
+✓ Sentence printed for each point  
+✓ Largest `x` value reported correctly
+
+> Source: Day6_Hour2_Basics.md §9.1–§9.4
 
 ---
 
-## Circuit Debrief (5 minutes after stations)
+## Lab: Drill Circuit
 
-### Share-Out Questions
-1. Which station was easiest? Which was hardest?
-2. Which data structure felt most natural for its task?
-3. Did anyone find a different approach? Share it!
+**Time: ~36 minutes (8–9 minutes per station)**
 
-### One Solution Verbally
-Each learner (or a few volunteers) explains one station solution to the class in 1-2 minutes.
+### Your Goal
+Work through all four stations in order. Use this rhythm at every station:
+1. Read the prompt — choose the right structure
+2. Build the smallest working version you can
+3. Test with tiny data
+4. Improve output if time remains
 
----
+### If You Finish Early
+Print numbers one per line with a label; add a sorted station-2 result with `sorted()`; ask the user for a color in station 3 and print its count using `get()`
 
-## Lab: Completion Criteria — Hour 22
+### Completion Criteria
+✓ At least three stations completed with working, tested code  
+✓ Can explain verbally why each structure was chosen
 
-### You Must:
-✓ Complete at least 3 of 4 stations with working code
-✓ Produce correct output for the stations you completed
-✓ Explain one solution verbally during the debrief
-
-### Success Markers
-- Code runs without errors
-- Output matches expected format
-- Can articulate why you chose that structure
+> Source: Day6_Hour2_Basics.md §4.1–§4.3, §6–§9
 
 ---
 
 ## Common Pitfalls — Hour 22
 
-### Pitfall 1: Rushing and Creating Syntax Errors
-```python
-# Example: Forgetting colons or indentation
-for num in numbers
-    if num > 10   # Missing colon
-```
+⚠️ Station 1 — appending to the original list instead of the result list  
+⚠️ Station 2 — creating `{}` and making an empty dictionary instead of a set  
+⚠️ Station 2 — expecting the set to preserve the original order  
+⚠️ Station 3 — using `counts[word] += 1` before the key exists (KeyError)  
+⚠️ Station 3 — forgetting `.items()` when printing both word and count  
+⚠️ Station 4 — writing `for point in points:` and forgetting to unpack
 
-**Fix:** Slow down, test often, read error messages carefully.
-
-### Pitfall 2: Not Testing with Small Examples
-Don't wait until the end to run your code — test after each step!
-
----
-
-## Optional Extensions — Hour 22
-
-### Add an Extra Station (if time allows)
-**Station 5:** Nested list table formatting
-Given a list of lists representing rows, print each row as a formatted table.
-
-```python
-table = [
-    ["Name", "Age", "City"],
-    ["Alice", "25", "NYC"],
-    ["Bob", "30", "LA"]
-]
-
-# Format and print as a table
-```
-
-**Stay in Basics Scope:** Use loops and string formatting — no pandas or external libraries.
+> Source: Day6_Hour2_Basics.md §6.6, §7.6, §8.6, §9.6
 
 ---
 
 ## Quick Check — Hour 22
 
-**Exit Ticket Question:** Name one thing you'll use dicts for in real work.
+**Question:** What does this line do, and why is it better than `counts[word] += 1`?
 
-**Example Answers:**
-- "Mapping user IDs to user profiles"
-- "Counting occurrences of items (like word frequency)"
-- "Storing configuration settings as key-value pairs"
-
-**Recap:**
-- Practiced lists, tuples, sets, and dicts in focused tasks
-- Completed at least 3 of 4 stations
-- Explained solutions verbally to solidify understanding
+```python
+counts[word] = counts.get(word, 0) + 1
+```
 
 ---
 
 # Hour 23: Mini-Project — In-Memory Tracker
 
 ## Learning Outcomes
-- Combine data structures into a coherent mini application
-- Practice clean output and user-friendly updates
-- Choose between list of dicts or dict of dicts for storage
-- Build a menu-driven program with add, list, and search features
+- Explain why a list of dictionaries fits a small in-memory tracker with multiple records
+- Build a tracker that stores records, adds a new record, lists all records, and searches
+- Read and write record fields using clear dictionary keys
+- Loop through a list of records and format output cleanly with f-strings
+- Describe one reason for choosing this storage model
 
 ---
 
-## Mini-Project Overview
+## Choosing the Storage Model
 
-### What We're Building
-A small in-memory tracker application with:
-- **Add:** Add a new record
-- **List:** Display all records
-- **Search:** Find a record by a key (name, title, etc.)
-
-### Storage Model Options
-- **List of dicts:** `[{"name": "Alice", "phone": "555-1234"}, {...}]`
-- **Dict of dicts:** `{"Alice": {"phone": "555-1234", "email": "..."}, ...}`
-
-### No File I/O Yet
-All data is stored in memory (variables) — it disappears when the program ends. We'll add persistence in a later session.
-
----
-
-## Project Choices
-
-### Pick One (or propose your own):
-
-**A) Expense Tracker**
-- Add expenses: `{date, amount, category}`
-- List all expenses
-- Search by category
-
-**B) Contact List**
-- Add contacts: `{name, phone, email}`
-- List all contacts
-- Search by name
-
-**C) Book Library**
-- Add books: `{title, author, year}`
-- List all books
-- Search by title or author
-
----
-
-## Requirements: Minimum Features
-
-### Must Include:
-1. **Add** — add a new record to the collection
-2. **List** — display all records in a readable format
-3. **Search** — find and display a specific record
-
-### Must Use:
-- At least one **dictionary** to store key-value pairs
-- At least one **list** to hold multiple records (if using list of dicts)
-
-### Optional (but recommended):
-- A menu loop that lets the user choose actions
-- Input validation (e.g., don't add empty names)
-
----
-
-## Demo: Scaffolding a Menu and Add Feature
-
-### Step 1: Menu Structure
+### Option 1: Plain list of strings
 ```python
-def main():
-    contacts = []  # Storage: list of dicts
-
-    while True:
-        print("\n--- Contact Tracker ---")
-        print("1. Add Contact")
-        print("2. List Contacts")
-        print("3. Search Contact")
-        print("4. Quit")
-
-        choice = input("Choose an option: ")
-
-        if choice == "1":
-            add_contact(contacts)
-        elif choice == "2":
-            list_contacts(contacts)
-        elif choice == "3":
-            search_contact(contacts)
-        elif choice == "4":
-            print("Goodbye!")
-            break
-        else:
-            print("Invalid choice. Try again.")
+books = ["Dune", "1984", "The Hobbit"]
 ```
+Simple, but stores only one piece of information per book.
 
----
-
-## Demo: Add Feature
-
-### Step 2: Add Function
+### Option 2: Dictionary from title to author
 ```python
-def add_contact(contacts):
-    name = input("Enter name: ")
-    phone = input("Enter phone: ")
-    email = input("Enter email: ")
-
-    contact = {"name": name, "phone": phone, "email": email}
-    contacts.append(contact)
-
-    print(f"Added contact: {name}")
+books = {"Dune": "Frank Herbert", "1984": "George Orwell"}
 ```
+Better for lookup by title, but where does genre go?
 
-### Key Points
-- Collect input from user
-- Store in a dictionary
-- Append to the list
-- Give feedback to the user
-
----
-
-## Lab: Mini-Project (30 minutes)
-
-### Instructions
-Choose one of the three project options (Expense Tracker, Contact List, or Book Library) and implement:
-
-1. **Add feature** — collect input and store in your data structure
-2. **List feature** — print all records in a readable format
-3. **Search feature** — find a record by name/title/category
-
-### Starter Template
+### Option 3: List of dictionaries ✅
 ```python
-def main():
-    # Choose your storage model:
-    records = []  # List of dicts, OR
-    # records = {}  # Dict of dicts
-
-    while True:
-        # Menu here
-        pass
-
-def add_record(records):
-    # Your code here
-    pass
-
-def list_records(records):
-    # Your code here
-    pass
-
-def search_records(records):
-    # Your code here
-    pass
-
-if __name__ == "__main__":
-    main()
+books = [
+    {"title": "Dune", "author": "Frank Herbert", "genre": "Science Fiction"},
+    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
+]
 ```
+Each book is one record with named fields; the outer list holds many records in order.
+
+> Source: Day6_Hour3_Basics.md §4.1–§4.3
 
 ---
 
-## Lab: Completion Criteria — Hour 23
+## Starter Data and Program Shape
 
-### You Must:
-✓ Implement all three minimum features: add, list, search
-✓ Use at least one dict and one list meaningfully
-✓ Produce clear, readable output (not raw dict printing)
-✓ Handle basic cases (e.g., search returns "not found" if missing)
-
-### Example Good Output
-```
---- Contact List ---
-1. Alice - 555-1234
-2. Bob - 555-5678
+```python
+books: list[dict[str, str]] = [
+    {"title": "Dune", "author": "Frank Herbert", "genre": "Science Fiction"},
+    {"title": "1984", "author": "George Orwell", "genre": "Dystopian"},
+    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy"},
+]
 ```
 
-### Example Bad Output
+### Three Required Features
+1. **Add** a book
+2. **List** all books
+3. **Search** for a book by title
+
+**Design rule:** outer structure = list (holds many records); inner structure = dictionary (holds one record's named fields)
+
+> Source: Day6_Hour3_Basics.md §5.1–§5.2
+
+---
+
+## Add Feature
+
+```python
+new_title: str = input("Enter a book title: ")
+new_author: str = input("Enter the author: ")
+new_genre: str = input("Enter the genre: ")
+
+new_book: dict[str, str] = {
+    "title": new_title,
+    "author": new_author,
+    "genre": new_genre,
+}
+
+books.append(new_book)
+print("Book added.")
 ```
-[{'name': 'Alice', 'phone': '555-1234'}, {'name': 'Bob', 'phone': '555-5678'}]
+
+**Structure:** ask for values → build one dictionary → append to the outer list
+
+> Source: Day6_Hour3_Basics.md §6.2–§6.3
+
+---
+
+## List Feature — User-Friendly Output
+
+```python
+print("\nLibrary books:")
+for book in books:
+    print(f"- {book['title']} by {book['author']} ({book['genre']})")
 ```
+
+### Debug output vs. user-friendly output
+- **Debug:** `print(books)` — prints raw list of dicts; useful for inspecting
+- **User-friendly:** loop with f-string — readable by a person
+
+**Habit:** move from debug printing to formatted output as the final step.
+
+> Source: Day6_Hour3_Basics.md §7.2–§7.3
+
+---
+
+## Search Feature
+
+```python
+search_title: str = input("\nEnter a title to search for: ")
+found: bool = False
+
+for book in books:
+    if book["title"].lower() == search_title.lower():
+        print("Found book:")
+        print(f"  Title:  {book['title']}")
+        print(f"  Author: {book['author']}")
+        print(f"  Genre:  {book['genre']}")
+        found = True
+        break
+
+if not found:
+    print("Book not found.")
+```
+
+**Key details:** `.lower()` on both sides (case-insensitive); `found` flag for the not-found message; `break` once found.
+
+> Source: Day6_Hour3_Basics.md §8.3–§8.5
+
+---
+
+## Lab: Book Library Tracker
+
+**Time: 19 minutes**
+
+### Task
+Build a small Python program that stores books using a **list of dictionaries**.
+
+Each book record must include `title`, `author`, and `genre`. Your program must:
+1. Start with at least **three** books already in the list
+2. Ask the user for one new book and add it
+3. Print all books in a clean, readable format
+4. Ask the user for a title to search — print the matching book or "Book not found."
+
+### Completion Criteria
+✓ Uses at least one list and one dictionary meaningfully  
+✓ Starts with at least three records  
+✓ Adds a new record correctly with `append()`  
+✓ Lists all records with formatted output (not raw `print(books)`)  
+✓ Search works for both found and not-found cases
+
+> Source: Day6_Hour3_Basics.md §9.2–§9.3
 
 ---
 
 ## Common Pitfalls — Hour 23
 
-### Pitfall 1: Messy Global Variables
-```python
-# Bad: using global variables everywhere
-contacts = []
+⚠️ Storing each new book as a list instead of a dictionary  
+⚠️ Using different key names in different records (`name` in one, `title` in another)  
+⚠️ Printing the raw list and thinking the formatting requirement is complete  
+⚠️ Forgetting to set or check the `found` flag in the search logic  
+⚠️ Comparing titles without normalizing case and assuming search is broken  
+⚠️ Creating the new book dictionary but forgetting to append it to `books`
 
-def add_contact():
-    global contacts
-    # ...
-```
-
-**Better:** Pass the data structure as a parameter to functions.
-
-### Pitfall 2: Hard-to-Read Printing
-```python
-# Bad: printing raw dictionaries
-print(contacts)
-
-# Better: format nicely
-for contact in contacts:
-    print(f"{contact['name']} - {contact['phone']}")
-```
-
----
-
-## Optional Extensions — Hour 23
-
-### Add More Features (Stay in Basics Scope)
-- **Update:** Modify an existing record
-- **Delete:** Remove a record by name
-- **Sort:** Display records in alphabetical order
-
-### Example: Sort Contacts
-```python
-def list_contacts(contacts):
-    # Advanced topic preview: sorting a list of dicts. 
-    # For basics, you might just display unsorted or use simpler lists.
-    sorted_contacts = sorted(contacts, key=lambda c: c['name'])
-    for contact in sorted_contacts:
-        print(f"{contact['name']} - {contact['phone']}")
-```
-
-> ⚠️ **Note:** Using `lambda` here is an Advanced topic — for Basics, you can use a simple loop to find min/max or just display unsorted.
+> Source: Day6_Hour3_Basics.md §9.6
 
 ---
 
 ## Quick Check — Hour 23
 
-**Exit Ticket Question:** What data structure did you choose and why?
+**Question:** Why is a list of dictionaries a good fit for this tracker?
 
-**Example Answers:**
-- "I used a list of dicts because each contact is a record with multiple fields, and I want to keep them in order."
-- "I used a dict of dicts because I want fast lookup by name as the key."
-
-**Recap:**
-- Built a mini in-memory tracker app
-- Combined dicts and lists to store structured data
-- Practiced clean output and basic menu-driven programs
+**Expected answer:** "I used a list of dictionaries because I had many books, and each book had multiple named fields. The list lets me store many records, and the dictionary makes each record readable."
 
 ---
 
 # Hour 24: Checkpoint 3 — Data Structures Assessment
 
 ## Learning Outcomes
-- Demonstrate confident use of core data structures and iteration
-- Build a working program that meets a rubric
-- Handle missing keys safely (no KeyError)
-- Produce clear, formatted output
+- Demonstrate confident use of a dictionary for real-world data storage
+- Apply safe dictionary access patterns (`get()` or `in` checks) to avoid KeyError crashes
+- Format and display structured data clearly and readably
+- Test programs systematically — check both successful searches and failure cases
+- Reflect on data-structure selection and explain why a dictionary fits this task
 
 ---
 
-## Checkpoint 3 Overview
+## What This Checkpoint Tests
 
-### What Is Checkpoint 3?
-A timed assessment (45-60 minutes) where you build a simple application from scratch to demonstrate mastery of:
-- Lists, tuples, sets, and dictionaries
-- Iteration with `for` loops
-- Safe key access (`dict.get()` or `if key in dict`)
-- Clear output formatting
+### Five Skills
+1. **Can you choose the right data structure?** — A dictionary is the answer: given a name, find a phone
+2. **Can you create and populate a structure cleanly?** — Five contacts, five lines
+3. **Can you print data in a form a human can read?** — Not just `print(contacts)`
+4. **Can you accept and handle user input?** — The `input()` function
+5. **Can you handle the case where something is missing?** — No KeyError; respond gracefully
 
-### Optional Quiz (10 minutes)
-After the lab, you may take a short multiple-choice quiz on data structures.
-
----
-
-## Assessment Task: Simple Contacts (In-Memory)
-
-### Requirements
-Build a contacts program that:
-1. Stores contacts as name → phone in a **dictionary**
-2. Adds at least **5 contacts** (hardcoded or via input)
-3. **Search by name** — print phone if found, message if not found
-4. **List all contacts** — print all names and phones (sorted optional)
-
-### No File I/O
-All data is in memory (variables) — no reading/writing files.
+> Source: Day6_Hour4_Basics.md §3.2
 
 ---
 
-## Rubric and Success Criteria
+## Safe Key Access — Two Patterns
 
-### You Must:
-✓ **Search works** for both existing and missing names
-✓ **Clear output** — not raw dict printing
-✓ **No KeyError** — handle missing keys gracefully
-✓ Code runs without syntax errors
-
-### Example Success
-```
-Search for: Alice
-Alice: 555-1234
-
-Search for: Zoe
-Zoe not found.
-
-All Contacts:
-  Alice: 555-1234
-  Bob: 555-5678
-  Charlie: 555-9012
-```
-
----
-
-## Demo: How to Test with 2-3 Example Inputs
-
-### Step 1: Add Test Contacts
+### Pattern 1: Check First with `in`
 ```python
-contacts = {
-    "Alice": "555-1234",
-    "Bob": "555-5678",
-    "Charlie": "555-9012"
-}
-```
-
-### Step 2: Test Search Function
-```python
-def search_contact(contacts, name):
-    if name in contacts:
-        print(f"{name}: {contacts[name]}")
-    else:
-        print(f"{name} not found.")
-
-# Test with existing name
-search_contact(contacts, "Alice")   # Should print: Alice: 555-1234
-
-# Test with missing name
-search_contact(contacts, "Zoe")     # Should print: Zoe not found.
-```
-
----
-
-## Demo: Safe Key Access
-
-### Method 1: Check with `in`
-```python
-name = "Alice"
-if name in contacts:
-    print(contacts[name])
+search_name = input("Enter name: ")
+if search_name in contacts:
+    print(contacts[search_name])
 else:
-    print("Not found")
+    print("Contact not found.")
 ```
 
-### Method 2: Use `dict.get()`
+### Pattern 2: Use `get()` with a Default
 ```python
-name = "Alice"
-phone = contacts.get(name, "Not found")
+search_name = input("Enter name: ")
+phone = contacts.get(search_name, "Contact not found.")
 print(phone)
 ```
 
-Both methods avoid `KeyError` when the key doesn't exist.
+**Both patterns are safe.** If a searched name is missing, your program must not crash.
+
+> Source: Day6_Hour4_Basics.md §4.2
 
 ---
 
-## Lab: Checkpoint 3 (45-60 minutes)
+## Checkpoint Build Order
 
-### Task
-Build the Simple Contacts program following the rubric:
-
+### Step-by-Step Approach
 ```python
-# Step 1: Create a dictionary with at least 5 contacts
+# Step 1: Create the dictionary with five starting contacts
 contacts = {
-    "Alice": "555-1234",
-    # Add 4 more...
+    'Alice': '555-1234',
+    'Bob': '555-5678',
+    'Carol': '555-9999',
+    'Diana': '555-4444',
+    'Eve': '555-5555'
 }
 
-# Step 2: Implement search function
-def search_contact(contacts, name):
-    # Your code here
-    pass
+# Step 2: Display all contacts (loop with .items())
 
-# Step 3: Implement list function
-def list_contacts(contacts):
-    # Your code here
-    pass
+# Step 3: Ask the user for a name to search
 
-# Step 4: Test with 2-3 searches
-search_contact(contacts, "Alice")
-search_contact(contacts, "Zoe")
+# Step 4: Search safely (in check or .get())
 
-# Step 5: List all contacts
-list_contacts(contacts)
+# Step 5: Test — one name that exists, one that does not
 ```
+
+> Source: Day6_Hour4_Basics.md §6.1
 
 ---
 
-## Lab: Completion Criteria — Hour 24
+## Checkpoint Task: Simple Contacts (In Memory)
 
-### Required:
-✓ Search works for existing names
-✓ Search handles missing names gracefully (no KeyError)
-✓ List displays all contacts with clear formatting
-✓ At least 5 contacts stored in the dictionary
+**Name:** Simple Contacts (In Memory)
 
-### Bonus (Optional):
-✓ Sorted output (alphabetically by name)
-✓ Case-insensitive search (e.g., "alice" finds "Alice")
+### Minimum Features
+- Create a dictionary with at least **5 contacts** (name → phone)
+- **Display all contacts** in readable format — one per line with labels
+- **Accept user input** to search for a contact by name
+- Return the phone number if contact exists; print a **friendly message** if not
+- **Critical:** Handle missing keys safely — no KeyError crash
+
+### Readable Output Example
+```text
+— All Contacts —
+Alice: 555-1234
+Bob: 555-5678
+Carol: 555-9999
+Diana: 555-4444
+Eve: 555-5555
+```
+
+> Source: Day6_Hour4_Basics.md §2.3, §6.2
+
+---
+
+## Test Plan for the Checkpoint
+
+```text
+Test 1: Display all contacts
+  Expected: All 5 contacts printed clearly, one per line
+
+Test 2: Search for a contact that exists
+  Example: Search for "Alice"
+  Expected: Print Alice's phone number
+
+Test 3: Search for a contact that does NOT exist
+  Example: Search for "Zzzzzz"
+  Expected: Print "Contact not found" — no crash
+
+Test 4 (optional): Case sensitivity
+  Example: Search for "alice" when stored as "Alice"
+  Expected: Either finds it or reports not found
+```
+
+> Source: Day6_Hour4_Basics.md §5.2
+
+---
+
+## Lab: Checkpoint 3
+
+**Time: 25–35 minutes of uninterrupted work**
+
+### Task
+Build the Simple Contacts program following the build order above.
+
+### Completion Criteria
+✓ Dictionary created with at least 5 entries  
+✓ Loop printing contacts one per line (not raw dictionary dump)  
+✓ Safe search code — either `in` check or `.get()`  
+✓ At least one test run with a name that exists  
+✓ At least one test run with a name that does not exist  
+✓ Friendly message for missing contacts — no crash
+
+> Source: Day6_Hour4_Basics.md §7.1–§7.3
 
 ---
 
 ## Common Pitfalls — Hour 24
 
-### Pitfall 1: Forgetting to Normalize Case
-```python
-# Problem: "alice" doesn't match "Alice"
-if name in contacts:
-    # Won't find if case differs
-```
+⚠️ Bare bracket access `contacts[search_name]` without a safety check — causes KeyError  
+⚠️ Printing `print(contacts)` as final output instead of a formatted loop  
+⚠️ Swapping key and value in `.items()` loop — `for phone, name in contacts.items():`  
+⚠️ Testing only the success case and never checking a missing name  
+⚠️ Case sensitivity confusion — "Alice" and "alice" are different keys  
+⚠️ Adding extra features before the minimum requirements work
 
-**Fix:** Normalize to lowercase for searching:
-```python
-name = name.lower()
-# Store all keys in lowercase, or use .get() with case handling
-```
-
-### Pitfall 2: Printing Dict Directly
-```python
-# Bad: raw dict output
-print(contacts)
-
-# Better: formatted loop
-for name, phone in contacts.items():
-    print(f"{name}: {phone}")
-```
-
----
-
-## Optional Extensions — Hour 24
-
-### Allow Partial Match Search
-Search for contacts where the search term is a substring of the name:
-```python
-def search_partial(contacts, keyword):
-    results = []
-    lowered_keyword = keyword.lower()
-    for name in contacts:
-        if lowered_keyword in name.lower():
-            results.append(name)
-            
-    if results:
-        for name in results:
-            print(f"{name}: {contacts[name]}")
-    else:
-        print("No matches found.")
-```
-
-**Stay in Basics Scope:** This version stays in Basics scope by using a simple loop instead of a list comprehension.
-
----
-
-## Optional Quiz (10 minutes)
-
-### Sample Questions
-
-**Q1:** What's the difference between `dict.get(key)` and `dict[key]`?
-
-**A:** `dict.get(key)` returns `None` (or a default) if the key doesn't exist; `dict[key]` raises `KeyError` if the key is missing.
-
-**Q2:** Which structure removes duplicates automatically?
-
-**A:** Set
-
-**Q3:** Which structure is best for ordered, fixed records like coordinates?
-
-**A:** Tuple
+> Source: Day6_Hour4_Basics.md §8.1–§8.6
 
 ---
 
 ## Quick Check — Hour 24
 
-**Exit Ticket Question:** What's the difference between `dict.get()` and `dict[key]`?
+**Question:** What is the difference between `contacts[search_name]` and `contacts.get(search_name, "Not found")`?
 
-**Model Answer:** "`dict[key]` will raise a KeyError if the key doesn't exist. `dict.get(key)` returns `None` by default (or a custom default value) if the key is missing, making it safer for handling optional keys."
+**Expected answer:** "`contacts[search_name]` raises a KeyError if the key is missing. `contacts.get(search_name, 'Not found')` returns the default value instead of crashing, making it safe for user-provided input."
 
-**Recap:**
-- Completed Checkpoint 3: Simple Contacts program
-- Demonstrated safe key access and clear output
-- Practiced data structure selection and iteration
+---
+
+# Session 6 Wrap-Up
+
+## What We Covered Today
+
+### Hour 21 — Choosing the Right Structure
+- Decision checklist: order, duplicates, key lookup, fixed records, mutability
+- Refactor challenge: list → set, list-of-tuples → dictionary
+
+### Hour 22 — Drill Circuit
+- Four patterns: list filtering, set uniqueness, dictionary counting, tuple unpacking
+- Testing rhythm: start small, test first, explain your choice
+
+### Hour 23 — Mini-Project
+- List of dictionaries as storage model
+- Add, list, and search features with clean formatted output
+
+### Hour 24 — Checkpoint 3
+- Dictionary-based contacts program
+- Safe key access: `in` check and `get()`
 
 ---
 
 ## Scope Guardrail Reminder
 
 ### Stay in Basics Scope
-✓ Core data structures: list, tuple, set, dict
-✓ Basic iteration with `for` and `while`
-✓ Simple functions and imports
-✓ Basic input/output and string formatting
+✓ Core structures: list, tuple, set, dictionary  
+✓ Safe key access: `in` check, `get()` with default  
+✓ Formatted output using f-strings and loops  
+✓ Simple in-memory storage (no file I/O yet)
 
 ### Not Yet (Advanced Topics)
-✗ Named tuples or collections module
-✗ Performance analysis / Big O notation
-✗ Advanced data modeling or custom classes
-✗ List comprehensions (introduced later)
-✗ Lambda functions or decorators
+✗ List comprehensions  
+✗ Lambda functions  
+✗ Big O notation or performance analysis  
+✗ Custom classes or data modeling  
+✗ Nested dictionaries beyond list-of-dicts  
+✗ External packages or databases
 
 ---
 
-## Session 6 Wrap-Up
+## Next Session Preview
 
-### What We Covered Today
-- **Hour 21:** Choosing the right structure based on task requirements
-- **Hour 22:** Drill circuit with lists, tuples, sets, and dicts
-- **Hour 23:** Mini-project combining data structures into an app
-- **Hour 24:** Checkpoint 3 assessment with Simple Contacts
+### Session 7 (Hours 25–28)
+- Hour 25: Conditionals in depth — `if/elif/else`, boundaries, compound conditions
+- Hour 26: Defining and calling functions
+- Hour 27: Parameters, return values, and scope
+- Hour 28: Checkpoint 4 — functions + data structures
 
-### Key Takeaways
-- Decision checklist: order, duplicates, key lookup, mutability
-- Practice refactoring to better-fitting structures
-- Build mini-projects to integrate multiple structures
-- Handle edge cases safely (no KeyError)
-
----
-
-## Homework and Practice
-
-### Practice Tasks
-1. **Refactor Exercise:** Take a program you wrote earlier and identify one place where a different data structure would be clearer.
-2. **Extend Mini-Project:** Add an update or delete feature to your tracker app.
-3. **Word Counter:** Write a program that counts word frequency in a sentence using a dictionary.
-
-### Preparation for Session 7
-- Review conditionals (`if/elif/else`) from earlier sessions
-- Think about how to validate user input
-- Practice writing functions that return values
-
----
-
-## Next Session Preview: Session 7 (Hours 25–28)
-
-### Topics Coming Up
-- **Hour 25:** Conditionals — `if/elif/else` and boundaries
-- **Hour 26:** Functions — defining, calling, returning values
-- **Hour 27:** Function parameters and scope
-- **Hour 28:** Checkpoint 4 — Functions + data structures
-
-### Get Ready To:
-- Write reusable functions
-- Structure programs with clear logic flow
-- Combine functions with data structures
+### Coming Skills
+Writing reusable functions and structuring programs with clean logic flow
 
 ---
 
 ## Questions?
 
-**Session 6 Complete!**
+**Remember:**
+- Choose structures based on the job, not your favorite
+- Always test both the success path and the failure path
+- User-friendly output is not optional — it is a programming habit
+- Safe key access prevents crashes in real programs
 
-You've mastered:
-- Choosing the right data structure for the job
-- Refactoring to improve clarity and simplicity
-- Building mini-projects with multiple structures
-- Demonstrating proficiency in Checkpoint 3
+---
 
-**Keep practicing — see you in Session 7!**
+# Thank You!
+
+See you in Session 7!

@@ -1,19 +1,17 @@
-<!-- repo-agent-bootstrap:file-kind=claude -->
-<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap-manual-fallback-2026-04-16 -->
+<!-- repo-agent-bootstrap:file-kind=claude-md -->
+<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap@2026-05-13 -->
 <!-- repo-agent-bootstrap:managed:start -->
 # CLAUDE.md
 
-Read `AGENTS.md` first.
+Read `AGENTS.md` first for repo-wide defaults.
 
 Then load:
-- `Prompt.md`
-- `Plans.md`
-- `Architecture.md`
-- `Implement.md`
-- `Documentation.md`
+- `memory-bank/activeContext.md`
+- `memory-bank/progress.md`
+- `docs/architecture.md` when the task affects system design
 
-Repository-specific notes:
-- Treat `Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md` and `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md` as the source of truth for curriculum changes.
-- Preserve the per-hour lecture file conventions and the autograder filename/config contracts described in `AGENTS.md`.
-- Reuse the existing agent roster in `.github/agents/` and the existing repo skills before creating new parallel guidance.
+Claude-specific note:
+- Keep responses concise, but preserve the same validation and boundary rules defined in `AGENTS.md`.
+- Prefer the generated specialist agents and repository skills when the task clearly matches them.
+- This repo's primary stack is Python, TypeScript, TSX, JavaScript with pytest.
 <!-- repo-agent-bootstrap:managed:end -->

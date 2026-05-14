@@ -1,33 +1,15 @@
 # Basics Day 12 — Session 12 (Hours 45–48)
-Python Programming (Basic) • Capstone Delivery and Final Review
-
-## Session 12 Overview
-- Hour 45: Capstone kickoff — requirements + scaffolding
-- Hour 46: Capstone build sprint
-- Hour 47: Capstone polish + demo readiness
-- Hour 48: Final assessment + certification-style review
+Capstone Project — Requirements, Build Sprint, Polish, and Final Assessment
 
 ---
 
-# Day 12 Goal
+# Session 12 Overview
 
-**Finish With a Working Story**
-
-- Build a small command-line capstone project
-- Save and load data with JSON in a `data/` folder
-- Organize code with functions, modules, and at least one class
-- Handle common input and file errors gracefully
-- Demo the project clearly in under 3 minutes
-
----
-
-# Capstone Theme Choices
-
-**Choose One CLI Personal Organizer**
-
-- Tasks
-- Contacts
-- Notes
+## Topics Covered Today
+- Hour 45: Capstone kickoff — requirements & scaffolding
+- Hour 46: Capstone build sprint — full CRUD
+- Hour 47: Capstone polish & demo readiness
+- Hour 48: Final assessment & certification-style review
 
 **Keep It Basics-Scope**
 

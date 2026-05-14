@@ -1,539 +1,654 @@
 # Advanced Day 5 — Session 5 (Hours 17–20)
-Python Programming (Advanced) • GUI Foundations for the Tracker Capstone
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 5 overview (Hours 17–20); Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Instructor Notes -->
+GUI Fundamentals, Layout and Usability, Form Validation, and Record List UI with Tkinter
 
 ---
 
 # Session 5 Overview
 
 ## Topics Covered Today
-- Hour 17: GUI fundamentals with Tkinter / `ttk`
-- Hour 18: Layout, spacing, and resizing
-- Hour 19: Forms, validation, and user feedback
-- Hour 20: Record lists, selection, and refresh
+- Hour 17: GUI fundamentals — event loop, widgets, callbacks, service wiring
+- Hour 18: Layout, usability, and resizing with nested frames and grid weights
+- Hour 19: Forms + validation feedback patterns and UI/service responsibility
+- Hour 20: Record list UI with Treeview/Listbox, selection callbacks, safe refresh
 
-## Today's Capstone Milestone
-- Move from CLI-style flow to event-driven desktop workflow
-- Keep the **service layer** as the home for business rules
-- Start building a tracker UI that can grow into CRUD workflows
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 5 overview (Hours 17–20); Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Section 1: Recap and Transition -->
-
----
-
-## Homework + Quiz Emphasis
-
-- Build one working GUI action first
-- Use `grid()` intentionally for readable forms
-- Show validation feedback without crashes
-- Bind record selection to a **stable ID**, not display order
-
-### Canonical quiz/contracts to recognize
-- `Hour 17 | root window: tracker app`
-- `Hour 18 | layout manager: grid`
-- `Hour 19 | field read: title entry`
-- `Hour 20 | list widget: treeview`
-
-<!-- Sources: Advanced/assignments/Advanced_Day5_homework.ipynb — Part 1 through Part 4; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 17 through Hour 20 canonical contract questions -->
+### Source Alignment
+- `Advanced/lessons/lecture/Day5_Hour1_Advanced.md` → `# Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk`
+- `Advanced/lessons/lecture/Day5_Hour2_Advanced.md` → `# Day 5 Hour 2 Advanced — Tkinter Layout, Usability, and Resizing`
+- `Advanced/lessons/lecture/Day5_Hour3_Advanced.md` → `# Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced)`
+- `Advanced/lessons/lecture/Day5_Hour4_Advanced.md` → `# Day 5 Hour 4 Advanced: Record List UI with Treeview or Listbox`
 
 ---
 
-# Hour 17: GUI Fundamentals
+# Session 5 Outcomes
+
+- Build event-driven Tkinter apps that stay alive via `mainloop()`
+- Use nested frames, sticky, and weights for readable, resizable layouts
+- Validate form input before saving and surface errors clearly to users
+- Display records in a Treeview, respond to selection, and refresh safely
+- Apply one consistent design rule: **GUI handles interaction; service handles rules**
+
+---
+
+# Scope Guardrails for Today
+
+## In Scope
+- Tkinter/ttk window, widget, callback, and layout fundamentals
+- Frame decomposition, sticky behavior, and resize weight allocation
+- Required-field validation, inline error feedback, and Save button state
+- Treeview record browsing, selection callbacks, and safe refresh sequence
+
+## Not Yet
+- Tkinter threading or async GUI patterns
+- Database or file persistence backends
+- Full MVC/MVP framework architecture
+- Advanced sorting, filtering, or multi-level Treeview trees
+
+---
+
+# Hour 17: GUI Fundamentals with Tkinter and ttk
 
 ## Learning Outcomes
-- Explain why GUI programs are **event-driven**
-- Create a small window with labels, entries, and buttons
-- Wire a button to a callback
-- Route validation through the service layer
-- Show visible success/error feedback
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 17: GUI fundamentals (Tkinter/ttk): event loop, widgets, callbacks; Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Learning Outcomes for This Hour -->
+- Explain what makes GUI programming event-driven
+- Describe the role of `mainloop()` in a Tkinter app
+- Create a window with `Label`, `Entry`, and `Button` using `ttk`
+- Wire a button callback to a service layer
+- Show user feedback with a status label and `messagebox`
 
 ---
 
-## The Mental Model Shift
+## The GUI Mental Model and `mainloop()`
 
-### CLI mindset
-1. Start
-2. Read input
-3. Do work
-4. Print output
-5. Exit
-
-### GUI mindset
-- Open a window
-- Wait for events
-- React through callbacks
-- Stay responsive until the user closes the app
-
-**Key phrase**: The GUI handles interaction; the service layer handles rules.
-
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Section 1: Recap and Transition; Section 2: The GUI Mental Model -->
-
----
-
-## Core Building Blocks
-
-- `mainloop()` keeps the app alive and listening
-- `Label` shows text
-- `Entry` captures user input
-- `Button` triggers a callback
-- `messagebox` gives simple popup feedback
-- `StringVar` helps connect UI state to Python values
-
-### Keep callbacks short
-- Read form values
-- Call the service
-- Update the interface
-
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — What mainloop() Does; Widgets and Callbacks; Demo Teaching Points to Repeat -->
-
----
-
-## Thin Callback Pattern
+- Command-line programs run **top to bottom**; GUIs **wait for events**
+- The user's clicks, key presses, and text entry drive execution
+- Our code registers **callbacks**; the toolkit calls them when events fire
 
 ```python
-def on_add(self) -> None:
-    try:
-        record = self.service.add_record(
-            self.name_var.get(),
-            self.email_var.get(),
-        )
-    except ValidationError as exc:
-        self.status_var.set(f"Error: {exc}")
-        return
-
-    self.status_var.set(f"Added {record.name}")
+root = tk.Tk()
+# ... create widgets and register callbacks ...
+root.mainloop()   # starts the event loop; keeps window alive
 ```
 
-### Why this pattern works
-- UI gathers input
-- Service validates and stores
-- UI presents the outcome
+- Without `mainloop()` the window may flash and disappear
+- When the user closes the window, `mainloop()` exits
 
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Section 3: Core Design Pattern for This Hour; Demo Code -->
+> **Key message:** The GUI handles interaction; the service layer handles rules.
 
 ---
 
-## Demo: Hello GUI + Add Form
+## The Three-Part GUI Pattern
 
-### Instructor flow
-1. Create the service class first
-2. Build a small `ContactApp` / tracker app class
-3. Add two fields and an **Add** button
-4. Wire `command=self.on_add`
-5. Show one bad submission and one good submission
-6. Point directly to `root.mainloop()`
+```text
+widgets collect input
+        ↓
+  callback responds
+        ↓
+ service validates and stores
+        ↓
+  UI shows success or error
+```
 
-### Watch for
-- Where the widgets live
-- Where the callback lives
-- Where the validation rule lives
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Live demo (Hour 17); Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Demo Steps -->
+- **Widget** — visible UI element (Label, Entry, Button)
+- **Callback** — function wired to an event via `command=self.on_add` (not `command=self.on_add()`)
+- **Service layer** — ordinary Python that owns business rules and validation
+- Blocking calls (sleep, network, large files) in a callback **freeze the GUI**
 
 ---
 
-## Lab: First Working GUI Action
+## Demo: Service First — ContactService
 
-**Time: 25–35 minutes**
+```python
+class ContactService:
+    def __init__(self) -> None:
+        self._records: list[ContactRecord] = []
+
+    def add_record(self, name: str, email: str) -> ContactRecord:
+        clean_name = name.strip()
+        clean_email = email.strip().lower()
+        if not clean_name:
+            raise ValidationError("Name is required.")
+        if "@" not in clean_email:
+            raise ValidationError("Email must include '@'.")
+        record = ContactRecord(name=clean_name, email=clean_email)
+        self._records.append(record)
+        return record
+```
+
+- Service does **not** know about widgets, `StringVar`, or `messagebox`
+- Rules belong here whether input comes from GUI, CLI, or API
+
+---
+
+## Demo: ContactApp — Widgets and Callback
+
+```python
+class ContactApp:
+    def __init__(self, root: tk.Tk, service: ContactService) -> None:
+        self.root = root
+        self.service = service
+        self.name_var = tk.StringVar()
+        self.email_var = tk.StringVar()
+        self.status_var = tk.StringVar(value="Ready.")
+        self._build_ui()
+
+    def _build_ui(self) -> None:
+        frame = ttk.Frame(self.root, padding=16)
+        frame.pack(fill="both", expand=True)
+        ttk.Label(frame, text="Name").pack(anchor="w")
+        ttk.Entry(frame, textvariable=self.name_var).pack(fill="x", pady=(0, 10))
+        ttk.Label(frame, text="Email").pack(anchor="w")
+        ttk.Entry(frame, textvariable=self.email_var).pack(fill="x", pady=(0, 10))
+        ttk.Button(frame, text="Add Record", command=self.on_add).pack()
+        ttk.Label(frame, textvariable=self.status_var).pack(anchor="w")
+```
+
+---
+
+## Demo: The `on_add` Callback
+
+```python
+    def on_add(self) -> None:
+        try:
+            record = self.service.add_record(
+                self.name_var.get(), self.email_var.get()
+            )
+        except ValidationError as exc:
+            self.status_var.set(f"Error: {exc}")
+            messagebox.showerror("Validation Error", str(exc))
+            return
+        self.status_var.set(f"Added {record.name}.")
+        messagebox.showinfo("Success", f"Saved {record.name}.")
+        self.name_var.set("")
+        self.email_var.set("")
+
+def main() -> None:
+    root = tk.Tk()
+    service = ContactService()
+    ContactApp(root, service)
+    root.mainloop()
+```
+
+- Callback coordinates; service decides
+- `messagebox` is modal — acceptable for short feedback, not for long blocking work
+
+---
+
+## Lab: Hello GUI and Add Form (Hour 17)
+
+**Time: 26 minutes**
 
 ### Tasks
-- Create a Tkinter window for your tracker domain
-- Add at least two inputs
-- Add one working action button
-- Show status or messagebox feedback
-- Keep business rules outside the widget-building code
+- Part A — Hello GUI: create `tk.Tk()` window with a `ttk.Label`; confirm `mainloop()` keeps it alive
+- Part B — Add Form: build a two-field form with `Label`, `Entry`, `Button`, and status label
+- Part C — Wire a service: validate through a service; show `messagebox` on success and error
+- Part D — Test all cases: blank fields, one field only, two valid fields, close and relaunch
 
-### Completion Criteria
+### Completion criteria
 ✓ GUI launches reliably  
-✓ One callback works end to end  
-✓ Validation comes from a service/helper  
-✓ User sees success or error clearly
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Hello GUI + Add form; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 1: Hour 17 -->
+✓ Add action shows correct feedback for both valid and invalid input
 
 ---
 
 ## Common Pitfalls (Hour 17)
 
-⚠️ Forgetting `mainloop()`  
-⚠️ Writing `command=self.on_add()` instead of `command=self.on_add`  
-⚠️ Burying business rules directly in callbacks  
-⚠️ Clicking a button and giving the user no visible feedback
+⚠️ Business logic placed inside the button callback instead of a service layer
+⚠️ Forgetting `root.mainloop()` — window flashes and disappears
+⚠️ Writing `command=on_add()` — calls the function at build time instead of wiring it
+⚠️ Creating a widget but not calling `.pack()` or `.grid()` — widget is invisible
+⚠️ Mixing `.pack()` and `.grid()` in the **same parent container** — causes layout errors
+⚠️ No visible feedback — user cannot tell whether Add succeeded or failed
 
-## Quick Check
-**Question**: What does `mainloop()` do, and why should callbacks stay small?
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 17 best practice and pitfall -->
+**Quick Check:** What does `mainloop()` do? Why is `command=self.on_add` correct while `command=self.on_add()` is a bug?
 
 ---
 
-# Hour 18: Layout and Usability
+# Hour 18: Layout, Usability, and Resizing
 
 ## Learning Outcomes
-- Use `grid()` for form-style layouts
-- Group related controls with frames
-- Add consistent spacing and alignment
-- Configure the layout to resize sensibly
-- Avoid mixing geometry managers in the same parent
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 18: Layout and usability; Advanced/lessons/lecture/Day5_Hour2_Advanced.md — Learning Outcomes for This Hour -->
+- Explain parent-child geometry ownership
+- Use nested frames to separate layout regions
+- Configure row and column weights so a window expands predictably
+- Apply sticky and padding for alignment and readability
+- Identify and fix overlap, collapse, and cramped spacing defects
 
 ---
 
-## `pack()` vs `grid()`
+## Parent-Child Geometry Ownership
 
-### Use `pack()` when
-- You want simple stacking
+- A Tkinter layout is a **tree** — every widget has exactly one parent
+- Use **one geometry manager** for direct children of any one parent
+- You may use different managers in *different* nested parents — not mixed in the **same** parent
 
-### Use `grid()` when
-- You need rows + columns
-- You are building a form
-- Labels and inputs should line up cleanly
+> "Think of each frame as a room. Inside one room, choose one rule for placing furniture."
 
-> Do not mix `pack()` and `grid()` in the same parent widget.
-
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour2_Advanced.md — `pack()` and `grid()`; The Rule About Mixing Geometry Managers -->
+**Frame decomposition pattern:**
+- Page-level frame holds region frames
+- Each region frame manages its own local grid
+- Local coordination keeps layout reasoning simple
 
 ---
 
-## Layout Rules That Matter
-
-- Use frames as layout boundaries
-- Add consistent `padx` / `pady`
-- Use `sticky="w"` or `sticky="ew"` intentionally
-- Give growing columns a weight
+## Frame Decomposition Code Example
 
 ```python
-main_frame.columnconfigure(1, weight=1)
-ttk.Entry(form_frame).grid(row=0, column=1, sticky="ew")
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+page = ttk.Frame(root, padding=12)
+page.grid(row=0, column=0, sticky="nsew")
+page.columnconfigure(0, weight=3)   # content region — wider
+page.columnconfigure(1, weight=2)   # sidebar region — narrower
+page.rowconfigure(1, weight=1)      # row 1 absorbs vertical growth
+
+content = ttk.Frame(page)
+content.grid(row=1, column=0, sticky="nsew")
+
+sidebar = ttk.Frame(page)
+sidebar.grid(row=1, column=1, sticky="nsew")
 ```
 
-### Usability checklist
-1. Are related items grouped?
-2. Is spacing consistent?
-3. Is the main action easy to find?
-4. Does resize behavior make sense?
-
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour2_Advanced.md — Usability Principles for Basic Desktop GUIs; Column Weights and Resizing -->
+- Regions are **local layout jurisdictions** — each configures its own weights and sticky
 
 ---
 
-## Demo: Refactor a Messy Layout
+## Sticky, Weights, and Padding
 
-### Demo target
-- One main frame
-- Two visual regions
-  - Form area
-  - Preview/list area
-- `grid()` for the form
-- Safe nested `pack()` only inside a different parent such as a button bar
+**Sticky** — controls where a widget attaches inside its grid cell
+- `ew` — horizontal stretch, `ns` — vertical stretch, `nsew` — full coverage
 
-### Success signal
-- The app looks intentional
-- Resize behavior is acceptable
+**Weights** — allocate the resize budget
+- `columnconfigure(1, weight=1)` — column 1 absorbs extra width
+- A column with `weight=0` (default) receives no extra space
 
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Live demo (Hour 18); Advanced/lessons/lecture/Day5_Hour2_Advanced.md — Live Demo — Refactoring a Messy Layout -->
+```python
+content.columnconfigure(1, weight=1)
+ttk.Entry(content).grid(row=0, column=1, sticky="ew", pady=(0, 8))
+```
+
+**Padding** — usability signal, not decoration
+- Consistent `padx`/`pady` creates visual rhythm and scan paths
+- Use `minsize` on `root` to protect baseline readability
+
+**Resize test rule:** Test narrow, wide, and tall scenarios after every layout change.
 
 ---
 
-## Lab: Improve Layout and Resizing
+## Pitfalls — Missing Sticky, Missing Weights, Mixed Managers
 
-**Time: 25–35 minutes**
+```python
+# Defect: entry stays fixed while window grows (missing sticky + weight)
+ttk.Entry(frame).grid(row=0, column=1)
+# Fix:
+frame.columnconfigure(1, weight=1)
+ttk.Entry(frame).grid(row=0, column=1, sticky="ew")
+
+# Defect: listbox does not grow vertically (missing row weight + sticky)
+tk.Listbox(sidebar).grid(row=1, column=0)
+# Fix:
+sidebar.rowconfigure(1, weight=1)
+tk.Listbox(sidebar).grid(row=1, column=0, sticky="nsew")
+
+# Defect: mixing pack and grid in the same parent causes errors
+# Fix: choose one manager per parent; use a nested frame to isolate
+```
+
+---
+
+## Lab: Refactor a Rough Layout (Hour 18)
+
+**Time: 26 minutes**
 
 ### Tasks
-- Rebuild the GUI using at least one frame
-- Convert the form area to `grid()`
-- Add consistent spacing
-- Test the window at more than one size
+- Start from a provided rough layout — no weights, no sticky, no nested frames
+- Sketch region decomposition in comments before coding
+- Apply structural frames, alignment with sticky, and consistent padding
+- Configure `rowconfigure`/`columnconfigure` weights where growth is expected
+- Run the mandatory resize test: narrow, wide, and tall
+- Peer-review: one commendation + one targeted adjustment
 
-### Completion Criteria
+### Completion criteria
 ✓ UI is readable and aligned  
-✓ Resizing does not break the layout  
-✓ One layout strategy per container  
-✓ Main action stays obvious
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Improve layout; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 2: Hour 18 -->
+✓ Resizing is acceptable under all three test scenarios
 
 ---
 
 ## Common Pitfalls (Hour 18)
 
-⚠️ Mixing `pack` and `grid` in the same container  
-⚠️ Forgetting `sticky`, so fields do not align or stretch  
-⚠️ Inconsistent padding  
-⚠️ Never testing resize behavior
+⚠️ Missing `sticky` — entry stays tiny while its cell enlarges (overlap feel)
+⚠️ Missing row/column weight — listbox or text area does not grow (collapse feel)
+⚠️ Missing padding — labels, entries, and buttons visually blend (crowded feel)
+⚠️ Mixed geometry manager in one parent — runtime warnings and unpredictable layout
+⚠️ Uneven column weights — one region stretches too much; content area stays cramped
+⚠️ Testing only at default size — a layout not tested under resize is not finished
 
-## Quick Check
-**Question**: Why is `grid()` usually a better fit for forms?
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 18 canonical contract and pitfall -->
+**Quick Check:** A column has `weight=1` but the entry still does not stretch. What else is missing?
 
 ---
 
-# Hour 19: Forms, Validation, and Feedback
+# Hour 19: Forms and Validation Feedback Patterns
 
 ## Learning Outcomes
-- Validate before saving
-- Normalize input before checking rules
-- Show friendly, actionable feedback
-- Keep predictable validation out of crash paths
-- Separate service validation from UI presentation
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 19: Forms + validation feedback patterns; Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Learning Outcomes for This Hour -->
+- Validate input **before** saving — normalize first, validate second
+- Implement required-field checks and actionable inline feedback
+- Move focus to the first invalid field automatically
+- Disable and re-enable the Save button correctly on all code paths
+- Surface service-layer failures without exposing stack traces to users
 
 ---
 
-## Good Validation Helps the User Succeed
+## Inline Validation vs Messagebox
 
-### Weak message
-`Invalid input`
+**Inline validation** — preferred for field-level, expected input mistakes
+- Keeps user attention in context; connects each error to the exact field
+- Supports correction flow without modal interruption
 
-### Better message
-`Email is required`
+**Messagebox** — reserved for major state changes, destructive actions, or severe failures
+- Forces acknowledgement when safety matters
+- Should never show a raw Python traceback
 
-### Best message
-`Enter an email address such as name@example.com`
-
-### Normalize first
-- `strip()` whitespace
-- lowercase email-like fields
-- clean obvious formatting noise before validation
-
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Validation Should Be Helpful, Not Punitive; Normalize Before You Validate -->
+> **Rule:** Field problem → inline message + focus move. App-level failure → concise status or controlled popup.
 
 ---
 
-## Service vs UI Responsibilities
+## Actionable Error Messages and Save Button Behavior
 
-### Service layer
-- Decides whether data is valid
-- Returns structured errors or raises the right exception
+**Bad messages:** "Invalid input." | "Error." | "Email wrong."
 
-### UI layer
-- Places messages near the right field
-- Moves focus to the first invalid control
-- Clears old errors
-- Resets the form after success
+**Good messages:**
+- "Name is required. Use at least 2 letters."
+- "Enter an email like name@example.com."
+- "Role is required before saving."
+
+**Save button disable/enable:**
 
 ```python
-errors = {
-    "name": "Name is required.",
-    "email": "Enter an email address such as name@example.com.",
-}
+def on_save(self) -> None:
+    self._clear_inline_errors()
+    self.save_btn.state(["disabled"])       # disable immediately
+
+    try:
+        result = self.service.validate_and_save(...)
+    except ServiceSaveError:
+        self.status_var.set("Could not save. Please try again.")
+        return
+    finally:
+        self._update_save_enabled_state()   # always restore on every path
 ```
 
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Service Errors vs UI Errors; A Clean Validation Pattern -->
+---
+
+## UI / Service Responsibility Boundary
+
+**UI layer owns:**
+- Reading field values from widgets
+- Clearing old error state at the start of each save
+- Disabling/enabling Save control
+- Rendering inline errors and summary messages
+- Focus management
+
+**Service layer owns:**
+- Input normalization — trim, lowercase, collapse whitespace
+- Validation rule decisions
+- Persistence call
+- Raising controlled exceptions for infrastructure issues
+
+**Structured error map returned by the service:**
+
+```python
+{"name": "Name is required.", "email": "Enter an email like name@example.com."}
+```
 
 ---
 
-## Demo: Validated Tracker Form
+## Demo: validate_and_save and Inline Error Application
 
-### Demo highlights
-- Inline field-level errors
-- Summary status message
-- Disabled/re-enabled Save button during submit
-- Focus moved to the first invalid field
-- App stays stable after bad input
+```python
+def validate_and_save(self, name: str, email: str, role: str) -> ValidationResult:
+    clean_name = " ".join(name.strip().split())
+    clean_email = email.strip().lower()
+    errors: dict[str, str] = {}
+    if not clean_name:
+        errors["name"] = "Name is required."
+    if not clean_email:
+        errors["email"] = "Email is required."
+    elif "@" not in clean_email:
+        errors["email"] = "Enter an email like name@example.com."
+    if errors:
+        return ValidationResult(ok=False, errors=errors)
+    self._records.append(Contact(clean_name, clean_email, role.strip()))
+    return ValidationResult(ok=True, errors={}, record=...)
+```
 
-### Instructor prompt
-Ask learners to identify:
-1. Where `.strip()` happens
-2. Where errors are structured
-3. Why inline feedback often beats a popup
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Live demo (Hour 19); Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Live Demo — Inline Validation and Actionable Feedback -->
+```python
+    if not result.ok:
+        for field, msg in result.errors.items():
+            self.error_vars[field].set(msg)  # inline label under field
+        self._focus_first_invalid(result.errors)
+        self.status_var.set("Please fix the highlighted fields, then select Save.")
+```
 
 ---
 
-## Lab: Validation Feedback Without Crashing
+## Lab: Add Validation Behavior (Hour 19)
 
-**Time: 25–35 minutes**
+**Time: 26 minutes**
 
-### Tasks
-- Add required-field checks
-- Normalize user input
-- Display at least one inline error
-- Add a summary status message
-- Keep the app available for immediate correction
+### Required deliverables
+- Required-field checks with whitespace normalization (trim before check)
+- Inline error labels rendered under each invalid field
+- Focus moved automatically to the first invalid field
+- Save button disable/enable on all paths, including exception path (use `finally`)
+- User-friendly service failure message — no stack trace shown in the UI
+- Demonstrable valid save path that clears the form
 
-### Completion Criteria
-✓ Missing data is rejected clearly  
-✓ Errors are actionable  
-✓ No raw traceback shown to the user  
+### Acceptance tests to run before calling lab complete
+- Blank fields, spaces-only fields, malformed email, valid input, simulated service failure
+
+### Completion criteria
+✓ Invalid entries show clear feedback  
 ✓ Valid entries save successfully
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Add validation UI; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 3: Hour 19 -->
 
 ---
 
 ## Common Pitfalls (Hour 19)
 
-⚠️ Silent failure after bad input  
-⚠️ Vague messages with no next step  
-⚠️ Treating predictable validation as a crash-worthy exception  
-⚠️ Forgetting to clear old errors before the next save
+⚠️ Validation rule duplicated in both UI and service — inconsistent outcomes
+⚠️ Old inline errors remain visible after a successful save
+⚠️ Save button stays disabled forever — `finally` block missing
+⚠️ Spaces-only input passes required check — normalize **before** checking emptiness
+⚠️ Silent failure — button click does nothing and shows nothing to the user
+⚠️ Raw stack trace surfaced in a UI label or messagebox — translate to a calm user message
 
-## Quick Check
-**Question**: Why is “Enter an email address such as name@example.com” better than “Invalid email”?
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 19 best practice and pitfall -->
+**Quick Check:** Give a good validation message and a bad one for an email field. What makes the good one better?
 
 ---
 
-# Hour 20: Record Lists and Selection
+# Hour 20: Record List UI with Treeview, Selection, and Safe Refresh
 
 ## Learning Outcomes
-- Show multiple records in a list or table
-- Use `Treeview` or `Listbox` appropriately
-- Refresh safely without duplicate stale rows
-- React to selection events
-- Map selection to a stable record ID
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 20: Record list UI; Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Learning Outcomes for This Hour -->
+- Display records in a Listbox or Treeview widget
+- React to user selection and show record details in a details pane
+- Choose between Listbox and Treeview for a given use case
+- Implement selection callbacks that do not crash on empty selection
+- Refresh list data safely using the clear → repopulate → handle-selection sequence
 
 ---
 
-## `Listbox` vs `Treeview`
+## Listbox vs Treeview
 
-### `Listbox`
-- Lightweight
-- Good for one visible string per row
+**Listbox is best when:**
+- Each row is a single display string
+- Fields can compress into one readable line
+- Column structure is not needed
 
-### `Treeview`
-- Better for multi-column records
-- Good fit for tracker-style data
-- Easier to grow into sorting and richer browsing
+**Treeview is best when:**
+- Records have multiple fields and table-like readability matters
+- Named column headers improve clarity
+- Later sorting or richer row identity may be added
 
-### Selection rule
-Selection should lead to a **record ID**, not just a row position.
+> **Default choice for multi-field records:** Treeview — columns match fields directly.
 
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Choosing the Right List Widget; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 4: Hour 20 -->
+**Quick ask:** Given records with id, name, email, and role, which widget gives better clarity?  
+**Expected answer:** Treeview, because columns match fields directly.
 
 ---
 
-## Safe Refresh Pattern
-
-1. Clear existing rows
-2. Fetch current records
-3. Insert fresh rows
-4. Reset or refresh the details pane
+## Selection Callbacks — Safe Handling
 
 ```python
-self.tree.delete(*self.tree.get_children())
-for record in records:
-    self.tree.insert("", "end", iid=str(record.record_id), values=(...))
+self.tree.bind("<<TreeviewSelect>>", self.on_select)
 ```
 
-### Why this matters
-- No duplicated rows
-- No stale details
-- No “selection points at the wrong thing” bug
-
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Refreshing Safely; Demo Code -->
-
----
-
-## Demo: List + Details Browser
-
-### Demo flow
-- Add a `Treeview`
-- Bind `<<TreeviewSelect>>`
-- Show details for the selected record
-- Add a Refresh button
-- Handle empty-state cases safely
-
-### Empty-state behavior
-- Empty list is still a valid state
-- No selection should clear or reset details
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: Treeview showing records; Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Live Demo — Treeview with Selection and Details Pane -->
+```python
+def on_select(self, _event: tk.Event) -> None:
+    selected_items = self.tree.selection()
+    if not selected_items:               # guard: nothing selected
+        self.clear_details("No record selected")
+        return
+    try:
+        selected_id = int(selected_items[0])   # guard: parse safely
+    except ValueError:
+        self.clear_details("No record selected")
+        return
+    record = self.service.get_record_by_id(selected_id)
+    if record is None:                   # guard: record may be gone
+        self.clear_details("No record selected")
+        return
+    self.show_details(record)
+```
 
 ---
 
-## Lab: Record Browser
+## Refresh Safety Sequence
 
-**Time: 25–35 minutes**
+**The three-step sequence — order is non-negotiable:**
+
+```python
+def refresh_records(self) -> None:
+    existing = self.tree.get_children()
+    if existing:
+        self.tree.delete(*existing)        # step 1: clear existing rows
+
+    records = self.service.list_records()
+    for item in records:                   # step 2: repopulate from source
+        self.tree.insert("", "end", iid=str(item.record_id),
+                         values=(item.name, item.email, item.role))
+
+    if not records:                        # step 3: handle selection state
+        self.clear_details("No records available")
+        return
+    self.clear_details("No record selected")
+```
+
+Skipping step 1 causes **stale rows to stack** on subsequent refreshes.
+
+---
+
+## Demo: Treeview Record Browser — Setup and Wiring
+
+```python
+self.tree = ttk.Treeview(
+    main, columns=("name", "email", "role"),
+    show="headings", selectmode="browse", height=12,
+)
+self.tree.heading("name", text="Name")
+self.tree.heading("email", text="Email")
+self.tree.heading("role", text="Role")
+self.tree.column("name", width=180, anchor="w")
+self.tree.column("email", width=240, anchor="w")
+self.tree.column("role", width=130, anchor="w")
+self.tree.bind("<<TreeviewSelect>>", self.on_select)
+```
+
+- `show="headings"` hides the default tree column; shows only named columns
+- `iid=str(item.record_id)` lets us look up the source record by ID on selection
+- Details pane uses `tk.StringVar` bound to `ttk.Label` widgets for live updates
+
+---
+
+## Demo: Three Mandatory Acceptance Checks
+
+Run all three in front of students — any failure means the feature is not complete:
+
+**No-selection check**
+- Ensure nothing is selected → no exception; details pane shows "No record selected"
+
+**Empty-data check**
+- Clear source, then refresh → list shows 0 rows; details shows "No records available"; no crash
+
+**Repeated-refresh check**
+- Refresh three consecutive times → row count remains correct; no duplicate or stale rows
+
+> "If your class implementation does not pass these three checks, it is not complete yet."
+> — `Advanced/lessons/lecture/Day5_Hour4_Advanced.md` → Segment 4: Demo acceptance checks
+
+---
+
+## Lab: Build List-and-Details UI (Hour 20)
+
+**Time: 26 minutes**
 
 ### Tasks
-- Add a list area for saved records
-- Add a details pane
-- Bind selection to a callback
-- Add Refresh
-- Show safe behavior when there are no records
+- Scaffold a two-region layout — list area (Treeview recommended) + details pane with fallback text
+- Load in-memory records into the Treeview on startup
+- Bind `<<TreeviewSelect>>` and populate the details pane on valid selection; guard empty selection
+- Implement `refresh_records()` with the exact clear → repopulate → handle-selection sequence
+- Run all three acceptance checks (no-selection, empty-data, repeated-refresh)
 
-### Completion Criteria
-✓ List populates and updates  
-✓ Details follow the selected record  
-✓ No crash on empty selection  
-✓ Refresh clears stale rows first
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: List + details; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 4: Hour 20 -->
+### Completion criteria
+✓ List loads records  
+✓ Selecting a row shows details  
+✓ Refreshing does not duplicate rows
 
 ---
 
 ## Common Pitfalls (Hour 20)
 
-⚠️ Using display order as identity  
-⚠️ Not clearing old rows before refresh  
-⚠️ Crashing when no selection exists  
-⚠️ Leaving stale details visible after the list changes
+⚠️ Selection callback crashes when `tree.selection()` returns an empty tuple — guard it first
+⚠️ Skipping the clear step in `refresh_records` — old rows stack on top of new rows
+⚠️ Details pane shows stale content after source data is cleared and refreshed
+⚠️ `iid` stored as an integer — Treeview requires a string `iid`; type mismatch crashes lookup
+⚠️ Refresh sequence out of order — repopulate before clear causes visible duplicates
+⚠️ Optional search/filter added before core acceptance checks pass — stabilize core first
 
-## Quick Check
-**Question**: What should happen if the user clicks Refresh when there are zero records?
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 20 best practice and pitfall -->
+**Quick Check:** What can go wrong if you refresh without clearing existing rows? What must happen when no row is selected?
 
 ---
 
 # Session 5 Wrap-Up
 
-## What We Built Toward
-- Event-driven thinking instead of CLI-only flow
-- A cleaner form layout with `grid()` and frames
-- Validation that helps users recover
-- A record browser that is safe to refresh and select
+## What We Built Today
+- A working event-driven Tkinter GUI with service-layer separation (Hour 17)
+- Intentional nested-frame layouts with predictable resize behavior (Hour 18)
+- Form validation with inline feedback, focus management, and safe Save state (Hour 19)
+- A record browser with Treeview, selection callbacks, and duplicate-free refresh (Hour 20)
 
-## Capstone checkpoint coming next
-- Update + delete workflows
-- Cleaner controller architecture
-- JSON persistence + polish
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 5 overview; Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Wrap-Up -->
+### The One Design Rule That Governed All Four Hours
+**"The GUI handles interaction; the service layer handles rules."**
 
 ---
 
-## Scope Guardrails
+## Day 5 Homework and Study Checklist
 
-### Stay in scope today
-✓ Tkinter / `ttk` fundamentals  
-✓ Small, maintainable callbacks  
-✓ Service-layer validation  
-✓ Stable IDs for selection
+- Re-run your Hour 17 app and add a third field with its own validation rule
+- Apply three-step frame decomposition to your Hour 18 layout and run all resize tests
+- Confirm your Hour 19 form passes all five test cases: blank, spaces, malformed email, valid, service error
+- Run the three acceptance checks on your Hour 20 record browser: no-selection, empty-data, repeated-refresh
+- Optional: add a search/filter field to the Treeview — only after all core checks pass
 
-### Not today's goal
-✗ Fancy theming  
-✗ Framework switching  
-✗ ORM/database work  
-✗ Big “all-features-at-once” refactors
+---
 
-### Homework / quiz prep
-- Be able to explain **why** `mainloop()` matters
-- Be able to justify `grid()` for forms
-- Be able to show a friendly validation path
-- Be able to explain why stable IDs beat list positions
+## Next Session Preview
 
-<!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Wrap-Up; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 17 through Hour 20 explanations -->
+### Session 6 (Hours 21–24)
+- Connecting the GUI to file or SQLite persistence
+- Edit and delete record workflows with confirmation dialogs
+- More complex layouts — scrollable frames and status bars
+- Checkpoint: integrated GUI application milestone
 
 ---
 
 # Thank You!
 
-Session 6 next:
-- Update + delete through the GUI
-- Controller cleanup
-- JSON persistence and checkpoint demo
-
-<!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 6 overview (Hours 21–24) -->
+Save your work.  
+Commit the latest good state.  
+Be ready to wire persistence tomorrow.

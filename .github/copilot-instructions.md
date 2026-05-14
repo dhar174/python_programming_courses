@@ -329,19 +329,26 @@ Use these agents for specialized tasks in their respective domains.
 - **Python Institute**: https://pythoninstitute.org/
 
 <!-- repo-agent-bootstrap:file-kind=copilot-instructions -->
-<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap-manual-fallback-2026-04-16 -->
+<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap@2026-05-13 -->
 <!-- repo-agent-bootstrap:managed:start -->
+# Repository-wide Copilot instructions
 
-## Bootstrapped Agent Routing
+This repository uses Python, TypeScript, TSX, JavaScript and pytest.
 
-- Use `.github/agents/repo-planner.agent.md` as the repo-wide orchestrator for general requests.
-- Route pedagogy-heavy writing to `.github/agents/python-educator.agent.md`.
-- Route deep curriculum review or quality audits to `.github/agents/technical-content-evaluator.agent.md`.
-- Route deck generation and export pipeline work to the existing presentation-focused agents under `.github/agents/`.
-- Load the path-specific instructions under `.github/instructions/` when editing `Basics/` or `Advanced/`.
+When making changes:
+- prefer small, focused diffs
+- preserve existing architecture unless the task explicitly changes it
+- run the relevant validation commands before finishing
+- update `memory-bank/activeContext.md` and `memory-bank/progress.md` when project state shifts
 
-Maintenance notes:
-- Keep `Prompt.md`, `Plans.md`, `Architecture.md`, `Implement.md`, and `Documentation.md` as the durable project-memory set for this repo.
-- Prefer updating existing guidance files over introducing a parallel memory-bank unless the repo intentionally adopts one later.
+Important references:
+- `AGENTS.md`
+- `docs/architecture.md`
+- `memory-bank/activeContext.md`
+- `memory-bank/progress.md`
 
+Do not:
+- edit generated files casually
+- introduce new dependencies without justification
+- remove tests to avoid fixing failures
 <!-- repo-agent-bootstrap:managed:end -->

@@ -6,582 +6,879 @@ Python Programming (Advanced) • REST APIs and Flask Foundations
 # Session 9 Overview
 
 ## Topics Covered Today
-- Hour 33: REST fundamentals + Flask app setup
-- Hour 34: CRUD endpoints for the main resource
-- Hour 35: Serialization + validation
-- Hour 36: App structure + dependency wiring
+- Hour 33 — REST fundamentals + Flask app setup
+- Hour 34 — CRUD endpoints for the main resource
+- Hour 35 — Serialization + validation (manual, consistent)
+- Hour 36 — App structure: blueprints and dependency wiring
 
 ## Capstone Through-Line
 - Expose the existing tracker logic through a Flask API
 - Keep the service layer as the center of truth
 - Build for maintainability, not framework novelty
 
----
-
-# Alignment Sources
-
-- Runbook: `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md` → Session 9 overview; Hours 33–36
-- Lecture: `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` through `Day9_Hour4_Advanced.md`
-- Homework: `Advanced/assignments/Advanced_Day9_homework.ipynb`
-- Quiz: `Advanced/quizzes/Advanced_Day9_Quiz.html`
-
-## Today’s Output Target
-- A working Flask surface over the tracker project
-- Predictable JSON responses
-- A structure that can keep growing tomorrow
+### Source Alignment
+- `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `# Day 9, Hour 1: REST fundamentals + Flask app setup`
+- `Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `# Day 9, Hour 2: CRUD endpoints for your main resource`
+- `Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `# Day 9, Hour 3: Serialization + validation (manual, consistent)`
+- `Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `# Day 9, Hour 4: App structure: blueprints and dependency wiring`
 
 ---
 
-# Session Success Criteria
+# Session 9 Outcomes
 
-- `/health` responds with JSON
-- Main resource supports CRUD behavior
-- Error responses use one consistent JSON shape
-- Write-ready app structure uses explicit dependency wiring
-- Homework and quiz checkpoints are visible in the day’s build flow
+By the end of today, learners will be able to:
+
+- Create a Flask application with a health endpoint and JSON error contract
+- Implement GET, POST, PUT, and DELETE for a tracker resource
+- Centralize serialization and validation outside route functions
+- Refactor a single-file Flask app into an application factory with explicit wiring
+
+### Source Alignment
+- `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `## Learning Outcomes`
+- `Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `## Learning Outcomes`
+- `Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `## Learning Outcomes`
+- `Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `## Learning Outcomes`
 
 ---
 
 # Scope Guardrails for Today
 
-- Stay in course scope: Flask + clean contracts + practical structure
-- Do **not** drift into deployment, OAuth, JWT, or API versioning
-- Reuse service and repository logic instead of rebuilding business rules in routes
-- Choose one resource name and keep it consistent in your own project
+## In Scope
+- Flask route handlers as thin HTTP adapters
+- REST resource naming and HTTP status code conventions
+- JSON error envelopes with a consistent shape
+- Manual serialization and field-level validation helpers
+- Application factory pattern and explicit dependency wiring
+
+## Not Yet
+- Production deployment, reverse proxies, or WSGI configuration
+- OAuth, JWT, or session-based authentication
+- API versioning or rate limiting
+- Complex ORMs or SQLAlchemy migrations
+- Front-end frameworks or advanced GUI integration
 
 ---
 
-# Hour 33: REST Fundamentals + Flask App Setup
+# Hour 33 — REST Fundamentals + Flask App Setup
 
-## Learning Outcomes
-- Explain REST-style resources in plain language
-- Distinguish `GET` from `POST`
-- Create a minimal Flask app
-- Return JSON instead of default HTML errors
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `# Day 9, Hour 1`
 
 ---
 
-## Why an API Matters Now
+# Hour 33 Learning Outcomes
 
-- The capstone already has logic and persistence
-- Flask becomes a **new interface**, not a new project
-- An API lets other tools call the same application behavior
-- Strong layering now makes later integration easier
+By the end of this hour, learners will be able to:
+
+- Create a small Flask application with a reliable health endpoint
+- Explain resources, HTTP verbs, status codes, and JSON response contracts
+- Use one consistent JSON error shape for every sad path
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `## Learning Outcomes`
+
+---
+
+## Why an API Layer Now
+
+The capstone tracker already has a working model, service, and repository.
+
+Flask adds a **new interface** — not a new project.
 
 ```text
-Client -> Flask route -> service -> repository -> SQLite
+Client ──► Flask route ──► TrackerService ──► SQLiteRepository ──► SQLite
 ```
+
+- Other tools (tests, GUIs, scripts) can call the same logic over HTTP
+- Strong layering keeps the service reusable outside Flask
+- An API contract makes the next developer's job predictable
+
+> "Routes translate HTTP details into service calls, not contain all business rules."
+>
+> — `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Talk points`
 
 ---
 
 ## REST in Plain English
 
-- **Resource**: the thing the API exposes
-- **Route**: URL pattern connected to code
-- **Method**: `GET`, `POST`, `PUT`, `DELETE`
-- **Status code**: fast signal of what happened
-- **JSON contract**: predictable request/response shape
+| Term | Meaning |
+|---|---|
+| Resource | The thing the API exposes (e.g., a tracker record) |
+| Route | URL pattern mapped to Python code |
+| HTTP method | `GET`, `POST`, `PUT`, `DELETE` — the verb |
+| Status code | Fast numeric signal of what happened |
+| JSON contract | The agreed shape of every request and response |
 
-## Useful Day 9 status codes
-- `200` success
-- `201` created
-- `400` bad input
-- `404` missing resource
-- `500` unexpected failure
+### Key Status Codes for Day 9
+
+| Code | Meaning |
+|---|---|
+| `200` | Success |
+| `201` | Resource created |
+| `400` | Bad request (malformed input) |
+| `404` | Resource not found |
+| `500` | Unexpected server failure |
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Talk points`
 
 ---
 
-## Minimal Flask Starter
+## Demo: Flask App Factory
 
 ```python
+from __future__ import annotations
+
+from uuid import uuid4
 from flask import Flask, jsonify
 
-app = Flask(__name__)
 
-@app.get("/health")
-def health():
-    return jsonify({"status": "ok"})
+def error_response(code: str, message: str, status: int):
+    payload = {
+        "error": {
+            "code": code,
+            "message": message,
+            "request_id": str(uuid4()),
+        }
+    }
+    return jsonify(payload), status
+
+
+def create_app() -> Flask:
+    app = Flask(__name__)
+
+    @app.get("/health")
+    def health():
+        return jsonify({"status": "ok", "service": "tracker-api"})
+
+    @app.errorhandler(404)
+    def not_found(_error):
+        return error_response("not_found", "Route not found", 404)
+
+    return app
 ```
 
-## Teaching point
-- Start with one honest route before adding CRUD
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Consistent Error Contract
+## The Health Endpoint
+
+Why `/health` is the right first route:
+
+- Proves the process is up before testing deeper behavior
+- Returns a predictable JSON body — no HTML, no guesswork
+- Cheapest possible integration smoke test
+- Establishes the `create_app()` factory pattern from the start
+
+```python
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok", "service": "tracker-api"})
+```
+
+**Teaching point:** Start with one honest route before adding CRUD.
+
+---
+
+## Consistent JSON Error Contract
+
+Every sad path must return the same envelope — no surprises, no HTML tracebacks.
 
 ```json
 {
   "error": {
     "code": "not_found",
-    "message": "Record 12 was not found.",
-    "request_id": "a1b2c3d4"
+    "message": "Record 12 was not found",
+    "request_id": "a1b2c3d4-..."
   }
 }
 ```
 
-## Why it matters
-- Clients can depend on one structure
-- Logs and user-facing errors connect more cleanly
+- `code` — machine-readable identifier for the failure type
+- `message` — human-readable explanation
+- `request_id` — tracing handle (UUID generated per request)
+
+> "Every error should return JSON, never a surprise HTML traceback."
+>
+> — `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Talk points`
 
 ---
 
 ## Demo Flow: Hour 33
 
-1. Create `app = Flask(__name__)`
-2. Add `/health`
-3. Run the server locally
-4. Test with browser, `curl`, or a small Python call
-5. Trigger one intentional failure and show JSON output
+1. Show project folders: `api/`, `src/`, `tests/`, `data/`, `reports/`
+2. Create `create_app()` returning a Flask instance
+3. Add `GET /health` → `{"status": "ok", "service": "tracker-api"}`
+4. Add `error_response(code, message, status)` helper with `request_id`
+5. Register a `404` error handler using `error_response`
+6. Run `flask --app api.app run --debug`
+7. Test `/health` in browser or with `curl`
+8. Call a missing route — observe the JSON error, not an HTML traceback
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Demo steps`
 
 ---
 
-## Lab: Flask Starter + Smoke Test
+## Lab: Flask Starter (Hour 33)
 
 **Time: 25–35 minutes**
 
 ### Tasks
-- Create a small Flask app
-- Add `/health`
-- Return JSON on success
-- Add one reusable error helper
-- Verify the app from outside the Flask file
+1. Create `api/app.py` with `create_app()`
+2. Add `GET /health` returning `{"status": "ok"}`
+3. Implement `error_response` with `code`, `message`, `request_id`
+4. Register a global 404 handler
+5. Run the server and verify one happy path and one sad path
 
 ### Completion Criteria
-- App starts reliably
-- `/health` returns JSON
-- Learner can explain what a route does
+- `/health` returns JSON with `status ok`
+- At least one error path returns the shared error envelope
+- Learner can explain `GET` vs `POST` and why `201` is used for create
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `## Hands-on Lab`
 
 ---
 
-## Common Pitfalls (Hour 33)
+## Common Pitfalls — Hour 33
 
-⚠️ Mixing setup, routing, and service logic in one giant file  
-⚠️ Returning HTML errors while success paths return JSON  
-⚠️ Treating the API as a separate project instead of a new interface
+- **Port already in use** — choose a different port rather than restarting the whole lab
+- **Debug mode leaks tracebacks** — helpful locally; inappropriate as an API contract
+- **Returning plain strings** — makes clients harder to write; always use `jsonify`
+- **One giant file** — mixing setup, routing, and service logic increases debugging cost
 
----
-
-## Homework + Quiz Emphasis (Hour 33)
-
-- Homework goal: build a Flask app with a health route and clear REST basics
-- Best practice: start with one small health endpoint before layering CRUD
-- Quiz-ready anchor: `Hour 33 | framework: Flask`
-- Deliverable check: can you show a health route and explain why it matters?
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Common pitfalls to watch for`
 
 ---
 
-## Quick Check
+## Quick Check — Hour 33
 
-**Question**: Why is a health endpoint a smart first step before building CRUD routes?
+**Exit questions:**
+
+- What HTTP status code fits a successful create, and why is it not just `200`?
+- What happy path did you prove this hour?
+- What sad path did you test or plan to test next?
+- Which file or module is most important for the next hour?
 
 ---
 
-# Hour 34: CRUD Endpoints for the Main Resource
+# Hour 34 — CRUD Endpoints for the Main Resource
 
-## Learning Outcomes
-- Implement `GET`, `POST`, `PUT`, and `DELETE`
-- Keep routes thin
-- Connect handlers to the service layer
-- Return the right status codes for the outcome
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `# Day 9, Hour 2`
+
+---
+
+# Hour 34 Learning Outcomes
+
+By the end of this hour, learners will be able to:
+
+- Implement GET, POST, PUT, and DELETE for the tracker record resource
+- Map service-layer outcomes to correct HTTP status codes
+- Demonstrate both successful operations and sad paths such as bad JSON and missing records
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `## Learning Outcomes`
+
+---
+
+## Thin Routes Principle
+
+Routes are **adapters**, not business logic containers.
+
+```text
+HTTP request
+  → parse input
+    → call service method
+      → serialize output
+        → return HTTP response
+```
+
+- `400` means the **request** is malformed
+- `404` means the **resource** was not found
+- Use parameterized repository methods — never build SQL from request text
+- Keep service and repository reusable outside Flask
+
+> "Route handlers should be thin adapters: parse input, call service, serialize output."
+>
+> — `Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `### Talk points`
 
 ---
 
 ## Canonical Route Set
 
-- `GET /records`
-- `POST /records`
-- `GET /records/<id>`
-- `PUT /records/<id>`
-- `DELETE /records/<id>`
+Use **plural nouns** for collections:
 
-## Naming note
-- Lecture examples use `records`
-- Homework/quiz output anchors may use `tasks`
-- Your project should pick **one** resource name and stay consistent
+| Route | Method | Purpose |
+|---|---|---|
+| `/records` | `GET` | List all records |
+| `/records` | `POST` | Create a record |
+| `/records/<id>` | `GET` | Fetch one record |
+| `/records/<id>` | `PUT` | Update one record |
+| `/records/<id>` | `DELETE` | Delete one record |
 
----
-
-## Thin Route Handler Mindset
-
-### Route responsibilities
-- Read request input
-- Call the service
-- Catch known exceptions
-- Return JSON + status code
-
-### Avoid in the route
-- Direct SQL
-- Deep business logic
-- Hidden global state
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `### Talk points`
 
 ---
 
-## Safe JSON Parsing Pattern
+## Demo: GET and POST
 
 ```python
-payload = request.get_json(silent=True)
-if payload is None:
-    return error_response(
-        "invalid_json",
-        "Request body must be valid JSON.",
-        400,
-    )
-```
+from flask import request, jsonify
 
-## Key distinction
-- Bad input → `400`
-- Missing resource → `404`
-
----
-
-## CRUD Example
-
-```python
-# from flask import Flask, request, jsonify
-# from .services import service          # TrackerService instance
-# from .errors import error_response     # helper returning JSON error + status code
-# app = Flask(__name__)
+@app.get("/records")
+def list_records():
+    records = service.list_records()
+    return jsonify({"data": [r.to_dict() for r in records]})
 
 @app.post("/records")
 def create_record():
     payload = request.get_json(silent=True)
     if payload is None:
-        return error_response("invalid_json", "Request body must be valid JSON.", 400)
-
-    record = service.add_record(
-        title=payload.get("title", ""),
-        category=payload.get("category", ""),
-        status=payload.get("status", "open"),
-    )
-    return jsonify(record.to_dict()), 201
+        return error_response("bad_json", "Request body must be JSON", 400)
+    try:
+        record = service.create_record(payload)
+    except ValidationError as exc:
+        return error_response("validation_error", str(exc), 400)
+    return jsonify({"data": record.to_dict()}), 201
 ```
 
----
-
-## Demo Flow: Hour 34
-
-1. Add list + create routes
-2. Add get-by-id
-3. Add update + delete
-4. Show one success case
-5. Show one validation or not-found case
-
-## Smoke test habit
-- Verify behavior from outside the Flask app
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Lab: Build the CRUD Surface
+## Demo: GET by ID, PUT, DELETE
+
+```python
+@app.get("/records/<int:record_id>")
+def get_record(record_id: int):
+    try:
+        return jsonify({"data": service.get_record(record_id).to_dict()})
+    except NotFoundError:
+        return error_response("not_found", f"Record {record_id} was not found", 404)
+
+@app.put("/records/<int:record_id>")
+def update_record(record_id: int):
+    payload = request.get_json(silent=True)
+    if payload is None:
+        return error_response("bad_json", "Request body must be JSON", 400)
+    try:
+        record = service.update_record(record_id, payload)
+    except ValidationError as exc:
+        return error_response("validation_error", str(exc), 400)
+    except NotFoundError:
+        return error_response("not_found", f"Record {record_id} was not found", 404)
+    return jsonify({"data": record.to_dict()})
+
+@app.delete("/records/<int:record_id>")
+def delete_record(record_id: int):
+    try:
+        service.delete_record(record_id)
+    except NotFoundError:
+        return error_response("not_found", f"Record {record_id} was not found", 404)
+    return jsonify({"data": {"deleted_id": record_id}})
+```
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `### Demo code or command sketch`
+
+---
+
+## Status Code Decision Guide
+
+| Situation | Status |
+|---|---|
+| Success — returning existing data | `200` |
+| Success — resource just created | `201` |
+| Request body is not valid JSON | `400` |
+| Field missing or value invalid | `400` |
+| ID refers to a record that does not exist | `404` |
+| Unexpected exception in server code | `500` |
+
+**Rule:** `400` = the caller's fault. `404` = resource not there. `500` = server's fault.
+
+---
+
+## Lab: CRUD API (Hour 34)
 
 **Time: 25–35 minutes**
 
 ### Tasks
-- Add the full CRUD route set
-- Route everything through the service layer
-- Return consistent JSON
-- Test at least one success and one failure for each major path
+1. Implement all five routes: list, create, get-by-id, update, delete
+2. Test list, create, get by id, update, delete — happy paths
+3. Test bad JSON, validation failure, and missing id — sad paths
+4. Ensure the service/repository layer is never imported inside a route body
 
 ### Completion Criteria
-- CRUD endpoints respond predictably
-- Status codes match the actual outcome
-- Learner can explain `400` vs `404`
+- All five routes respond with JSON
+- POST returns `201`; missing records return `404`; invalid payloads return `400`
+- The service/repository layer remains reusable outside Flask
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `## Hands-on Lab`
 
 ---
 
-## Common Pitfalls (Hour 34)
+## Common Pitfalls — Hour 34
 
-⚠️ Returning `200` for everything  
-⚠️ Writing business rules in Flask handlers  
-⚠️ Forgetting to test malformed requests  
-⚠️ Letting route names drift between files
+- **One route for every operation** with manual method branching instead of `@app.get`, `@app.post`
+- **Inconsistent integer/string ids** — use `<int:record_id>` in Flask to avoid silent mismatches
+- **Returning `200` for a delete that failed** — map the error correctly
+- **SQLite exceptions leaking as HTML `500`** — catch domain errors in the route
 
----
-
-## Homework + Quiz Emphasis (Hour 34)
-
-- Homework goal: a small set of CRUD endpoints for the tracker resource
-- Best practice: use HTTP verbs and status codes consistently
-- Pitfall to avoid: wrong status codes make clients harder to trust
-- Quiz-ready anchor: `Hour 34 | endpoint: POST /tasks`
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `### Common pitfalls to watch for`
 
 ---
 
-## Quick Check
+## Quick Check — Hour 34
 
-**Question**: When should a route return `400` instead of `404`?
+**Exit questions:**
 
----
-
-# Hour 35: Serialization + Validation
-
-## Learning Outcomes
-- Centralize request parsing
-- Centralize response serialization
-- Keep validation rules coherent
-- Use intentional negative cases to test the contract
+- When should an API return `400` instead of `404`? Give one tracker example of each.
+- What happy path did you prove this hour?
+- What sad path did you test or plan to test next?
+- Can the same service method be called by a CLI without importing Flask?
 
 ---
 
-## API Contracts Are Promises
+# Hour 35 — Serialization + Validation
 
-- Requests should arrive in a predictable shape
-- Responses should leave in a predictable shape
-- Failure paths should look consistent too
-- “It works” is not enough if every endpoint behaves differently
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `# Day 9, Hour 3`
 
 ---
 
-## Serializer Helper
+# Hour 35 Learning Outcomes
+
+By the end of this hour, learners will be able to:
+
+- Standardize request and response shapes for the API
+- Centralize validation so routes do not duplicate domain rules
+- Create predictable JSON errors that clients and tests can rely on
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `## Learning Outcomes`
+
+---
+
+## Serialization and Deserialization
+
+**Serialization** — converting Python objects to plain JSON-ready dicts
+
+**Deserialization** — reading client payloads and turning them into validated data
+
+Key principles:
+
+- The JSON contract is part of the product; changing field names randomly breaks clients
+- Manual validation is acceptable when it is **centralized and consistent**
+- Do not duplicate validation logic in the GUI, the API, and the repository
+- JSON has no `datetime` object — convert dates to ISO 8601 strings explicitly
+
+> "The contract is part of the product."
+>
+> — `Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `### Talk points`
+
+---
+
+## Demo: parse_record_payload
 
 ```python
-def serialize_record(record) -> dict:
-    return {
-        "id": record.id,
-        "title": record.title,
-        "category": record.category,
-        "status": record.status,
-        "priority": record.priority,
-    }
-```
+from tracker.exceptions import ValidationError
 
-## Benefit
-- One change point instead of copy/paste edits across routes
+REQUIRED_FIELDS = {"title", "category"}
+ALLOWED_FIELDS = REQUIRED_FIELDS | {"status"}
+ALLOWED_STATUSES = {"open", "in_progress", "done"}
 
----
-
-## Parser + Validation Helper
-
-```python
 def parse_record_payload(payload: dict) -> dict:
-    title = str(payload.get("title", "")).strip()
-    category = str(payload.get("category", "")).strip()
-    status = str(payload.get("status", "open")).strip().lower()
-
+    if not isinstance(payload, dict):
+        raise ValidationError("Payload must be a JSON object")
+    unknown = payload.keys() - ALLOWED_FIELDS
+    if unknown:
+        raise ValidationError(f"Unknown field: {sorted(unknown)[0]}")
+    missing = REQUIRED_FIELDS - payload.keys()
+    if missing:
+        raise ValidationError(f"Missing required field: {sorted(missing)[0]}")
+    if not isinstance(payload["title"], str):
+        raise ValidationError("title must be a string")
+    if not isinstance(payload["category"], str):
+        raise ValidationError("category must be a string")
+    if "status" in payload and not isinstance(payload["status"], str):
+        raise ValidationError("status must be a string")
+    title = payload["title"].strip()
+    category = payload["category"].strip()
+    status = payload.get("status", "open").strip().lower()
     if not title:
-        raise ValidationError("Title is required.")
+        raise ValidationError("title cannot be blank")
     if not category:
-        raise ValidationError("Category is required.")
-    if status not in {"open", "in_progress", "done"}:
-        raise ValidationError("Status is invalid.")
-
+        raise ValidationError("category cannot be blank")
+    if status not in ALLOWED_STATUSES:
+        raise ValidationError(f"status must be one of {sorted(ALLOWED_STATUSES)}")
     return {"title": title, "category": category, "status": status}
 ```
 
----
-
-## Where Validation Should Live
-
-- Parser helpers normalize and reject malformed payloads
-- Service layer enforces domain invariants
-- Routes should **not** duplicate the same rules repeatedly
-
-## Negative test ideas
-- invalid JSON
-- missing title
-- missing category
-- invalid status value
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Cleaner Route Pattern
+## Demo: record_to_response
 
 ```python
-@app.post("/records")
-def create_record():
-    payload = request.get_json(silent=True)
-    if payload is None:
-        return error_response("invalid_json", "Request body must be valid JSON.", 400)
-
-    try:
-        parsed = parse_record_payload(payload)
-        record = service.add_record(**parsed)
-    except ValidationError as exc:
-        return error_response("validation_error", str(exc), 400)
-
-    return jsonify(serialize_record(record)), 201
+def record_to_response(record) -> dict:
+    return record.to_dict()
 ```
+
+**Why a named helper instead of inline `.to_dict()`?**
+
+- One place to rename or add fields without touching every route
+- Makes the serialization contract explicit and testable
+- Prevents `record.__dict__` leaking private fields or internal state
+
+### Anti-pattern to avoid
+
+```python
+# Do NOT do this — exposes internals, no stable contract
+return jsonify(record.__dict__), 200
+```
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Lab: Make the API Coherent
+## Validation Sad-Path Matrix
+
+| Bad input type | Example | Expected error code |
+|---|---|---|
+| Non-JSON body | Raw string body | `bad_json` |
+| Missing required field | No `title` key | `validation_error` |
+| Wrong type | `"title": 42` | `validation_error` |
+| Unknown field | `"colour": "red"` | `validation_error` |
+| Blank required field | `"title": "  "` | `validation_error` |
+| Invalid enum value | `"status": "maybe"` | `validation_error` |
+
+**Rule:** Validation errors must never expose a Python stack trace.
+
+---
+
+## Benefits of Centralized Validation
+
+Before centralization — validation scattered across routes:
+
+```python
+# POST /records
+if "title" not in payload:
+    return error_response("validation_error", "title required", 400)
+
+# PUT /records/<id>
+if "title" not in payload:
+    return error_response("validation_error", "title required", 400)
+```
+
+After centralization — routes become shorter and safer:
+
+```python
+# POST /records
+data = parse_record_payload(payload)   # one call covers all rules
+record = service.create_record(data)
+```
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `### Demo steps`
+
+---
+
+## Lab: Clean API Contracts (Hour 35)
 
 **Time: 25–35 minutes**
 
 ### Tasks
-- Add one serializer helper
-- Add one parser/validator helper
-- Replace ad hoc route logic with helpers
-- Run a few negative cases intentionally
+1. Create `api/serializers.py` with `parse_record_payload` and `record_to_response`
+2. Route every POST and PUT payload through `parse_record_payload`
+3. Manually test three negative cases: missing field, bad type, unknown field
+4. Verify that routes become shorter after the refactor
 
 ### Completion Criteria
-- Output shape is consistent across routes
-- Validation rules live in one obvious place
-- Learner can explain at least one negative test result
+- Every endpoint uses the same response wrapper and error wrapper
+- Validation messages are helpful without exposing stack traces
+- Routes are shorter because parsing and serialization are reusable
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `## Hands-on Lab`
 
 ---
 
-## Common Pitfalls (Hour 35)
+## Common Pitfalls — Hour 35
 
-⚠️ Different key sets across endpoints  
-⚠️ Validation logic duplicated in multiple routes  
-⚠️ Plain-text errors in one handler and JSON in another  
-⚠️ Negative cases never tested until demo time
+- **Different error formats per endpoint** — inconsistency breaks client integrations
+- **Duplicating validation** in GUI, API layer, and repository
+- **Accepting unknown fields silently** — they hide typos and future field conflicts
+- **Forgetting JSON has no `datetime`** — convert dates to strings explicitly
 
----
+### Optional Extensions
+- Include `request_id` in all responses, not only errors
+- Document the contract in README with one sample request and response
+- Add `pytest` tests for `parse_record_payload` without starting Flask
 
-## Homework + Quiz Emphasis (Hour 35)
-
-- Homework goal: manual serializers and validators for tracker payloads
-- Best practice: one consistent request/response contract
-- Pitfall to avoid: different key sets confuse clients
-- Quiz-ready anchor: `Hour 35 | request fields checked: title, priority`
-
----
-
-## Quick Check
-
-**Question**: Why is centralizing parsing and serialization safer than rebuilding dictionaries inside each route?
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `### Common pitfalls to watch for`
 
 ---
 
-# Hour 36: App Structure + Dependency Wiring
+## Quick Check — Hour 35
 
-## Learning Outcomes
-- Explain why growing apps need structure
-- Refactor toward a `create_app()` pattern
-- Wire dependencies explicitly
-- Avoid circular imports and hidden globals
+**Exit questions:**
 
----
-
-## When Structure Starts to Matter
-
-- Single-file apps are great for learning
-- Growth creates import noise and setup confusion
-- Testing gets harder when construction happens at import time
-- Clear startup makes the app easier to reason about
+- Why should all API errors follow a consistent format even when the messages differ?
+- What happy path did you prove this hour?
+- What sad path did you test or plan to test next?
+- Which fields are part of the public API versus internal implementation details?
 
 ---
 
-## Simple Application Factory
+# Hour 36 — App Structure: Blueprints and Dependency Wiring
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `# Day 9, Hour 4`
+
+---
+
+# Hour 36 Learning Outcomes
+
+By the end of this hour, learners will be able to:
+
+- Refactor Flask code into a maintainable application structure
+- Use an application factory to wire configuration, repository, and service dependencies
+- Avoid circular imports and hidden global state
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `## Learning Outcomes`
+
+---
+
+## Why Structure Matters
+
+Structure exists to reduce friction, not to impress anyone.
+
+Problems with a single-file approach:
+
+- Can't create an isolated app instance for tests
+- DB connection created at import time — no flexibility
+- Circular imports appear as the app grows
+- Configuration is invisible and hard to change
+
+> "The application factory pattern lets tests create isolated apps with temporary databases."
+>
+> — `Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Talk points`
+
+---
+
+## Application Factory Pattern
+
+**Before** — module-level app creation, hidden dependencies:
 
 ```python
-def create_app():
+# api/app.py — problematic
+from tracker.repository import SQLiteTrackerRepository
+
+repo = SQLiteTrackerRepository("data/tracker.db")   # import-time side effect
+service = TrackerService(repo=repo)
+app = Flask(__name__)
+```
+
+**After** — explicit factory, wiring visible in one place:
+
+```python
+def create_app(db_path: Path | None = None) -> Flask:
     app = Flask(__name__)
-    repo = SQLiteTrackerRepository("data/tracker.db")
+    database_path = db_path or Path("data/tracker.db")
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    repo = SQLiteTrackerRepository(str(database_path))
     repo.init_db()
     service = TrackerService(repo=repo)
     register_routes(app, service)
     return app
 ```
 
-## Why it helps
-- One visible startup path
-- Explicit dependencies
-- Easier testing later
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Structure Options for This Course
+## Demo: create_app (api/app.py)
 
-### Minimum good structure
-- `api/app.py` for startup
-- `api/routes.py` for route registration
-- service + repository modules stay separate
+```python
+from pathlib import Path
+from flask import Flask
 
-### Optional structure
-- Flask blueprints if the learner is ready
+from api.routes import register_routes
+from tracker.repository import SQLiteTrackerRepository
+from tracker.service import TrackerService
 
-## Guardrail
-- Do not overframework the capstone
+
+def create_app(db_path: Path | None = None) -> Flask:
+    app = Flask(__name__)
+    database_path = db_path or Path("data/tracker.db")
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    repo = SQLiteTrackerRepository(str(database_path))
+    repo.init_db()
+    service = TrackerService(repo=repo)
+    register_routes(app, service)
+    return app
+```
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Common Architecture Risks
+## Demo: register_routes (api/routes.py)
 
-- Global service creation at import time
-- `routes.py` importing `app.py` and vice versa
-- Repository construction hidden in random modules
-- Learners changing file layout without updating imports deliberately
+```python
+from flask import Flask
+from tracker.service import TrackerService
+
+
+def register_routes(app: Flask, service: TrackerService) -> None:
+    @app.get("/health")
+    def health():
+        return {"status": "ok"}
+
+    @app.get("/records")
+    def list_records():
+        return {"data": [r.to_dict() for r in service.list_records()]}
+
+    # ... POST, GET/<id>, PUT/<id>, DELETE/<id> here
+```
+
+**Key design decisions:**
+
+- `service` is injected — no global import needed inside route functions
+- Routes never construct repositories or open database connections
+- `create_app` is the single composition root — one place to understand wiring
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Demo code or command sketch`
 
 ---
 
-## Refactor Sprint
+## Circular Import Anti-Pattern
+
+**The trap** — routes importing app while app imports routes:
+
+```text
+api/app.py   imports   api/routes.py
+api/routes.py   imports   api/app.py   ← circular!
+```
+
+**Prevention rules:**
+
+- `api/routes.py` must never import `api/app.py`
+- Pass `service` as a parameter, not as a module-level global
+- Never create repositories or open connections at import time
+- Use `create_app()` as the composition root — everything wired there
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Common pitfalls to watch for`
+
+---
+
+## Lab: Refactor API Structure (Hour 36)
 
 **Time: 25–35 minutes**
 
 ### Tasks
-- Move routes into a dedicated module or grouping
-- Add `create_app()`
-- Construct repository + service in one clear place
-- Re-test `/health` and main resource routes
+1. Create `api/routes.py` with `register_routes(app, service)` helper
+2. Create `api/app.py` with `create_app(db_path=None)` factory
+3. Construct repository and service inside `create_app`, not at module level
+4. Run `/health` and at least one CRUD endpoint to confirm the refactor works
 
 ### Completion Criteria
-- Startup is predictable
-- Route wiring is readable
-- API still behaves the same after refactor
+- App still starts after the refactor
+- `/health` and at least one CRUD endpoint still work
+- DB path can be changed for tests or demos via `create_app(db_path=...)`
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `## Hands-on Lab`
 
 ---
 
-## Common Pitfalls (Hour 36)
+## Common Pitfalls — Hour 36
 
-⚠️ Circular imports  
-⚠️ Hidden global singletons  
-⚠️ Refactoring too much at once  
-⚠️ Losing a working route while reorganizing
+- **Circular imports** between `app.py` and `routes.py`
+- **Creating the database connection at import time** — prevents test isolation
+- **Moving files without updating imports** — always run after moving, not just after writing
+- **Refactoring and changing behavior at the same time** — refactor first, then extend
 
----
+### Optional Extensions
+- Use a Flask Blueprint for records routes
+- Add a config object or environment variable for the database path
+- Add a test that creates an app with `tmp_path` from pytest
 
-## Homework + Quiz Emphasis (Hour 36)
-
-- Homework goal: an app structure that can grow beyond one file
-- Best practice: use an app factory and optional blueprints to organize startup
-- Pitfall to avoid: global singletons hide dependencies and hurt testing
-- Quiz-ready anchor: `Hour 36 | app factory: create_app`
-
----
-
-## Quick Check
-
-**Question**: What problem does `create_app()` solve that a global `service = ...` pattern does not?
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Common pitfalls to watch for`
 
 ---
 
-# Day 9 Wrap-Up
+## Quick Check — Hour 36
 
-## What Learners Should Leave With
-- A Flask entry point
-- CRUD routes around one main resource
-- Manual parser + serializer helpers
-- A maintainable startup path for tomorrow’s security and client work
+**Exit questions:**
 
----
-
-## Homework Focus
-
-- Build deterministic outputs in `Advanced_Day9_homework.ipynb`
-- Keep the contract stable enough for autograder-style labels
-- Rehearse the hour anchors:
-  - `framework: Flask`
-  - `endpoint: POST /tasks`
-  - `request fields checked: title, priority`
-  - `app factory: create_app`
+- What risk appears when a repository or database connection is created at import time?
+- What happy path did you prove this hour?
+- What sad path did you test or plan to test next?
+- Where is the one place a reader can see how the app is assembled?
 
 ---
 
-## Exit Ticket
+## Capstone Quality Gate — Session 9
 
-1. Which route feels strongest right now?
-2. Which failure case still needs testing?
-3. What part of your API structure will make tomorrow easier?
+Before leaving, check each artifact against this rubric:
+
+| Category | Ready | Needs Attention |
+|---|---|---|
+| Correctness | Feature works with a realistic happy path | Only works with hard-coded data |
+| Error handling | Sad path produces a clear JSON error | App crashes or returns an HTML traceback |
+| Structure | Responsibility is in the correct layer | Route, service, and SQL logic are tangled |
+| Repeatability | Command or test reproduces the result | Result depends on manual memory |
+| Maintainability | Names are clear, next feature has an obvious home | Works once but hard to extend |
+
+### Source Alignment
+`Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Capstone quality gate`
 
 ---
 
-# Looking Ahead
+## Session 9 Summary
 
-## Next Session
-- Protect write routes with an API key
-- Build a Python client
-- Choose an integration path
-- Demo the API milestone confidently
+### What we built today
+- `GET /health` — first proof the server is live
+- Five CRUD routes backed by `TrackerService` and `SQLiteTrackerRepository`
+- `parse_record_payload` and `record_to_response` — centralized contract helpers
+- `create_app(db_path)` — application factory with explicit dependency wiring
+
+### Design principles reinforced
+- Routes are thin adapters, not business logic containers
+- One JSON error envelope for every sad path
+- No import-time side effects; configuration injected at construction time
+- A thin vertical slice per hour, always runnable before extending
+
+---
+
+## What's Next — Day 10
+
+Session 10 builds on today's foundations:
+
+- Testing the Flask API with `pytest` and Flask `test_client()`
+- Writing focused integration tests with an in-memory or temp-file database
+- Packaging the tracker for distribution and repeatable installation
+- Final capstone review and delivery preparation
+
+**Commit message to write before Day 10:**
+`feat: add Flask API with health, CRUD endpoints, and application factory`

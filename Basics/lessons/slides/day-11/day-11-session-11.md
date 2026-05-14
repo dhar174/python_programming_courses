@@ -1,1772 +1,903 @@
 # Basics Day 11 — Session 11 (Hours 41–44)
-Python Programming (Basic) • File I/O, JSON, Paths & Exception Handling
+Python Programming (Basic) • File I/O, JSON Persistence, pathlib, and Exception Handling
 
-## Session 11 Overview
+---
+
+# Session 11 Overview
+
+## Topics Covered Today
 - Hour 41: Files — reading and writing text
-- Hour 42: JSON persistence (stdlib json)
-- Hour 43: Directories + paths (pathlib preferred)
-- Hour 44: Exception handling (full Basics treatment)
+- Hour 42: JSON persistence with the stdlib `json` module
+- Hour 43: Directories and paths with `pathlib`
+- Hour 44: Exception handling — full Basics treatment
 
 ---
 
 # Hour 41: Files — Reading and Writing Text
 
 ## Learning Outcomes
-- Open files using `with open()`
-- Read all text, iterate lines, and write lines to a file
-- Understand how the context manager closes files safely
+- Open files safely using `with open(...) as f`
+- Write lines to a text file using `write()`
+- Read lines back using `readlines()` and `read()`
+- Confirm file location with CWD and absolute path
 
 ---
 
 ## Why Files Matter
 
-### Programs Forget Everything Without Files
+### Programs Forget Without Files
+- Variables live only while the script runs
+- Files make data **persistent** across runs
 
-```python
-# Without files — data is gone when the program exits
-contacts = ["Alice|555-1234", "Bob|555-5678"]
-# ... user adds Carol at runtime ...
-# Program exits → Carol is lost forever
-```
+> "Memory variables are like writing on a whiteboard that gets erased when class ends. Files are like writing in a notebook you can open tomorrow."
 
-### With Files — Data Survives Between Runs
-
-```python
-# Save to disk
-with open("contacts.txt", "w") as f:
-    for entry in contacts:
-        f.write(entry + "\n")
-
-# Next run — load it back
-with open("contacts.txt", "r") as f:
-    contacts = [line.strip() for line in f]
-```
-
-> 💡 **Files are the simplest form of persistence.** No database, no server — just bytes on disk that survive after your program closes.
+### What We Can Do with Files
+- Save shopping lists, contacts, and tasks
+- Store simple reports and logs
+- Build apps that remember state between runs
 
 ---
 
-## The `with` Statement — Context Manager Basics
+## `with open()` — The Safe Pattern
 
-### What Problem Does `with` Solve?
-
+### Core Syntax
 ```python
-# Old-style (fragile) — what if an error happens before close()?
-f = open("contacts.txt", "r")
-data = f.read()     # if this raises, f.close() is never called!
-f.close()           # file handle leaks → resource exhaustion over time
-
-# with open() — guaranteed close, even on error
-with open("contacts.txt", "r") as f:
-    data = f.read()
-# f is automatically closed here — no matter what happened inside
+# Write mode
+with open("shopping.txt", "w", encoding="utf-8") as f:
+    f.write("Apples\n")
+# File is automatically closed when the block ends
 ```
 
-### The Three Parts
+### File Modes
+| Mode | Meaning |
+| --- | --- |
+| `"r"` | Read (default) |
+| `"w"` | Write — overwrites existing content |
+| `"a"` | Append — adds to existing content |
 
-```python
-with open("contacts.txt", "r") as f:
-#    ^^^^ ^^^^^^^^^^^^^^^^  ^^^  ^
-#    |    filename           |   variable name bound to the file object
-#    |                       mode: "r" = read, "w" = write, "a" = append
-#    context manager keyword
-```
-
-> 💡 **Always use `with open(...)`.** It guarantees the file is closed when the block exits — whether normally or due to an exception.
+> `with` closes the file automatically, even if an error occurs.
 
 ---
 
-## File Modes
+## Writing Files — write() and Newlines
 
-### Common Modes at a Glance
-
-| Mode | Meaning | File must exist? | Overwrites? |
-|------|---------|-----------------|-------------|
-| `"r"` | Read (text) | Yes — raises `FileNotFoundError` | — |
-| `"w"` | Write (text) | No — creates it | Yes — truncates! |
-| `"a"` | Append (text) | No — creates it | No — adds to end |
-| `"x"` | Exclusive create | No — raises if it exists | — |
-
-### Warning: `"w"` Overwrites!
-
+### write() Writes Exactly What You Pass
 ```python
-# First call — writes "Hello\n" to file
-with open("notes.txt", "w") as f:
-    f.write("Hello\n")
+from pathlib import Path
 
-# Second call — ERASES "Hello\n", replaces with "World\n"
-with open("notes.txt", "w") as f:
-    f.write("World\n")
+items = ["Apples", "Bananas", "Bread", "Milk"]
+file_path = Path("shopping.txt")
 
-# Use "a" (append) if you want to ADD to an existing file
-with open("notes.txt", "a") as f:
-    f.write("Adding this line\n")
-```
-
-> ⚠️ **Mode `"w"` silently destroys existing file content.** If you need to add lines, use `"a"` (append).
-
----
-
-## Reading a File — Three Patterns
-
-### Pattern 1: `read()` — Entire File as One String
-
-```python
-with open("contacts.txt", "r") as f:
-    content = f.read()          # one big string including all newlines
-print(content)
-```
-
-### Pattern 2: `readlines()` — List of Lines (with `\n`)
-
-```python
-with open("contacts.txt", "r") as f:
-    lines = f.readlines()       # ["Alice|555-1234\n", "Bob|555-5678\n"]
-
-for line in lines:
-    print(line.strip())         # .strip() removes the trailing \n
-```
-
-### Pattern 3: Iterate Directly (Most Memory-Efficient)
-
-```python
-with open("contacts.txt", "r") as f:
-    for line in f:              # reads one line at a time
-        entry = line.strip()
-        if entry:               # skip blank lines
-            print(entry)
-```
-
-> 💡 **Prefer the direct iteration pattern for large files.** It never loads the whole file into memory at once.
-
----
-
-## Writing a File
-
-### `write()` — Write a String
-
-```python
-with open("contacts.txt", "w") as f:
-    f.write("Alice|555-1234\n")   # you must include the newline yourself!
-    f.write("Bob|555-5678\n")
-```
-
-### `writelines()` — Write an Iterable of Strings
-
-```python
-entries = ["Alice|555-1234\n", "Bob|555-5678\n", "Carol|555-9999\n"]
-
-with open("contacts.txt", "w") as f:
-    f.writelines(entries)         # entries must already contain "\n"
-```
-
-### Saving a List (Pattern You Will Use in Lab)
-
-```python
-contacts = ["Alice|555-1234", "Bob|555-5678", "Carol|555-9999"]
-
-with open("contacts.txt", "w") as f:
-    for entry in contacts:
-        f.write(entry + "\n")   # add "\n" yourself each time
-```
-
-> ⚠️ **`write()` and `writelines()` do not add newlines automatically.** Forgetting `\n` causes all lines to run together on one line.
-
----
-
-## File Paths and Working Directory
-
-### Relative vs Absolute
-
-```python
-# Relative path — relative to where you RUN the script from
-with open("contacts.txt", "r") as f: ...      # same folder as CWD
-with open("data/contacts.txt", "r") as f: ... # subfolder of CWD
-
-# Absolute path — always the same regardless of where you run from
-with open("/home/user/project/contacts.txt", "r") as f: ...
-```
-
-### Finding Your Working Directory
-
-```python
-import os
-print(os.getcwd())   # prints e.g. /home/user/project
-```
-
-### Checking Whether a File Exists
-
-```python
-import os
-if os.path.exists("contacts.txt"):
-    with open("contacts.txt", "r") as f:
-        content = f.read()
-else:
-    print("No contacts file yet — starting fresh.")
-```
-
-> 💡 **Prefer `pathlib` for paths (covered in Hour 43).** For now, `os.path.exists()` is a quick way to check.
-
----
-
-## Demo: Shopping List — Write Then Read
-
-### Watch For:
-- `"w"` mode creates the file
-- Newline added manually in `write()`
-- `"r"` mode reads back exactly what was written
-- `.strip()` removes trailing `\n` on each line
-
-```python
-# --- Write the shopping list ---
-items = ["apples", "bread", "milk", "eggs", "cheese"]
-
-with open("shopping.txt", "w") as f:
+with open(file_path, "w", encoding="utf-8") as f:
     for item in items:
+        f.write(item + "\n")   # "\n" puts each item on its own line
+```
+
+### Without `\n` — All Items Merge Into One Line
+```python
+# ❌ Missing newlines
+f.write("Apples")
+f.write("Bananas")
+# Result in file: ApplesBananas
+```
+
+---
+
+## Reading Files — read() vs readlines()
+
+### readlines() — List of Lines (Use for Line-by-Line Data)
+```python
+with open(file_path, "r", encoding="utf-8") as f:
+    lines = f.readlines()   # returns ["Apples\n", "Bananas\n", ...]
+
+for index, line in enumerate(lines, start=1):
+    print(f"{index}. {line.strip()}")  # strip() removes the \n
+```
+
+### read() — One Big String (Use for Full File Content)
+```python
+with open(file_path, "r", encoding="utf-8") as f:
+    entire_text = f.read()   # returns "Apples\nBananas\n..."
+print(entire_text)
+```
+
+> **`strip()`** removes surrounding whitespace including `\n` — always use it when printing loaded lines.
+
+---
+
+## Demo — Shopping List Save and Load
+
+```python
+from pathlib import Path
+
+shopping_items = ["Apples", "Bananas", "Bread", "Milk"]
+file_path = Path("shopping.txt")
+
+print(f"CWD: {Path.cwd()}")
+print(f"Absolute path: {file_path.resolve()}")
+
+# Write
+with open(file_path, "w", encoding="utf-8") as f:
+    for item in shopping_items:
         f.write(item + "\n")
+print(f"File exists? {file_path.exists()}")
 
-print("Shopping list saved.")
+# Read
+with open(file_path, "r", encoding="utf-8") as f:
+    lines = f.readlines()
 
-# --- Read it back and print ---
-print("\nLoaded shopping list:")
-with open("shopping.txt", "r") as f:
-    for line in f:
-        entry = line.strip()
-        if entry:
-            print(f"  - {entry}")
+for index, line in enumerate(lines, start=1):
+    print(f"{index}. {line.strip()}")
 ```
 
-### Expected Output:
-```
-Shopping list saved.
-
-Loaded shopping list:
-  - apples
-  - bread
-  - milk
-  - eggs
-  - cheese
-```
-
-> 🗒️ **Speaker note:** Open `shopping.txt` in a text editor mid-demo and show students the file on disk. Makes persistence tangible.
+### Debrief Questions
+- What changes if we remove `\n` from the write?
+- Why do we call `line.strip()` before printing?
+- How do we prove where the file was saved?
 
 ---
 
-## Lab: Save and Load (Text) — 30 min
+## Lab — Save and Load Text
 
-### Task
-Build a program that saves contacts (or tasks) to a text file and loads them back.
+**Time: 25–35 minutes**
 
-**Step 1 — Define your format:**
-```
-Alice|555-1234
-Bob|555-5678
-Carol|555-9999
-```
+### Tasks
+1. Create a list of tasks or contacts in Python
+2. Save each item to a `.txt` file — one per line using `"w"` mode
+3. Print CWD and absolute file path before writing
+4. Verify the file exists after writing (`file_path.exists()`)
+5. Load the lines back with `readlines()` and print them numbered
 
-**Step 2 — Write a `save_contacts()` function:**
+### Sample Data (Tasks)
 ```python
-def save_contacts(contacts: list, filename: str) -> None:
-    with open(filename, "w") as f:
-        for entry in contacts:
-            f.write(entry + "\n")
-```
-
-**Step 3 — Write a `load_contacts()` function:**
-```python
-def load_contacts(filename: str) -> list:
-    contacts = []
-    with open(filename, "r") as f:
-        for line in f:
-            entry = line.strip()
-            if entry:
-                contacts.append(entry)
-    return contacts
-```
-
----
-
-## Lab: Save and Load (Text) — continued
-
-### Step 4 — Add a menu and test:
-
-```python
-import os
-
-FILENAME = "contacts.txt"
-
-contacts = []
-
-# Load on startup (only if file exists)
-if os.path.exists(FILENAME):
-    contacts = load_contacts(FILENAME)
-    print(f"Loaded {len(contacts)} contacts.")
-
-while True:
-    cmd = input("add / list / quit: ").strip().lower()
-    if cmd == "add":
-        name  = input("  Name: ").strip()
-        phone = input("  Phone: ").strip()
-        contacts.append(f"{name}|{phone}")
-        save_contacts(contacts, FILENAME)
-        print("Saved.")
-    elif cmd == "list":
-        for entry in contacts:
-            parts = entry.split("|")
-            print(f"  {parts[0]} — {parts[1]}")
-    elif cmd == "quit":
-        break
+tasks = [
+    "Review notes",
+    "Email instructor",
+    "Practice file I/O",
+    "Prepare tomorrow plan",
+]
 ```
 
 ### Completion Criteria
-- [ ] File is created when contacts are added
-- [ ] Contacts reload correctly on restart
-- [ ] Learner can open and inspect the file on disk
+✓ File written with one item per line  
+✓ Lines loaded and printed as numbered list  
+✓ CWD and absolute path printed — learner can find file on disk
 
 ---
 
-## Common Pitfalls — Hour 41
+## Common Pitfalls (Hour 41)
 
-### Pitfall 1: Wrong Working Directory
+⚠️ **Wrong working directory** — file not found on read  
+→ Print `Path.cwd()` and `file_path.resolve()` to diagnose
 
-```python
-# You think your script is in /home/user/project/
-# You double-click from the Desktop → CWD is /home/user/Desktop
-# Result: FileNotFoundError — "contacts.txt" not where you expect
+⚠️ **Forgetting `\n`** — all items merge into one line in the file  
+→ Always use `f.write(item + "\n")`
 
-# Fix: always run your script from a known location
-# Terminal: cd /home/user/project && python main.py
-# Or use absolute paths (Hour 43: pathlib fixes this properly)
-```
-
-### Pitfall 2: Forgetting the Newline
-
-```python
-# Bug — all entries on one line: "AliceBobCarol"
-with open("contacts.txt", "w") as f:
-    for entry in contacts:
-        f.write(entry)          # no "\n"!
-
-# Fix
-with open("contacts.txt", "w") as f:
-    for entry in contacts:
-        f.write(entry + "\n")   # newline separator
-```
+⚠️ **Not using `strip()`** — extra newlines appear in printed output  
+→ Use `line.strip()` when printing each loaded line
 
 ---
 
-## Common Pitfalls — Hour 41 (continued)
+## Quick Check (Hour 41)
 
-### Pitfall 3: Using `"w"` When You Mean `"a"`
+**Question:** Why is `with open(...)` recommended instead of calling `open()` and `close()` manually?
 
-```python
-# Bug: each run overwrites the file — history is lost
-contacts = load_contacts("contacts.txt")
-contacts.append("Dave|555-4321")
-
-with open("contacts.txt", "w") as f:   # wipes file first!
-    f.write("Dave|555-4321\n")          # only Dave remains after restart
-
-# Fix: either write the full list or use "a" intentionally
-with open("contacts.txt", "w") as f:
-    for entry in contacts:              # write the full updated list
-        f.write(entry + "\n")
-```
-
-### Pitfall 4: Not Closing The File (No `with`)
-
-```python
-# Bug — no guarantee the file is flushed or closed
-f = open("contacts.txt", "w")
-f.write("Alice|555-1234\n")
-# crash here → file may be empty or corrupted on disk
-
-# Fix
-with open("contacts.txt", "w") as f:
-    f.write("Alice|555-1234\n")
-# file is always closed when the with block exits
-```
-
-> ⚠️ **Not using `with` can leave file handles open or data un-flushed.** This is the most common beginner file I/O mistake.
+**Strong answer:** `with` automatically closes the file when the block ends — even if an error occurs inside the block. Manual `close()` can be skipped if an exception is raised, leaving the file open and risking resource leaks or data corruption.
 
 ---
 
-## Quick Check — Hour 41
-
-**Exit Ticket Question:** Why is using `with` recommended for file handling?
-
-**Model Answer:** "The `with` statement uses Python's **context manager** protocol to guarantee that the file is closed when the block exits — whether the code inside the block ran successfully or raised an exception. Without `with`, you must call `f.close()` manually, and if an exception is raised before `close()` is reached, the file handle leaks. A leaked file handle can prevent other processes from accessing the file, exhaust the operating system's file descriptor limit, and may leave data un-flushed to disk. Using `with open(...)` is the idiomatic, safe pattern for all file I/O in Python."
-
----
-
-# Hour 42: JSON Persistence (stdlib `json`)
+# Hour 42: JSON Persistence
 
 ## Learning Outcomes
-- Serialize Python dicts/lists to a JSON file with `json.dump()`
-- Load JSON back into Python with `json.load()`
-- Understand which Python types map to JSON
-- Convert a simple object to/from a dict for JSON storage
+- Use `json.dump()` to save Python data to a `.json` file
+- Use `json.load()` to read JSON back into Python data structures
+- Identify JSON-supported types and their Python equivalents
+- Convert simple class objects with `to_dict()` and `from_dict()`
+- Handle `FileNotFoundError` and `json.JSONDecodeError` safely
 
 ---
 
-## Why JSON?
+## What is JSON?
 
-### Plain Text Files Have Limits
+### JSON — JavaScript Object Notation
+- Language-neutral, human-readable text format
+- Built into Python's standard library — `import json`
+- Perfect for storing small app data between runs
 
+### A JSON Payload Looks Like This
 ```python
-# Text format: one contact per line — how do you store extra fields?
-"Alice|555-1234"                # simple
-"Alice|555-1234|alice@ex.com"   # add email — fine so far
-"Alice|555-1234|alice@ex.com|notes: likes cats, no calls before 9am"
-# notes field contains "|" → parsing breaks
+# Equivalent Python dict written as JSON in the file:
+# {
+#   "name": "Ada",
+#   "active": true,
+#   "score": 98
+# }
+# Note: JSON uses lowercase true/false and null (not True/False/None)
 ```
 
-### JSON Handles Structure Natively
+> **Persistence** = writing program state to storage so it survives program restarts.
 
+---
+
+## Python ↔ JSON Type Mapping
+
+| JSON | Python on load | Python before dump |
+| --- | --- | --- |
+| object | `dict` | `dict` |
+| array | `list` | `list` or `tuple` |
+| string | `str` | `str` |
+| number | `int` or `float` | `int` or `float` |
+| true/false | `bool` | `bool` |
+| null | `None` | `None` |
+
+> **Important:** Tuples become lists in JSON and come back as lists after loading.  
+> Custom class objects are **not** JSON-serializable — see `to_dict`/`from_dict`.
+
+---
+
+## json.dump() and json.load()
+
+### Save Python Data to a File
 ```python
 import json
+from pathlib import Path
+
+DATA_PATH = Path("data.json")
 
 contacts = [
-    {"name": "Alice", "phone": "555-1234", "email": "alice@ex.com"},
-    {"name": "Bob",   "phone": "555-5678", "email": "bob@ex.com"},
+    {"id": 1, "name": "Ava", "email": "ava@example.com"},
+    {"id": 2, "name": "Noah", "email": "noah@example.com"},
 ]
 
-# Save
-with open("data.json", "w") as f:
-    json.dump(contacts, f, indent=2)
-
-# Load
-with open("data.json", "r") as f:
-    loaded = json.load(f)
-
-print(loaded[0]["name"])   # Alice
+with DATA_PATH.open("w", encoding="utf-8") as file:
+    json.dump(contacts, file, indent=2)   # indent=2 for readable output
 ```
 
-> 💡 **JSON is the de-facto format for structured data in Python programs.** It is human-readable, widely supported, and maps directly to Python dicts and lists.
-
----
-
-## What JSON Can Store
-
-### Python → JSON Type Mapping
-
-| Python Type | JSON Type | Example |
-|-------------|-----------|---------|
-| `dict` | object `{}` | `{"name": "Alice"}` |
-| `list` | array `[]` | `["a", "b", "c"]` |
-| `str` | string | `"hello"` |
-| `int` / `float` | number | `42`, `3.14` |
-| `True` / `False` | `true` / `false` | `true` |
-| `None` | `null` | `null` |
-| **custom object** | ❌ not directly | convert to `dict` first |
-| `tuple` | array `[]` | becomes a list on load |
-| `set` | ❌ not supported | convert to `list` first |
-
-> ⚠️ **JSON does not know about your custom classes.** You must convert objects to dicts before dumping, and reconstruct objects from dicts after loading.
-
----
-
-## `json.dump` and `json.load`
-
-### Saving to File — `json.dump()`
-
+### Load JSON Data Back Into Python
 ```python
-import json
+with DATA_PATH.open("r", encoding="utf-8") as file:
+    loaded = json.load(file)
 
-data = {
-    "app": "Contact Manager",
-    "version": 1,
-    "contacts": [
-        {"name": "Alice", "phone": "555-1234"},
-        {"name": "Bob",   "phone": "555-5678"},
-    ]
-}
-
-with open("data.json", "w") as f:
-    json.dump(data, f, indent=2)   # indent=2 for human-readable output
+for contact in loaded:
+    print(f'{contact["id"]}: {contact["name"]}')
 ```
-
-### Loading from File — `json.load()`
-
-```python
-import json
-
-with open("data.json", "r") as f:
-    data = json.load(f)
-
-print(data["app"])                 # Contact Manager
-print(data["contacts"][0]["name"]) # Alice
-```
-
-> 💡 **`json.dump(obj, file)`** writes to a file. **`json.dumps(obj)`** returns a string. **`json.load(file)`** reads from a file. **`json.loads(string)`** parses a string.
 
 ---
 
-## `indent` and Pretty-Printing
-
-### Without `indent` — Compact (Hard to Read)
-
-```python
-json.dump(data, f)
-# {"app": "Contact Manager", "version": 1, "contacts": [{"name": "Alice", ...}]}
-```
-
-### With `indent=2` — Readable
-
-```json
-{
-  "app": "Contact Manager",
-  "version": 1,
-  "contacts": [
-    {
-      "name": "Alice",
-      "phone": "555-1234"
-    },
-    {
-      "name": "Bob",
-      "phone": "555-5678"
-    }
-  ]
-}
-```
-
-> 💡 **Always use `indent=2` during development.** It makes the file easy to inspect in a text editor. You can remove it later if file size matters.
-
----
-
-## Converting Objects ↔ Dicts
+## Object Mapping — to_dict / from_dict
 
 ### Why Custom Objects Need Conversion
-
 ```python
 import json
 
-class Contact:
-    def __init__(self, name: str, phone: str) -> None:
-        self.name  = name
-        self.phone = phone
+class Note:
+    pass
 
-c = Contact("Alice", "555-1234")
-json.dumps(c)
-# TypeError: Object of type Contact is not JSON serializable
+note = Note()
+# json.dump(note, file)  # ❌ TypeError: Object of type Note is not JSON serializable
 ```
 
-### Add `to_dict()` and `from_dict()` Class Methods
-
+### Simple Object Mapping Pattern
 ```python
-class Contact:
-    def __init__(self, name: str, phone: str) -> None:
-        self.name  = name
-        self.phone = phone
+from dataclasses import dataclass
+
+@dataclass
+class Note:
+    note_id: int
+    text: str
 
     def to_dict(self) -> dict:
-        """Convert this Contact to a plain dict for JSON serialization."""
-        return {"name": self.name, "phone": self.phone}
+        return {"note_id": self.note_id, "text": self.text}
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Contact":
-        """Reconstruct a Contact from a dict loaded from JSON."""
-        return cls(data["name"], data["phone"])
-```
+    def from_dict(cls, data: dict) -> "Note":
+        return cls(note_id=int(data["note_id"]), text=str(data["text"]))
 
-> 🗒️ **Speaker note:** `@classmethod` is introduced here purely as a label — do not deep-dive into it. It is fine for learners to just add `from_dict` as a regular function outside the class at Basics level.
+note = Note(note_id=1, text="Remember to persist data")
+payload = note.to_dict()          # convert before json.dump
+loaded_note = Note.from_dict(payload)  # rebuild after json.load
+```
 
 ---
 
-## Saving and Loading Objects (Full Pattern)
+## Handling Missing and Corrupt Files
 
-### Save a List of Contact Objects
+### Load with Safety Net
+```python
+import json
+from pathlib import Path
+
+def load_data(path: Path, fallback: dict) -> dict:
+    try:
+        with path.open("r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f"[INFO] {path} not found. Using fallback data.")
+        return fallback
+    except json.JSONDecodeError:
+        print(f"[WARNING] {path} is corrupted JSON. Using fallback data.")
+        return fallback
+```
+
+### App Persistence Workflow
+1. Program starts → try load JSON
+2. If missing or corrupt → use fallback defaults
+3. User makes changes in memory
+4. Program saves updated data to disk
+5. Next run restores those changes
+
+---
+
+## Demo — JSON Persistence Mini App
 
 ```python
 import json
+from pathlib import Path
 
-def save_contacts(contacts: list, filename: str) -> None:
-    data = [c.to_dict() for c in contacts]
-    with open(filename, "w") as f:
+DATA_PATH = Path("data.json")
+FALLBACK = {"next_id": 4, "contacts": [
+    {"id": 1, "name": "Ava", "email": "ava@example.com"},
+]}
+
+def load_data(path, fallback):
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print("[INFO] No file found. Using defaults.")
+        return fallback
+    except json.JSONDecodeError:
+        print("[WARNING] Corrupted JSON. Using defaults.")
+        return fallback
+
+def save_data(path, data):
+    with path.open("w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
-```
 
-### Load and Reconstruct Contact Objects
-
-```python
-def load_contacts(filename: str) -> list:
-    with open(filename, "r") as f:
-        data = json.load(f)
-    return [Contact.from_dict(d) for d in data]
-```
-
-### Usage Pattern in `main()`
-
-```python
-import os
-
-FILENAME = "data.json"
-contacts = []
-
-if os.path.exists(FILENAME):
-    contacts = load_contacts(FILENAME)
-
-# ... run the app ...
-
-save_contacts(contacts, FILENAME)   # save on exit
+data = load_data(DATA_PATH, FALLBACK)
+save_data(DATA_PATH, data)
+print("Saved:", DATA_PATH.resolve())
 ```
 
 ---
 
-## Demo: Dump and Load a Dict — Watch the Live Build
+## Lab — JSON Contacts App
 
-### Watch For:
-- `json.dump()` writes the file; `json.load()` reads it back
-- Python types survive the round-trip intact
-- `indent=2` makes the file readable
+**Time: 25–35 minutes**
 
-```python
-import json, os
-
-# Build data
-data = {
-    "contacts": [
-        {"name": "Alice", "phone": "555-1234"},
-        {"name": "Bob",   "phone": "555-5678"},
-    ],
-    "count": 2
-}
-
-# Save
-with open("data.json", "w") as f:
-    json.dump(data, f, indent=2)
-print("Saved data.json")
-
-# Load back
-with open("data.json", "r") as f:
-    loaded = json.load(f)
-
-print(loaded["count"])                 # 2
-print(loaded["contacts"][0]["name"])   # Alice
-
-# Prove it is real Python after load
-for c in loaded["contacts"]:
-    print(f"  {c['name']} — {c['phone']}")
-```
-
----
-
-## Lab: Save and Load (JSON) — 30 min
-
-### Task
-Add JSON persistence to your contact manager from Hour 41.
-
-**Step 1 — Add `to_dict()` to your `Contact` class:**
-```python
-def to_dict(self) -> dict:
-    return {"name": self.name, "phone": self.phone}
-```
-
-**Step 2 — Add a standalone `from_dict()` function (Basics-friendly):**
-```python
-def contact_from_dict(data: dict) -> Contact:
-    return Contact(data["name"], data["phone"])
-```
-
-**Step 3 — Save and load functions:**
-```python
-def save_contacts(contacts: list, filename: str) -> None:
-    with open(filename, "w") as f:
-        json.dump([c.to_dict() for c in contacts], f, indent=2)
-
-def load_contacts(filename: str) -> list:
-    with open(filename, "r") as f:
-        return [contact_from_dict(d) for d in json.load(f)]
-```
-
----
-
-## Lab: Save and Load (JSON) — continued
-
-### Step 4 — Wire up startup and shutdown:
-
-```python
-import json, os
-
-FILENAME = "data.json"
-contacts = []
-
-if os.path.exists(FILENAME):
-    contacts = load_contacts(FILENAME)
-    print(f"Loaded {len(contacts)} contacts from {FILENAME}")
-
-# ... menu loop (add / list / quit) ...
-
-save_contacts(contacts, FILENAME)
-print("Changes saved.")
-```
+### Tasks
+1. Run the `contacts_json_app.py` scaffold and list contacts
+2. Add a new contact and save — re-run to confirm persistence
+3. Delete `data.json` and re-run — app must NOT crash (uses fallback)
+4. Manually break `data.json` syntax and re-run — app must NOT crash
 
 ### Completion Criteria
-- [ ] Program saves `data.json` after any change
-- [ ] Program reloads contacts correctly on the next run
-- [ ] Program does not crash if `data.json` is missing (use `os.path.exists()`)
-- [ ] Open `data.json` in a text editor and verify it is valid, readable JSON
+✓ Data persists across multiple runs  
+✓ Missing file handled — no crash, fallback data used  
+✓ Corrupt JSON handled — no crash, fallback data used  
+✓ Changes saved correctly after edits
 
 ---
 
-## Common Pitfalls — Hour 42
+## Common Pitfalls + Quick Check (Hour 42)
 
-### Pitfall 1: `JSONDecodeError` From an Empty or Corrupt File
+### Common Pitfalls
+⚠️ **Dumping custom object directly** — `TypeError: not JSON serializable`  
+→ Convert to `dict` first with `to_dict()`
 
-```python
-# Bug: file exists but is empty (e.g., write failed mid-way)
-with open("data.json", "r") as f:
-    data = json.load(f)   # json.JSONDecodeError: Expecting value: line 1 col 1
+⚠️ **Crashing when file missing** — no `FileNotFoundError` guard on first run  
+→ Wrap `json.load()` in `try/except FileNotFoundError`
 
-# Fix (Hour 44 gives the full pattern): check file size or use try/except
-import os
+⚠️ **Forgetting to save after changes** — data disappears on next run  
+→ Call `save_data()` before exit
 
-if os.path.exists("data.json") and os.path.getsize("data.json") > 0:
-    with open("data.json", "r") as f:
-        data = json.load(f)
-else:
-    data = []
-```
+⚠️ **JSON booleans** — Python `True` writes as JSON `true`; `None` writes as `null`  
+→ Conversion is automatic — no action needed
 
-### Pitfall 2: Trying to Dump a Custom Object Directly
-
-```python
-c = Contact("Alice", "555-1234")
-
-json.dumps(c)
-# TypeError: Object of type Contact is not JSON serializable
-
-# Fix: convert to dict first
-json.dumps(c.to_dict())   # works
-```
+### Quick Check
+**Why can't `json.dump()` write a custom object directly?**  
+JSON supports only basic language-neutral types. A Python class instance has no mapping in JSON — convert it to a `dict` first using `to_dict()`.
 
 ---
 
-## Common Pitfalls — Hour 42 (continued)
-
-### Pitfall 3: `tuple` Becomes `list` After JSON Round-Trip
-
-```python
-import json
-
-original = (1, 2, 3)
-encoded  = json.dumps(original)   # "[1, 2, 3]"
-decoded  = json.loads(encoded)    # [1, 2, 3]  ← list, not tuple!
-
-print(type(original))   # <class 'tuple'>
-print(type(decoded))    # <class 'list'>
-```
-
-> ⚠️ **JSON has no tuple type.** Tuples are encoded as JSON arrays and come back as Python lists. If your code checks `isinstance(x, tuple)` after a load, it will break.
-
-### Pitfall 4: `set` Cannot Be Serialized
-
-```python
-import json
-
-tags = {"python", "beginner", "exercises"}
-json.dumps(tags)
-# TypeError: Object of type set is not JSON serializable
-
-# Fix: convert to a list before dumping
-json.dumps(list(tags))   # works
-```
-
----
-
-## Quick Check — Hour 42
-
-**Exit Ticket Question:** Why can't `json.dump()` write a custom object unless you convert it first?
-
-**Model Answer:** "The `json` module only knows how to serialize a fixed set of built-in Python types: `dict`, `list`, `str`, `int`, `float`, `bool`, and `None`. It has no idea what your custom class (`Contact`, `Task`, etc.) is or which attributes are meaningful to save. You must explicitly convert the object to one of those supported types — typically a `dict` — before passing it to `json.dump()`. The reverse is also true: `json.load()` only produces plain Python dicts and lists, so you need a reconstruction step (like `from_dict()`) to turn the loaded data back into your custom objects."
-
----
-
-# Hour 43: Directories + Paths (pathlib Preferred)
+# Hour 43: Directories and Paths with pathlib
 
 ## Learning Outcomes
-- Use `pathlib.Path` to build portable file paths
+- Build reliable file paths using `pathlib.Path`
 - Create a `data/` directory safely with `mkdir(exist_ok=True)`
-- List directory contents using `iterdir()` and `glob()`
-- Understand the difference between relative and absolute paths
-
----
-
-## Why `pathlib`?
-
-### The Old Way — String Concatenation Is Fragile
-
-```python
-import os
-
-# Different path separators on Windows vs Unix:
-path = "data" + "/" + "contacts.json"   # error-prone and hard to read
-path = os.path.join("data", "contacts.json")   # better, but verbose
-
-# Does this file exist?
-if os.path.exists(os.path.join("data", "contacts.json")):
-    ...
-```
-
-### The `pathlib` Way — Clean and Portable
-
-```python
-from pathlib import Path
-
-path = Path("data") / "contacts.json"   # "/" operator builds paths
-print(path)           # data/contacts.json  (correct separator on all OS)
-print(path.exists())  # True or False
-print(path.name)      # contacts.json
-print(path.stem)      # contacts
-print(path.suffix)    # .json
-print(path.parent)    # data
-```
-
-> 💡 **`pathlib` replaces most uses of `os.path`.** It is the modern, idiomatic way to work with file paths in Python 3.
-
----
-
-## Path Anatomy
-
-### Exploring a `Path` Object
-
-```python
-from pathlib import Path
-
-p = Path("/home/user/project/data/contacts.json")
-
-print(p.name)      # contacts.json     — filename with extension
-print(p.stem)      # contacts          — filename without extension
-print(p.suffix)    # .json             — just the extension
-print(p.parent)    # /home/user/project/data  — the containing folder
-print(p.parts)     # ('/', 'home', 'user', 'project', 'data', 'contacts.json')
-
-# Check properties
-print(p.is_file())    # True if a file exists at this path
-print(p.is_dir())     # True if it is a directory
-print(p.exists())     # True if either a file or dir exists here
-```
-
-### Building Paths With `/`
-
-```python
-from pathlib import Path
-
-base = Path("data")
-json_file = base / "contacts.json"    # data/contacts.json
-backup     = base / "backup" / "v1" / "contacts.json"
-# data/backup/v1/contacts.json — nested paths, no string concatenation
-```
+- List directory contents with `iterdir()` and find files with `glob()`
+- Choose a file deterministically from discovered results
+- Explain why project-relative paths beat hardcoded personal paths
 
 ---
 
 ## Relative vs Absolute Paths
 
-### The Difference
+### Absolute Path — Full Location from Drive Root
+```python
+# Windows absolute path (machine-specific — fragile!)
+path = "C:/Users/Ava/Downloads/data.json"
 
+# macOS/Linux absolute path (also machine-specific)
+path = "/Users/ava/Downloads/data.json"
+```
+
+### Relative Path — Relative to a Base Location
 ```python
 from pathlib import Path
 
-# Relative — interpreted from the current working directory (CWD)
-rel = Path("data") / "contacts.json"
-print(rel)            # data/contacts.json
-print(rel.is_absolute())  # False
-
-# Absolute — the full path from the root of the filesystem
-abs_ = Path("/home/user/project/data/contacts.json")
-print(abs_.is_absolute())  # True
-
-# Convert relative → absolute (resolves against CWD)
-print(rel.resolve())  # /home/user/project/data/contacts.json
+# Relative to current working directory
+path = Path("data/data.json")
 ```
 
-### Why Relative Paths Can Surprise You
-
-```python
-# You always cd to /home/user/project before running → works fine
-# A different user runs from /tmp → "data/contacts.json" is /tmp/data/contacts.json
-# CI pipeline runs from /app → completely different location
-
-# Solution: anchor paths to the script's own directory
-SCRIPT_DIR = Path(__file__).parent     # wherever this .py file lives
-DATA_DIR   = SCRIPT_DIR / "data"       # data/ next to the script
-```
-
-> 💡 **`Path(__file__).parent`** gives you the directory your script is in — not wherever someone runs it from. This is the safest anchor for project files.
+> **Problem:** If you share hardcoded absolute paths, they break on every other machine.  
+> **Rule:** Build paths from a stable project/script-relative base.
 
 ---
 
-## Creating Directories Safely
+## Why CWD-Dependent Code Fails
 
-### `mkdir()` — Create a Directory
+### The Common Beginner Pattern
+```python
+# This works sometimes — fails other times
+with open("data.json") as file:
+    ...
+```
 
+### Why It Breaks
+- `"data.json"` is relative to **Current Working Directory (CWD)**
+- CWD is wherever the terminal was launched — not necessarily the script's folder
+- Script in `project/app.py`, terminal started in parent folder → **FileNotFoundError**
+
+### Print CWD to Diagnose (not to depend on)
 ```python
 from pathlib import Path
 
-data_dir = Path("data")
-
-# Safe creation — no error if it already exists
-data_dir.mkdir(exist_ok=True)
-
-# Create nested dirs in one call
-nested = Path("data") / "exports" / "2024"
-nested.mkdir(parents=True, exist_ok=True)
+print(f"Current working directory: {Path.cwd()}")
+# Use for debugging — NOT as the anchor for your file paths
 ```
-
-### What Happens Without `exist_ok`?
-
-```python
-from pathlib import Path
-
-data_dir = Path("data")
-data_dir.mkdir()       # works the first time
-
-data_dir.mkdir()       # FileExistsError — crashes on the second run!
-
-# Always use exist_ok=True for application data directories
-data_dir.mkdir(exist_ok=True)   # safe to call every time
-```
-
-> 💡 **`mkdir(exist_ok=True)` is the standard idiom.** Call it at application startup to ensure your data directory always exists.
 
 ---
 
-## Opening Files With `pathlib`
+## Project-Relative Base Path
 
-### `Path` Objects Work Directly With `open()`
-
+### Anchor Paths to the Script Location
 ```python
 from pathlib import Path
-import json
 
-DATA_DIR  = Path(__file__).parent / "data"
+BASE_DIR = Path(__file__).resolve().parent   # folder containing this script
+DATA_DIR = BASE_DIR / "data"                 # project/data/
+```
+
+### Why This Is Reliable
+- `__file__` is this script's path
+- `resolve()` gives absolute, normalized location
+- `.parent` gives the containing folder
+- Works regardless of which folder the terminal started in
+
+### Build All Paths from BASE_DIR
+```python
+settings_file = DATA_DIR / "settings.json"
+log_file      = DATA_DIR / "errors.txt"
+# Never use personal paths like Desktop or Downloads in shared code
+```
+
+---
+
+## Create a Folder Safely
+
+### mkdir with exist_ok=True
+```python
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+
 DATA_DIR.mkdir(exist_ok=True)
-
-json_file = DATA_DIR / "contacts.json"
-
-# Write
-with open(json_file, "w") as f:
-    json.dump({"contacts": []}, f, indent=2)
-
-# Read
-with open(json_file, "r") as f:
-    data = json.load(f)
-
-print(data)   # {'contacts': []}
+# exist_ok=True: create if missing, do nothing if already exists
+# Scripts can be run multiple times without crashing
 ```
 
-### Or Use `Path.write_text()` / `Path.read_text()` (For Short Files)
-
+### Print Location and Verify
 ```python
-from pathlib import Path
-
-p = Path("notes.txt")
-p.write_text("Hello, file!\n")   # creates or overwrites
-content = p.read_text()
-print(content)   # Hello, file!
+print(f"Script base: {BASE_DIR}")
+print(f"Data folder: {DATA_DIR}")
+print(f"Folder exists? {DATA_DIR.exists()}")
 ```
+
+> Always use `exist_ok=True` to make your scripts **rerunnable** without errors.
 
 ---
 
-## Listing Directory Contents
+## Directory Discovery — iterdir() and glob()
 
-### `iterdir()` — All Entries in a Directory
-
+### List Everything in a Folder
 ```python
-from pathlib import Path
-
-data_dir = Path("data")
-
-print("Files in data/:")
-for entry in data_dir.iterdir():
-    print(f"  {entry.name}")   # contacts.json, backup.json, ...
+# All items — sorted for deterministic order
+all_items = sorted(DATA_DIR.iterdir(), key=lambda p: p.name.lower())
+for item in all_items:
+    kind = "DIR " if item.is_dir() else "FILE"
+    print(f"[{kind}] {item.name}")
 ```
 
-### `glob()` — Filter by Pattern
-
+### Find Files by Pattern with glob()
 ```python
-from pathlib import Path
+# Only JSON files — sorted for deterministic order
+json_files = sorted(DATA_DIR.glob("*.json"), key=lambda p: p.name.lower())
 
-data_dir = Path("data")
-
-# All JSON files directly inside data/
-json_files = list(data_dir.glob("*.json"))
-print(json_files)   # [PosixPath('data/contacts.json'), ...]
-
-# All JSON files in data/ and all subdirectories (recursive)
-all_json = list(data_dir.glob("**/*.json"))
-```
-
-### Select the First Match Safely
-
-```python
-json_files = sorted(data_dir.glob("*.json"))
-if json_files:
-    with open(json_files[0], "r") as f:
-        data = json.load(f)
+if not json_files:
+    print("No save files found.")
 else:
-    print("No JSON files found in data/")
-    data = []
+    chosen = json_files[0]   # deterministic: always first in sorted order
+    print(f"Chosen file: {chosen}")
 ```
+
+> **Always sort glob results** — file system iteration order is not guaranteed.
 
 ---
 
-## Demo: Create `data/` and List Contents
-
-### Watch For:
-- `mkdir(exist_ok=True)` called safely every run
-- `Path(__file__).parent` anchors to the script location
-- `iterdir()` lists what is in the folder
+## Demo — Create Folder, Save JSON, Discover Files
 
 ```python
-from pathlib import Path
 import json
-
-# Build paths anchored to the script
-SCRIPT_DIR = Path(__file__).parent
-DATA_DIR   = SCRIPT_DIR / "data"
-DATA_DIR.mkdir(exist_ok=True)
-
-# Write two sample files
-for i in range(1, 3):
-    p = DATA_DIR / f"sample_{i}.json"
-    with open(p, "w") as f:
-        json.dump({"id": i, "label": f"Sample {i}"}, f)
-
-# List the folder
-print(f"Contents of {DATA_DIR}:")
-for entry in DATA_DIR.iterdir():
-    print(f"  {entry.name}")
-
-# Find only JSON files
-json_files = sorted(DATA_DIR.glob("*.json"))
-print(f"\nFound {len(json_files)} JSON file(s):")
-for jf in json_files:
-    print(f"  {jf.name}")
-```
-
-> 🗒️ **Speaker note:** Run this twice to prove `mkdir(exist_ok=True)` does not crash on the second run.
-
----
-
-## Lab: Data Folder — 30 min
-
-### Task
-Refactor your contact manager to store `data.json` in a `data/` subdirectory, using pathlib throughout.
-
-**Step 1 — Update paths:**
-```python
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).parent
-DATA_DIR   = SCRIPT_DIR / "data"
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
-CONTACTS_FILE = DATA_DIR / "contacts.json"
-```
+# Save a JSON file
+payload = {"student": "demo_user", "score": 100}
+demo_file = DATA_DIR / "save1.json"
+with demo_file.open("w", encoding="utf-8") as f:
+    json.dump(payload, f, indent=2)
 
-**Step 2 — Update `save_contacts` and `load_contacts`:**
-```python
-def save_contacts(contacts: list) -> None:
-    with open(CONTACTS_FILE, "w") as f:
-        json.dump([c.to_dict() for c in contacts], f, indent=2)
+# Discover files
+json_files = sorted(DATA_DIR.glob("*.json"), key=lambda p: p.name.lower())
+print("JSON files found:")
+for path in json_files:
+    print(f"- {path.name}")
 
-def load_contacts() -> list:
-    if not CONTACTS_FILE.exists():   # pathlib replaces os.path.exists
-        return []
-    with open(CONTACTS_FILE, "r") as f:
-        return [contact_from_dict(d) for d in json.load(f)]
+chosen = json_files[0] if json_files else None
+print(f"Chosen: {chosen}")
 ```
 
 ---
 
-## Lab: Data Folder — continued
+## Lab — Data Folder and Deterministic Discovery
 
-### Step 3 — List all files in `data/` on startup:
+**Time: 25–35 minutes**
 
-```python
-contacts = load_contacts()
-print(f"Loaded {len(contacts)} contacts.")
-
-print("Data folder contents:")
-for entry in DATA_DIR.iterdir():
-    print(f"  {entry.name}")
-```
-
-### Step 4 — Run from a different directory and verify it still works:
-
-```bash
-# From your home directory
-python /full/path/to/project/main.py
-```
+### Tasks
+1. Use `Path(__file__).resolve().parent` as `BASE_DIR`
+2. Create `BASE_DIR / "data"` with `mkdir(exist_ok=True)`
+3. Save JSON to `data/data.json`
+4. Print all file names in `data/` using `iterdir()`
+5. Find all `.json` files with `glob("*.json")` — sort results
+6. If JSON files exist, print chosen path (first sorted); if none, print a no-files message
+7. Re-run the script — confirm no crash (folder already exists)
 
 ### Completion Criteria
-- [ ] `data/` folder is created automatically on first run
-- [ ] `contacts.json` is written inside `data/`
-- [ ] Program still works when run from a different working directory
-- [ ] Startup prints the list of files in `data/`
+✓ Paths built from script/project root — no hardcoded personal folders  
+✓ Folder created safely with `exist_ok=True`  
+✓ JSON files discovered with `glob()` and results sorted  
+✓ Deterministic file selection — consistent on every run
 
 ---
 
-## Common Pitfalls — Hour 43
+## Common Pitfalls + Quick Check (Hour 43)
 
-### Pitfall 1: Hard-Coded Absolute Paths
+### Common Pitfalls
+⚠️ **Hardcoded absolute paths** — `Path("C:/Users/Ava/Desktop/data")` breaks on all other machines  
+→ Use `Path(__file__).resolve().parent` as base
 
-```python
-# Bug: only works on one specific machine
-DATA_DIR = Path("/home/alice/project/data")
+⚠️ **Using CWD as final path anchor** — `Path.cwd() / "data"` breaks when terminal starts elsewhere  
+→ Use CWD for debugging only; anchor paths to the script
 
-# Fix: anchor to the script's own location
-DATA_DIR = Path(__file__).parent / "data"
-```
+⚠️ **Forgetting `exist_ok=True`** — `mkdir()` crashes if folder already exists  
+→ Always write `mkdir(exist_ok=True)` for rerunnable scripts
 
-### Pitfall 2: Forgetting `exist_ok=True`
+⚠️ **Assuming glob() order** — unsorted results differ across machines  
+→ Wrap in `sorted(... key=lambda p: p.name.lower())`
 
-```python
-# Bug: crashes on the second run
-DATA_DIR = Path("data")
-DATA_DIR.mkdir()   # FileExistsError!
-
-# Fix
-DATA_DIR.mkdir(exist_ok=True)   # safe every time
-```
-
-### Pitfall 3: Running From a Different Working Directory
-
-```python
-# main.py is in /home/user/project/
-# Run from: cd /tmp && python /home/user/project/main.py
-# Path("data") resolves to /tmp/data — not where you expect!
-
-# Fix: use Path(__file__).parent to anchor to the script location
-SCRIPT_DIR = Path(__file__).parent
-DATA_DIR   = SCRIPT_DIR / "data"
-```
+### Quick Check
+**What is the difference between knowing CWD and depending on CWD?**  
+CWD tells you the runtime context (useful for debugging). Depending on CWD means your paths only work when the terminal starts from the expected folder. Reliable code uses a stable project-relative anchor (`__file__`), not CWD.
 
 ---
 
-## Common Pitfalls — Hour 43 (continued)
-
-### Pitfall 4: Using String Concatenation for Paths
-
-```python
-# Bug: breaks on Windows (backslash separator)
-path = "data" + "/" + "contacts.json"   # hard-coded "/" is wrong on Windows
-
-# Also fragile — easy to miss a slash or double up
-path = "data" + "contacts.json"   # wrong — missing separator
-
-# Fix: use Path and the "/" operator
-from pathlib import Path
-path = Path("data") / "contacts.json"   # always correct
-```
-
-### Pitfall 5: `iterdir()` Returns `Path` Objects, Not Strings
-
-```python
-from pathlib import Path
-
-for entry in Path("data").iterdir():
-    print(entry)           # PosixPath('data/contacts.json')
-    print(entry.name)      # contacts.json   ← the string filename
-    print(str(entry))      # data/contacts.json ← full path as string
-```
-
-> 💡 **Use `.name` for just the filename, `str(path)` for a plain string path.**
-
----
-
-## Quick Check — Hour 43
-
-**Exit Ticket Question:** What is the difference between a relative and absolute path?
-
-**Model Answer:** "A **relative path** is interpreted relative to the **current working directory (CWD)** — the folder from which the Python script is run. For example, `Path('data/contacts.json')` means 'look for a `data` folder inside wherever I am right now.' An **absolute path** starts from the root of the filesystem (e.g., `/home/user/project/data/contacts.json` on Unix, or `C:\\Users\\user\\project\\data\\contacts.json` on Windows) and means exactly one location, regardless of the CWD. The practical implication is that relative paths can break when a script is run from different directories, while absolute paths always resolve to the same file — though hard-coded absolute paths break on other machines. The best practice for application data is `Path(__file__).parent / 'data'`, which is relative to the script itself rather than to wherever the user runs it from."
-
----
-
-# Hour 44: Exception Handling (Full Basics Treatment)
+# Hour 44: Exception Handling
 
 ## Learning Outcomes
-- Use `try/except` to catch and handle runtime errors
-- Distinguish `try/except/else/finally` clauses
-- Catch specific exceptions: `ValueError`, `FileNotFoundError`, `json.JSONDecodeError`
-- Understand why catching broadly (`except Exception`) is discouraged
+- Use `try/except` to handle runtime errors without crashing
+- Catch specific exceptions — `ValueError`, `FileNotFoundError`, `json.JSONDecodeError`
+- Apply `try/except/else/finally` for clean control flow
+- Display friendly error messages and continue program execution
+- Explain why specific catches are better than catch-all `except Exception`
 
 ---
 
-## Why Programs Crash
+## Exceptions vs Syntax Errors
 
-### Runtime Errors Are Inevitable
-
+### Syntax Error — Python Cannot Parse the Code
 ```python
-# User types "abc" when we asked for a number
-age = int(input("Enter your age: "))
-# ValueError: invalid literal for int() with base 10: 'abc'
-# → program crashes, all unsaved data lost
-
-# File is missing
-with open("data.json", "r") as f:
-    data = json.load(f)
-# FileNotFoundError: [Errno 2] No such file or directory: 'data.json'
-# → crash on first run before any data exists
+# ❌ Syntax error — program never starts
+print("hello"   # missing closing parenthesis
 ```
+→ Fix syntax errors in your code — `try/except` cannot catch them.
 
-### Exceptions Are Not Bugs — They Are Signals
-
+### Runtime Exception — Fails During Valid Execution
 ```python
-# An exception signals: "something went wrong — what should we do?"
-# If we don't handle it → program crashes with a traceback
-# If we handle it → we can show a friendly message and keep running
+# ✓ Valid syntax — but fails at runtime when input is wrong
+user_text = input("Enter a number: ")
+count = int(user_text)   # raises ValueError if input is "five"
 ```
+→ These are what `try/except` is designed to handle.
 
-> 💡 **Exception handling is not about hiding errors.** It is about deciding what your program should do when something goes wrong — and communicating that clearly to the user.
+> **Key distinction:** Syntax errors are broken keys. Runtime exceptions are blocked doors.
 
 ---
 
-## `try` / `except` — The Basic Pattern
+## try/except — The Control Pattern
 
-### Syntax
-
+### Minimal Pattern
 ```python
+user_text = input("Enter a whole number: ")
+
 try:
-    # code that might raise an exception
-    value = int(input("Enter a number: "))
+    count = int(user_text)
 except ValueError:
-    # runs only if a ValueError was raised inside the try block
-    print("That is not a valid number. Please enter digits only.")
-```
-
-### What Happens Step by Step
-
-```python
-try:
-    value = int("abc")    # raises ValueError
-    print("After error")  # SKIPPED — never reached
-except ValueError:
-    print("Caught it!")   # runs instead
-print("After the block")  # always runs — we recovered
-```
-
-### Output
-```
-Caught it!
-After the block
-```
-
-> 💡 **When an exception is raised inside `try`, Python immediately jumps to the matching `except` block.** Any code after the error in `try` is skipped.
-
----
-
-## Catching Specific Exceptions
-
-### Why Specific Is Better Than Broad
-
-```python
-# Broad (discouraged at Basics level)
-try:
-    value = int(input("Enter a number: "))
-except Exception:
-    print("Something went wrong.")   # catches EVERYTHING — hides real bugs
-
-# Specific (correct pattern)
-try:
-    value = int(input("Enter a number: "))
-except ValueError:
-    print("Please enter a whole number.")   # only catches bad conversion
-```
-
-### Multiple `except` Clauses
-
-```python
-try:
-    with open("data.json", "r") as f:
-        data = json.load(f)
-except FileNotFoundError:
-    print("data.json not found — starting with empty data.")
-    data = []
-except json.JSONDecodeError:
-    print("data.json is corrupted — starting with empty data.")
-    data = []
-```
-
-> ⚠️ **Catch only the exceptions you expect and know how to handle.** Catching `Exception` broadly can mask bugs you haven't seen yet.
-
----
-
-## `try / except / else / finally`
-
-### Full Structure
-
-```python
-try:
-    result = int(input("Enter a number: "))
-except ValueError:
-    print("Not a valid number.")
-    result = None
+    print("Please enter digits only, such as 12.")
 else:
-    # runs ONLY if no exception was raised in try
-    print(f"You entered: {result}")
-finally:
-    # ALWAYS runs — exception or not
-    print("Input processing complete.")
+    print(f"Thanks. You entered {count}.")
 ```
 
-### When to Use Each Clause
-
-| Clause | When It Runs | Typical Use |
-|--------|-------------|-------------|
-| `try` | Always — contains the risky code | The operation that might fail |
-| `except` | Only when the named exception is raised | Error recovery / friendly message |
-| `else` | Only when `try` succeeds (no exception) | Code that should run only on success |
-| `finally` | Always — exception or not | Cleanup (closing resources, logging) |
-
-> 💡 **`else` is for "this only makes sense if the try worked."** `finally` is for "this must happen regardless."
+### The Four-Step Mental Model
+1. Put **risky code** in `try`
+2. Put **recovery code** in `except` — keep the exception type specific
+3. Use `else` for code that runs **only on success**
+4. Continue the program where reasonable — do not stop everything
 
 ---
 
-## Common Exceptions to Know
+## Why Specific Exceptions Matter
 
-### The Basics Toolbox
-
-| Exception | When It Occurs | Example |
-|-----------|---------------|---------|
-| `ValueError` | Conversion fails | `int("abc")` |
-| `TypeError` | Wrong type for operation | `"a" + 1` |
-| `IndexError` | List index out of range | `lst[99]` on a 3-item list |
-| `KeyError` | Dict key not found | `d["missing"]` |
-| `FileNotFoundError` | File not found on open | `open("nope.txt")` |
-| `json.JSONDecodeError` | Invalid JSON in file | `json.load(f)` on corrupt file |
-| `ZeroDivisionError` | Division by zero | `10 / 0` |
-
+### Specific Catch — Documents Intent, Preserves Visibility
 ```python
-# All of these can be caught with specific except clauses:
 try:
-    value = int(user_input)
+    value = int("abc")
 except ValueError:
-    print("Enter a number, not text.")
+    print("Not a valid integer.")
+# Any other exception (NameError, TypeError...) is still visible for debugging
+```
+
+### Broad Catch-All — Hides Bugs
+```python
+try:
+    value = int("abc")
+except Exception:
+    print("Something went wrong.")
+# ❌ Masks unrelated bugs — avoid in this course
+```
+
+> **Rule:** Catch expected errors. Expose unexpected errors.  
+> Never use `except Exception` everywhere, and never use bare `except:` with no message.
+
+---
+
+## try/except/else/finally
+
+### All Four Blocks Together
+```python
+from pathlib import Path
+
+target = Path("data/class_settings_valid.json")
+
+try:
+    text = target.read_text(encoding="utf-8")
+except FileNotFoundError:
+    print(f"Could not find file: {target}")
+else:
+    print(f"Loaded {len(text)} characters.")   # only on success
+finally:
+    print("Load attempt finished.")            # always runs
+```
+
+### Block Execution Summary
+| Scenario | `except` | `else` | `finally` |
+| --- | --- | --- | --- |
+| Success | skipped | runs | runs |
+| `FileNotFoundError` | runs | skipped | runs |
+| Other error | skipped (re-raised) | skipped | runs |
+
+---
+
+## Core Expected Exceptions
+
+### ValueError — Wrong Value Shape for Conversion
+```python
+try:
+    count = int(input("Enter quantity: ").strip())
+except ValueError:
+    print("Friendly error: please type digits only, such as 12.")
+```
+
+### FileNotFoundError — Target File Does Not Exist
+```python
+try:
+    with path.open("r", encoding="utf-8") as handle:
+        settings = json.load(handle)
+except FileNotFoundError:
+    print("Settings file not found. Continuing with defaults.")
+    settings = DEFAULT_SETTINGS.copy()
+```
+
+### json.JSONDecodeError — File Exists but JSON is Invalid
+```python
+except json.JSONDecodeError:
+    print("Settings file has invalid JSON. Continuing with defaults.")
+    settings = DEFAULT_SETTINGS.copy()
 ```
 
 ---
 
-## Wrapping Numeric Input
-
-### Robust Input Loop Pattern
+## Demo — Hardened CLI Tool
 
 ```python
-def get_int(prompt: str) -> int:
-    """Keep asking until the user enters a valid integer."""
+import json
+from pathlib import Path
+
+def prompt_positive_int(prompt: str) -> int:
     while True:
         raw = input(prompt).strip()
         try:
-            return int(raw)
+            number = int(raw)
         except ValueError:
-            print(f"  '{raw}' is not a whole number — please try again.")
+            print("Friendly error: please type digits only, such as 3 or 15.")
+            continue
+        if number <= 0:
+            print("Friendly reminder: the number must be greater than zero.")
+            continue
+        return number
 
-# Usage
-age = get_int("Enter your age: ")
-print(f"Age: {age}")
-```
-
-### Example Interaction
-```
-Enter your age: abc
-  'abc' is not a whole number — please try again.
-Enter your age: 3.5
-  '3.5' is not a whole number — please try again.
-Enter your age: 25
-Age: 25
-```
-
-> 💡 **Wrapping `int()` in a helper function keeps your menu loop clean.** Put the retry logic once in `get_int()`, not scattered throughout your code.
-
----
-
-## Wrapping File / JSON Load
-
-### Safe Load Pattern
-
-```python
-import json
-from pathlib import Path
-
-def load_contacts(filepath: Path) -> list:
-    """Load contacts from JSON, returning [] on any file/parse error."""
+def load_settings(file_path: Path) -> dict:
     try:
-        with open(filepath, "r") as f:
-            data = json.load(f)
-        return [contact_from_dict(d) for d in data]
+        with file_path.open("r", encoding="utf-8") as handle:
+            settings = json.load(handle)
     except FileNotFoundError:
-        print(f"No save file found at {filepath} — starting fresh.")
-        return []
+        print("Settings file not found. Using defaults.")
+        return {}
     except json.JSONDecodeError:
-        print(f"{filepath} appears corrupted — starting fresh.")
-        return []
-```
-
-### Why `else` Can Help Here
-
-```python
-def load_contacts(filepath: Path) -> list:
-    try:
-        with open(filepath, "r") as f:
-            raw = json.load(f)
-    except FileNotFoundError:
-        return []
-    except json.JSONDecodeError:
-        print("Warning: save file is corrupted. Starting fresh.")
-        return []
+        print("Settings file has invalid JSON. Using defaults.")
+        return {}
     else:
-        # only runs if json.load() succeeded
-        return [contact_from_dict(d) for d in raw]
+        print("Settings loaded successfully.")
+        return settings
+    finally:
+        print("Load attempt completed.")
 ```
 
 ---
 
-## Demo: Harden the Contact Manager
+## Lab — Harden Your Program
 
-### Watch For:
-- Each `except` catches a specific, named exception
-- Friendly messages shown to the user
-- Program continues after errors — no crash
+**Time: 25–35 minutes**
 
+### Starting Point — Two Fragile Operations
 ```python
-import json
-from pathlib import Path
+# Fragile: crashes on bad input or missing file
+raw_count = input("How many students? ")
+student_count = int(raw_count)           # crashes if "ten"
 
-CONTACTS_FILE = Path(__file__).parent / "data" / "contacts.json"
-
-def safe_load(filepath: Path) -> list:
-    try:
-        with open(filepath, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print("No existing data — starting fresh.")
-        return []
-    except json.JSONDecodeError:
-        print("Data file corrupted — starting fresh.")
-        return []
-
-def get_int(prompt: str) -> int:
-    while True:
-        try:
-            return int(input(prompt))
-        except ValueError:
-            print("  Please enter a whole number.")
-
-# Demo run
-contacts = safe_load(CONTACTS_FILE)
-print(f"Loaded {len(contacts)} item(s).")
-
-n = get_int("How many items to add? ")
-print(f"Adding {n} item(s).")
+with path.open("r") as handle:
+    settings = json.load(handle)         # crashes if missing or corrupt
 ```
 
-> 🗒️ **Speaker note:** Delete `contacts.json` mid-demo and re-run to show the `FileNotFoundError` path.
-
----
-
-## Lab: Harden Your Program — 30 min
-
-### Task
-Add exception handling to your contact manager so it never crashes on bad input or missing files.
-
-**Step 1 — Wrap `load_contacts()` with `try/except`:**
-```python
-def load_contacts(filepath: Path) -> list:
-    try:
-        with open(filepath, "r") as f:
-            data = json.load(f)
-        return [contact_from_dict(d) for d in data]
-    except FileNotFoundError:
-        return []          # first run — no file yet
-    except json.JSONDecodeError:
-        print("Warning: data file is corrupted. Starting with empty list.")
-        return []
-```
-
-**Step 2 — Add a `get_int()` helper:**
-```python
-def get_int(prompt: str) -> int:
-    while True:
-        try:
-            return int(input(prompt).strip())
-        except ValueError:
-            print("  Please enter a whole number.")
-```
-
----
-
-## Lab: Harden Your Program — continued
-
-### Step 3 — Replace bare `int()` calls in your menu with `get_int()`:
-
-```python
-# Before (crashes on bad input)
-choice = int(input("Choose option: "))
-
-# After (safe)
-choice = get_int("Choose option: ")
-```
-
-### Step 4 — Test your hardening:
-
-```bash
-# Test 1: delete data.json — should start fresh without crashing
-# Test 2: corrupt data.json (write "not json" in it) — should show warning
-# Test 3: type "abc" at any numeric prompt — should show friendly message
-```
+### Required Tasks
+1. Wrap `int()` conversion in `try/except ValueError` — re-prompt on failure
+2. Wrap `float()` conversion in `try/except ValueError` — re-prompt on failure
+3. Wrap `json.load()` in `try/except FileNotFoundError` and `json.JSONDecodeError`
+4. On any error, show a friendly message and continue — do not crash
+5. Verify all three test cases: bad input recovery, missing file, corrupt file
 
 ### Completion Criteria
-- [ ] Program does not crash when `data.json` is missing
-- [ ] Program handles corrupt JSON with a friendly message
-- [ ] All `int()` conversions are wrapped in `get_int()` or try/except
-- [ ] No bare `except:` or `except Exception:` in the code
-- [ ] Program continues running after any handled error
+✓ Program continues after bad numeric input (friendly re-prompt)  
+✓ Missing JSON handled — fallback used, no crash  
+✓ Corrupt JSON handled — fallback used, no crash  
+✓ No bare `except:` and no silent `pass`
 
 ---
 
-## Common Pitfalls — Hour 44
+## Common Pitfalls + Quick Check (Hour 44)
 
-### Pitfall 1: Catching `Exception` Too Broadly
+### Common Pitfalls
+⚠️ **Giant catch-all block** — `except Exception` wrapping entire program  
+→ Narrow your `try` block to one risky operation; catch only expected exception
 
-```python
-# Bug: catches EVERYTHING — including bugs you haven't fixed yet
-try:
-    result = risky_operation()
-except Exception:
-    print("Something went wrong.")   # which thing? we'll never know
+⚠️ **Silent swallow with `pass`** — user sees nothing, error is hidden  
+→ Always print a clear, actionable message in the `except` block
 
-# Fix: catch only what you expect
-try:
-    result = int(user_input)
-except ValueError:
-    print("Please enter a number.")
-```
+⚠️ **Confusing validation with exceptions** — `if number <= 0` is not an exception  
+→ Use `try/except` for conversion failures; use `if` for business rule checks
 
-### Pitfall 2: Swallowing Errors Without a Message
+⚠️ **Forgetting `return` in error branch** — function returns `None`, fails downstream  
+→ Every `except` branch that handles and continues must return a known fallback value
 
-```python
-# Bug: silent failure — user has no idea what happened
-try:
-    data = json.load(f)
-except json.JSONDecodeError:
-    pass   # the error is completely hidden
-
-# Fix: always tell the user (or log the error)
-try:
-    data = json.load(f)
-except json.JSONDecodeError:
-    print("Warning: could not read save file — starting fresh.")
-    data = []
-```
+### Quick Check
+**Why are specific exception catches better than `except Exception` everywhere?**  
+Specific catches document which errors are expected and leave all other bugs visible for debugging. A catch-all can hide unrelated bugs — a typo like `NameError` appears as a generic "something went wrong" message, making diagnosis much harder.
 
 ---
 
-## Common Pitfalls — Hour 44 (continued)
+# Session 11 Wrap-Up
 
-### Pitfall 3: Trying to Use the Variable Set in `try` After an Exception
+## What We Covered Today
 
-```python
-# Bug: value is never assigned when the exception fires
-try:
-    value = int(input("Enter number: "))
-except ValueError:
-    print("Bad input.")
+### Hour 41 — File I/O
+- `with open()` safe context manager pattern
+- `write()` with `\n`, `readlines()`, `strip()`
+- Confirm file location with `Path.cwd()` and `.resolve()`
 
-print(f"You entered {value}")   # NameError if exception was raised!
+### Hour 42 — JSON Persistence
+- `json.dump()` to save, `json.load()` to restore
+- Python ↔ JSON type mapping
+- `to_dict()` / `from_dict()` for simple class objects
+- Handle `FileNotFoundError` and `JSONDecodeError`
 
-# Fix: set a default before the try block
-value = None
-try:
-    value = int(input("Enter number: "))
-except ValueError:
-    print("Bad input.")
+### Hour 43 — pathlib Directories
+- Script-relative base paths using `__file__`
+- `mkdir(exist_ok=True)` — safe folder creation
+- `iterdir()` and `glob("*.json")` with sorted determinism
 
-if value is not None:
-    print(f"You entered {value}")
-```
-
-### Pitfall 4: Putting Too Much Code Inside `try`
-
-```python
-# Bug: "something in here failed" — but what?
-try:
-    contacts = load_file()
-    contacts = filter_contacts(contacts, query)
-    save_file(contacts)
-except FileNotFoundError:
-    print("File error.")   # which step failed?
-
-# Fix: minimal try blocks — only the line that can raise
-try:
-    contacts = load_file()
-except FileNotFoundError:
-    contacts = []
-filtered = filter_contacts(contacts, query)
-save_file(filtered)
-```
+### Hour 44 — Exception Handling
+- `try/except/else/finally` control flow
+- Specific catches: `ValueError`, `FileNotFoundError`, `JSONDecodeError`
+- Friendly messages + continue-after-error pattern
 
 ---
 
-## Quick Check — Hour 44
+## Scope Guardrails
 
-**Exit Ticket Question:** Why is catching a specific exception better than catching all exceptions?
+### Stay in Basics Scope
+✓ Plain text files with `with open()`  
+✓ JSON persistence for dicts, lists, and simple objects  
+✓ `pathlib` for portable, project-relative paths  
+✓ Specific `try/except` for expected runtime errors  
+✓ Friendly error messages that help users recover
 
-**Model Answer:** "Catching a **specific exception** (e.g., `except ValueError`) only intercepts the error you know how to handle — a bad type conversion — and lets all other exceptions propagate normally. This is safer for three reasons: First, unexpected bugs (like a `NameError` or `AttributeError` caused by a mistake in your code) will still crash the program with a visible traceback, making them easy to find and fix. Second, the intent is clear — a reader sees exactly which error is being handled and why. Third, you avoid accidentally masking critical errors that the program should not silently swallow. Using `except Exception` is sometimes called a 'Pokémon catch' (`catch 'em all`) — it grabs every exception, including ones you never expected, and hides them behind a generic message. Specific exception handling is one of the hallmarks of robust, maintainable Python code."
-
----
-
-## Session 11 Complete — Putting It All Together
-
-### The Full Persistence Pattern
-
-```python
-from pathlib import Path
-import json
-
-# 1. Anchored paths
-SCRIPT_DIR    = Path(__file__).parent
-DATA_DIR      = SCRIPT_DIR / "data"
-DATA_DIR.mkdir(exist_ok=True)
-CONTACTS_FILE = DATA_DIR / "contacts.json"
-
-# 2. Safe load
-def load_contacts() -> list:
-    try:
-        with open(CONTACTS_FILE, "r") as f:
-            return [contact_from_dict(d) for d in json.load(f)]
-    except FileNotFoundError:
-        return []
-    except json.JSONDecodeError:
-        print("Warning: save file corrupted — starting fresh.")
-        return []
-
-# 3. Save
-def save_contacts(contacts: list) -> None:
-    with open(CONTACTS_FILE, "w") as f:
-        json.dump([c.to_dict() for c in contacts], f, indent=2)
-
-# 4. Safe numeric input
-def get_int(prompt: str) -> int:
-    while True:
-        try:
-            return int(input(prompt).strip())
-        except ValueError:
-            print("  Please enter a whole number.")
-```
+### Not Yet (Advanced Topics)
+✗ Database drivers (SQLite, ORMs)  
+✗ Custom JSON encoders or serialization frameworks  
+✗ `logging` module (use simple `print` for now)  
+✗ Context managers with `__enter__`/`__exit__`  
+✗ Chained exceptions or exception hierarchies  
+✗ Decorators, generators, or advanced OOP patterns
 
 ---
 
-## Session 11 Key Terms Reference
+## What's Next — Session 12 Preview
 
-| Term | Definition |
-|------|-----------|
-| **context manager** | An object that sets up and tears down resources automatically; used with `with` |
-| **`with open()`** | Idiomatic Python for opening files; guarantees the file is closed on exit |
-| **file mode** | `"r"` read, `"w"` write (overwrites), `"a"` append — controls how a file is opened |
-| **serialization** | Converting a Python object to a storable/transmittable format (e.g., JSON) |
-| **deserialization** | Reconstructing a Python object from a stored format (e.g., loading JSON) |
-| **`json.dump()`** | Write a Python object to a JSON file |
-| **`json.load()`** | Read JSON from a file into a Python object |
-| **`pathlib.Path`** | Modern class for representing and manipulating file system paths |
-| **`mkdir(exist_ok=True)`** | Create a directory; do nothing if it already exists |
-| **`iterdir()`** | Yield all entries in a directory as `Path` objects |
-| **`glob()`** | Yield paths matching a pattern (e.g., `*.json`) |
-| **`try / except`** | Handle runtime exceptions without crashing the program |
-| **`finally`** | A block that always runs, whether or not an exception was raised |
-| **`FileNotFoundError`** | Raised when opening a file that does not exist |
-| **`json.JSONDecodeError`** | Raised when `json.load()` cannot parse the file contents |
-| **`ValueError`** | Raised when a conversion fails (e.g., `int("abc")`) |
+### Upcoming Hours (45–48)
+- Hour 45: Lists and tuples — deeper methods and patterns
+- Hour 46: Dictionaries — nested structures and common workflows
+- Hour 47: Sets — membership, deduplication, and set operations
+- Hour 48: Comprehensions introduction — list and dict comprehensions
+
+### Skills You Built That Carry Forward
+- File I/O and JSON persistence will be used in all upcoming data exercises
+- `pathlib` paths will anchor every lab's data folder
+- Exception handling wraps every risky input and file operation
+- These four tools together form the foundation of small, working Python apps
 
 ---
 
-## No-Go Topics for Basics Scope
+# Thank You!
 
-> 🚫 **Scope guardrail (Basics):** The following are **Advanced course** topics. Do not introduce them during this session.
+## Keep Practicing
 
-| Topic | Why It Is Advanced |
-|-------|------------------|
-| Custom exception classes (`class MyError(Exception)`) | Requires inheritance understanding |
-| Exception chaining (`raise X from Y`) | Advanced error propagation patterns |
-| Custom context managers (`__enter__` / `__exit__`) | Advanced OOP and protocol design |
-| `contextlib.contextmanager` decorator | Advanced generator-based context managers |
-| Binary file I/O (`"rb"`, `"wb"`) | Encoding details, struct module — Advanced |
-| `csv` module | Covered in Advanced course (structured text formats) |
-| `pickle` module | Security implications, not a safe beginner tool |
-| Database persistence (`sqlite3`) | Requires SQL knowledge — Advanced |
-| Advanced `pathlib` (`symlink_to`, `chmod`, `stat`) | OS-level file operations — Advanced |
-| `logging` module | Structured logging — Advanced error handling |
+- Save your work to files — use what you learned today
+- Add `try/except` to existing programs from earlier sessions
+- Try breaking your own JSON files and confirm your app recovers
+- Build a small contacts or tasks CLI app that persists across runs
 
----
-
-## Session 11 Common Patterns Reference
-
-### Text File — Save and Load a List
-
-```python
-from pathlib import Path
-
-def save_lines(items: list, filename: str) -> None:
-    with open(filename, "w") as f:
-        for item in items:
-            f.write(item + "\n")
-
-def load_lines(filename: str) -> list:
-    if not Path(filename).exists():
-        return []
-    with open(filename, "r") as f:
-        return [line.strip() for line in f if line.strip()]
-```
-
-### JSON — Save and Load Objects
-
-```python
-import json
-from pathlib import Path
-
-def save_json(contacts: list, filepath: Path) -> None:
-    with open(filepath, "w") as f:
-        json.dump([c.to_dict() for c in contacts], f, indent=2)
-
-def load_json(filepath: Path) -> list:
-    try:
-        with open(filepath, "r") as f:
-            return [contact_from_dict(d) for d in json.load(f)]
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
-```
-
-### Safe Numeric Input
-
-```python
-def get_int(prompt: str) -> int:
-    while True:
-        try:
-            return int(input(prompt).strip())
-        except ValueError:
-            print("  Please enter a whole number.")
-```
-
----
-
-## Looking Ahead — Day 12
-
-### Next Session Builds On Today
-
-**Hour 45: Review + Mini-Project Setup**
-- Combine OOP (Day 10), persistence (Day 11), and previous CLI skills
-- Plan and scaffold a multi-file project
-
-**Hour 46: Building the Mini-Project**
-- Implement the full data layer with JSON persistence
-- Separate UI, data, and logic into modules
-
-**Hour 47: Testing and Debugging**
-- Manual testing strategies
-- Reading tracebacks; using `print()` for debugging
-
-**Hour 48: Checkpoint 6 + Course Wrap-Up**
-- Final checkpoint: persistent CLI application
-- Reflects on the full Basics arc
-
-> 💡 **Homework suggestion:** Add a `backup()` function that copies `data.json` to `data/backup.json` using `pathlib.Path.rename()` or `shutil.copy()`. Hint: you may need to look up `shutil.copy` — and that is fine!
+See you in Session 12!

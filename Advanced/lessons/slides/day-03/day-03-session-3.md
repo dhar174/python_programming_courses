@@ -1,581 +1,809 @@
 # Advanced Day 3 — Session 3 (Hours 9–12)
-Python Programming (Advanced) • Packages, Logging, Safe Saves, and Decorators
-
+Python Programming (Advanced) • Project Packages, Logging, Safer File Ops, and Decorators
 ---
 
 # Session 3 Overview
 
 ## Topics Covered Today
-- Hour 9: Project structure, packages, imports, and config
-- Hour 10: Logging and error reporting (practical)
-- Hour 11: Context managers + safer file operations
-- Hour 12: Decorators (timing / authorization / validation)
+- Hour 9 (Hour 9 overall): Project structure, packages, imports, and config
+- Hour 10 (Hour 10 overall): Logging and error reporting (practical)
+- Hour 11 (Hour 11 overall): Context managers and safer file operations
+- Hour 12 (Hour 12 overall): Decorators — timing, toy authorization, lightweight validation
 
 ### Source Alignment
-- `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md` → `## Session 3 overview`
-- `Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `# Advanced Day 3, Hour 1: Project Structure, Packages, Imports, and Config`
+- `Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `# Day 3, Hour 1: Project Structure, Packages, Imports, and Config`
 - `Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `# Day 3, Hour 2: Logging and Error Reporting (Practical)`
-- `Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `# Day 3, Hour 3: Context Managers + Safer File Operations`
-- `Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `# Day 3, Hour 4: Decorators (Timing / Authorization / Validation)`
+- `Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `# Day 3, Hour 3: Context Managers and Safer File Operations`
+- `Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `# Day 3, Hour 4: Decorators for Timing, Toy Authorization, and Lightweight Validation`
 
 ---
 
 # Session 3 Outcomes
 
-- Package the core under `src/`
-- Add logging that helps developers without spamming users
-- Save JSON more safely with temp-then-replace thinking
-- Use decorators for repeated edge behavior
+- Organize the checkpoint core into `src/tracker/` with clean relative imports
+- Add practical `logging` that separates developer diagnostics from user messages
+- Save JSON safely using write-temp-then-replace instead of direct overwrite
+- Write and apply small `@timed` decorators without changing core function behavior
 
 ---
 
 # Scope Guardrails for Today
 
 ## In Scope
-- Packaging and import hygiene
-- File-based logging
-- Context managers and safe saves
-- Small, readable decorators
+- Package layout under `src/tracker/` with `__init__.py` and relative imports
+- File-based logging to `logs/app.log`
+- Context managers and a `save_json_safe` helper
+- Small readable decorators for timing and toy authorization
 
 ## Not Yet
-- Full production config systems
-- Secret-heavy deployment workflows
-- Decorator metaprogramming tricks
-- Database transactions
+- Publishing or installing packages (`pyproject.toml`, editable installs, `pip install -e .`)
+- Production secrets management or security frameworks
+- Decorator factories with arguments, class decorators, or metaclasses
+- Database transactions or full durability guarantees
 
 ---
 
-# Hour 9: Project Structure + Imports + Config
+# Hour 9: Project Structure, Packages, Imports, and Config
 
 ## Learning Outcomes
-- Move from a loose script pile to a usable package layout
-- Explain the role of `__init__.py`
-- Avoid common import headaches
-- Centralize simple configuration
+- Move the checkpoint core from a flat script pile into `src/tracker/`
+- Use relative imports inside the package (`from .models import Task`)
+- Run the demo with `python -m src.tracker.demo` from the project root
+- Centralize path constants in a light `config.py`
 
 ---
 
 ## Why Structure Matters Now
 
-- Yesterday's checkpoint core needs a cleaner home
-- New layers are coming:
-  - logging
-  - persistence
-  - APIs
-  - tests
-- Brittle imports slow every later step
-
----
-
-## Practical `src/` Layout
-
 ```text
-project_root/
-    src/
-        tracker/
-            __init__.py
-            models.py
-            services.py
-            exceptions.py
-            config.py
-    demo.py
-    README.md
+Before (flat):              After (organized):
+project_root/               project_root/
+    models.py                   src/
+    services.py                     tracker/
+    exceptions.py                       __init__.py
+    demo.py                             exceptions.py
+                                        models.py
+                                        services.py
+                                        config.py
+                                        demo.py
 ```
 
----
+- Upcoming layers need to find the core reliably: logging, persistence, GUI, API, tests
+- Structure tells future readers where responsibilities live
+- Brittle or accidental imports break when any layer moves
 
-## Import Rules to Remember
-
-- Relative imports can help **inside** a package
-- Absolute imports are clearer **from outside** the package
-- Run from the project root or use `python -m ...`
-
-### Three Headaches to Avoid
-1. Wrong entry file
-2. Circular imports
-3. Naming collisions like `json.py` or `logging.py`
+### Source
+`Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `## Opening Bridge from Checkpoint 1`
 
 ---
 
-## Demo: Clean Package Move
+## Key Vocabulary
+
+- **Module** — a single `.py` file: `models.py`, `services.py`
+- **Package** — a directory containing `__init__.py`: `tracker/`
+- **`__init__.py`** — marks a folder as a package; can stay empty
+- **Relative import** — `from .models import Task` (dot = current package)
+- **`-m` flag** — run a module by import path, preserving package context
+- **Entry point** — `src/tracker/demo.py`, run via `python -m src.tracker.demo`
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `## Outcomes, Setup, and Vocabulary`
+
+---
+
+## Relative Imports in `models.py`
 
 ```python
-from tracker.exceptions import ValidationError
+# src/tracker/models.py
+from .exceptions import ValidationError   # dot = "from this package"
 
 
 class Task:
+    VALID_PRIORITIES = {"low", "medium", "high"}
+
     def __init__(self, task_id: int, title: str, priority: str = "medium") -> None:
-        ...
+        cleaned = title.strip()
+        if not cleaned:
+            raise ValidationError("Task title cannot be empty.")
+        self.task_id   = task_id
+        self.title     = cleaned
+        self.priority  = priority.strip().lower()
+        self.completed = False
+
+    def to_dict(self) -> dict[str, object]:
+        return {"task_id": self.task_id, "title": self.title,
+                "priority": self.priority, "completed": self.completed}
 ```
 
-- Move related files together
-- Fix imports intentionally
-- Re-run the demo after restructuring
+### Source
+`Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `## Live Demo` → Step 4
 
 ---
 
-## Light Configuration
+## Dependency Direction and Running Correctly
 
-- Move hard-coded paths into `config.py`
-- Good early config values:
-  - data directory
-  - log path
-  - default save filename
-- Keep it small and practical
+```text
+Correct dependency direction:
+  demo.py  -->  services.py  -->  models.py
+      \               \               \
+       \-----------+   \-----------+   \--> exceptions.py
+```
+
+- `models.py` must NOT import `services.py` — circular imports cause mysterious errors
+
+```powershell
+# CORRECT — from project root
+python -m src.tracker.demo
+
+# BREAKS relative imports — avoid
+python src/tracker/demo.py
+```
+
+- `-m` preserves the package context so `from .services import TaskService` resolves
+- If it fails: check working directory and command before rewriting code
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `## Concept Briefing` → §3 and §4
 
 ---
 
-## Lab: Restructure the Core
+## Light Config Module
 
-**Time: 25–35 minutes**
+```python
+# src/tracker/config.py
+import os
+from pathlib import Path
 
-### Tasks
-- Create `src/tracker/`
-- Add `__init__.py`
-- Move models and services into the package
-- Update imports
-- Add a simple `config.py`
-- Prove the demo still runs
+# parents[2]: config.py -> tracker/ -> src/ -> project_root
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+DATA_DIR = Path(os.environ.get("TRACKER_DATA_DIR", "data"))
+DB_PATH  = DATA_DIR / "tracker.db"
+LOG_DIR  = BASE_DIR / "logs"
+LOG_FILE = LOG_DIR  / "app.log"
+```
+
+- One home for constants — no hard-coded paths scattered across modules
+- `os.environ.get(...)` allows overrides without a full config framework
+- PowerShell override: `$env:TRACKER_DATA_DIR = "data"; python -m src.tracker.demo`
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `## Concept Briefing` → `### 5. Light configuration`
+
+---
+
+## Lab: Restructure Your Tracker
+
+**Time: 25 minutes**
+
+### Required Steps
+1. `mkdir src\tracker` and create an empty `src\tracker\__init__.py`
+2. Move `models.py`, `services.py`, `exceptions.py`, `demo.py` into `src/tracker/`
+3. Update all internal imports to use the dot-relative form
+4. Add `config.py` with `DATA_DIR`, `DB_PATH`, `LOG_DIR`, `LOG_FILE`
+5. Run `python -m src.tracker.demo` from the project root
+6. Confirm happy path and at least one caught `NotFoundError` or `ValidationError`
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour1_Advanced.md` → `## Guided Lab: Restructure Your Tracker`
 
 ---
 
 ## Completion Criteria (Hour 9)
 
-✓ Package layout exists  
-✓ Imports are consistent  
-✓ Demo runs from the intended entry point  
-✓ Config values are not scattered across random files
-
----
-
-## Homework + Quiz Emphasis (Hour 9)
-
-- Homework framing:
-  - **Goal:** package layout + config module
-  - **Best practice:** packages + dedicated settings module
-  - **Pitfall:** relative imports everywhere without discipline
-- Quiz/canonical contract marker:
-  - `Hour 9 | package root: tracker_app`
-
-### Source Alignment
-- `Advanced/assignments/Advanced_Day3_homework.ipynb` → `## Part 1: Hour 9 - Project structure: packages, imports, and config`
-- `Advanced/quizzes/Advanced_Day3_Quiz.html` → `QUIZ_DATA` questions 1–5
+- `src/tracker/__init__.py` exists (can be empty)
+- Internal imports use the dot-relative form — `from .models import Task`
+- No module named after a stdlib module (`logging.py`, `json.py`, etc.)
+- `python -m src.tracker.demo` from the project root runs without import errors
+- `config.py` holds `DATA_DIR` and `DB_PATH`
 
 ---
 
 ## Common Pitfalls (Hour 9)
 
-⚠️ Running modules directly from inside the package  
-⚠️ Circular imports between services and models  
-⚠️ Shadowing standard library module names  
-⚠️ Hard-coded paths in multiple files
+- Running `python src/tracker/demo.py` — package context is missing
+- Keeping flat `from models import Task` after moving files into the package
+- Circular import: `models.py` importing from `services.py`
+- Naming a local file `logging.py` or `json.py` — shadows the standard library
+- Skipping `__init__.py` — Python cannot recognize the directory as a package
 
 ---
 
-## Quick Check
-
-**Question:** What usually causes `ModuleNotFoundError` right after a student "cleans up" project structure?
-
----
-
-# Hour 10: Logging and Error Reporting
+# Hour 10: Logging and Error Reporting (Practical)
 
 ## Learning Outcomes
-- Use `logging` instead of scattered `print()` debugging
-- Choose practical levels: DEBUG, INFO, WARNING, ERROR
-- Keep user messages separate from developer diagnostics
-- Write logs to `logs/app.log`
+- Explain why `logging` replaces scattered `print()` debugging
+- Choose the right level: DEBUG, INFO, WARNING, ERROR
+- Configure file logging to `logs/app.log` near program startup
+- Separate developer diagnostics from friendly user-facing messages
 
 ---
 
-## Big Idea
+## The Central Rule
 
 **Logs are for developers. Error messages are for users.**
 
-- Users need calm, clear feedback
-- Developers need timestamps, context, and failure detail
-- More output is not the same as better diagnostics
+```text
+Developer view (logs/app.log):
+  2026-01-14 10:03:22 WARNING src.tracker.services
+    Missing task lookup task_id=999
+
+User view (terminal):
+  "Task 999 was not found. Please check the ID and try again."
+```
+
+- `print()` mixes audiences, carries no timestamp, no severity, disappears on exit
+- `logging` routes information to the right audience and persists it to a file
+- Exceptions still control flow — logging records what happened
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `## Opening Bridge` and `## Concept Briefing`
 
 ---
 
 ## Practical Log Levels
 
-- `DEBUG` → detailed development tracing
-- `INFO` → normal important events
-- `WARNING` → something odd happened, but recovery is possible
-- `ERROR` → an operation failed
+```text
+DEBUG   — detailed developer-only info; filtered out in production
+INFO    — normal important events (service started, task added)
+WARNING — unexpected but recoverable (lookup for a missing task)
+ERROR   — an operation failed (validation rejected, file not writable)
+```
 
-### Example Signals
-- "created task 7" → INFO
-- "task 999 missing" → WARNING
-- "failed to save file" → ERROR
+```python
+logger.debug("Inspecting candidate task_id=%s", task_id)
+logger.info("Added task_id=%s title=%r", task.task_id, task.title)
+logger.warning("Missing task lookup task_id=%s", task_id)
+logger.error("Validation rejected task creation")
+```
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `### Practical logging levels`
 
 ---
 
-## Demo: Configure Logging
+## Logging Config: `config.py` and `demo.py`
 
 ```python
+# src/tracker/config.py  — add log paths
+LOG_DIR  = BASE_DIR / "logs"
+LOG_FILE = LOG_DIR  / "app.log"
+```
+
+```python
+# src/tracker/demo.py — configure once near startup
 import logging
+from .config import LOG_DIR, LOG_FILE
 
-logging.basicConfig(
-    level=logging.INFO,
-    filename="logs/app.log",
-)
+def configure_logging() -> None:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)   # create logs/ if missing
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    )
 ```
 
-```python
-logger = logging.getLogger(__name__)
-```
+- Must call `LOG_DIR.mkdir(...)` **before** logging fires — the module will not create the directory
+- Call `configure_logging()` before creating any service object
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `## Live Demo` → Step 1 and Step 3
 
 ---
 
-## Demo: Friendly User Message, Richer Log
+## Module-Level Logger in `services.py`
 
 ```python
-try:
-    service.get_task(999)
-except NotFoundError:
-    logger.warning("Attempted lookup for missing task_id=%s", 999)
-    print("Task 999 was not found.")
+# src/tracker/services.py
+import logging
+from .exceptions import NotFoundError, ValidationError
+from .models import Task
+
+logger = logging.getLogger(__name__)   # logger name = "src.tracker.services"
+
+class TaskService:
+    def __init__(self) -> None:
+        self._tasks: dict[int, Task] = {}
+        logger.info("TaskService initialized")
+
+    def add(self, task: Task) -> None:
+        if task.task_id in self._tasks:
+            logger.warning("Rejected duplicate task_id=%s", task.task_id)
+            raise ValidationError(f"Task {task.task_id} already exists.")
+        self._tasks[task.task_id] = task
+        logger.info("Added task_id=%s title=%r", task.task_id, task.title)
+
+    def get(self, task_id: int) -> Task:
+        try:
+            return self._tasks[task_id]
+        except KeyError as exc:
+            logger.warning("Missing task lookup task_id=%s", task_id)
+            raise NotFoundError(f"Task {task_id} was not found.") from exc
 ```
 
-- Same event
-- Different audiences
+### Source
+`Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `## Live Demo` → Step 2
 
 ---
 
-## Lab: Add Logging
+## Friendly Messages in `demo.py`
 
-**Time: 25–35 minutes**
+```python
+def main() -> None:
+    configure_logging()
+    service = TaskService()
 
-### Tasks
-- Create `logs/`
-- Configure file logging
-- Add at least three log calls
-- Trigger one failure on purpose
-- Inspect `logs/app.log`
+    try:
+        service.get(999)
+    except NotFoundError as exc:
+        logger.warning("Demo: missing task — %s", exc)
+        print("That task was not found. Please check the task ID.")
+
+    try:
+        service.add(Task(task_id=1, title="Duplicate"))
+    except ValidationError:
+        logger.exception("Demo: validation failed on add")   # traceback in log
+        print("That task could not be saved. Please check the task details.")
+```
+
+- `logger.exception(...)` stores the full traceback in `logs/app.log` — never on screen
+- Users see two clear sentences; developers see full context in the file
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `## Live Demo` → Step 3
+
+---
+
+## Lab: Add Practical Logging
+
+**Time: 25 minutes**
+
+### Required Steps
+1. Add `LOG_DIR` and `LOG_FILE` to `config.py`
+2. Call `configure_logging()` at startup before creating services
+3. Add `logger = logging.getLogger(__name__)` to `services.py`
+4. Add at least 3 service-layer log calls (init, add, missing lookup)
+5. Trigger one expected error and catch it with a friendly user message
+6. Open `logs/app.log` and confirm readable, useful entries are present
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour2_Advanced.md` → `## Guided Lab: Add Practical Logging`
 
 ---
 
 ## Completion Criteria (Hour 10)
 
-✓ `app.log` is created  
-✓ Logs show useful events, not noise  
-✓ User-facing messages stay readable  
-✓ Failures leave a developer trail
-
----
-
-## Homework + Quiz Emphasis (Hour 10)
-
-- Homework framing:
-  - **Goal:** structured log messages for service events and failures
-  - **Best practice:** use logging levels instead of `print()` debugging
-  - **Pitfall:** dumping raw secrets or stack noise into ordinary logs
-- Quiz/canonical contract marker:
-  - `Hour 10 | logger name: tracker.service`
-
-### Source Alignment
-- `Advanced/assignments/Advanced_Day3_homework.ipynb` → `## Part 2: Hour 10 - Logging and error reporting`
-- `Advanced/quizzes/Advanced_Day3_Quiz.html` → `QUIZ_DATA` questions 6–10
+- `logs/app.log` is created automatically at startup
+- At least three useful service-layer log entries appear
+- User-facing output in the terminal stays friendly and short
+- At least one `logger.exception(...)` stores a traceback in the file (not on screen)
 
 ---
 
 ## Common Pitfalls (Hour 10)
 
-⚠️ Using logs as a substitute for clear code  
-⚠️ Logging too little or too much  
-⚠️ Showing full tracebacks to end users  
-⚠️ Forgetting to create the log directory
+- Forgetting `LOG_DIR.mkdir(parents=True, exist_ok=True)` — logging silently produces no file
+- Calling `logging.basicConfig(...)` after the first log fires — it becomes a no-op
+- Logging inside a tight loop — produces a log file too noisy to read
+- Printing raw tracebacks to end users instead of routing them to the log
+- Naming a project file `logging.py` — shadows the standard library module
 
 ---
 
-## Quick Check
-
-**Question:** When should you log at `WARNING` instead of `ERROR`?
-
----
-
-# Hour 11: Context Managers + Safer File Operations
+# Hour 11: Context Managers and Safer File Operations
 
 ## Learning Outcomes
-- Explain what a context manager really guarantees
-- Use `with` for safer resource handling
-- Understand why naive overwrites can corrupt data
-- Apply a write-temp-then-replace save pattern
+- Explain what a context manager guarantees beyond "closes the file"
+- Use `with` consistently for files and other cleanup-requiring resources
+- Explain why opening the real file in write mode can corrupt it mid-write
+- Implement `save_json_safe(path, data)` using write-temp-then-replace
 
 ---
 
-## The Mental Model for `with`
-
-- setup on entry
-- cleanup on exit
-- cleanup still happens if an exception occurs
-
-### Common Uses
-- files
-- locks
-- database connections
-- temporary resources
-
----
-
-## Why Direct Overwrites Are Risky
+## Context Manager Mental Model
 
 ```python
-with open("tasks.json", "w") as file:
-    file.write(json_text)
+# Manual — cleanup depends on reaching file.close()
+file = open("data/tasks.json", "w", encoding="utf-8")
+file.write("example")
+file.close()    # skipped if exception occurs above
+
+# With context manager — cleanup guaranteed
+with Path("data/tasks.json").open("w", encoding="utf-8") as file:
+    file.write("example")
+# file is closed here, even if an exception was raised
 ```
 
-- Better than manual close
-- Still risky if the write fails midway
-- Can leave a good file half-written or corrupted
+- `with` = "enter this context, do work, always run exit cleanup"
+- Same pattern works for locks, DB connections, temp directories, network sessions
+- `with` guarantees cleanup — it does not guarantee a safe write strategy
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `## Concept Briefing` → `### Part 1`
 
 ---
 
-## Safe Save Pattern
-
-1. Resolve the real target path
-2. Make sure the parent directory exists
-3. Write new content to a temp file
-4. Close it successfully
-5. Replace the original file
-
----
-
-## Demo: `save_json_safe`
+## Why Direct Overwrites Can Corrupt Data
 
 ```python
-from pathlib import Path
+# "w" mode truncates the real file IMMEDIATELY on open
+with Path("data/tasks.json").open("w", encoding="utf-8") as file:
+    file.write("[\n")
+    file.write('  {"task_id": 2, "title": "Half-written"')
+    raise RuntimeError("crash mid-write")   # original content is already gone
+# with closed the file — but it closed a damaged file
+```
+
+```text
+Direct overwrite:
+  open real file -> old content gone -> write -> maybe fail -> corrupted file
+
+Temp-then-replace:
+  write side file -> old file untouched -> replace only after success
+```
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `## Concept Briefing` → `### Part 2 and Part 3`
+
+---
+
+## `save_json_safe` — Full Implementation
+
+```python
 import json
+from pathlib import Path
+from typing import Any
 
 
-def save_json_safe(path: str | Path, data: list[dict]) -> None:
+def save_json_safe(
+    path: str | Path,
+    data: Any,
+    *,
+    simulate_failure: bool = False,
+) -> None:
     target_path = Path(path)
-    temp_path = target_path.with_suffix(target_path.suffix + ".tmp")
-    with temp_path.open("w", encoding="utf-8") as file:
-        json.dump(data, file, indent=2)
-        file.write("\n")
-    temp_path.replace(target_path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    # Same-directory temp works for "tasks.json" AND suffix-less "tasks"
+    tmp_path = target_path.with_name(f"{target_path.name}.tmp")
+
+    try:
+        with tmp_path.open("w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+            file.write("\n")              # trailing newline for readability
+        if simulate_failure:
+            raise RuntimeError("simulated failure before replace")
+        tmp_path.replace(target_path)    # only touches target after success
+    except Exception:
+        tmp_path.unlink(missing_ok=True) # clean up temp, then re-raise
+        raise
 ```
 
----
-
-## Lab: Safe Save Utility
-
-**Time: 25–35 minutes**
-
-### Tasks
-- Implement `save_json_safe(path, data)`
-- Use `with`
-- Write a `.tmp` file next to the real file
-- Replace only after success
-- Simulate a failure and compare outcomes
+### Source
+`Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `## Live Demo: Write JSON to Temp, Then Replace`
 
 ---
 
-## Completion Criteria (Hour 11)
+## Proving the Pattern Works
 
-✓ File work uses context managers  
-✓ Save logic writes to temp first  
-✓ Replace happens after success  
-✓ Student can explain why the pattern is safer
+```python
+# Save known-good data
+save_json_safe("data/tasks.json", [{"task_id": 1, "title": "Original"}])
+before = Path("data/tasks.json").read_text(encoding="utf-8")
+
+# Simulate a mid-write crash
+try:
+    save_json_safe(
+        "data/tasks.json",
+        [{"task_id": 9, "title": "Should NOT replace original"}],
+        simulate_failure=True,
+    )
+except RuntimeError as err:
+    print(f"Caught: {err}")
+
+after = Path("data/tasks.json").read_text(encoding="utf-8")
+print(before == after)                         # True  — original intact
+print(Path("data/tasks.json.tmp").exists())    # False — temp cleaned up
+```
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `## Live Demo` → `### Run the simulated failure`
 
 ---
 
-## Homework + Quiz Emphasis (Hour 11)
+## Lab: Safe Save Utility for Tracker Data
 
-- Homework framing:
-  - **Goal:** safe file operation flow that writes and reads tracker data
-  - **Best practice:** wrap file work in context managers
-  - **Pitfall:** opening files without `with`
-- Quiz/canonical contract marker:
-  - `Hour 11 | file mode: context manager used`
+**Time: 25 minutes**
 
-### Source Alignment
-- `Advanced/assignments/Advanced_Day3_homework.ipynb` → `## Part 3: Hour 11 - Context managers + safer file operations`
-- `Advanced/quizzes/Advanced_Day3_Quiz.html` → `QUIZ_DATA` questions 11–15
+### Required Steps
+1. Implement `save_json_safe(path, data)` in `src/tracker/storage.py`
+2. Save tracker-style data to `data/tasks.json` (use `task.to_dict()` for objects)
+3. Inspect the file with `Get-Content data/tasks.json`
+4. Run a simulated failure — confirm original file is unchanged and `.tmp` is gone
+5. Explain: "What is one advantage of writing to a temp file first?"
+
+### Stretch Options
+- Add a `load_json(path)` helper that returns `[]` if the file does not exist
+- Log successful saves and failed saves using the Hour 10 logging setup
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour3_Advanced.md` → `## Guided Lab: Safe Save Utility for Tracker Data`
+
+---
+
+## Completion Criteria and Quick Check (Hour 11)
+
+- `save_json_safe` creates the parent directory automatically
+- Temp file is in the same directory as the target
+- JSON write happens inside a `with` block
+- `tmp_path.replace(target_path)` runs only after the write succeeds
+- Simulated failure leaves the original file content unchanged
+
+**Question:** `with` closes the file reliably. Why is that still not enough to make a direct overwrite safe?
 
 ---
 
 ## Common Pitfalls (Hour 11)
 
-⚠️ Writing directly to the final file first  
-⚠️ Putting temp files in unrelated locations  
-⚠️ Forgetting to create the parent directory  
-⚠️ Teaching "it probably works" instead of failure simulation
+- Using `.with_suffix(".tmp")` — breaks for files with no extension; use `with_name(f"{name}.tmp")` instead
+- Writing the temp file in a different directory — complicates `replace` and may cause cross-device errors
+- Skipping `parent.mkdir(parents=True, exist_ok=True)` — `FileNotFoundError` on first run
+- Not calling `unlink(missing_ok=True)` in the exception path — leaves stale `.tmp` files
+- On Windows: `PermissionError` from `replace()` if the target is locked by an editor, sync tool, or antivirus
 
 ---
 
-## Quick Check
-
-**Question:** What is the main advantage of writing to a temporary file first?
-
----
-
-# Hour 12: Decorators
+# Hour 12: Decorators for Timing, Toy Authorization, and Lightweight Validation
 
 ## Learning Outcomes
-- Explain decorators in plain language
-- Build a wrapper with `*args` and `**kwargs`
-- Add timing or authorization behavior without rewriting core functions
-- Use `functools.wraps`
+- Explain a decorator: a function that takes a function, wraps it, and returns a new callable
+- Write `wrapper(*args, **kwargs)` that handles both functions and methods
+- Build a `@timed` decorator that logs via the Hour 10 logging setup
+- Use `functools.wraps` to preserve function name and docstring
 
 ---
 
-## Decorator Idea
-
-- A decorator takes a function
-- Wraps it
-- Returns a new function
-
-### Good Course Use Cases
-- timing
-- logging entry/exit
-- toy auth checks
-- lightweight validation
-
----
-
-## Demo: Essential Shape
+## The Problem Decorators Solve
 
 ```python
-def my_decorator(func):
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return result
-    return wrapper
+# Duplicated timing code — error-prone to maintain
+def add_task(self, title: str) -> int:
+    start = time.perf_counter()
+    result = self._do_add(title)
+    logger.info("add_task completed in %.6f s", time.perf_counter() - start)
+    return result
+
+def list_titles(self) -> list[str]:
+    start = time.perf_counter()
+    result = list(self._titles)
+    logger.info("list_titles completed in %.6f s", time.perf_counter() - start)
+    return result
 ```
 
-- Accept the function
-- Pass through arguments
-- Return the result
+- Same wrapping code copied into every service method
+- Change the format string once — must edit every copy
+- Forget `return result` in one copy — silent `None` bug
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Opening Bridge from Safe Saves to Reusable Wrappers`
 
 ---
 
-## Demo: `@timed`
+## Decorator Anatomy
 
 ```python
+def my_decorator(func):          # 1. accept the original function
+    def wrapper(*args, **kwargs): # 2. inner function collects ALL args
+        result = func(*args, **kwargs)  # 3. call original
+        return result            # 4. MUST return original result
+    return wrapper               # 5. return the wrapper, not a call to it
+```
+
+```python
+@my_decorator
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+# Equivalent to: greet = my_decorator(greet)
+```
+
+- `*args, **kwargs` forwards everything including `self` for methods
+- Without `return result`: decorated function silently returns `None`
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Concept Briefing: Decorator Anatomy`
+
+---
+
+## Professional `@timed` Decorator
+
+```python
+import logging
 import time
 from functools import wraps
+from typing import Any, Callable
 
 
-def timed(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
+def timed(func: Callable[..., Any]) -> Callable[..., Any]:
+    @wraps(func)   # preserves __name__, __doc__ — use in professional code
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        start  = time.perf_counter()
         result = func(*args, **kwargs)
-        duration = time.perf_counter() - start
-        print(f"{func.__name__} took {duration:.6f} seconds")
-        return result
+        elapsed = time.perf_counter() - start
+        logging.getLogger(__name__).info(
+            "%s completed in %.6f seconds",
+            func.__name__,
+            elapsed,
+        )
+        return result  # original result unchanged
     return wrapper
 ```
 
----
+- `time.perf_counter()` — correct tool for measuring elapsed durations
+- `logging.getLogger(__name__).info(...)` — timing goes to `logs/app.log`, not `print()`
 
-## Readability Rule
-
-- Decorators should handle repeated edge behavior
-- They should stay small
-- They should not hide the main business story
-
-### Stop If...
-- the wrapper is longer than the function it decorates
-- the decorator becomes a black box of business logic
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Live Demo: Professional @timed for Service Methods`
 
 ---
 
-## Lab: Decorator Practice
+## Applying `@timed` to Service Methods
 
-**Time: 25–35 minutes**
+```python
+class TaskService:
+    def __init__(self) -> None:
+        self._titles: list[str] = []
 
-### Tasks
-- Build a `@timed` decorator
-- Attach it to 2 service methods
-- Log the timing result
-- Preserve metadata with `@wraps`
-- Optional: sketch a toy auth or validation decorator
+    @timed
+    def add_task(self, title: str) -> int:
+        self._titles.append(title)
+        return len(self._titles)          # still returns correct count
 
----
+    @timed
+    def list_titles(self) -> list[str]:
+        return list(self._titles)         # still returns the list
+```
 
-## Completion Criteria (Hour 12)
+```text
+# logs/app.log after running the demo
+INFO src.tracker.services add_task completed in 0.000080 seconds
+INFO src.tracker.services list_titles completed in 0.000030 seconds
+```
 
-✓ Decorated functions still return the right result  
-✓ Timing or validation behavior is visible  
-✓ `@wraps` preserves helpful metadata  
-✓ Core function purpose remains clear
+- `self` passes through `args` — no special method support needed
+- Return values are unchanged after decoration
 
----
-
-## Homework + Quiz Emphasis (Hour 12)
-
-- Homework framing:
-  - **Goal:** decorated service function with reusable wrappers
-  - **Best practice:** use decorators for cross-cutting concerns
-  - **Pitfall:** stuffing business logic into decorators
-- Quiz/canonical contract marker:
-  - `Hour 12 | timing decorator: add_task took 0.002s`
-
-### Source Alignment
-- `Advanced/assignments/Advanced_Day3_homework.ipynb` → `## Part 4: Hour 12 - Decorators`
-- `Advanced/quizzes/Advanced_Day3_Quiz.html` → `QUIZ_DATA` questions 16–20
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Live Demo` → `### Add a deterministic service-method example`
 
 ---
 
-## Common Pitfalls (Hour 12)
+## Toy `@requires_api_key` — Shape, Not Security
 
-⚠️ Forgetting to `return result`  
-⚠️ Ignoring `*args` / `**kwargs` pass-through  
-⚠️ Losing function metadata without `@wraps`  
-⚠️ Hiding too much logic in the decorator
+```python
+from functools import wraps
+from typing import Any, Callable
+
+
+def requires_api_key(func: Callable[..., Any]) -> Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        if kwargs.get("api_key") != "demo-key":
+            raise PermissionError("invalid API key")
+        return func(*args, **kwargs)
+    return wrapper
+
+
+@requires_api_key
+def fetch_remote_task_titles(*, api_key: str) -> list[str]:
+    return ["Plan API client", "Document JSON contract"]
+```
+
+- Keyword-only `api_key` avoids positional ambiguity
+- **This is a teaching toy** — real auth involves protocols, secrets, rotation, auditing
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Live Demo: Toy @requires_api_key`
 
 ---
 
-## Quick Check
+## Readability Rules for Decorators
 
-**Question:** What breaks if the wrapper forgets to return the original function result?
+```text
+Use a decorator when:
+  - the extra behavior repeats across multiple functions
+  - the wrapper stays small and focused
+  - the decorated function becomes easier to read
+
+Avoid a decorator when:
+  - it hides the main business rule
+  - it creates surprising side effects
+  - debugging becomes harder than the duplication was
+```
+
+- Timing is a good decorator: it is cross-cutting, small, and observable
+- Validation that IS the business rule belongs in the model or service — not a wrapper
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Concept Briefing` → `### Part 3: Keep decorators small and readable`
+
+---
+
+## Lab: Timing Decorator in the Tracker Project
+
+**Time: 26 minutes**
+
+### Required Steps
+1. Implement `@timed` using `perf_counter` + `logging.getLogger(__name__).info`
+2. Apply `@timed` to at least two service functions (e.g., `add_task`, `list_titles`)
+3. Run the demo from the project root
+4. Confirm timing messages appear in `logs/app.log`
+5. Verify the decorated functions still return the same values as before
+
+### Source
+`Advanced/lessons/lecture/Day3_Hour4_Advanced.md` → `## Guided Lab: Timing Decorator in the Tracker Project`
+
+---
+
+## Completion Criteria and Pitfalls (Hour 12)
+
+- `@timed` uses `wrapper(*args, **kwargs)` — no fixed parameter list
+- `time.perf_counter()` measures elapsed time
+- Timing message goes through `logging.getLogger(__name__).info(...)` — not `print()`
+- `return result` is present — decorated functions return unchanged values
+- `@wraps(func)` preserves `func.__name__` and docstring
+
+Pitfalls:
+
+- Forgetting `return result` — decorated function silently returns `None`
+- Not forwarding `*args, **kwargs` — method call fails with missing `self`
+- Using `print()` instead of `logging` — timing output is inconsistent and untraceable
+- Omitting `@wraps(func)` — every decorated function appears as `wrapper` in logs
 
 ---
 
 # Session 3 Wrap-Up
 
-## What We Added Today
-- Package structure under `src/`
-- Real logging habits
-- Safer JSON save patterns
-- Reusable wrappers through decorators
+## What We Built Today
+- A professional package shape under `src/tracker/` that other layers can import reliably
+- Practical logging that routes developer detail to `logs/app.log` and friendly messages to users
+- A `save_json_safe` helper that protects good data during file writes
+- A `@timed` decorator that eliminates repeated timing boilerplate around service methods
 
-### Key Rule
-**Operational habits are part of software design, not an afterthought.**
+### Key Day 3 Rule
+**Operational habits — structure, logging, safe saves, reusable wrappers — are part of the design, not an afterthought.**
 
 ---
 
 ## Day 3 Homework / Study Checklist
 
-- Run the project from the intended entry point
-- Inspect `logs/app.log`
-- Test a simulated save failure
-- Re-run a decorated service call
-- Match canonical labels where the notebook expects them
+- Run `python -m src.tracker.demo` from the project root and confirm it succeeds
+- Open `logs/app.log` and explain every entry — what level, what module, what event
+- Trigger a simulated save failure and confirm the original file is unchanged
+- Confirm a decorated service call still returns the correct value after adding `@timed`
+- Check: does `models.py` import anything from `services.py`? It should not
 
 ### Source Alignment
-- `Advanced/assignments/Advanced_Day3_homework.ipynb` → `## Submission Checklist`
+- `Advanced/assignments/Advanced_Day3_homework.ipynb` → `## Reflection and Submission Checklist`
 
 ---
 
 ## Next Session Preview
 
 ### Session 4 (Hours 13–16)
-- HTTP clients with `requests`
+- HTTP clients with `requests` and JSON API contracts
 - Environment-variable and secrets habits
 - Capstone planning workshop
 - Checkpoint 2: persistence-ready core + JSON save/load
+
+### Bridge from Today
+The same discipline applies to HTTP wrappers: keep wrappers small, use logging for visibility, and make the core service logic easy to read and test.
 
 ---
 
 # Thank You!
 
-Package it cleanly.  
-Log what matters.  
-Save data safely.  
+Package it cleanly.
+Log what matters.
+Save data safely.
 Keep the wrappers readable.
