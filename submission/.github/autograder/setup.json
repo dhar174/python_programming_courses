@@ -1,0 +1,11 @@
+{
+  "file_checks": [
+    "Advanced_Day10_homework_test_filled.ipynb"
+  ],
+  "commands": [
+    "python -m pip install --quiet --upgrade pip || python -m pip install --upgrade pip",
+    "for attempt in 1 2 3; do echo 'Installing nbconvert: Attempt $attempt of 3...' && python -m pip install --quiet --upgrade nbconvert && break; if [ $attempt -lt 3 ]; then sleep $((2 ** attempt)); fi; done",
+    "jupyter nbconvert --to script Advanced_Day10_homework_test_filled.ipynb --output advanced_day10",
+    "if [ ! -f advanced_day10.py ]; then echo 'ERROR: Conversion failed'; exit 1; fi"
+  ]
+}
