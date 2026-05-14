@@ -1,1178 +1,849 @@
 # Basics Day 7 — Session 7 (Hours 25–28)
-Python Programming (Basic) • Conditionals, Loops & Loop Patterns
+Python Programming (Basic) • Conditionals, while/for Loops, and Loop Patterns
 
-## Session 7 Overview
-- Hour 25: Conditionals — if/elif/else and boundaries
+---
+
+# Session 7 Overview
+
+## Topics Covered Today
+- Hour 25: Conditionals — if/elif/else and boundary handling
 - Hour 26: while loops + sentinel patterns
 - Hour 27: for loops + range()
-- Hour 28: Loop patterns — counters, accumulators, min/max
+- Hour 28: Loop patterns — counters, accumulators, min/max, averages
 
 ---
 
 # Hour 25: Conditionals — if/elif/else and Boundaries
 
 ## Learning Outcomes
-- Write clear conditional logic
-- Handle boundary values correctly
-- Use if/elif/else effectively for multi-branch decisions
-- Order conditions to avoid overlapping branches
+- Write clear if/elif/else statements that handle multiple distinct cases
+- Explain why the order of elif branches matters when conditions overlap
+- Handle boundary values correctly using `<=`, `<`, `>=`, `>`
+- Choose between nested and flat if/elif chains based on readability
+- Build a shipping calculator that handles all boundary weights correctly
 
 ---
 
-## Review: Basic Conditionals
+## if/elif/else Structure
 
-### The Building Blocks
+### The Basic Form
+
 ```python
-if condition:
-    # runs when condition is True
-elif other_condition:
-    # runs when other_condition is True
+if condition_1:
+    # runs if condition_1 is True
+elif condition_2:
+    # runs if condition_1 is False and condition_2 is True
+elif condition_3:
+    # runs if condition_1 and condition_2 are False, condition_3 is True
 else:
-    # runs when all conditions are False
+    # runs if all conditions above are False
 ```
 
-### Key Points
-- Python uses **indentation** (4 spaces) to define blocks
-- `elif` is short for "else if"
-- `else` is optional — but often a good safety net
-- Only **one** branch executes per if/elif/else chain
+### Key Rule — First Match Wins
+Python evaluates conditions **top to bottom** and executes the first block whose condition is True. Once a match is found, all remaining `elif` and `else` blocks are skipped.
 
 ---
 
 ## Condition Ordering Matters
 
-### The Problem
-When conditions overlap, the **order** determines which branch runs first.
+### The Bug — Overlapping Conditions
 
-### Bad Example — Overlapping Conditions
 ```python
-weight = 5
-
-if weight <= 10:
-    cost = 5.00      # This catches weight=5
-elif weight <= 5:
-    cost = 3.00      # Never reached for weight=5!
+# WRONG: every weight > 10 is also > 0, so "Heavy" is never reached
+if weight > 0:
+    print("Standard rate")
+elif weight > 10:
+    print("Heavy rate")   # never executes!
 ```
 
-### Good Example — Correct Order
-```python
-weight = 5
+### The Fix — Most Specific First
 
+```python
+# CORRECT: check narrowest range first
 if weight <= 5:
-    cost = 3.00      # Checks smallest range first
+    rate = 5
 elif weight <= 10:
-    cost = 5.00
+    rate = 10
+else:
+    rate = 15
 ```
 
-> 💡 **Rule of Thumb:** Check from smallest to largest (or most specific to least specific).
+If we reach `elif weight <= 10`, we already know weight is greater than 5. No need to repeat the lower bound.
+
+---
+
+## Boundary Handling
+
+### The Off-by-One Problem
+A shipping rule says "0 to 5 pounds: $5". Does exactly 5 pounds cost $5 or $10?
+
+```python
+# <= 5 means "up to and including 5"
+if weight <= 5:
+    rate = 5
+elif weight <= 10:
+    rate = 10
+else:
+    rate = 15
+```
+
+### Always Test at Boundaries
+
+Test weights 5, 5.01, 10, and 10.01 — these are the values where bugs hide.
+
+- Weight 5 → `weight <= 5` matches → $5
+- Weight 5.01 → `weight <= 10` matches → $10
+- Weight 10 → `weight <= 10` matches → $10
+- Weight 10.01 → `else` → $15
 
 ---
 
 ## Nested vs Flat Conditionals
 
-### Nested (Harder to Read)
+### Nested — Grows Deeply
+
 ```python
-if age >= 18:
-    if has_ticket:
-        print("Welcome!")
+if is_member:
+    if purchase_amount > 100:
+        discount = 0.20
     else:
-        print("Buy a ticket first.")
+        discount = 0.10
 else:
-    print("Too young.")
+    discount = 0
 ```
 
-### Flat (Clearer)
+### Flat — Easier to Scan
+
 ```python
-if age < 18:
-    print("Too young.")
-elif not has_ticket:
-    print("Buy a ticket first.")
+if is_member and purchase_amount > 100:
+    discount = 0.20
+elif is_member:
+    discount = 0.10
 else:
-    print("Welcome!")
+    discount = 0
 ```
 
-> 💡 **Prefer flat if/elif/else** when possible — it's easier to read and maintain.
+**Guideline:** Prefer flat if/elif chains. Use nesting only when the inner condition truly depends on the outer being True.
 
 ---
 
-## Readable Boolean Expressions
-
-### Tips for Cleaner Conditions
-```python
-# Avoid double negatives
-# Bad:
-if not is_invalid:
-    ...
-
-# Better:
-if is_valid:
-    ...
-```
-
-### Comparing to Boolean Values
-```python
-# Don't write this:
-if is_ready == True:
-    ...
-
-# Write this instead:
-if is_ready:
-    ...
-```
-
-### Using `and` / `or`
-```python
-if age >= 18 and has_ticket:
-    print("Welcome!")
-
-if is_weekend or is_holiday:
-    print("Day off!")
-```
-
----
-
-## Boundary Values
-
-### What Are Boundaries?
-The exact values where behavior changes — e.g., the cutoff between shipping tiers.
-
-### Common Boundary Bug
-```python
-# Bug: What happens when weight is exactly 5?
-if weight < 5:
-    cost = 3.00
-elif weight < 10:
-    cost = 5.00
-# weight=5 → cost=5.00 (is that correct?)
-```
-
-### Fix: Use `<=` When the Boundary Belongs to the Lower Tier
-```python
-if weight <= 5:
-    cost = 3.00
-elif weight <= 10:
-    cost = 5.00
-```
-
-> ⚠️ **Always test boundary values** — they're where bugs hide.
-
----
-
-## Demo: Shipping Calculator
-
-### Watch For:
-- Correct ordering of conditions
-- Boundary values handled properly
-- Clear output messages
+## Demo — Shipping Calculator (Correct Version)
 
 ```python
-weight = float(input("Enter package weight (kg): "))
+# Shipping calculator - correct version
+# Source: Day7_Hour1_Basics.md, section 7.2
+
+weight = float(input("Enter package weight in pounds: "))
 
 if weight <= 0:
-    print("Invalid weight.")
-elif weight <= 2:
-    cost = 5.00
-    category = "Light"
+    print("Error: weight must be positive.")
 elif weight <= 5:
-    cost = 10.00
-    category = "Medium"
+    cost = 5
+    category = "Light"
 elif weight <= 10:
-    cost = 20.00
-    category = "Heavy"
+    cost = 10
+    category = "Medium"
 else:
-    cost = 35.00
-    category = "Extra Heavy"
+    cost = 15
+    category = "Heavy"
 
 if weight > 0:
     print(f"Category: {category}")
-    print(f"Shipping cost: ${cost:.2f}")
+    print(f"Shipping cost: ${cost}")
 ```
 
-### Expected Output (weight = 5)
-```
-Category: Medium
-Shipping cost: $10.00
-```
+Guard clause first, then most specific to least specific. Each `elif` inherits the rejected ranges above it.
 
 ---
 
-## Lab: Shipping Calculator
+## Demo — Wrong Ordering Bug
 
-### Instructions (30 minutes)
+```python
+# WRONG: overlapping conditions
+# Source: Day7_Hour1_Basics.md, section 7.4
 
-**Task:** Build a shipping cost calculator with tiered pricing.
+weight = float(input("Enter package weight in pounds: "))
 
-**Requirements:**
-1. Ask the user to input a package weight (in kg)
-2. Compute shipping cost using these tiers:
-   - 0 kg or less → Invalid (print error message)
-   - Up to 2 kg → $5.00 (Light)
-   - Up to 5 kg → $10.00 (Medium)
-   - Up to 10 kg → $20.00 (Heavy)
-   - Over 10 kg → $35.00 (Extra Heavy)
-3. Print both the category name and cost
+if weight > 0:
+    cost = 5
+    category = "Light"
+elif weight > 5:
+    cost = 10
+    category = "Medium"   # never reached for any valid weight
+elif weight > 10:
+    cost = 15
+    category = "Heavy"    # never reached
+```
+
+Testing with `weight = 12` outputs "Light, $5" — **wrong**.
+
+**Fix:** Either order from most restrictive to least, or use non-overlapping `<=` boundaries.
+
+---
+
+## Lab — Shipping Calculator
+
+**Time: 25 minutes**
+
+**Task:** Build a shipping calculator with tiered weight rules.
+
+**Rules:**
+- Weight must be positive — validate and show error if not
+- 0 to 5 pounds → $5 flat (Light)
+- More than 5, up to 10 pounds → $10 flat (Medium)
+- More than 10 pounds → $15 flat (Heavy)
+
+**Optional:** Add a fragile surcharge — if package is fragile (yes/no), add $3.
 
 **Completion Criteria:**
-- ✅ Correct cost for boundary weights (0, 2, 5, 10)
-- ✅ Readable branching logic
-- ✅ Handles invalid input (zero or negative weight)
+- Correct cost for boundary weights 5, 5.01, 10, 10.01
+- Readable branching logic with no overlapping conditions
+- Clear output showing weight, category, and cost
 
 ---
 
 ## Common Pitfalls — Hour 25
 
-### Pitfall 1: Overlapping Conditions
-```python
-# Bug: Both conditions match weight=5
-if weight <= 10:
-    cost = 5.00
-if weight <= 5:     # Should be elif, not if!
-    cost = 3.00
-```
+⚠️ **Overlapping conditions** — first `if` is too broad, later `elif` blocks never execute
 
-**Fix:** Use `elif` to create mutually exclusive branches.
+⚠️ **Wrong comparison operator** — using `<` instead of `<=` shifts the boundary by one unit
 
-### Pitfall 2: Wrong elif Order
-```python
-# Bug: Larger range checked first catches everything
-if weight <= 10:
-    cost = 20.00   # weight=3 hits this!
-elif weight <= 5:
-    cost = 10.00   # Never reached for small weights
-```
+⚠️ **No input validation** — not checking for negative or zero weight before computing cost
 
-**Fix:** Check smallest ranges first, then larger ones.
-
----
-
-## Optional Extensions — Hour 25
-
-### Extension 1: Free Shipping Threshold
-Add a check: if total order is over $50, shipping is free.
-```python
-order_total = float(input("Order total: $"))
-
-if order_total > 50:
-    print("Free shipping!")
-else:
-    # Apply normal tiered pricing
-    ...
-```
-
-### Extension 2: Fragile Surcharge
-Add a boolean input: if the package is fragile, add a $5 surcharge.
-```python
-is_fragile = input("Is the package fragile? (yes/no): ").lower() == "yes"
-
-if is_fragile:
-    cost += 5.00
-    print(f"Fragile surcharge applied. New cost: ${cost:.2f}")
-```
-
-**Stay in Basics Scope:** Simple boolean input and addition — no classes or complex types.
+⚠️ **Inconsistent boundaries** — "5 to 10 pounds" is ambiguous; clarify whether 5 and 10 are included
 
 ---
 
 ## Quick Check — Hour 25
 
-**Exit Ticket Question:** Why does the order of `elif` statements matter?
+**Question:** Given this code, what grade does a score of 85 receive?
 
-**Model Answer:** "The order matters because Python evaluates conditions top to bottom and executes the **first** branch that is True. If a broader condition appears before a narrower one, the narrower condition will never execute. Always order from most specific (smallest range) to least specific (largest range)."
+```python
+if score >= 90:
+    grade = 'A'
+elif score >= 80:
+    grade = 'B'
+elif score >= 70:
+    grade = 'C'
+else:
+    grade = 'F'
+```
+
+What would happen if you reversed the order of the conditions?
 
 ---
 
 # Hour 26: while Loops + Sentinel Patterns
 
 ## Learning Outcomes
-- Use while loops for repeated prompts
-- Use break and continue appropriately
-- Implement sentinel value patterns (e.g., 'q' to quit)
-- Avoid common infinite loop mistakes
+- Write a while loop that repeats code until a condition becomes False
+- Explain the difference between a while loop and a for loop
+- Use `break` to exit a loop early when a goal is achieved
+- Use `continue` to skip the rest of the current iteration
+- Implement a sentinel pattern — keep prompting until a special value is entered
+- Build a password prompt that allows up to 3 attempts
 
 ---
 
-## What Is a while Loop?
+## while Loop Basics
 
-### Basic Structure
+### Structure
+
 ```python
 while condition:
-    # body runs repeatedly while condition is True
+    # code to repeat
 ```
 
-### Simple Example
+Python checks the condition **before each iteration**. If it is False on the first check, the body never runs.
+
+### Simple Trace
+
 ```python
 count = 1
-while count <= 5:
-    print(count)
-    count += 1
 
-print("Done!")
+while count <= 3:
+    print(f"Iteration {count}")
+    count = count + 1
+
+print("Done")
 ```
 
-### Output
-```
-1
-2
-3
-4
-5
-Done!
-```
-
-> 💡 A while loop keeps going as long as the condition stays True.
+Output: `Iteration 1`, `Iteration 2`, `Iteration 3`, `Done`
 
 ---
 
-## Sentinel Value Patterns
+## The Infinite Loop Danger
 
-### What Is a Sentinel?
-A **sentinel value** is a special input that signals "stop looping."
+### What Happens When You Forget to Update
 
-### Common Sentinels
-- `'q'` or `'quit'` to exit a menu
-- `-1` to stop entering numbers
-- `''` (empty string) to finish input
-
-### Example: Input Until Quit
 ```python
-while True:
-    command = input("Enter command (q to quit): ")
-    if command == 'q':
-        print("Goodbye!")
-        break
-    print(f"You entered: {command}")
+count = 1
+
+while count <= 3:
+    print(f"Iteration {count}")
+    # forgot: count = count + 1
 ```
+
+`count` never changes, so the condition is always True, and the loop runs forever.
+
+**If this happens:** press `Ctrl+C` in the terminal to interrupt.
+
+**Rule:** Every while loop must change something that eventually makes the condition False — usually by updating a variable inside the loop body.
 
 ---
 
-## break and continue
+## break — Exit a Loop Early
 
-### break — Exit the Loop Immediately
 ```python
-while True:
-    answer = input("Type 'exit' to stop: ")
-    if answer == 'exit':
-        break
-    print(f"You said: {answer}")
+count = 1
 
-print("Loop ended.")
+while count <= 10:
+    print(f"Iteration {count}")
+    if count == 3:
+        print("Breaking out of loop")
+        break
+    count = count + 1
+
+print("Done")
 ```
 
-### continue — Skip to the Next Iteration
+When Python hits `break`, it exits immediately — even though `count <= 10` is still True.
+
+**Use `break` when:** you have achieved your goal early and do not need to keep looping.
+
+---
+
+## continue — Skip to the Next Iteration
+
 ```python
 count = 0
-while count < 10:
-    count += 1
-    if count % 2 == 0:
-        continue     # Skip even numbers
-    print(count)     # Only prints odd: 1, 3, 5, 7, 9
+
+while count < 5:
+    count = count + 1
+    if count == 3:
+        print(f"Skipping {count}")
+        continue
+    print(f"Processing {count}")
+
+print("Done")
 ```
 
-> ⚠️ Use `break` and `continue` sparingly — overuse makes code harder to follow.
+Output: `Processing 1`, `Processing 2`, `Skipping 3`, `Processing 4`, `Processing 5`, `Done`
+
+**Use `continue` when:** you want to skip this case but keep looping (e.g., skip blank lines, re-prompt on invalid input without exiting).
 
 ---
 
-## Common Infinite Loop Causes
+## Sentinel Patterns
 
-### Cause 1: Forgetting to Update the Loop Variable
+### What Is a Sentinel?
+A **sentinel value** signals "stop" — it is never a valid data value.
+
 ```python
-# Bug: count never changes!
-count = 1
-while count <= 5:
-    print(count)
-    # Missing: count += 1
+names = []
+
+while True:
+    name = input("Enter a name (or 'done' to finish): ")
+    if name == 'done':
+        break
+    names.append(name)
+
+print(f"You entered {len(names)} names.")
 ```
 
-### Cause 2: Wrong Update Direction
-```python
-# Bug: count starts at 10 and goes UP, so count >= 5 stays True forever
-count = 10
-while count >= 5:
-    count += 1   # Should be count -= 1 to eventually reach < 5
-```
+Pattern: `while True` + `break` on the sentinel. Safe because `break` guarantees exit.
 
-### Cause 3: Condition Always True
-```python
-# Bug: 1 == 1 is always True
-while 1 == 1:
-    print("Stuck forever!")
-```
-
-> 💡 **Always ask:** "What changes in each iteration to eventually make the condition False?"
+**Common sentinels:** `'q'`, `'quit'`, `'done'`, empty string `''`, `-1` for positive-number lists.
 
 ---
 
-## Demo: Password Attempts Loop
-
-### Watch For:
-- Limited number of attempts
-- `break` on correct password
-- Lockout message after failures
+## Demo — Password Prompt with Retry Limit
 
 ```python
+# Password prompt with retry limit
+# Source: Day7_Hour2_Basics.md, section 7.2
+
 correct_password = "python123"
 max_attempts = 3
 attempts = 0
 
 while attempts < max_attempts:
-    password = input("Enter password: ")
-    attempts += 1
+    attempts = attempts + 1
+    password = input(f"Enter password (attempt {attempts} of {max_attempts}): ")
 
     if password == correct_password:
         print("Access granted!")
         break
-else:
+    else:
+        print("Incorrect password.")
+
+if attempts == max_attempts and password != correct_password:
     print("Account locked. Too many failed attempts.")
 ```
 
-### Expected Output (all wrong)
-```
-Enter password: wrong1
-Enter password: wrong2
-Enter password: wrong3
-Account locked. Too many failed attempts.
-```
-
 ---
 
-## while/else Explained
+## Lab — Password Prompt
 
-### How It Works
-```python
-while condition:
-    # loop body
-    if something:
-        break
-else:
-    # runs ONLY if the loop ended normally (no break)
-```
+**Time: 25 minutes**
 
-### Key Insight
-- The `else` block runs when the `while` condition becomes False
-- It does **not** run if the loop exits via `break`
-- Useful for "search" patterns: break when found, else = not found
+**Task:** Build a password prompt with retry logic.
 
----
+**Rules:**
+- Correct password: `'secure123'` (hardcoded for this lab)
+- Maximum 3 attempts
+- After each incorrect attempt, show how many attempts remain
+- On success: print `'Access granted!'` and stop immediately
+- After 3 failures: print `'Account locked. Contact support.'`
 
-## Lab: Password Prompt
-
-### Instructions (30 minutes)
-
-**Task:** Build a password checker with limited attempts.
-
-**Requirements:**
-1. Define a correct password (e.g., `"secret123"`)
-2. Ask the user for a password — up to 3 attempts
-3. If correct, print "Access granted!" and stop
-4. If all 3 attempts fail, print "Account locked."
+**Optional:** If the user enters an empty string, don't count it as an attempt — re-prompt instead.
 
 **Completion Criteria:**
-- ✅ Stops correctly on successful password entry
-- ✅ Locks out after exactly 3 failed attempts
-- ✅ Correct use of while loop and counter
+- Program stops on success using `break`
+- Program stops after exactly 3 failures
+- Attempt counter is accurate throughout
 
 ---
 
 ## Common Pitfalls — Hour 26
 
-### Pitfall 1: Not Updating the Attempt Counter
-```python
-# Bug: attempts never increases → infinite loop
-attempts = 0
-while attempts < 3:
-    password = input("Enter password: ")
-    if password == correct:
-        print("Correct!")
-        break
-    # Missing: attempts += 1
-```
+⚠️ **Infinite loop** — forgetting to update the loop variable; `attempts` never changes, condition stays True forever
 
-### Pitfall 2: Using = Instead of ==
-```python
-# Bug: Assignment, not comparison!
-if password = "secret":    # SyntaxError in Python
+⚠️ **No `break` on success** — program prints "Access granted!" but keeps looping; must `break` immediately
 
-# Correct:
-if password == "secret":
-    print("Match!")
-```
+⚠️ **Wrong condition** — `while attempts <= 3` gives 4 attempts instead of 3; use `<` not `<=`
 
-> 💡 Python catches `=` vs `==` errors as SyntaxError, but the intent matters.
-
----
-
-## Optional Extensions — Hour 26
-
-### Extension 1: Show Remaining Attempts
-```python
-while attempts < max_attempts:
-    remaining = max_attempts - attempts
-    password = input(f"Enter password ({remaining} attempts left): ")
-    attempts += 1
-    if password == correct_password:
-        print("Access granted!")
-        break
-```
-
-### Extension 2: Minimum Password Length Check
-```python
-while attempts < max_attempts:
-    password = input("Enter password: ")
-    if len(password) < 6:
-        print("Password must be at least 6 characters.")
-        continue    # Don't count this as an attempt
-    attempts += 1
-    if password == correct_password:
-        print("Access granted!")
-        break
-```
-
-**Stay in Basics Scope:** Simple length check — no regex or complex validation.
+⚠️ **Incrementing in the wrong place** — if you only increment on failure, the counter is wrong when the user succeeds early
 
 ---
 
 ## Quick Check — Hour 26
 
-**Exit Ticket Question:** What variable must change in a while loop to avoid infinite loops?
+**Question:** What is the minimum number of times a while loop's body can execute? What is the maximum?
 
-**Model Answer:** "The **loop control variable** — the variable tested in the `while` condition — must change inside the loop body. If it never changes, the condition remains True forever and the loop runs indefinitely."
+**Hint:** What happens if the condition is False the very first time Python checks it?
 
 ---
 
 # Hour 27: for Loops + range()
 
 ## Learning Outcomes
-- Use for loops with range()
-- Explain inclusive/exclusive end in range
-- Use range(n), range(a, b), and range(a, b, step)
-- Choose between for and while loops appropriately
+- Write a for loop that iterates over a list or other sequence
+- Use `range(n)`, `range(start, stop)`, and `range(start, stop, step)` to generate sequences
+- Explain why range() uses exclusive endpoints and how to adjust for inclusive ranges
+- Choose between for loops and while loops based on whether you know the iteration count
+- Build a multiplication table using nested for loops with range()
 
 ---
 
-## What Is a for Loop?
+## for Loops — Iterating Over Sequences
 
-### Basic Structure
+### Structure
+
 ```python
-for variable in sequence:
-    # body runs once for each item in sequence
+for item in sequence:
+    # code to repeat once per item
 ```
 
-### Looping Over a List
+### Simple Example
+
 ```python
-fruits = ["apple", "banana", "cherry"]
-for fruit in fruits:
-    print(fruit)
+names = ['Alice', 'Bob', 'Charlie']
+
+for name in names:
+    print(f'Hello, {name}!')
 ```
 
-### Output
-```
-apple
-banana
-cherry
-```
+Output: `Hello, Alice!`, `Hello, Bob!`, `Hello, Charlie!`
 
-> 💡 A for loop visits each item in a sequence, one at a time.
+Python moves through the sequence automatically — no counter to manage, no index to increment. **Prefer for over while when you know what you are iterating over.**
 
 ---
 
-## The range() Function
+## range() — Three Forms
 
-### Three Forms of range()
+### range(stop) — start at 0, stop before n
 
-**`range(n)`** — 0 to n-1
 ```python
 for i in range(5):
     print(i)
 # Output: 0, 1, 2, 3, 4
 ```
 
-**`range(a, b)`** — a to b-1
+### range(start, stop) — start at start, stop before stop
+
 ```python
-for i in range(1, 6):
+for i in range(2, 5):
     print(i)
-# Output: 1, 2, 3, 4, 5
+# Output: 2, 3, 4
 ```
 
-**`range(a, b, step)`** — a to b-1, stepping by step
+### range(start, stop, step) — custom increment or countdown
+
 ```python
 for i in range(0, 10, 2):
     print(i)
 # Output: 0, 2, 4, 6, 8
+
+for i in range(5, 0, -1):
+    print(i)
+# Output: 5, 4, 3, 2, 1
 ```
 
 ---
 
-## Inclusive vs Exclusive End
+## range() — Exclusive Endpoints
 
 ### The Rule
 `range(start, stop)` goes up to but **does NOT include** `stop`.
 
-### Why This Matters
 ```python
-# Want numbers 1 through 10?
+# Want 1 through 10? range(1, 10) gives only 1-9
 for i in range(1, 10):
-    print(i)
-# Prints: 1, 2, 3, 4, 5, 6, 7, 8, 9
-# Missing 10!
+    print(i)   # Missing 10!
 
-# Fix:
+# Fix: use range(1, 11)
 for i in range(1, 11):
-    print(i)
-# Prints: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    print(i)   # 1 through 10 inclusive
 ```
 
-> ⚠️ **The most common for-loop bug:** off-by-one errors from forgetting that `range()` is exclusive on the upper end.
+### Why Exclusive?
+- Length is obvious: `range(5)` gives exactly 5 numbers (0–4)
+- Ranges fit together cleanly: `range(0, 5)` and `range(5, 10)` have no gap or overlap
+- List indexing works naturally: a 5-item list has valid indices `0, 1, 2, 3, 4` = `range(5)`
 
 ---
 
-## Counting with range()
+## Nested for Loops
 
-### Useful Patterns
+### What Are They?
+A loop inside another loop. The inner loop completes **all** its iterations for each single iteration of the outer loop.
 
-**Count from 1 to n:**
 ```python
-n = 5
-for i in range(1, n + 1):
-    print(i)
-# 1, 2, 3, 4, 5
+for row in range(3):
+    for col in range(4):
+        print(f'({row}, {col})', end=' ')
+    print()  # new line after each row
 ```
 
-**Count backward:**
-```python
-for i in range(5, 0, -1):
-    print(i)
-# 5, 4, 3, 2, 1
+Output:
+```
+(0, 0) (0, 1) (0, 2) (0, 3)
+(1, 0) (1, 1) (1, 2) (1, 3)
+(2, 0) (2, 1) (2, 2) (2, 3)
 ```
 
-**Skip every other number:**
-```python
-for i in range(0, 10, 2):
-    print(i)
-# 0, 2, 4, 6, 8
-```
+**Total iterations:** outer × inner = 3 × 4 = 12. Keep nesting to two levels when possible.
 
 ---
 
-## for vs while — When to Use Each
-
-### Use for When:
-- You know how many times to loop
-- You're iterating over a sequence (list, range, string)
-- You want cleaner, more predictable code
-
-### Use while When:
-- You don't know how many iterations in advance
-- You're waiting for user input or a condition to change
-- You need a sentinel-based loop
-
-### Quick Comparison
-```python
-# for: known count
-for i in range(5):
-    print(i)
-
-# while: unknown count
-response = ""
-while response != "quit":
-    response = input("Enter command: ")
-```
-
----
-
-## Demo: Multiplication Table
-
-### Watch For:
-- Using range(1, 11) for 1 through 10
-- Formatted output alignment
-- Nested loops for grid (optional, keep small)
+## Demo — Multiplication Table
 
 ```python
-n = int(input("Enter a number: "))
+# Multiplication table: 1 through 10
+# Source: Day7_Hour3_Basics.md, section 7.2
 
-print(f"Multiplication table for {n}:")
-print("-" * 20)
+print("Multiplication Table (1-10)")
+print()
 
 for i in range(1, 11):
-    result = n * i
-    print(f"{n} x {i:2d} = {result:3d}")
+    for j in range(1, 11):
+        product = i * j
+        print(f"{product:4}", end="")
+    print()  # new line after each row
 ```
 
-### Expected Output (n = 7)
-```
-Multiplication table for 7:
---------------------
-7 x  1 =   7
-7 x  2 =  14
-7 x  3 =  21
-7 x  4 =  28
-7 x  5 =  35
-7 x  6 =  42
-7 x  7 =  49
-7 x  8 =  56
-7 x  9 =  63
-7 x 10 =  70
-```
+- `range(1, 11)` gives 1 through 10 (11 is exclusive)
+- `f"{product:4}"` pads to width 4 so columns align
+- `end=""` keeps products on one line; `print()` after inner loop starts the next row
 
 ---
 
-## Lab: Multiplication Table
+## Lab — Multiplication Table
 
-### Instructions (30 minutes)
+**Time: 25 minutes**
 
-**Task:** Build a multiplication table generator.
+**Task:** Ask the user for a number `n`, then print a multiplication table from 1 to n.
 
-**Requirements:**
-1. Ask the user for a number `n`
-2. Print the multiplication table for `n` from 1 to 10
-3. Use `range()` to generate the multipliers
-4. Format output so columns align
+**Rules:**
+- Prompt user for n (a positive integer)
+- Print a table showing `i × j` for all i and j from 1 to n
+- Format output so columns align (use `{:4}` or similar)
+
+**Optional:** Add row and column headers (the numbers 1 through n).
 
 **Completion Criteria:**
-- ✅ Correct outputs for 1 through 10
-- ✅ Formatting is readable and aligned
-- ✅ Uses `range()` properly
+- Table prints correctly for n=5, n=10, n=12
+- Columns align with a format specifier
+- `range()` uses correct start and stop values (1 through n inclusive)
 
 ---
 
 ## Common Pitfalls — Hour 27
 
-### Pitfall 1: Off-by-One in range()
-```python
-# Bug: Prints 1 to 9, not 1 to 10
-for i in range(1, 10):
-    print(f"{n} x {i} = {n * i}")
+⚠️ **Wrong range** — `range(n)` gives 0 to n-1, not 1 to n; use `range(1, n + 1)` for 1 through n inclusive
 
-# Fix: Use range(1, 11) for 1 through 10
-for i in range(1, 11):
-    print(f"{n} x {i} = {n * i}")
-```
+⚠️ **No newline after row** — forgetting `print()` after the inner loop prints everything on one long line
 
-### Pitfall 2: Not Converting Input to int
-```python
-# Bug: n is a string, can't multiply
-n = input("Enter a number: ")
-result = n * 3   # "777" not 21!
+⚠️ **Misaligned columns** — not using a format specifier like `{:4}` makes the table unreadable
 
-# Fix:
-n = int(input("Enter a number: "))
-result = n * 3   # 21
-```
-
----
-
-## Optional Extensions — Hour 27
-
-### Full Multiplication Grid
-Print a full 1 through n grid using nested loops:
-```python
-n = int(input("Grid size: "))
-
-# Header row
-print("    ", end="")
-for j in range(1, n + 1):
-    print(f"{j:4d}", end="")
-print()
-print("-" * (4 * n + 4))
-
-# Table body
-for i in range(1, n + 1):
-    print(f"{i:3d} |", end="")
-    for j in range(1, n + 1):
-        print(f"{i * j:4d}", end="")
-    print()
-```
-
-**Stay in Basics Scope:** Nested loops are fine for a small grid. Don't introduce list comprehensions or string methods beyond basics.
+⚠️ **Confusing i and j** — outer loop variable controls rows; inner loop variable controls columns
 
 ---
 
 ## Quick Check — Hour 27
 
-**Exit Ticket Question:** What does `range(1, 4)` produce?
-
-**Model Answer:** "`range(1, 4)` produces the sequence `1, 2, 3`. The start value (1) is **inclusive** and the stop value (4) is **exclusive**. To see the values, you can use `list(range(1, 4))` which gives `[1, 2, 3]`."
+**Question:** What does `range(1, 4)` produce? What about `range(4, 1)`? What about `range(4, 1, -1)`?
 
 ---
 
 # Hour 28: Loop Patterns — Counters, Accumulators, Min/Max
 
 ## Learning Outcomes
-- Apply common loop patterns reliably
-- Track min and max values through a loop
-- Use counter and accumulator patterns
-- Initialize variables safely before looping
+- Implement counter patterns — increment inside a conditional to count specific items
+- Build accumulators — initialize and update variables that collect values across iterations
+- Develop min/max tracking — find minimum and maximum values while iterating
+- Calculate averages — combine counter and accumulator to compute the mean
+- Build a complete number statistics program integrating all four patterns
 
 ---
 
-## Pattern 1: Counter
+## Counter Pattern
 
-### What Is It?
-A variable that counts how many times something happens.
+### What It Does
+Counts how many items satisfy a condition. Initialize to 0; increment **inside** the `if` block.
 
-### Template
 ```python
+numbers = [10, 5, 20, 15, 30]
+even_count = 0
+
+for num in numbers:
+    if num % 2 == 0:    # check if even
+        even_count = even_count + 1
+
+print(f'Even numbers: {even_count}')  # Output: 3
+```
+
+**Common mistake:** putting `count = count + 1` outside the `if` — it then counts every iteration, not just matching items.
+
+---
+
+## Accumulator Pattern
+
+### What It Does
+Collects values across a loop. Choose the right initial value for the operation.
+
+```python
+numbers = [10, 20, 30, 40, 50]
+total = 0
+
+for num in numbers:
+    total = total + num
+
+print(f'Sum: {total}')  # Output: 150
+```
+
+### Initialization Rules
+
+- **Addition** → initialize to `0`
+- **Multiplication** → initialize to `1`
+- **String concatenation** → initialize to `""`
+- **List building** → initialize to `[]`
+
+---
+
+## Min/Max Pattern
+
+### What It Does
+Tracks extreme values. Initialize with the **first item** — never with 0.
+
+```python
+numbers = [10, 5, 20, 15, 30]
+minimum = numbers[0]   # start with a real value from the data
+maximum = numbers[0]
+
+for num in numbers[1:]:   # skip first item (already assigned)
+    if num < minimum:
+        minimum = num
+    if num > maximum:
+        maximum = num
+
+print(f'Min: {minimum}, Max: {maximum}')  # Min: 5, Max: 30
+```
+
+If you initialize `minimum = 0` and all values are positive, minimum stays 0 — a value that was never in the list.
+
+---
+
+## Average Pattern
+
+### What It Does
+Combines counter + accumulator. Divide **after** the loop completes — never inside it.
+
+```python
+numbers = [10, 5, 20, 15, 30]
+total = 0
 count = 0
-for item in collection:
-    if some_condition(item):
-        count += 1
-print(f"Found {count} matches.")
-```
-
-### Example: Count Passing Scores
-```python
-scores = [85, 42, 91, 67, 73, 55, 88]
-passing_count = 0
-
-for score in scores:
-    if score >= 70:
-        passing_count += 1
-
-print(f"Passing scores: {passing_count}")
-# Output: Passing scores: 4
-```
-
----
-
-## Pattern 2: Accumulator
-
-### What Is It?
-A variable that accumulates (adds up) values through a loop.
-
-### Template
-```python
-total = 0
-for item in collection:
-    total += item
-average = total / len(collection)
-```
-
-### Example: Sum and Average
-```python
-prices = [12.50, 8.75, 15.00, 6.25, 9.50]
-total = 0
-
-for price in prices:
-    total += price
-
-average = total / len(prices)
-print(f"Total: ${total:.2f}")
-print(f"Average: ${average:.2f}")
-# Total: $52.00
-# Average: $10.40
-```
-
----
-
-## Pattern 3: Min/Max Tracking
-
-### What Is It?
-Tracking the smallest and largest values seen so far.
-
-### Safe Initialization
-```python
-# Option 1: Initialize with first item
-numbers = [45, 23, 67, 12, 89, 34]
-current_min = numbers[0]
-current_max = numbers[0]
 
 for num in numbers:
-    if num < current_min:
-        current_min = num
-    if num > current_max:
-        current_max = num
-
-print(f"Min: {current_min}, Max: {current_max}")
-# Min: 12, Max: 89
-```
-
----
-
-## Why Not Initialize Min/Max to 0?
-
-### The Trap
-```python
-# Bug: What if all numbers are positive?
-current_min = 0    # This is smaller than any positive number!
-
-numbers = [45, 23, 67]
-for num in numbers:
-    if num < current_min:
-        current_min = num
-
-print(f"Min: {current_min}")
-# Output: Min: 0 ← Wrong! 0 was never in the list.
-```
-
-### Safe Alternatives
-```python
-# Option 1: Use first element
-current_min = numbers[0]
-
-# Option 2: Use float('inf') / float('-inf')
-current_min = float('inf')    # Larger than any number
-current_max = float('-inf')   # Smaller than any number
-```
-
-> ⚠️ **Initializing min to 0 is a classic bug.** Always use the first element or infinity.
-
----
-
-## Combining Patterns
-
-### All Together: Stats in One Loop
-```python
-numbers = [45, 23, 67, 12, 89, 34]
-
-count = 0
-total = 0
-current_min = numbers[0]
-current_max = numbers[0]
-
-for num in numbers:
-    count += 1
-    total += num
-    if num < current_min:
-        current_min = num
-    if num > current_max:
-        current_max = num
+    total = total + num
+    count = count + 1
 
 average = total / count
-print(f"Count: {count}")
-print(f"Sum: {total}")
-print(f"Average: {average:.2f}")
-print(f"Min: {current_min}")
-print(f"Max: {current_max}")
+print(f'Average: {average:.2f}')  # Output: 16.00
 ```
+
+Format to two decimal places for clarity. Watch for division by zero if the list could be empty.
 
 ---
 
-## Demo: Number Stats
-
-### Watch For:
-- Safe min/max initialization
-- Counter and accumulator in one loop
-- Clean formatted output
+## Demo — Number Statistics Program
 
 ```python
-numbers = []
-print("Enter 5 numbers:")
+# Number Statistics Program
+# Source: Day7_Hour4_Basics.md, section 4
 
-for i in range(5):
-    num = float(input(f"  Number {i + 1}: "))
-    numbers.append(num)
+numbers = [10, 5, 20, 15, 30]
 
-# Calculate stats
 total = 0
-current_min = numbers[0]
-current_max = numbers[0]
+count = 0
+minimum = numbers[0]
+maximum = numbers[0]
 
-for num in numbers:
-    total += num
-    if num < current_min:
-        current_min = num
-    if num > current_max:
-        current_max = num
+for num in numbers[1:]:
+    total = total + num
+    count = count + 1
+    if num < minimum:
+        minimum = num
+    if num > maximum:
+        maximum = num
 
-average = total / len(numbers)
+# Add back the first number (used for min/max init but not yet in total)
+total = total + numbers[0]
+count = count + 1
 
-print(f"\nResults:")
-print(f"  Sum:     {total:.2f}")
-print(f"  Average: {average:.2f}")
-print(f"  Min:     {current_min:.2f}")
-print(f"  Max:     {current_max:.2f}")
+average = total / count
+
+print(f'Min: {minimum:.1f}')
+print(f'Max: {maximum:.1f}')
+print(f'Sum: {total:.1f}')
+print(f'Average: {average:.2f}')
 ```
 
-### Expected Output
-```
-Enter 5 numbers:
-  Number 1: 10
-  Number 2: 25
-  Number 3: 7
-  Number 4: 42
-  Number 5: 18
-
-Results:
-  Sum:     102.00
-  Average: 20.40
-  Min:     7.00
-  Max:     42.00
-```
+Expected: `Min: 5.0`, `Max: 30.0`, `Sum: 80.0`, `Average: 16.00`
 
 ---
 
-## Lab: Number Stats
+## Lab — Number Statistics
 
-### Instructions (30 minutes)
+**Time: 25 minutes**
 
-**Task:** Build a number statistics calculator.
+**Starter data:** `numbers = [12, 8, 25, 9, 18, 14, 22]`
 
-**Requirements:**
-1. Ask the user for 5 numbers
-2. Compute: minimum, maximum, sum, and average
-3. Print all four results with clear labels
+**Task:** Complete a statistics program for this list.
+
+**Steps:**
+1. Initialize `total = 0`, `count = 0`, `minimum = numbers[0]`, `maximum = numbers[0]`
+2. Write a for loop — update total, count, minimum, and maximum for every number
+3. Calculate `average = total / count` after the loop
+4. Print: Minimum, Maximum, Sum, Average
 
 **Completion Criteria:**
-- ✅ Correct statistics for the given input
-- ✅ Clean, formatted output
-- ✅ Safe initialization of min/max (not 0)
+- Output matches: `Minimum: 8.0`, `Maximum: 25.0`, `Sum: 108.0`, `Average: 15.43`
+- min/max initialized to `numbers[0]`, not to 0
+- Average computed after the loop, formatted to 2 decimal places
 
 ---
 
 ## Common Pitfalls — Hour 28
 
-### Pitfall 1: Initializing Min/Max to 0
-```python
-# Bug: 0 is not in the data
-current_min = 0   # Incorrect!
-current_max = 0   # Will miss negatives
+⚠️ **Counter increments every iteration** — increment is outside the `if` block; move it inside so it only counts matching items
 
-# Fix: Use first element
-current_min = numbers[0]
-current_max = numbers[0]
-```
+⚠️ **Min/Max initialized to 0** — if all values are positive, `minimum` stays 0, which was never in the list; use `numbers[0]`
 
-### Pitfall 2: Dividing by Wrong Count
-```python
-# Bug: Using hardcoded count instead of actual length
-average = total / 5   # What if the list has 4 items?
+⚠️ **Average calculated inside the loop** — total and count are incomplete mid-loop; compute average only after the loop ends
 
-# Fix: Use len()
-average = total / len(numbers)
-```
-
-### Pitfall 3: Accumulating Before Collecting
-```python
-# Bug: Trying to sum an empty list
-total = sum(numbers)   # Works, but not the pattern we're learning
-
-# Practice the manual pattern first:
-total = 0
-for num in numbers:
-    total += num
-```
-
----
-
-## Optional Extensions — Hour 28
-
-### Allow Variable Count with Sentinel
-Let the user enter numbers until they type "done":
-```python
-numbers = []
-while True:
-    entry = input("Enter a number (or 'done' to finish): ")
-    if entry.lower() == 'done':
-        break
-    numbers.append(float(entry))
-
-if numbers:
-    total = 0
-    current_min = numbers[0]
-    current_max = numbers[0]
-
-    for num in numbers:
-        total += num
-        if num < current_min:
-            current_min = num
-        if num > current_max:
-            current_max = num
-
-    average = total / len(numbers)
-    print(f"Count: {len(numbers)}")
-    print(f"Sum: {total:.2f}, Avg: {average:.2f}")
-    print(f"Min: {current_min:.2f}, Max: {current_max:.2f}")
-else:
-    print("No numbers entered.")
-```
-
-**Stay in Basics Scope:** Uses while + sentinel from Hour 26 and loop patterns from this hour. No list comprehensions or advanced features.
+⚠️ **First number missing from total** — if you start the loop at `numbers[1:]`, remember to add `numbers[0]` to total and count afterward
 
 ---
 
 ## Quick Check — Hour 28
 
-**Exit Ticket Question:** What's a safe way to initialize `min` before looping?
+**Question 1:** In a counter pattern, does the increment go inside or outside the `if` block?
 
-**Model Answer:** "Initialize `min` to the first element of the collection (`current_min = numbers[0]`), or use `float('inf')` which is larger than any real number. Never initialize to 0 because 0 might be smaller than all values in the data, giving a wrong result."
+**Question 2:** You have a list of test scores. To find the lowest score, do you initialize `minimum` to 0 or to the first score?
 
----
-
-## Scope Guardrail Reminder
-
-### Stay in Basics Scope
-✓ if/elif/else conditional logic
-✓ while loops with break/continue
-✓ for loops with range()
-✓ Counter, accumulator, min/max patterns
-✓ Basic input/output and string formatting
-
-### Not Yet (Later in Basics)
-✗ Functions — defining and calling (Session 8)
-✗ Imports / modules (random, math, statistics, etc.)
-
-### Not Yet (Advanced Course)
-✗ List comprehensions or generator expressions
-✗ try/except error handling
-✗ Lambda functions or decorators
-✗ File I/O or databases
+**Question 3:** Why do we compute the average after the loop, not inside it?
 
 ---
 
-## Session 7 Wrap-Up
+# Session 7 Wrap-Up
 
-### What We Covered Today
-- **Hour 25:** Conditionals — if/elif/else ordering and boundary handling
-- **Hour 26:** while loops — sentinel patterns, break/continue, infinite loop avoidance
-- **Hour 27:** for loops — range() with three forms, inclusive/exclusive boundaries
-- **Hour 28:** Loop patterns — counters, accumulators, min/max tracking
+## What We Covered Today
 
-### Key Takeaways
-- Order elif branches from most specific to least specific
-- Always verify behavior at boundary values
-- A while loop needs a changing condition to terminate
-- range(start, stop) is exclusive on the upper end
-- Initialize min/max safely — never to 0
-- Counter, accumulator, and min/max patterns combine naturally
+### Hour 25 — Conditionals
+- if/elif/else; first match wins rule
+- Condition ordering: most specific to least specific
+- Boundary values: `<=` vs `<`, testing at exact boundary inputs
 
----
+### Hour 26 — while Loops
+- Repeats as long as condition is True; update variable to avoid infinite loops
+- `break` for early exit; `continue` to skip an iteration
+- Sentinel pattern: `while True` + `break`
 
-## Homework and Practice
+### Hour 27 — for Loops
+- Iterates over sequences automatically; no manual counter needed
+- `range(n)`, `range(start, stop)`, `range(start, stop, step)`
+- Exclusive endpoints; nested for loops for tables
 
-### Practice Tasks
-1. **Shipping Calculator V2:** Add at least two more tiers and a fragile surcharge
-2. **Guessing Game:** Computer picks a random number 1–100; user guesses with while loop, program says "higher" or "lower"
-3. **Grade Analyzer:** Read 10 test scores, compute min, max, average, and count how many are A (90+), B (80+), etc.
-
-### Preparation for Session 8
-- Review functions and how to define reusable blocks of code
-- Think about how to break today's labs into smaller, reusable pieces
-- Practice combining conditionals with loops
+### Hour 28 — Loop Patterns
+- Counter, accumulator, min/max, and average patterns
+- Initialize min/max to `numbers[0]`, not 0
+- Compute average after — never inside — the loop
 
 ---
 
-## Next Session Preview: Session 8 (Hours 29–32)
+## Scope Guardrail
 
-### Topics Coming Up
-- **Hour 29:** Functions — defining, calling, returning values
-- **Hour 30:** Function parameters and scope
-- **Hour 31:** Functions with data structures
-- **Hour 32:** Checkpoint review and practice
+### What We Are Building Toward
+- Conditional logic with clear, ordered branches
+- while loops with sentinel patterns
+- for loops with range() and sequence iteration
+- Core loop patterns: counter, accumulator, min/max, average
 
-### Get Ready To:
-- Write reusable functions
-- Structure programs with clear logic flow
-- Combine functions with loops and data structures
+### Not Yet Covered — Basics Course
+- Defining and calling functions (Session 8)
+- Importing modules (random, math, statistics)
+
+### Not Yet Covered — Advanced Course
+- List comprehensions or generator expressions
+- try/except error handling
+- Lambda functions and decorators
+- File I/O, databases, or asynchronous code
+
+---
+
+## Next Session Preview
+
+### Session 8 (Hours 29–32)
+- Hour 29: Functions — defining, calling, returning values
+- Hour 30: Function parameters and scope
+- Hour 31: Functions with data structures
+- Hour 32: Checkpoint review and practice
+
+### Preparation
+- Think about how to break today's lab programs into smaller, named pieces
+- Practice combining conditionals with loops in a single program
+- Note: everything in Session 7 becomes a building block inside functions
 
 ---
 
 ## Questions?
 
-**Session 7 Complete!**
-
-You've mastered:
-- Writing clear, well-ordered conditional logic
-- Using while loops for user-driven repetition
-- Using for loops with range() for counted repetition
-- Applying counter, accumulator, and min/max loop patterns
+**Remember:**
+- Order `elif` conditions from most restrictive to least restrictive
+- Every while loop must change something that makes the condition eventually False
+- `range(1, n + 1)` when you want 1 through n inclusive
+- Initialize min/max to the first element, not to 0
 
 **Keep practicing — see you in Session 8!**

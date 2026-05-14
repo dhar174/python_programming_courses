@@ -645,23 +645,63 @@ For questions or issues:
 **Last Updated**: 2026-02-11  
 **Repository**: https://github.com/dhar174/python_programming_courses
 
-<!-- repo-agent-bootstrap:file-kind=agents -->
-<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap-manual-fallback-2026-04-16 -->
+<!-- repo-agent-bootstrap:file-kind=agents-md -->
+<!-- repo-agent-bootstrap:provenance=repo-agent-bootstrap@2026-05-13 -->
 <!-- repo-agent-bootstrap:managed:start -->
+# AGENTS.md
 
-## Agent Stack Bootstrap
+## Project overview
+This repository contains An instructor-led **96-hour Python training package** built by **GlobalIT** and taught by **Charles Niswander**. The course delivers two sequential 48-hour modules aligned to the Python Institute certification pathway (PCEP → PCAP), with active remediation tracked in GitHub Issues.
 
-This repository uses a hybrid agent stack:
+Primary goals:
+- Maintain CLI flows, prompts, and output contracts.
+- Extend and verify API or service behavior without breaking external callers.
+- Update web UI or static assets while preserving usability and responsiveness.
+- Keep deep documentation, agent guidance, and architecture notes in sync with the codebase.
+- Curate contributor-facing AI assets, skills, prompts, and instructions.
+- Maintain CI/CD workflows, quality gates, and automation entrypoints.
 
-- `AGENTS.md` and `.github/copilot-instructions.md` hold repo-wide defaults and safety rails.
-- `CLAUDE.md` mirrors the same repo context for Claude-style tools and points back to the canonical docs here.
-- `.github/instructions/*.instructions.md` carries path-specific guidance for `Basics/` and `Advanced/`.
-- `.github/agents/repo-planner.agent.md` is the repo-wide planner/orchestrator for general work, while the existing specialists in `.github/agents/` remain the preferred delegates for pedagogy, slide work, and content evaluation.
+## Repo map
+Important directories:
+- `.github` — Copilot assets, workflows, prompts, hooks, and repository automation.
+- `_site` — Project-specific directory that should be inspected before large changes.
+- `Advanced` — Project-specific directory that should be inspected before large changes.
+- `Basics` — Project-specific directory that should be inspected before large changes.
+- `fixtures` — Project-specific directory that should be inspected before large changes.
+- `presentations` — Project-specific directory that should be inspected before large changes.
+- `scratch` — Project-specific directory that should be inspected before large changes.
+- `slides` — Project-specific directory that should be inspected before large changes.
+- `spec` — Project-specific directory that should be inspected before large changes.
 
-Bootstrap maintenance notes:
+High-signal files:
+- `README.md`
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `CLAUDE.md`
 
-- Preserve the existing long-term memory files (`Prompt.md`, `Plans.md`, `Architecture.md`, `Implement.md`, `Documentation.md`) instead of introducing a second parallel memory system.
-- Prefer extending the existing repo agents and skills over creating near-duplicate roles.
-- Keep the instructor runbooks as the source of truth for curriculum-facing changes.
+## How to work in this repo
+Before making changes:
+1. Read `memory-bank/activeContext.md` and `memory-bank/progress.md`.
+2. Skim `docs/architecture.md` and any nearby ADRs when the task changes behavior or architecture.
+3. Inspect existing `.github/agents/`, `.github/instructions/`, and `.github/skills/` assets before adding new ones.
 
+## Build, test, lint
+Use the following commands unless the task explicitly requires otherwise:
+- Install: `python -m pip install nbconvert`
+- Test: `├── criteria.json         # Test specs: command, stdin, expected_stdout, points`
+
+## Engineering conventions
+- Prefer minimal, targeted changes over broad refactors.
+- Preserve public interfaces unless the task explicitly calls for a breaking change.
+- Add or update validation when behavior changes.
+- Keep repo-wide instructions short and move deep detail into `docs/`, `memory-bank/`, or skills.
+
+## Constraints / do-not rules
+- Preserve user-authored docs and existing agent assets outside managed sections.
+
+## Definition of done
+- Relevant tests pass.
+- Lint and type checks pass when applicable.
+- `memory-bank/` or `docs/` files are refreshed when architecture or contributor expectations change.
+- The final diff stays within the requested scope.
 <!-- repo-agent-bootstrap:managed:end -->

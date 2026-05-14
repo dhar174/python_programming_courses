@@ -1,11 +1,15 @@
 # Basics Day 4 — Session 4 (Hours 13–16)
-Python Programming (Basic) • Lists & Iteration
+Python Programming (Basic) • Lists, Booleans, Conditionals & Checkpoint 1
 
-## Session 4 Overview
-- Hour 13: Lists fundamentals — create, index, slice, mutate
-- Hour 14: Iterating lists with `for` loops — accumulators & averages
-- Hour 15: Nested lists for table-like data — rows & columns
-- Hour 16: Checkpoint 2 — Lists + string handling
+---
+
+# Session 4 Overview
+
+## Topics Covered Today
+- Hour 13: Lists fundamentals — create, index, slice, and mutate
+- Hour 14: Boolean expressions, comparison operators, and logical operators
+- Hour 15: If / elif / else flow and nested conditions
+- Hour 16: Checkpoint 1 — Receipt generator integration assessment
 
 ---
 
@@ -32,1049 +36,760 @@ item_4 = "tea"
 item_5 = "rice"
 ```
 
-### Why this breaks down
-- Repetitive and hard to extend
-- Difficult to print neatly
-- Harder to search or update
-
-> 💡 What if you suddenly need 6 items instead of 5?
-
----
-
-## What a List Is
-
-### One variable — many values
+### The list way
 ```python
-# A list holds multiple related values in order
-groceries = ["milk", "bread", "eggs", "tea", "rice"]
-
-print(groceries)
-# ['milk', 'bread', 'eggs', 'tea', 'rice']
+shopping_list = ["milk", "bread", "eggs", "tea", "rice"]
+print(shopping_list)
 ```
 
-### Key ideas
-- Uses square brackets `[ ]`
-- Items separated by commas
-- Items stay in the order you put them
-- One list = one variable name
-
-> 💡 **Prediction:** What does `type(groceries)` return?
+> A list is **one variable** that holds **multiple related values in order**.
 
 ---
 
 ## Creating Lists
 
-### A list with items
+### List literal syntax
 ```python
 fruits = ["apple", "banana", "cherry"]
-numbers = [10, 20, 30, 40, 50]
-mixed = ["Alice", 25, True, 3.14]
+print(fruits)
+# ['apple', 'banana', 'cherry']
 ```
 
-### An empty list (ready to fill later)
+### Empty list (start empty, grow later)
 ```python
-empty = []
-shopping = []
+shopping_list = []
+print(shopping_list)   # []
 ```
 
-### How many items?
+### A list of numbers
 ```python
-fruits = ["apple", "banana", "cherry"]
-print(len(fruits))   # 3
+numbers = [10, 20, 30]
+print(numbers)
+# [10, 20, 30]
 ```
+
+Keep list items consistent in type for beginner clarity.
 
 ---
 
-## Indexing — Finding Items by Position
+## Indexing Lists
 
-### Zero-based counting
+### Zero-based positions
 ```python
 fruits = ["apple", "banana", "cherry"]
-
-fruits[0]   # "apple"   ← first item
-fruits[1]   # "banana"  ← second item
-fruits[2]   # "cherry"  ← third item
+print(fruits[0])   # apple
+print(fruits[1])   # banana
+print(fruits[2])   # cherry
 ```
 
-### Negative indices — count from the end
+### Negative indexing (count from the end)
 ```python
-fruits[-1]  # "cherry"  ← last item
-fruits[-2]  # "banana"  ← second to last
+print(fruits[-1])   # cherry  (last item)
+print(fruits[-2])   # banana  (second-to-last)
 ```
 
-> ⚠️ Lists start at index **0**, not **1**!
-
-> 🗒️ **Speaker note:** Pause and ask: "What does `fruits[-1]` return?" Let learners predict before running it.
+⚠️ Accessing an out-of-range index raises `IndexError` — stay within bounds!
 
 ---
 
-## Slicing — Grabbing a Portion
+## Slicing Lists
 
-### The `[start:stop]` pattern
+### Pattern: `list[start:end]` — end is **not** included
 ```python
-fruits = ["apple", "banana", "cherry", "date", "elderberry"]
-
-fruits[0:2]   # ["apple", "banana"]      ← stop is excluded
-fruits[1:4]   # ["banana", "cherry", "date"]
-fruits[2:]    # ["cherry", "date", "elderberry"]  ← to end
-fruits[:3]    # ["apple", "banana", "cherry"]     ← from start
+letters = ["a", "b", "c", "d", "e"]
+print(letters[0:3])   # ['a', 'b', 'c']
+print(letters[1:4])   # ['b', 'c', 'd']
+print(letters[:2])    # ['a', 'b']
+print(letters[2:])    # ['c', 'd', 'e']
 ```
 
-### Quick rule
-- **start** is included
-- **stop** is excluded (stop - 1 is the last item returned)
+### Indexing vs. slicing
+```python
+print(letters[2])     # 'c'       — one item
+print(letters[2:4])   # ['c','d'] — a new list
+```
 
-> 💡 This is the same rule as `range()` — you've seen it before!
+> Indexing gives **one item**; slicing gives **a new list**.
 
 ---
 
-## Mutating a List — append() and update
-
-### Add an item to the end
-```python
-groceries = ["milk", "bread"]
-
-groceries.append("eggs")
-print(groceries)  # ['milk', 'bread', 'eggs']
-```
+## Lists Are Mutable
 
 ### Update an item by index
 ```python
-groceries[0] = "oat milk"
-print(groceries)  # ['oat milk', 'bread', 'eggs']
+fruits = ["apple", "banana", "cherry"]
+print(fruits)              # ['apple', 'banana', 'cherry']
+
+fruits[1] = "blueberry"
+print(fruits)              # ['apple', 'blueberry', 'cherry']
 ```
 
-### Lists are mutable — strings are not
+### Strings are NOT mutable this way
 ```python
-name = "Alice"
-name[0] = "B"   # ❌ TypeError — strings are immutable!
+word = "cat"
+# word[0] = "b"   ← TypeError! Strings don't allow this
+```
 
-items = ["Alice"]
-items[0] = "Bob"  # ✓ Lists can be changed
+> **Mutable** = the list can be changed after it is created.  
+> Lists allow item-by-item updates; strings do not.
+
+---
+
+## Core List Methods
+
+### `append()` — add to the end
+```python
+shopping_list = ["milk", "bread"]
+shopping_list.append("eggs")
+print(shopping_list)   # ['milk', 'bread', 'eggs']
+```
+
+### `remove()` — remove by **value**
+```python
+shopping_list.remove("bread")
+print(shopping_list)   # ['milk', 'eggs']
+```
+
+### `pop()` — remove by **index** (default: last item)
+```python
+shopping_list = ["milk", "bread", "eggs"]
+removed = shopping_list.pop(1)   # removes index 1
+print(removed)                   # bread
+print(shopping_list)             # ['milk', 'eggs']
 ```
 
 ---
 
-## Removing Items — remove() and pop()
+## The `in` Operator and Safe Removal
 
-### `remove()` — find and delete by value
+### Membership test
 ```python
-fruits = ["apple", "banana", "cherry"]
-
-fruits.remove("banana")
-print(fruits)   # ['apple', 'cherry']
+shopping_list = ["milk", "bread", "eggs"]
+print("milk" in shopping_list)   # True
+print("tea" in shopping_list)    # False
 ```
 
-### `pop()` — remove by index, returns the item
+### Safe removal pattern (avoid crash if item is missing)
 ```python
-fruits = ["apple", "banana", "cherry"]
+item_to_remove = "tea"
 
-last = fruits.pop()     # removes last → "cherry"
-first = fruits.pop(0)   # removes at index 0 → "apple"
-print(fruits)           # ['banana']
-```
-
-<!-- Coach: demonstrate the ValueError deliberately — fruits.remove("grape") when grape is not in the list. Show learners how to read that error message calmly. -->
-
----
-
-## Membership Test — the `in` Operator
-
-### Check if an item is in the list
-```python
-fruits = ["apple", "banana", "cherry"]
-
-"apple" in fruits    # True
-"grape" in fruits    # False
-"banana" not in fruits  # False
-```
-
-### A practical use: check before removing
-```python
-item = input("What would you like to remove? ")
-
-if item in groceries:
-    groceries.remove(item)
-    print(f"Removed: {item}")
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print("Item removed.")
 else:
-    print(f"{item} was not in the list.")
+    print("That item is not in the list.")
 ```
+
+⚠️ Calling `remove()` on a missing item raises a `ValueError` — always check first!
 
 ---
 
-## Demo: Shopping List
-
-### Watch for…
-- Starting with an empty list
-- Appending items one by one
-- Updating an item by index
-- Removing by value safely
-- Popping the last item
+## Demo: Build a Shopping List Step by Step
 
 ```python
-cart = []
+shopping_list = []
+print("Starting list:", shopping_list)
 
-cart.append("milk")
-cart.append("bread")
-cart.append("eggs")
-cart.append("tea")
-cart.append("rice")
+shopping_list.append("milk")
+shopping_list.append("bread")
+shopping_list.append("eggs")
+print("After adds:", shopping_list)
 
-cart[2] = "free-range eggs"   # update third item
-cart.remove("tea")            # remove by value
-last_item = cart.pop()        # remove and save last
+shopping_list[1] = "whole grain bread"
+print("After update:", shopping_list)
 
-print(cart)
-print(f"Items in cart: {len(cart)}")
+item_to_remove = "milk"
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+print("After remove:", shopping_list)
+
+popped_item = shopping_list.pop()
+print("Popped:", popped_item)
+print("Final list:", shopping_list)
+print(f"Item count: {len(shopping_list)}")
 ```
-
-### Expected Output
-```
-['milk', 'bread', 'free-range eggs']
-Items in cart: 3
-```
-
-<!-- Speaker note: Run this live. After appending all 5, pause and ask "How many items are in cart right now?" before running the rest. Builds indexing intuition. -->
 
 ---
 
-## Lab: Shopping List
+## Lab: Shopping List Program
 
 **Time: 25–35 minutes**
 
 ### Tasks
-1. Start with an **empty list** called `shopping`
-2. Use `append()` to add **5 items** (any items you like)
-3. Print the list and its length after appending
-4. Ask the user: "Which item would you like to remove?"
-5. Check if it's in the list before removing — no crashes!
-6. Print the **final list** and **final count**
+1. Start with an empty list
+2. Ask the user for **5 shopping items** one at a time; `append()` each
+3. Ask for **one item to remove**; use the safe membership-check pattern
+4. Print the **final list** and **item count** using `len()`
 
 ### Completion Criteria
-✓ Empty list created with `[]`  
-✓ Exactly 5 items appended with `append()`  
-✓ `in` check guards the `remove()` call  
-✓ Final list and count printed with an f-string  
-✓ Program does not crash on a missing item
-
-<!-- Speaker note: Circulate and watch for: (1) students calling remove() without an in-check; (2) students using pop() when they mean remove(). These are the two most common mistakes. Praise any student who uses the in-check proactively. -->
+✓ Program starts with an empty list and grows it with user input  
+✓ Uses `in` to check before calling `remove()`  
+✓ Prints a clean final list and count  
+✓ No crashes on any valid input sequence
 
 ---
 
-## Common Pitfalls (Hour 13)
-
-⚠️ **`remove()` on a missing item** — raises `ValueError`; always guard with `in`
-
-⚠️ **`pop()` uses an index, not a value** — `fruits.pop("apple")` fails; use `fruits.remove("apple")`
-
-⚠️ **Index starts at 0** — `fruits[1]` is the *second* item, not the first
-
-⚠️ **Slice stop is excluded** — `fruits[0:2]` returns items at index 0 and 1 only
-
-⚠️ **Confusing `append()` with `+`** — `list + item` raises a `TypeError`; use `list.append(item)`
-
-```python
-# ❌ Common mistake
-fruits = ["apple", "banana"]
-fruits.remove("grape")    # ValueError: not in list
-
-# ✓ Safe approach
-if "grape" in fruits:
-    fruits.remove("grape")
-```
-
----
-
-## Quick Check (Hour 13)
-
-**Question**: What does `fruits[-1]` return when `fruits = ["apple", "banana", "cherry"]`?
-
-**Expected Answer**: `"cherry"` — the **last item** in the list.
-
-Negative indices count from the end: `-1` → last, `-2` → second to last.
-
----
-
-# Hour 14: Iterating Lists with `for` Loops
+# Hour 14: Boolean Expressions & Comparison Operators
 
 ## Learning Outcomes
-- Explain what `for item in items:` does in everyday language
-- Loop through a list and perform an action for each item
-- Use an accumulator variable to compute a running total
-- Calculate an average from a list of numbers
-- Find the highest value in a list with `max()`
-- Build a grade-average program collecting 5 inputs
+- Use all six comparison operators to compare values
+- Distinguish between assignment (`=`) and equality (`==`)
+- Combine conditions with `and`, `or`, and `not`
+- Predict the result of compound boolean expressions
+- Avoid common off-by-one and type-mismatch pitfalls
 
 ---
 
-## Why Loops Matter
+## The Six Comparison Operators
 
-### The repetitive way — 5 grades, 5 print lines
-```python
-grades = [88, 92, 76, 95, 84]
+| Operator | Meaning | Example | Result |
+|----------|---------|---------|--------|
+| `==` | Equal to | `5 == 5` | `True` |
+| `!=` | Not equal to | `5 != 3` | `True` |
+| `<` | Less than | `3 < 5` | `True` |
+| `>` | Greater than | `5 > 3` | `True` |
+| `<=` | Less than or equal | `5 <= 5` | `True` |
+| `>=` | Greater than or equal | `5 >= 3` | `True` |
 
-print(grades[0])
-print(grades[1])
-print(grades[2])
-print(grades[3])
-print(grades[4])
-```
-
-### The problem: it doesn't scale
-- 100 grades → 100 lines
-- 1,000 grades → 1,000 lines
-- If the list changes, you must rewrite everything
-
-> 💡 We need one instruction that works for *any* list size.
+Every comparison returns `True` or `False` — a **boolean** value.
 
 ---
 
-## The for Loop — Reading It in Plain English
-
-### Syntax
-```python
-for item in items:
-    # do something with item
-```
-
-### Plain English translation
-> "For **each** item in the items list,  
-> run the indented code once,  
-> using that item's value."
+## `=` vs `==` — The Most Common Beginner Mistake
 
 ```python
-colors = ["red", "blue", "green"]
-
-for color in colors:
-    print(color)
-```
-```
-red
-blue
-green
+age = 18        # Assignment: puts 18 INTO age
+age == 18       # Comparison: ASKS "is age equal to 18?"
 ```
 
-<!-- Ask learners to predict the output before running. Reinforce that "color" is just a name — it changes each time around the loop. -->
+### What goes wrong
+```python
+# ❌ SyntaxError — can't assign inside a condition
+if age = 18:
+    print("Adult")
+
+# ✓ Correct
+if age == 18:
+    print("Adult")
+```
+
+> **Memory trick**: Single `=` puts a value **in**.  
+> Double `==` asks a **question**.
 
 ---
 
-## Loop Variable Naming
+## Logical Operators: `and`, `or`, `not`
 
-### The variable name is up to you
+### `and` — both must be `True`
 ```python
-# These all do the same thing:
-for color in colors:
-    print(color)
-
-for c in colors:
-    print(c)
-
-for x in colors:
-    print(x)
+age >= 18 and has_license       # True only if BOTH are True
 ```
 
-### Convention: singular = item, plural = list
+### `or` — at least one must be `True`
 ```python
-for grade in grades:      # clear ✓
-for student in students:  # clear ✓
-for x in grades:          # works, but less readable
+is_weekend or is_holiday        # True if EITHER is True
 ```
 
-> 💡 Use a **descriptive singular** name for the loop variable — it makes code readable.
+### `not` — flips the boolean
+```python
+is_adult = True
+not is_adult                    # False
+```
+
+### Combining all three
+```python
+# Adult (18+) AND (has membership OR paid fee)
+age >= 18 and (has_membership or paid_fee)
+```
+
+⚠️ Use parentheses to group `or` sub-expressions — `and` binds tighter than `or`.
 
 ---
 
-## The Accumulator Pattern
+## Truth Tables at a Glance
 
-### Concept: keep a running total
-```python
-grades = [88, 92, 76, 95, 84]
+### `and` — only TT → True
+| A | B | A and B |
+|---|---|---------|
+| T | T | **T** |
+| T | F | F |
+| F | T | F |
+| F | F | F |
 
-total = 0               # ← start at zero (the accumulator)
-
-for grade in grades:
-    total += grade      # ← add each grade to total
-
-print(total)            # 435
-```
-
-### Step-by-step trace
-| Loop step | `grade` | `total` |
-|-----------|---------|---------|
-| Start     | —       | 0       |
-| Step 1    | 88      | 88      |
-| Step 2    | 92      | 180     |
-| Step 3    | 76      | 256     |
-| Step 4    | 95      | 351     |
-| Step 5    | 84      | 435     |
+### `or` — only FF → False
+| A | B | A or B |
+|---|---|--------|
+| T | T | T |
+| T | F | T |
+| F | T | T |
+| F | F | **F** |
 
 ---
 
-## Computing an Average
-
-### Total ÷ count
-```python
-grades = [88, 92, 76, 95, 84]
-
-total = 0
-for grade in grades:
-    total += grade
-
-average = total / len(grades)   # 435 / 5 = 87.0
-
-print(f"Average grade: {average:.1f}")
-```
-
-### Using built-in max() and min()
-```python
-highest = max(grades)   # 95
-lowest = min(grades)    # 76
-
-print(f"Highest: {highest}")
-print(f"Lowest:  {lowest}")
-```
-
-> 💡 `max()` and `min()` work directly on the list — no loop needed!
-
----
-
-## Demo: Grade Summary
-
-### Watch for…
-- Accumulator starting at zero
-- `total += grade` inside the loop body
-- Division using `len(grades)` — not a hard-coded number
-- `max()` without writing a manual loop
+## Demo: Age-Gating Eligibility Checker
 
 ```python
-grades = [88, 92, 76, 95, 84]
+# Basic comparison
+age = 16
+print(f"Age >= 18? {age >= 18}")          # False
 
-total = 0
-for grade in grades:
-    total += grade
+age = 25
+print(f"Age >= 18? {age >= 18}")          # True
 
-average = total / len(grades)
-highest = max(grades)
+# Combining with and
+has_license = True
+print(f"Eligible? {age >= 18 and has_license}")  # True
 
-print(f"Grades:  {grades}")
-print(f"Total:   {total}")
-print(f"Average: {average:.1f}")
-print(f"Highest: {highest}")
+has_license = False
+print(f"Eligible? {age >= 18 and has_license}")  # False
+
+# Full eligibility: adult AND (membership OR paid fee)
+age = 20
+has_membership = False
+paid_fee = True
+eligible = age >= 18 and (has_membership or paid_fee)
+print(f"Eligible: {eligible}")            # True
 ```
-
-### Expected Output
-```
-Grades:  [88, 92, 76, 95, 84]
-Total:   435
-Average: 87.0
-Highest: 95
-```
-
-<!-- Pause after typing total = 0. Ask "Why do we start at zero, not any other number?" Then walk through the trace table on the whiteboard or verbally. -->
-
----
-
-## Collecting Input into a List
-
-### Asking for values one at a time
-```python
-grades = []
-
-grades.append(int(input("Enter grade 1: ")))
-grades.append(int(input("Enter grade 2: ")))
-grades.append(int(input("Enter grade 3: ")))
-grades.append(int(input("Enter grade 4: ")))
-grades.append(int(input("Enter grade 5: ")))
-
-print(f"Collected: {grades}")
-```
-
-> ⚠️ Don't forget `int()` — `input()` always returns a **string**!
-
-<!-- Speaker note: 🚫 Scope guardrail: Stay in Basics scope — no dictionaries, file I/O, or function design yet. Also, no while loops or range-based for loops for collecting input — individual appends are correct at this stage. -->
-
----
-
-## Lab: Grade Average
-
-**Time: 25–35 minutes**
-
-### Tasks
-1. Create an **empty list** called `grades`
-2. Ask the user to enter **5 numeric grades** — append each to the list
-3. Compute the **total** using an accumulator loop
-4. Compute the **average** using `len(grades)`
-5. Find the **highest grade** with `max()`
-6. Print a clean summary report
-
-### Completion Criteria
-✓ All 5 inputs converted to `int` or `float`  
-✓ Accumulator starts at `0` before the loop  
-✓ Division uses `len(grades)` — not the hard-coded number 5  
-✓ Average formatted to 1 decimal place with `:.1f`  
-✓ Highest grade displayed correctly
-
-<!-- Speaker note: Common error to watch for: students write average = total / 5 instead of total / len(grades). Both work here, but dividing by len() is the safer habit. Coach toward len() actively. -->
 
 ---
 
 ## Common Pitfalls (Hour 14)
 
-⚠️ **Forgetting `int()` or `float()` on `input()`** — `"88" + "92"` = `"8892"`, not `180`
-
-⚠️ **Accumulator not initialized before the loop** — `total` must be `0` before the `for` statement
-
-⚠️ **Dividing by a hard-coded count** — use `len(grades)` so it works for any list size
-
-⚠️ **Indentation errors** — the `total += grade` line must be *inside* the loop (4 spaces in)
-
+### Off-by-one boundary error
 ```python
-# ❌ Indentation error — total not updated inside loop
-total = 0
-for grade in grades:
-    pass
-total += grade    # runs once, uses only the last value
+age = 18
+if age > 18:     # ❌ Excludes exactly 18
+    print("Adult")
 
-# ✓ Correct
-total = 0
-for grade in grades:
-    total += grade   # ← indented inside the loop
+if age >= 18:    # ✓ Includes 18
+    print("Adult")
+```
+
+### Type mismatch
+```python
+age = "18"
+if age > 18:           # ❌ TypeError — str vs int
+    print("Adult")
+
+age = int(input("Age: "))
+if age >= 18:          # ✓ Both integers
+    print("Adult")
+```
+
+### Operator precedence
+```python
+# ❌ Reads as: (age>=18 and has_membership) OR paid_fee
+if age >= 18 and has_membership or paid_fee:  ...
+
+# ✓ Correct grouping
+if age >= 18 and (has_membership or paid_fee):  ...
 ```
 
 ---
 
-## Quick Check (Hour 14)
+## Lab: Camp Eligibility Checker
 
-**Question**: What does an accumulator pattern look like for summing a list?
+**Time: 20 minutes**
 
-**Expected Answer**:
-```python
-total = 0
-for x in nums:
-    total += x
-```
-
-Start the accumulator at `0` *before* the loop.  
-Add each item to it *inside* the loop.  
-Read the result *after* the loop ends.
-
----
-
-# Hour 15: Nested Lists for Table-Like Data
-
-## Learning Outcomes
-- Explain what a nested list is in simple language
-- Represent small table-like data as a list of lists
-- Access a cell using `grid[row][col]` notation
-- Print each row of a nested list with a `for` loop
-- Update one value inside a 2D structure
-- Avoid off-by-one row/column mistakes
-
----
-
-## From One Row to a Grid
-
-### Single-row list (what we know)
-```python
-row = ["A1", "A2", "A3"]
-```
-
-### Grid — a list where each item is another list
-```python
-seats = [
-    ["A1", "A2", "A3"],   # row 0
-    ["B1", "B2", "B3"],   # row 1
-    ["C1", "C2", "C3"],   # row 2
-]
-```
-
-### Mental model
-- The **outer** list holds the rows
-- Each **inner** list holds the columns for that row
-- Two indices to get any single cell: `seats[row][col]`
-
----
-
-## When Do You Need a Grid?
-
-### Real examples of table-like data
-- 🪑 Classroom seating chart
-- ✅ Tic-tac-toe or noughts-and-crosses board
-- 📅 Weekly schedule (rows = days, cols = periods)
-- 📊 Simple spreadsheet of student scores
-
-### Why not a flat list?
-```python
-# Flat — structure is hidden
-seats_flat = ["A1", "A2", "A3", "B1", "B2", "B3"]
-
-# Nested — structure is visible
-seats = [["A1", "A2", "A3"], ["B1", "B2", "B3"]]
-```
-
-> 💡 A nested list makes the *shape* of the data visible in the code.
-
----
-
-## Accessing Cells: grid[row][col]
-
-### Two-step indexing
-```python
-seats = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"],
-]
-
-seats[0]        # ["A1", "A2", "A3"]   ← whole row 0
-seats[0][1]     # "A2"                 ← row 0, col 1
-seats[1][2]     # "B3"                 ← row 1, col 2
-seats[2][0]     # "C1"                 ← row 2, col 0
-```
-
-### Visual grid map
-```
-       col 0   col 1   col 2
-row 0 [ "A1",  "A2",  "A3" ]
-row 1 [ "B1",  "B2",  "B3" ]
-row 2 [ "C1",  "C2",  "C3" ]
-```
-
----
-
-## Updating a Cell
-
-### Change one seat to "X" (reserved)
-```python
-seats = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"],
-]
-
-seats[1][2] = "X"   # row 1, col 2  →  "B3" → "X"
-
-print(seats[1])     # ['B1', 'B2', 'X']
-```
-
-### The assignment works just like a regular list
-```python
-# Single list:  items[index] = new_value
-# Nested list:  grid[row][col] = new_value
-```
-
-> ⚠️ Remember: both indices are **zero-based**!
-
----
-
-## Printing Rows with a for Loop
-
-### Print each row on its own line
-```python
-seats = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"],
-]
-
-for row in seats:
-    print(row)
-```
-```
-['A1', 'A2', 'A3']
-['B1', 'B2', 'B3']
-['C1', 'C2', 'C3']
-```
-
-### Reading the loop in plain English
-> "For **each row** in seats, print that row."
-
-<!-- Ask learners: "What type is 'row' inside the loop?" (It's a list.) This is a great discovery moment. -->
-
----
-
-## Demo: Seating Chart — Create, Print, Update
-
-### Watch for…
-- Three rows defined as a list of lists
-- `seats[row][col]` access syntax
-- Updating one cell and reprinting to verify
-
-```python
-seats = [
-    ["A1", "A2", "A3"],
-    ["B1", "B2", "B3"],
-    ["C1", "C2", "C3"],
-]
-
-print("Original seating chart:")
-for row in seats:
-    print(row)
-
-# Reserve seat B2 (row 1, col 1)
-seats[1][1] = "X"
-
-print("\nAfter reserving B2:")
-for row in seats:
-    print(row)
-```
-
-### Expected Output
-```
-Original seating chart:
-['A1', 'A2', 'A3']
-['B1', 'B2', 'B3']
-['C1', 'C2', 'C3']
-
-After reserving B2:
-['A1', 'A2', 'A3']
-['B1', 'X', 'B3']
-['C1', 'C2', 'C3']
-```
-
-<!-- Speaker note: After the demo, ask learners to predict: "If I type seats[0][2], what do I get?" (Answer: "A3"). Then ask "What about seats[2][0]?" (Answer: "C1"). Quick verbal drill builds indexing muscle memory. -->
-
----
-
-## Lab: Seating Chart
-
-**Time: 25–35 minutes**
+### Rules
+- **Eligible** if: age between 8–16 (inclusive) AND swimming test passed AND parent contact on file
 
 ### Tasks
-1. Create a **3×3 seating chart** as a nested list using any labels you like
-2. **Print the full grid** row by row before any changes
-3. Ask the user for a **row number** (0–2) and a **column number** (0–2)
-4. **Change that seat** to `"X"` (reserved)
-5. **Print the grid again** to confirm the change
+1. Ask for age, swimming test result, parent contact (use `True`/`False`)
+2. Build the eligibility expression
+3. Print `"Eligible for camp!"` or `"Not eligible."`
 
-### Completion Criteria
-✓ Grid defined as a list of 3 lists, each with 3 string items  
-✓ `for row in seats: print(row)` used for both prints  
-✓ User input converted to `int()` before use as index  
-✓ Assignment uses `seats[row][col] = "X"` correctly  
-✓ No `IndexError` when valid indices (0–2) are entered
-
-<!-- Speaker note: Watch for the most common mistake: students writing seats[col][row] instead of seats[row][col]. Draw the grid visual on the board and label it. Physically pointing to rows first (top-to-bottom) then columns (left-to-right) helps. Also remind them int() is required on the input — without it, "1" is a string, not a valid index. -->
-
----
-
-## Common Pitfalls (Hour 15)
-
-⚠️ **Swapping row and col** — `seats[col][row]` gives wrong cell; always row first, then column
-
-⚠️ **Forgetting zero-based counting** — `seats[3][0]` on a 3-row grid → `IndexError`
-
-⚠️ **Not converting input to `int()`** — `seats["1"]["2"]` raises a `TypeError`
-
-⚠️ **Off-by-one on update** — want row 2 col 1 → use `seats[2][1]`, not `seats[3][2]`
-
+### Sample solution skeleton
 ```python
-# ❌ Swapped indices (common beginner mistake)
-seats[col][row] = "X"     # wrong order
+age = int(input("Age: "))
+swimming_test = input("Passed swim test? (True/False): ") == "True"
+parent_contact = input("Parent contact on file? (True/False): ") == "True"
 
-# ✓ Correct: row first, then column
-seats[row][col] = "X"
+eligible = 8 <= age <= 16 and swimming_test and parent_contact
 
-# ❌ Forgetting int() on input
-row = input("Row: ")       # row is a string!
-seats[row][0]              # TypeError
-
-# ✓ Correct
-row = int(input("Row: "))
+if eligible:
+    print("Eligible for camp!")
+else:
+    print("Not eligible. Please check your information.")
 ```
 
 ---
 
-## Quick Check (Hour 15)
-
-**Question**: How do you access row 1, column 2 of a grid called `seats`?
-
-**Expected Answer**: `seats[1][2]`
-
-- First index = **row** (outer list position)
-- Second index = **column** (inner list position)
-- Both are **zero-based**
-
----
-
-# Hour 16: Checkpoint 2 — Lists + String Handling
+# Hour 15: If / Elif / Else Flow and Nested Conditions
 
 ## Learning Outcomes
-- Demonstrate list creation and updates in a short checkpoint program
-- Use strings and list operations together for clean user-facing output
-- Display a numbered list of items using `enumerate()`
-- Add items, remove items, and show items in a simple in-memory to-do list
-- Explain the difference between `remove()` (by value) and `pop()` (by index)
-- Produce correct, readable, crash-free output
+- Write `if`, `elif`, and `else` to create branching logic
+- Understand that only **one** block executes per conditional chain
+- Order conditions from most specific to most general
+- Identify and fix unreachable code branches
+- Use nested conditionals appropriately (and know when to use `and` instead)
 
 ---
 
-## Checkpoint 2 — Framing
+## The If / Elif / Else Structure
 
-### What this checkpoint tests
-- Can you store items in a list?
-- Can you add and remove items correctly?
-- Can you display items in a numbered, readable format?
-- Does your program handle a missing item gracefully?
-
-### What this checkpoint does NOT require
-- ✗ Looping menus (while loops) — not yet
-- ✗ Dictionaries or files
-- ✗ Functions or classes
-- ✗ Any Advanced-module topics
-
-> 💡 One clean pass through the user's chosen action is all that's needed.
-
-<!-- 🚫 Scope guardrail: Stay in Basics scope — no dictionaries, file I/O, or function design yet. -->
-
----
-
-## Checkpoint Scope Guardrail
-
-### ✓ What belongs in this checkpoint
-- `list = []` — list creation
-- `list.append(item)` — adding items
-- `list.remove(item)` — removing by value
-- `item in list` — checking before removing
-- `enumerate()` — numbered display
-- `input()`, `if/elif/else`, f-strings
-
-### ✗ Out of scope — keep for later
-- `while True:` looping menu
-- Dictionaries (`{}`)
-- File reading/writing
-- Function definitions (`def`)
-- Classes, decorators, `try/except`
-
----
-
-## Review: The Three Core List Actions
-
-### Add an item
 ```python
-todo_items = []
-new_item = input("Enter item to add: ")
-todo_items.append(new_item)
-print(f"Added: '{new_item}'")
-```
-
-### Remove an item (with safety check)
-```python
-item_to_remove = input("Item to remove: ")
-if item_to_remove in todo_items:
-    todo_items.remove(item_to_remove)
-    print(f"Removed: '{item_to_remove}'")
+if condition_A:
+    # runs ONLY if A is True
+elif condition_B:
+    # runs ONLY if A is False AND B is True
+elif condition_C:
+    # runs ONLY if A and B are False AND C is True
 else:
-    print(f"'{item_to_remove}' was not found in the list.")
+    # runs if NO condition above was True
 ```
 
-### Show all items
+**Critical rule**: Python checks top-to-bottom. The **first** `True` branch runs; all others are skipped.
+
+### Example
 ```python
-for i, item in enumerate(todo_items, 1):
-    print(f"{i}. {item}")
-```
-
----
-
-## Numbered Output with enumerate()
-
-### The pattern
-```python
-items = ["study Python", "buy groceries", "call mom"]
-
-for i, item in enumerate(items, 1):
-    print(f"{i}. {item}")
-```
-
-### Output
-```
-1. study Python
-2. buy groceries
-3. call mom
-```
-
-### What `enumerate(items, 1)` gives you
-- `i` — the counter (starts at `1` because we passed `1`)
-- `item` — the current list item
-
-> 💡 Without `enumerate()`, you'd need a separate counter variable — this is cleaner!
-
----
-
-## The Full Checkpoint Program
-
-```python
-# Pre-filled list (lab requires 3 starting items)
-todo_items = ["buy milk", "send email", "read notes"]
-
-action = input("Choose: add, remove, or show: ")
-
-if action == "add":
-    new_item = input("Enter item: ")
-    todo_items.append(new_item)
-    print(f"Added: '{new_item}'")
-
-elif action == "remove":
-    item_to_remove = input("Item to remove: ")
-    if item_to_remove in todo_items:
-        todo_items.remove(item_to_remove)
-        print(f"Removed: '{item_to_remove}'")
-    else:
-        print(f"'{item_to_remove}' not found.")
-
-elif action == "show":
-    if len(todo_items) == 0:
-        print("Your to-do list is empty.")
-    else:
-        for i, item in enumerate(todo_items, 1):
-            print(f"{i}. {item}")
-
+age = 16
+if age < 13:
+    print("You are a child.")
+elif age < 18:
+    print("You are a teenager.")
 else:
-    print("Unrecognized action. Choose: add, remove, or show.")
+    print("You are an adult.")
+# Output: You are a teenager.
 ```
-
-<!-- Speaker note: Walk through this structure at a high level ONLY before the lab. Do not write it for learners. Your goal is to show the three branches exist and the numbered output pattern — then let them build it themselves. -->
 
 ---
 
-## Demo: To-Do List in Action
-
-### Watch for…
-- Pre-filled list as the starting point
-- `in` guard before `remove()`
-- `enumerate(items, 1)` for numbered output
-- Clean branch separation with `if/elif/elif`
+## Tiered Decisions: Shipping Cost
 
 ```python
-todo_items = ["email team", "buy notebook", "study lists"]
+weight = 25
 
-# Simulate: show action
-print("Current to-do list:")
-for i, item in enumerate(todo_items, 1):
-    print(f"{i}. {item}")
+if weight <= 10:
+    cost = 0        # Free
+elif weight <= 50:
+    cost = 5        # Standard
+elif weight <= 100:
+    cost = 12       # Heavy
+else:
+    print("Too heavy. Contact support.")
+    cost = None
 
-# Simulate: remove action
-to_remove = "buy notebook"
-if to_remove in todo_items:
-    todo_items.remove(to_remove)
-    print(f"\nRemoved '{to_remove}'.")
-
-print(f"\nUpdated list ({len(todo_items)} items):")
-for i, item in enumerate(todo_items, 1):
-    print(f"{i}. {item}")
+print(f"Shipping cost: ${cost}")
+# Output: Shipping cost: $5
 ```
 
-### Expected Output
+**Trace through**:
+1. `weight <= 10`? No (25 is not ≤ 10)
+2. `weight <= 50`? Yes → set cost = 5, skip the rest
+
+---
+
+## Order Matters — Avoid Unreachable Code
+
+### ❌ Unreachable second branch
+```python
+x = 15
+if x > 0:
+    print("x is positive")
+elif x > 10:           # ← never reached! x > 10 implies x > 0
+    print("x > 10")
 ```
-Current to-do list:
-1. email team
-2. buy notebook
-3. study lists
 
-Removed 'buy notebook'.
+### ✓ Fix: most specific first
+```python
+x = 15
+if x > 10:
+    print("x is greater than 10")
+elif x > 0:
+    print("x is positive (but ≤ 10)")
+else:
+    print("x is not positive")
+```
 
-Updated list (2 items):
-1. email team
-2. study lists
+> **Rule of thumb**: order conditions from **most specific** to **most general**.
+
+---
+
+## Nested Conditionals
+
+### When to nest — second check depends on the first
+```python
+age = 25
+has_license = True
+
+if age >= 18:
+    if has_license:
+        print("You can drive.")
+    else:
+        print("You're an adult but can't drive yet.")
+else:
+    print("You must be an adult to drive.")
+# Output: You can drive.
+```
+
+### Prefer flat `and` when both conditions are equal weight
+```python
+# Nested (harder to read):
+if age >= 18:
+    if has_license:
+        print("Can drive")
+
+# Flat with `and` (clearer):
+if age >= 18 and has_license:
+    print("Can drive")
 ```
 
 ---
 
-## Checkpoint Lab: Simple To-Do List
+## Demo: Shipping Cost Calculator with Boundaries
 
-**Time: 25–35 minutes**
+```python
+weight = float(input("Package weight (lbs): "))
 
-### Task
-Build a simple in-memory to-do list program. A single run of the program should:
+if weight <= 10:
+    cost = 0
+elif weight <= 50:
+    cost = 5
+elif weight <= 100:
+    cost = 12
+else:
+    print(f"Weight: {weight} lbs — Too heavy. Contact support.")
+    cost = None
 
-1. Start with a **pre-filled list** of 3 to-do items
-2. Ask the user to choose an action: `add`, `remove`, or `show`
-3. For **add**: ask for a new item, append it, confirm it was added
-4. For **remove**: ask for an item, check it exists, remove it, confirm
-5. For **show**: display items with **numbered output** using `enumerate()`
-6. Handle an unrecognized action with a friendly message
+if cost is not None:
+    print(f"Weight: {weight} lbs, Shipping cost: ${cost}")
+```
+
+**Boundary test values to run**:
+- 9 lbs → $0 · 10 lbs → $0 · 11 lbs → $5 · 50 lbs → $5 · 51 lbs → $12 · 101 lbs → error
+
+---
+
+## Guided Practice: Grade Assignment
+
+```python
+score = 87
+
+if score >= 90:
+    grade = "A"
+    message = "Excellent!"
+elif score >= 80:
+    grade = "B"
+    message = "Good job!"
+elif score >= 70:
+    grade = "C"
+    message = "Satisfactory."
+elif score >= 60:
+    grade = "D"
+    message = "Needs improvement."
+else:
+    grade = "F"
+    message = "See me after class."
+
+print(f"Score: {score}")
+print(f"Grade: {grade}")
+print(f"Message: {message}")
+```
+
+> Check highest score first — if 95 passes `>= 90`, we never reach `>= 80`.
+
+---
+
+## Lab: Shipping Calculator
+
+**Time: 18 minutes**
+
+### Tiers
+| Weight | Cost |
+|--------|------|
+| 0–5 lbs | $3 |
+| 5–15 lbs | $7 |
+| 15–30 lbs | $12 |
+| 30–50 lbs | $18 |
+| Over 50 lbs | Cannot ship |
+
+### Tasks
+1. Ask user for weight (`float`)
+2. Use `if/elif/else` to assign cost or "Cannot ship" message
+3. Print the result
 
 ### Completion Criteria
-✓ List pre-filled with 3 items  
-✓ All three actions (`add`, `remove`, `show`) work correctly  
-✓ `remove` uses an `in` guard — no `ValueError` crash  
-✓ `show` uses `enumerate(items, 1)` for numbered output  
-✓ F-strings used for all output messages  
-✓ Program handles unrecognized action gracefully
-
-<!-- Speaker note: Circulate during the checkpoint. Look for: (1) missing in-check before remove; (2) students using pop() with a value — remind them pop() needs an index; (3) enumerate starting at 0 instead of 1. This is a self-contained assessment — resist solving it for students. Ask guiding questions: "What does your remove branch do if the item isn't there?" -->
+✓ Correct cost for all tier boundaries  
+✓ "Cannot ship" printed for weight > 50 lbs  
+✓ No calculation errors at boundary values (5, 15, 30, 50)
 
 ---
 
-## remove() vs pop() — Final Clarity
+# Hour 16: Checkpoint 1 — Receipt Generator
 
-### `remove()` — by value
-```python
-items = ["walk dog", "read book", "cook dinner"]
-
-items.remove("read book")   # finds the value and removes it
-print(items)
-# ['walk dog', 'cook dinner']
-```
-
-### `pop()` — by index
-```python
-items = ["walk dog", "read book", "cook dinner"]
-
-removed = items.pop(1)      # removes at index 1
-print(removed)              # "read book"
-print(items)
-# ['walk dog', 'cook dinner']
-```
-
-### When to use which
-- **Know the name?** → `remove()`  
-- **Know the position?** → `pop()`
-- **Need the removed value back?** → `pop()` returns it
+## Learning Outcomes
+- Integrate input handling, type conversion, arithmetic, and formatted output
+- Demonstrate mastery of Checkpoint 1 by building a receipt generator
+- Apply correct order of operations for multi-step calculations
+- Test programs systematically using multiple input cases
+- Reflect on strengths and areas for continued growth
 
 ---
 
-## Common Pitfalls (Hour 16)
+## What Checkpoint 1 Measures
 
-⚠️ **Calling `remove()` without an `in` guard** — raises `ValueError` if item is missing
+### Checkpoint 1 IS about:
+- Taking requirements and turning them into code
+- Using correct operators and data types
+- Producing readable, formatted output
+- Catching and fixing your own mistakes
 
-⚠️ **Using `pop("item")` instead of `remove("item")`** — `pop()` needs an index, not a value
+### Checkpoint 1 is NOT about:
+- Memorizing exact syntax
+- Being perfect on the first run
+- Using advanced features outside Basics scope
 
-⚠️ **`enumerate()` starting at 0** — pass `1` as second argument for human-friendly numbering
+> Open-book. You can reference your notes.  
+> The code must be yours.
 
-⚠️ **Forgetting to test all three branches** — test add, remove, and show before calling done
+---
 
-```python
-# ❌ Crashes if item not found
-items.remove("missing item")   # ValueError
+## The Receipt Generator Problem
 
-# ✓ Safe
-if "missing item" in items:
-    items.remove("missing item")
+**Input**: item name, quantity, price per item
 
-# ❌ Wrong enumerate start
-for i, item in enumerate(items):    # starts at 0
-    print(f"{i}. {item}")
+**Calculations**:
+- `subtotal = quantity × price_per_item`
+- `subtotal_with_fee = subtotal + 2.50`
+- `tax = subtotal_with_fee × 0.08`
+- `total = subtotal_with_fee + tax`
 
-# ✓ Human-friendly numbering
-for i, item in enumerate(items, 1): # starts at 1
-    print(f"{i}. {item}")
+**Expected output** (Widget, qty 3, $10.00):
+```
+========== RECEIPT ==========
+Item: Widget
+Quantity: 3
+Price per item: $10.00
+Subtotal: $30.00
+Service fee: $2.50
+Subtotal with fee: $32.50
+Sales tax (8%): $2.60
+Total: $35.10
+=============================
 ```
 
 ---
 
-## Quick Check (Hour 16)
+## Step-by-Step: Input and Type Conversion
 
-**Question**: How do you display a numbered list of items from a list called `todo_items`?
-
-**Expected Answer**:
 ```python
-for i, item in enumerate(todo_items, 1):
-    print(f"{i}. {item}")
+# Step 1: Get input
+item = input("Item name: ")
+quantity_str = input("Quantity: ")
+price_str = input("Price per item: ")
+
+# Step 2: Convert to numbers
+quantity = float(quantity_str)
+price_per_item = float(price_str)
+
+# Step 3: Verify
+print(f"Item: {item}")
+print(f"Quantity: {quantity}")
+print(f"Price: ${price_per_item}")
 ```
 
-- `enumerate(todo_items, 1)` gives you both the **counter** (`i`) and the **item**
-- Starting at `1` makes the numbering human-friendly
+> `input()` always returns a **string**.  
+> You must convert to `float` before doing any math.
+
+---
+
+## Step-by-Step: Calculations
+
+```python
+# Subtotal
+subtotal = quantity * price_per_item
+
+# Add fixed service fee
+subtotal_with_fee = subtotal + 2.50
+
+# Calculate 8% tax on the full subtotal-with-fee
+tax = subtotal_with_fee * 0.08
+
+# Final total
+total = subtotal_with_fee + tax
+```
+
+**Verify with: Widget, 3, $10.00**
+
+| Step | Value |
+|------|-------|
+| Subtotal | $30.00 |
+| With fee | $32.50 |
+| Tax (8%) | $2.60 |
+| **Total** | **$35.10** |
+
+⚠️ Tax the **subtotal + fee**, not just the subtotal.
+
+---
+
+## Step-by-Step: Formatted Output
+
+```python
+print("========== RECEIPT ==========")
+print(f"Item: {item}")
+print(f"Quantity: {quantity}")
+print(f"Price per item: ${price_per_item:.2f}")
+print(f"Subtotal: ${subtotal:.2f}")
+print(f"Service fee: $2.50")
+print(f"Subtotal with fee: ${subtotal_with_fee:.2f}")
+print(f"Sales tax (8%): ${tax:.2f}")
+print(f"Total: ${total:.2f}")
+print("=============================")
+```
+
+> `:.2f` inside an f-string formats a float to **exactly 2 decimal places**.  
+> Calculate first; round only when printing.
+
+---
+
+## Checkpoint 1 Pitfalls
+
+### Forgetting to convert input
+```python
+# ❌ TypeError — can't multiply a string by a number
+quantity = input("Quantity: ")
+subtotal = quantity * price_per_item
+
+# ✓ Fix
+quantity = float(input("Quantity: "))
+```
+
+### Taxing the wrong amount
+```python
+# ❌ Forgets to tax the service fee
+tax = subtotal * 0.08
+
+# ✓ Tax on the full subtotal-with-fee
+tax = subtotal_with_fee * 0.08
+```
+
+### Rounding too early
+```python
+# ❌ Compounding rounding error
+subtotal = round(quantity * price, 2)
+tax = subtotal * 0.08   # tax calculated on rounded value
+
+# ✓ Calculate in full precision; use :.2f only when printing
+```
+
+---
+
+## Checkpoint 1 Rubric (30 points)
+
+| Criterion | Points |
+|-----------|--------|
+| Input handling — 3 prompts, no crash | 4 |
+| Type conversion — quantity and price to `float` | 3 |
+| Subtotal calculation (`qty × price`) | 4 |
+| Service fee addition (+$2.50) | 3 |
+| Tax calculation (8% on subtotal-with-fee) | 4 |
+| Total calculation (subtotal-with-fee + tax) | 3 |
+| Output formatting (`:.2f`, labels, readable layout) | 3 |
+| Code quality (descriptive names, logical flow) | 3 |
+| **Passing score** | **24 / 30** |
+
+Test with at least 3 input sets before submitting.
 
 ---
 
@@ -1082,93 +797,59 @@ for i, item in enumerate(todo_items, 1):
 
 ## What We Covered Today
 
-### Hour 13: Lists Fundamentals
-- List literals, indexing (0-based), negative indices
-- Slicing with `[start:stop]`
-- Mutating with `append()`, `remove()`, `pop()`
-- Membership test with `in`
+### Hour 13: Lists
+- List creation, indexing, slicing, and mutability
+- `append()`, `remove()`, `pop()`, `in`, `len()`
 
-### Hour 14: Iterating Lists with `for` Loops
-- `for item in items:` — plain English mental model
-- Accumulator pattern: `total = 0` → `total += item`
-- Average: `total / len(items)`
-- `max()` and `min()` on a list
+### Hour 14: Boolean Expressions
+- All six comparison operators; `=` vs `==`
+- `and`, `or`, `not` with truth tables and precedence
 
-### Hour 15: Nested Lists
-- List of lists for table-like data
-- `grid[row][col]` access and update
-- Printing rows with a `for` loop
+### Hour 15: Conditionals
+- `if / elif / else` flow; order-matters rule
+- Unreachable branches and nested conditionals
 
-### Hour 16: Checkpoint 2
-- In-memory to-do list with add/remove/show
-- `enumerate()` for numbered output
-- `remove()` vs `pop()` distinction
+### Hour 16: Checkpoint 1
+- Receipt generator integrating all Basics skills
+- Systematic testing and formatted output
 
 ---
 
 ## Scope Guardrail Reminder
 
 ### Stay in Basics Scope ✓
-✓ List creation, indexing, slicing  
-✓ `append()`, `remove()`, `pop()`, `in`  
-✓ `for item in items:` loop  
-✓ Accumulator pattern for totals and averages  
-✓ Nested lists: `grid[row][col]`  
-✓ `enumerate()` for numbered display
+- Lists (no dictionaries yet)
+- Boolean and comparison operators
+- `if / elif / else` branching
+- Arithmetic, type conversion, f-string formatting
 
 ### Not Yet (Advanced Topics) ✗
-✗ Dictionaries (`{key: value}`)  
-✗ File I/O (`open()`, `read()`, `write()`)  
-✗ Functions (`def`) and return values  
-✗ List comprehensions  
-✗ `while` loops and looping menus  
-✗ Classes and OOP
-
----
-
-## No-Go Topics for Basics Course
-
-### Keep for Advanced Module
-- Web frameworks (Flask/Django)
-- Databases and SQL
-- GUI frameworks (Tkinter/PyQt)
-- Testing frameworks (pytest)
-- Packaging and distribution
-- Decorators and generators
+- List comprehensions
 - Lambda functions
+- Decorators / generators
 - Advanced OOP patterns
-- Regular expressions
-
----
-
-## Homework / Practice
-
-### Recommended Exercises
-1. **Extend the shopping list** — add a `show all` action that prints items numbered with `enumerate()`
-2. **Grade tracker** — collect 5 grades, print average, highest, and lowest using `max()` / `min()`
-3. **Tic-tac-toe board** — create a 3×3 nested list of `"."` and let two users place their marks
-4. **To-do list upgrade** — add a count display: `"You have 3 items remaining"`
+- Exception handling (`try / except`)
 
 ---
 
 ## Next Session Preview
 
 ### Session 5 (Hours 17–20)
-- Hour 17: Functions — defining and calling `def`
-- Hour 18: Parameters, arguments, and return values
-- Hour 19: Scope — local vs. global variables
-- Hour 20: Checkpoint 3 — Functions mini-assessment
+- Hour 17: `for` loops — iterating over lists and ranges
+- Hour 18: `while` loops and loop control (`break`, `continue`)
+- Hour 19: Functions — defining, calling, parameters, return values
+- Hour 20: Putting it together — small programs using loops + functions
 
 ---
 
 ## Questions?
 
-**Key patterns from today:**
-- `list[-1]` → last item
-- `for item in items:` → visit each item once
-- `total = 0; for x in nums: total += x` → accumulator
-- `grid[row][col]` → two-index access
-- `for i, item in enumerate(items, 1):` → numbered output
+**Key reminders from Session 4**:
+- Check list membership with `in` before calling `remove()`
+- Single `=` assigns, double `==` compares
+- Order `if / elif` from most specific to most general
+- Always convert `input()` to the correct type before math
+- Calculate at full precision — only round when printing
 
 ---
 
