@@ -68,6 +68,7 @@ jobs:
       - name: Ensure Pages root resolves to slide content
         run: |
           mkdir -p _site
+          sudo chown -R "$(id -u):$(id -g)" _site
 
           # Clean up only if index.html exists as a non-file entry.
           if [ -e _site/slides/index.html ] && [ ! -f _site/slides/index.html ]; then
@@ -115,19 +116,6 @@ jobs:
           mkdir -p _site/slides
 
           if [ ! -f _site/slides/index.html ]; then
-            # marp-cli-action can leave _site/slides non-writable for this runner user.
-            # If that happens, stage a writable copy before generating index.html.
-            if ! touch _site/slides/.write_test 2>/dev/null; then
-              echo "Normalizing _site/slides writeability for index generation."
-              rm -rf _site/slides-writable
-              mkdir -p _site/slides-writable
-              cp -R _site/slides/. _site/slides-writable/
-              rm -rf _site/slides
-              mv _site/slides-writable _site/slides
-            else
-              rm -f _site/slides/.write_test
-            fi
-
             rm -rf _site/slides/index.html
 
             FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
