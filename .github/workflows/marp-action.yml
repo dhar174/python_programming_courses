@@ -62,8 +62,8 @@ jobs:
 
       - name: Remove non-deck README artifacts
         run: |
-          find _site/slides -maxdepth 1 -type f -name 'README*' -delete
-          find _site/slides/advanced -maxdepth 1 -type f -name 'README*' -delete 2>/dev/null || true
+          find _site/slides -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
+          find _site/slides/advanced -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
 
       - name: Ensure Pages root resolves to slide content
         run: |
