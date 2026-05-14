@@ -68,25 +68,11 @@ jobs:
       - name: Ensure Pages root resolves to slide content
         run: |
           mkdir -p _site
+
+          # Clean up only if index.html exists as a non-file entry.
           if [ -e _site/slides/index.html ] && [ ! -f _site/slides/index.html ]; then
             rm -rf _site/slides/index.html
           fi
-          touch _site/slides/index.html
-          chmod u+w _site/slides/index.html
-          
-          cat <<EOF > _site/slides/index.html
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <meta http-equiv="refresh" content="1; url=./${FIRST_SLIDE_RELATIVE}">
-              <title>Redirecting to slides…</title>
-            </head>
-            <body>
-              <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./${FIRST_SLIDE_RELATIVE}">open the first available deck</a>.</p>
-            </body>
-          </html>
-          EOF
 
           # Fallback to the checked-in static slide site when the Marp action
           # does not populate the configured `_site/slides` output directory
@@ -99,7 +85,7 @@ jobs:
           elif [ -d _site/slides ]; then
             GENERATED_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
             if [ -n "${GENERATED_SLIDE_HTML}" ]; then
-              echo "Generated slide HTML found in _site/slides; creating index.html entrypoint."
+              echo "Generated slide HTML found in _site/slides; creating index.html entrypoint if needed."
             else
               echo "No usable generated slide HTML found in _site/slides; applying fallback from Basics/lessons/slides."
               USE_FALLBACK=1
@@ -126,10 +112,9 @@ jobs:
             fi
           fi
 
+          mkdir -p _site/slides
+
           if [ ! -f _site/slides/index.html ]; then
-            # Use locale-independent sorting so the generated redirect is
-            # reproducible across runners and prefers Basics deck output first,
-            # then Advanced deck output, before considering auxiliary files.
             FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
@@ -137,9 +122,6 @@ jobs:
             fi
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
-              # Depth 3 matches the checked-in slide site layout plus the
-              # dedicated `_site/slides/advanced/...` output for Advanced decks
-              # without traversing unrelated content.
               FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'index.html' ! -name 'README.html' | LC_ALL=C sort | head -n 1)"
             fi
 
@@ -149,14 +131,12 @@ jobs:
             fi
 
             FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
-            # Reject traversal-style paths or hidden/relative path segments.
+
             INVALID_SLIDE_PATH_STRUCTURE=0
             if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|/\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
               INVALID_SLIDE_PATH_STRUCTURE=1
             fi
 
-            # Allow only portable HTML paths composed of letters, digits,
-            # dots, underscores, hyphens, and forward slashes.
             INVALID_SLIDE_PATH_CHARS=0
             if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9_/-]*([.][A-Za-z0-9_/-]+)*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
               INVALID_SLIDE_PATH_CHARS=1
@@ -166,6 +146,7 @@ jobs:
               echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
               exit 1
             fi
+
             cat <<EOF > _site/slides/index.html
           <!doctype html>
           <html lang="en">
