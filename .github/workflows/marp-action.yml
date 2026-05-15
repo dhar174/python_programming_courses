@@ -10,7 +10,7 @@ on:
       - "Advanced/lessons/slides/**"
       - ".marprc.yml"
       - ".github/workflows/marp-action.yml"
-      - "_site/**"
+      - "_site/slides/**"
 
 permissions:
   contents: read
@@ -60,7 +60,7 @@ jobs:
         uses: KoharaKazuya/marp-cli-action@0810e250c2fcf4e81b17012e35cffacd1b9e976b # v4
         with:
           # config-file: ./.marprc.yml
-          args: --input-dir Advanced/lessons/slides --output _site/slides/advanced
+          args: --no-config --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
       - name: Remove non-deck README artifacts
         run: |
