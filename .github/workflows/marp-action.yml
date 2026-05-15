@@ -75,9 +75,9 @@ jobs:
           sudo chown -R "$(id -u):$(id -g)" _site
 
           # Clean up only if index.html exists as a non-file entry.
-          if [ -e _site/slides/index.html ] && [ ! -f _site/slides/index.html ]; then
-            rm -rf _site/slides/index.html
-            echo "Found nonfile slide index at _site/slides/index.html, deleted it."
+          if [ -e _site/index.html ] && [ ! -f _site/index.html ]; then
+            rm -rf _site/index.html
+            echo "Found nonfile slide index at _site/index.html, deleted it."
           fi
 
           # Fallback to the checked-in static slide site when the Marp action
@@ -86,8 +86,8 @@ jobs:
           USE_FALLBACK=0
           GENERATED_SLIDE_HTML=""
           FOUND_INDEX=0
-          if [ -f _site/slides/index.html ]; then
-            echo "Found generated slide index at _site/slides/index.html."
+          if [ -f _site/index.html ]; then
+            echo "Found generated slide index at _site/index.html."
             FOUND_INDEX=1
           elif [ -d _site/slides/basics ]; then
             GENERATED_SLIDE_HTML="$(find _site/slides/basics -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
@@ -155,10 +155,10 @@ jobs:
           # mkdir -p _site/slides/advanced
           if [ "${FOUND_INDEX:-0}" -eq 0 ]; then
             FIRST_SLIDE_HTML=""
-            if [ ! -f _site/slides/index.html ]; then
-              rm -rf _site/slides/index.html
+            if [ ! -f _site/index.html ]; then
+              rm -rf _site/index.html
               if [ -f Basics/lessons/slides/index.html ]; then
-                cp Basics/lessons/slides/index.html _site/slides/index.html
+                cp Basics/lessons/slides/index.html _site/index.html
                 echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
               else
                 FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/basics/day-*/*.html' | LC_ALL=C sort | head -n 1)"
@@ -193,7 +193,7 @@ jobs:
                   exit 1
                 fi
                 
-                cat <<EOF > _site/slides/index.html
+                cat <<EOF > _site/index.html
           <!doctype html>
           <html lang="en">
             <head>
@@ -209,7 +209,7 @@ jobs:
               fi
             fi
           else
-            echo "Using generated _site/slides/index.html."
+            echo "Using generated _site/index.html."
           fi
         
       - name: Upload artifact
