@@ -4,14 +4,15 @@
 # Active Context
 
 ## Current objective
-Maintain a repo-specific hybrid agent stack that reflects the current codebase and contributor workflows.
+Investigate the GitHub Pages 404 and keep repo guidance aligned with the current slide deploy shape.
 
 ## Why it matters now
-The bootstrap stack only stays useful if commands, architecture notes, and specialist routing still match the repository.
+The bootstrap stack only stays useful if commands, architecture notes, and specialist routing still match the repository, especially when Pages URLs or slide artifact paths shift.
 
 ## Current status
 - Done:
   - Base repo inventory exists.
+  - Pages deploy root vs `/slides/` mismatch has been investigated.
 - In progress:
   - Keep managed guidance aligned with the codebase.
 - Blocked:
@@ -22,9 +23,12 @@ The bootstrap stack only stays useful if commands, architecture notes, and speci
 - `AGENTS.md`
 - `.github/copilot-instructions.md`
 - `CLAUDE.md`
+- `.github/workflows/marp-action.yml`
+- `slides/basics/day-*/index.html`
+- `slides/advanced/day-*/index.html`
 
 ## Next recommended steps
-1. Maintain CLI flows, prompts, and output contracts.
-2. Extend and verify API or service behavior without breaking external callers.
+1. Keep CLI flows, prompts, and output contracts aligned with current deploy behavior.
+2. Verify Pages root and `/slides/` URLs after any workflow or artifact-path change.
 3. Update web UI or static assets while preserving usability and responsiveness.
 <!-- repo-agent-bootstrap:managed:end -->
