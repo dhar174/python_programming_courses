@@ -20,6 +20,7 @@ env:
   # See: https://github.blog/changelog/2024-09-04-github-actions-transitioning-from-node-20-to-node-22-and-node-24/
   # Remove this once all referenced actions use Node 24 by default and GitHub deprecates this feature flag.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  
 
 concurrency:
   group: pages
@@ -59,7 +60,7 @@ jobs:
         # if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
         uses: KoharaKazuya/marp-cli-action@0810e250c2fcf4e81b17012e35cffacd1b9e976b # v4
         with:
-          # config-file: ./.marprc.yml
+          config-file: ./.marprc.advanced.yml
           args: --no-config --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
       - name: Remove non-deck README artifacts
@@ -84,15 +85,16 @@ jobs:
           # with a usable HTML entrypoint.
           USE_FALLBACK=0
           GENERATED_SLIDE_HTML=""
-
+          FOUND_INDEX=0
           if [ -f _site/slides/index.html ]; then
             echo "Found generated slide index at _site/slides/index.html."
+            FOUND_INDEX=1
           elif [ -d _site/slides/basics ]; then
             GENERATED_SLIDE_HTML="$(find _site/slides/basics -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
             if [ -n "${GENERATED_SLIDE_HTML}" ]; then
               echo "Generated slide HTML found in _site/slides/basics; creating index.html entrypoint if needed."
             else
-              echo "No usable generated slide HTML found in _site/slides/basics; applying fallback from Basics/lessons/slides."
+              echo "_site/slides/basics is not a directory and no index was found in _site/slides; applying fallback from Basics/lessons/slides."
               USE_FALLBACK=1
             fi
           else
@@ -128,11 +130,12 @@ jobs:
               USE_FALLBACK_AD=1
             fi
           else
-            echo "No usable generated slide HTML found in _site/slides/advanced; applying fallback from Advanced/lessons/slides."
+            echo "_site/slides/advanced is not a directory; applying fallback from Advanced/lessons/slides."
             USE_FALLBACK_AD=1
           fi
           
           if [ "${USE_FALLBACK_AD:-0}" -eq 1 ]; then
+            FALLBACK_SLIDE_HTML_AD=""
             if [ -d Advanced/lessons/slides ]; then
               FALLBACK_SLIDE_HTML_AD="$(find Advanced/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
             fi
@@ -150,46 +153,47 @@ jobs:
 
           # mkdir -p _site/slides
           # mkdir -p _site/slides/advanced
-          FIRST_SLIDE_HTML=""
-          if [ ! -f _site/slides/index.html ]; then
-            rm -rf _site/slides/index.html
-            if [ -f Basics/lessons/slides/index.html ]; then
-              cp Basics/lessons/slides/index.html _site/slides/index.html
-              echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
-            else
-              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/basics/day-*/*.html' | LC_ALL=C sort | head -n 1)"
-              
-              if [ -z "${FIRST_SLIDE_HTML}" ]; then
-                FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
-              fi
-              
-              if [ -z "${FIRST_SLIDE_HTML}" ]; then
-                FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'index.html' ! -name 'README.html' | LC_ALL=C sort | head -n 1)"
-              fi
-              
-              if [ -z "${FIRST_SLIDE_HTML}" ]; then
-                echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
-                exit 1
-              fi
-              
-              FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
-              
-              INVALID_SLIDE_PATH_STRUCTURE=0
-              if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|/\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
-                INVALID_SLIDE_PATH_STRUCTURE=1
-              fi
-              
-              INVALID_SLIDE_PATH_CHARS=0
-              if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9_/-]*([.][A-Za-z0-9_/-]+)*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
-                INVALID_SLIDE_PATH_CHARS=1
-              fi
-              
-              if [ "${INVALID_SLIDE_PATH_STRUCTURE}" -ne 0 ] || [ "${INVALID_SLIDE_PATH_CHARS}" -ne 0 ]; then
-                echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
-                exit 1
-              fi
-              
-              cat <<EOF > _site/slides/index.html
+          if [ "${FOUND_INDEX:-0}" -eq 0 ]; then
+            FIRST_SLIDE_HTML=""
+            if [ ! -f _site/slides/index.html ]; then
+              rm -rf _site/slides/index.html
+              if [ -f Basics/lessons/slides/index.html ]; then
+                cp Basics/lessons/slides/index.html _site/slides/index.html
+                echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
+              else
+                FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/basics/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+                
+                if [ -z "${FIRST_SLIDE_HTML}" ]; then
+                  FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+                fi
+                
+                if [ -z "${FIRST_SLIDE_HTML}" ]; then
+                  FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'index.html' ! -name 'README.html' | LC_ALL=C sort | head -n 1)"
+                fi
+                
+                if [ -z "${FIRST_SLIDE_HTML}" ]; then
+                  echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
+                  exit 1
+                fi
+                
+                FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
+                
+                INVALID_SLIDE_PATH_STRUCTURE=0
+                if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|/\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
+                  INVALID_SLIDE_PATH_STRUCTURE=1
+                fi
+                
+                INVALID_SLIDE_PATH_CHARS=0
+                if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9_/-]*([.][A-Za-z0-9_/-]+)*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
+                  INVALID_SLIDE_PATH_CHARS=1
+                fi
+                
+                if [ "${INVALID_SLIDE_PATH_STRUCTURE}" -ne 0 ] || [ "${INVALID_SLIDE_PATH_CHARS}" -ne 0 ]; then
+                  echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
+                  exit 1
+                fi
+                
+                cat <<EOF > _site/slides/index.html
           <!doctype html>
           <html lang="en">
             <head>
@@ -202,7 +206,7 @@ jobs:
             </body>
           </html>
           EOF
-            fi
+              fi
           else
             echo "Using generated _site/slides/index.html."
           fi
