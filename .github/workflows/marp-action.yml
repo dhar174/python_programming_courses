@@ -66,7 +66,7 @@ jobs:
         run: |
           find _site/slides/basics -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
           find _site/slides/advanced -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
-          find _site/slides -maxdepth 1 -type f -name 'README*'
+          find _site/slides -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
 
       - name: Ensure Pages root resolves to slide content
         run: |
@@ -148,59 +148,60 @@ jobs:
 
           # mkdir -p _site/slides
           # mkdir -p _site/slides/advanced
-
+          FIRST_SLIDE_HTML=""
           if [ ! -f _site/slides/index.html ]; then
             rm -rf _site/slides/index.html
-            if [ -d _site/slides ] && [ -f Basics/lessons/slides/index.html ]; then
+            if [ -f Basics/lessons/slides/index.html ]; then
               cp Basics/lessons/slides/index.html _site/slides/index.html
               echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
             else
               FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/basics/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+            
+
+              if [ -z "${FIRST_SLIDE_HTML}" ]; then
+                FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+              fi
+              
+              if [ -z "${FIRST_SLIDE_HTML}" ]; then
+                FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'index.html' ! -name 'README.html' | LC_ALL=C sort | head -n 1)"
+              fi
+              
+              if [ -z "${FIRST_SLIDE_HTML}" ]; then
+                echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
+                exit 1
+              fi
+              
+              FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
+              
+              INVALID_SLIDE_PATH_STRUCTURE=0
+              if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|/\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
+                INVALID_SLIDE_PATH_STRUCTURE=1
+              fi
+              
+              INVALID_SLIDE_PATH_CHARS=0
+              if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9_/-]*([.][A-Za-z0-9_/-]+)*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
+                INVALID_SLIDE_PATH_CHARS=1
+              fi
+              
+              if [ "${INVALID_SLIDE_PATH_STRUCTURE}" -ne 0 ] || [ "${INVALID_SLIDE_PATH_CHARS}" -ne 0 ]; then
+                echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
+                exit 1
+              fi
+              
+              cat <<EOF > _site/slides/index.html
+            <!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8">
+                <meta http-equiv="refresh" content="1; url=./${FIRST_SLIDE_RELATIVE}">
+                <title>Redirecting to slides…</title>
+              </head>
+              <body>
+                <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./${FIRST_SLIDE_RELATIVE}">open the first available deck</a>.</p>
+              </body>
+            </html>
+            EOF
             fi
-
-            if [ -z "${FIRST_SLIDE_HTML}" ]; then
-              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
-            fi
-
-            if [ -z "${FIRST_SLIDE_HTML}" ]; then
-              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'index.html' ! -name 'README.html' | LC_ALL=C sort | head -n 1)"
-            fi
-
-            if [ -z "${FIRST_SLIDE_HTML}" ]; then
-              echo "ERROR: No slide HTML found to use as the /slides/ entrypoint."
-              exit 1
-            fi
-
-            FIRST_SLIDE_RELATIVE="${FIRST_SLIDE_HTML#_site/slides/}"
-
-            INVALID_SLIDE_PATH_STRUCTURE=0
-            if grep -Eq '(^|/)\.\.(/|$)|^[./]|/$|/\.' <<<"${FIRST_SLIDE_RELATIVE}"; then
-              INVALID_SLIDE_PATH_STRUCTURE=1
-            fi
-
-            INVALID_SLIDE_PATH_CHARS=0
-            if ! grep -Eq '^[A-Za-z0-9][A-Za-z0-9_/-]*([.][A-Za-z0-9_/-]+)*\.html$' <<<"${FIRST_SLIDE_RELATIVE}"; then
-              INVALID_SLIDE_PATH_CHARS=1
-            fi
-
-            if [ "${INVALID_SLIDE_PATH_STRUCTURE}" -ne 0 ] || [ "${INVALID_SLIDE_PATH_CHARS}" -ne 0 ]; then
-              echo "ERROR: Unsafe slide path selected for generated index: ${FIRST_SLIDE_RELATIVE}"
-              exit 1
-            fi
-
-            cat <<EOF > _site/slides/index.html
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <meta http-equiv="refresh" content="1; url=./${FIRST_SLIDE_RELATIVE}">
-              <title>Redirecting to slides…</title>
-            </head>
-            <body>
-              <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./${FIRST_SLIDE_RELATIVE}">open the first available deck</a>.</p>
-            </body>
-          </html>
-          EOF
           else
             echo "Using generated _site/slides/index.html."
           fi
