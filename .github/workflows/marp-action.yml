@@ -112,12 +112,12 @@ jobs:
               exit 1
             fi
             if [ -d Advanced/lessons/slides ]; then
-              FALLBACK_SLIDE_HTML="$(find Advanced/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
+              FALLBACK_SLIDE_HTML_AD="$(find Advanced/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
             fi
 
-            if [ -n "${FALLBACK_SLIDE_HTML}" ]; then
-              rm -rf _site/slides
-              mkdir -p _site/slides
+            if [ -n "${FALLBACK_SLIDE_HTML_AD}" ]; then
+              rm -rf _site/slides/advanced
+              mkdir -p _site/slides/advanced
               cp -R Advanced/lessons/slides/. _site/slides/advanced
               echo "Fallback slide content copied from Advanced/lessons/slides/."
             else
@@ -131,9 +131,9 @@ jobs:
 
           if [ ! -f _site/slides/index.html ]; then
             rm -rf _site/slides/index.html
-            if [ -d Basics/lessons/slides ] && [ -f Basics/lessons/slides/index.html ]; then
-              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
-              echo "Generated slide HTML found in Basics/lessons/slides; creating index.html entrypoint if needed."
+            if [ -d _site/slides ] && [ -f Basics/lessons/slides/index.html ]; then
+              cp Basics/lessons/slides/index.html _site/slides/index.html
+              echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
             else
               FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
             fi
@@ -181,6 +181,8 @@ jobs:
             </body>
           </html>
           EOF
+          else
+            echo "Using generated _site/slides/index.html."
           fi
         
       - name: Upload artifact
