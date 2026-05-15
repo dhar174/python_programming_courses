@@ -10,6 +10,7 @@ on:
       - "Advanced/lessons/slides/**"
       - ".marprc.yml"
       - ".github/workflows/marp-action.yml"
+      - "_site/**"
 
 permissions:
   contents: read
@@ -58,7 +59,7 @@ jobs:
         # if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
         uses: KoharaKazuya/marp-cli-action@0810e250c2fcf4e81b17012e35cffacd1b9e976b # v4
         with:
-          config-file: ./.marprc.yml
+          # config-file: ./.marprc.yml
           args: --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
       - name: Remove non-deck README artifacts
@@ -116,6 +117,7 @@ jobs:
             fi
           fi
           USE_FALLBACK_AD=0
+          AD_GENERATED_SLIDE_HTML=""
           if [ -d _site/slides/advanced ]; then
             AD_GENERATED_SLIDE_HTML="$(find _site/slides/advanced -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
             if [ -n "${AD_GENERATED_SLIDE_HTML}" ]; then
