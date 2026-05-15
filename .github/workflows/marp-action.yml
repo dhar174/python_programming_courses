@@ -57,7 +57,7 @@ jobs:
         uses: KoharaKazuya/marp-cli-action@0810e250c2fcf4e81b17012e35cffacd1b9e976b # v4
         with:
           config-file: ./.marprc.yml
-          args: --input-dir Advanced/lessons/slides --output _site/slides/advanced
+          args: --input-dir ./Advanced/lessons/slides --output ./_site/slides/advanced
 
       - name: Remove non-deck README artifacts
         run: |
@@ -72,6 +72,7 @@ jobs:
           # Clean up only if index.html exists as a non-file entry.
           if [ -e _site/slides/index.html ] && [ ! -f _site/slides/index.html ]; then
             rm -rf _site/slides/index.html
+            echo "Found generated slide index at _site/slides/index.html."
           fi
 
           # Fallback to the checked-in static slide site when the Marp action
