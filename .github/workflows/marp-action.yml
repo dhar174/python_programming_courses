@@ -83,9 +83,6 @@ jobs:
 
           if [ -f _site/slides/index.html ]; then
             echo "Found generated slide index at _site/slides/index.html."
-          elif [ -d Basics/lessons/slides ] && [ -f Basics/lessons/slides/index.html ]; then
-            GENERATED_SLIDE_HTML="Basics/lessons/slides/index.html"
-              echo "Generated slide HTML found in _site/slides; creating index.html entrypoint if needed."
           elif [ -d _site/slides ]; then
             GENERATED_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
             if [ -n "${GENERATED_SLIDE_HTML}" ]; then
@@ -114,6 +111,19 @@ jobs:
               echo "ERROR: No usable fallback slide content found in Basics/lessons/slides."
               exit 1
             fi
+            if [ -d Advanced/lessons/slides ]; then
+              FALLBACK_SLIDE_HTML="$(find Advanced/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
+            fi
+
+            if [ -n "${FALLBACK_SLIDE_HTML}" ]; then
+              rm -rf _site/slides
+              mkdir -p _site/slides
+              cp -R Advanced/lessons/slides/. _site/slides/advanced
+              echo "Fallback slide content copied from Advanced/lessons/slides/."
+            else
+              echo "ERROR: No usable fallback slide content found in Advanced/lessons/slides."
+              exit 1
+            fi
           fi
 
           mkdir -p _site/slides
@@ -121,8 +131,13 @@ jobs:
 
           if [ ! -f _site/slides/index.html ]; then
             rm -rf _site/slides/index.html
-            
-            FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+            if [ -d Basics/lessons/slides ] && [ -f Basics/lessons/slides/index.html ]; then
+              FIRST_SLIDE_HTML="Basics/lessons/slides/index.html"
+              echo "Generated slide HTML found in Basics/lessons/slides; creating index.html entrypoint if needed."
+            fi
+            else
+              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+            fi
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
               FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
