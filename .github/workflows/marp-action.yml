@@ -65,6 +65,7 @@ jobs:
         run: |
           find _site/slides/basics -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
           find _site/slides/advanced -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
+          find _site/slides -maxdepth 1 -type f -name 'README*'
 
       - name: Ensure Pages root resolves to slide content
         run: |
@@ -116,8 +117,8 @@ jobs:
           fi
           USE_FALLBACK_AD=0
           if [ -d _site/slides/advanced ]; then
-            GENERATED_SLIDE_HTML="$(find _site/slides/advanced -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
-            if [ -n "${GENERATED_SLIDE_HTML}" ]; then
+            AD_GENERATED_SLIDE_HTML="$(find _site/slides/advanced -maxdepth 3 -type f -name '*.html' ! -name 'README.html' -print -quit)"
+            if [ -n "${AD_GENERATED_SLIDE_HTML}" ]; then
               echo "Generated slide HTML found in _site/slides/advanced; creating index.html entrypoint if needed."
             else
               echo "No usable generated slide HTML found in _site/slides/advanced; applying fallback from Advanced/lessons/slides."
@@ -152,7 +153,7 @@ jobs:
               cp Basics/lessons/slides/index.html _site/slides/index.html
               echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
             else
-              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 2 -type f -path '_site/slides/day-*/*.html' | LC_ALL=C sort | head -n 1)"
+              FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/basics/day-*/*.html' | LC_ALL=C sort | head -n 1)"
             fi
 
             if [ -z "${FIRST_SLIDE_HTML}" ]; then
