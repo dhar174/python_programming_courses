@@ -101,7 +101,7 @@ jobs:
             echo "No usable generated slide HTML found in _site/slides/basics; applying fallback from Basics/lessons/slides."
             USE_FALLBACK=1
           fi
-
+          
           if [ "${USE_FALLBACK:-0}" -eq 1 ]; then
             FALLBACK_SLIDE_HTML=""
             if [ -d Basics/lessons/slides ]; then
@@ -139,7 +139,7 @@ jobs:
             if [ -d Advanced/lessons/slides ]; then
               FALLBACK_SLIDE_HTML_AD="$(find Advanced/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
             fi
-
+            
             if [ -n "${FALLBACK_SLIDE_HTML_AD}" ]; then
               rm -rf _site/slides/advanced
               mkdir -p _site/slides/advanced
@@ -207,6 +207,7 @@ jobs:
           </html>
           EOF
               fi
+            fi
           else
             echo "Using generated _site/slides/index.html."
           fi
@@ -235,4 +236,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
-        
