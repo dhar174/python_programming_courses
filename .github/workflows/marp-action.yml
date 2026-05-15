@@ -8,7 +8,6 @@ on:
       - "Advanced/lessons/slides/day-*/**"
       - ".marprc.yml"
       - ".github/workflows/marp-action.yml"
-      - "Basics/lessons/slides**"
 
 permissions:
   contents: read
@@ -54,11 +53,11 @@ jobs:
           args: --input-dir Basics/lessons/slides --output _site/slides
 
       - name: Convert Advanced slide Markdown into HTML and PDF
-        if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
+        # if: ${{ hashFiles('Advanced/lessons/slides/day-*/**/*.md') != '' }}
         uses: KoharaKazuya/marp-cli-action@0810e250c2fcf4e81b17012e35cffacd1b9e976b # v4
         with:
           config-file: ./.marprc.yml
-          args: --input-dir ./Advanced/lessons/slides --output ./_site/slides/advanced
+          args: --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
       - name: Remove non-deck README artifacts
         run: |
