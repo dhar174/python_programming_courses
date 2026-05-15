@@ -1,0 +1,40 @@
+settings:
+  skipIfBot: false
+  removeUnmatchedLabels: false
+  onMissingLabel: create
+  dryRun: false
+
+rules:
+  issue:
+    - label: bug
+      matches:
+        # The title starts with `[bug]`, the body contains the `error` keyword,
+        # and the `wip` keyword is not included
+        - operator: all
+          conditions:
+            - title: /^\[bug\]/i
+            - body: /\berror\b/i
+            - body: /\bwip\b/i
+              negate: true
+  pr:
+    - label: large-change
+      matches:
+        # The changed line count is 200 or more and the PR is not a draft
+        - operator: all
+          conditions:
+            - changed-lines: '>=200'
+            - draft: false
+
+    - label: documentation
+      skipIfBot: true
+      matches:
+        # The `docs` directory or the `README.md` file changed
+        - operator: any
+          conditions:
+            - changed-files: 'docs/**/*.md'
+            - changed-files: 'README.md'
+        # The title contains the `docs` keyword
+        - operator: any
+          skipIfBot: false
+          conditions:
+            - title: /\bdocs?\b/i
