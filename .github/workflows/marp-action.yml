@@ -116,6 +116,7 @@ jobs:
               exit 1
             fi
           fi
+          
           USE_FALLBACK_AD=0
           AD_GENERATED_SLIDE_HTML=""
           if [ -d _site/slides/advanced ]; then
@@ -130,6 +131,7 @@ jobs:
             echo "No usable generated slide HTML found in _site/slides/advanced; applying fallback from Advanced/lessons/slides."
             USE_FALLBACK_AD=1
           fi
+          
           if [ "${USE_FALLBACK_AD:-0}" -eq 1 ]; then
             if [ -d Advanced/lessons/slides ]; then
               FALLBACK_SLIDE_HTML_AD="$(find Advanced/lessons/slides -maxdepth 2 -type f -name '*.html' -print -quit)"
@@ -156,8 +158,7 @@ jobs:
               echo "Copied Basics/lessons/slides/index.html as /slides/ entrypoint."
             else
               FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/basics/day-*/*.html' | LC_ALL=C sort | head -n 1)"
-            
-
+              
               if [ -z "${FIRST_SLIDE_HTML}" ]; then
                 FIRST_SLIDE_HTML="$(find _site/slides -maxdepth 3 -type f -path '_site/slides/advanced/day-*/*.html' | LC_ALL=C sort | head -n 1)"
               fi
@@ -189,18 +190,18 @@ jobs:
               fi
               
               cat <<EOF > _site/slides/index.html
-            <!doctype html>
-            <html lang="en">
-              <head>
-                <meta charset="utf-8">
-                <meta http-equiv="refresh" content="1; url=./${FIRST_SLIDE_RELATIVE}">
-                <title>Redirecting to slides…</title>
-              </head>
-              <body>
-                <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./${FIRST_SLIDE_RELATIVE}">open the first available deck</a>.</p>
-              </body>
-            </html>
-            EOF
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta http-equiv="refresh" content="1; url=./${FIRST_SLIDE_RELATIVE}">
+              <title>Redirecting to slides…</title>
+            </head>
+            <body>
+              <p aria-live="polite">Redirecting to the published slides… If you are not redirected, <a href="./${FIRST_SLIDE_RELATIVE}">open the first available deck</a>.</p>
+            </body>
+          </html>
+          EOF
             fi
           else
             echo "Using generated _site/slides/index.html."
