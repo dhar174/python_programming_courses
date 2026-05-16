@@ -46,7 +46,7 @@ graph TD
 |----|-------------|----------|-------------------|
 | REQ-001 | The workflow shall support both manual runs and automatic publish runs from repository changes. | High | A maintainer can trigger a publish manually, and matching pushes to `main` start the workflow automatically. |
 | REQ-002 | The build job shall publish Basics and Advanced slide outputs as separate module trees. | High | The Pages artifact contains both `slides/basics/` and `slides/advanced/` when content is available. |
-| REQ-003 | The workflow shall preserve a usable published landing experience even when generated module output lacks a usable HTML entrypoint. | High | The final Pages artifact includes a working root entrypoint that resolves to published slide content. |
+| REQ-003 | The workflow shall preserve a usable published landing experience even when generated module output lacks a usable HTML entrypoint. | High | The final Pages artifact includes a working root entrypoint that resolves to published course or slide content. |
 | REQ-004 | The workflow shall permit checked-in standalone slide trees to serve as fallback publish content. | High | When generated HTML is unavailable for a module, the final artifact still contains that module's checked-in standalone slide site. |
 | REQ-005 | The workflow shall package a single Pages artifact and deploy it through a separate deployment step. | High | Publish output is staged before deployment and released through the Pages environment. |
 | REQ-006 | The workflow shall avoid exposing top-level README artifacts as published slide entrypoints. | Medium | The published module roots do not surface README files as the main landing content. |
@@ -76,6 +76,14 @@ repository_triggers:
   paths:
     - Basics/lessons/slides/**
     - Advanced/lessons/slides/**
+    - Basics/lessons/lecture/**
+    - Advanced/lessons/lecture/**
+    - Basics/assignments/**
+    - Advanced/assignments/**
+    - Basics/quizzes/**
+    - Advanced/quizzes/**
+    - slides/**
+    - scripts/generate_portal_manifest.py
     - .marprc.yml
     - .github/workflows/marp-action.yml
     - _site/slides/**
@@ -93,6 +101,7 @@ pages_artifact:
   root_entrypoint: _site/index.html
   basics_module_tree: _site/slides/basics/**
   advanced_module_tree: _site/slides/advanced/**
+  shared_portal_assets: _site/slides/shared/portal/**
 deployment:
   environment: github-pages
 ```
@@ -123,8 +132,9 @@ deployment:
 | Error Type | Response | Recovery Action |
 |------------|----------|-----------------|
 | Missing generated module HTML | Fall back to checked-in standalone slide trees | Copy the module's checked-in slide site into the Pages artifact and continue |
+| Missing approved supporting page | Fail portal validation | Restore `slides/printable-index.html` or `slides/404.html`, or update the manifest contract intentionally |
 | Missing fallback slide content | Fail the build | Restore the missing checked-in slide tree or fix build generation so the module produces HTML |
-| Missing root entrypoint | Generate or copy a safe root entrypoint | Publish a validated redirect or static landing page into `_site/index.html` |
+| Missing root entrypoint | Generate or copy a safe root entrypoint | Publish `slides/index.html` into `_site/index.html` when available, otherwise generate a validated redirect into `_site/index.html` |
 | Deployment failure | Stop publish completion | Re-run the workflow after resolving Pages or permission issues |
 
 ## Quality Gates
@@ -135,6 +145,7 @@ deployment:
 |------|----------|-------------------|
 | Module output availability | Each module must contribute usable HTML or an approved fallback tree | None |
 | Safe root entrypoint | The final artifact must include a valid root landing page | None |
+| Supporting page presence | Approved supporting pages must be staged at their contract paths when the manifest advertises them | None |
 | Artifact upload | `_site/` must be packaged successfully before deploy begins | None |
 
 ## Monitoring & Observability
@@ -190,8 +201,9 @@ deployment:
 |----------|-------------------|-------------------|
 | Basics generated output is missing HTML | Publish uses the checked-in Basics standalone slide tree | Inspect `_site/slides/basics/` in the artifact |
 | Advanced generated output is missing HTML | Publish uses the checked-in Advanced standalone slide tree | Inspect `_site/slides/advanced/` in the artifact |
-| No generated root landing page exists | Workflow creates or copies a valid `_site/index.html` entrypoint | Open the published site root and confirm it resolves to slide content |
-| A lecture-script-only change lands under `lessons/lecture/` | No slide publish run is triggered by path filters alone | Review trigger configuration and workflow history |
+| Printable index or custom 404 exists in source | Workflow copies each page into its contract path | Inspect `_site/slides/printable-index.html` and `_site/404.html` in the artifact |
+| No generated root landing page exists | Workflow creates or copies a valid `_site/index.html` entrypoint | Open the published site root and confirm it resolves to course or slide content |
+| A lecture-script-only change lands under `lessons/lecture/` | Publish runs so the manifest-backed portal summaries stay current | Review trigger configuration and workflow history |
 | Advanced config changes outside watched paths | Publish may not run automatically | Confirm trigger coverage whenever config files change |
 
 ## Validation Criteria
@@ -199,6 +211,7 @@ deployment:
 ### Workflow Validation
 
 - **VLD-001**: A successful run publishes a root Pages landing page plus both module slide trees
+- **VLD-005**: Approved supporting pages (`_site/slides/printable-index.html`, `_site/404.html`) are present whenever the manifest advertises them
 - **VLD-002**: Manual dispatch can republish the site without requiring a content change
 - **VLD-003**: If generated module HTML is unavailable, fallback content preserves a usable published site
 - **VLD-004**: Changes to the workflow or watched slide paths trigger publication automatically on `main`
@@ -212,7 +225,7 @@ deployment:
 
 ### Update Process
 
-1. **Specification Update**: Update this document and the README workflow notes first
+1. **Specification Update**: Update this document, `docs/portal-architecture.md`, and the README workflow notes first when entrypoint or fallback behavior changes
 2. **Review & Approval**: Review trigger coverage, fallback behavior, and root entrypoint handling together
 3. **Implementation**: Apply workflow changes in `.github/workflows/marp-action.yml`
 4. **Testing**: Validate with a manual workflow dispatch and inspect the resulting Pages artifact
@@ -227,5 +240,6 @@ deployment:
 ## Related Specifications
 
 - [`../README.md`](../README.md)
+- [`../docs/portal-architecture.md`](../docs/portal-architecture.md)
 - [`spec-process-project-completion.md`](spec-process-project-completion.md)
 - [`../.github/workflows/marp-action.yml`](../.github/workflows/marp-action.yml)
