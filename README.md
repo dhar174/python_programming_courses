@@ -19,6 +19,7 @@ An instructor-led **96-hour Python training package** built by **GlobalIT** and 
 - [For Contributors & AI Agents](#-for-contributors--ai-agents)
 - [Repository Structure](#repository-structure)
 - [CI/CD Pipelines](#cicd-pipelines)
+- [Course Content Index](#course-content-index)
 - [Certification Alignment](#certification-alignment)
 
 ---
@@ -96,9 +97,11 @@ All lesson content must align to the runbooks. Do not modify lesson files withou
 No `package.json` — use `npx` directly.
 
 ```bash
-# Build all slides (mirrors CI)
-npx @marp-team/marp-cli -c .marprc.yml
-# Output: ./_site/slides/ (HTML, PDF, PPTX, PNG)
+# Build Basics the same way the workflow does
+npx @marp-team/marp-cli -c .marprc.yml --input-dir Basics/lessons/slides --output _site/slides/basics
+
+# Build Advanced the same way the workflow does
+npx @marp-team/marp-cli -c .marprc.advanced.yml --no-config --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
 # Build and watch a single file during development
 npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-session-1.md
@@ -107,15 +110,15 @@ npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-
 npx @marp-team/marp-cli --no-config-file Basics/lessons/slides/day-01/day-01-session-1.md -o out.pdf --pdf
 ```
 
-Slides are published automatically to **GitHub Pages** on every push to `main` that touches slide source files under `Basics/lessons/slides/day-*/` or `Advanced/lessons/slides/day-*/`, or updates `.marprc.yml` / the workflow file.
+Slides are published automatically to **GitHub Pages** on manual dispatch and on pushes to `main` that touch the workflow's configured path filters under `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**`.
 
 ### Lecture Scripts
 
 Each hour of instruction has a dedicated Markdown lecture script for verbatim delivery.
 
 - **Location:** `Basics/lessons/lecture/DayX_HourY_Basics.md` or `Advanced/lessons/lecture/DayX_HourY_Advanced.md`
-- **Standard:** ~4,000 words minimum per hour
-- **Status:** 96 per-hour lecture files are present (48 Basics + 48 Advanced), but depth remediation remains open under [#269](https://github.com/dhar174/python_programming_courses/issues/269).
+- **Standard:** Per-hour instructor-delivery scripts aligned to the runbooks; lecture-depth remediation remains tracked under [#269](https://github.com/dhar174/python_programming_courses/issues/269).
+- **Status:** 96 day/hour lecture files are present across the two modules, plus legacy introductory lesson material in a few locations.
 
 ### Assignments & Quizzes
 
@@ -186,7 +189,7 @@ python_programming_courses/
 │   ├── Instructor/                  #   Instructor runbook (authoritative schedule)
 │   ├── lessons/
 │   │   ├── lecture/                 #   48 per-hour lecture scripts
-│   │   └── slides/                  #   Marp slide source (Markdown → HTML/PDF/PPTX)
+│   │   └── slides/                  #   Slide sources, checked-in standalone decks, and module portal assets
 │   ├── assignments/                 #   12 homework notebooks + autograder configs
 │   ├── quizzes/                     #   12 HTML quizzes + 12 _answers.json exports
 │   └── themes/                      #   CSS themes (python-dark.css, python-light.css)
@@ -194,7 +197,7 @@ python_programming_courses/
 ├── Advanced/                        # Module 2 — 48 hours (parallel structure)
 │   ├── Instructor/
 │   ├── lessons/lecture/             #   48 per-hour lecture scripts
-│   ├── lessons/slides/              #   Generated HTML slide decks
+│   ├── lessons/slides/              #   Slide sources plus checked-in standalone HTML decks
 │   ├── assignments/
 │   └── quizzes/
 │
@@ -213,8 +216,11 @@ python_programming_courses/
 ├── Architecture.md                  # Design principles and constraints
 ├── Plans.md                         # Milestone tracking
 ├── Documentation.md                 # Decision log and milestone status
-├── .marprc.yml                      # Marp build configuration (used by CI)
+├── .marprc.yml                      # Basics Marp build configuration used by CI
+├── .marprc.advanced.yml             # Advanced Marp build configuration used by CI
+├── .marprc.basics.yml               # Additional Basics config file currently not referenced by the workflow
 └── spec/
+    ├── spec-process-cicd-marp-action.md    # Slide publishing workflow specification
     └── spec-process-project-completion.md  # Completion criteria and acceptance tests
 ```
 
@@ -228,9 +234,36 @@ python_programming_courses/
 
 | | |
 |---|---|
-| **Trigger** | Push to `main` touching `Basics/lessons/**`, `Advanced/lessons/**`, or `.marprc.yml` |
-| **Action** | Builds HTML, PDF, PPTX, and PNG from all Marp slide Markdown sources |
-| **Output** | Deployed to GitHub Pages |
+| **Trigger** | `workflow_dispatch` and pushes to `main` touching `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**` |
+| **Jobs** | `build` then `deploy`, with Pages concurrency so newer publish runs cancel older in-progress runs |
+| **Action** | Builds Basics and Advanced slide trees separately, stages a Pages artifact under `_site`, then deploys that artifact to GitHub Pages |
+| **Output** | `_site/index.html`, `_site/slides/basics/**`, and `_site/slides/advanced/**` published through the `github-pages` environment |
+
+#### `marp-action.yml` Behavior
+
+1. **Build Basics output** from `Basics/lessons/slides` into `_site/slides/basics` using `.marprc.yml`.
+2. **Build Advanced output** from `Advanced/lessons/slides` into `_site/slides/advanced` using `.marprc.advanced.yml`.
+3. **Remove top-level README artifacts** from generated output so the published module roots expose decks and indexes instead of root README files.
+4. **Verify published HTML exists** for both modules. If a generated module tree is missing usable HTML, the workflow falls back to copying the checked-in standalone slide site from `Basics/lessons/slides` or `Advanced/lessons/slides`.
+5. **Guarantee a GitHub Pages entrypoint**. If no generated root index is present, the workflow either copies `Basics/lessons/slides/index.html` to `_site/index.html` or writes a redirect page to the first safe published slide path it can discover.
+6. **Upload and deploy** the `_site` directory as the Pages artifact, then publish it through a separate deploy job targeting the `github-pages` environment.
+
+#### Maintaining `marp-action.yml`
+
+- **Treat the workflow as a two-module publisher, not a single Marp command.** The local commands that actually mirror CI are:
+
+  ```bash
+  npx @marp-team/marp-cli -c .marprc.yml --input-dir Basics/lessons/slides --output _site/slides/basics
+  npx @marp-team/marp-cli -c .marprc.advanced.yml --no-config --input-dir Advanced/lessons/slides --output _site/slides/advanced
+  ```
+
+- **Preserve trigger intent carefully.** Changes under `Basics/lessons/lecture/**` and `Advanced/lessons/lecture/**` do **not** currently trigger this workflow. Changes to `.marprc.advanced.yml` also do **not** currently appear in the workflow path filters even though that file is used during the Advanced build step.
+- **Keep config ownership explicit.** The workflow actively uses `.marprc.yml` for Basics and `.marprc.advanced.yml` for Advanced. A third file, `.marprc.basics.yml`, exists in the repository but is not referenced by the current workflow.
+- **Do not remove the fallback copy logic casually.** The checked-in `Basics/lessons/slides/index.html` currently serves as the most reliable static module landing page and is also part of the fallback story when generated output is incomplete.
+- **Protect the Pages root behavior.** `_site/index.html` is intentionally managed so the published site always resolves to slide content even when Marp does not emit a root landing page.
+- **Review the pinned action SHAs and temporary runtime flags together.** The workflow opts JavaScript actions into Node 24 through `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true`, and all referenced third-party actions are SHA-pinned. Update those deliberately rather than ad hoc.
+- **Treat `_site/slides/**` as a defensive trigger path.** `_site/` is build output and should not normally be committed, so edits there should usually prompt a workflow/config review rather than routine content work.
+- **Use the workflow specification for deeper changes.** See [`spec/spec-process-cicd-marp-action.md`](spec/spec-process-cicd-marp-action.md) before changing job flow, permissions, or entrypoint logic.
 
 ### Autograder (`autograder.yml`)
 
@@ -242,6 +275,65 @@ python_programming_courses/
 | **Manual dispatch** | Commits results to a timestamped `autograder-results-*` branch |
 
 ---
+
+## Course Content Index
+
+This index is intentionally **comprehensive but grouped**. It covers both module trees using stable file patterns, explicit counts, and named reference files so maintainers can audit the repository without turning the README into a raw recursive file dump.
+
+### Basics Module Index
+
+#### Basics Top-Level Reference Files
+
+| File | Purpose |
+|---|---|
+| [`Basics/generate_slides.py`](Basics/generate_slides.py) | Batch-generates standalone Basics HTML slide decks and mirrors |
+| [`Basics/Python Basics (48h) Syllabus (12x4h) — Pcep_pcap Aligned.pdf`](Basics/Python%20Basics%20%2848h%29%20Syllabus%20%2812x4h%29%20%E2%80%94%20Pcep_pcap%20Aligned.pdf) | PDF syllabus for the Basics module |
+| [`Basics/python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md`](Basics/python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md) | Markdown syllabus source for the Basics module |
+| [`Basics/Python Programming - Basic.md`](Basics/Python%20Programming%20-%20Basic.md) | Additional package-level Basics documentation |
+
+#### Basics Directory and File Patterns
+
+| Area | Current Inventory | Path / Pattern | Notes |
+|---|---:|---|---|
+| Instructor runbook | 1 file | [`Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`](Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md) | Primary curriculum source of truth for the module |
+| Lecture scripts | 48 files | `Basics/lessons/lecture/DayX_HourY_Basics.md` | Per-hour instructor scripts for Days 1-12 and Hours 1-4 |
+| Slide day folders | 12 folders | [`Basics/lessons/slides/`](Basics/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
+| Slide Markdown sources | 13 files | `Basics/lessons/slides/**/*.md` | Includes day-based deck sources plus module-level slide docs such as the local README |
+| Standalone slide HTML | 22 files | `Basics/lessons/slides/**/*.html` | Includes `index.html`, day decks, and additional standalone HTML artifacts |
+| Module slide landing page | 1 file | [`Basics/lessons/slides/index.html`](Basics/lessons/slides/index.html) | Current Basics portal/landing page used directly and by workflow fallback logic |
+| Assignment templates | 12 files | `Basics/assignments/Basics_DayX_homework.ipynb` | Blank day-level learner notebooks |
+| Assignment config directories | 12 folders | `Basics/assignments/Basics_DayX_homework/` | Each contains grading config plus a `submissions/` folder |
+| Quiz HTML files | 12 files | `Basics/quizzes/Basics_DayX_Quiz.html` | Day-based learner quiz UIs |
+| Quiz answer exports | 12 files | `Basics/quizzes/**/*_answers.json` | Answer-export payloads consumed by the autograder |
+| Theme files | 2 files | [`Basics/themes/python-dark.css`](Basics/themes/python-dark.css), [`Basics/themes/python-light.css`](Basics/themes/python-light.css) | Shared design tokens for Marp and related slide UX |
+
+### Advanced Module Index
+
+#### Advanced Top-Level Reference Files
+
+| File | Purpose |
+|---|---|
+| [`Advanced/generate_slides.py`](Advanced/generate_slides.py) | Batch-generates standalone Advanced HTML slide decks and mirrors |
+| [`Advanced/Python Advanced (48h) Syllabus (12x4h) — Pcap_path To Pcpp1.pdf`](Advanced/Python%20Advanced%20%2848h%29%20Syllabus%20%2812x4h%29%20%E2%80%94%20Pcap_path%20To%20Pcpp1.pdf) | PDF syllabus for the Advanced module |
+| [`Advanced/python_advanced_48_h_syllabus_12_x_4_h_pcap_path_to_pcpp_1.md`](Advanced/python_advanced_48_h_syllabus_12_x_4_h_pcap_path_to_pcpp_1.md) | Markdown syllabus source for the Advanced module |
+| [`Advanced/Python Programming Advanced Global IT training package.md`](Advanced/Python%20Programming%20Advanced%20Global%20IT%20training%20package.md) | Additional package-level Advanced documentation |
+| [`Advanced/Python_Advanced_Instructor_Runbook_4hr_Days.pdf`](Advanced/Python_Advanced_Instructor_Runbook_4hr_Days.pdf) | PDF export of the Advanced instructor runbook |
+
+#### Advanced Directory and File Patterns
+
+| Area | Current Inventory | Path / Pattern | Notes |
+|---|---:|---|---|
+| Instructor runbook | 1 Markdown + 1 PDF | [`Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`](Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md) | Primary curriculum source of truth, with an additional PDF export at module root |
+| Lecture scripts | 48 day/hour files + 1 legacy intro file | `Advanced/lessons/lecture/DayX_HourY_Advanced.md` plus `Advanced/lessons/lecture/01-intro-to-python.md` | The day/hour lecture inventory is complete, but one extra legacy intro file remains in the lecture tree |
+| Slide day folders | 12 folders | [`Advanced/lessons/slides/`](Advanced/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
+| Slide Markdown sources | 12 files | `Advanced/lessons/slides/**/*.md` | Day-based standalone deck sources |
+| Standalone slide HTML | 12 files | `Advanced/lessons/slides/**/*.html` | One checked-in standalone HTML deck per day |
+| Module slide landing page | none at module root | `Advanced/lessons/slides/` | Unlike Basics, Advanced currently has no root `index.html` portal page in this folder |
+| Assignment templates | 12 files | `Advanced/assignments/Advanced_DayX_homework.ipynb` | Blank day-level learner notebooks |
+| Assignment config directories | 12 folders | `Advanced/assignments/Advanced_DayX_homework/` | Each contains grading config plus a `submissions/` folder |
+| Quiz HTML files | 12 files | `Advanced/quizzes/Advanced_DayX_Quiz.html` | Day-based learner quiz UIs |
+| Quiz answer exports | 12 files | `Advanced/quizzes/**/*_answers.json` | Answer-export payloads consumed by the autograder |
+| Theme files | 2 files | [`Advanced/themes/python-dark.css`](Advanced/themes/python-dark.css), [`Advanced/themes/python-light.css`](Advanced/themes/python-light.css) | Shared design tokens for Marp and related slide UX |
 
 ## Certification Alignment
 
