@@ -165,9 +165,7 @@
         const item = document.createElement("li");
         const link = document.createElement("a");
         link.className = "portal-link-chip";
-        const dayTarget = isSourcePreview()
-          ? day.sourcePrimaryHref || day.artifacts.slides.sourcePath || day.primaryHref
-          : day.primaryHref;
+        const dayTarget = dayDeckHref(day);
         link.href = dayTarget ? withBasePath(dayTarget) : "#";
         link.textContent = `${module.title} · Day ${day.dayNumber}`;
         item.appendChild(link);
@@ -184,6 +182,14 @@
     return `Lecture ${index + 1}`;
   }
 
+  function dayDeckHref(day) {
+    const slides = day.artifacts && day.artifacts.slides ? day.artifacts.slides : {};
+    if (isSourcePreview()) {
+      return day.sourcePrimaryHref || slides.sourcePath || day.primaryHref;
+    }
+    return day.primaryHref || slides.href;
+  }
+
   function appendChip(container, label, href, state) {
     const node = href ? document.createElement("a") : document.createElement("span");
     node.className = "portal-link-chip portal-status-badge";
@@ -193,6 +199,94 @@
       node.href = href;
     }
     container.appendChild(node);
+  }
+
+  function renderArtifactStatus(container, artifacts) {
+    container.innerHTML = "";
+    [
+      { key: "slides", label: "Slides" },
+      { key: "lecture", label: "Lecture" },
+      { key: "assignment", label: "Assignment" },
+      { key: "quiz", label: "Quiz" },
+    ].forEach(function (artifact) {
+      const artifactData = artifacts[artifact.key];
+      const isPresent = Boolean(artifactData && artifactData.present);
+      appendChip(container, `${artifact.label} ${isPresent ? "✓" : "—"}`, null, isPresent ? "available" : "missing");
+    });
+  }
+
+  function renderArtifactLinks(container, artifacts) {
+    container.innerHTML = "";
+    const lecturePaths = artifacts.lecture && Array.isArray(artifacts.lecture.repoPaths)
+      ? artifacts.lecture.repoPaths
+      : [];
+    lecturePaths.forEach(function (repoPath, index) {
+      appendChip(container, labelFromLecturePath(repoPath, index), repoBlobUrl(repoPath), "available");
+    });
+
+    if (artifacts.assignment && artifacts.assignment.repoPath) {
+      appendChip(container, "Assignment", repoBlobUrl(artifacts.assignment.repoPath), "available");
+    }
+    if (artifacts.quiz && artifacts.quiz.repoPath) {
+      appendChip(container, "Quiz", repoBlobUrl(artifacts.quiz.repoPath), "available");
+    }
+
+    const downloads = artifacts.slides && artifacts.slides.downloads ? artifacts.slides.downloads : {};
+    Object.keys(downloads).forEach(function (formatName) {
+      const href = downloads[formatName];
+      if (href && formatName !== "html") {
+        appendChip(container, formatName.toUpperCase(), withBasePath(href), "available");
+      }
+    });
+  }
+
+  function enhanceDayOverviewPage(manifest) {
+    if (document.body.dataset.portalRoot !== "day") {
+      return;
+    }
+
+    const moduleId = document.body.dataset.moduleId;
+    const dayId = document.body.dataset.dayId;
+    const module = manifest.modules.find((item) => item.id === moduleId);
+    if (!module) {
+      return;
+    }
+
+    const day = module.days.find((item) => item.id === dayId);
+    if (!day) {
+      return;
+    }
+
+    const artifacts = day.artifacts || {};
+    const deckLink = document.querySelector("[data-day-deck-link]");
+    const deckTarget = dayDeckHref(day);
+    if (deckLink && deckTarget) {
+      deckLink.href = deckTarget.startsWith("http") ? deckTarget : withBasePath(deckTarget);
+    }
+
+    const badgeContainer = document.querySelector("[data-day-overview-badges]");
+    if (badgeContainer) {
+      renderArtifactStatus(badgeContainer, artifacts);
+    }
+
+    const linkContainer = document.querySelector("[data-day-overview-links]");
+    if (linkContainer) {
+      renderArtifactLinks(linkContainer, artifacts);
+    }
+
+    const prevLink = document.querySelector("[data-day-prev]");
+    if (prevLink && day.prev && day.prev.href) {
+      prevLink.href = withBasePath(isSourcePreview()
+        ? day.prev.href.replace(`slides/${moduleId}/`, `${module.sourceRoot}/`)
+        : day.prev.href);
+    }
+
+    const nextLink = document.querySelector("[data-day-next]");
+    if (nextLink && day.next && day.next.href) {
+      nextLink.href = withBasePath(isSourcePreview()
+        ? day.next.href.replace(`slides/${moduleId}/`, `${module.sourceRoot}/`)
+        : day.next.href);
+    }
   }
 
   function enhanceModulePage(manifest) {
@@ -215,17 +309,7 @@
       const artifacts = day.artifacts || {};
       const badgeContainer = document.querySelector(`[data-day-badges="${day.id}"]`);
       if (badgeContainer) {
-        badgeContainer.innerHTML = "";
-        [
-          { key: "slides", label: "Slides" },
-          { key: "lecture", label: "Lecture" },
-          { key: "assignment", label: "Assignment" },
-          { key: "quiz", label: "Quiz" },
-        ].forEach(function (artifact) {
-          const artifactData = artifacts[artifact.key];
-          const isPresent = Boolean(artifactData && artifactData.present);
-          appendChip(badgeContainer, `${artifact.label} ${isPresent ? "✓" : "—"}`, null, isPresent ? "available" : "missing");
-        });
+        renderArtifactStatus(badgeContainer, artifacts);
       }
 
       const linkContainer = document.querySelector(`[data-day-links="${day.id}"]`);
@@ -268,6 +352,7 @@
     manifest.modules.forEach(renderModuleSummary);
     renderFeaturedDays(manifest.modules);
     enhanceModulePage(manifest);
+    enhanceDayOverviewPage(manifest);
   }
 
   function fetchManifest() {

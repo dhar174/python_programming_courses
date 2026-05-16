@@ -15,6 +15,7 @@ on:
       - "Basics/quizzes/**"
       - "Advanced/quizzes/**"
       - "slides/**"
+      - "scripts/generate_day_overviews.py"
       - "scripts/generate_portal_manifest.py"
       - "scripts/check_portal_publish.py"
       - ".marprc.yml"
@@ -54,6 +55,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
+      - name: Check generated day overview pages
+        run: python scripts/generate_day_overviews.py --check
         
       - name: Setup Pages
         id: pages
@@ -174,6 +178,20 @@ jobs:
             mkdir -p _site/slides/advanced
             cp Advanced/lessons/slides/index.html _site/slides/advanced/index.html
           fi
+
+          find Basics/lessons/slides -path '*/day-*/index.html' -type f | while IFS= read -r SOURCE_DAY_INDEX; do
+            RELATIVE_DAY_INDEX="${SOURCE_DAY_INDEX#Basics/lessons/slides/}"
+            TARGET_DAY_INDEX="_site/slides/basics/${RELATIVE_DAY_INDEX}"
+            mkdir -p "$(dirname "${TARGET_DAY_INDEX}")"
+            cp "${SOURCE_DAY_INDEX}" "${TARGET_DAY_INDEX}"
+          done
+
+          find Advanced/lessons/slides -path '*/day-*/index.html' -type f | while IFS= read -r SOURCE_DAY_INDEX; do
+            RELATIVE_DAY_INDEX="${SOURCE_DAY_INDEX#Advanced/lessons/slides/}"
+            TARGET_DAY_INDEX="_site/slides/advanced/${RELATIVE_DAY_INDEX}"
+            mkdir -p "$(dirname "${TARGET_DAY_INDEX}")"
+            cp "${SOURCE_DAY_INDEX}" "${TARGET_DAY_INDEX}"
+          done
 
           python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json
 

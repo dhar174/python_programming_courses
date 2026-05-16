@@ -54,6 +54,8 @@ The finished portal for this epic uses a small set of stable pages.
 | Course root dashboard | `slides/index.html` | `_site/index.html` | `${BASE_PATH}` | Introduced as a dedicated root entrypoint in #421, then upgraded in #424. |
 | Basics module landing page | `Basics/lessons/slides/index.html` | `_site/slides/basics/index.html` | `${BASE_PATH}slides/basics/` | Rebuilt in #422. |
 | Advanced module landing page | `Advanced/lessons/slides/index.html` | `_site/slides/advanced/index.html` | `${BASE_PATH}slides/advanced/` | Created in #423. |
+| Basics day overview pages | `Basics/lessons/slides/day-XX/index.html` | `_site/slides/basics/day-XX/index.html` | `${BASE_PATH}slides/basics/day-XX/index.html` | Generated from structured metadata; module day cards route here before decks. |
+| Advanced day overview pages | `Advanced/lessons/slides/day-XX/index.html` | `_site/slides/advanced/day-XX/index.html` | `${BASE_PATH}slides/advanced/day-XX/index.html` | Generated from structured metadata; module day cards route here before decks. |
 | Shared portal asset kit | `slides/shared/portal/**` | `_site/slides/shared/portal/**` | `${BASE_PATH}slides/shared/portal/**` | Added in #421. |
 | Printable full-course index | `slides/printable-index.html` | `_site/slides/printable-index.html` | `${BASE_PATH}slides/printable-index.html` | Implemented in #424 as the compact full-course deck index. |
 | Custom 404 page | `slides/404.html` | `_site/404.html` | `${BASE_PATH}404.html` | Implemented in #424 as the course-portal recovery page. |
@@ -61,10 +63,9 @@ The finished portal for this epic uses a small set of stable pages.
 The following are explicitly **not** required as separate page types in this epic:
 
 - dedicated search-results pages
-- dedicated day overview pages
 - lecture/assignment/quiz render pages inside the Pages artifact
 
-Search is an enhancement inside the root or module pages. Day navigation is owned by module landing pages through cards or lists driven by the manifest.
+Search is an enhancement inside the root or module pages. Day navigation starts on module landing cards, continues through generated day overview pages, and opens the underlying deck through explicit slide CTAs.
 
 ## 5. URL and path contract
 
@@ -166,15 +167,18 @@ Portal pages must never infer order from rendered text.
           "title": "Day 1 - Session 1 (Hours 1-4)",
           "order": 1,
           "primaryHref": "slides/basics/day-01/day-01-session-1.html",
+          "sourcePrimaryHref": "Basics/lessons/slides/day-01/day-01-session-1.html",
+          "overviewHref": "slides/basics/day-01/index.html",
+          "sourceOverviewHref": "Basics/lessons/slides/day-01/index.html",
           "breadcrumbs": [
             { "label": "Course", "href": "index.html" },
             { "label": "Basics", "href": "slides/basics/" },
-            { "label": "Day 1", "href": "slides/basics/" }
+            { "label": "Day 1", "href": "slides/basics/day-01/index.html" }
           ],
           "prev": null,
           "next": {
             "label": "Day 2",
-            "href": "slides/basics/day-02/day-02-session-2.html"
+            "href": "slides/basics/day-02/index.html"
           },
           "artifacts": {
             "slides": {
@@ -217,11 +221,14 @@ Portal pages must never infer order from rendered text.
 ### 7.4 Schema rules
 
 - `supportingPages` values are published paths relative to `BASE_PATH`, not source-repository paths.
+- `primaryHref` and `sourcePrimaryHref` identify the actual deck HTML file and must remain stable for deck CTAs and download discovery.
+- `overviewHref` and `sourceOverviewHref` identify the generated day overview page when it exists.
 - `href` is required only for `pages` delivery.
 - `repoPath` is required only for `repo` delivery.
 - `present` drives badge visibility and no-JS fallback text.
 - `downloads` may include only paths that actually exist; no guessed file names.
 - `breadcrumbs`, `prev`, and `next` are authored or generated into the manifest, not hardcoded in page templates.
+- `breadcrumbs`, `prev`, and `next` should prefer day overview pages while deck CTAs continue to use the slide artifact href.
 - Titles are manifest data, not runtime filename parsing.
 
 ## 8. Theme contract
@@ -297,7 +304,7 @@ If the root dashboard is temporarily incomplete, the dedicated root source may b
 
 Before portal-affecting pull requests merge, the implementation must prove:
 
-- `_site/index.html`, `_site/slides/basics/index.html`, `_site/slides/advanced/index.html`, and `_site/slides/shared/portal/course-manifest.json` all exist when their owning issue has landed
+- `_site/index.html`, `_site/slides/basics/index.html`, `_site/slides/advanced/index.html`, all generated day overview pages, and `_site/slides/shared/portal/course-manifest.json` all exist when their owning issue has landed
 - module fallback copies still produce valid module roots
 - the published root entrypoint no longer matches `Basics/lessons/slides/index.html`
 - no-JS rendering leaves root and module pages readable
@@ -313,4 +320,4 @@ Before portal-affecting pull requests merge, the implementation must prove:
 - **D-005:** Day ordering is numeric and runbook-aligned through the zero-padded `day-NN` directory names.
 - **D-006:** Lecture, assignment, and quiz artifacts may be discovered as `repo` delivery targets until workflow support publishes them to Pages.
 - **D-007:** Search is an inline enhancement, not a separate approved page type for this epic.
-- **D-008:** Per-day overview pages are out of scope for this rollout; day cards on module portals are the canonical day navigation surface.
+- **D-008:** Per-day overview pages are now an approved portal page type. Module day cards route to these overview pages; root featured links and the printable index remain direct deck shortcuts.
