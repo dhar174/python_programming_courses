@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics Day 6 — Session 6 (Hours 21–24)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Basics Day 6 — Session 6 (Hours 21–24)</h1>
+            <div class="subtitle">Python Programming (Basic) • Data Structure Selection &amp; Mini-Projects</div>
+        </section>
+
+        <section class="slide">
+            <h1>Session 6 Overview</h1>
+            <ul>
+  <li>Hour 21: Choosing the right structure — list vs set vs dict</li>
+  <li>Hour 22: Data-structure drill circuit (guided practice)</li>
+  <li>Hour 23: Mini-project: In-memory tracker</li>
+  <li>Hour 24: Checkpoint 3: Data structures assessment</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 21: Choosing the Right Structure</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Select list vs set vs dict based on task requirements</li>
+  <li>Refactor an approach using a better-fitting structure</li>
+  <li>Explain tradeoffs between structures in terms of readability and simplicity</li>
+  <li>Apply a decision checklist: order, duplicates, key lookup, mutability</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>The Structure-Choice Problem</h1>
+            <h3>What We&#x27;ve Covered So Far</h3>
+<p>By the end of Session 5, you learned:</p>
+<ul>
+  <li><strong>Lists</strong> — ordered, mutable sequences</li>
+  <li><strong>Tuples</strong> — ordered, immutable sequences (fixed records)</li>
+  <li><strong>Sets</strong> — unordered collections of unique items</li>
+  <li><strong>Dictionaries</strong> — key-value mappings for fast lookup</li>
+</ul>
+<h3>Today&#x27;s Shift</h3>
+<p>From knowing <strong>what</strong> each structure is → choosing <strong>when</strong> to use each structure</p>
+<blockquote>💡 Good programmers ask: &quot;What structure makes this simpler, clearer, and safer?&quot;</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Decision Checklist</h1>
+            <h3>Five Key Questions</h3>
+<ol>
+  <li><strong>Does order matter?</strong> → List or Tuple</li>
+  <li><strong>Can duplicates happen?</strong> → If unwanted, use Set</li>
+  <li><strong>Do I need to look something up by a key?</strong> → Dictionary</li>
+  <li><strong>Is this a fixed record with a small number of parts?</strong> → Tuple</li>
+  <li><strong>Will the collection change over time?</strong> → List (mutable) or Set (mutable)</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Comparing Structures: Quick Reference</h1>
+            <table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Ordered?</th>
+<th>Mutable?</th>
+<th>Duplicates?</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>List</strong></td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>Sequences, ordered collections</td>
+</tr>
+<tr>
+<td><strong>Tuple</strong></td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+<td>Fixed records (coordinates, dates)</td>
+</tr>
+<tr>
+<td><strong>Set</strong></td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+<td>❌ No</td>
+<td>Removing duplicates, membership tests</td>
+</tr>
+<tr>
+<td><strong>Dict</strong></td>
+<td>✅ Insertion order*</td>
+<td>✅ Yes</td>
+<td>❌ No (keys)</td>
+<td>Lookup by name/ID, key-value pairs</td>
+</tr>
+</tbody>
+</table>
+<p><em>Python 3.7+ maintains insertion order for dicts.</em></p>
+        </section>
+
+        <section class="slide">
+            <h1>Example 1: Checking for Duplicates</h1>
+            <h3>The Task</h3>
+<p>You have a list of email addresses and need to identify if any are duplicates.</p>
+<h3>Approach 1: Using a List</h3>
+<pre data-lang="python"><code>emails = [&quot;alice@example.com&quot;, &quot;bob@example.com&quot;, &quot;alice@example.com&quot;]
+
+# Check for duplicates by counting
+for email in emails:
+    if emails.count(email) &gt; 1:
+        print(f&quot;{email} is duplicated!&quot;)</code></pre>
+<p><strong>Problem:</strong> <code>count()</code> scans the entire list for each email — inefficient and harder to read.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Example 1: Better Approach with Set</h1>
+            <h3>Approach 2: Using a Set</h3>
+<pre data-lang="python"><code>emails = [&quot;alice@example.com&quot;, &quot;bob@example.com&quot;, &quot;alice@example.com&quot;]
+
+# Convert to set to see unique items
+unique_emails = set(emails)
+
+if len(emails) != len(unique_emails):
+    print(&quot;Duplicates found!&quot;)
+    print(f&quot;Original: {len(emails)}, Unique: {len(unique_emails)}&quot;)</code></pre>
+<p><strong>Better because:</strong></p>
+<ul>
+  <li>Clearer intent: &quot;I care about uniqueness&quot;</li>
+  <li>Simpler logic</li>
+  <li>More efficient for large lists</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Example 2: Looking Up Phone Numbers</h1>
+            <h3>The Task</h3>
+<p>Store contacts and look up phone numbers by name.</p>
+<h3>Approach 1: Using a List of Tuples</h3>
+<pre data-lang="python"><code>contacts = [
+    (&quot;Alice&quot;, &quot;555-1234&quot;),
+    (&quot;Bob&quot;, &quot;555-5678&quot;),
+    (&quot;Charlie&quot;, &quot;555-9012&quot;)
+]
+
+# Lookup by name
+name = &quot;Bob&quot;
+for contact_name, phone in contacts:
+    if contact_name == name:
+        print(f&quot;{name}: {phone}&quot;)
+        break</code></pre>
+<p><strong>Problem:</strong> Have to loop through every contact until found.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Example 2: Better Approach with Dictionary</h1>
+            <h3>Approach 2: Using a Dictionary</h3>
+<pre data-lang="python"><code>contacts = {
+    &quot;Alice&quot;: &quot;555-1234&quot;,
+    &quot;Bob&quot;: &quot;555-5678&quot;,
+    &quot;Charlie&quot;: &quot;555-9012&quot;
+}
+
+# Direct lookup by name
+name = &quot;Bob&quot;
+if name in contacts:
+    print(f&quot;{name}: {contacts[name]}&quot;)
+else:
+    print(f&quot;{name} not found&quot;)</code></pre>
+<p><strong>Better because:</strong></p>
+<ul>
+  <li>Direct lookup by key (no loop needed)</li>
+  <li>Clear mapping: name → phone</li>
+  <li>Easier to extend (add/remove/update)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Tradeoffs to Consider</h1>
+            <h3>Simplicity vs Power</h3>
+<ul>
+  <li><strong>Don&#x27;t overengineer:</strong> If a simple list works and is readable, use it</li>
+  <li><strong>Don&#x27;t underengineer:</strong> If you&#x27;re looping repeatedly to find items, consider a dict</li>
+</ul>
+<h3>Readability</h3>
+<ul>
+  <li>Choose the structure that makes your intent clearest to other programmers</li>
+  <li>A dict says &quot;I&#x27;m mapping keys to values&quot;</li>
+  <li>A set says &quot;I care about uniqueness&quot;</li>
+</ul>
+<h3>Performance (Basic-level awareness)</h3>
+<ul>
+  <li>Lists: Good for small collections and sequential access</li>
+  <li>Sets: Fast membership testing (<code>item in set</code>)</li>
+  <li>Dicts: Fast lookup by key</li>
+</ul>
+<blockquote>⚠️ **Basics Scope:** We&#x27;re not doing performance benchmarking or Big O analysis — just building intuition.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Membership Lookup — List vs Set</h1>
+            <h3>Scenario</h3>
+<p>Check if a visitor is on a VIP list.</p>
+<pre data-lang="python"><code># Using a list
+vip_list = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Diana&quot;, &quot;Eve&quot;]
+
+if &quot;Charlie&quot; in vip_list:
+    print(&quot;VIP found in list!&quot;)
+
+# Using a set
+vip_set = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Diana&quot;, &quot;Eve&quot;}
+
+if &quot;Charlie&quot; in vip_set:
+    print(&quot;VIP found in set!&quot;)</code></pre>
+<h3>Key Insight</h3>
+<p>Both work! For small collections, either is fine. For hundreds or thousands of items, sets are faster for membership tests — but that&#x27;s not the point today. The point is <strong>clarity of intent.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Refactor Challenge</h1>
+            <h3>Instructions (30 minutes)</h3>
+<p><strong>Task:</strong> Given a small problem, first solve it using a list, then refactor to use a better structure (set or dict) and explain why the refactor improves the solution.</p>
+<p><strong>Problem:</strong> Check for duplicate names in a list of students.</p>
+<pre data-lang="python"><code>students = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Alice&quot;, &quot;Diana&quot;, &quot;Bob&quot;]
+
+# Step 1: Solve using a list (hint: use .count() or nested loops)
+
+# Step 2: Refactor using a set
+
+# Step 3: Write a comment explaining at least one tradeoff</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Completion Criteria</h1>
+            <h3>You Must:</h3>
+<p><span class="check">✓</span> Produce a working list-based solution</p>
+<p><span class="check">✓</span> Produce a working set-based refactor</p>
+<p><span class="check">✓</span> Write an explanation that includes at least one tradeoff (e.g., readability, simplicity, efficiency)</p>
+<h3>Example Explanation</h3>
+<blockquote>&quot;The list approach uses `.count()` which works but scans the list repeatedly. The set approach converts the list to a set and compares lengths. This is clearer because it directly expresses the concept of &#x27;uniqueness.&#x27; The tradeoff is that we lose the order information, but for this task, order doesn&#x27;t matter.&quot;</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 21</h1>
+            <h3>Pitfall 1: Overengineering</h3>
+<pre data-lang="python"><code># Overkill: using a dict when a list is simplest
+items = {&quot;item1&quot;: &quot;milk&quot;, &quot;item2&quot;: &quot;bread&quot;, &quot;item3&quot;: &quot;eggs&quot;}
+
+# Better: just use a list if you don&#x27;t need key-based lookup
+items = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]</code></pre>
+<h3>Pitfall 2: Choosing the wrong structure for lookup</h3>
+<pre data-lang="python"><code># Inefficient: looping through a list to find an item repeatedly
+# Better: use a dict if you need frequent lookups by key</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 21</h1>
+            <h3>Add a Feature</h3>
+<ul>
+  <li>Add a search or filter feature to your refactored solution</li>
+  <li>Example: Find all students whose names start with a certain letter</li>
+</ul>
+<h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> Use basic loops and conditionals</p>
+<p><span class="cross">✗</span> Don&#x27;t use list comprehensions (Advanced topic)</p>
+<p><span class="cross">✗</span> Don&#x27;t use lambda functions or advanced filtering</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 21</h1>
+            <p><strong>Exit Ticket Question:</strong> If you need fast lookup by name, which structure fits best?</p>
+<p><strong>Model Answer:</strong> &quot;A dictionary is the best fit because it allows direct lookup by key (the name) without needing to loop through all items. This makes the code clearer and more efficient.&quot;</p>
+<p><strong>Recap:</strong></p>
+<ul>
+  <li>Use lists for ordered sequences</li>
+  <li>Use sets for removing duplicates or membership testing</li>
+  <li>Use dicts for key-value lookups</li>
+  <li>Choose the structure that makes your intent clearest</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 22: Data-Structure Drill Circuit</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Practice with lists, tuples, sets, and dicts in short timed tasks</li>
+  <li>Apply the right structure to solve focused problems</li>
+  <li>Complete coding tasks under time constraints</li>
+  <li>Explain solutions verbally to reinforce understanding</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>The Circuit Format</h1>
+            <h3>What Is a Drill Circuit?</h3>
+<p>A rotation through 4 coding stations — 12 minutes per station:</p>
+<ol>
+  <li><strong>Station 1:</strong> Filter numbers &gt; 10 (list)</li>
+  <li><strong>Station 2:</strong> Unique emails (set)</li>
+  <li><strong>Station 3:</strong> Word frequency (dict)</li>
+  <li><strong>Station 4:</strong> Coordinates unpacking (tuple)</li>
+</ol>
+<h3>Goal</h3>
+<p>Finish at least 3 of 4 stations with working code. At the end, share one solution verbally with the class.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Circuit Goals and Mindset</h1>
+            <h3>Finish Before Optimizing</h3>
+<ul>
+  <li>Get a working solution first</li>
+  <li>Then improve if time allows</li>
+  <li>Don&#x27;t get stuck perfecting Station 1 — move on!</li>
+</ul>
+<h3>Test with Small Examples</h3>
+<ul>
+  <li>Run your code with 2-3 test inputs</li>
+  <li>Make sure it produces the expected output</li>
+  <li>Fix bugs before moving to the next station</li>
+</ul>
+<h3>No Collaboration During Stations</h3>
+<p>Work independently during the 12-minute rotations. Share and discuss during the 5-minute debrief at the end.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Station 1 Example (Quick Walkthrough)</h1>
+            <h3>Task: Filter Numbers &gt; 10</h3>
+<p>Given a list of numbers, create a new list containing only numbers greater than 10.</p>
+<pre data-lang="python"><code>numbers = [5, 12, 3, 18, 7, 21, 9, 15]
+
+# Create a new list with only numbers &gt; 10
+filtered = []
+for num in numbers:
+    if num &gt; 10:
+        filtered.append(num)
+
+print(filtered)   # [12, 18, 21, 15]</code></pre>
+<h3>Expected Output</h3>
+<p><code>[12, 18, 21, 15]</code></p>
+        </section>
+
+        <section class="slide">
+            <h1>Station 1: Filter Numbers &gt; 10 (List)</h1>
+            <h3>Task (12 minutes)</h3>
+<p>Given this list of numbers, create a new list containing only numbers greater than 10.</p>
+<pre data-lang="python"><code>numbers = [5, 12, 3, 18, 7, 21, 9, 15, 2, 25, 8, 30]
+
+# Your code here:
+# 1. Create an empty list
+# 2. Loop through numbers
+# 3. If number &gt; 10, add it to the new list
+# 4. Print the result</code></pre>
+<p><strong>Expected Output:</strong> <code>[12, 18, 21, 15, 25, 30]</code></p>
+        </section>
+
+        <section class="slide">
+            <h1>Station 2: Unique Emails (Set)</h1>
+            <h3>Task (12 minutes)</h3>
+<p>Given a list of email addresses (with duplicates), print only the unique emails.</p>
+<pre data-lang="python"><code>emails = [
+    &quot;alice@example.com&quot;,
+    &quot;bob@example.com&quot;,
+    &quot;alice@example.com&quot;,
+    &quot;charlie@example.com&quot;,
+    &quot;bob@example.com&quot;,
+    &quot;diana@example.com&quot;
+]
+
+# Your code here:
+# 1. Convert the list to a set
+# 2. Print the unique emails (order doesn&#x27;t matter)</code></pre>
+<p><strong>Expected Output:</strong> A set or list with 4 unique emails (order may vary).</p>
+        </section>
+
+        <section class="slide">
+            <h1>Station 3: Word Frequency (Dict)</h1>
+            <h3>Task (12 minutes)</h3>
+<p>Given a list of words, count how many times each word appears.</p>
+<pre data-lang="python"><code>words = [&quot;apple&quot;, &quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;banana&quot;, &quot;apple&quot;]
+
+# Your code here:
+# 1. Create an empty dictionary
+# 2. Loop through words
+# 3. If word is in dict, increment count; otherwise, set count to 1
+# 4. Print the dictionary</code></pre>
+<p><strong>Expected Output:</strong> <code>{&#x27;apple&#x27;: 3, &#x27;banana&#x27;: 2, &#x27;orange&#x27;: 1}</code></p>
+        </section>
+
+        <section class="slide">
+            <h1>Station 4: Coordinates Unpacking (Tuple)</h1>
+            <h3>Task (12 minutes)</h3>
+<p>Given a list of (x, y) coordinate tuples, print each coordinate and calculate the total distance from the origin (0, 0).</p>
+<pre data-lang="python"><code>coordinates = [(2, 3), (5, 1), (3, 4), (1, 2)]
+
+# Your code here:
+# 1. Loop through coordinates
+# 2. Unpack each tuple into x and y
+# 3. Print x and y
+# 4. Calculate distance: sqrt(x*x + y*y) — use math.sqrt
+# 5. Sum all distances and print total
+
+import math</code></pre>
+<p><strong>Expected Output:</strong> Print each coordinate and a total distance sum.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Circuit Debrief (5 minutes after stations)</h1>
+            <h3>Share-Out Questions</h3>
+<ol>
+  <li>Which station was easiest? Which was hardest?</li>
+  <li>Which data structure felt most natural for its task?</li>
+  <li>Did anyone find a different approach? Share it!</li>
+</ol>
+<h3>One Solution Verbally</h3>
+<p>Each learner (or a few volunteers) explains one station solution to the class in 1-2 minutes.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Completion Criteria — Hour 22</h1>
+            <h3>You Must:</h3>
+<p><span class="check">✓</span> Complete at least 3 of 4 stations with working code</p>
+<p><span class="check">✓</span> Produce correct output for the stations you completed</p>
+<p><span class="check">✓</span> Explain one solution verbally during the debrief</p>
+<h3>Success Markers</h3>
+<ul>
+  <li>Code runs without errors</li>
+  <li>Output matches expected format</li>
+  <li>Can articulate why you chose that structure</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 22</h1>
+            <h3>Pitfall 1: Rushing and Creating Syntax Errors</h3>
+<pre data-lang="python"><code># Example: Forgetting colons or indentation
+for num in numbers
+    if num &gt; 10   # Missing colon</code></pre>
+<p><strong>Fix:</strong> Slow down, test often, read error messages carefully.</p>
+<h3>Pitfall 2: Not Testing with Small Examples</h3>
+<p>Don&#x27;t wait until the end to run your code — test after each step!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 22</h1>
+            <h3>Add an Extra Station (if time allows)</h3>
+<p><strong>Station 5:</strong> Nested list table formatting</p>
+<p>Given a list of lists representing rows, print each row as a formatted table.</p>
+<pre data-lang="python"><code>table = [
+    [&quot;Name&quot;, &quot;Age&quot;, &quot;City&quot;],
+    [&quot;Alice&quot;, &quot;25&quot;, &quot;NYC&quot;],
+    [&quot;Bob&quot;, &quot;30&quot;, &quot;LA&quot;]
+]
+
+# Format and print as a table</code></pre>
+<p><strong>Stay in Basics Scope:</strong> Use loops and string formatting — no pandas or external libraries.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 22</h1>
+            <p><strong>Exit Ticket Question:</strong> Name one thing you&#x27;ll use dicts for in real work.</p>
+<p><strong>Example Answers:</strong></p>
+<ul>
+  <li>&quot;Mapping user IDs to user profiles&quot;</li>
+  <li>&quot;Counting occurrences of items (like word frequency)&quot;</li>
+  <li>&quot;Storing configuration settings as key-value pairs&quot;</li>
+</ul>
+<p><strong>Recap:</strong></p>
+<ul>
+  <li>Practiced lists, tuples, sets, and dicts in focused tasks</li>
+  <li>Completed at least 3 of 4 stations</li>
+  <li>Explained solutions verbally to solidify understanding</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 23: Mini-Project — In-Memory Tracker</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Combine data structures into a coherent mini application</li>
+  <li>Practice clean output and user-friendly updates</li>
+  <li>Choose between list of dicts or dict of dicts for storage</li>
+  <li>Build a menu-driven program with add, list, and search features</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Mini-Project Overview</h1>
+            <h3>What We&#x27;re Building</h3>
+<p>A small in-memory tracker application with:</p>
+<ul>
+  <li><strong>Add:</strong> Add a new record</li>
+  <li><strong>List:</strong> Display all records</li>
+  <li><strong>Search:</strong> Find a record by a key (name, title, etc.)</li>
+</ul>
+<h3>Storage Model Options</h3>
+<ul>
+  <li><strong>List of dicts:</strong> <code>[{&quot;name&quot;: &quot;Alice&quot;, &quot;phone&quot;: &quot;555-1234&quot;}, {...}]</code></li>
+  <li><strong>Dict of dicts:</strong> <code>{&quot;Alice&quot;: {&quot;phone&quot;: &quot;555-1234&quot;, &quot;email&quot;: &quot;...&quot;}, ...}</code></li>
+</ul>
+<h3>No File I/O Yet</h3>
+<p>All data is stored in memory (variables) — it disappears when the program ends. We&#x27;ll add persistence in a later session.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Project Choices</h1>
+            <h3>Pick One (or propose your own):</h3>
+<p><strong>A) Expense Tracker</strong></p>
+<ul>
+  <li>Add expenses: <code>{date, amount, category}</code></li>
+  <li>List all expenses</li>
+  <li>Search by category</li>
+</ul>
+<p><strong>B) Contact List</strong></p>
+<ul>
+  <li>Add contacts: <code>{name, phone, email}</code></li>
+  <li>List all contacts</li>
+  <li>Search by name</li>
+</ul>
+<p><strong>C) Book Library</strong></p>
+<ul>
+  <li>Add books: <code>{title, author, year}</code></li>
+  <li>List all books</li>
+  <li>Search by title or author</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Requirements: Minimum Features</h1>
+            <h3>Must Include:</h3>
+<ol>
+  <li><strong>Add</strong> — add a new record to the collection</li>
+  <li><strong>List</strong> — display all records in a readable format</li>
+  <li><strong>Search</strong> — find and display a specific record</li>
+</ol>
+<h3>Must Use:</h3>
+<ul>
+  <li>At least one <strong>dictionary</strong> to store key-value pairs</li>
+  <li>At least one <strong>list</strong> to hold multiple records (if using list of dicts)</li>
+</ul>
+<h3>Optional (but recommended):</h3>
+<ul>
+  <li>A menu loop that lets the user choose actions</li>
+  <li>Input validation (e.g., don&#x27;t add empty names)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Scaffolding a Menu and Add Feature</h1>
+            <h3>Step 1: Menu Structure</h3>
+<pre data-lang="python"><code>def main():
+    contacts = []  # Storage: list of dicts
+
+    while True:
+        print(&quot;\n--- Contact Tracker ---&quot;)
+        print(&quot;1. Add Contact&quot;)
+        print(&quot;2. List Contacts&quot;)
+        print(&quot;3. Search Contact&quot;)
+        print(&quot;4. Quit&quot;)
+
+        choice = input(&quot;Choose an option: &quot;)
+
+        if choice == &quot;1&quot;:
+            add_contact(contacts)
+        elif choice == &quot;2&quot;:
+            list_contacts(contacts)
+        elif choice == &quot;3&quot;:
+            search_contact(contacts)
+        elif choice == &quot;4&quot;:
+            print(&quot;Goodbye!&quot;)
+            break
+        else:
+            print(&quot;Invalid choice. Try again.&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Add Feature</h1>
+            <h3>Step 2: Add Function</h3>
+<pre data-lang="python"><code>def add_contact(contacts):
+    name = input(&quot;Enter name: &quot;)
+    phone = input(&quot;Enter phone: &quot;)
+    email = input(&quot;Enter email: &quot;)
+
+    contact = {&quot;name&quot;: name, &quot;phone&quot;: phone, &quot;email&quot;: email}
+    contacts.append(contact)
+
+    print(f&quot;Added contact: {name}&quot;)</code></pre>
+<h3>Key Points</h3>
+<ul>
+  <li>Collect input from user</li>
+  <li>Store in a dictionary</li>
+  <li>Append to the list</li>
+  <li>Give feedback to the user</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Mini-Project (30 minutes)</h1>
+            <h3>Instructions</h3>
+<p>Choose one of the three project options (Expense Tracker, Contact List, or Book Library) and implement:</p>
+<ol>
+  <li><strong>Add feature</strong> — collect input and store in your data structure</li>
+  <li><strong>List feature</strong> — print all records in a readable format</li>
+  <li><strong>Search feature</strong> — find a record by name/title/category</li>
+</ol>
+<h3>Starter Template</h3>
+<pre data-lang="python"><code>def main():
+    # Choose your storage model:
+    records = []  # List of dicts, OR
+    # records = {}  # Dict of dicts
+
+    while True:
+        # Menu here
+        pass
+
+def add_record(records):
+    # Your code here
+    pass
+
+def list_records(records):
+    # Your code here
+    pass
+
+def search_records(records):
+    # Your code here
+    pass
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Completion Criteria — Hour 23</h1>
+            <h3>You Must:</h3>
+<p><span class="check">✓</span> Implement all three minimum features: add, list, search</p>
+<p><span class="check">✓</span> Use at least one dict and one list meaningfully</p>
+<p><span class="check">✓</span> Produce clear, readable output (not raw dict printing)</p>
+<p><span class="check">✓</span> Handle basic cases (e.g., search returns &quot;not found&quot; if missing)</p>
+<h3>Example Good Output</h3>
+<pre><code>--- Contact List ---
+1. Alice - 555-1234
+2. Bob - 555-5678</code></pre>
+<h3>Example Bad Output</h3>
+<pre><code>[{&#x27;name&#x27;: &#x27;Alice&#x27;, &#x27;phone&#x27;: &#x27;555-1234&#x27;}, {&#x27;name&#x27;: &#x27;Bob&#x27;, &#x27;phone&#x27;: &#x27;555-5678&#x27;}]</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 23</h1>
+            <h3>Pitfall 1: Messy Global Variables</h3>
+<pre data-lang="python"><code># Bad: using global variables everywhere
+contacts = []
+
+def add_contact():
+    global contacts
+    # ...</code></pre>
+<p><strong>Better:</strong> Pass the data structure as a parameter to functions.</p>
+<h3>Pitfall 2: Hard-to-Read Printing</h3>
+<pre data-lang="python"><code># Bad: printing raw dictionaries
+print(contacts)
+
+# Better: format nicely
+for contact in contacts:
+    print(f&quot;{contact[&#x27;name&#x27;]} - {contact[&#x27;phone&#x27;]}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 23</h1>
+            <h3>Add More Features (Stay in Basics Scope)</h3>
+<ul>
+  <li><strong>Update:</strong> Modify an existing record</li>
+  <li><strong>Delete:</strong> Remove a record by name</li>
+  <li><strong>Sort:</strong> Display records in alphabetical order</li>
+</ul>
+<h3>Example: Sort Contacts</h3>
+<pre data-lang="python"><code>def list_contacts(contacts):
+    # Advanced topic preview: sorting a list of dicts. 
+    # For basics, you might just display unsorted or use simpler lists.
+    sorted_contacts = sorted(contacts, key=lambda c: c[&#x27;name&#x27;])
+    for contact in sorted_contacts:
+        print(f&quot;{contact[&#x27;name&#x27;]} - {contact[&#x27;phone&#x27;]}&quot;)</code></pre>
+<blockquote>⚠️ **Note:** Using `lambda` here is an Advanced topic — for Basics, you can use a simple loop to find min/max or just display unsorted.</blockquote>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 23</h1>
+            <p><strong>Exit Ticket Question:</strong> What data structure did you choose and why?</p>
+<p><strong>Example Answers:</strong></p>
+<ul>
+  <li>&quot;I used a list of dicts because each contact is a record with multiple fields, and I want to keep them in order.&quot;</li>
+  <li>&quot;I used a dict of dicts because I want fast lookup by name as the key.&quot;</li>
+</ul>
+<p><strong>Recap:</strong></p>
+<ul>
+  <li>Built a mini in-memory tracker app</li>
+  <li>Combined dicts and lists to store structured data</li>
+  <li>Practiced clean output and basic menu-driven programs</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour 24: Checkpoint 3 — Data Structures Assessment</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Demonstrate confident use of core data structures and iteration</li>
+  <li>Build a working program that meets a rubric</li>
+  <li>Handle missing keys safely (no KeyError)</li>
+  <li>Produce clear, formatted output</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Checkpoint 3 Overview</h1>
+            <h3>What Is Checkpoint 3?</h3>
+<p>A timed assessment (45-60 minutes) where you build a simple application from scratch to demonstrate mastery of:</p>
+<ul>
+  <li>Lists, tuples, sets, and dictionaries</li>
+  <li>Iteration with <code>for</code> loops</li>
+  <li>Safe key access (<code>dict.get()</code> or <code>if key in dict</code>)</li>
+  <li>Clear output formatting</li>
+</ul>
+<h3>Optional Quiz (10 minutes)</h3>
+<p>After the lab, you may take a short multiple-choice quiz on data structures.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Assessment Task: Simple Contacts (In-Memory)</h1>
+            <h3>Requirements</h3>
+<p>Build a contacts program that:</p>
+<ol>
+  <li>Stores contacts as name → phone in a <strong>dictionary</strong></li>
+  <li>Adds at least <strong>5 contacts</strong> (hardcoded or via input)</li>
+  <li><strong>Search by name</strong> — print phone if found, message if not found</li>
+  <li><strong>List all contacts</strong> — print all names and phones (sorted optional)</li>
+</ol>
+<h3>No File I/O</h3>
+<p>All data is in memory (variables) — no reading/writing files.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Rubric and Success Criteria</h1>
+            <h3>You Must:</h3>
+<p><span class="check">✓</span> <strong>Search works</strong> for both existing and missing names</p>
+<p><span class="check">✓</span> <strong>Clear output</strong> — not raw dict printing</p>
+<p><span class="check">✓</span> <strong>No KeyError</strong> — handle missing keys gracefully</p>
+<p><span class="check">✓</span> Code runs without syntax errors</p>
+<h3>Example Success</h3>
+<pre><code>Search for: Alice
+Alice: 555-1234
+
+Search for: Zoe
+Zoe not found.
+
+All Contacts:
+  Alice: 555-1234
+  Bob: 555-5678
+  Charlie: 555-9012</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: How to Test with 2-3 Example Inputs</h1>
+            <h3>Step 1: Add Test Contacts</h3>
+<pre data-lang="python"><code>contacts = {
+    &quot;Alice&quot;: &quot;555-1234&quot;,
+    &quot;Bob&quot;: &quot;555-5678&quot;,
+    &quot;Charlie&quot;: &quot;555-9012&quot;
+}</code></pre>
+<h3>Step 2: Test Search Function</h3>
+<pre data-lang="python"><code>def search_contact(contacts, name):
+    if name in contacts:
+        print(f&quot;{name}: {contacts[name]}&quot;)
+    else:
+        print(f&quot;{name} not found.&quot;)
+
+# Test with existing name
+search_contact(contacts, &quot;Alice&quot;)   # Should print: Alice: 555-1234
+
+# Test with missing name
+search_contact(contacts, &quot;Zoe&quot;)     # Should print: Zoe not found.</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Demo: Safe Key Access</h1>
+            <h3>Method 1: Check with `in`</h3>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+if name in contacts:
+    print(contacts[name])
+else:
+    print(&quot;Not found&quot;)</code></pre>
+<h3>Method 2: Use `dict.get()`</h3>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+phone = contacts.get(name, &quot;Not found&quot;)
+print(phone)</code></pre>
+<p>Both methods avoid <code>KeyError</code> when the key doesn&#x27;t exist.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Checkpoint 3 (45-60 minutes)</h1>
+            <h3>Task</h3>
+<p>Build the Simple Contacts program following the rubric:</p>
+<pre data-lang="python"><code># Step 1: Create a dictionary with at least 5 contacts
+contacts = {
+    &quot;Alice&quot;: &quot;555-1234&quot;,
+    # Add 4 more...
+}
+
+# Step 2: Implement search function
+def search_contact(contacts, name):
+    # Your code here
+    pass
+
+# Step 3: Implement list function
+def list_contacts(contacts):
+    # Your code here
+    pass
+
+# Step 4: Test with 2-3 searches
+search_contact(contacts, &quot;Alice&quot;)
+search_contact(contacts, &quot;Zoe&quot;)
+
+# Step 5: List all contacts
+list_contacts(contacts)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Lab: Completion Criteria — Hour 24</h1>
+            <h3>Required:</h3>
+<p><span class="check">✓</span> Search works for existing names</p>
+<p><span class="check">✓</span> Search handles missing names gracefully (no KeyError)</p>
+<p><span class="check">✓</span> List displays all contacts with clear formatting</p>
+<p><span class="check">✓</span> At least 5 contacts stored in the dictionary</p>
+<h3>Bonus (Optional):</h3>
+<p><span class="check">✓</span> Sorted output (alphabetically by name)</p>
+<p><span class="check">✓</span> Case-insensitive search (e.g., &quot;alice&quot; finds &quot;Alice&quot;)</p>
+        </section>
+
+        <section class="slide">
+            <h1>Common Pitfalls — Hour 24</h1>
+            <h3>Pitfall 1: Forgetting to Normalize Case</h3>
+<pre data-lang="python"><code># Problem: &quot;alice&quot; doesn&#x27;t match &quot;Alice&quot;
+if name in contacts:
+    # Won&#x27;t find if case differs</code></pre>
+<p><strong>Fix:</strong> Normalize to lowercase for searching:</p>
+<pre data-lang="python"><code>name = name.lower()
+# Store all keys in lowercase, or use .get() with case handling</code></pre>
+<h3>Pitfall 2: Printing Dict Directly</h3>
+<pre data-lang="python"><code># Bad: raw dict output
+print(contacts)
+
+# Better: formatted loop
+for name, phone in contacts.items():
+    print(f&quot;{name}: {phone}&quot;)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Extensions — Hour 24</h1>
+            <h3>Allow Partial Match Search</h3>
+<p>Search for contacts where the search term is a substring of the name:</p>
+<pre data-lang="python"><code>def search_partial(contacts, keyword):
+    results = []
+    lowered_keyword = keyword.lower()
+    for name in contacts:
+        if lowered_keyword in name.lower():
+            results.append(name)
+            
+    if results:
+        for name in results:
+            print(f&quot;{name}: {contacts[name]}&quot;)
+    else:
+        print(&quot;No matches found.&quot;)</code></pre>
+<p><strong>Stay in Basics Scope:</strong> This version stays in Basics scope by using a simple loop instead of a list comprehension.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Optional Quiz (10 minutes)</h1>
+            <h3>Sample Questions</h3>
+<p><strong>Q1:</strong> What&#x27;s the difference between <code>dict.get(key)</code> and <code>dict[key]</code>?</p>
+<p><strong>A:</strong> <code>dict.get(key)</code> returns <code>None</code> (or a default) if the key doesn&#x27;t exist; <code>dict[key]</code> raises <code>KeyError</code> if the key is missing.</p>
+<p><strong>Q2:</strong> Which structure removes duplicates automatically?</p>
+<p><strong>A:</strong> Set</p>
+<p><strong>Q3:</strong> Which structure is best for ordered, fixed records like coordinates?</p>
+<p><strong>A:</strong> Tuple</p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Check — Hour 24</h1>
+            <p><strong>Exit Ticket Question:</strong> What&#x27;s the difference between <code>dict.get()</code> and <code>dict[key]</code>?</p>
+<p><strong>Model Answer:</strong> &quot;<code>dict[key]</code> will raise a KeyError if the key doesn&#x27;t exist. <code>dict.get(key)</code> returns <code>None</code> by default (or a custom default value) if the key is missing, making it safer for handling optional keys.&quot;</p>
+<p><strong>Recap:</strong></p>
+<ul>
+  <li>Completed Checkpoint 3: Simple Contacts program</li>
+  <li>Demonstrated safe key access and clear output</li>
+  <li>Practiced data structure selection and iteration</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Scope Guardrail Reminder</h1>
+            <h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> Core data structures: list, tuple, set, dict</p>
+<p><span class="check">✓</span> Basic iteration with <code>for</code> and <code>while</code></p>
+<p><span class="check">✓</span> Simple functions and imports</p>
+<p><span class="check">✓</span> Basic input/output and string formatting</p>
+<h3>Not Yet (Advanced Topics)</h3>
+<p><span class="cross">✗</span> Named tuples or collections module</p>
+<p><span class="cross">✗</span> Performance analysis / Big O notation</p>
+<p><span class="cross">✗</span> Advanced data modeling or custom classes</p>
+<p><span class="cross">✗</span> List comprehensions (introduced later)</p>
+<p><span class="cross">✗</span> Lambda functions or decorators</p>
+        </section>
+
+        <section class="slide">
+            <h1>Session 6 Wrap-Up</h1>
+            <h3>What We Covered Today</h3>
+<ul>
+  <li><strong>Hour 21:</strong> Choosing the right structure based on task requirements</li>
+  <li><strong>Hour 22:</strong> Drill circuit with lists, tuples, sets, and dicts</li>
+  <li><strong>Hour 23:</strong> Mini-project combining data structures into an app</li>
+  <li><strong>Hour 24:</strong> Checkpoint 3 assessment with Simple Contacts</li>
+</ul>
+<h3>Key Takeaways</h3>
+<ul>
+  <li>Decision checklist: order, duplicates, key lookup, mutability</li>
+  <li>Practice refactoring to better-fitting structures</li>
+  <li>Build mini-projects to integrate multiple structures</li>
+  <li>Handle edge cases safely (no KeyError)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Homework and Practice</h1>
+            <h3>Practice Tasks</h3>
+<ol>
+  <li><strong>Refactor Exercise:</strong> Take a program you wrote earlier and identify one place where a different data structure would be clearer.</li>
+  <li><strong>Extend Mini-Project:</strong> Add an update or delete feature to your tracker app.</li>
+  <li><strong>Word Counter:</strong> Write a program that counts word frequency in a sentence using a dictionary.</li>
+</ol>
+<h3>Preparation for Session 7</h3>
+<ul>
+  <li>Review conditionals (<code>if/elif/else</code>) from earlier sessions</li>
+  <li>Think about how to validate user input</li>
+  <li>Practice writing functions that return values</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Next Session Preview: Session 7 (Hours 25–28)</h1>
+            <h3>Topics Coming Up</h3>
+<ul>
+  <li><strong>Hour 25:</strong> Conditionals — <code>if/elif/else</code> and boundaries</li>
+  <li><strong>Hour 26:</strong> Functions — defining, calling, returning values</li>
+  <li><strong>Hour 27:</strong> Function parameters and scope</li>
+  <li><strong>Hour 28:</strong> Checkpoint 4 — Functions + data structures</li>
+</ul>
+<h3>Get Ready To:</h3>
+<ul>
+  <li>Write reusable functions</li>
+  <li>Structure programs with clear logic flow</li>
+  <li>Combine functions with data structures</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Questions?</h1>
+            <p><strong>Session 6 Complete!</strong></p>
+<p>You&#x27;ve mastered:</p>
+<ul>
+  <li>Choosing the right data structure for the job</li>
+  <li>Refactoring to improve clarity and simplicity</li>
+  <li>Building mini-projects with multiple structures</li>
+  <li>Demonstrating proficiency in Checkpoint 3</li>
+</ul>
+<p><strong>Keep practicing — see you in Session 7!</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay(updateHash = true) {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            if (updateHash) {
+                window.location.hash = currentSlide + 1;
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    currentSlide = slideNum;
+                }
+            }
+            updateSlideDisplay(false);
+        });
+    </script>
+</body>
+</html>

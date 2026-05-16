@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 1, Hour 3: Variables + Basic Types</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Day 1, Hour 3: Variables + Basic Types</h1>
+            
+        </section>
+
+        <section class="slide">
+            <h1>Python Basics Course - Lecture Script</h1>
+            <p><strong>Session:</strong> Day 1 (Session 1), Hour 3 of 4</p>
+<p><strong>Duration:</strong> 60 minutes</p>
+<p><strong>Prerequisites:</strong> Hour 1 (Environment setup) and Hour 2 (print(), comments, reading errors)</p>
+        </section>
+
+        <section class="slide">
+            <h1>Overview &amp; Learning Outcomes</h1>
+            <p><strong>What students will be able to do by the end of this hour:</strong></p>
+<ul>
+  <li>Create variables and assign values</li>
+  <li>Use <code>type()</code> to inspect what kind of value a variable holds</li>
+  <li>Explain the difference between strings, numbers, and booleans</li>
+  <li>Apply Python&#x27;s naming rules when creating identifiers</li>
+  <li>Reassign variables and understand the &quot;read from right to left&quot; mental model</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Hour Structure</h1>
+            <ul>
+  <li><strong>Recap &amp; Bridge</strong> (3-5 minutes)</li>
+  <li><strong>Instructor Talk: Variables &amp; Types</strong> (10-15 minutes)</li>
+  <li><strong>Live Demo: Profile Card</strong> (5-10 minutes)</li>
+  <li><strong>Hands-on Lab: Profile Card</strong> (25-35 minutes)</li>
+  <li><strong>Wrap-up &amp; Quick Check</strong> (5 minutes)</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Section 1: Recap &amp; Bridge from Hour 2</h1>
+            <h3>Timing: 3-5 minutes</h3>
+<p><strong>[Speaking cues: Energetic, welcoming tone. Acknowledge the transition.]</strong></p>
+<p>Alright everyone, welcome back! We&#x27;re now in Hour 3 of Day 1, and we&#x27;re about to take a major step forward in our Python journey.</p>
+<p>Let&#x27;s do a quick recap of where we&#x27;ve been. In Hour 1, we got our environment set up—we made sure Python was installed, we created our workspace folder, and we ran our very first script. In Hour 2, we learned how to use <code>print()</code> to send output to the screen, we added comments to document our code, and most importantly, we practiced reading error messages. By now, you should feel comfortable running a Python script and troubleshooting basic syntax errors.</p>
+<p><strong>[Pause for acknowledgment]</strong></p>
+<p>Today, in Hour 3, we&#x27;re going to introduce one of the most fundamental concepts in all of programming: <strong>variables</strong>. If you&#x27;ve never programmed before, think of this hour as unlocking the ability to <em>remember</em> information in your programs. Up until now, every time we printed something, we typed it directly into the <code>print()</code> function. That works, but it&#x27;s limiting. What if we want to use the same piece of information multiple times? What if we want to change it in one place and have that change reflected everywhere? That&#x27;s where variables come in.</p>
+<p>By the end of this hour, you&#x27;ll be able to store information—like names, numbers, and true/false values—and reuse them throughout your programs. This is a game-changer.</p>
+<p><strong>[Transition cue]</strong></p>
+<p>Let&#x27;s dive in.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 2: Instructor Talk – Variables &amp; Basic Types</h1>
+            <h3>Timing: 10-15 minutes</h3>
+<h3>Part A: What is a Variable? (3-4 minutes)</h3>
+<p><strong>[Speaking cues: Use a metaphor to ground the concept.]</strong></p>
+<p>So, what <em>is</em> a variable?</p>
+<p>Think of a variable as a <strong>labeled box</strong>. You can put something inside the box, and you can write a label on the outside so you remember what&#x27;s in there. Later, when you need that thing, you just look at the label and open the box.</p>
+<p>In Python, a variable is a name that points to a value. We create a variable by using the <strong>assignment operator</strong>, which is the equals sign: <code>=</code>.</p>
+<p>Here&#x27;s the simplest example:</p>
+<pre data-lang="python"><code>name = &quot;Alex&quot;</code></pre>
+<p>Let me break this down word by word:</p>
+<ul>
+  <li><code>name</code> is the <strong>variable name</strong> (or what we call an &quot;identifier&quot;)</li>
+  <li><code>=</code> is the <strong>assignment operator</strong> (it means &quot;assign the value on the right to the name on the left&quot;)</li>
+  <li><code>&quot;Alex&quot;</code> is the <strong>value</strong> we&#x27;re storing—in this case, a string</li>
+</ul>
+<p>After this line runs, whenever we use the word <code>name</code> in our code, Python will substitute in the value <code>&quot;Alex&quot;</code>.</p>
+<p>Let&#x27;s see it in action:</p>
+<pre data-lang="python"><code>name = &quot;Alex&quot;
+print(name)</code></pre>
+<p><strong>Expected output:</strong></p>
+<pre><code>Alex</code></pre>
+<p>Notice we didn&#x27;t write <code>print(&quot;name&quot;)</code>—that would print the word &quot;name&quot; literally. We wrote <code>print(name)</code> without quotes, so Python looks up the value associated with <code>name</code> and prints <em>that</em>.</p>
+<p><strong>[Check for understanding]</strong></p>
+<p>Does that make sense so far? Variables are names that hold values. We assign values to variables using <code>=</code>.</p>
+<h3>Part B: The Mental Model—Read from Right to Left (2 minutes)</h3>
+<p><strong>[Speaking cues: Emphasize this as a key insight.]</strong></p>
+<p>Here&#x27;s a mental model that will serve you well throughout your Python journey: when you see an assignment statement, <strong>read it from right to left</strong>.</p>
+<pre data-lang="python"><code>age = 25</code></pre>
+<p>Don&#x27;t read this as &quot;age equals 25.&quot; Instead, read it as: <strong>&quot;Take the value 25 and assign it to the variable named age.&quot;</strong></p>
+<p>Why does this matter? Because assignment is not the same as equality in mathematics. In math, when we write <code>x = 5</code>, we&#x27;re saying x <em>is</em> 5. In Python, we&#x27;re saying: &quot;From now on, whenever I say <code>x</code>, I mean the value 5.&quot;</p>
+<p>And here&#x27;s the powerful part: we can <em>change</em> what a variable holds. This is called <strong>reassignment</strong>.</p>
+<pre data-lang="python"><code>age = 25
+print(age)  # Prints 25
+
+age = 26
+print(age)  # Prints 26</code></pre>
+<p>The variable <code>age</code> first held <code>25</code>, then we reassigned it to hold <code>26</code>. The old value is gone—it&#x27;s been replaced.</p>
+<p><strong>[Pause]</strong></p>
+<p>So remember: right to left. Take the value on the right, store it in the variable on the left.</p>
+<h3>Part C: Naming Rules and Conventions (3-4 minutes)</h3>
+<p><strong>[Speaking cues: Transition to practical rules.]</strong></p>
+<p>Now, you can&#x27;t just name a variable anything you want. Python has rules. Let&#x27;s talk about what makes a valid <strong>identifier</strong>—that&#x27;s the formal term for a variable name.</p>
+<p><strong>Rules (these are enforced by Python):</strong></p>
+<ol>
+  <li><strong>Must start with a letter or underscore</strong> (<code>a-z</code>, <code>A-Z</code>, <code>_</code>)</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">✅ <code>name</code>, <code>_temp</code>, <code>user1</code></li>
+  <li style="margin-left: 30px;">❌ <code>1user</code> (can&#x27;t start with a number)</li>
+  <li style="margin-left: 30px;">❌ <code>@name</code> (can&#x27;t start with special characters)</li>
+</ul>
+<ol>
+  <li><strong>Can contain letters, numbers, and underscores</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">✅ <code>first_name</code>, <code>age2</code>, <code>total_score</code></li>
+  <li style="margin-left: 30px;">❌ <code>first-name</code> (hyphens are not allowed)</li>
+  <li style="margin-left: 30px;">❌ <code>total score</code> (spaces are not allowed)</li>
+</ul>
+<ol>
+  <li><strong>Case-sensitive</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><code>Name</code>, <code>name</code>, and <code>NAME</code> are three different variables</li>
+</ul>
+<ol>
+  <li><strong>Cannot be a reserved keyword</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Python has special words like <code>if</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>class</code>, <code>return</code>, etc.</li>
+  <li style="margin-left: 30px;">You can&#x27;t name a variable <code>if</code> or <code>for</code>—Python uses those for other things</li>
+</ul>
+<p><strong>Conventions (these are best practices):</strong></p>
+<p>In Python, we follow a style guide called <strong>PEP 8</strong>. For variable names, the convention is:</p>
+<ul>
+  <li>Use <strong>snake_case</strong>: all lowercase, with underscores separating words</li>
+  <li style="margin-left: 30px;">✅ <code>first_name</code>, <code>total_score</code>, <code>is_active</code></li>
+  <li style="margin-left: 30px;">Not recommended: <code>firstName</code> (that&#x27;s camelCase, used in JavaScript), <code>FirstName</code> (that&#x27;s PascalCase, used for classes)</li>
+</ul>
+<ul>
+  <li>Use <strong>descriptive names</strong></li>
+  <li style="margin-left: 30px;">✅ <code>student_count</code>, <code>max_temperature</code></li>
+  <li style="margin-left: 30px;">❌ <code>x</code>, <code>temp</code>, <code>var1</code> (unless in a very small, obvious context)</li>
+</ul>
+<p>Good variable names make your code readable. When you come back to your code in a week, you want to understand what <code>student_count</code> means. If you just called it <code>n</code>, you might forget.</p>
+<p><strong>[Check for understanding]</strong></p>
+<p>So: letters, numbers, underscores. Start with a letter or underscore. Use snake_case. Be descriptive. Any questions on naming?</p>
+<h3>Part D: Basic Types—Strings, Numbers, Booleans (4-5 minutes)</h3>
+<p><strong>[Speaking cues: Introduce the concept of &quot;types&quot; as categories of data.]</strong></p>
+<p>Okay, so we can store values in variables. But not all values are the same. Python categorizes values into different <strong>types</strong>. Think of a type as the &quot;kind&quot; of data you&#x27;re working with.</p>
+<p>In this hour, we&#x27;re going to focus on three fundamental types:</p>
+<h4>1. Strings (`str`)</h4>
+<p>A <strong>string</strong> is a sequence of characters—text. You create a string by wrapping text in quotes: single quotes <code>&#x27;...&#x27;</code> or double quotes <code>&quot;...&quot;</code>.</p>
+<pre data-lang="python"><code>name = &quot;Jordan&quot;
+city = &#x27;Seattle&#x27;
+message = &quot;Hello, world!&quot;</code></pre>
+<p>Strings are for text: names, addresses, messages, anything you&#x27;d write or read as words.</p>
+<h4>2. Numbers—Integers and Floats (`int` and `float`)</h4>
+<p>Numbers in Python come in two main flavors:</p>
+<ul>
+  <li><strong>Integers</strong> (<code>int</code>): whole numbers, no decimal point</li>
+</ul>
+<pre data-lang="python"><code>  age = 30
+  year = 2024
+  score = -5</code></pre>
+<ul>
+  <li><strong>Floats</strong> (<code>float</code>): numbers with a decimal point</li>
+</ul>
+<pre data-lang="python"><code>  temperature = 72.5
+  price = 19.99
+  pi_approx = 3.14159</code></pre>
+<p>Notice: no quotes around numbers. If you write <code>&quot;30&quot;</code>, that&#x27;s a string, not a number.</p>
+<h4>3. Booleans (`bool`)</h4>
+<p>A <strong>boolean</strong> is a value that&#x27;s either <code>True</code> or <code>False</code>. (Notice the capital T and F—Python is case-sensitive!)</p>
+<pre data-lang="python"><code>is_raining = True
+has_permission = False
+likes_python = True</code></pre>
+<p>Booleans are used to represent yes/no, on/off, true/false conditions. We&#x27;ll use them a lot when we get to conditional logic (if statements) in future sessions.</p>
+<p><strong>[Speaking cues: Introduce the <code>type()</code> function.]</strong></p>
+<p>So how do you know what type a value is? Python gives us a built-in function called <code>type()</code>. It tells you the type of whatever you pass to it.</p>
+<pre data-lang="python"><code>name = &quot;Jordan&quot;
+age = 30
+temperature = 72.5
+is_student = True
+
+print(type(name))         # &lt;class &#x27;str&#x27;&gt;
+print(type(age))          # &lt;class &#x27;int&#x27;&gt;
+print(type(temperature))  # &lt;class &#x27;float&#x27;&gt;
+print(type(is_student))   # &lt;class &#x27;bool&#x27;&gt;</code></pre>
+<p>When you run this, you&#x27;ll see output like <code>&lt;class &#x27;str&#x27;&gt;</code>. Don&#x27;t worry about the word &quot;class&quot; for now—just focus on the second part: <code>&#x27;str&#x27;</code>, <code>&#x27;int&#x27;</code>, <code>&#x27;float&#x27;</code>, <code>&#x27;bool&#x27;</code>. Those are the type names.</p>
+<p><strong>[Key point]</strong></p>
+<p>Here&#x27;s something really important: in Python, the type is determined by the <em>value</em>, not by the variable name. A variable can hold any type, and you can even reassign it to a different type (though we generally try to avoid that because it can be confusing).</p>
+<pre data-lang="python"><code>x = 10        # x is an int
+print(type(x))  # &lt;class &#x27;int&#x27;&gt;
+
+x = &quot;hello&quot;   # now x is a str
+print(type(x))  # &lt;class &#x27;str&#x27;&gt;</code></pre>
+<p>This is called <strong>dynamic typing</strong>. The variable doesn&#x27;t have a fixed type—the value does.</p>
+<h3>Part E: Quick Concept Check—String vs Number (1 minute)</h3>
+<p><strong>[Speaking cues: Pose a prediction question.]</strong></p>
+<p>Before we move to the demo, let me ask you a quick question to check understanding:</p>
+<p><strong>What&#x27;s the difference between <code>&#x27;5&#x27;</code> and <code>5</code>?</strong></p>
+<p>Think about it for a moment.</p>
+<p><strong>[Pause for thought]</strong></p>
+<p>The answer: <code>&#x27;5&#x27;</code> (in quotes) is a <strong>string</strong>. It&#x27;s the character &quot;5&quot;—text. You can&#x27;t do math with it directly. <code>5</code> (no quotes) is an <strong>integer</strong>. It&#x27;s the number five—you <em>can</em> do math with it.</p>
+<p>This is a common source of confusion for beginners. If you see quotes, it&#x27;s a string. No quotes (and it looks like a number), it&#x27;s a number.</p>
+<pre data-lang="python"><code>x = &#x27;5&#x27;
+y = 5
+
+print(type(x))  # &lt;class &#x27;str&#x27;&gt;
+print(type(y))  # &lt;class &#x27;int&#x27;&gt;</code></pre>
+<p><strong>[Transition cue]</strong></p>
+<p>Alright, let&#x27;s see all of this in action with a live demo.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 3: Live Demo – Building a Profile Card</h1>
+            <h3>Timing: 5-10 minutes</h3>
+<p><strong>[Speaking cues: Switch to your IDE or terminal. Narrate as you type.]</strong></p>
+<p>I&#x27;m going to create a new file called <code>profile_demo.py</code> in my <code>python_basics</code> folder. Watch what I do, and I&#x27;ll explain each step.</p>
+<p><strong>[Begin typing and narrating]</strong></p>
+<pre data-lang="python"><code># profile_demo.py
+# A simple profile card using variables
+
+name = &quot;Taylor&quot;
+city = &quot;Austin&quot;
+age = 28
+favorite_number = 7
+likes_python = True</code></pre>
+<p>Okay, I&#x27;ve created five variables. Let me walk through them:</p>
+<ul>
+  <li><code>name</code> holds the string <code>&quot;Taylor&quot;</code></li>
+  <li><code>city</code> holds the string <code>&quot;Austin&quot;</code></li>
+  <li><code>age</code> holds the integer <code>28</code></li>
+  <li><code>favorite_number</code> holds the integer <code>7</code></li>
+  <li><code>likes_python</code> holds the boolean <code>True</code></li>
+</ul>
+<p>Now, let&#x27;s print out a formatted profile card using these variables:</p>
+<pre data-lang="python"><code>print(&quot;=== Profile Card ===&quot;)
+print(&quot;Name:&quot;, name)
+print(&quot;City:&quot;, city)
+print(&quot;Age:&quot;, age)
+print(&quot;Favorite Number:&quot;, favorite_number)
+print(&quot;Likes Python:&quot;, likes_python)
+print(&quot;====================&quot;)</code></pre>
+<p><strong>[Run the script]</strong></p>
+<p>Let me run this and see what we get:</p>
+<pre><code>=== Profile Card ===
+Name: Taylor
+City: Austin
+Age: 28
+Favorite Number: 7
+Likes Python: True
+====================</code></pre>
+<p>Beautiful! Notice how we&#x27;re reusing the variable names multiple times. If I wanted to change the name, I&#x27;d only need to change it in one place—the assignment line—and everywhere I print <code>name</code>, it would reflect the new value.</p>
+<p><strong>[Speaking cues: Demonstrate reassignment.]</strong></p>
+<p>Let me show you reassignment in action. I&#x27;ll add a few lines to change some values:</p>
+<pre data-lang="python"><code>print(&quot;\nUpdating profile...&quot;)
+age = 29
+city = &quot;Denver&quot;
+
+print(&quot;\n=== Updated Profile Card ===&quot;)
+print(&quot;Name:&quot;, name)
+print(&quot;City:&quot;, city)
+print(&quot;Age:&quot;, age)
+print(&quot;Favorite Number:&quot;, favorite_number)
+print(&quot;Likes Python:&quot;, likes_python)
+print(&quot;============================&quot;)</code></pre>
+<p><strong>[Run again]</strong></p>
+<p>Now when I run it:</p>
+<pre><code>=== Profile Card ===
+Name: Taylor
+City: Austin
+Age: 28
+Favorite Number: 7
+Likes Python: True
+====================
+
+Updating profile...
+
+=== Updated Profile Card ===
+Name: Taylor
+City: Denver
+Age: 29
+Favorite Number: 7
+Likes Python: True
+============================</code></pre>
+<p>See? The age changed from 28 to 29, and the city changed from Austin to Denver. The variables were reassigned, and when we printed them again, we got the new values.</p>
+<p><strong>[Speaking cues: Demonstrate <code>type()</code> function.]</strong></p>
+<p>Now let&#x27;s use <code>type()</code> to inspect each of our variables:</p>
+<pre data-lang="python"><code>print(&quot;\n=== Type Information ===&quot;)
+print(&quot;Type of name:&quot;, type(name))
+print(&quot;Type of city:&quot;, type(city))
+print(&quot;Type of age:&quot;, type(age))
+print(&quot;Type of favorite_number:&quot;, type(favorite_number))
+print(&quot;Type of likes_python:&quot;, type(likes_python))</code></pre>
+<p><strong>[Run again]</strong></p>
+<pre><code>=== Type Information ===
+Type of name: &lt;class &#x27;str&#x27;&gt;
+Type of city: &lt;class &#x27;str&#x27;&gt;
+Type of age: &lt;class &#x27;int&#x27;&gt;
+Type of favorite_number: &lt;class &#x27;int&#x27;&gt;
+Type of likes_python: &lt;class &#x27;bool&#x27;&gt;</code></pre>
+<p>Perfect! We can see that <code>name</code> and <code>city</code> are strings, <code>age</code> and <code>favorite_number</code> are integers, and <code>likes_python</code> is a boolean.</p>
+<p><strong>[Speaking cues: Highlight the key takeaway.]</strong></p>
+<p>So the key takeaway from this demo: variables let us store information and reuse it. We can change the values (reassignment), and we can inspect what type of data we&#x27;re working with using <code>type()</code>.</p>
+<p><strong>[Transition cue]</strong></p>
+<p>Now it&#x27;s your turn! You&#x27;re going to build your own profile card in the lab.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 4: Hands-on Lab – Profile Card</h1>
+            <h3>Timing: 25-35 minutes</h3>
+<p><strong>[Speaking cues: Provide clear instructions for the lab.]</strong></p>
+<p>Alright, everyone, it&#x27;s time for hands-on practice. Open up your IDE or terminal, navigate to your <code>python_basics</code> folder, and create a new file called <code>profile_card.py</code>.</p>
+<h3>Lab Instructions</h3>
+<p><strong>Your task:</strong></p>
+<ol>
+  <li><strong>Create variables</strong> for the following information about yourself (or a fictional person):</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><code>name</code> (a string)</li>
+  <li style="margin-left: 30px;"><code>city</code> (a string)</li>
+  <li style="margin-left: 30px;"><code>favorite_number</code> (an integer)</li>
+  <li style="margin-left: 30px;"><code>likes_python</code> (a boolean—<code>True</code> or <code>False</code>)</li>
+</ul>
+<ol>
+  <li><strong>Print a formatted profile card</strong> that displays all four values. Make it look nice—use labels like &quot;Name:&quot;, &quot;City:&quot;, etc.</li>
+</ol>
+<ol>
+  <li><strong>Use <code>type()</code></strong> to print the type of each variable. Add a section at the end of your output that shows the type information.</li>
+</ol>
+<h3>Completion Criteria</h3>
+<p>Your program should:</p>
+<ul>
+  <li>✅ Print all four values correctly</li>
+  <li>✅ Use clear, descriptive variable names (following snake_case convention)</li>
+  <li>✅ Include <code>type()</code> output for each variable</li>
+  <li>✅ Run without errors</li>
+</ul>
+<h3>Example Output</h3>
+<p>Your output should look something like this (but with your own values):</p>
+<pre><code>=== My Profile Card ===
+Name: Jordan Lee
+City: Portland
+Favorite Number: 42
+Likes Python: True
+========================
+
+=== Type Information ===
+Type of name: &lt;class &#x27;str&#x27;&gt;
+Type of city: &lt;class &#x27;str&#x27;&gt;
+Type of favorite_number: &lt;class &#x27;int&#x27;&gt;
+Type of likes_python: &lt;class &#x27;bool&#x27;&gt;</code></pre>
+<p><strong>[Speaking cues: Set expectations and offer support.]</strong></p>
+<p>You have about 25 minutes for this lab. Start simple—get the basic version working first. Once you&#x27;ve got that, we have some optional extensions if you finish early.</p>
+<p>I&#x27;ll be walking around to answer questions. Remember: if you get an error, <em>read the error message</em>. Look at the line number, read what it says, and try to figure out what went wrong. That&#x27;s a skill we practiced in Hour 2, and it applies here too.</p>
+<p><strong>[Pause for questions]</strong></p>
+<p>Any questions before you start?</p>
+<p><strong>[While students work, circulate and provide support. Use the following guidance.]</strong></p>
+<h3>Common Pitfalls to Watch For</h3>
+<p>As you&#x27;re helping students, keep an eye out for these common mistakes:</p>
+<h4>1. **NameError from typos**</h4>
+<p>Students might define a variable as <code>name</code> but then try to print <code>Name</code> (with a capital N). Python is case-sensitive, so this will cause a <code>NameError</code>.</p>
+<p><strong>How to address it:</strong></p>
+<ul>
+  <li>Point to the error message: <code>NameError: name &#x27;Name&#x27; is not defined</code></li>
+  <li>Ask: &quot;Look at how you defined the variable. Is the capitalization the same?&quot;</li>
+  <li>Reinforce: &quot;Python is case-sensitive. <code>name</code> and <code>Name</code> are different.&quot;</li>
+</ul>
+<h4>2. **Using quotes when printing a variable**</h4>
+<p>Students might write <code>print(&quot;name&quot;)</code> instead of <code>print(name)</code>.</p>
+<p><strong>How to address it:</strong></p>
+<ul>
+  <li>Ask: &quot;What does it print?&quot;</li>
+  <li>They&#x27;ll say: &quot;It prints the word &#x27;name&#x27;.&quot;</li>
+  <li>Explain: &quot;Right. If you use quotes, Python treats it as literal text. If you want the <em>value</em> of the variable, leave off the quotes.&quot;</li>
+</ul>
+<h4>3. **Accidentally overwriting a variable with a different type**</h4>
+<p>Students might write:</p>
+<pre data-lang="python"><code>favorite_number = 7
+favorite_number = &quot;seven&quot;</code></pre>
+<p>This is legal in Python, but it&#x27;s confusing.</p>
+<p><strong>How to address it:</strong></p>
+<ul>
+  <li>Ask: &quot;What type is <code>favorite_number</code> now?&quot;</li>
+  <li>Run <code>type(favorite_number)</code> to show it&#x27;s a string.</li>
+  <li>Explain: &quot;Python allows this, but it can be confusing. Generally, we try to keep a variable holding the same type of data. If you need a different type, consider using a different variable name.&quot;</li>
+</ul>
+<h4>4. **Forgetting to assign a value before using it**</h4>
+<p>Students might try to print a variable they haven&#x27;t created yet.</p>
+<p><strong>How to address it:</strong></p>
+<ul>
+  <li>Point to the error: <code>NameError: name &#x27;age&#x27; is not defined</code></li>
+  <li>Ask: &quot;Did you create the variable <code>age</code> before this line?&quot;</li>
+  <li>Reinforce: &quot;Python reads your code from top to bottom. You have to assign a value to a variable before you can use it.&quot;</li>
+</ul>
+<h3>Optional Extensions (for students who finish early)</h3>
+<p><strong>[Speaking cues: Announce these after about 15 minutes, or individually as students finish.]</strong></p>
+<p>If you&#x27;ve completed the basic lab, here are some optional extensions to try:</p>
+<h4>Extension 1: Add a computed value</h4>
+<p>Add a variable called <code>next_favorite_number</code> that stores <code>favorite_number + 10</code>. Print it in your profile card.</p>
+<pre data-lang="python"><code>favorite_number = 42
+next_favorite_number = favorite_number + 10
+
+print(&quot;Favorite Number:&quot;, favorite_number)
+print(&quot;Next Favorite Number:&quot;, next_favorite_number)</code></pre>
+<h4>Extension 2: Add user input for one field</h4>
+<p>Use the <code>input()</code> function to ask the user for their name, rather than hard-coding it.</p>
+<pre data-lang="python"><code>name = input(&quot;Enter your name: &quot;)
+print(&quot;Name:&quot;, name)</code></pre>
+<p><strong>Note:</strong> Keep this simple. We&#x27;ll dive deeper into <code>input()</code> in future hours.</p>
+<h3>Circulating Tips</h3>
+<p>As you walk around:</p>
+<ul>
+  <li><strong>Ask guiding questions</strong> rather than giving answers. &quot;What does the error message say?&quot; is better than &quot;You forgot a quote.&quot;</li>
+  <li><strong>Celebrate small wins.</strong> &quot;Great! You got the strings working. Now let&#x27;s add the boolean.&quot;</li>
+  <li><strong>Encourage experimentation.</strong> &quot;What do you think will happen if you change <code>likes_python</code> to <code>False</code>? Try it!&quot;</li>
+  <li><strong>Point out good practices.</strong> &quot;I like how you used a descriptive variable name—<code>favorite_number</code> is much clearer than <code>fav_num</code> or <code>fn</code>.&quot;</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Section 5: Lab Debrief &amp; Common Pitfalls</h1>
+            <h3>Timing: 5 minutes (before wrap-up)</h3>
+<p><strong>[Speaking cues: Call the class back together after lab time.]</strong></p>
+<p>Alright, everyone, let&#x27;s come back together. Hopefully you&#x27;ve got your profile card working!</p>
+<p>Let me highlight a few common pitfalls I saw while walking around—these are things <em>everyone</em> runs into when learning variables, so if you hit any of these, you&#x27;re in good company.</p>
+<h3>Pitfall 1: Overwriting a Variable with a Different Type</h3>
+<p>Some of you might have written something like this:</p>
+<pre data-lang="python"><code>age = 28
+age = &quot;twenty-eight&quot;</code></pre>
+<p>This is legal in Python—Python won&#x27;t stop you. But it&#x27;s confusing. Now <code>age</code> is a string, not a number. If you later try to do math with it, you&#x27;ll get an error.</p>
+<p><strong>Best practice:</strong> If you need to store different types of data, use different variable names. For example:</p>
+<pre data-lang="python"><code>age = 28
+age_text = &quot;twenty-eight&quot;</code></pre>
+<h3>Pitfall 2: NameError from Typos</h3>
+<p>Python is case-sensitive and spelling-sensitive. If you define <code>favorite_number</code> but then try to print <code>Favorite_Number</code> or <code>favourit_number</code>, Python will say: <code>NameError: name &#x27;Favorite_Number&#x27; is not defined</code>.</p>
+<p><strong>How to avoid this:</strong></p>
+<ul>
+  <li>Be consistent with your capitalization.</li>
+  <li>If you get a NameError, check the spelling and capitalization of your variable name.</li>
+  <li>Use your editor&#x27;s autocomplete feature—it can help you avoid typos.</li>
+</ul>
+<h3>Pitfall 3: Quotes Around Variable Names</h3>
+<p>If you write:</p>
+<pre data-lang="python"><code>name = &quot;Alex&quot;
+print(&quot;name&quot;)</code></pre>
+<p>You&#x27;ll see:</p>
+<pre><code>name</code></pre>
+<p>Not &quot;Alex.&quot; Why? Because <code>&quot;name&quot;</code> in quotes is literal text—Python prints the word &quot;name.&quot;</p>
+<p>If you want the <em>value</em> of the variable, don&#x27;t use quotes:</p>
+<pre data-lang="python"><code>print(name)  # Prints: Alex</code></pre>
+<p><strong>[Pause for questions]</strong></p>
+<p>Did anyone run into other issues? [Allow 1-2 students to share.]</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 6: Wrap-up &amp; Quick Check / Exit Ticket</h1>
+            <h3>Timing: 3-5 minutes</h3>
+<p><strong>[Speaking cues: Summarize key concepts.]</strong></p>
+<p>Alright, let&#x27;s wrap up Hour 3. Here&#x27;s what we covered today:</p>
+<ol>
+  <li><strong>Variables</strong> are names that hold values. We create them using the assignment operator <code>=</code>.</li>
+  <li>We read assignment statements <strong>from right to left</strong>: &quot;Take the value on the right and store it in the variable on the left.&quot;</li>
+  <li><strong>Identifiers</strong> (variable names) must follow Python&#x27;s naming rules: start with a letter or underscore, use letters/numbers/underscores, no spaces or special characters.</li>
+  <li>We follow <strong>snake_case</strong> convention for variable names in Python.</li>
+  <li><strong>Types</strong> categorize data:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>Strings</strong> (<code>str</code>): text, in quotes</li>
+  <li style="margin-left: 30px;"><strong>Integers</strong> (<code>int</code>): whole numbers</li>
+  <li style="margin-left: 30px;"><strong>Floats</strong> (<code>float</code>): numbers with decimals</li>
+  <li style="margin-left: 30px;"><strong>Booleans</strong> (<code>bool</code>): <code>True</code> or <code>False</code></li>
+</ul>
+<ol>
+  <li>We use the <strong><code>type()</code></strong> function to inspect the type of a value.</li>
+</ol>
+<p><strong>[Transition to exit ticket]</strong></p>
+<p>Before we move to Hour 4, I want you to answer a quick check question. This is your &quot;exit ticket&quot;—it helps me know what&#x27;s landing and what might need reinforcement.</p>
+<h3>Quick Check / Exit Ticket</h3>
+<p><strong>Question:</strong> What&#x27;s the difference between <code>&#x27;5&#x27;</code> and <code>5</code>?</p>
+<p><strong>[Pause for students to think or write. Then provide the answer.]</strong></p>
+<p><strong>Answer:</strong></p>
+<ul>
+  <li><code>&#x27;5&#x27;</code> (in quotes) is a <strong>string</strong>—the character &quot;5&quot;, which is text. You can&#x27;t do math with it directly.</li>
+  <li><code>5</code> (no quotes) is an <strong>integer</strong>—the number 5, which you <em>can</em> do math with.</li>
+</ul>
+<p>This distinction is crucial. If you&#x27;re ever confused about why something isn&#x27;t working the way you expect, check the type with <code>type()</code>. You might be working with a string when you thought you had a number, or vice versa.</p>
+<p><strong>[Final encouragement]</strong></p>
+<p>Great work today, everyone. Variables are one of the foundational building blocks of programming. Now that you can store and reuse information, you&#x27;re ready to start doing more interesting things—like math and calculations, which is exactly what we&#x27;ll cover in Hour 4.</p>
+<p>Take a quick stretch break, and we&#x27;ll come back in a few minutes to dive into numbers and operators.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Instructor Notes &amp; Tips</h1>
+            <h3>Time Management</h3>
+<ul>
+  <li>If the lab runs over, it&#x27;s okay to shorten the debrief. The hands-on practice is more valuable than lecture time.</li>
+  <li>If students finish the lab early, point them to the optional extensions.</li>
+  <li>If students are struggling, consider doing a quick &quot;live help&quot; session where you debug one student&#x27;s code on the projector with the class watching.</li>
+</ul>
+<h3>Common Questions &amp; Answers</h3>
+<p><strong>Q: &quot;Can I use spaces in variable names?&quot;</strong></p>
+<p>A: No. Use underscores instead. <code>first_name</code> not <code>first name</code>.</p>
+<p><strong>Q: &quot;Why do we use snake_case instead of camelCase?&quot;</strong></p>
+<p>A: It&#x27;s the Python convention (PEP 8). Different languages have different conventions. In Python, we use snake_case for variables and functions. It makes code more readable and consistent.</p>
+<p><strong>Q: &quot;Can I change a variable from an int to a string?&quot;</strong></p>
+<p>A: Technically yes, but it&#x27;s confusing and generally not recommended. If you need both, use two different variables.</p>
+<p><strong>Q: &quot;What&#x27;s the difference between <code>=</code> and <code>==</code>?&quot;</strong></p>
+<p>A: Great question! <code>=</code> is assignment (store a value). <code>==</code> is comparison (check if two values are equal). We&#x27;ll cover <code>==</code> when we get to conditionals. For now, just know that <code>=</code> means &quot;assign.&quot;</p>
+<p><strong>Q: &quot;Why does <code>type()</code> print <code>&lt;class &#x27;str&#x27;&gt;</code> instead of just <code>str</code>?&quot;</strong></p>
+<p>A: In Python, types are implemented as &quot;classes&quot; under the hood. For now, just focus on the part in quotes—that&#x27;s the type name. We&#x27;ll learn about classes much later in the course.</p>
+<h3>Differentiation Strategies</h3>
+<p><strong>For students who are ahead:</strong></p>
+<ul>
+  <li>Encourage them to experiment: &quot;What happens if you add two strings together? Try <code>first_name + last_name</code>.&quot;</li>
+  <li>Point them to type conversion: &quot;Can you convert a string to an int? Try <code>int(&#x27;5&#x27;)</code> and see what happens.&quot;</li>
+  <li>Challenge them to format output more creatively, perhaps using ASCII art.</li>
+</ul>
+<p><strong>For students who are struggling:</strong></p>
+<ul>
+  <li>Break the lab into smaller steps: &quot;Let&#x27;s just get one variable printed first. Then we&#x27;ll add the second.&quot;</li>
+  <li>Pair them with a peer who&#x27;s a bit ahead.</li>
+  <li>Sit with them and narrate what you&#x27;re doing: &quot;First, I&#x27;m going to create the variable. I&#x27;ll type <code>name =</code> and then the value in quotes.&quot;</li>
+</ul>
+<h3>Connection to Future Hours</h3>
+<p>Hour 3 sets the stage for:</p>
+<ul>
+  <li><strong>Hour 4 (Numbers &amp; Operators):</strong> Now that we can store numbers in variables, we&#x27;ll do math with them.</li>
+  <li><strong>Session 2 (Conditionals):</strong> We&#x27;ll use boolean variables to make decisions (<code>if likes_python:</code>).</li>
+  <li><strong>Session 3 (Loops):</strong> We&#x27;ll use variables to count and track progress in loops.</li>
+  <li><strong>Session 4 (Functions):</strong> We&#x27;ll pass variables as arguments to functions.</li>
+</ul>
+<p>Emphasize that variables aren&#x27;t just a one-hour topic—they&#x27;re a foundational concept that everything else builds on.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Additional Resources for Instructors</h1>
+            <h3>Helpful Analogies</h3>
+<p><strong>Variables as labeled boxes:</strong></p>
+<p>&quot;A variable is like a labeled box. You can put something inside (assign a value), you can look inside (use the variable), and you can replace what&#x27;s inside (reassign a new value). The label (variable name) stays the same, but the contents can change.&quot;</p>
+<p><strong>Assignment as right-to-left:</strong></p>
+<p>&quot;Think of <code>=</code> as an arrow pointing left: <code>age ← 25</code>. We&#x27;re taking the value on the right and putting it into the variable on the left.&quot;</p>
+<p><strong>Types as categories:</strong></p>
+<p>&quot;Types are like categories of data. Just like in real life, you wouldn&#x27;t try to mail a letter in a shoebox—the type matters. You can&#x27;t do math with a string, and you can&#x27;t capitalize a number.&quot;</p>
+<h3>Code Snippets for Quick Demos</h3>
+<p><strong>Reassignment:</strong></p>
+<pre data-lang="python"><code>x = 10
+print(x)  # 10
+
+x = 20
+print(x)  # 20
+
+x = x + 5
+print(x)  # 25</code></pre>
+<p><strong>Type inspection:</strong></p>
+<pre data-lang="python"><code>value = 100
+print(type(value))  # &lt;class &#x27;int&#x27;&gt;
+
+value = &quot;one hundred&quot;
+print(type(value))  # &lt;class &#x27;str&#x27;&gt;</code></pre>
+<p><strong>String vs number:</strong></p>
+<pre data-lang="python"><code>a = &#x27;5&#x27;
+b = 5
+
+print(a + a)  # &#x27;55&#x27; (string concatenation)
+print(b + b)  # 10 (addition)</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>Appendix: Full Demo Code</h1>
+            <p>For your reference, here&#x27;s the complete code from the live demo:</p>
+<pre data-lang="python"><code># profile_demo.py
+# A simple profile card using variables
+
+# Initial variable assignments
+name = &quot;Taylor&quot;
+city = &quot;Austin&quot;
+age = 28
+favorite_number = 7
+likes_python = True
+
+# Print the profile card
+print(&quot;=== Profile Card ===&quot;)
+print(&quot;Name:&quot;, name)
+print(&quot;City:&quot;, city)
+print(&quot;Age:&quot;, age)
+print(&quot;Favorite Number:&quot;, favorite_number)
+print(&quot;Likes Python:&quot;, likes_python)
+print(&quot;====================&quot;)
+
+# Demonstrate reassignment
+print(&quot;\nUpdating profile...&quot;)
+age = 29
+city = &quot;Denver&quot;
+
+# Print updated profile
+print(&quot;\n=== Updated Profile Card ===&quot;)
+print(&quot;Name:&quot;, name)
+print(&quot;City:&quot;, city)
+print(&quot;Age:&quot;, age)
+print(&quot;Favorite Number:&quot;, favorite_number)
+print(&quot;Likes Python:&quot;, likes_python)
+print(&quot;============================&quot;)
+
+# Use type() to inspect types
+print(&quot;\n=== Type Information ===&quot;)
+print(&quot;Type of name:&quot;, type(name))
+print(&quot;Type of city:&quot;, type(city))
+print(&quot;Type of age:&quot;, type(age))
+print(&quot;Type of favorite_number:&quot;, type(favorite_number))
+print(&quot;Type of likes_python:&quot;, type(likes_python))</code></pre>
+        </section>
+
+        <section class="slide">
+            <h1>End of Hour 3 Script</h1>
+            <p><strong>Word Count:</strong> ~4,800 words</p>
+<p><strong>Prepared for:</strong> Python Basics Course, Day 1, Session 1</p>
+<p><strong>Next Hour:</strong> Hour 4 - Numbers + Operators</p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>

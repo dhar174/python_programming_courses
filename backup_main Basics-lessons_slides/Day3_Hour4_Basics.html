@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3, Hour 4: Debugging Habits (Basics Level)</title>
+    <style>
+        /* ====================================
+           CSS VARIABLES - TWEAK GUIDE
+           ==================================== */
+        :root {
+            /* Colors - Swiss Modern Palette */
+            --bg: #f7f7f7;              /* Main background (light gray) */
+            --fg: #111111;              /* Main text color (near black) */
+            --accent: #0066ff;          /* Accent color (blue) */
+            --accent-light: #e6f0ff;    /* Light accent background */
+            --code-bg: #1e1e1e;         /* Code block background (dark) */
+            --code-fg: #f8f8f2;         /* Code text color (light) */
+            --border: #cccccc;          /* Border color */
+            --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+            
+            /* Typography */
+            --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-heading: "Inter", system-ui, -apple-system, sans-serif;
+            --font-code: "SF Mono", "Monaco", "Consolas", monospace;
+            
+            /* Spacing */
+            --spacing: 24px;            /* Base spacing unit */
+            --slide-padding: 60px;      /* Padding inside slides */
+            
+            /* Animation timing */
+            --transition-speed: 0.3s;   /* Slide transition duration */
+        }
+        
+        /* ====================================
+           BASE STYLES
+           ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           SLIDE CONTAINER
+           ==================================== */
+        #slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ====================================
+           INDIVIDUAL SLIDES
+           ==================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: var(--slide-padding);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .slide.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Title slide special styling */
+        .slide.title-slide {
+            background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+        
+        .slide.title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing) * 2);
+            line-height: 1.2;
+        }
+        
+        .slide.title-slide .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* ====================================
+           TYPOGRAPHY
+           ==================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: var(--spacing);
+        }
+        
+        .slide:not(.title-slide) h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: calc(var(--spacing) / 2);
+        }
+        
+        .slide h2 {
+            font-size: 2rem;
+            margin-top: calc(var(--spacing) * 1.5);
+        }
+        
+        .slide h3 {
+            font-size: 1.5rem;
+            margin-top: var(--spacing);
+        }
+        
+        p {
+            margin-bottom: var(--spacing);
+            font-size: 1.2rem;
+            max-width: 900px;
+        }
+        
+        /* ====================================
+           LISTS
+           ==================================== */
+        ul, ol {
+            margin-left: calc(var(--spacing) * 1.5);
+            margin-bottom: var(--spacing);
+            max-width: 900px;
+        }
+        
+        li {
+            margin-bottom: calc(var(--spacing) / 2);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        ul li {
+            list-style-type: none;
+            position: relative;
+            padding-left: calc(var(--spacing) * 1.5);
+        }
+        
+        ul li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* Nested lists */
+        ul ul, ol ol {
+            margin-top: calc(var(--spacing) / 2);
+            margin-bottom: calc(var(--spacing) / 2);
+        }
+        
+        /* ====================================
+           CODE BLOCKS
+           ==================================== */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            padding: var(--spacing);
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: var(--spacing);
+            box-shadow: 0 4px 6px var(--shadow);
+            max-width: 1000px;
+        }
+        
+        code {
+            font-family: var(--font-code);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Inline code */
+        p code, li code {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* ====================================
+           BLOCKQUOTES
+           ==================================== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: var(--spacing);
+            margin: var(--spacing) 0;
+            font-style: italic;
+            color: #555;
+            background: var(--accent-light);
+            padding: var(--spacing);
+            border-radius: 4px;
+        }
+        
+        /* ====================================
+           IMAGES
+           ==================================== */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin: var(--spacing) 0;
+        }
+        
+        /* ====================================
+           LINKS
+           ==================================== */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
+        
+        /* ====================================
+           NAVIGATION CONTROLS
+           ==================================== */
+        #nav-hint {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        #nav-hint:hover {
+            opacity: 1;
+        }
+        
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+        
+        #slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+        
+        /* ====================================
+           RESPONSIVE DESIGN
+           ==================================== */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide.title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h1 {
+                font-size: 2rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+            
+            p, li {
+                font-size: 1rem;
+            }
+        }
+        
+        /* ====================================
+           SPECIAL ELEMENTS
+           ==================================== */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border);
+            margin: calc(var(--spacing) * 2) 0;
+        }
+        
+        strong, b {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        /* Checkmarks and X marks for task lists */
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        /* Warning/Alert styling */
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: var(--spacing);
+            margin: var(--spacing) 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slides-container">
+        
+        <section class="slide title-slide">
+            <h1>Day 3, Hour 4: Debugging Habits (Basics Level)</h1>
+            <div class="subtitle">**Python Programming Basics – Session 3**</div>
+        </section>
+
+        <section class="slide">
+            <h1>Timing Overview</h1>
+            <p><strong>Total Time:</strong> 60 minutes</p>
+<ul>
+  <li>Recap &amp; Transition from Hour 11: 3 minutes</li>
+  <li>Reading Tracebacks and Error Messages: 10-12 minutes</li>
+  <li>Common Error Types: 10-12 minutes</li>
+  <li>Print-Debugging Strategies: 8-10 minutes</li>
+  <li>Platform-Specific Debugging (Working Directory): 5 minutes</li>
+  <li>Live Demo (Break and Fix): 5-10 minutes</li>
+  <li>Hands-On Lab (Debugging Drill): 25-35 minutes</li>
+  <li>Optional: Python 2 vs 3 Note: 5-10 minutes</li>
+  <li>Debrief &amp; Exit Ticket: 5 minutes</li>
+</ul>
+        </section>
+
+        <section class="slide">
+            <h1>Learning Outcomes for This Hour</h1>
+            <p>By the end of this hour, you will be able to:</p>
+<ol>
+  <li>Read and interpret Python tracebacks from bottom to top</li>
+  <li>Identify and fix the four most common error types (NameError, TypeError, ValueError, IndexError)</li>
+  <li>Use print-debugging strategically to isolate problems</li>
+  <li>Check your working directory to diagnose import and file issues</li>
+  <li>Form a hypothesis about an error before making changes</li>
+  <li>Apply a systematic debugging process: reproduce, isolate, hypothesize, test, verify</li>
+  <li>Distinguish Python 2 vs Python 3 syntax when encountering legacy code online</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Section 1: Recap &amp; Transition from Hour 11 (3 minutes)</h1>
+            <h3>Quick Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome to the final hour of Day 2! Let&#x27;s do a quick recap:</p>
+<p><strong>Today&#x27;s Journey:</strong></p>
+<ul>
+  <li><strong>Hour 9</strong>: Comparison operators and boolean logic—making decisions</li>
+  <li><strong>Hour 10</strong>: F-strings—formatting output professionally</li>
+  <li><strong>Hour 11</strong>: <code>.split()</code> and <code>.join()</code>—processing and transforming text</li>
+</ul>
+<p>You&#x27;ve learned a lot today! Quick show of hands: <strong>Who&#x27;s feeling more confident about making programs that make decisions and process data?</strong></p>
+<p>[Wait for responses]</p>
+<p>Excellent! You should be proud of what you&#x27;ve built.</p>
+<h3>The Reality of Programming</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now, let me be honest with you: <strong>no matter how good you get at programming, you will encounter errors. Every. Single. Day.</strong></p>
+<p>I&#x27;ve been programming for years, and I still see error messages multiple times an hour. The difference between a beginner and an experienced programmer isn&#x27;t that experienced programmers don&#x27;t make mistakes—<strong>it&#x27;s that they know how to debug quickly</strong>.</p>
+<p><strong>Hour 12 (right now)</strong> is about <strong>building debugging habits</strong> that will make you self-sufficient. By the end of this hour:</p>
+<ul>
+  <li>Error messages won&#x27;t intimidate you</li>
+  <li>You&#x27;ll know exactly where to look when something breaks</li>
+  <li>You&#x27;ll have a systematic process for fixing problems</li>
+</ul>
+<p>This is one of the most important hours in the entire course. Let&#x27;s dive in!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 2: Reading Tracebacks and Error Messages (10-12 minutes)</h1>
+            <h3>What Is a Traceback?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When Python encounters an error it can&#x27;t handle, it stops and prints a <strong>traceback</strong> (also called a &quot;stack trace&quot;). This is Python&#x27;s way of saying: &quot;Here&#x27;s what I was doing when things went wrong.&quot;</p>
+<p><strong>Important mindset shift:</strong> Tracebacks are not punishment. They&#x27;re <strong>helpful diagnostic information</strong>. Learning to read them is like learning to read X-rays—once you know what to look for, they tell you exactly what&#x27;s wrong.</p>
+<h3>Anatomy of a Traceback</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let&#x27;s look at a real traceback:</p>
+<pre data-lang="python"><code># broken_script.py
+def calculate_average(numbers):
+    total = sum(numbers)
+    return total / len(numbers)
+
+scores = [85, 90, 78]
+result = calculate_average(score)
+print(f&quot;Average: {result}&quot;)</code></pre>
+<p><strong>When we run this:</strong></p>
+<pre><code>Traceback (most recent call last):
+  File &quot;broken_script.py&quot;, line 7, in &lt;module&gt;
+    result = calculate_average(score)
+NameError: name &#x27;score&#x27; is not defined</code></pre>
+<p><strong>Let&#x27;s break down each part:</strong></p>
+<ol>
+  <li><strong><code>Traceback (most recent call last):</code></strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">This header tells you a traceback is coming</li>
+  <li style="margin-left: 30px;">&quot;Most recent call last&quot; means the <strong>bottom</strong> of the traceback is where the error occurred</li>
+</ul>
+<ol>
+  <li><strong><code>File &quot;broken_script.py&quot;, line 7, in &lt;module&gt;</code></strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>File</strong>: Which file had the problem</li>
+  <li style="margin-left: 30px;"><strong>Line 7</strong>: The line number where the error occurred</li>
+  <li style="margin-left: 30px;"><strong>in &lt;module&gt;</strong>: The context (here, top-level code)</li>
+</ul>
+<ol>
+  <li><strong><code>result = calculate_average(score)</code></strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">This is the actual line of code that caused the problem</li>
+</ul>
+<ol>
+  <li><strong><code>NameError: name &#x27;score&#x27; is not defined</code></strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;"><strong>NameError</strong>: The type of error</li>
+  <li style="margin-left: 30px;"><strong>Message</strong>: What went wrong (we tried to use a variable called <code>score</code> that doesn&#x27;t exist)</li>
+</ul>
+<h3>How to Read a Traceback: Bottom to Top</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><strong>Key rule: Read tracebacks from bottom to top.</strong></p>
+<ol>
+  <li><strong>Start at the bottom:</strong> Look at the error type and message</li>
+  <li><strong>Read the message:</strong> It often tells you exactly what&#x27;s wrong</li>
+  <li><strong>Look at the line number:</strong> That&#x27;s where Python detected the problem</li>
+  <li><strong>Examine the code:</strong> Look at the line mentioned</li>
+</ol>
+<p><strong>In our example:</strong></p>
+<ul>
+  <li><strong>Error:</strong> <code>NameError: name &#x27;score&#x27; is not defined</code></li>
+  <li><strong>Line:</strong> Line 7</li>
+  <li><strong>The code:</strong> <code>result = calculate_average(score)</code></li>
+  <li><strong>The problem:</strong> We wrote <code>score</code> but the variable is actually called <code>scores</code> (with an &#x27;s&#x27;)</li>
+</ul>
+<p><strong>The fix:</strong></p>
+<pre data-lang="python"><code>result = calculate_average(scores)  # Fixed the typo</code></pre>
+<h3>Multi-Level Tracebacks</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Sometimes the traceback has multiple levels:</p>
+<pre data-lang="python"><code># multi_level.py
+def divide_values(a, b):
+    return a / b
+
+def calculate_ratio(x, y):
+    return divide_values(x, y)
+
+result = calculate_ratio(10, 0)
+print(result)</code></pre>
+<p><strong>Traceback:</strong></p>
+<pre><code>Traceback (most recent call last):
+  File &quot;multi_level.py&quot;, line 8, in &lt;module&gt;
+    result = calculate_ratio(10, 0)
+  File &quot;multi_level.py&quot;, line 6, in calculate_ratio
+    return divide_values(x, y)
+  File &quot;multi_level.py&quot;, line 3, in divide_values
+    return a / b
+ZeroDivisionError: division by zero</code></pre>
+<p><strong>Reading this:</strong></p>
+<ol>
+  <li><strong>Bottom:</strong> <code>ZeroDivisionError: division by zero</code> on line 3 in <code>divide_values</code></li>
+  <li><strong>Middle:</strong> <code>divide_values</code> was called from line 6 in <code>calculate_ratio</code></li>
+  <li><strong>Top:</strong> <code>calculate_ratio</code> was called from line 8 in our main code</li>
+</ol>
+<p><strong>The path:</strong> Line 8 → called function on Line 6 → called function on Line 3 → <strong>error occurred here</strong></p>
+<p><strong>The traceback shows the call chain</strong>, but the <strong>actual error</strong> is at the bottom.</p>
+<h3>Quick Check #1</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>Look at this traceback:</p>
+<pre><code>Traceback (most recent call last):
+  File &quot;test.py&quot;, line 5, in &lt;module&gt;
+    print(message)
+NameError: name &#x27;message&#x27; is not defined</code></pre>
+<p><strong>Questions:</strong></p>
+<ol>
+  <li>What line has the problem?</li>
+  <li>What&#x27;s the error type?</li>
+  <li>What went wrong?</li>
+</ol>
+<p>[Pause for student predictions]</p>
+<p><strong>Answers:</strong></p>
+<ol>
+  <li>Line 5</li>
+  <li><code>NameError</code></li>
+  <li>We&#x27;re trying to use a variable called <code>message</code> that doesn&#x27;t exist (maybe we forgot to define it, or we misspelled it)</li>
+</ol>
+        </section>
+
+        <section class="slide">
+            <h1>Section 3: Common Error Types (10-12 minutes)</h1>
+            <h3>The Four Most Common Errors (and How to Fix Them)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>At the Basics level, you&#x27;ll encounter four error types over and over. Let&#x27;s learn to recognize and fix each one.</p>
+<h3>1. NameError: Variable Doesn&#x27;t Exist</h3>
+<p><strong>What it means:</strong> You&#x27;re trying to use a variable, function, or module that Python doesn&#x27;t know about.</p>
+<p><strong>Common causes:</strong></p>
+<pre data-lang="python"><code># Cause 1: Typo
+name = &quot;Alice&quot;
+print(nam)  # NameError: name &#x27;nam&#x27; is not defined
+
+# Cause 2: Variable not defined yet
+print(greeting)  # NameError: name &#x27;greeting&#x27; is not defined
+greeting = &quot;Hello&quot;
+
+# Cause 3: Wrong scope (we&#x27;ll cover this later)
+def my_function():
+    x = 10
+
+print(x)  # NameError: name &#x27;x&#x27; is not defined</code></pre>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Check spelling carefully</li>
+  <li>Make sure the variable is defined before you use it</li>
+  <li>Check for scope issues (variables defined inside functions aren&#x27;t visible outside)</li>
+</ul>
+<h3>2. TypeError: Wrong Type for Operation</h3>
+<p><strong>What it means:</strong> You&#x27;re trying to do something with a value that doesn&#x27;t support that operation.</p>
+<p><strong>Common causes:</strong></p>
+<pre data-lang="python"><code># Cause 1: Can&#x27;t add string and number
+age = 25
+message = &quot;I am &quot; + age  # TypeError: can only concatenate str (not &quot;int&quot;) to str
+
+# Fix: Convert to string
+message = &quot;I am &quot; + str(age)  # Works
+# Or use f-string
+message = f&quot;I am {age}&quot;  # Better!
+
+# Cause 2: Can&#x27;t call a non-function
+name = &quot;Alice&quot;
+result = name(10)  # TypeError: &#x27;str&#x27; object is not callable
+
+# Cause 3: Wrong argument type
+number = int(&quot;hello&quot;)  # ValueError (actually), but shows type issues</code></pre>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Check the types of your variables with <code>print(type(variable))</code></li>
+  <li>Convert types explicitly: <code>str()</code>, <code>int()</code>, <code>float()</code></li>
+  <li>Read the error message—it often tells you what types are involved</li>
+</ul>
+<h3>3. ValueError: Right Type, Wrong Value</h3>
+<p><strong>What it means:</strong> The type is correct, but the specific value can&#x27;t be used.</p>
+<p><strong>Common causes:</strong></p>
+<pre data-lang="python"><code># Cause 1: Can&#x27;t convert non-numeric string to int
+age = int(&quot;twenty&quot;)  # ValueError: invalid literal for int() with base 10: &#x27;twenty&#x27;
+
+# Fix: Make sure the string contains a number
+age = int(&quot;20&quot;)  # Works
+
+# Cause 2: Unpacking wrong number of values
+name = &quot;Alice&quot;
+first, last = name.split()  # ValueError: not enough values to unpack (expected 2, got 1)
+
+# Fix: Make sure the data matches expectations
+name = &quot;Alice Johnson&quot;
+first, last = name.split()  # Works</code></pre>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Validate input before converting</li>
+  <li>Check that the value makes sense for the operation</li>
+  <li>Use try/except for user input (we&#x27;ll cover this in error handling later)</li>
+</ul>
+<h3>4. IndexError: Index Out of Range</h3>
+<p><strong>What it means:</strong> You&#x27;re trying to access a position in a list/string that doesn&#x27;t exist.</p>
+<p><strong>Common causes:</strong></p>
+<pre data-lang="python"><code># Cause 1: List index too large
+fruits = [&quot;apple&quot;, &quot;banana&quot;]
+print(fruits[2])  # IndexError: list index out of range
+
+# Fix: Use valid indices (0 and 1 in this case)
+print(fruits[1])  # &quot;banana&quot;
+
+# Cause 2: Empty list
+words = []
+print(words[0])  # IndexError: list index out of range
+
+# Fix: Check length first
+if len(words) &gt; 0:
+    print(words[0])
+
+# Cause 3: Off-by-one error
+numbers = [1, 2, 3, 4, 5]
+print(numbers[5])  # IndexError: list index out of range
+# Remember: indices are 0-4, not 1-5
+
+# Fix:
+print(numbers[4])  # 5 (the last element)</code></pre>
+<p><strong>How to fix:</strong></p>
+<ul>
+  <li>Check the length of your list/string: <code>len(my_list)</code></li>
+  <li>Remember indices start at 0</li>
+  <li>Use negative indices to count from the end: <code>my_list[-1]</code> (last element)</li>
+  <li>Validate indices before accessing</li>
+</ul>
+<h3>Quick Check #2</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What error type would each of these cause?</p>
+<pre data-lang="python"><code># A
+numbers = [10, 20, 30]
+print(numbers[3])
+
+# B
+result = &quot;5&quot; + 5
+
+# C
+total = sum(items)</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answers:</strong></p>
+<ul>
+  <li><strong>A:</strong> <code>IndexError</code> (list only has indices 0, 1, 2)</li>
+  <li><strong>B:</strong> <code>TypeError</code> (can&#x27;t add string and int)</li>
+  <li><strong>C:</strong> <code>NameError</code> (if <code>items</code> wasn&#x27;t defined earlier)</li>
+</ul>
+<h3>Less Common Errors (Honorable Mentions)</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You might also see:</p>
+<ul>
+  <li><strong><code>SyntaxError</code></strong>: Your code isn&#x27;t valid Python (missing colon, unmatched parentheses, etc.)</li>
+  <li><strong><code>IndentationError</code></strong>: Your indentation is wrong (Python cares about this!)</li>
+  <li><strong><code>AttributeError</code></strong>: You&#x27;re calling a method that doesn&#x27;t exist on that type</li>
+  <li><strong><code>KeyError</code></strong>: You&#x27;re accessing a dictionary key that doesn&#x27;t exist (we&#x27;ll cover this later)</li>
+</ul>
+<p><strong>For now, focus on the Big Four:</strong> NameError, TypeError, ValueError, IndexError.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 4: Print-Debugging Strategies (8-10 minutes)</h1>
+            <h3>The Power of Print Statements</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The simplest and most effective debugging tool is the humble <code>print()</code> statement. Professional developers use this technique constantly.</p>
+<p><strong>The idea:</strong> Insert <code>print()</code> statements at strategic points to see:</p>
+<ul>
+  <li>What values variables have</li>
+  <li>Which code paths are executed</li>
+  <li>Where the program crashes</li>
+</ul>
+<h3>Strategy 1: Print Variable Values</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When something doesn&#x27;t work as expected, print the variables involved:</p>
+<pre data-lang="python"><code># Broken code
+bill = input(&quot;Enter bill: &quot;)
+tip_percent = input(&quot;Enter tip %: &quot;)
+tip = bill * (tip_percent / 100)
+print(f&quot;Tip: ${tip:.2f}&quot;)</code></pre>
+<p><strong>This will crash with a <code>TypeError</code>. Why?</strong></p>
+<p><strong>Add debug prints:</strong></p>
+<pre data-lang="python"><code>bill = input(&quot;Enter bill: &quot;)
+tip_percent = input(&quot;Enter tip %: &quot;)
+
+# Debug prints
+print(f&quot;DEBUG: bill = {bill}, type = {type(bill)}&quot;)
+print(f&quot;DEBUG: tip_percent = {tip_percent}, type = {type(tip_percent)}&quot;)
+
+tip = bill * (tip_percent / 100)
+print(f&quot;Tip: ${tip:.2f}&quot;)</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Enter bill: 50
+Enter tip %: 18
+DEBUG: bill = 50, type = &lt;class &#x27;str&#x27;&gt;
+DEBUG: tip_percent = 18, type = &lt;class &#x27;str&#x27;&gt;
+TypeError: can&#x27;t multiply sequence by non-int of type &#x27;str&#x27;</code></pre>
+<p><strong>Aha!</strong> Both are strings. We forgot to convert them.</p>
+<p><strong>The fix:</strong></p>
+<pre data-lang="python"><code>bill = float(input(&quot;Enter bill: &quot;))
+tip_percent = float(input(&quot;Enter tip %: &quot;))
+tip = bill * (tip_percent / 100)
+print(f&quot;Tip: ${tip:.2f}&quot;)</code></pre>
+<p><strong>[Key insight]:</strong> Print statements revealed the problem immediately.</p>
+<h3>Strategy 2: Print Checkpoints</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When you don&#x27;t know where the crash is happening, add checkpoints:</p>
+<pre data-lang="python"><code>print(&quot;DEBUG: Starting program&quot;)
+
+name = input(&quot;Enter name: &quot;)
+print(&quot;DEBUG: Got name&quot;)
+
+age = int(input(&quot;Enter age: &quot;))
+print(&quot;DEBUG: Got age&quot;)
+
+if age &gt;= 18:
+    print(&quot;DEBUG: In adult branch&quot;)
+    print(&quot;You are an adult&quot;)
+else:
+    print(&quot;DEBUG: In minor branch&quot;)
+    print(&quot;You are a minor&quot;)
+
+print(&quot;DEBUG: Program complete&quot;)</code></pre>
+<p><strong>If the program crashes between &quot;Got name&quot; and &quot;Got age&quot;, you know the problem is on the <code>age = int(...)</code> line.</strong></p>
+<h3>Strategy 3: Print Type Information</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When you get type-related errors, print the types:</p>
+<pre data-lang="python"><code>value = input(&quot;Enter a number: &quot;)
+result = value * 2
+
+# Add this to debug:
+print(f&quot;value = {value}, type = {type(value)}&quot;)
+print(f&quot;result = {result}, type = {type(result)}&quot;)</code></pre>
+<p><strong>This reveals:</strong> <code>value</code> is a string, and <code>value * 2</code> repeats the string, not multiplies a number.</p>
+<h3>Strategy 4: Print in Small Test Cases</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When a function is misbehaving, test it with a small, known input:</p>
+<pre data-lang="python"><code>def calculate_average(numbers):
+    total = sum(numbers)
+    count = len(numbers)
+    return total / count
+
+# Test with simple input
+test_data = [10, 20, 30]
+print(f&quot;Testing with: {test_data}&quot;)
+result = calculate_average(test_data)
+print(f&quot;Result: {result}&quot;)
+print(f&quot;Expected: 20.0&quot;)</code></pre>
+<p><strong>This lets you verify the function works before using it with real data.</strong></p>
+<h3>The Debug Print Pattern</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A useful pattern:</p>
+<pre data-lang="python"><code>DEBUG = True  # Set to False when done debugging
+
+if DEBUG:
+    print(f&quot;DEBUG: variable_name = {variable_name}&quot;)
+
+# Or use a function:
+def debug_print(message):
+    if DEBUG:
+        print(f&quot;DEBUG: {message}&quot;)
+
+debug_print(f&quot;Processing item {item}&quot;)</code></pre>
+<p><strong>This lets you turn all debug output on/off with one variable.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 5: Platform-Specific Debugging – Working Directory (5 minutes)</h1>
+            <h3>&quot;Where Am I?&quot; – The Working Directory Problem</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A very common issue, especially with file operations and imports:</p>
+<p><strong>Error message:</strong></p>
+<pre><code>FileNotFoundError: [Errno 2] No such file or directory: &#x27;data.txt&#x27;</code></pre>
+<p><strong>The problem:</strong> Python is looking for <code>data.txt</code> in the <strong>current working directory</strong>, but the file is somewhere else.</p>
+<h3>Checking Your Working Directory</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Add this to your script to see where Python thinks you are:</p>
+<pre data-lang="python"><code>import os
+
+print(f&quot;Current working directory: {os.getcwd()}&quot;)</code></pre>
+<p><strong>Example output:</strong></p>
+<pre><code>Current working directory: /home/username/Documents</code></pre>
+<p><strong>If your script is in <code>/home/username/python_basics/</code> but Python is running from <code>/home/username/Documents/</code>, it won&#x27;t find files in the <code>python_basics</code> folder.</strong></p>
+<h3>The Fix: Run from the Correct Directory</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p><strong>In your terminal:</strong></p>
+<pre data-lang="bash"><code># Check where you are
+pwd
+
+# Change to your project folder
+cd python_basics
+
+# Now run the script
+python my_script.py</code></pre>
+<p><strong>This is why we established the folder structure in Hour 1</strong>—keeping everything in one course folder prevents path confusion.</p>
+<h3>Common Working Directory Issues</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<ol>
+  <li><strong>Running from the wrong folder:</strong></li>
+</ol>
+<pre data-lang="bash"><code>   # BAD: Running from home directory
+   python python_basics/my_script.py
+   
+   # GOOD: Change to the folder first
+   cd python_basics
+   python my_script.py</code></pre>
+<ol>
+  <li><strong>IDE running from a different folder:</strong></li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">In VS Code, open the <code>python_basics</code> folder as your workspace</li>
+  <li style="margin-left: 30px;">Check the terminal shows you&#x27;re in the correct folder</li>
+</ul>
+<ol>
+  <li><strong>Using absolute paths as a workaround (not ideal but works):</strong></li>
+</ol>
+<pre data-lang="python"><code>   # Instead of: data.txt
+   # Use full path: /home/username/python_basics/data.txt</code></pre>
+<p><strong>[Best practice]:</strong> Always <code>cd</code> to your project folder before running scripts.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 6: Live Demo – Break and Fix (5-10 minutes)</h1>
+            <h3>Demo Script: Deliberate Debugging</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now I&#x27;m going to deliberately break a script and show you how I debug it systematically.</p>
+<p><strong>[Open editor and create <code>buggy_calculator.py</code>]</strong></p>
+<p><strong>[Instructor types:]</strong></p>
+<pre data-lang="python"><code># buggy_calculator.py
+# Purpose: Calculate average of three scores (with bugs!)
+
+print(&quot;=== Score Average Calculator ===\n&quot;)
+
+score1 = input(&quot;Enter score 1: &quot;)
+score2 = input(&quot;Enter score 2: &quot;)
+score3 = input(&quot;Enter score 3: &quot;)
+
+total = score1 + score2 + score3
+average = total / 3
+
+print(f&quot;Average score: {average:.1f}&quot;)</code></pre>
+<p><strong>[Run the program]</strong></p>
+<pre><code>Enter score 1: 85
+Enter score 2: 90
+Enter score 3: 78
+Traceback (most recent call last):
+  File &quot;buggy_calculator.py&quot;, line 11, in &lt;module&gt;
+    average = total / 3
+TypeError: unsupported operand type(s) for /: &#x27;str&#x27; and &#x27;int&#x27;</code></pre>
+<p><strong>[Instructor narrates the debugging process:]</strong></p>
+<p><strong>Step 1: Read the error</strong></p>
+<ul>
+  <li><strong>Error type:</strong> <code>TypeError</code></li>
+  <li><strong>Message:</strong> Can&#x27;t divide string by int</li>
+  <li><strong>Line:</strong> 11 (<code>average = total / 3</code>)</li>
+</ul>
+<p><strong>Step 2: Form a hypothesis</strong></p>
+<p>&quot;The error says <code>total</code> is a string. That means line 10 didn&#x27;t add numbers—it concatenated strings. This is because <code>input()</code> returns strings, and we didn&#x27;t convert them.&quot;</p>
+<p><strong>Step 3: Add debug prints to verify</strong></p>
+<pre data-lang="python"><code>total = score1 + score2 + score3
+print(f&quot;DEBUG: total = {total}, type = {type(total)}&quot;)
+average = total / 3</code></pre>
+<p><strong>Run again:</strong></p>
+<pre><code>DEBUG: total = 859078, type = &lt;class &#x27;str&#x27;&gt;
+TypeError: unsupported operand type(s) for /: &#x27;str&#x27; and &#x27;int&#x27;</code></pre>
+<p><strong>Confirmed!</strong> <code>total</code> is <code>&quot;859078&quot;</code> (concatenated strings), not <code>253</code> (sum of numbers).</p>
+<p><strong>Step 4: Fix the bug</strong></p>
+<pre data-lang="python"><code>score1 = int(input(&quot;Enter score 1: &quot;))
+score2 = int(input(&quot;Enter score 2: &quot;))
+score3 = int(input(&quot;Enter score 3: &quot;))</code></pre>
+<p><strong>Step 5: Test again</strong></p>
+<pre><code>Enter score 1: 85
+Enter score 2: 90
+Enter score 3: 78
+Average score: 84.3</code></pre>
+<p><strong>Success!</strong></p>
+<p><strong>[Key teaching moments:]</strong></p>
+<ol>
+  <li>Read the error message—it told us exactly what was wrong</li>
+  <li>Form a hypothesis before making changes</li>
+  <li>Use debug prints to verify the hypothesis</li>
+  <li>Make the smallest fix possible</li>
+  <li>Test to verify it works</li>
+</ol>
+<h3>Adding More Debug Checkpoints</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me show you what the fully-debugged version might look like:</p>
+<pre data-lang="python"><code># buggy_calculator.py (with debugging)
+# Purpose: Calculate average of three scores
+
+DEBUG = True  # Turn off when done
+
+print(&quot;=== Score Average Calculator ===\n&quot;)
+
+score1 = int(input(&quot;Enter score 1: &quot;))
+score2 = int(input(&quot;Enter score 2: &quot;))
+score3 = int(input(&quot;Enter score 3: &quot;))
+
+if DEBUG:
+    print(f&quot;DEBUG: score1={score1}, score2={score2}, score3={score3}&quot;)
+
+total = score1 + score2 + score3
+
+if DEBUG:
+    print(f&quot;DEBUG: total={total}&quot;)
+
+average = total / 3
+
+if DEBUG:
+    print(f&quot;DEBUG: average={average}&quot;)
+
+print(f&quot;Average score: {average:.1f}&quot;)</code></pre>
+<p><strong>Once you verify it works, set <code>DEBUG = False</code> to hide the debug output.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 7: Hands-On Lab – Debugging Drill (25-35 minutes)</h1>
+            <h3>Lab Overview</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now it&#x27;s your turn! You&#x27;re going to receive three broken scripts. For each one:</p>
+<ol>
+  <li>Run it and observe the error</li>
+  <li>Read the traceback</li>
+  <li>Form a hypothesis about what&#x27;s wrong</li>
+  <li>Add debug prints if needed</li>
+  <li>Fix the problem</li>
+  <li>Write a 1-sentence explanation of what went wrong</li>
+</ol>
+<p><strong>Lab Goal:</strong> Practice systematic debugging.</p>
+<h3>Lab Instructions: Debugging Drill</h3>
+<p><strong>You&#x27;ll fix three broken scripts. Create each file and debug it.</strong></p>
+<h4>**Script 1: Greeting Program (broken_greeter.py)**</h4>
+<pre data-lang="python"><code># broken_greeter.py
+# Purpose: Greet a user by name
+
+print(&quot;=== Greeter ===\n&quot;)
+
+first_name = input(&quot;Enter your first name: &quot;)
+last_name = input(&quot;Enter your last name: &quot;)
+
+print(f&quot;Hello, {first_nam} {last_name}!&quot;)
+print(f&quot;Your full name has {len(first_name + last_name)} characters.&quot;)</code></pre>
+<p><strong>Expected behavior:</strong> Greet the user and count total characters in their full name.</p>
+<p><strong>Your tasks:</strong></p>
+<ol>
+  <li>Run the script and observe the error</li>
+  <li>Read the traceback—what&#x27;s the error type and line number?</li>
+  <li>Fix the bug</li>
+  <li>Test with your name</li>
+  <li><strong>Write 1 sentence explaining what was wrong</strong></li>
+</ol>
+<h4>**Script 2: Temperature Converter (broken_temp_converter.py)**</h4>
+<pre data-lang="python"><code># broken_temp_converter.py
+# Purpose: Convert Fahrenheit to Celsius
+
+print(&quot;=== Temperature Converter ===\n&quot;)
+
+fahrenheit = input(&quot;Enter temperature in Fahrenheit: &quot;)
+
+celsius = (fahrenheit - 32) * 5 / 9
+
+print(f&quot;{fahrenheit}°F is {celsius:.1f}°C&quot;)</code></pre>
+<p><strong>Expected behavior:</strong> Convert Fahrenheit to Celsius using the formula: C = (F - 32) × 5/9</p>
+<p><strong>Your tasks:</strong></p>
+<ol>
+  <li>Run the script and observe the error</li>
+  <li>Identify the problem (hint: it&#x27;s a type issue)</li>
+  <li>Add debug prints to confirm the types of variables</li>
+  <li>Fix the bug</li>
+  <li>Test with 32°F (should output 0.0°C) and 212°F (should output 100.0°C)</li>
+  <li><strong>Write 1 sentence explaining what was wrong</strong></li>
+</ol>
+<h4>**Script 3: List Average (broken_average.py)**</h4>
+<pre data-lang="python"><code># broken_average.py
+# Purpose: Calculate average of a list of numbers
+
+print(&quot;=== Average Calculator ===\n&quot;)
+
+numbers = [85, 92, 78, 90, 88]
+
+total = sum(numbers)
+average = total / len(numbers)
+
+print(f&quot;Numbers: {numbers}&quot;)
+print(f&quot;Average: {average:.1f}&quot;)
+
+# Now try to access the 5th number
+fifth_number = numbers[5]
+print(f&quot;The 5th number is: {fifth_number}&quot;)</code></pre>
+<p><strong>Expected behavior:</strong> Calculate average and show the 5th number.</p>
+<p><strong>Your tasks:</strong></p>
+<ol>
+  <li>Run the script—it works partially then crashes</li>
+  <li>Read the traceback—what error occurs?</li>
+  <li>Identify why this error happens (hint: count the elements and check the index)</li>
+  <li>Fix the bug by correcting the index (use index 4) or handling the missing element safely</li>
+  <li>Test and verify all output is correct</li>
+  <li><strong>Write 1 sentence explaining what was wrong</strong></li>
+</ol>
+<h3>Completion Criteria</h3>
+<p>For each script, you must:</p>
+<ul>
+  <li>✅ Identify the error type from the traceback</li>
+  <li>✅ Fix the bug so the script runs without errors</li>
+  <li>✅ Test with appropriate inputs</li>
+  <li>✅ Write a 1-sentence explanation of the root cause</li>
+</ul>
+<h3>Hints and Strategies</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you work through these:</p>
+<ol>
+  <li><strong>Don&#x27;t change multiple things at once</strong>—make one small fix at a time</li>
+  <li><strong>Run the script after each change</strong>—verify your fix works</li>
+  <li><strong>Use debug prints liberally</strong>—<code>print(f&quot;DEBUG: var = {var}, type = {type(var)}&quot;)</code></li>
+  <li><strong>Read the error message carefully</strong>—it often tells you exactly what&#x27;s wrong</li>
+  <li><strong>Check line numbers</strong>—go to the exact line mentioned in the traceback</li>
+</ol>
+<p><strong>Common debugging questions:</strong></p>
+<ul>
+  <li><strong>NameError?</strong> Check for typos in variable names</li>
+  <li><strong>TypeError?</strong> Check if you need to convert types (<code>int()</code>, <code>str()</code>, <code>float()</code>)</li>
+  <li><strong>IndexError?</strong> Count your list elements—remember indices start at 0</li>
+  <li><strong>ValueError?</strong> Check if the value makes sense for the operation</li>
+</ul>
+<h3>Optional Extensions</h3>
+<p>If you finish early, try these:</p>
+<ol>
+  <li><strong>Add input validation to Script 2:</strong> Check that the user enters a valid number before converting</li>
+</ol>
+<ol>
+  <li><strong>Extend Script 3:</strong> Modify it to safely handle lists of any size (don&#x27;t hardcode the index)</li>
+</ol>
+<ol>
+  <li><strong>Create a 4th broken script:</strong> Write a buggy script and challenge a neighbor to fix it</li>
+</ol>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, you have 25-35 minutes. Remember:</p>
+<ul>
+  <li>Read tracebacks from bottom to top</li>
+  <li>Form a hypothesis before fixing</li>
+  <li>Change one thing at a time</li>
+  <li>Test after each fix</li>
+</ul>
+<p>Let&#x27;s debug!</p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 8: Optional – Python 2 vs Python 3 Quick Differences (5-10 minutes)</h1>
+            <p><strong>[Instructor speaks:]</strong></p>
+<p><strong>Note:</strong> This section is optional and only relevant if students encounter old code online or need to work with legacy Python 2 code.</p>
+<h3>Why This Matters</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Python 3 was released in 2008, and Python 2 reached end-of-life in 2020. <strong>All new code should use Python 3.</strong></p>
+<p>However, you might encounter Python 2 code in:</p>
+<ul>
+  <li>Old tutorials and Stack Overflow answers</li>
+  <li>Legacy codebases at companies</li>
+  <li>Academic papers and research code</li>
+</ul>
+<p><strong>You should NOT learn Python 2</strong>, but you should be able to <strong>recognize</strong> it.</p>
+<h3>Key Differences to Recognize</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here are the most visible differences:</p>
+<h4>1. print is a Function in Python 3</h4>
+<p><strong>Python 2:</strong></p>
+<pre data-lang="python"><code>print &quot;Hello, world&quot;
+print &quot;Age:&quot;, age</code></pre>
+<p><strong>Python 3:</strong></p>
+<pre data-lang="python"><code>print(&quot;Hello, world&quot;)
+print(&quot;Age:&quot;, age)</code></pre>
+<p><strong>If you see <code>print</code> without parentheses, it&#x27;s Python 2 code.</strong></p>
+<h4>2. Integer Division Behavior</h4>
+<p><strong>Python 2:</strong></p>
+<pre data-lang="python"><code>print 5 / 2        # 2 (floor division)</code></pre>
+<p><strong>Python 3:</strong></p>
+<pre data-lang="python"><code>print(5 / 2)       # 2.5 (true division)
+print(5 // 2)      # 2 (floor division)</code></pre>
+<p><strong>Python 3 requires explicit <code>//</code> for floor division.</strong></p>
+<h4>3. Unicode is Default in Python 3</h4>
+<p><strong>Python 2:</strong></p>
+<pre data-lang="python"><code>name = u&quot;José&quot;     # u prefix for unicode</code></pre>
+<p><strong>Python 3:</strong></p>
+<pre data-lang="python"><code>name = &quot;José&quot;      # unicode by default</code></pre>
+<h4>4. input() Behavior</h4>
+<p><strong>Python 2:</strong></p>
+<pre data-lang="python"><code># input() evaluates the input as Python code (dangerous!)
+# raw_input() gets a string
+name = raw_input(&quot;Name: &quot;)</code></pre>
+<p><strong>Python 3:</strong></p>
+<pre data-lang="python"><code># input() always returns a string (safe)
+name = input(&quot;Name: &quot;)</code></pre>
+<h3>What to Do When You See Python 2 Code</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<ol>
+  <li><strong>Check the date:</strong> Is the tutorial/article from before 2015? It might be Python 2</li>
+  <li><strong>Look for the telltale signs:</strong> <code>print</code> without parentheses, <code>raw_input()</code>, etc.</li>
+  <li><strong>Find a Python 3 equivalent:</strong> Search for &quot;Python 3 [topic]&quot;</li>
+  <li><strong>Use a converter:</strong> The <code>2to3</code> tool can convert Python 2 code to Python 3</li>
+</ol>
+<p><strong>Bottom line: Write all your code in Python 3. Just be aware Python 2 exists when reading old resources.</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Section 9: Debrief &amp; Exit Ticket (5 minutes)</h1>
+            <h3>Solution Walkthrough</h3>
+<p><strong>[Instructor shares solutions:]</strong></p>
+<h4>Script 1: Greeting Program</h4>
+<p><strong>Bug:</strong> Typo in variable name (<code>first_nam</code> instead of <code>first_name</code>)</p>
+<p><strong>Fixed code:</strong></p>
+<pre data-lang="python"><code>print(f&quot;Hello, {first_name} {last_name}!&quot;)</code></pre>
+<p><strong>Explanation:</strong> NameError occurred because we misspelled the variable name.</p>
+<h4>Script 2: Temperature Converter</h4>
+<p><strong>Bug:</strong> <code>fahrenheit</code> is a string (from <code>input()</code>), but we&#x27;re trying to do math with it.</p>
+<p><strong>Fixed code:</strong></p>
+<pre data-lang="python"><code>fahrenheit = float(input(&quot;Enter temperature in Fahrenheit: &quot;))</code></pre>
+<p><strong>Explanation:</strong> TypeError occurred because we didn&#x27;t convert the input string to a number.</p>
+<h4>Script 3: List Average</h4>
+<p><strong>Bug:</strong> List has 5 elements (indices 0-4), but we&#x27;re trying to access index 5.</p>
+<p><strong>Fixed code:</strong></p>
+<pre data-lang="python"><code>fifth_number = numbers[4]  # Access the 5th element at index 4</code></pre>
+<p><strong>Or with safety check:</strong></p>
+<pre data-lang="python"><code>if len(numbers) &gt;= 5:
+    fifth_number = numbers[4]
+    print(f&quot;The 5th number is: {fifth_number}&quot;)</code></pre>
+<p><strong>Explanation:</strong> IndexError occurred because the list has 5 elements (indices 0-4), and we tried to access index 5 (off-by-one error).</p>
+<h3>Key Debugging Takeaways</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me summarize the debugging mindset we practiced today:</p>
+<p><strong>The Debugging Process:</strong></p>
+<ol>
+  <li>✅ <strong>Reproduce</strong> the error (run the code)</li>
+  <li>✅ <strong>Read</strong> the traceback (bottom to top)</li>
+  <li>✅ <strong>Isolate</strong> the problem (which line? which variable?)</li>
+  <li>✅ <strong>Hypothesize</strong> the cause (form a theory)</li>
+  <li>✅ <strong>Test</strong> your hypothesis (add debug prints if needed)</li>
+  <li>✅ <strong>Fix</strong> the bug (smallest change possible)</li>
+  <li>✅ <strong>Verify</strong> the fix (test with multiple inputs)</li>
+</ol>
+<p><strong>This process works for ANY bug, from beginner to expert level.</strong></p>
+<h3>Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>Before we wrap up Day 2, answer this in your notes or in the chat:</p>
+<p><strong>Question:</strong> When is it helpful to print <code>type(variable)</code>, and why?</p>
+<p><strong>Expected answer:</strong> It&#x27;s helpful when you get type-related errors (TypeError, ValueError). Printing the type reveals if a variable is a string when you expected a number, or vice versa, which helps you know where to add type conversions.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Recap: What We Accomplished in Hour 12</h1>
+            <p>In this hour, you:</p>
+<p>✅ Learned to read tracebacks from bottom to top</p>
+<p>✅ Identified the four most common error types (NameError, TypeError, ValueError, IndexError)</p>
+<p>✅ Used print-debugging to isolate problems</p>
+<p>✅ Checked your working directory to diagnose file/import issues</p>
+<p>✅ Applied a systematic debugging process</p>
+<p>✅ Fixed three broken scripts using the debugging workflow</p>
+<p>✅ (Optional) Recognized Python 2 vs Python 3 differences</p>
+<p><strong>This is a career-changing skill.</strong> Being able to debug your own code makes you self-sufficient and confident. You&#x27;re no longer dependent on others to fix your errors—you can figure them out yourself.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Recap: What We Accomplished in Day 2</h1>
+            <p><strong>Day 2 Complete!</strong> Let&#x27;s review the full day:</p>
+<p>✅ <strong>Hour 9:</strong> Comparisons and boolean logic—making complex decisions</p>
+<p>✅ <strong>Hour 10:</strong> F-strings—formatting output like a pro</p>
+<p>✅ <strong>Hour 11:</strong> <code>.split()</code> and <code>.join()</code>—processing text data</p>
+<p>✅ <strong>Hour 12:</strong> Debugging habits—fixing errors systematically</p>
+<p><strong>You&#x27;ve made incredible progress.</strong> You can now:</p>
+<ul>
+  <li>Build programs that make multi-condition decisions</li>
+  <li>Format output beautifully</li>
+  <li>Process and transform text</li>
+  <li>Debug problems independently</li>
+</ul>
+<p><strong>In Day 3 (Session 4), we&#x27;ll dive into lists in detail and learn about loops.</strong></p>
+<p><strong>Amazing work today! See you next session!</strong></p>
+        </section>
+
+        <section class="slide">
+            <h1>Quick Reference Card (for students)</h1>
+            <p><strong>Reading Tracebacks:</strong></p>
+<ul>
+  <li>Read from <strong>bottom to top</strong></li>
+  <li>Bottom line = error type and message</li>
+  <li>Look at the line number mentioned</li>
+  <li>Examine that line in your code</li>
+</ul>
+<p><strong>Common Error Types:</strong></p>
+<ul>
+  <li><strong>NameError:</strong> Variable doesn&#x27;t exist (typo? not defined yet?)</li>
+  <li><strong>TypeError:</strong> Wrong type for operation (need to convert?)</li>
+  <li><strong>ValueError:</strong> Right type, wrong value (invalid number string?)</li>
+  <li><strong>IndexError:</strong> List/string index out of range (off-by-one?)</li>
+</ul>
+<p><strong>Debugging Strategies:</strong></p>
+<pre data-lang="python"><code># Print variable values and types
+value = 42.5
+print(f&quot;DEBUG: value={value} (type: {type(value)})&quot;)
+
+# Print checkpoints
+print(&quot;DEBUG: Reached checkpoint 1&quot;)
+
+# Check working directory
+import os
+print(f&quot;Working directory: {os.getcwd()}&quot;)</code></pre>
+<p><strong>Debugging Process:</strong></p>
+<ol>
+  <li>Reproduce the error</li>
+  <li>Read the traceback</li>
+  <li>Isolate the problem</li>
+  <li>Form a hypothesis</li>
+  <li>Test (add debug prints)</li>
+  <li>Fix (smallest change)</li>
+  <li>Verify (test again)</li>
+</ol>
+<p><strong>Remember:</strong></p>
+<ul>
+  <li>Errors are feedback, not failure</li>
+  <li>Change one thing at a time</li>
+  <li>Run after each change</li>
+  <li>Debug prints are your friend</li>
+</ul>
+<p><strong>End of Hour 12 Script / End of Day 2</strong></p>
+        </section>
+    </div>
+    
+    <div id="progress-bar"></div>
+    <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div id="nav-hint">← → or Space to navigate</div>
+    
+    <script>
+        // ====================================
+        // SLIDE NAVIGATION
+        // ====================================
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const currentCounter = document.getElementById('current');
+        const totalCounter = document.getElementById('total');
+        
+        // Initialize
+        totalCounter.textContent = totalSlides;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'previous');
+                if (index < currentSlide) {
+                    slide.classList.add('previous');
+                }
+            });
+            
+            // Show current slide
+            if (slides[currentSlide]) {
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update counter
+            currentCounter.textContent = currentSlide + 1;
+            
+            // Update URL hash (for bookmarking)
+            window.location.hash = currentSlide + 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlideDisplay();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(index) {
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlideDisplay();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                prevSlide();
+            }
+        }
+        
+        // Load slide from URL hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const slideNum = parseInt(hash) - 1;
+                if (!isNaN(slideNum)) {
+                    goToSlide(slideNum);
+                    return;
+                }
+            }
+            updateSlideDisplay();
+        });
+        
+        // Initialize first slide
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
