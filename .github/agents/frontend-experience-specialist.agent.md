@@ -2,7 +2,7 @@
 name: "Frontend Experience Specialist"
 description: "Improves UI flows, static assets, and user-facing polish while preserving responsiveness and repo patterns."
 target: "github-copilot"
-tools: ["read", "search", "edit", "execute", "web", "custom-agent"]
+tools: ["*"]
 disable-model-invocation: false
 user-invocable: true
 ---
