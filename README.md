@@ -101,7 +101,7 @@ No `package.json` — use `npx` directly.
 npx @marp-team/marp-cli -c .marprc.yml --input-dir Basics/lessons/slides --output _site/slides/basics
 
 # Build Advanced the same way the workflow does
-npx @marp-team/marp-cli -c .marprc.advanced.yml --no-config --input-dir Advanced/lessons/slides --output _site/slides/advanced
+npx @marp-team/marp-cli --config-file .marprc.advanced.yml --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
 # Build and watch a single file during development
 npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-session-1.md
@@ -110,7 +110,7 @@ npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-
 npx @marp-team/marp-cli --no-config-file Basics/lessons/slides/day-01/day-01-session-1.md -o out.pdf --pdf
 ```
 
-Slides are published automatically to **GitHub Pages** on manual dispatch and on pushes to `main` that touch the workflow's configured path filters under `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**`.
+Slides are published automatically to **GitHub Pages** on manual dispatch and on pushes to `main` that touch the workflow's configured portal and slide paths, including `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `Basics/lessons/lecture/**`, `Advanced/lessons/lecture/**`, assignment and quiz trees for both modules, `slides/**`, `scripts/generate_portal_manifest.py`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**`.
 
 ### Lecture Scripts
 
@@ -234,10 +234,10 @@ python_programming_courses/
 
 | | |
 |---|---|
-| **Trigger** | `workflow_dispatch` and pushes to `main` touching `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**` |
+| **Trigger** | `workflow_dispatch` and pushes to `main` touching slide, portal, lecture, assignment, quiz, or workflow paths needed to rebuild the shared manifest and published artifact |
 | **Jobs** | `build` then `deploy`, with Pages concurrency so newer publish runs cancel older in-progress runs |
 | **Action** | Builds Basics and Advanced slide trees separately, stages a Pages artifact under `_site`, then deploys that artifact to GitHub Pages |
-| **Output** | `_site/index.html`, `_site/slides/basics/**`, and `_site/slides/advanced/**` published through the `github-pages` environment |
+| **Output** | `_site/index.html`, `_site/404.html`, `_site/slides/basics/**`, `_site/slides/advanced/**`, `_site/slides/printable-index.html`, and `_site/slides/shared/portal/**` published through the `github-pages` environment |
 
 #### `marp-action.yml` Behavior
 
@@ -245,8 +245,10 @@ python_programming_courses/
 2. **Build Advanced output** from `Advanced/lessons/slides` into `_site/slides/advanced` using `.marprc.advanced.yml`.
 3. **Remove top-level README artifacts** from generated output so the published module roots expose decks and indexes instead of root README files.
 4. **Verify published HTML exists** for both modules. If a generated module tree is missing usable HTML, the workflow falls back to copying the checked-in standalone slide site from `Basics/lessons/slides` or `Advanced/lessons/slides`.
-5. **Guarantee a GitHub Pages entrypoint**. If no generated root index is present, the workflow either copies `Basics/lessons/slides/index.html` to `_site/index.html` or writes a redirect page to the first safe published slide path it can discover.
-6. **Upload and deploy** the `_site` directory as the Pages artifact, then publish it through a separate deploy job targeting the `github-pages` environment.
+5. **Publish the shared portal foundation**. The workflow copies `slides/shared/portal/**` into the Pages artifact and generates the published manifest at `_site/slides/shared/portal/course-manifest.json`.
+6. **Publish supporting portal pages**. If present, `slides/printable-index.html` is copied to `_site/slides/printable-index.html` and `slides/404.html` is copied to `_site/404.html`.
+7. **Guarantee a GitHub Pages entrypoint**. If `slides/index.html` exists, the workflow copies it to `_site/index.html` as the dedicated root course entrypoint. If no root page exists, the fallback redirect logic still resolves the published site to the first safe slide path it can discover.
+8. **Upload and deploy** the `_site` directory as the Pages artifact, then publish it through a separate deploy job targeting the `github-pages` environment.
 
 #### Maintaining `marp-action.yml`
 
@@ -254,13 +256,15 @@ python_programming_courses/
 
   ```bash
   npx @marp-team/marp-cli -c .marprc.yml --input-dir Basics/lessons/slides --output _site/slides/basics
-  npx @marp-team/marp-cli -c .marprc.advanced.yml --no-config --input-dir Advanced/lessons/slides --output _site/slides/advanced
+  npx @marp-team/marp-cli --config-file .marprc.advanced.yml --input-dir Advanced/lessons/slides --output _site/slides/advanced
   ```
 
-- **Preserve trigger intent carefully.** Changes under `Basics/lessons/lecture/**` and `Advanced/lessons/lecture/**` do **not** currently trigger this workflow. Changes to `.marprc.advanced.yml` also do **not** currently appear in the workflow path filters even though that file is used during the Advanced build step.
+- **Preserve trigger intent carefully.** The workflow now watches the portal source tree plus lecture, assignment, and quiz paths so manifest-backed artifact badges stay current. Changes to `.marprc.advanced.yml` still do **not** currently appear in the workflow path filters even though that file is used during the Advanced build step.
 - **Keep config ownership explicit.** The workflow actively uses `.marprc.yml` for Basics and `.marprc.advanced.yml` for Advanced. A third file, `.marprc.basics.yml`, exists in the repository but is not referenced by the current workflow.
-- **Do not remove the fallback copy logic casually.** The checked-in `Basics/lessons/slides/index.html` currently serves as the most reliable static module landing page and is also part of the fallback story when generated output is incomplete.
-- **Protect the Pages root behavior.** `_site/index.html` is intentionally managed so the published site always resolves to slide content even when Marp does not emit a root landing page.
+- **Do not remove the fallback copy logic casually.** The checked-in `Basics/lessons/slides/index.html` still anchors the Basics module fallback, and `Advanced/lessons/slides/` still anchors the Advanced fallback, when generated output is incomplete.
+- **Protect the Pages root behavior.** `_site/index.html` is intentionally managed by `slides/index.html` first and by the redirect fallback second so the published site always resolves to course content.
+- **Keep supporting pages in the artifact contract.** `slides/printable-index.html` and `slides/404.html` are now first-class publish surfaces; if they exist in source, the workflow and validator are expected to stage them into `_site`.
+- **Regenerate the portal manifest whenever artifact coverage changes.** Use `python scripts/generate_portal_manifest.py` locally; CI regenerates the published manifest against `_site`.
 - **Review the pinned action SHAs and temporary runtime flags together.** The workflow opts JavaScript actions into Node 24 through `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true`, and all referenced third-party actions are SHA-pinned. Update those deliberately rather than ad hoc.
 - **Treat `_site/slides/**` as a defensive trigger path.** `_site/` is build output and should not normally be committed, so edits there should usually prompt a workflow/config review rather than routine content work.
 - **Use the workflow specification for deeper changes.** See [`spec/spec-process-cicd-marp-action.md`](spec/spec-process-cicd-marp-action.md) before changing job flow, permissions, or entrypoint logic.
@@ -300,7 +304,11 @@ This index is intentionally **comprehensive but grouped**. It covers both module
 | Slide day folders | 12 folders | [`Basics/lessons/slides/`](Basics/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
 | Slide Markdown sources | 13 files | `Basics/lessons/slides/**/*.md` | Includes day-based deck sources plus module-level slide docs such as the local README |
 | Standalone slide HTML | 22 files | `Basics/lessons/slides/**/*.html` | Includes `index.html`, day decks, and additional standalone HTML artifacts |
-| Module slide landing page | 1 file | [`Basics/lessons/slides/index.html`](Basics/lessons/slides/index.html) | Current Basics portal/landing page used directly and by workflow fallback logic |
+| Course root landing page | 1 file | [`slides/index.html`](slides/index.html) | Dedicated root portal source copied to `_site/index.html` by the workflow |
+| Supporting portal pages | 2 files | [`slides/printable-index.html`](slides/printable-index.html), [`slides/404.html`](slides/404.html) | Printable course index and custom 404 page staged by the workflow |
+| Shared portal asset kit | 3 files + generator | [`slides/shared/portal/`](slides/shared/portal/) and [`scripts/generate_portal_manifest.py`](scripts/generate_portal_manifest.py) | Shared CSS/JS/manifest foundation for the root dashboard and later module portals |
+| Module slide landing page | 1 file | [`Basics/lessons/slides/index.html`](Basics/lessons/slides/index.html) | Current Basics module landing page used directly and by the module fallback copy |
+| Module slide landing page | 1 file | [`Advanced/lessons/slides/index.html`](Advanced/lessons/slides/index.html) | Current Advanced module landing page used directly and by the module fallback copy |
 | Assignment templates | 12 files | `Basics/assignments/Basics_DayX_homework.ipynb` | Blank day-level learner notebooks |
 | Assignment config directories | 12 folders | `Basics/assignments/Basics_DayX_homework/` | Each contains grading config plus a `submissions/` folder |
 | Quiz HTML files | 12 files | `Basics/quizzes/Basics_DayX_Quiz.html` | Day-based learner quiz UIs |

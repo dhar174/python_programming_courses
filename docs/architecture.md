@@ -33,3 +33,7 @@ Project-specific directory that should be inspected before large changes.
 - Keep third-party AI assets pinned, attributable, and license-checked before vendoring.
 - Use the smallest relevant validation commands before merging automation changes.
 <!-- repo-agent-bootstrap:managed:end -->
+
+## Portal architecture
+
+Epic #419 and issue #420 define the static portal information architecture, manifest contract, and Pages entrypoint rules in [`portal-architecture.md`](portal-architecture.md). Read that document together with [`../spec/spec-process-cicd-marp-action.md`](../spec/spec-process-cicd-marp-action.md) before changing module portals or GitHub Pages root behavior.

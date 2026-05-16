@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Programming Course Portal</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #f7f7f7;
+            color: #111111;
+            line-height: 1.6;
+        }
+
+        .fallback-shell {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 48px;
+        }
+
+        .fallback-panel,
+        .fallback-card {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 20px;
+            box-shadow: 0 16px 40px rgba(17, 17, 17, 0.08);
+        }
+
+        .fallback-panel {
+            padding: 28px;
+        }
+
+        .fallback-grid {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            margin-top: 24px;
+        }
+
+        .fallback-card {
+            padding: 24px;
+        }
+
+        .fallback-card h2,
+        .fallback-panel h1 {
+            margin-top: 0;
+        }
+
+        .fallback-card a,
+        .fallback-panel a {
+            color: #0066ff;
+            font-weight: 700;
+        }
+
+        .fallback-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .fallback-chip-list li {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #e6f0ff;
+            color: #0066ff;
+            font-size: 0.95rem;
+        }
+
+        .fallback-meta {
+            color: #4f5b66;
+            font-size: 0.95rem;
+        }
+    </style>
+    <script>
+        (function () {
+            const repoMarker = "/python_programming_courses/";
+            const pathname = window.location.pathname;
+            const basePath = pathname.includes(repoMarker)
+                ? pathname.slice(0, pathname.indexOf(repoMarker) + repoMarker.length)
+                : "/";
+            window.__PYC_BASE_PATH = basePath;
+            window.__PYC_SOURCE_PREVIEW = pathname.startsWith("/slides/") && !pathname.includes(repoMarker);
+
+            document.addEventListener("DOMContentLoaded", function () {
+                if (!window.__PYC_SOURCE_PREVIEW) {
+                    return;
+                }
+
+                document.querySelectorAll("[data-source-href]").forEach(function (node) {
+                    const sourceHref = node.getAttribute("data-source-href");
+                    if (sourceHref) {
+                        node.setAttribute("href", basePath + sourceHref.replace(/^\/+/, ""));
+                    }
+                });
+            }, { once: true });
+
+            const stylesheet = document.createElement("link");
+            stylesheet.rel = "stylesheet";
+            stylesheet.href = basePath + "slides/shared/portal/portal.css";
+            document.head.appendChild(stylesheet);
+
+            const script = document.createElement("script");
+            script.src = basePath + "slides/shared/portal/portal.js";
+            script.defer = true;
+            document.head.appendChild(script);
+        })();
+    </script>
+</head>
+<body class="portal-page" data-portal-root="course">
+    <a class="portal-skip-link" href="#main-content">Skip to course overview</a>
+    <main id="main-content" class="portal-shell fallback-shell" role="main">
+        <header class="portal-header">
+            <section class="portal-hero fallback-panel" aria-labelledby="portal-title">
+                <span class="portal-kicker">GitHub Pages portal</span>
+                <h1 id="portal-title">Python Programming course portal</h1>
+                <p>
+                    Explore the full 96-hour curriculum across Basics and Advanced.
+                    The root dashboard now connects both module portals, the printable course index, and the repository-backed teaching materials without replacing the live homepage during rollout.
+                </p>
+                <div class="portal-actions">
+                    <a class="portal-button" data-variant="primary" href="./slides/basics/" data-source-href="Basics/lessons/slides/index.html">Open Basics portal</a>
+                    <a class="portal-button" data-variant="secondary" href="./slides/advanced/" data-source-href="Advanced/lessons/slides/index.html">Open Advanced portal</a>
+                    <a class="portal-button" data-variant="secondary" href="./slides/printable-index.html" data-source-href="slides/printable-index.html">Open printable index</a>
+                </div>
+                <div class="portal-stats-grid" aria-label="Course summary">
+                    <div class="portal-stat">
+                        <strong data-course-modules>2</strong>
+                        <span>modules</span>
+                    </div>
+                    <div class="portal-stat">
+                        <strong data-course-days>24</strong>
+                        <span>instruction days</span>
+                    </div>
+                    <div class="portal-stat">
+                        <strong data-course-slides>24</strong>
+                        <span>standalone day decks</span>
+                    </div>
+                    <div class="portal-stat">
+                        <strong data-course-artifacts>72</strong>
+                        <span>lecture, quiz, and assignment artifacts</span>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="portal-toolbar" aria-label="Portal tools">
+                <section class="portal-panel">
+                    <h2>Theme</h2>
+                    <div class="portal-theme-row">
+                        <label for="theme-select">Appearance</label>
+                        <select id="theme-select" data-theme-toggle>
+                            <option value="auto">Auto</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </section>
+                <section class="portal-panel">
+                    <h2>Manifest status</h2>
+                    <p class="portal-note" data-manifest-status>
+                        Manifest-driven summaries will load automatically when the shared portal assets are available.
+                    </p>
+                </section>
+            </aside>
+        </header>
+
+        <section class="portal-section fallback-panel" aria-labelledby="module-section-title">
+            <h2 id="module-section-title">Choose a module</h2>
+            <p>
+                Both module portals now exist on the shared portal system. Start with the Basics or Advanced landing page, then move into day decks, lecture materials, assignments, and quizzes from there.
+            </p>
+            <div class="portal-module-grid fallback-grid">
+                <article class="portal-card fallback-card">
+                    <div class="portal-card-header">
+                        <h2>Basics</h2>
+                        <div class="portal-badge-row">
+                            <span class="portal-badge">PCEP aligned</span>
+                            <span class="portal-badge">48 hours</span>
+                        </div>
+                    </div>
+                    <p>
+                        Start with Python fundamentals, core data structures, file handling, and introductory object-oriented programming.
+                    </p>
+                    <div class="portal-card-meta">
+                        <div class="portal-meta-item">
+                            <strong data-module-days="basics">12</strong>
+                            <span>day decks</span>
+                        </div>
+                        <div class="portal-meta-item">
+                            <strong data-module-slides="basics">12</strong>
+                            <span>slide portals</span>
+                        </div>
+                        <div class="portal-meta-item">
+                            <strong data-module-lectures="basics">12</strong>
+                            <span>lecture sets</span>
+                        </div>
+                        <div class="portal-meta-item">
+                            <strong data-module-assignments="basics">12</strong>
+                            <span>homework notebooks</span>
+                        </div>
+                    </div>
+                    <div class="portal-actions">
+                        <a class="portal-button" data-variant="primary" data-module-link="basics" href="./slides/basics/" data-source-href="Basics/lessons/slides/index.html">Open Basics portal</a>
+                    </div>
+                    <div class="portal-chip-list" data-module-repo-links="basics"></div>
+                </article>
+
+                <article class="portal-card fallback-card">
+                    <div class="portal-card-header">
+                        <h2>Advanced</h2>
+                        <div class="portal-badge-row">
+                            <span class="portal-badge">PCAP aligned</span>
+                            <span class="portal-badge">48 hours</span>
+                        </div>
+                    </div>
+                    <p>
+                        Continue into advanced object-oriented design, databases, APIs, testing, and data-oriented Python workflows.
+                    </p>
+                    <div class="portal-card-meta">
+                        <div class="portal-meta-item">
+                            <strong data-module-days="advanced">12</strong>
+                            <span>day decks</span>
+                        </div>
+                        <div class="portal-meta-item">
+                            <strong data-module-slides="advanced">12</strong>
+                            <span>slide portals</span>
+                        </div>
+                        <div class="portal-meta-item">
+                            <strong data-module-lectures="advanced">12</strong>
+                            <span>lecture sets</span>
+                        </div>
+                        <div class="portal-meta-item">
+                            <strong data-module-quizzes="advanced">12</strong>
+                            <span>quizzes</span>
+                        </div>
+                    </div>
+                    <div class="portal-actions">
+                        <a class="portal-button" data-variant="primary" data-module-link="advanced" href="./slides/advanced/" data-source-href="Advanced/lessons/slides/index.html">Open Advanced portal</a>
+                    </div>
+                    <div class="portal-chip-list" data-module-repo-links="advanced"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="course-docs-title">
+            <h2 id="course-docs-title">Course documents and material categories</h2>
+            <p>
+                Use the module portals for day-by-day navigation, then jump directly into repository-backed teaching materials or overview documents from these quick paths.
+            </p>
+            <div class="portal-module-grid fallback-grid">
+                <article class="portal-card fallback-card">
+                    <h2>Lecture materials</h2>
+                    <p>Browse the instructor-facing lecture scripts that support every four-hour session in both modules.</p>
+                    <div class="portal-chip-list">
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/tree/main/Basics/lessons/lecture">Basics lecture scripts</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/tree/main/Advanced/lessons/lecture">Advanced lecture scripts</a>
+                    </div>
+                </article>
+                <article class="portal-card fallback-card">
+                    <h2>Assignments and quizzes</h2>
+                    <p>Open the notebook assignments and HTML quizzes that align with each module day.</p>
+                    <div class="portal-chip-list">
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/tree/main/Basics/assignments">Basics assignments</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/tree/main/Advanced/assignments">Advanced assignments</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/tree/main/Basics/quizzes">Basics quizzes</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/tree/main/Advanced/quizzes">Advanced quizzes</a>
+                    </div>
+                </article>
+                <article class="portal-card fallback-card">
+                    <h2>Syllabi and overview docs</h2>
+                    <p>Reference the published course overviews and module syllabus documents that frame the full training package.</p>
+                    <div class="portal-chip-list">
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/blob/main/README.md">README</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/blob/main/Basics/python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md">Basics syllabus</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/blob/main/Advanced/python_advanced_48_h_syllabus_12_x_4_h_pcap_path_to_pcpp_1.md">Advanced syllabus</a>
+                        <a class="portal-link-chip" href="https://github.com/dhar174/python_programming_courses/blob/main/Python%20GIT%20Training%20Course%20Package.md">Training package</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="featured-days-title">
+            <h2 id="featured-days-title">Start here</h2>
+            <p>
+                The shared manifest keeps the root experience aligned with the real day ordering so the dashboard, printable index, and module portals all point at the same sequence of decks.
+            </p>
+            <ul class="portal-chip-list fallback-chip-list" data-featured-days>
+                <li><a href="./slides/basics/day-01/day-01-session-1.html" data-source-href="Basics/lessons/slides/day-01/day-01-session-1.html">Basics · Day 1</a></li>
+                <li><a href="./slides/basics/day-02/day-02-session-2.html" data-source-href="Basics/lessons/slides/day-02/day-02-session-2.html">Basics · Day 2</a></li>
+                <li><a href="./slides/advanced/day-01/day-01-session-1.html" data-source-href="Advanced/lessons/slides/day-01/day-01-session-1.html">Advanced · Day 1</a></li>
+            </ul>
+        </section>
+
+        <footer class="portal-footer">
+            <p>
+                Shared portal assets live under <code>slides/shared/portal/</code>. The root page is intentionally static-first so it remains readable even if JavaScript enhancements are unavailable, and the printable index lives at <a href="./slides/printable-index.html" data-source-href="slides/printable-index.html">/slides/printable-index.html</a>.
+            </p>
+        </footer>
+    </main>
+</body>
+</html>

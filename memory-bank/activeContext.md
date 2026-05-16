@@ -45,3 +45,13 @@ The repository is now in a maintenance state. All lecture scripts, slides, and C
 3. Update `README.md` badges/links if the Pages URL is confirmed working.
 <!-- repo-agent-bootstrap:managed:end -->
 
+## Portal architecture update
+
+- [2026-05-16] Issue #420 architecture contract added in `docs/portal-architecture.md`.
+- Root ownership is now specified to move to `slides/index.html` in #421 before the Basics portal rebuild in #422.
+- Shared portal assets and the canonical manifest path are reserved as `slides/shared/portal/**`.
+- [2026-05-16] Issue #421 shared portal foundation implemented in the working tree: `slides/index.html` now owns the course root, shared portal CSS/JS live under `slides/shared/portal/`, and publish validation is codified in `scripts/check_portal_publish.py`.
+- [2026-05-16] Issue #422 Basics portal rebuild is now implemented in the working tree. `Basics/lessons/slides/index.html` is a static-first module portal with root breadcrumbs, theme controls, preserved day descriptions, static relative deck links, and manifest-enhanced repository artifact chips.
+- [2026-05-16] Issue #423 Advanced portal is now implemented in the working tree. `Advanced/lessons/slides/index.html` now exists as the Advanced module landing page, and the Basics portal now routes its "Continue to Advanced" CTA to the new module page.
+- [2026-05-16] Issue #424 root dashboard/supporting pages are now implemented in the working tree. `slides/index.html` reflects both live module portals, `slides/printable-index.html` provides the approved full-course deck index, and `slides/404.html` provides the approved recovery page.
+- [2026-05-16] Current active portal objective: finish issue #425 by aligning docs and remaining workflow/QA notes with the now-complete root + module portal surfaces.

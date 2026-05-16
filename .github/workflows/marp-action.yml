@@ -8,6 +8,14 @@ on:
       - "Advanced/lessons/slides/day-*/**"
       - "Basics/lessons/slides/**"
       - "Advanced/lessons/slides/**"
+      - "Basics/lessons/lecture/**"
+      - "Advanced/lessons/lecture/**"
+      - "Basics/assignments/**"
+      - "Advanced/assignments/**"
+      - "Basics/quizzes/**"
+      - "Advanced/quizzes/**"
+      - "slides/**"
+      - "scripts/generate_portal_manifest.py"
       - ".marprc.yml"
       - ".github/workflows/marp-action.yml"
       - "_site/slides/**"
@@ -151,6 +159,38 @@ jobs:
             fi
           fi
 
+          mkdir -p _site/slides/shared/portal
+          if [ -d slides/shared/portal ]; then
+            cp -R slides/shared/portal/. _site/slides/shared/portal
+          fi
+
+          if [ -f Basics/lessons/slides/index.html ]; then
+            mkdir -p _site/slides/basics
+            cp Basics/lessons/slides/index.html _site/slides/basics/index.html
+          fi
+
+          if [ -f Advanced/lessons/slides/index.html ]; then
+            mkdir -p _site/slides/advanced
+            cp Advanced/lessons/slides/index.html _site/slides/advanced/index.html
+          fi
+
+          python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json
+
+          if [ -f slides/index.html ]; then
+            cp slides/index.html _site/index.html
+            FOUND_INDEX=1
+            echo "Copied slides/index.html as the root course entrypoint."
+          fi
+
+          if [ -f slides/printable-index.html ]; then
+            mkdir -p _site/slides
+            cp slides/printable-index.html _site/slides/printable-index.html
+          fi
+
+          if [ -f slides/404.html ]; then
+            cp slides/404.html _site/404.html
+          fi
+
           # mkdir -p _site/slides
           # mkdir -p _site/slides/advanced
           if [ "${FOUND_INDEX:-0}" -eq 0 ]; then
@@ -211,7 +251,10 @@ jobs:
           else
             echo "Using generated _site/index.html."
           fi
-        
+
+      - name: Validate portal publish contract
+        run: python scripts/check_portal_publish.py --repo-root . --site-root _site
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
