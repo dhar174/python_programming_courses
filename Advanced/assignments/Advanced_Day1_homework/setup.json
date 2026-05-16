@@ -1,0 +1,11 @@
+{
+  "file_checks": [
+    "submissions/*Advanced_Day1*.ipynb"
+  ],
+  "commands": [
+    "python -m pip install --quiet --upgrade pip",
+    "python -m pip install nbconvert",
+    "set --; sample_nb=''; for nb in submissions/*Advanced_Day1*.ipynb; do [ \"$nb\" = 'submissions/*Advanced_Day1*.ipynb' ] && continue; if [ \"$nb\" = 'submissions/Advanced_Day1_homework_test_filled.ipynb' ]; then sample_nb=\"$nb\"; continue; fi; set -- \"$@\" \"$nb\"; done; if [ \"$#\" -eq 0 ] && [ -n \"$sample_nb\" ]; then set -- \"$sample_nb\"; fi; if [ \"$#\" -eq 0 ]; then echo 'ERROR: No matching Day 1 notebook found; add exactly one non-sample submission or keep the bundled sample notebook for fallback grading'; exit 1; fi; if [ \"$#\" -ne 1 ]; then echo 'ERROR: Multiple matching Day 1 notebooks found'; exit 1; fi; jupyter nbconvert --to script \"$1\" --output advanced_day1 --output-dir .",
+    "if [ ! -f advanced_day1.py ]; then echo 'ERROR: Notebook conversion failed - advanced_day1.py not found'; exit 1; fi"
+  ]
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printable Course Index</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #f7f7f7;
+            color: #111111;
+            line-height: 1.6;
+        }
+
+        .fallback-shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 48px;
+        }
+
+        .fallback-panel,
+        .fallback-card {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 20px;
+            box-shadow: 0 16px 40px rgba(17, 17, 17, 0.08);
+        }
+
+        .fallback-panel {
+            padding: 24px;
+        }
+
+        .fallback-grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .fallback-card {
+            padding: 20px;
+        }
+
+        .fallback-card h3,
+        .fallback-panel h1,
+        .fallback-panel h2 {
+            margin-top: 0;
+        }
+
+        .fallback-card a,
+        .fallback-panel a {
+            color: #0066ff;
+            font-weight: 700;
+        }
+    </style>
+    <script>
+        (function () {
+            const pathname = window.location.pathname;
+            const isSourcePreview = pathname.startsWith("/slides/");
+
+            function computeBasePath(siteRelativePath) {
+                const normalizedSitePath = siteRelativePath.replace(/^\/+/, "");
+                const suffix = `/${normalizedSitePath}`;
+                if (pathname === suffix) {
+                    return "/";
+                }
+                if (pathname.endsWith(suffix)) {
+                    return pathname.slice(0, -normalizedSitePath.length);
+                }
+                if (pathname.endsWith(normalizedSitePath)) {
+                    const base = pathname.slice(0, -normalizedSitePath.length);
+                    return base || "/";
+                }
+                return "/";
+            }
+
+            const basePath = isSourcePreview ? "/" : computeBasePath("slides/printable-index.html");
+            window.__PYC_BASE_PATH = basePath;
+            window.__PYC_SOURCE_PREVIEW = isSourcePreview;
+
+            document.addEventListener("DOMContentLoaded", function () {
+                if (!window.__PYC_SOURCE_PREVIEW) {
+                    return;
+                }
+
+                document.querySelectorAll("[data-source-href]").forEach(function (node) {
+                    const sourceHref = node.getAttribute("data-source-href");
+                    if (sourceHref) {
+                        node.setAttribute("href", basePath + sourceHref.replace(/^\/+/, ""));
+                    }
+                });
+            }, { once: true });
+
+            const stylesheet = document.createElement("link");
+            stylesheet.rel = "stylesheet";
+            stylesheet.href = basePath + "slides/shared/portal/portal.css";
+            document.head.appendChild(stylesheet);
+
+            const script = document.createElement("script");
+            script.src = basePath + "slides/shared/portal/portal.js";
+            script.defer = true;
+            document.head.appendChild(script);
+        })();
+    </script>
+</head>
+<body class="portal-page">
+    <a class="portal-skip-link" href="#main-content">Skip to printable index</a>
+    <main id="main-content" class="portal-shell fallback-shell" role="main">
+        <nav class="portal-breadcrumbs fallback-panel" aria-label="Breadcrumb">
+            <a href="../index.html" data-source-href="slides/index.html">Course portal</a>
+            <span class="portal-breadcrumb-separator" aria-hidden="true">/</span>
+            <span>Printable index</span>
+        </nav>
+
+        <header class="portal-section fallback-panel" aria-labelledby="printable-index-title">
+            <span class="portal-kicker">Supporting page</span>
+            <h1 id="printable-index-title">Printable full-course index</h1>
+            <p>
+                This page collects the day-deck entrypoints for both modules in one printable-friendly overview. Use the module portals for richer artifact links and theme-aware browsing.
+            </p>
+            <div class="portal-actions">
+                <a class="portal-button" data-variant="primary" href="../index.html" data-source-href="slides/index.html">Back to course portal</a>
+                <a class="portal-button" data-variant="secondary" href="./basics/" data-source-href="Basics/lessons/slides/index.html">Open Basics portal</a>
+                <a class="portal-button" data-variant="secondary" href="./advanced/" data-source-href="Advanced/lessons/slides/index.html">Open Advanced portal</a>
+            </div>
+        </header>
+
+        <section class="portal-section fallback-panel" aria-labelledby="printable-notes-title">
+            <h2 id="printable-notes-title">Reference notes</h2>
+            <div class="portal-badge-row">
+                <span class="portal-badge">24 day decks</span>
+                <span class="portal-badge">2 module portals</span>
+                <span class="portal-badge">Static-first layout</span>
+            </div>
+            <p class="portal-note">
+                For lecture scripts, assignments, quizzes, and syllabus documents, use the root dashboard or the individual module portals. This page is optimized for a compact full-course deck index.
+            </p>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="basics-printable-title">
+            <div class="portal-card-header">
+                <h2 id="basics-printable-title">Basics module index</h2>
+                <a class="portal-link-chip" href="./basics/" data-source-href="Basics/lessons/slides/index.html">Basics portal</a>
+            </div>
+            <div class="portal-day-grid fallback-grid">
+                <article class="portal-card fallback-card"><h3>Basics Day 1</h3><p><a href="./basics/day-01/day-01-session-1.html" data-source-href="Basics/lessons/slides/day-01/day-01-session-1.html">Day 1 deck</a><br>Environment setup, print(), variables, and operators</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 2</h3><p><a href="./basics/day-02/day-02-session-2.html" data-source-href="Basics/lessons/slides/day-02/day-02-session-2.html">Day 2 deck</a><br>Strings, input/output, type conversion, and Checkpoint 1</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 3</h3><p><a href="./basics/day-03/day-03-session-3.html" data-source-href="Basics/lessons/slides/day-03/day-03-session-3.html">Day 3 deck</a><br>Comparisons, boolean logic, f-strings, and debugging habits</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 4</h3><p><a href="./basics/day-04/day-04-session-4.html" data-source-href="Basics/lessons/slides/day-04/day-04-session-4.html">Day 4 deck</a><br>Lists, looping, nested lists, and Checkpoint 2</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 5</h3><p><a href="./basics/day-05/day-05-session-5.html" data-source-href="Basics/lessons/slides/day-05/day-05-session-5.html">Day 5 deck</a><br>Tuples, immutability, packing/unpacking, and list trade-offs</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 6</h3><p><a href="./basics/day-06/day-06-session-6.html" data-source-href="Basics/lessons/slides/day-06/day-06-session-6.html">Day 6 deck</a><br>Sets, dictionaries, comprehensions, and Checkpoint 3</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 7</h3><p><a href="./basics/day-07/day-07-session-7.html" data-source-href="Basics/lessons/slides/day-07/day-07-session-7.html">Day 7 deck</a><br>Conditionals, boolean operators, and match/case</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 8</h3><p><a href="./basics/day-08/day-08-session-8.html" data-source-href="Basics/lessons/slides/day-08/day-08-session-8.html">Day 8 deck</a><br>Loops, input validation, and a CLI mini-project</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 9</h3><p><a href="./basics/day-09/day-09-session-9.html" data-source-href="Basics/lessons/slides/day-09/day-09-session-9.html">Day 9 deck</a><br>Functions, scope, collections in functions, and modules</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 10</h3><p><a href="./basics/day-10/day-10-session-10.html" data-source-href="Basics/lessons/slides/day-10/day-10-session-10.html">Day 10 deck</a><br>Classes, attributes, methods, inheritance, and Checkpoint 4</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 11</h3><p><a href="./basics/day-11/day-11-session-11.html" data-source-href="Basics/lessons/slides/day-11/day-11-session-11.html">Day 11 deck</a><br>File I/O, try/except, and error management</p></article>
+                <article class="portal-card fallback-card"><h3>Basics Day 12</h3><p><a href="./basics/day-12/day-12-session-12.html" data-source-href="Basics/lessons/slides/day-12/day-12-session-12.html">Day 12 deck</a><br>Capstone project, final review, PCEP prep, and wrap-up</p></article>
+            </div>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="advanced-printable-title">
+            <div class="portal-card-header">
+                <h2 id="advanced-printable-title">Advanced module index</h2>
+                <a class="portal-link-chip" href="./advanced/" data-source-href="Advanced/lessons/slides/index.html">Advanced portal</a>
+            </div>
+            <div class="portal-day-grid fallback-grid">
+                <article class="portal-card fallback-card"><h3>Advanced Day 1</h3><p><a href="./advanced/day-01/day-01-session-1.html" data-source-href="Advanced/lessons/slides/day-01/day-01-session-1.html">Day 1 deck</a><br>Kickoff, class design, invariants, exceptions, and polymorphism</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 2</h3><p><a href="./advanced/day-02/day-02-session-2.html" data-source-href="Advanced/lessons/slides/day-02/day-02-session-2.html">Day 2 deck</a><br>Factory and Strategy patterns, ergonomics, and Checkpoint 1</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 3</h3><p><a href="./advanced/day-03/day-03-session-3.html" data-source-href="Advanced/lessons/slides/day-03/day-03-session-3.html">Day 3 deck</a><br>Project structure, logging, context managers, and decorators</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 4</h3><p><a href="./advanced/day-04/day-04-session-4.html" data-source-href="Advanced/lessons/slides/day-04/day-04-session-4.html">Day 4 deck</a><br>HTTP clients, security basics, capstone planning, and Checkpoint 2</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 5</h3><p><a href="./advanced/day-05/day-05-session-5.html" data-source-href="Advanced/lessons/slides/day-05/day-05-session-5.html">Day 5 deck</a><br>GUI fundamentals, layout, forms, and list interfaces</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 6</h3><p><a href="./advanced/day-06/day-06-session-6.html" data-source-href="Advanced/lessons/slides/day-06/day-06-session-6.html">Day 6 deck</a><br>GUI CRUD workflows, architecture, polish, and Checkpoint 3</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 7</h3><p><a href="./advanced/day-07/day-07-session-7.html" data-source-href="Advanced/lessons/slides/day-07/day-07-session-7.html">Day 7 deck</a><br>Schema thinking, sqlite CRUD, row mapping, and transactions</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 8</h3><p><a href="./advanced/day-08/day-08-session-8.html" data-source-href="Advanced/lessons/slides/day-08/day-08-session-8.html">Day 8 deck</a><br>ORM/deeper SQL, DB integration, search, pagination, and Checkpoint 4</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 9</h3><p><a href="./advanced/day-09/day-09-session-9.html" data-source-href="Advanced/lessons/slides/day-09/day-09-session-9.html">Day 9 deck</a><br>REST fundamentals, CRUD endpoints, validation, and app structure</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 10</h3><p><a href="./advanced/day-10/day-10-session-10.html" data-source-href="Advanced/lessons/slides/day-10/day-10-session-10.html">Day 10 deck</a><br>API security, Python clients, integration choices, and Checkpoint 5</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 11</h3><p><a href="./advanced/day-11/day-11-session-11.html" data-source-href="Advanced/lessons/slides/day-11/day-11-session-11.html">Day 11 deck</a><br>Pandas, matplotlib, regression, and analytics integration</p></article>
+                <article class="portal-card fallback-card"><h3>Advanced Day 12</h3><p><a href="./advanced/day-12/day-12-session-12.html" data-source-href="Advanced/lessons/slides/day-12/day-12-session-12.html">Day 12 deck</a><br>pytest, coverage, packaging, final demo, and review</p></article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

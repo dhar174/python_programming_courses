@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Advanced - Day 5 Quiz</title>
+  <style>
+    :root { color-scheme: dark; --bg:#111827; --surface:#1f2937; --surface-hi:#253245; --border:#374151; --text:#f3f4f6; --muted:#cbd5e1; --blue:#60a5fa; --gold:#fbbf24; --ok:#34d399; --radius:18px; --space:16px; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,sans-serif; background:radial-gradient(circle at top left, rgba(96,165,250,.18), transparent 28%), radial-gradient(circle at top right, rgba(251,191,36,.16), transparent 24%), var(--bg); color:var(--text); line-height:1.6; }
+    .container { max-width:980px; margin:0 auto; padding:32px 16px 80px; }
+    .panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 12px 30px rgba(0,0,0,.35); }
+    .hero,.question-card,.action-card { padding:24px; }
+    .hero { margin-bottom:24px; border-top:5px solid var(--gold); }
+    .question-card { margin-bottom:16px; }
+    .action-card { margin-top:24px; }
+    h1 { margin:0 0 8px; color:var(--gold); }
+    h2 { margin:24px 0 8px; color:var(--blue); font-size:.85rem; text-transform:uppercase; letter-spacing:.1em; }
+    .meta,.compat-note,.progress-label,#status { color:var(--muted); }
+    .meta { display:inline-block; margin-top:16px; padding:6px 12px; border:1px solid var(--border); border-radius:999px; background:var(--surface-hi); }
+    .compat-note { margin-top:16px; padding:16px; border:1px solid rgba(96,165,250,.35); border-radius:12px; background:rgba(96,165,250,.12); }
+    .progress-wrap { display:flex; align-items:center; gap:16px; margin-top:24px; }
+    .progress-track { flex:1; height:10px; background:var(--border); border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--blue),var(--gold)); }
+    .question-number { color:var(--blue); font-weight:700; margin-bottom:8px; }
+    .question-prompt { margin-bottom:16px; white-space:pre-wrap; }
+    .option-row { display:block; margin-bottom:10px; padding:12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-hi); cursor:pointer; }
+    .option-row:hover { border-color:var(--blue); }
+    .option-row input { margin-right:10px; }
+    .option-row.is-checked { border-color:var(--gold); }
+    .explanation { display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.35); }
+    .explanation.is-visible { display:block; }
+    .button-row { display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; }
+    button { border:none; border-radius:999px; padding:12px 18px; font-weight:700; cursor:pointer; }
+    .primary { background:linear-gradient(90deg,var(--blue),#2563eb); color:#fff; }
+    .secondary { background:linear-gradient(90deg,var(--gold),#d97706); color:#111827; }
+    .ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="panel hero">
+      <h1>Python Advanced - Day 5 Quiz</h1>
+      <p>Certification-style checkpoint quiz aligned to the homework notebook and instructor runbook.</p>
+      <div class="meta">Total Questions: 20 | Time Estimate: 30-45 minutes</div>
+      <h2>Topics Covered</h2>
+      <ul><li>GUI fundamentals (Tkinter or ttk): event loop, widgets, callbacks</li><li>Layout and usability: grid, pack, spacing, resizing</li><li>Forms, validation, and user feedback patterns</li><li>Record list UI with Listbox or Treeview and selection events</li></ul>
+      <p class="compat-note">Use <strong>Save or Export Answers (JSON)</strong> to download a file with <code>student_answers</code>, <code>expected_answers</code>, and <code>criteria_like_tests</code>.</p>
+      <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><span class="progress-label" id="progressLabel">0 / 20</span></div>
+      <p id="status">Choose answers as you go. Progress saves in this browser.</p>
+    </section>
+    <main id="quizContainer"></main>
+    <section class="panel action-card"><h2>Actions</h2><div class="button-row"><button class="primary" id="showAnswersBtn" type="button" aria-label="Show correct answers and explanations for the quiz">Show Explanations</button><button class="secondary" id="exportBtn" type="button" aria-label="Save or export your quiz answers as a JSON file">Save or Export Answers (JSON)</button><button class="ghost" id="resetBtn" type="button" aria-label="Reset and clear all selected quiz answers">Reset Answers</button></div></section>
+  </div>
+  <script>
+    const QUIZ_DATA = {
+  "quizId": "Advanced_Day5_Quiz",
+  "title": "Python Advanced - Day 5 Quiz",
+  "questions": [
+    {
+      "number": 1,
+      "prompt": "Hour 17: Which topic is the main focus of this section of Day 5?",
+      "options": {
+        "A": "GUI fundamentals (Tkinter or ttk): event loop, widgets, callbacks",
+        "B": "Layout and usability: grid, pack, spacing, resizing",
+        "C": "Forms, validation, and user feedback patterns",
+        "D": "Record list UI with Listbox or Treeview and selection events"
+      },
+      "explanation": "Hour 17 in the runbook centers on gui fundamentals (tkinter or ttk): event loop, widgets, callbacks."
+    },
+    {
+      "number": 2,
+      "prompt": "Which labeled output line belongs to the Hour 17 canonical contract?",
+      "options": {
+        "A": "Hour 17 | root window: tracker app",
+        "B": "Hour 18 | layout manager: grid",
+        "C": "Hour 19 | field read: title entry",
+        "D": "Hour 20 | list widget: treeview"
+      },
+      "explanation": "The canonical contract for Hour 17 includes the line `Hour 17 | root window: tracker app`."
+    },
+    {
+      "number": 3,
+      "prompt": "Which practice best matches the work for Hour 17?",
+      "options": {
+        "A": "Create widgets clearly and wire callbacks to small handler functions.",
+        "B": "Choose one layout strategy per container and test resizing early.",
+        "C": "Validate user input near the form boundary and show friendly feedback.",
+        "D": "Bind selection events to stable record ids rather than row positions."
+      },
+      "explanation": "The best practice for Hour 17 is: Create widgets clearly and wire callbacks to small handler functions."
+    },
+    {
+      "number": 4,
+      "prompt": "Which mistake would most likely hurt the Hour 17 deliverable?",
+      "options": {
+        "A": "Burying business rules directly in callbacks makes the GUI brittle.",
+        "B": "Mixing pack and grid in the same container causes layout bugs.",
+        "C": "Failing silently after bad input leaves users stuck.",
+        "D": "Using display order as identity makes updates and deletes unsafe."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 17 is: Burying business rules directly in callbacks makes the GUI brittle."
+    },
+    {
+      "number": 5,
+      "prompt": "What should learners be able to show by the end of Hour 17?",
+      "options": {
+        "A": "a simple Tkinter window with one working action",
+        "B": "a form layout that stays readable when the window changes size",
+        "C": "a validated form that reports success and error states clearly",
+        "D": "a list-based record browser with reliable selection handling"
+      },
+      "explanation": "The expected deliverable for Hour 17 is a simple Tkinter window with one working action."
+    },
+    {
+      "number": 6,
+      "prompt": "Hour 18: Which topic is the main focus of this section of Day 5?",
+      "options": {
+        "A": "Layout and usability: grid, pack, spacing, resizing",
+        "B": "GUI fundamentals (Tkinter or ttk): event loop, widgets, callbacks",
+        "C": "Forms, validation, and user feedback patterns",
+        "D": "Record list UI with Listbox or Treeview and selection events"
+      },
+      "explanation": "Hour 18 in the runbook centers on layout and usability: grid, pack, spacing, resizing."
+    },
+    {
+      "number": 7,
+      "prompt": "Which labeled output line belongs to the Hour 18 canonical contract?",
+      "options": {
+        "A": "Hour 18 | layout manager: grid",
+        "B": "Hour 17 | root window: tracker app",
+        "C": "Hour 19 | field read: title entry",
+        "D": "Hour 20 | list widget: treeview"
+      },
+      "explanation": "The canonical contract for Hour 18 includes the line `Hour 18 | layout manager: grid`."
+    },
+    {
+      "number": 8,
+      "prompt": "Which practice best matches the work for Hour 18?",
+      "options": {
+        "A": "Choose one layout strategy per container and test resizing early.",
+        "B": "Create widgets clearly and wire callbacks to small handler functions.",
+        "C": "Validate user input near the form boundary and show friendly feedback.",
+        "D": "Bind selection events to stable record ids rather than row positions."
+      },
+      "explanation": "The best practice for Hour 18 is: Choose one layout strategy per container and test resizing early."
+    },
+    {
+      "number": 9,
+      "prompt": "Which mistake would most likely hurt the Hour 18 deliverable?",
+      "options": {
+        "A": "Mixing pack and grid in the same container causes layout bugs.",
+        "B": "Burying business rules directly in callbacks makes the GUI brittle.",
+        "C": "Failing silently after bad input leaves users stuck.",
+        "D": "Using display order as identity makes updates and deletes unsafe."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 18 is: Mixing pack and grid in the same container causes layout bugs."
+    },
+    {
+      "number": 10,
+      "prompt": "What should learners be able to show by the end of Hour 18?",
+      "options": {
+        "A": "a form layout that stays readable when the window changes size",
+        "B": "a simple Tkinter window with one working action",
+        "C": "a validated form that reports success and error states clearly",
+        "D": "a list-based record browser with reliable selection handling"
+      },
+      "explanation": "The expected deliverable for Hour 18 is a form layout that stays readable when the window changes size."
+    },
+    {
+      "number": 11,
+      "prompt": "Hour 19: Which topic is the main focus of this section of Day 5?",
+      "options": {
+        "A": "Forms, validation, and user feedback patterns",
+        "B": "GUI fundamentals (Tkinter or ttk): event loop, widgets, callbacks",
+        "C": "Layout and usability: grid, pack, spacing, resizing",
+        "D": "Record list UI with Listbox or Treeview and selection events"
+      },
+      "explanation": "Hour 19 in the runbook centers on forms, validation, and user feedback patterns."
+    },
+    {
+      "number": 12,
+      "prompt": "Which labeled output line belongs to the Hour 19 canonical contract?",
+      "options": {
+        "A": "Hour 19 | field read: title entry",
+        "B": "Hour 17 | root window: tracker app",
+        "C": "Hour 18 | layout manager: grid",
+        "D": "Hour 20 | list widget: treeview"
+      },
+      "explanation": "The canonical contract for Hour 19 includes the line `Hour 19 | field read: title entry`."
+    },
+    {
+      "number": 13,
+      "prompt": "Which practice best matches the work for Hour 19?",
+      "options": {
+        "A": "Validate user input near the form boundary and show friendly feedback.",
+        "B": "Create widgets clearly and wire callbacks to small handler functions.",
+        "C": "Choose one layout strategy per container and test resizing early.",
+        "D": "Bind selection events to stable record ids rather than row positions."
+      },
+      "explanation": "The best practice for Hour 19 is: Validate user input near the form boundary and show friendly feedback."
+    },
+    {
+      "number": 14,
+      "prompt": "Which mistake would most likely hurt the Hour 19 deliverable?",
+      "options": {
+        "A": "Failing silently after bad input leaves users stuck.",
+        "B": "Burying business rules directly in callbacks makes the GUI brittle.",
+        "C": "Mixing pack and grid in the same container causes layout bugs.",
+        "D": "Using display order as identity makes updates and deletes unsafe."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 19 is: Failing silently after bad input leaves users stuck."
+    },
+    {
+      "number": 15,
+      "prompt": "What should learners be able to show by the end of Hour 19?",
+      "options": {
+        "A": "a validated form that reports success and error states clearly",
+        "B": "a simple Tkinter window with one working action",
+        "C": "a form layout that stays readable when the window changes size",
+        "D": "a list-based record browser with reliable selection handling"
+      },
+      "explanation": "The expected deliverable for Hour 19 is a validated form that reports success and error states clearly."
+    },
+    {
+      "number": 16,
+      "prompt": "Hour 20: Which topic is the main focus of this section of Day 5?",
+      "options": {
+        "A": "Record list UI with Listbox or Treeview and selection events",
+        "B": "GUI fundamentals (Tkinter or ttk): event loop, widgets, callbacks",
+        "C": "Layout and usability: grid, pack, spacing, resizing",
+        "D": "Forms, validation, and user feedback patterns"
+      },
+      "explanation": "Hour 20 in the runbook centers on record list ui with listbox or treeview and selection events."
+    },
+    {
+      "number": 17,
+      "prompt": "Which labeled output line belongs to the Hour 20 canonical contract?",
+      "options": {
+        "A": "Hour 20 | list widget: treeview",
+        "B": "Hour 17 | root window: tracker app",
+        "C": "Hour 18 | layout manager: grid",
+        "D": "Hour 19 | field read: title entry"
+      },
+      "explanation": "The canonical contract for Hour 20 includes the line `Hour 20 | list widget: treeview`."
+    },
+    {
+      "number": 18,
+      "prompt": "Which practice best matches the work for Hour 20?",
+      "options": {
+        "A": "Bind selection events to stable record ids rather than row positions.",
+        "B": "Create widgets clearly and wire callbacks to small handler functions.",
+        "C": "Choose one layout strategy per container and test resizing early.",
+        "D": "Validate user input near the form boundary and show friendly feedback."
+      },
+      "explanation": "The best practice for Hour 20 is: Bind selection events to stable record ids rather than row positions."
+    },
+    {
+      "number": 19,
+      "prompt": "Which mistake would most likely hurt the Hour 20 deliverable?",
+      "options": {
+        "A": "Using display order as identity makes updates and deletes unsafe.",
+        "B": "Burying business rules directly in callbacks makes the GUI brittle.",
+        "C": "Mixing pack and grid in the same container causes layout bugs.",
+        "D": "Failing silently after bad input leaves users stuck."
+      },
+      "explanation": "The runbook-aligned pitfall for Hour 20 is: Using display order as identity makes updates and deletes unsafe."
+    },
+    {
+      "number": 20,
+      "prompt": "What should learners be able to show by the end of Hour 20?",
+      "options": {
+        "A": "a list-based record browser with reliable selection handling",
+        "B": "a simple Tkinter window with one working action",
+        "C": "a form layout that stays readable when the window changes size",
+        "D": "a validated form that reports success and error states clearly"
+      },
+      "explanation": "The expected deliverable for Hour 20 is a list-based record browser with reliable selection handling."
+    }
+  ],
+  "expectedAnswers": {
+    "1": "A",
+    "2": "B",
+    "3": "C",
+    "4": "D",
+    "5": "A",
+    "6": "B",
+    "7": "C",
+    "8": "D",
+    "9": "A",
+    "10": "B",
+    "11": "C",
+    "12": "D",
+    "13": "A",
+    "14": "B",
+    "15": "C",
+    "16": "D",
+    "17": "A",
+    "18": "B",
+    "19": "C",
+    "20": "D"
+  }
+};
+    function escapeHtml(str) {
+      if (str === null || str === undefined) {
+        return '';
+      }
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    function formatPrompt(text) {
+      if (text === null || text === undefined) {
+        return '';
+      }
+      // First escape any HTML special characters
+      let escaped = escapeHtml(String(text));
+      // Fenced code blocks: ```code```
+      escaped = escaped.replace(/```([\s\S]*?)```/g, function (_, code) {
+        return '<pre><code>' + code + '</code></pre>';
+      });
+      // Inline code: `code`
+      escaped = escaped.replace(/`([^`]+)`/g, function (_, code) {
+        return '<code>' + code + '</code>';
+      });
+      // Preserve line breaks for normal text
+      return escaped.replace(/\r\n|\r|\n/g, '<br>');
+    }
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
+    function loadSavedAnswers() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch (error) { return {}; } }
+    function saveAnswers(answers) { const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number))); const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key))); localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered)); const count = Object.keys(filtered).length; const total = QUIZ_DATA.questions.length; document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`; document.getElementById('progressFill').style.width = `${total ? Math.round((count / total) * 100) : 0}%`; document.getElementById('progressLabel').textContent = `${count} / ${total}`; }
+    function renderQuiz() {
+      const saved = loadSavedAnswers();
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = QUIZ_DATA.questions
+        .map((question) => {
+          const promptHtml = formatPrompt(question.prompt);
+          const optionsHtml = Object.entries(question.options)
+            .map(([key, value]) => {
+              const valueHtml = formatPrompt(value);
+              return `<label class="option-row ${saved[String(question.number)] === key ? 'is-checked' : ''}"><input type="radio" name="q${question.number}" value="${key}" ${saved[String(question.number)] === key ? 'checked' : ''} /><strong>${key}.</strong> ${valueHtml}</label>`;
+            })
+            .join('');
+          const explanationHtml = formatPrompt(question.explanation || '');
+          return `<section class="panel question-card"><div class="question-number">Question ${question.number}</div><div class="question-prompt">${promptHtml}</div><div>${optionsHtml}</div><div class="explanation" id="explanation-${question.number}">${explanationHtml}</div></section>`;
+        })
+        .join('');
+      container.querySelectorAll('input[type="radio"]').forEach((input) => {
+        input.addEventListener('change', (event) => {
+          const target = event.target;
+          const formName = target.name;
+          const answers = loadSavedAnswers();
+          answers[formName.replace('q', '')] = target.value;
+          saveAnswers(answers);
+          document.querySelectorAll(`input[name="${formName}"]`).forEach((peer) =>
+            peer.closest('.option-row').classList.toggle('is-checked', peer.checked)
+          );
+        });
+      });
+      saveAnswers(saved);
+    }
+    function exportAnswers() { const studentAnswers = loadSavedAnswers(); const criteriaLikeTests = QUIZ_DATA.questions.map((question) => { const qid = String(question.number); const expected = QUIZ_DATA.expectedAnswers[qid] || null; const student = studentAnswers[qid] || null; return { name:`Question ${qid}`, points:1, expected_stdout:[expected], student_stdout:[student], pass: expected !== null && student === expected }; }); const payload = { quiz_id: QUIZ_DATA.quizId, title: QUIZ_DATA.title, exported_at: new Date().toISOString(), student_answers: studentAnswers, expected_answers: QUIZ_DATA.expectedAnswers, criteria_like_tests: criteriaLikeTests, autograder_notes:'Map each question to quiz checks in the existing autograder workflow.' }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `${QUIZ_DATA.quizId}_answers.json`; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(link.href); }
+    function showExplanations() { document.querySelectorAll('.explanation').forEach((item) => item.classList.add('is-visible')); document.getElementById('status').textContent = 'Explanations are now visible below each question.'; }
+    function resetAnswers() { localStorage.removeItem(STORAGE_KEY); renderQuiz(); document.querySelectorAll('.explanation').forEach((item) => item.classList.remove('is-visible')); document.getElementById('status').textContent = 'Answers reset for this browser.'; }
+    document.getElementById('exportBtn').addEventListener('click', exportAnswers); document.getElementById('showAnswersBtn').addEventListener('click', showExplanations); document.getElementById('resetBtn').addEventListener('click', resetAnswers); renderQuiz();
+  </script>
+</body>
+</html>
