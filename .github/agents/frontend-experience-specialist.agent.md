@@ -1,7 +1,6 @@
 ---
 name: "Frontend Experience Specialist"
 description: "Owns the cohesive web experience for the Python course site — Marp slide decks, standalone HTML lessons, themes, homework notebooks, quizzes, grading submission, navigation, and the GitHub Pages portal — with a strict accessibility, performance, and zero-CDN contract."
-target: "github-copilot"
 tools: ["*"]
 disable-model-invocation: false
 user-invocable: true
