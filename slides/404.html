@@ -29,13 +29,49 @@
     </style>
     <script>
         (function () {
-            const repoMarker = "/python_programming_courses/";
             const pathname = window.location.pathname;
-            const basePath = pathname.includes(repoMarker)
-                ? pathname.slice(0, pathname.indexOf(repoMarker) + repoMarker.length)
-                : "/";
+            function computeBasePath(siteRelativePath) {
+                const normalizedSitePath = siteRelativePath.replace(/^\/+/, "");
+                const suffix = `/${normalizedSitePath}`;
+                if (pathname === suffix) {
+                    return "/";
+                }
+                if (pathname.endsWith(suffix)) {
+                    return pathname.slice(0, -normalizedSitePath.length);
+                }
+                if (pathname.endsWith(normalizedSitePath)) {
+                    const base = pathname.slice(0, -normalizedSitePath.length);
+                    return base || "/";
+                }
+                return "/";
+            }
+
+            function computeFallbackProjectBasePath() {
+                const segments = pathname.split("/").filter(Boolean);
+                if (window.location.hostname.endsWith(".github.io") && segments.length > 1) {
+                    return `/${segments[0]}/`;
+                }
+                return "/";
+            }
+
+            const isSourcePreview = pathname.startsWith("/slides/");
+            const publishedBasePath = computeBasePath("404.html");
+            const basePath = isSourcePreview
+                ? "/"
+                : (publishedBasePath !== "/" || pathname.endsWith("/404.html")
+                    ? publishedBasePath
+                    : computeFallbackProjectBasePath());
             window.__PYC_BASE_PATH = basePath;
-            window.__PYC_SOURCE_PREVIEW = false;
+            window.__PYC_SOURCE_PREVIEW = isSourcePreview;
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll("[data-relative-href]").forEach(function (node) {
+                    const relativeHref = node.getAttribute("data-relative-href");
+                    if (relativeHref) {
+                        node.setAttribute("href", basePath + relativeHref.replace(/^\/+/, ""));
+                    }
+                });
+            }, { once: true });
 
             const stylesheet = document.createElement("link");
             stylesheet.rel = "stylesheet";
@@ -58,10 +94,10 @@
                 Use the course dashboard or one of the module portals to get back to a valid day deck, printable index, or repository-backed course document.
             </p>
             <div class="portal-actions">
-                <a class="portal-button" data-variant="primary" href="./index.html">Open course portal</a>
-                <a class="portal-button" data-variant="secondary" href="./slides/basics/">Basics portal</a>
-                <a class="portal-button" data-variant="secondary" href="./slides/advanced/">Advanced portal</a>
-                <a class="portal-button" data-variant="secondary" href="./slides/printable-index.html">Printable index</a>
+                <a class="portal-button" data-variant="primary" href="/" data-relative-href="index.html">Open course portal</a>
+                <a class="portal-button" data-variant="secondary" href="/slides/basics/" data-relative-href="slides/basics/">Basics portal</a>
+                <a class="portal-button" data-variant="secondary" href="/slides/advanced/" data-relative-href="slides/advanced/">Advanced portal</a>
+                <a class="portal-button" data-variant="secondary" href="/slides/printable-index.html" data-relative-href="slides/printable-index.html">Printable index</a>
             </div>
         </section>
     </main>

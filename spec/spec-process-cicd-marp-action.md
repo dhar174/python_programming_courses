@@ -203,7 +203,7 @@ deployment:
 | Advanced generated output is missing HTML | Publish uses the checked-in Advanced standalone slide tree | Inspect `_site/slides/advanced/` in the artifact |
 | Printable index or custom 404 exists in source | Workflow copies each page into its contract path | Inspect `_site/slides/printable-index.html` and `_site/404.html` in the artifact |
 | No generated root landing page exists | Workflow creates or copies a valid `_site/index.html` entrypoint | Open the published site root and confirm it resolves to course or slide content |
-| A lecture-script-only change lands under `lessons/lecture/` | No slide publish run is triggered by path filters alone | Review trigger configuration and workflow history |
+| A lecture-script-only change lands under `lessons/lecture/` | Publish runs so the manifest-backed portal summaries stay current | Review trigger configuration and workflow history |
 | Advanced config changes outside watched paths | Publish may not run automatically | Confirm trigger coverage whenever config files change |
 
 ## Validation Criteria

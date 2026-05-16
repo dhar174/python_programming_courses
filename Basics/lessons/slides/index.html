@@ -60,14 +60,29 @@
     </style>
     <script>
         (function () {
-            const repoMarker = "/python_programming_courses/";
             const pathname = window.location.pathname;
-            const basePath = pathname.includes(repoMarker)
-                ? pathname.slice(0, pathname.indexOf(repoMarker) + repoMarker.length)
-                : "/";
+            const isSourcePreview = pathname.includes("/Basics/lessons/slides/") || pathname.includes("/Advanced/lessons/slides/");
+
+            function computeBasePath(siteRelativePath) {
+                const normalizedSitePath = siteRelativePath.replace(/^\/+/, "");
+                const suffix = `/${normalizedSitePath}`;
+                if (pathname === suffix) {
+                    return "/";
+                }
+                if (pathname.endsWith(suffix)) {
+                    return pathname.slice(0, -normalizedSitePath.length);
+                }
+                if (pathname.endsWith(normalizedSitePath)) {
+                    const base = pathname.slice(0, -normalizedSitePath.length);
+                    return base || "/";
+                }
+                return "/";
+            }
+
+            const basePath = isSourcePreview ? "/" : computeBasePath("slides/basics/index.html");
             window.__PYC_BASE_PATH = basePath;
             // Treat source-tree slide paths as preview mode even when they are served from a local static server.
-            window.__PYC_SOURCE_PREVIEW = pathname.includes("/Basics/lessons/slides/") || pathname.includes("/Advanced/lessons/slides/");
+            window.__PYC_SOURCE_PREVIEW = isSourcePreview;
 
             document.addEventListener("DOMContentLoaded", function () {
                 if (!window.__PYC_SOURCE_PREVIEW) {

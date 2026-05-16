@@ -5,10 +5,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
+import re
+import subprocess
 
 
-REPOSITORY = {
+DEFAULT_REPOSITORY = {
     "owner": "dhar174",
     "name": "python_programming_courses",
     "defaultBranch": "main",
@@ -39,6 +42,56 @@ DOWNLOAD_SUFFIXES = {
     "pptx": ".pptx",
     "png": ".png",
 }
+
+
+def run_command(repo_root: Path, *args: str) -> str | None:
+    completed = subprocess.run(
+        args,
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    if completed.returncode != 0:
+        return None
+    return completed.stdout.strip() or None
+
+
+def parse_github_remote(remote_url: str) -> tuple[str | None, str | None]:
+    match = re.search(r"github\.com[:/](?P<owner>[^/]+)/(?P<name>[^/]+?)(?:\.git)?$", remote_url.strip())
+    if not match:
+        return None, None
+    return match.group("owner"), match.group("name")
+
+
+def discover_repository(repo_root: Path) -> dict[str, str]:
+    owner: str | None = None
+    name: str | None = None
+    default_branch = os.getenv("PORTAL_DEFAULT_BRANCH") or os.getenv("GITHUB_DEFAULT_BRANCH")
+
+    env_repo = os.getenv("PORTAL_GITHUB_REPOSITORY") or os.getenv("GITHUB_REPOSITORY")
+    if env_repo and "/" in env_repo:
+        owner, name = env_repo.split("/", 1)
+
+    if not owner or not name:
+        remote_url = run_command(repo_root, "git", "remote", "get-url", "origin")
+        if remote_url:
+            remote_owner, remote_name = parse_github_remote(remote_url)
+            owner = owner or remote_owner
+            name = name or remote_name
+
+    if not default_branch:
+        remote_head = run_command(repo_root, "git", "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD")
+        if remote_head and "/" in remote_head:
+            default_branch = remote_head.split("/", 1)[1]
+
+    return {
+        "owner": owner or DEFAULT_REPOSITORY["owner"],
+        "name": name or repo_root.name or DEFAULT_REPOSITORY["name"],
+        "defaultBranch": default_branch or DEFAULT_REPOSITORY["defaultBranch"],
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -286,7 +339,7 @@ def build_manifest(repo_root: Path, site_root: Path | None) -> dict[str, object]
 
     return {
         "version": 1,
-        "repository": REPOSITORY,
+        "repository": discover_repository(repo_root),
         "supportingPages": {
             "root": "index.html",
             "printableIndex": "slides/printable-index.html",

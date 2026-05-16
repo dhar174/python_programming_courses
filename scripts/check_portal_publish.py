@@ -97,11 +97,14 @@ def validate_root_decoupling(repo_root: Path, site_root: Path, errors: list[str]
         return
 
     root_html = published_root.read_text(encoding="utf-8")
-    if 'data-portal-root="course"' not in root_html:
-        add_error(errors, "Published root entrypoint is missing the portal root marker.")
-    if "slides/shared/portal/portal.css" not in root_html:
+    is_portal_root = 'data-portal-root="course"' in root_html
+    is_redirect_fallback = 'http-equiv="refresh"' in root_html and "Redirecting to slides" in root_html and 'href="./' in root_html
+
+    if not is_portal_root and not is_redirect_fallback:
+        add_error(errors, "Published root entrypoint is neither the dedicated portal root nor the validated redirect fallback.")
+    if is_portal_root and "slides/shared/portal/portal.css" not in root_html:
         add_error(errors, "Published root entrypoint does not reference the shared portal asset kit.")
-    if "Python Course Slides - Index" in root_html:
+    if is_portal_root and "Python Course Slides - Index" in root_html:
         add_error(errors, "Published root entrypoint still exposes the legacy Basics landing heading.")
 
 

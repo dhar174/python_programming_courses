@@ -100,7 +100,7 @@ No `package.json` — use `npx` directly.
 # Build Basics the same way the workflow does
 npx @marp-team/marp-cli -c .marprc.yml --input-dir Basics/lessons/slides --output _site/slides/basics
 
-# Build Advanced the same way the workflow does
+# Build Advanced locally with the repository's Advanced Marp config
 npx @marp-team/marp-cli --config-file .marprc.advanced.yml --input-dir Advanced/lessons/slides --output _site/slides/advanced
 
 # Build and watch a single file during development
@@ -110,7 +110,7 @@ npx @marp-team/marp-cli --no-config-file -w Basics/lessons/slides/day-01/day-01-
 npx @marp-team/marp-cli --no-config-file Basics/lessons/slides/day-01/day-01-session-1.md -o out.pdf --pdf
 ```
 
-Slides are published automatically to **GitHub Pages** on manual dispatch and on pushes to `main` that touch the workflow's configured portal and slide paths, including `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `Basics/lessons/lecture/**`, `Advanced/lessons/lecture/**`, assignment and quiz trees for both modules, `slides/**`, `scripts/generate_portal_manifest.py`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**`.
+Slides are published automatically to **GitHub Pages** on manual dispatch and on pushes to `main` that touch the workflow's configured portal and slide paths, including `Basics/lessons/slides/**`, `Advanced/lessons/slides/**`, `Basics/lessons/lecture/**`, `Advanced/lessons/lecture/**`, assignment and quiz trees for both modules, `slides/**`, `scripts/generate_portal_manifest.py`, `scripts/check_portal_publish.py`, `.marprc.yml`, `.github/workflows/marp-action.yml`, or `_site/slides/**`.
 
 ### Lecture Scripts
 

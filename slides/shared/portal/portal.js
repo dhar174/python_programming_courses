@@ -1,22 +1,27 @@
 (function () {
   const THEME_STORAGE_KEY = "pyc-theme";
   const THEME_ATTRIBUTE = "data-theme";
+  let repositoryMeta = {
+    owner: "dhar174",
+    name: "python_programming_courses",
+    defaultBranch: "main",
+  };
 
   function resolveBasePath() {
     if (typeof window.__PYC_BASE_PATH === "string") {
       return window.__PYC_BASE_PATH;
     }
 
-    const repoMarker = "/python_programming_courses/";
     const pathname = window.location.pathname;
-    if (pathname.includes(repoMarker)) {
-      return pathname.slice(0, pathname.indexOf(repoMarker) + repoMarker.length);
+    const slidesMarker = "/slides/";
+    if (pathname.includes(slidesMarker)) {
+      return pathname.slice(0, pathname.indexOf(slidesMarker) + 1);
     }
-    if (pathname.startsWith("/slides/")) {
-      return "/";
+    const htmlMatch = pathname.match(/^(.*\/)(?:index|404)\.html$/);
+    if (htmlMatch) {
+      return htmlMatch[1] || "/";
     }
-    const lastSlash = pathname.lastIndexOf("/");
-    return lastSlash >= 0 ? pathname.slice(0, lastSlash + 1) : "/";
+    return "/";
   }
 
   function isSourcePreview() {
@@ -38,27 +43,45 @@
     root.removeAttribute(THEME_ATTRIBUTE);
   }
 
+  function safeGetThemePreference() {
+    try {
+      return localStorage.getItem(THEME_STORAGE_KEY) || "auto";
+    } catch {
+      return "auto";
+    }
+  }
+
+  function safeSetThemePreference(value) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, value);
+    } catch {
+      // Ignore persistence failures and still apply the theme for the current session.
+    }
+  }
+
   function bindThemeControl() {
     const select = document.querySelector("[data-theme-toggle]");
     if (!select) {
       return;
     }
 
-    const initial = localStorage.getItem(THEME_STORAGE_KEY) || "auto";
+    const initial = safeGetThemePreference();
     select.value = initial;
     applyTheme(initial);
 
     select.addEventListener("change", function (event) {
       const value = event.target.value;
-      localStorage.setItem(THEME_STORAGE_KEY, value);
+      safeSetThemePreference(value);
       applyTheme(value);
     });
   }
 
   function repoBlobUrl(repoPath) {
-    const owner = document.body.getAttribute("data-repo-owner") || "dhar174";
-    const name = document.body.getAttribute("data-repo-name") || "python_programming_courses";
-    return `https://github.com/${owner}/${name}/blob/main/${repoPath}`;
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
+  }
+
+  function repoTreeUrl(repoPath) {
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
   function setText(selector, value) {
@@ -104,9 +127,12 @@
     const lecture = module.days.find((day) => day.artifacts.lecture.present);
     const assignment = module.days.find((day) => day.artifacts.assignment.present);
     const quiz = module.days.find((day) => day.artifacts.quiz.present);
+    const lectureDirectory = lecture && lecture.artifacts.lecture.repoPath
+      ? lecture.artifacts.lecture.repoPath.replace(/\/[^/]+$/, "")
+      : null;
     const items = [
-      lecture && lecture.artifacts.lecture.repoPath
-        ? { label: "Lecture scripts", href: repoBlobUrl(lecture.artifacts.lecture.repoPath) }
+      lectureDirectory
+        ? { label: "Lecture scripts", href: repoTreeUrl(lectureDirectory) }
         : null,
       assignment && assignment.artifacts.assignment.repoPath
         ? { label: "Assignments", href: repoBlobUrl(assignment.artifacts.assignment.repoPath) }
@@ -228,8 +254,11 @@
       return;
     }
 
-    document.body.setAttribute("data-repo-owner", manifest.repository.owner);
-    document.body.setAttribute("data-repo-name", manifest.repository.name);
+    repositoryMeta = {
+      owner: manifest.repository.owner || repositoryMeta.owner,
+      name: manifest.repository.name || repositoryMeta.name,
+      defaultBranch: manifest.repository.defaultBranch || repositoryMeta.defaultBranch,
+    };
 
     setText("[data-course-modules]", manifest.stats.modules);
     setText("[data-course-days]", manifest.stats.days);
@@ -261,7 +290,7 @@
     });
   }
 
-  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "auto";
+  const storedTheme = safeGetThemePreference();
   applyTheme(storedTheme);
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init, { once: true });
