@@ -24,5 +24,5 @@
 - Test: `├── criteria.json         # Test specs: command, stdin, expected_stdout, points`
 
 ## Last meaningful update
-[2026-05-14] Investigated the Pages 404: `/slides/` works, root URL does not.
+[2026-05-14] Github Pages working
 <!-- repo-agent-bootstrap:managed:end -->
