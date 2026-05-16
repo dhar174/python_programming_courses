@@ -51,20 +51,27 @@ def load_metadata(path: Path) -> dict[str, object]:
 
 
 def find_deck_file(day_dir: Path) -> Path:
-    html_files = sorted(
-        path
-        for path in day_dir.glob("*.html")
-        if path.name.lower() not in {"index.html", "readme.html"}
-    )
-    if not html_files:
+    day_id = day_dir.name
+    candidates = sorted(day_dir.glob(f"{day_id}-session-*.html"))
+    if not candidates:
+        candidates = sorted(
+            path
+            for path in day_dir.glob("*.html")
+            if path.name.lower() not in {"index.html", "readme.html"}
+        )
+    if not candidates:
         raise FileNotFoundError(f"No deck HTML found in {day_dir}")
-    return html_files[0]
+    return candidates[0]
 
 
 def page_bootstrap(site_relative_path: str) -> str:
+    source_checks = " || ".join(
+        f'pathname.includes("/{m["source_root"].as_posix()}/")'
+        for m in MODULES.values()
+    )
     return f"""        (function () {{
             const pathname = window.location.pathname;
-            const isSourcePreview = pathname.includes("/Basics/lessons/slides/") || pathname.includes("/Advanced/lessons/slides/");
+            const isSourcePreview = {source_checks};
 
             function computeBasePath(siteRelativePath) {{
                 const normalizedSitePath = siteRelativePath.replace(/^\\/+/, "");
@@ -130,6 +137,7 @@ def render_page(
     module: dict[str, str],
     day: dict[str, object],
     deck_file: Path,
+    num_days: int = 12,
 ) -> str:
     day_id = str(day["id"])
     day_number = int(day["dayNumber"])
@@ -142,7 +150,7 @@ def render_page(
     site_relative_path = f"{module['published_site_path']}/{day_id}/index.html"
     deck_href = deck_file.name
     prev_day = day_number - 1 if day_number > 1 else None
-    next_day = day_number + 1 if day_number < 12 else None
+    next_day = day_number + 1 if day_number < num_days else None
 
     prev_link = (
         f'<a class="portal-button" data-variant="secondary" data-day-prev href="../day-{prev_day:02d}/index.html">Previous day</a>'
@@ -303,7 +311,7 @@ def generate_pages(repo_root: Path, metadata: dict[str, object], check: bool) ->
             day_dir = source_root / day_id
             deck_file = find_deck_file(day_dir)
             output_path = day_dir / "index.html"
-            html = render_page(module_id=module_id, module=module, day=day, deck_file=deck_file)
+            html = render_page(module_id=module_id, module=module, day=day, deck_file=deck_file, num_days=len(module_data.get("days", [])))
             if output_path.exists() and output_path.read_text(encoding="utf-8") == html:
                 continue
             changed.append(output_path)
