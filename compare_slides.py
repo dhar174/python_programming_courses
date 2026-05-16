@@ -4,6 +4,9 @@ from pathlib import Path
 
 
 class SlideSectionParser(HTMLParser):
+    """Parse HTML and collect section text while preserving block-level line breaks."""
+
+    # Tags that should force a line boundary in the extracted text output.
     BLOCK_TAGS = {
         "address",
         "article",
@@ -71,6 +74,7 @@ class SlideSectionParser(HTMLParser):
             self._current_section["text_parts"].append(data)
 
     def extracted_sections(self):
+        """Return parsed sections, preferring sections with the `slide` class."""
         sections_with_slide_class = [
             section for section in self._all_sections if "slide" in section["classes"]
         ]
@@ -78,6 +82,7 @@ class SlideSectionParser(HTMLParser):
 
 
 def normalize_section_text(text_parts):
+    """Normalize extracted text parts into newline-separated, non-empty lines."""
     normalized_lines = []
     for raw_line in "".join(text_parts).splitlines():
         collapsed = " ".join(raw_line.split())
@@ -87,6 +92,7 @@ def normalize_section_text(text_parts):
 
 
 def extract_slides(html_path):
+    """Extract slide text and classes from an HTML file path."""
     with open(html_path, "r", encoding="utf-8") as f:
         html = f.read()
 
@@ -102,10 +108,12 @@ def extract_slides(html_path):
 
 
 def get_slide_text_lines(slides):
+    """Return non-empty text lines across all slides."""
     return [line for line in "\n".join(s["text"] for s in slides).splitlines() if line.strip()]
 
 
 def compare_directories(backup_dir, new_dir):
+    """Compare backup and new slide directories and return aggregate diff metrics."""
     backup_path = Path(backup_dir)
     new_path = Path(new_dir)
 
@@ -205,6 +213,7 @@ def compare_directories(backup_dir, new_dir):
 
 
 def generate_report(basics_data, advanced_data):
+    """Write markdown summary report from Basics and Advanced comparison data."""
     report = ["# Slide Content Comparison Report\n"]
 
     report.append("## Executive Summary")
