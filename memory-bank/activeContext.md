@@ -4,17 +4,23 @@
 # Active Context
 
 ## Current objective
-Investigate the GitHub Pages 404 and keep repo guidance aligned with the current slide deploy shape.
+All 96 hours of course content are written. The final task was fixing the GitHub Pages root 404. That fix has been applied and pushed.
 
 ## Why it matters now
-The bootstrap stack only stays useful if commands, architecture notes, and specialist routing still match the repository, especially when Pages URLs or slide artifact paths shift.
+The repository is now in a maintenance state. All lecture scripts, slides, and CI/CD are complete. Future work is incremental updates or Advanced slide regeneration.
 
 ## Current status
 - Done:
-  - Base repo inventory exists.
-  - Pages deploy root vs `/slides/` mismatch has been investigated.
+  - All 48 Basics lecture scripts (Days 1–12, 4 hours each, ~3000+ words each)
+  - All 48 Advanced lecture scripts (Days 1–12, 4 hours each)
+  - Per-deck Basics slide regeneration for materially changed days
+  - `marp-action.yml` `sudo chown` permission fix (PR #418)
+  - Pages root 404 root-cause identified and fixed:
+    - `marp-action.yml` now writes root `_site/index.html` as meta-refresh → `./slides/basics/`
+    - `marp-action.yml` now copies source index to `_site/slides/basics/index.html` (not root)
+    - `Basics/lessons/slides/index.html` updated with Days 5–12 cards and correct Day 2 link
 - In progress:
-  - Keep managed guidance aligned with the codebase.
+  - none
 - Blocked:
   - none
 
@@ -24,11 +30,18 @@ The bootstrap stack only stays useful if commands, architecture notes, and speci
 - `.github/copilot-instructions.md`
 - `CLAUDE.md`
 - `.github/workflows/marp-action.yml`
-- `slides/basics/day-*/index.html`
-- `slides/advanced/day-*/index.html`
+- `Basics/lessons/slides/index.html`
+- `Basics/lessons/slides/day-*/day-*-session-*.html`
+- `Advanced/lessons/slides/day-*/day-*-session-*.html`
+
+## Slide locations (three kinds)
+1. `Basics/lessons/slides/day-NN/` — committed agent-built HTML slides (source of truth for Basics)
+2. `Advanced/lessons/slides/day-NN/` — committed agent-built HTML slides (source of truth for Advanced)
+3. `_site/slides/basics/` + `_site/slides/advanced/` — CI Marp build output, gitignored, deployed to Pages
 
 ## Next recommended steps
-1. Keep CLI flows, prompts, and output contracts aligned with current deploy behavior.
-2. Verify Pages root and `/slides/` URLs after any workflow or artifact-path change.
-3. Update web UI or static assets while preserving usability and responsiveness.
+1. Wait for CI to complete and verify `https://dhar174.github.io/python_programming_courses/` redirects to `/slides/basics/`.
+2. Regenerate Advanced slides if Advanced lecture content was changed since generation.
+3. Update `README.md` badges/links if the Pages URL is confirmed working.
 <!-- repo-agent-bootstrap:managed:end -->
+
