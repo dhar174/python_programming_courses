@@ -12,26 +12,29 @@
 - [x] `marp-action.yml` `sudo chown` permission fix (PR #418, merged)
 - [x] Pages root 404 investigated and root cause identified
 - [x] Pages root 404 fixed: `marp-action.yml` broken index copy logic patched; `Basics/lessons/slides/index.html` updated with Days 5–12 and fixed Day 2 link
+- [x] Epic #419 portal rollout merged (PR #426)
 
 ## What works
 - Repo-wide instructions, memory-bank scaffolding, and specialist agents exist.
 - Managed sections allow maintenance runs to update generated content safely.
 - All 96 hours of lecture content written and committed.
 - Marp CI builds Basics slides to `_site/slides/basics/` and Advanced to `_site/slides/advanced/`.
-- Pages workflow deploys successfully; slide subtree is live.
-- Root `_site/index.html` is now a meta-refresh redirect to `./slides/basics/`.
-- `_site/slides/basics/index.html` lists all 12 days with correct links.
+- Pages workflow stages a root course dashboard at `_site/index.html`, module portals at `_site/slides/basics/` and `_site/slides/advanced/`, and supporting pages at `_site/slides/printable-index.html` plus `_site/404.html`.
+- Shared portal assets publish from `_site/slides/shared/portal/`, including the generated `course-manifest.json`.
+- `scripts/check_portal_publish.py` validates the staged `_site` artifact before Pages upload.
 
 ## What is incomplete
-- Advanced slide index is not linked from the Basics index (could add a nav link in a future pass).
+- No open gaps remain from the merged Epic #419 portal rollout; future portal polish should be tracked as new work.
 - Third-party imports remain optional until a pinned, licensed source is selected.
 
 ## Validation status
 - Install: `python -m pip install nbconvert`
 - Test: `./validate_slides.sh`
+- Portal manifest: `python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json`
+- Portal publish contract: `python scripts/check_portal_publish.py --repo-root . --site-root _site`
 
 ## Last meaningful update
-[2026-05-14] All content complete; Pages root 404 fix applied and pushed
+[2026-05-16] Epic #419 portal rollout merged in PR #426
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone
@@ -41,3 +44,5 @@
 - [2026-05-16] Issue #422 Basics portal rebuilt as a production module portal in `Basics/lessons/slides/index.html`, with manifest-backed badges/repository artifact links, source-preview bootstrap logic, and validated published/source preview behavior.
 - [2026-05-16] Issue #423 Advanced portal added at `Advanced/lessons/slides/index.html`, validated in source and published previews, and cross-module navigation from the Basics portal now targets the new Advanced landing page.
 - [2026-05-16] Issue #424 root dashboard upgraded and supporting pages added: `slides/index.html` now points at both module portals plus course-material categories, `slides/printable-index.html` provides the approved full-course deck index, and `slides/404.html` is now part of the published portal contract.
+- [2026-05-16] Issue #425 hardening landed with PR #426: review-selected fixes removed repo-name hardcoding from portal base-path logic, switched repo URLs to manifest-driven metadata/default branch handling, guarded theme persistence storage, widened workflow trigger coverage for portal validation, and kept `scripts/check_portal_publish.py` compatible with both the dedicated portal root and the approved redirect fallback.
+- [2026-05-16] PR #426 merged, making the course dashboard, Basics portal, Advanced portal, shared asset kit, supporting pages, manifest generation, and staged publish validation the repository's current Pages baseline.

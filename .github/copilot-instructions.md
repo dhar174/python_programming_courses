@@ -111,10 +111,10 @@ pip install jupyter nbconvert
 ### GitHub Actions Workflows
 
 1. **Marp Slide Build** (`.github/workflows/marp-action.yml`)
-   - **Triggers**: Push to `main` (paths: `Basics/lessons/**.md`, `Advanced/lessons/**.md`, `.marprc.yml`)
-   - **Outputs**: Slides to GitHub Pages at `_site/slides/`
-   - **Uses**: `KoharaKazuya/marp-cli-action@v4` with `.marprc.yml`
-   - **Requires**: `GH_PAT` secret for deployment
+   - **Triggers**: Push to `main` for slide trees, lecture/assignment/quiz content, `slides/**`, portal validation scripts, `.marprc.yml`, and the workflow itself; also supports manual `workflow_dispatch`
+   - **Outputs**: A staged Pages artifact in `_site/` containing the root course dashboard, module portals, shared portal assets, supporting pages, and generated slide trees
+   - **Uses**: `KoharaKazuya/marp-cli-action@v4` for the Basics and Advanced Marp builds, plus local staging and portal validation steps
+   - **Deployment auth**: Uses the default GitHub Actions token with Pages permissions; no `GH_PAT` secret is required
 
 2. **Autograder** (`.github/workflows/autograder.yml`)
    - **Triggers**: Push/PR to `main`, plus manual `workflow_dispatch`
@@ -295,9 +295,10 @@ git branch -a
 3. **Deterministic outputs**: Assignment scripts must produce identical output on every run
 4. **IPython magics**: Avoid in notebooks - use Markdown code blocks instead
 5. **Theme locations**: `Basics/themes/` and `Advanced/themes/`
-6. **CI triggers**: Changes to `Basics/lessons/**.md`, `Advanced/lessons/**.md`, or `.marprc.yml`
-7. **Pages deployment**: Requires `GH_PAT` secret
-8. **Instructor runbooks**: Primary source of truth for all content
+6. **CI triggers**: The Pages workflow watches slide trees, lecture/assignment/quiz content, `slides/**`, portal scripts, `.marprc.yml`, and `.github/workflows/marp-action.yml`
+7. **Pages deployment**: Uses the default GitHub Actions token and validates the staged `_site` tree with `scripts/check_portal_publish.py`
+8. **Portal root**: `slides/index.html` owns the course dashboard; module portals live at `Basics/lessons/slides/index.html` and `Advanced/lessons/slides/index.html`
+9. **Instructor runbooks**: Primary source of truth for all content
 
 ## Validation Steps
 

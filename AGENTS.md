@@ -96,7 +96,7 @@ Output directory for generated HTML/PDF slides:
 GitHub-specific configuration and automation:
 
 - **[`.github/workflows/`](./.github/workflows/)** - GitHub Actions workflows:
-  - [`marp-action.yml`](./.github/workflows/marp-action.yml) - CI/CD workflow for building and publishing slides to GitHub Pages. Triggers on pushes to `main` branch that affect lesson files or configuration.
+  - [`marp-action.yml`](./.github/workflows/marp-action.yml) - CI/CD workflow for building and publishing the GitHub Pages course portal. It watches slide trees, lecture/assignment/quiz content, `slides/**`, portal validation scripts, `.marprc.yml`, and the workflow file itself.
   
 - **[`.github/ISSUE_TEMPLATE/`](./.github/ISSUE_TEMPLATE/)** - Issue templates for GitHub:
   - [`add--scope-guardrails---basics-advanced--to-slides---notes.md`](./.github/ISSUE_TEMPLATE/add--scope-guardrails---basics-advanced--to-slides---notes.md)
@@ -359,24 +359,22 @@ npx @marp-team/marp-cli -w -c .marprc.yml
 The project uses GitHub Actions for automated builds (`.github/workflows/marp-action.yml`):
 
 **Trigger Conditions**:
-- Push to `main` branch
-- Changes to `Basics/lessons/**.md`
-- Changes to `Advanced/lessons/**.md`
-- Changes to `.marprc.yml`
+- Push to `main` for slide trees, lecture/assignment/quiz content, `slides/**`, portal validation scripts, `.marprc.yml`, and the workflow itself
 - Manual workflow dispatch
 
 **Build Process**:
 1. Checks out code
 2. Sets up GitHub Pages
-3. Uses `KoharaKazuya/marp-cli-action@v4` to build slides with `.marprc.yml` configuration
-4. Uploads artifacts to `_site` directory
-5. Deploys to GitHub Pages
+3. Uses `KoharaKazuya/marp-cli-action@v4` to build Basics and Advanced slide trees
+4. Stages the root portal, module landing pages, shared portal assets, supporting pages, and generated manifest into `_site`
+5. Validates the staged artifact with `scripts/check_portal_publish.py`
+6. Uploads the `_site` artifact and deploys it to GitHub Pages
 
 **Output**:
-- HTML slides
-- PDF documents
-- PPTX presentations
-- PNG images
+- Root course dashboard at `_site/index.html`
+- Basics and Advanced module portals at `_site/slides/basics/` and `_site/slides/advanced/`
+- Shared portal assets and supporting pages under `_site/slides/**` plus `_site/404.html`
+- Generated HTML, PDF, PPTX, and PNG slide artifacts under the module trees
 
 **Published URL**: Slides are published to GitHub Pages at the repository's Pages URL.
 
@@ -389,7 +387,7 @@ If you need to deploy manually:
    npx @marp-team/marp-cli -c .marprc.yml
    ```
 
-2. The output will be in `_site/slides/` directory.
+2. The staged Pages artifact will be written under `_site/`.
 
 3. Commit and push changes:
    ```bash
