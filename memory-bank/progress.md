@@ -14,6 +14,7 @@
 - [x] Pages root 404 fixed: `marp-action.yml` broken index copy logic patched; `Basics/lessons/slides/index.html` updated with Days 5–12 and fixed Day 2 link
 - [x] Epic #419 portal rollout merged (PR #426)
 - [x] Day overview index pages added between module portals and day decks
+- [x] Root dashboard "Start here" links now point at day overview pages instead of slide decks
 - [x] GitHub Pages portal entrypoints fixed to preserve the repository subpath for shared portal assets on directory-style URLs
 
 ## What works
@@ -52,3 +53,4 @@
 - [2026-05-16] Issue #425 hardening landed with PR #426: review-selected fixes removed repo-name hardcoding from portal base-path logic, switched repo URLs to manifest-driven metadata/default branch handling, guarded theme persistence storage, widened workflow trigger coverage for portal validation, and kept `scripts/check_portal_publish.py` compatible with both the dedicated portal root and the approved redirect fallback.
 - [2026-05-16] PR #426 merged, making the course dashboard, Basics portal, Advanced portal, shared asset kit, supporting pages, manifest generation, and staged publish validation the repository's current Pages baseline.
 - [2026-05-16] Day overview work completed on `feature/day-slide-index-pages`: structured metadata drives generated `day-XX/index.html` pages for both modules, module day cards route to overviews, root/printable deck shortcuts remain direct, and publish validation requires the overview pages.
+- [2026-05-17] Root dashboard "Start here" links now target day overview pages so the featured day chips open the day landing pages instead of slide decks.

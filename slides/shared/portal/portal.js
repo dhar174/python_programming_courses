@@ -165,7 +165,7 @@
         const item = document.createElement("li");
         const link = document.createElement("a");
         link.className = "portal-link-chip";
-        const dayTarget = dayDeckHref(day);
+        const dayTarget = dayOverviewHref(day);
         link.href = dayTarget ? withBasePath(dayTarget) : "#";
         link.textContent = `${module.title} · Day ${day.dayNumber}`;
         item.appendChild(link);
@@ -188,6 +188,13 @@
       return day.sourcePrimaryHref || slides.sourcePath || day.primaryHref;
     }
     return day.primaryHref || slides.href;
+  }
+
+  function dayOverviewHref(day) {
+    if (isSourcePreview()) {
+      return day.sourceOverviewHref || day.sourcePrimaryHref || day.overviewHref || day.primaryHref;
+    }
+    return day.overviewHref || day.primaryHref;
   }
 
   function appendChip(container, label, href, state) {
