@@ -14,6 +14,7 @@
 - [x] Pages root 404 fixed: `marp-action.yml` broken index copy logic patched; `Basics/lessons/slides/index.html` updated with Days 5–12 and fixed Day 2 link
 - [x] Epic #419 portal rollout merged (PR #426)
 - [x] Day overview index pages added between module portals and day decks
+- [x] GitHub Pages portal entrypoints fixed to preserve the repository subpath for shared portal assets on directory-style URLs
 
 ## What works
 - Repo-wide instructions, memory-bank scaffolding, and specialist agents exist.
@@ -24,6 +25,7 @@
 - Shared portal assets publish from `_site/slides/shared/portal/`, including the generated `course-manifest.json`.
 - `scripts/check_portal_publish.py` validates the staged `_site` artifact before Pages upload.
 - `scripts/generate_day_overviews.py` generates source-owned Basics and Advanced day overview pages from `slides/shared/portal/day-overviews.json`.
+- Root, module, printable, and day overview portal pages now preserve the `/python_programming_courses/` GitHub Pages subpath when resolving shared portal CSS/JS from directory-style URLs.
 
 ## What is incomplete
 - No open gaps remain from the day overview portal polish; future portal changes should preserve the new module card → day overview → deck flow.
@@ -37,7 +39,7 @@
 - Day overview freshness: `python scripts/generate_day_overviews.py --check`
 
 ## Last meaningful update
-[2026-05-16] Epic #419 portal rollout merged in PR #426
+[2026-05-17] Portal entrypoint base-path detection normalized for GitHub Pages directory URLs
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone

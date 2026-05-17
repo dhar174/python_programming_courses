@@ -32,15 +32,18 @@
             const pathname = window.location.pathname;
             function computeBasePath(siteRelativePath) {
                 const normalizedSitePath = siteRelativePath.replace(/^\/+/, "");
+                const effectivePath = pathname.endsWith("/") && normalizedSitePath.endsWith("index.html")
+                    ? `${pathname}index.html`
+                    : pathname;
                 const suffix = `/${normalizedSitePath}`;
-                if (pathname === suffix) {
+                if (effectivePath === suffix) {
                     return "/";
                 }
-                if (pathname.endsWith(suffix)) {
-                    return pathname.slice(0, -normalizedSitePath.length);
+                if (effectivePath.endsWith(suffix)) {
+                    return effectivePath.slice(0, -normalizedSitePath.length);
                 }
-                if (pathname.endsWith(normalizedSitePath)) {
-                    const base = pathname.slice(0, -normalizedSitePath.length);
+                if (effectivePath.endsWith(normalizedSitePath)) {
+                    const base = effectivePath.slice(0, -normalizedSitePath.length);
                     return base || "/";
                 }
                 return "/";

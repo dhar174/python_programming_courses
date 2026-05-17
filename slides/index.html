@@ -81,15 +81,18 @@
 
             function computeBasePath(siteRelativePath) {
                 const normalizedSitePath = siteRelativePath.replace(/^\/+/, "");
+                const effectivePath = pathname.endsWith("/") && normalizedSitePath.endsWith("index.html")
+                    ? `${pathname}index.html`
+                    : pathname;
                 const suffix = `/${normalizedSitePath}`;
-                if (pathname === suffix) {
+                if (effectivePath === suffix) {
                     return "/";
                 }
-                if (pathname.endsWith(suffix)) {
-                    return pathname.slice(0, -normalizedSitePath.length);
+                if (effectivePath.endsWith(suffix)) {
+                    return effectivePath.slice(0, -normalizedSitePath.length);
                 }
-                if (pathname.endsWith(normalizedSitePath)) {
-                    const base = pathname.slice(0, -normalizedSitePath.length);
+                if (effectivePath.endsWith(normalizedSitePath)) {
+                    const base = effectivePath.slice(0, -normalizedSitePath.length);
                     return base || "/";
                 }
                 return "/";
@@ -133,7 +136,7 @@
                 <h1 id="portal-title">Python Programming course portal</h1>
                 <p>
                     Explore the full 96-hour curriculum across Basics and Advanced.
-                    The root dashboard now connects both module portals, the printable course index, and the repository-backed teaching materials without replacing the live homepage during rollout.
+                    The root dashboard connects both module portals, the printable course index, and the repository-backed teaching materials in the published shared portal experience.
                 </p>
                 <div class="portal-actions">
                     <a class="portal-button" data-variant="primary" href="./slides/basics/" data-source-href="Basics/lessons/slides/index.html">Open Basics portal</a>

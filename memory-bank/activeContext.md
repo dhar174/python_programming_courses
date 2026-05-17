@@ -25,6 +25,7 @@ Future portal work should preserve the module portal → day overview → slide 
     - source-owned generated pages under `Basics/lessons/slides/day-XX/index.html` and `Advanced/lessons/slides/day-XX/index.html`
     - module day cards route to overviews before opening decks
     - root featured links and printable index remain direct deck shortcuts
+  - GitHub Pages base-path normalization updated across portal entrypoints and generated day overviews so directory-style published URLs keep the `/python_programming_courses/` project prefix when loading shared portal assets
 - In progress:
   - none
 - Blocked:
@@ -69,3 +70,4 @@ Future portal work should preserve the module portal → day overview → slide 
 - [2026-05-16] Shared portal assets and the canonical manifest path are reserved as `slides/shared/portal/**`.
 - [2026-05-16] `scripts/generate_portal_manifest.py` and `scripts/check_portal_publish.py` define the staged-manifest and publish-contract validation workflow for `_site`.
 - [2026-05-16] New day overview work uses structured metadata in `slides/shared/portal/day-overviews.json` and generated source pages in each module `day-XX/index.html`; module day cards route to those pages while root and printable indexes keep direct deck shortcuts.
+- [2026-05-17] Portal entrypoints and generated day overview pages normalize trailing-slash directory URLs so published GitHub Pages paths keep the repository subpath when resolving `slides/shared/portal/*`.
