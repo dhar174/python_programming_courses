@@ -26,6 +26,7 @@ Future portal work should preserve the module portal → day overview → slide 
     - module day cards route to overviews before opening decks
     - root featured links now route to day overview pages; the printable index remains a direct deck shortcut
   - GitHub Pages base-path normalization updated across portal entrypoints and generated day overviews so directory-style published URLs keep the `/python_programming_courses/` project prefix when loading shared portal assets
+  - `.github/workflows/copilot-setup-steps.yml` now satisfies the Copilot setup-steps contract by exposing a single job id named `copilot-setup-steps`
 - In progress:
   - none
 - Blocked:
