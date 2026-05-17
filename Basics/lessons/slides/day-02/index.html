@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basics Day 2 Overview</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #f7f7f7;
+            color: #111111;
+            line-height: 1.6;
+        }
+
+        .fallback-shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 48px;
+        }
+
+        .fallback-panel,
+        .fallback-card {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 20px;
+            box-shadow: 0 16px 40px rgba(17, 17, 17, 0.08);
+        }
+
+        .fallback-panel,
+        .fallback-card {
+            padding: 24px;
+        }
+
+        .fallback-grid {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .fallback-panel h1,
+        .fallback-panel h2,
+        .fallback-card h3 {
+            margin-top: 0;
+        }
+
+        .fallback-panel a,
+        .fallback-card a {
+            color: #0066ff;
+            font-weight: 700;
+        }
+    </style>
+    <script>
+        (function () {
+            const pathname = window.location.pathname;
+            const isSourcePreview = pathname.includes("/Basics/lessons/slides/") || pathname.includes("/Advanced/lessons/slides/");
+
+            function computeBasePath(siteRelativePath) {
+                const normalizedSitePath = siteRelativePath.replace(/^\/+/, "");
+                const suffix = `/${normalizedSitePath}`;
+                if (pathname === suffix) {
+                    return "/";
+                }
+                if (pathname.endsWith(suffix)) {
+                    return pathname.slice(0, -normalizedSitePath.length);
+                }
+                if (pathname.endsWith(normalizedSitePath)) {
+                    const base = pathname.slice(0, -normalizedSitePath.length);
+                    return base || "/";
+                }
+                return "/";
+            }
+
+            const basePath = isSourcePreview ? "/" : computeBasePath("slides/basics/day-02/index.html");
+            window.__PYC_BASE_PATH = basePath;
+            window.__PYC_SOURCE_PREVIEW = isSourcePreview;
+
+            document.addEventListener("DOMContentLoaded", function () {
+                if (!window.__PYC_SOURCE_PREVIEW) {
+                    return;
+                }
+
+                document.querySelectorAll("[data-source-href]").forEach(function (node) {
+                    const sourceHref = node.getAttribute("data-source-href");
+                    if (sourceHref) {
+                        node.setAttribute("href", basePath + sourceHref.replace(/^\/+/, ""));
+                    }
+                });
+            }, { once: true });
+
+            const stylesheet = document.createElement("link");
+            stylesheet.rel = "stylesheet";
+            stylesheet.href = basePath + "slides/shared/portal/portal.css";
+            document.head.appendChild(stylesheet);
+
+            const script = document.createElement("script");
+            script.src = basePath + "slides/shared/portal/portal.js";
+            script.defer = true;
+            document.head.appendChild(script);
+        })();
+    </script>
+</head>
+<body class="portal-page" data-portal-root="day" data-module-id="basics" data-day-id="day-02">
+    <a class="portal-skip-link" href="#main-content">Skip to day overview</a>
+    <main id="main-content" class="portal-shell fallback-shell" role="main">
+        <nav class="portal-breadcrumbs fallback-panel" aria-label="Breadcrumb">
+            <a href="../../../index.html" data-source-href="slides/index.html">Course portal</a>
+            <span class="portal-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../index.html" data-source-href="Basics/lessons/slides/index.html">Basics</a>
+            <span class="portal-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Day 2</span>
+        </nav>
+
+        <header class="portal-header">
+            <section class="portal-hero fallback-panel" aria-labelledby="day-overview-title">
+                <span class="portal-kicker">Module 1 - PCEP aligned</span>
+                <h1 id="day-overview-title">Day 2 - Session 2</h1>
+                <p class="subtitle">Hours 5-8 - Python Programming: Basic</p>
+                <p>Build confidence with text processing, user input, type conversion, and the first checkpoint for core Python syntax.</p>
+                <div class="portal-actions">
+                    <a class="portal-button" data-variant="primary" data-day-deck-link href="day-02-session-2.html">Open slide deck</a>
+                    <a class="portal-button" data-variant="secondary" href="../index.html" data-source-href="Basics/lessons/slides/index.html">Back to Basics portal</a>
+                </div>
+                <div class="portal-badge-row" data-day-overview-badges>
+                    <span class="portal-badge">Slides</span>
+                    <span class="portal-badge">Lecture</span>
+                    <span class="portal-badge">Assignment</span>
+                    <span class="portal-badge">Quiz</span>
+                </div>
+            </section>
+
+            <aside class="portal-toolbar" aria-label="Day tools">
+                <section class="portal-panel">
+                    <h2>Theme</h2>
+                    <div class="portal-theme-row">
+                        <label for="theme-select">Appearance</label>
+                        <select id="theme-select" data-theme-toggle>
+                            <option value="auto">Auto</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </section>
+                <section class="portal-panel">
+                    <h2>Artifacts</h2>
+                    <div class="portal-chip-list portal-day-links" data-day-overview-links>
+                        <p class="portal-note">Repository artifact links load here when JavaScript is available.</p>
+                    </div>
+                </section>
+            </aside>
+        </header>
+
+        <section class="portal-section fallback-panel" aria-labelledby="day-breakdown-title">
+            <h2 id="day-breakdown-title">Day breakdown</h2>
+            <p>Use this page as a quick orientation before opening the full slide deck. The four hour blocks mirror the instructor runbook sequence.</p>
+            <div class="portal-overview-grid fallback-grid">
+                    <article class="portal-card portal-hour-card">
+                        <span class="portal-kicker">Hour 5</span>
+                        <h3>String fundamentals</h3>
+                        <p>Index, slice, and reason about immutable text values.</p>
+                    </article>
+                    <article class="portal-card portal-hour-card">
+                        <span class="portal-kicker">Hour 6</span>
+                        <h3>String methods</h3>
+                        <p>Clean, transform, search, split, and join strings using common methods.</p>
+                    </article>
+                    <article class="portal-card portal-hour-card">
+                        <span class="portal-kicker">Hour 7</span>
+                        <h3>Input and conversion</h3>
+                        <p>Read user input and convert string input into numbers safely for calculations.</p>
+                    </article>
+                    <article class="portal-card portal-hour-card">
+                        <span class="portal-kicker">Hour 8</span>
+                        <h3>Checkpoint 1</h3>
+                        <p>Apply variables, strings, operators, input, and conversion in integrated exercises.</p>
+                    </article>
+            </div>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="day-outcomes-title">
+            <h2 id="day-outcomes-title">By the end of this day</h2>
+            <ul class="portal-outcome-list">
+                    <li>Manipulate strings with indexing, slicing, and methods.</li>
+                    <li>Collect user input with input().</li>
+                    <li>Convert text input to numeric types.</li>
+                    <li>Complete a checkpoint that combines the first two days.</li>
+            </ul>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="day-navigation-title">
+            <h2 id="day-navigation-title">Continue through the course</h2>
+            <div class="portal-actions">
+                <a class="portal-button" data-variant="secondary" data-day-prev href="../day-01/index.html">Previous day</a>
+                <a class="portal-button" data-variant="secondary" data-day-next href="../day-03/index.html">Next day</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -51,6 +51,14 @@ def validate_pages_artifact(site_root: Path, artifact: dict[str, object], label:
             add_error(errors, f"Missing published {format_name} download for {label}: {site_root / str(relative_path)}")
 
 
+def validate_day_overview(site_root: Path, day: dict[str, object], label: str, errors: list[str]) -> None:
+    overview_href = day.get("overviewHref")
+    if not overview_href:
+        add_error(errors, f"Missing overviewHref for {label}")
+        return
+    require_file(site_root / str(overview_href), f"published day overview for {label}", errors)
+
+
 def validate_manifest(repo_root: Path, site_root: Path, errors: list[str]) -> None:
     manifest_path = site_root / "slides" / "shared" / "portal" / "course-manifest.json"
     require_file(manifest_path, "published portal manifest", errors)
@@ -84,6 +92,7 @@ def validate_manifest(repo_root: Path, site_root: Path, errors: list[str]) -> No
             add_error(errors, f"Missing module primary href for {module.get('id')}: {site_root / str(primary_href)}")
 
         for day in module.get("days", []):
+            validate_day_overview(site_root, day, f"{module['id']} {day['id']}", errors)
             validate_pages_artifact(site_root, day["artifacts"]["slides"], f"{module['id']} {day['id']} slides", errors)
             validate_repo_artifact(repo_root, day["artifacts"]["lecture"], f"{module['id']} {day['id']} lecture", errors)
             validate_repo_artifact(repo_root, day["artifacts"]["assignment"], f"{module['id']} {day['id']} assignment", errors)

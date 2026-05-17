@@ -23,3 +23,4 @@ Portal root, asset, and publish-contract invariants for the GitHub Pages course 
 - Regenerate the staged manifest with `python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json` when validating a publish-shaped `_site`.
 - Validate the staged Pages artifact with `python scripts/check_portal_publish.py --repo-root . --site-root _site`.
 - Keep root-entrypoint checks compatible with both the dedicated portal root and the approved redirect fallback.
+- For portal-only navigation, manifest, or shared-asset changes, prefer targeted checks before broad slide rebuilds: generator freshness checks, Python/JS syntax checks, link assertions, and a temporary publish-shaped staged tree passed to `scripts/check_portal_publish.py`. Run Marp builds when slide Markdown, deck output, or Marp configuration changes require deck regeneration.

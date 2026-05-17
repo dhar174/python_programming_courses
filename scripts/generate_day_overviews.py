@@ -1,0 +1,343 @@
+#!/usr/bin/env python3
+"""Generate source-owned day overview pages for the course portal."""
+
+from __future__ import annotations
+
+import argparse
+import json
+from html import escape
+from pathlib import Path
+
+
+MODULES = {
+    "basics": {
+        "title": "Python Programming: Basic",
+        "label": "Basics",
+        "source_root": Path("Basics/lessons/slides"),
+        "published_site_path": "slides/basics",
+        "source_index": "Basics/lessons/slides/index.html",
+        "kicker": "Module 1 - PCEP aligned",
+    },
+    "advanced": {
+        "title": "Python Programming: Advanced",
+        "label": "Advanced",
+        "source_root": Path("Advanced/lessons/slides"),
+        "published_site_path": "slides/advanced",
+        "source_index": "Advanced/lessons/slides/index.html",
+        "kicker": "Module 2 - Applied project track",
+    },
+}
+
+
+def parse_args() -> argparse.Namespace:
+    script_path = Path(__file__).resolve()
+    repo_root = script_path.parent.parent
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repo-root", default=str(repo_root))
+    parser.add_argument(
+        "--metadata",
+        default=str(repo_root / "slides" / "shared" / "portal" / "day-overviews.json"),
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Fail if generated day overview pages are not up to date.",
+    )
+    return parser.parse_args()
+
+
+def load_metadata(path: Path) -> dict[str, object]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def find_deck_file(day_dir: Path) -> Path:
+    day_id = day_dir.name
+    candidates = sorted(day_dir.glob(f"{day_id}-session-*.html"))
+    if not candidates:
+        candidates = sorted(
+            path
+            for path in day_dir.glob("*.html")
+            if path.name.lower() not in {"index.html", "readme.html"}
+        )
+    if not candidates:
+        raise FileNotFoundError(f"No deck HTML found in {day_dir}")
+    return candidates[0]
+
+
+def page_bootstrap(site_relative_path: str) -> str:
+    source_checks = " || ".join(
+        f'pathname.includes("/{m["source_root"].as_posix()}/")'
+        for m in MODULES.values()
+    )
+    return f"""        (function () {{
+            const pathname = window.location.pathname;
+            const isSourcePreview = {source_checks};
+
+            function computeBasePath(siteRelativePath) {{
+                const normalizedSitePath = siteRelativePath.replace(/^\\/+/, "");
+                const suffix = `/${{normalizedSitePath}}`;
+                if (pathname === suffix) {{
+                    return "/";
+                }}
+                if (pathname.endsWith(suffix)) {{
+                    return pathname.slice(0, -normalizedSitePath.length);
+                }}
+                if (pathname.endsWith(normalizedSitePath)) {{
+                    const base = pathname.slice(0, -normalizedSitePath.length);
+                    return base || "/";
+                }}
+                return "/";
+            }}
+
+            const basePath = isSourcePreview ? "/" : computeBasePath("{site_relative_path}");
+            window.__PYC_BASE_PATH = basePath;
+            window.__PYC_SOURCE_PREVIEW = isSourcePreview;
+
+            document.addEventListener("DOMContentLoaded", function () {{
+                if (!window.__PYC_SOURCE_PREVIEW) {{
+                    return;
+                }}
+
+                document.querySelectorAll("[data-source-href]").forEach(function (node) {{
+                    const sourceHref = node.getAttribute("data-source-href");
+                    if (sourceHref) {{
+                        node.setAttribute("href", basePath + sourceHref.replace(/^\\/+/, ""));
+                    }}
+                }});
+            }}, {{ once: true }});
+
+            const stylesheet = document.createElement("link");
+            stylesheet.rel = "stylesheet";
+            stylesheet.href = basePath + "slides/shared/portal/portal.css";
+            document.head.appendChild(stylesheet);
+
+            const script = document.createElement("script");
+            script.src = basePath + "slides/shared/portal/portal.js";
+            script.defer = true;
+            document.head.appendChild(script);
+        }})();"""
+
+
+def render_hour_cards(hours: list[dict[str, str]]) -> str:
+    cards: list[str] = []
+    for hour in hours:
+        cards.append(
+            f"""                    <article class="portal-card portal-hour-card">
+                        <span class="portal-kicker">Hour {escape(str(hour["hour"]))}</span>
+                        <h3>{escape(hour["title"])}</h3>
+                        <p>{escape(hour["summary"])}</p>
+                    </article>"""
+        )
+    return "\n".join(cards)
+
+
+def render_page(
+    *,
+    module_id: str,
+    module: dict[str, str],
+    day: dict[str, object],
+    deck_file: Path,
+    num_days: int = 12,
+) -> str:
+    day_id = str(day["id"])
+    day_number = int(day["dayNumber"])
+    title = str(day["title"])
+    session = str(day["session"])
+    hours_label = str(day["hoursLabel"])
+    summary = str(day["summary"])
+    outcomes = [str(item) for item in day.get("outcomes", [])]
+    overview_title = f"{module['label']} {title} Overview"
+    site_relative_path = f"{module['published_site_path']}/{day_id}/index.html"
+    deck_href = deck_file.name
+    prev_day = day_number - 1 if day_number > 1 else None
+    next_day = day_number + 1 if day_number < num_days else None
+
+    prev_link = (
+        f'<a class="portal-button" data-variant="secondary" data-day-prev href="../day-{prev_day:02d}/index.html">Previous day</a>'
+        if prev_day
+        else '<span class="portal-link-chip portal-status-badge" data-state="missing">Previous day unavailable</span>'
+    )
+    next_link = (
+        f'<a class="portal-button" data-variant="secondary" data-day-next href="../day-{next_day:02d}/index.html">Next day</a>'
+        if next_day
+        else '<span class="portal-link-chip portal-status-badge" data-state="missing">Next day unavailable</span>'
+    )
+    outcomes_html = "\n".join(f"                    <li>{escape(outcome)}</li>" for outcome in outcomes)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{escape(overview_title)}</title>
+    <style>
+        body {{
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #f7f7f7;
+            color: #111111;
+            line-height: 1.6;
+        }}
+
+        .fallback-shell {{
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 48px;
+        }}
+
+        .fallback-panel,
+        .fallback-card {{
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 20px;
+            box-shadow: 0 16px 40px rgba(17, 17, 17, 0.08);
+        }}
+
+        .fallback-panel,
+        .fallback-card {{
+            padding: 24px;
+        }}
+
+        .fallback-grid {{
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }}
+
+        .fallback-panel h1,
+        .fallback-panel h2,
+        .fallback-card h3 {{
+            margin-top: 0;
+        }}
+
+        .fallback-panel a,
+        .fallback-card a {{
+            color: #0066ff;
+            font-weight: 700;
+        }}
+    </style>
+    <script>
+{page_bootstrap(site_relative_path)}
+    </script>
+</head>
+<body class="portal-page" data-portal-root="day" data-module-id="{module_id}" data-day-id="{day_id}">
+    <a class="portal-skip-link" href="#main-content">Skip to day overview</a>
+    <main id="main-content" class="portal-shell fallback-shell" role="main">
+        <nav class="portal-breadcrumbs fallback-panel" aria-label="Breadcrumb">
+            <a href="../../../index.html" data-source-href="slides/index.html">Course portal</a>
+            <span class="portal-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../index.html" data-source-href="{module['source_index']}">{escape(module['label'])}</a>
+            <span class="portal-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">{escape(title)}</span>
+        </nav>
+
+        <header class="portal-header">
+            <section class="portal-hero fallback-panel" aria-labelledby="day-overview-title">
+                <span class="portal-kicker">{escape(module['kicker'])}</span>
+                <h1 id="day-overview-title">{escape(title)} - {escape(session)}</h1>
+                <p class="subtitle">{escape(hours_label)} - {escape(module['title'])}</p>
+                <p>{escape(summary)}</p>
+                <div class="portal-actions">
+                    <a class="portal-button" data-variant="primary" data-day-deck-link href="{escape(deck_href)}">Open slide deck</a>
+                    <a class="portal-button" data-variant="secondary" href="../index.html" data-source-href="{module['source_index']}">Back to {escape(module['label'])} portal</a>
+                </div>
+                <div class="portal-badge-row" data-day-overview-badges>
+                    <span class="portal-badge">Slides</span>
+                    <span class="portal-badge">Lecture</span>
+                    <span class="portal-badge">Assignment</span>
+                    <span class="portal-badge">Quiz</span>
+                </div>
+            </section>
+
+            <aside class="portal-toolbar" aria-label="Day tools">
+                <section class="portal-panel">
+                    <h2>Theme</h2>
+                    <div class="portal-theme-row">
+                        <label for="theme-select">Appearance</label>
+                        <select id="theme-select" data-theme-toggle>
+                            <option value="auto">Auto</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </section>
+                <section class="portal-panel">
+                    <h2>Artifacts</h2>
+                    <div class="portal-chip-list portal-day-links" data-day-overview-links>
+                        <p class="portal-note">Repository artifact links load here when JavaScript is available.</p>
+                    </div>
+                </section>
+            </aside>
+        </header>
+
+        <section class="portal-section fallback-panel" aria-labelledby="day-breakdown-title">
+            <h2 id="day-breakdown-title">Day breakdown</h2>
+            <p>Use this page as a quick orientation before opening the full slide deck. The four hour blocks mirror the instructor runbook sequence.</p>
+            <div class="portal-overview-grid fallback-grid">
+{render_hour_cards(day["hours"])}
+            </div>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="day-outcomes-title">
+            <h2 id="day-outcomes-title">By the end of this day</h2>
+            <ul class="portal-outcome-list">
+{outcomes_html}
+            </ul>
+        </section>
+
+        <section class="portal-section fallback-panel" aria-labelledby="day-navigation-title">
+            <h2 id="day-navigation-title">Continue through the course</h2>
+            <div class="portal-actions">
+                {prev_link}
+                {next_link}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+"""
+
+
+def generate_pages(repo_root: Path, metadata: dict[str, object], check: bool) -> int:
+    changed: list[Path] = []
+    modules = metadata.get("modules", {})
+    for module_id, module_data in modules.items():
+        if module_id not in MODULES:
+            raise KeyError(f"Unknown module id in metadata: {module_id}")
+        module = MODULES[module_id]
+        source_root = repo_root / module["source_root"]
+        for day in module_data.get("days", []):
+            day_id = str(day["id"])
+            day_dir = source_root / day_id
+            deck_file = find_deck_file(day_dir)
+            output_path = day_dir / "index.html"
+            html = render_page(module_id=module_id, module=module, day=day, deck_file=deck_file, num_days=len(module_data.get("days", [])))
+            if output_path.exists() and output_path.read_text(encoding="utf-8") == html:
+                continue
+            changed.append(output_path)
+            if not check:
+                output_path.write_text(html, encoding="utf-8")
+
+    if changed and check:
+        print("Day overview pages are out of date:")
+        for path in changed:
+            print(f"  {path.relative_to(repo_root)}")
+        return 1
+
+    if changed:
+        for path in changed:
+            print(f"Generated {path.relative_to(repo_root)}")
+    else:
+        print("Day overview pages are up to date.")
+    return 0
+
+
+def main() -> int:
+    args = parse_args()
+    repo_root = Path(args.repo_root).resolve()
+    metadata = load_metadata(Path(args.metadata).resolve())
+    return generate_pages(repo_root=repo_root, metadata=metadata, check=args.check)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

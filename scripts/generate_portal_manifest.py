@@ -189,9 +189,12 @@ def build_day(
     day_id = f"day-{day_number:02d}"
     source_day_dir = repo_root / module["source_root"] / day_id
     primary_html = find_primary_html(source_day_dir) if source_day_dir.is_dir() else None
+    overview_html = source_day_dir / "index.html"
     published_dir = f"slides/{module['id']}/{day_id}/"
     primary_href = f"{published_dir}{primary_html.name}" if primary_html else None
     source_primary_href = primary_html.relative_to(repo_root).as_posix() if primary_html else None
+    overview_href = f"{published_dir}index.html" if overview_html.is_file() else None
+    source_overview_href = overview_html.relative_to(repo_root).as_posix() if overview_html.is_file() else None
 
     lecture_paths = sorted(
         path.relative_to(repo_root).as_posix()
@@ -209,10 +212,12 @@ def build_day(
         "order": day_number,
         "primaryHref": primary_href,
         "sourcePrimaryHref": source_primary_href,
+        "overviewHref": overview_href,
+        "sourceOverviewHref": source_overview_href,
         "breadcrumbs": [
             {"label": "Course", "href": "index.html"},
             {"label": module["title"], "href": f"slides/{module['id']}/index.html"},
-            {"label": f"Day {day_number}", "href": primary_href},
+            {"label": f"Day {day_number}", "href": overview_href or primary_href},
         ],
         "prev": None,
         "next": None,
@@ -257,19 +262,21 @@ def build_day(
 def fill_navigation(days: list[dict[str, object]]) -> None:
     for index, day in enumerate(days):
         primary_href = day.get("primaryHref")
+        overview_href = day.get("overviewHref")
+        day_navigation_href = overview_href or primary_href
         if index > 0:
             prev_day = days[index - 1]
             day["prev"] = {
                 "label": f"Day {prev_day['dayNumber']}",
-                "href": prev_day.get("primaryHref") or prev_day["breadcrumbs"][-1]["href"],
+                "href": prev_day.get("overviewHref") or prev_day.get("primaryHref") or prev_day["breadcrumbs"][-1]["href"],
             }
         if index < len(days) - 1:
             next_day = days[index + 1]
             day["next"] = {
                 "label": f"Day {next_day['dayNumber']}",
-                "href": next_day.get("primaryHref") or next_day["breadcrumbs"][-1]["href"],
+                "href": next_day.get("overviewHref") or next_day.get("primaryHref") or next_day["breadcrumbs"][-1]["href"],
             }
-        day["breadcrumbs"][-1]["href"] = primary_href
+        day["breadcrumbs"][-1]["href"] = day_navigation_href
 
 
 def build_module(
