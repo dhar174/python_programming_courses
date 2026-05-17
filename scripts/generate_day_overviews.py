@@ -174,8 +174,8 @@ def render_page(
         body {{
             margin: 0;
             font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-            background: #f7f7f7;
-            color: #111111;
+            background: #f7f8fb;
+            color: #0b1220;
             line-height: 1.6;
         }}
 
@@ -188,9 +188,9 @@ def render_page(
         .fallback-panel,
         .fallback-card {{
             background: #ffffff;
-            border: 1px solid #d0d7de;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
-            box-shadow: 0 16px 40px rgba(17, 17, 17, 0.08);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
         }}
 
         .fallback-panel,
@@ -212,7 +212,7 @@ def render_page(
 
         .fallback-panel a,
         .fallback-card a {{
-            color: #0066ff;
+            color: #2563eb;
             font-weight: 700;
         }}
     </style>
