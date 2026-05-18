@@ -72,3 +72,7 @@ Future portal work should preserve the module portal → day overview → slide 
 - [2026-05-16] `scripts/generate_portal_manifest.py` and `scripts/check_portal_publish.py` define the staged-manifest and publish-contract validation workflow for `_site`.
 - [2026-05-16] New day overview work uses structured metadata in `slides/shared/portal/day-overviews.json` and generated source pages in each module `day-XX/index.html`; module day cards route to those pages while root and printable indexes keep direct deck shortcuts.
 - [2026-05-17] Portal entrypoints and generated day overview pages normalize trailing-slash directory URLs so published GitHub Pages paths keep the repository subpath when resolving `slides/shared/portal/*`.
+
+## Assignment fixture policy
+
+- [2026-05-18] `submissions/*_test_filled.ipynb` files must remain filled-in copies of each day’s full homework notebook and preserve instructional structure; they are not allowed to be reduced to print-only stubs.
