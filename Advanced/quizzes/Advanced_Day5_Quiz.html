@@ -301,6 +301,7 @@
     "20": "D"
   }
 };
+    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
     function escapeHtml(str) {
       if (str === null || str === undefined) {
         return '';
@@ -329,7 +330,6 @@
       // Preserve line breaks for normal text
       return escaped.replace(/\r\n|\r|\n/g, '<br>');
     }
-    const STORAGE_KEY = `quiz_answers_${QUIZ_DATA.quizId}`;
     function loadSavedAnswers() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch (error) { return {}; } }
     function saveAnswers(answers) { const validIds = new Set(QUIZ_DATA.questions.map((q) => String(q.number))); const filtered = Object.fromEntries(Object.entries(answers).filter(([key]) => validIds.has(key))); localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered)); const count = Object.keys(filtered).length; const total = QUIZ_DATA.questions.length; document.getElementById('status').textContent = `Saved ${count}/${total} answers locally.`; document.getElementById('progressFill').style.width = `${total ? Math.round((count / total) * 100) : 0}%`; document.getElementById('progressLabel').textContent = `${count} / ${total}`; }
     function renderQuiz() {
