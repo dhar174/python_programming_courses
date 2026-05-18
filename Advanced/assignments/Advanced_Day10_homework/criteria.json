@@ -63,6 +63,23 @@
         "Hour 40 | checkpoint result: api milestone ready"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 37/40 - Authenticity guardrail: API key logic uses real control flow",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; source = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); tree = ast.parse(source); function_defs = sum(isinstance(node, ast.FunctionDef) for node in ast.walk(tree)); if_nodes = sum(isinstance(node, ast.If) for node in ast.walk(tree)); env_lookup = ('TRACKER_API_KEY' in source) and ('environ' in source or 'getenv' in source); status_literals = all(token in source for token in ('401', '201', '200')); print(f'guardrail_functions={function_defs >= 2}'); print(f'guardrail_conditionals={if_nodes >= 1}'); print(f'guardrail_env_lookup={env_lookup}'); print(f'guardrail_status_literals={status_literals}')",
+        "advanced_day10.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_functions=True",
+        "guardrail_conditionals=True",
+        "guardrail_env_lookup=True",
+        "guardrail_status_literals=True"
+      ],
+      "points": 20
     }
   ]
 }

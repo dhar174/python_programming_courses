@@ -65,17 +65,18 @@
       "points": 20
     },
     {
-      "name": "Hour 42/44 - Analytics artifacts are created",
+      "name": "Hour 42/44 - Analytics artifacts are generated and meaningful",
       "command": [
         "python",
         "-c",
-        "from pathlib import Path; import subprocess, sys; subprocess.run([sys.executable, sys.argv[1]], check=True, stdout=subprocess.DEVNULL); print(Path('reports/priority_chart.png').is_file()); print(Path('reports/weekly_summary.txt').is_file())",
+        "from pathlib import Path; import subprocess, sys, tempfile; script = Path(sys.argv[1]).resolve(); tmp = tempfile.TemporaryDirectory(); tmp_path = Path(tmp.name); isolated = tmp_path / script.name; isolated.write_text(script.read_text(encoding='utf-8'), encoding='utf-8'); result = subprocess.run([sys.executable, isolated.name], cwd=tmp_path, capture_output=True, text=True); reports = tmp_path / 'reports'; chart = reports / 'priority_chart.png'; summary = reports / 'weekly_summary.txt'; png_ok = chart.is_file() and chart.read_bytes().startswith(b'\\x89PNG\\r\\n\\x1a\\n'); summary_text = summary.read_text(encoding='utf-8') if summary.exists() else ''; summary_ok = all(token in summary_text for token in ('Task Count by Priority', 'mean actual hours', 'next task hours')); print(f'guardrail_run_ok={result.returncode == 0}'); print(f'guardrail_png_ok={png_ok}'); print(f'guardrail_summary_ok={summary_ok}'); tmp.cleanup()",
         "advanced_day11.py"
       ],
       "stdin": "",
       "expected_stdout": [
-        "True",
-        "True"
+        "guardrail_run_ok=True",
+        "guardrail_png_ok=True",
+        "guardrail_summary_ok=True"
       ],
       "points": 20
     }

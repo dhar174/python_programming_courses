@@ -63,6 +63,24 @@
         "Hour 48 | final result: advanced capstone ready"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 45/47 - Authenticity guardrail: service behavior + packaging artifacts",
+      "command": [
+        "python",
+        "-c",
+        "import contextlib, io, json, os, runpy, sys, tempfile\nfrom pathlib import Path\nsource = Path(sys.argv[1]).resolve()\ntmp = tempfile.TemporaryDirectory()\ntmp_path = Path(tmp.name)\nisolated = tmp_path / source.name\nisolated.write_text(source.read_text(encoding='utf-8'), encoding='utf-8')\nold_cwd = Path.cwd()\nservice_ok = False\nedge_ok = False\npayload_ok = False\npackaging_ok = False\nreadme_ok = False\nentrypoint_ok = False\ntry:\n    os.chdir(tmp_path)\n    buffer = io.StringIO()\n    with contextlib.redirect_stdout(buffer):\n        ns = runpy.run_path(str(isolated), run_name='__main__')\n    TaskService = ns.get('TaskService')\n    AdvancedTaskService = ns.get('AdvancedTaskService')\n    if isinstance(TaskService, type):\n        svc = TaskService()\n        svc.add_task('task-1', '  Plan sprint  ')\n        trimmed = svc.get_task('task-1').title == 'Plan sprint'\n        blank_raised = False\n        try:\n            svc.add_task('task-2', '   ')\n        except ValueError:\n            blank_raised = True\n        service_ok = trimmed and blank_raised\n    if isinstance(AdvancedTaskService, type):\n        adv = AdvancedTaskService()\n        adv.add_unique_task('task-1', 'Alpha')\n        duplicate_raised = False\n        try:\n            adv.add_unique_task('task-1', 'Beta')\n        except ValueError:\n            duplicate_raised = True\n        edge_ok = duplicate_raised and adv.search('missing') == []\n    payload = Path('data/task_snapshot.json')\n    if payload.exists():\n        loaded = json.loads(payload.read_text(encoding='utf-8'))\n        payload_ok = isinstance(loaded, list) and len(loaded) >= 2\n    requirements = Path('requirements.txt')\n    readme = Path('README.md')\n    entrypoint = Path('tracker_app/__main__.py')\n    packaging_ok = requirements.exists() and entrypoint.exists() and 'pytest' in requirements.read_text(encoding='utf-8')\n    readme_ok = readme.exists() and 'python -m tracker_app' in readme.read_text(encoding='utf-8')\n    entrypoint_ok = entrypoint.exists() and 'def main' in entrypoint.read_text(encoding='utf-8')\nfinally:\n    os.chdir(old_cwd)\n    tmp.cleanup()\nprint(f'guardrail_service_ok={service_ok}')\nprint(f'guardrail_edge_ok={edge_ok}')\nprint(f'guardrail_payload_ok={payload_ok}')\nprint(f'guardrail_packaging_ok={packaging_ok}')\nprint(f'guardrail_docs_entry_ok={readme_ok and entrypoint_ok}')",
+        "advanced_day12.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_service_ok=True",
+        "guardrail_edge_ok=True",
+        "guardrail_payload_ok=True",
+        "guardrail_packaging_ok=True",
+        "guardrail_docs_entry_ok=True"
+      ],
+      "points": 20
     }
   ]
 }
