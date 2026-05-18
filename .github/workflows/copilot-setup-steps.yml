@@ -3,13 +3,29 @@ name: copilot-setup-steps
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   copilot-setup-steps:
+    name: Bootstrap Copilot agent environment
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - name: Verify agent stack commands
+      # Keep this workflow fast and narrow: it provisions the Copilot agent's
+      # ephemeral environment with repo-specific tools rather than duplicating CI.
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Python bootstrap dependencies
         run: |
-          echo "Run ├── criteria.json         # Test specs: command, stdin, expected_stdout, points"
-          echo "Run ruff check ."
-          echo "Replace this stub with repo-specific environment setup before enabling on every push."
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet nbconvert
+
+      - name: Verify bootstrap tools
+        run: python -c "import nbconvert; print(f'nbconvert {nbconvert.__version__}')"
