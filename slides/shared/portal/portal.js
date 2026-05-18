@@ -130,15 +130,21 @@
     const lectureDirectory = lecture && lecture.artifacts.lecture.repoPath
       ? lecture.artifacts.lecture.repoPath.replace(/\/[^/]+$/, "")
       : null;
+    const assignmentDirectory = assignment && assignment.artifacts.assignment.repoPath
+      ? assignment.artifacts.assignment.repoPath.replace(/\/[^/]+$/, "")
+      : null;
+    const quizDirectory = quiz && quiz.artifacts.quiz.repoPath
+      ? quiz.artifacts.quiz.repoPath.replace(/\/[^/]+$/, "")
+      : null;
     const items = [
       lectureDirectory
         ? { label: "Lecture scripts", href: repoTreeUrl(lectureDirectory) }
         : null,
-      assignment && assignment.artifacts.assignment.repoPath
-        ? { label: "Assignments", href: repoBlobUrl(assignment.artifacts.assignment.repoPath) }
+      assignmentDirectory
+        ? { label: "Assignments", href: repoTreeUrl(assignmentDirectory) }
         : null,
-      quiz && quiz.artifacts.quiz.repoPath
-        ? { label: "Quizzes", href: repoBlobUrl(quiz.artifacts.quiz.repoPath) }
+      quizDirectory
+        ? { label: "Quizzes", href: repoTreeUrl(quizDirectory) }
         : null,
     ].filter(Boolean);
 
