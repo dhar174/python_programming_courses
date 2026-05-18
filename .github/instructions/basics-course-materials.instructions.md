@@ -12,4 +12,5 @@ applyTo: "Basics/**"
 - Keep new or revised lesson, quiz, and assignment content aligned to the same day’s runbook objectives and PCEP/PCAP preparation goals.
 - Preserve Marp-compatible markdown for slide sources and reuse the existing `python-light` and `python-dark` theme files unless a task explicitly calls for theme work.
 - When touching assignments or quizzes inside `Basics/`, keep the autograder contracts in `AGENTS.md` and `.github/copilot-instructions.md` intact.
+- For `submissions/*_test_filled.ipynb`, preserve the full day notebook structure and pedagogy; these files must be filled-in copies of that day's homework notebook, not reduced print-only stubs.
 <!-- repo-agent-bootstrap:managed:end -->

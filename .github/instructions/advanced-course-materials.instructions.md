@@ -12,4 +12,5 @@ applyTo: "Advanced/**"
 - Keep advanced content aligned to the repository’s PCAP-to-PCPP1 trajectory and the runbook’s hour-by-hour structure.
 - Preserve the existing Marp and theme conventions under `Advanced/themes/` and avoid introducing alternate slide tooling unless the task explicitly requires it.
 - When creating new lecture-script locations under `Advanced/lessons/`, match the established Basics organization and do not combine multiple instructional hours into one file.
+- For `submissions/*_test_filled.ipynb`, preserve the full day notebook structure and pedagogy; these files must be filled-in copies of that day's homework notebook, not reduced print-only stubs.
 <!-- repo-agent-bootstrap:managed:end -->
