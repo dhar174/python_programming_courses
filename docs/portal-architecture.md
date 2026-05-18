@@ -320,4 +320,4 @@ Before portal-affecting pull requests merge, the implementation must prove:
 - **D-005:** Day ordering is numeric and runbook-aligned through the zero-padded `day-NN` directory names.
 - **D-006:** Lecture, assignment, and quiz artifacts may be discovered as `repo` delivery targets until workflow support publishes them to Pages.
 - **D-007:** Search is an inline enhancement, not a separate approved page type for this epic.
-- **D-008:** Per-day overview pages are now an approved portal page type. Module day cards route to these overview pages; root featured links and the printable index remain direct deck shortcuts.
+- **D-008:** Per-day overview pages are now an approved portal page type. Module day cards route to these overview pages; root featured links route to the first featured day overview pages, and the printable index remains a direct deck shortcut.

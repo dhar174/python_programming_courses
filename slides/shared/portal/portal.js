@@ -159,18 +159,24 @@
     }
 
     container.innerHTML = "";
+    const featuredDays = [];
     modules.forEach(function (module) {
-      const days = module.days.slice(0, 3);
-      days.forEach(function (day) {
-        const item = document.createElement("li");
-        const link = document.createElement("a");
-        link.className = "portal-link-chip";
-        const dayTarget = dayDeckHref(day);
-        link.href = dayTarget ? withBasePath(dayTarget) : "#";
-        link.textContent = `${module.title} · Day ${day.dayNumber}`;
-        item.appendChild(link);
-        container.appendChild(item);
+      module.days.forEach(function (day) {
+        if (featuredDays.length < 3) {
+          featuredDays.push({ module, day });
+        }
       });
+    });
+
+    featuredDays.forEach(function (entry) {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.className = "portal-link-chip";
+      const dayTarget = dayOverviewHref(entry.day);
+      link.href = dayTarget ? withBasePath(dayTarget) : "#";
+      link.textContent = `${entry.module.title} · Day ${entry.day.dayNumber}`;
+      item.appendChild(link);
+      container.appendChild(item);
     });
   }
 
@@ -188,6 +194,13 @@
       return day.sourcePrimaryHref || slides.sourcePath || day.primaryHref;
     }
     return day.primaryHref || slides.href;
+  }
+
+  function dayOverviewHref(day) {
+    if (isSourcePreview()) {
+      return day.sourceOverviewHref || day.overviewHref;
+    }
+    return day.overviewHref || day.sourceOverviewHref;
   }
 
   function appendChip(container, label, href, state) {
