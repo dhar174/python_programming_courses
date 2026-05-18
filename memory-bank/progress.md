@@ -16,7 +16,7 @@
 - [x] Day overview index pages added between module portals and day decks
 - [x] Root dashboard "Start here" links now point at day overview pages instead of slide decks
 - [x] GitHub Pages portal entrypoints fixed to preserve the repository subpath for shared portal assets on directory-style URLs
-- [x] Copilot setup-steps workflow job id corrected to `copilot-setup-steps` for PR automation compatibility
+- [x] Copilot setup-steps workflow upgraded from stub to real Python bootstrap with `nbconvert` smoke check
 
 ## What works
 - Repo-wide instructions, memory-bank scaffolding, and specialist agents exist.
@@ -28,7 +28,7 @@
 - `scripts/check_portal_publish.py` validates the staged `_site` artifact before Pages upload.
 - `scripts/generate_day_overviews.py` generates source-owned Basics and Advanced day overview pages from `slides/shared/portal/day-overviews.json`.
 - Root, module, printable, and day overview portal pages now preserve the `/python_programming_courses/` GitHub Pages subpath when resolving shared portal CSS/JS from directory-style URLs.
-- Copilot coding-agent setup can discover `.github/workflows/copilot-setup-steps.yml` because the workflow now exposes the required single job id `copilot-setup-steps`.
+- Copilot coding-agent setup can discover `.github/workflows/copilot-setup-steps.yml` because the workflow exposes the required single job id `copilot-setup-steps` and now bootstraps Python plus `nbconvert` for agent tasks.
 
 ## What is incomplete
 - No open gaps remain from the day overview portal polish; future portal changes should preserve the new module card → day overview → deck flow.
@@ -42,7 +42,7 @@
 - Day overview freshness: `python scripts/generate_day_overviews.py --check`
 
 ## Last meaningful update
-[2026-05-17] Copilot setup-steps workflow contract fixed for PR automation
+[2026-05-17] Copilot setup-steps workflow hardened from placeholder stub into a real bootstrap for Copilot agent sessions
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone
