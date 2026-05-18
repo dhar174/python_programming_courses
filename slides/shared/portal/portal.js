@@ -80,6 +80,10 @@
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
+  function repoRawUrl(repoPath) {
+    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
+  }
+
   function repoTreeUrl(repoPath) {
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
@@ -135,10 +139,10 @@
         ? { label: "Lecture scripts", href: repoTreeUrl(lectureDirectory) }
         : null,
       assignment && assignment.artifacts.assignment.repoPath
-        ? { label: "Assignments", href: repoBlobUrl(assignment.artifacts.assignment.repoPath) }
+        ? { label: "Assignments ↓", href: repoTreeUrl(assignment.artifacts.assignment.repoPath.replace(/\/[^/]+$/, "")) }
         : null,
       quiz && quiz.artifacts.quiz.repoPath
-        ? { label: "Quizzes", href: repoBlobUrl(quiz.artifacts.quiz.repoPath) }
+        ? { label: "Quizzes ↓", href: repoTreeUrl(quiz.artifacts.quiz.repoPath.replace(/\/[^/]+$/, "")) }
         : null,
     ].filter(Boolean);
 
@@ -203,13 +207,16 @@
     return day.overviewHref || day.sourceOverviewHref;
   }
 
-  function appendChip(container, label, href, state) {
+  function appendChip(container, label, href, state, download) {
     const node = href ? document.createElement("a") : document.createElement("span");
     node.className = "portal-link-chip portal-status-badge";
     node.textContent = label;
     node.dataset.state = state || "available";
     if (href) {
       node.href = href;
+    }
+    if (download && node.tagName === "A") {
+      node.setAttribute("download", download);
     }
     container.appendChild(node);
   }
@@ -238,10 +245,12 @@
     });
 
     if (artifacts.assignment && artifacts.assignment.repoPath) {
-      appendChip(container, "Assignment", repoBlobUrl(artifacts.assignment.repoPath), "available");
+      const assignmentPath = artifacts.assignment.repoPath;
+      appendChip(container, "Assignment ↓", repoRawUrl(assignmentPath), "available", assignmentPath.split("/").pop());
     }
     if (artifacts.quiz && artifacts.quiz.repoPath) {
-      appendChip(container, "Quiz", repoBlobUrl(artifacts.quiz.repoPath), "available");
+      const quizPath = artifacts.quiz.repoPath;
+      appendChip(container, "Quiz ↓", repoRawUrl(quizPath), "available", quizPath.split("/").pop());
     }
 
     const downloads = artifacts.slides && artifacts.slides.downloads ? artifacts.slides.downloads : {};
@@ -337,10 +346,12 @@
         });
 
         if (artifacts.assignment && artifacts.assignment.repoPath) {
-          appendChip(linkContainer, "Assignment", repoBlobUrl(artifacts.assignment.repoPath), "available");
+          const assignmentPath = artifacts.assignment.repoPath;
+          appendChip(linkContainer, "Assignment ↓", repoRawUrl(assignmentPath), "available", assignmentPath.split("/").pop());
         }
         if (artifacts.quiz && artifacts.quiz.repoPath) {
-          appendChip(linkContainer, "Quiz", repoBlobUrl(artifacts.quiz.repoPath), "available");
+          const quizPath = artifacts.quiz.repoPath;
+          appendChip(linkContainer, "Quiz ↓", repoRawUrl(quizPath), "available", quizPath.split("/").pop());
         }
       }
     });
