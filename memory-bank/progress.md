@@ -44,6 +44,7 @@
 ## Last meaningful update
 [2026-05-17] Copilot setup-steps workflow hardened from placeholder stub into a real bootstrap for Copilot agent sessions
 [2026-05-18] Added explicit guardrails across README, AGENTS, and course-material instruction files that `submissions/*_test_filled.ipynb` must stay fully filled-in notebook copies and must not be collapsed into print-only stubs.
+[2026-05-19] PR #456 notebook remediation repaired the reviewed `*_test_filled.ipynb` fixtures so they again preserve the base notebook structure, use real exercise implementations instead of placeholder output stubs, restore the Advanced Day 8 authenticity guardrail, and still satisfy the touched assignments' existing grading criteria.
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone
