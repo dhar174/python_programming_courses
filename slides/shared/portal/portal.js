@@ -80,8 +80,8 @@
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
-  function repoRawUrl(repoPath) {
-    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
+  function repoDownloadUrl(repoPath) {
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${repoPath}?download=1`;
   }
 
   function repoTreeUrl(repoPath) {
@@ -246,11 +246,11 @@
 
     if (artifacts.assignment && artifacts.assignment.repoPath) {
       const assignmentPath = artifacts.assignment.repoPath;
-      appendChip(container, "Assignment ↓", repoRawUrl(assignmentPath), "available", assignmentPath.split("/").pop());
+      appendChip(container, "Assignment ↓", repoDownloadUrl(assignmentPath), "available", assignmentPath.split("/").pop());
     }
     if (artifacts.quiz && artifacts.quiz.repoPath) {
       const quizPath = artifacts.quiz.repoPath;
-      appendChip(container, "Quiz ↓", repoRawUrl(quizPath), "available", quizPath.split("/").pop());
+      appendChip(container, "Quiz ↓", repoDownloadUrl(quizPath), "available", quizPath.split("/").pop());
     }
 
     const downloads = artifacts.slides && artifacts.slides.downloads ? artifacts.slides.downloads : {};
@@ -347,11 +347,11 @@
 
         if (artifacts.assignment && artifacts.assignment.repoPath) {
           const assignmentPath = artifacts.assignment.repoPath;
-          appendChip(linkContainer, "Assignment ↓", repoRawUrl(assignmentPath), "available", assignmentPath.split("/").pop());
+          appendChip(linkContainer, "Assignment ↓", repoDownloadUrl(assignmentPath), "available", assignmentPath.split("/").pop());
         }
         if (artifacts.quiz && artifacts.quiz.repoPath) {
           const quizPath = artifacts.quiz.repoPath;
-          appendChip(linkContainer, "Quiz ↓", repoRawUrl(quizPath), "available", quizPath.split("/").pop());
+          appendChip(linkContainer, "Quiz ↓", repoDownloadUrl(quizPath), "available", quizPath.split("/").pop());
         }
       }
     });
