@@ -76,3 +76,4 @@ Future portal work should preserve the module portal → day overview → slide 
 ## Assignment fixture policy
 
 - [2026-05-18] `submissions/*_test_filled.ipynb` files must remain filled-in copies of each day’s full homework notebook and preserve instructional structure; they are not allowed to be reduced to print-only stubs.
+- [2026-05-19] PR #456 fixture repairs restored real filled solutions for the reviewed Basics/Advanced notebooks, corrected mismatched autograder script-name guidance, and reinstated the Advanced Day 8 authenticity guardrail while keeping the repaired fixtures aligned with existing `criteria.json` checks.
