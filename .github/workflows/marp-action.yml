@@ -193,6 +193,30 @@ jobs:
             cp "${SOURCE_DAY_INDEX}" "${TARGET_DAY_INDEX}"
           done
 
+          for MODULE in Basics Advanced; do
+            if [ -d "${MODULE}/assignments" ]; then
+              rm -rf "_site/${MODULE}/assignments"
+              mkdir -p "_site/${MODULE}/assignments"
+              find "${MODULE}/assignments" -maxdepth 1 -type f -name "${MODULE}_Day*_homework.ipynb" | while IFS= read -r SOURCE_ASSIGNMENT; do
+                RELATIVE_ASSIGNMENT="${SOURCE_ASSIGNMENT#${MODULE}/assignments/}"
+                TARGET_ASSIGNMENT="_site/${MODULE}/assignments/${RELATIVE_ASSIGNMENT}"
+                mkdir -p "$(dirname "${TARGET_ASSIGNMENT}")"
+                cp "${SOURCE_ASSIGNMENT}" "${TARGET_ASSIGNMENT}"
+              done
+            fi
+
+            if [ -d "${MODULE}/quizzes" ]; then
+              rm -rf "_site/${MODULE}/quizzes"
+              mkdir -p "_site/${MODULE}/quizzes"
+              find "${MODULE}/quizzes" -type f -name '*Quiz.html' | while IFS= read -r SOURCE_QUIZ; do
+                RELATIVE_QUIZ="${SOURCE_QUIZ#${MODULE}/quizzes/}"
+                TARGET_QUIZ="_site/${MODULE}/quizzes/${RELATIVE_QUIZ}"
+                mkdir -p "$(dirname "${TARGET_QUIZ}")"
+                cp "${SOURCE_QUIZ}" "${TARGET_QUIZ}"
+              done
+            fi
+          done
+
           python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json
 
           if [ -f slides/index.html ]; then
