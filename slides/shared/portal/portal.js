@@ -81,11 +81,59 @@
   }
 
   function repoDownloadUrl(repoPath) {
-    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${repoPath}?download=1`;
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/refs/heads/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
   function repoTreeUrl(repoPath) {
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
+  }
+
+  function sourceArtifactUrl(repoPath) {
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    const markers = [
+      "/Basics/lessons/slides/",
+      "/Advanced/lessons/slides/",
+      "/slides/",
+    ];
+    const pathname = window.location.pathname;
+
+    for (const marker of markers) {
+      if (pathname.includes(marker)) {
+        return `${pathname.slice(0, pathname.indexOf(marker))}/${normalizedPath}`;
+      }
+    }
+
+    return normalizedPath;
+  }
+
+  function artifactUrl(repoPath) {
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    if (!normalizedPath) {
+      return "#";
+    }
+
+    if (isSourcePreview() || window.location.protocol === "file:") {
+      return sourceArtifactUrl(normalizedPath);
+    }
+
+    return withBasePath(normalizedPath);
+  }
+
+  function decorateRepositoryArtifactLinks() {
+    document.querySelectorAll("a[data-repo-path]").forEach(function (node) {
+      const repoPath = node.getAttribute("data-repo-path");
+      if (!repoPath) {
+        return;
+      }
+
+      node.href = artifactUrl(repoPath);
+      const fileName = repoPath.split("/").pop();
+      if (repoPath.endsWith(".ipynb")) {
+        node.setAttribute("download", fileName);
+      } else {
+        node.removeAttribute("download");
+      }
+    });
   }
 
   function setText(selector, value) {
@@ -246,11 +294,11 @@
 
     if (artifacts.assignment && artifacts.assignment.repoPath) {
       const assignmentPath = artifacts.assignment.repoPath;
-      appendChip(container, "Assignment ↓", repoDownloadUrl(assignmentPath), "available", assignmentPath.split("/").pop());
+      appendChip(container, "Assignment ↓", artifactUrl(assignmentPath), "available", assignmentPath.split("/").pop());
     }
     if (artifacts.quiz && artifacts.quiz.repoPath) {
       const quizPath = artifacts.quiz.repoPath;
-      appendChip(container, "Quiz ↓", repoDownloadUrl(quizPath), "available", quizPath.split("/").pop());
+      appendChip(container, "Quiz ↗", artifactUrl(quizPath), "available");
     }
 
     const downloads = artifacts.slides && artifacts.slides.downloads ? artifacts.slides.downloads : {};
@@ -347,11 +395,11 @@
 
         if (artifacts.assignment && artifacts.assignment.repoPath) {
           const assignmentPath = artifacts.assignment.repoPath;
-          appendChip(linkContainer, "Assignment ↓", repoDownloadUrl(assignmentPath), "available", assignmentPath.split("/").pop());
+          appendChip(linkContainer, "Assignment ↓", artifactUrl(assignmentPath), "available", assignmentPath.split("/").pop());
         }
         if (artifacts.quiz && artifacts.quiz.repoPath) {
           const quizPath = artifacts.quiz.repoPath;
-          appendChip(linkContainer, "Quiz ↓", repoDownloadUrl(quizPath), "available", quizPath.split("/").pop());
+          appendChip(linkContainer, "Quiz ↗", artifactUrl(quizPath), "available");
         }
       }
     });
@@ -391,6 +439,7 @@
 
   function init() {
     bindThemeControl();
+    decorateRepositoryArtifactLinks();
     fetchManifest().then(enhanceFromManifest).catch(function () {
       const note = document.querySelector("[data-manifest-status]");
       if (note) {

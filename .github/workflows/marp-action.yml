@@ -193,6 +193,16 @@ jobs:
             cp "${SOURCE_DAY_INDEX}" "${TARGET_DAY_INDEX}"
           done
 
+          for MODULE in Basics Advanced; do
+            for ARTIFACT_DIR in assignments quizzes; do
+              if [ -d "${MODULE}/${ARTIFACT_DIR}" ]; then
+                rm -rf "_site/${MODULE}/${ARTIFACT_DIR}"
+                mkdir -p "_site/${MODULE}"
+                cp -R "${MODULE}/${ARTIFACT_DIR}" "_site/${MODULE}/${ARTIFACT_DIR}"
+              fi
+            done
+          done
+
           python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json
 
           if [ -f slides/index.html ]; then
