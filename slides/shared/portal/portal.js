@@ -139,10 +139,10 @@
         ? { label: "Lecture scripts", href: repoTreeUrl(lectureDirectory) }
         : null,
       assignment && assignment.artifacts.assignment.repoPath
-        ? { label: "Assignments ↓", href: repoTreeUrl(assignment.artifacts.assignment.repoPath.replace(/\/[^/]+$/, "")) }
+        ? { label: "Assignments", href: repoTreeUrl(assignment.artifacts.assignment.repoPath.replace(/\/[^/]+$/, "")) }
         : null,
       quiz && quiz.artifacts.quiz.repoPath
-        ? { label: "Quizzes ↓", href: repoTreeUrl(quiz.artifacts.quiz.repoPath.replace(/\/[^/]+$/, "")) }
+        ? { label: "Quizzes", href: repoTreeUrl(quiz.artifacts.quiz.repoPath.replace(/\/[^/]+$/, "")) }
         : null,
     ].filter(Boolean);
 
