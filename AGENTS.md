@@ -281,6 +281,7 @@ Homework notebooks are graded automatically by the **Global Autograder**. Each a
     - All config files must use the exact canonical file names (`criteria.json`, `setup.json`, `feedback.json`).
     - In CI, assignment notebook discovery uses `Basics/assignments/Basics_DayX_homework/submissions/*Basics_DayX*.ipynb`.
     - Keep template notebook filenames in the `Basics_DayX_homework.ipynb` / `Advanced_DayX_homework.ipynb` pattern.
+    - `submissions/*_test_filled.ipynb` files are canonical filled-in fixtures and must preserve the full assignment notebook structure (instructions + exercise flow), not be collapsed into print-only stubs.
 
 ### Writing Multiple Choice Quizzes
 

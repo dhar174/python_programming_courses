@@ -178,6 +178,7 @@ Basics/assignments/Basics_DayX_homework/
 - All test outputs must be **deterministic** — no `datetime.now()`, no random seeds, no unseeded state
 - Converted script name should match the module-prefixed autograder contract (for example, `basics_day1.py` or `advanced_day12.py`)
 - Numeric precision must match `criteria.json` exactly (e.g., `85.50` not `85.5`)
+- Bundled `submissions/*_test_filled.ipynb` fixtures must remain **filled-in copies of the full daily homework notebook**; do not replace them with minimal print-only stubs.
 
 ### AI Agent Stack
 
