@@ -80,10 +80,6 @@
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
-  function repoDownloadUrl(repoPath) {
-    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/refs/heads/${repositoryMeta.defaultBranch}/${repoPath}`;
-  }
-
   function repoTreeUrl(repoPath) {
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
