@@ -142,6 +142,8 @@ class HeadingIdExtension(Extension):
 
 
 def render_markdown(markdown_text: str) -> RenderedLecture:
+    if markdown_text.startswith("\ufeff"):
+        markdown_text = markdown_text[1:]
     heading_extension = HeadingIdExtension()
     renderer = Markdown(
         extensions=[

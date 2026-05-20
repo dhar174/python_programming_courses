@@ -80,10 +80,11 @@
   }
 
   function uniqueId(baseId) {
-    let candidate = baseId || "section";
+    const base = baseId || "section";
+    let candidate = base;
     let index = 2;
     while (document.getElementById(candidate)) {
-      candidate = `${baseId}-${index}`;
+      candidate = `${base}-${index}`;
       index += 1;
     }
     return candidate;

@@ -28,8 +28,6 @@ def require_file(path: Path, label: str, errors: list[str]) -> None:
 
 
 def validate_repo_artifact(repo_root: Path, artifact: dict[str, object], label: str, errors: list[str]) -> None:
-    if artifact.get("delivery") != "repo":
-        return
     repo_path = artifact.get("repoPath")
     if repo_path and not (repo_root / str(repo_path)).is_file():
         add_error(errors, f"Missing repo artifact for {label}: {repo_root / str(repo_path)}")
