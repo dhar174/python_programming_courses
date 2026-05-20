@@ -188,6 +188,30 @@
     return `Lecture ${index + 1}`;
   }
 
+  function lectureLinks(lectureArtifact) {
+    const publishedPaths = lectureArtifact && Array.isArray(lectureArtifact.publishedPaths)
+      ? lectureArtifact.publishedPaths
+      : [];
+    if (publishedPaths.length) {
+      return publishedPaths.map(function (publishedPath, index) {
+        return {
+          label: labelFromLecturePath(publishedPath, index),
+          href: withBasePath(publishedPath),
+        };
+      });
+    }
+
+    const repoPaths = lectureArtifact && Array.isArray(lectureArtifact.repoPaths)
+      ? lectureArtifact.repoPaths
+      : [];
+    return repoPaths.map(function (repoPath, index) {
+      return {
+        label: labelFromLecturePath(repoPath, index),
+        href: repoBlobUrl(repoPath),
+      };
+    });
+  }
+
   function dayDeckHref(day) {
     const slides = day.artifacts && day.artifacts.slides ? day.artifacts.slides : {};
     if (isSourcePreview()) {
@@ -230,11 +254,8 @@
 
   function renderArtifactLinks(container, artifacts) {
     container.innerHTML = "";
-    const lecturePaths = artifacts.lecture && Array.isArray(artifacts.lecture.repoPaths)
-      ? artifacts.lecture.repoPaths
-      : [];
-    lecturePaths.forEach(function (repoPath, index) {
-      appendChip(container, labelFromLecturePath(repoPath, index), repoBlobUrl(repoPath), "available");
+    lectureLinks(artifacts.lecture).forEach(function (lectureLink) {
+      appendChip(container, lectureLink.label, lectureLink.href, "available");
     });
 
     if (artifacts.assignment && artifacts.assignment.repoPath) {
@@ -329,11 +350,8 @@
       if (linkContainer) {
         linkContainer.innerHTML = "";
 
-        const lecturePaths = artifacts.lecture && Array.isArray(artifacts.lecture.repoPaths)
-          ? artifacts.lecture.repoPaths
-          : [];
-        lecturePaths.forEach(function (repoPath, index) {
-          appendChip(linkContainer, labelFromLecturePath(repoPath, index), repoBlobUrl(repoPath), "available");
+        lectureLinks(artifacts.lecture).forEach(function (lectureLink) {
+          appendChip(linkContainer, lectureLink.label, lectureLink.href, "available");
         });
 
         if (artifacts.assignment && artifacts.assignment.repoPath) {

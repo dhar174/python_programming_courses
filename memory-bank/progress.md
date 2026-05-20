@@ -17,6 +17,8 @@
 - [x] Root dashboard "Start here" links now point at day overview pages instead of slide decks
 - [x] GitHub Pages portal entrypoints fixed to preserve the repository subpath for shared portal assets on directory-style URLs
 - [x] Copilot setup-steps workflow upgraded from stub to real Python bootstrap with `nbconvert` smoke check
+- [x] Issue #458 foundation platform implemented: shared lecture assets, lecture generator, lecture validator, and Pages workflow/publish integration
+- [x] Issue #458 lecture rollout generated all 96 hourly lecture HTML pages across Basics and Advanced
 
 ## What works
 - Repo-wide instructions, memory-bank scaffolding, and specialist agents exist.
@@ -29,9 +31,13 @@
 - `scripts/generate_day_overviews.py` generates source-owned Basics and Advanced day overview pages from `slides/shared/portal/day-overviews.json`.
 - Root, module, printable, and day overview portal pages now preserve the `/python_programming_courses/` GitHub Pages subpath when resolving shared portal CSS/JS from directory-style URLs.
 - Copilot coding-agent setup can discover `.github/workflows/copilot-setup-steps.yml` because the workflow exposes the required single job id `copilot-setup-steps` and now bootstraps Python plus `nbconvert` for agent tasks.
+- `scripts/generate_lecture_pages.py` can now render all 96 hourly lecture Markdown files into lecture HTML with natural day/hour ordering and mirrored `_site` output.
+- `scripts/validate_lecture_html.py` now enforces lecture-page structure, navigation, hash-target integrity, and offline-safe runtime/asset constraints.
+- The Pages workflow now installs pinned `Markdown`, generates lecture HTML into `_site`, validates it, and then runs the staged manifest/publish contract checks.
+- Source-owned hourly lecture HTML now exists beside the lecture Markdown files in `Basics/lessons/lecture/` and `Advanced/lessons/lecture/`.
 
 ## What is incomplete
-- No open gaps remain from the day overview portal polish; future portal changes should preserve the new module card → day overview → deck flow.
+- Issue/PR closeout for #458 remains after the validated local rollout.
 - Third-party imports remain optional until a pinned, licensed source is selected.
 
 ## Validation status
@@ -40,9 +46,15 @@
 - Portal manifest: `python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json`
 - Portal publish contract: `python scripts/check_portal_publish.py --repo-root . --site-root _site`
 - Day overview freshness: `python scripts/generate_day_overviews.py --check`
+- Lecture generator: `python scripts/generate_lecture_pages.py --repo-root . --output-root _site`
+- Lecture validation: `python scripts/validate_lecture_html.py _site`
 
 ## Last meaningful update
 [2026-05-17] Copilot setup-steps workflow hardened from placeholder stub into a real bootstrap for Copilot agent sessions
+[2026-05-18] Added explicit guardrails across README, AGENTS, and course-material instruction files that `submissions/*_test_filled.ipynb` must stay fully filled-in notebook copies and must not be collapsed into print-only stubs.
+[2026-05-19] PR #456 notebook remediation repaired the reviewed `*_test_filled.ipynb` fixtures so they again preserve the base notebook structure, use real exercise implementations instead of placeholder output stubs, restore the Advanced Day 8 authenticity guardrail, and still satisfy the touched assignments' existing grading criteria.
+[2026-05-19] Issue #458 foundation landed locally: lecture shared assets, the Markdown-driven lecture generator, lecture HTML validator, and Pages publish integration now work together and pass generator plus staged publish validation.
+[2026-05-19] Issue #458 pilot review passed, the UX follow-up fixes landed, and the generator produced validated source-owned lecture HTML for all 96 hourly lectures plus matching `_site` output.
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5, Hour 3: Dictionaries Fundamentals (Course Hour 19) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day5_Hour3_Basics.md">
+
+    <link rel="prev" href="Day5_Hour2_Basics.html">
+    <link rel="next" href="Day5_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="5" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 5, Hour 3: Dictionaries Fundamentals (Course Hour 19)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 5</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 5, Course Hour 19 – Dictionaries fundamentals<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 19. The entire hour focuses on Python dictionaries: what they are, how key-value thinking works, how to create and manipulate them, and — critically — how to access them safely using <code>get()</code> rather than crashing with a <code>KeyError</code>. Stay firmly within Basics scope: do not introduce dict comprehensions, <code>collections.defaultdict</code>, or nested dictionaries beyond a passing mention. The two key outcomes are (1) creating, reading, adding, and updating a dictionary by key, and (2) always using <code>get()</code> or an <code>in</code>-check before accessing a key that might be missing. The live demo types an inventory dictionary from scratch and deliberately triggers a <code>KeyError</code> to make the contrast with <code>get()</code> vivid and memorable. The guided lab turns learners loose to build their own interactive inventory manager. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip the conceptual explanations — they are load-bearing.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Create a dictionary using curly-brace literal syntax and the <code>dict()</code> constructor, and explain in plain language what makes a dictionary different from a list, tuple, or set.</li>
+<li>Access individual values by their key using bracket notation, and explain clearly why Python raises a <code>KeyError</code> when a key does not exist.</li>
+<li>Add new entries and update existing entries in a dictionary using the same assignment syntax, and use an <code>in</code>-check to decide which action is appropriate.</li>
+<li>Access dictionary values safely using <code>get(key)</code> and <code>get(key, default)</code>, and choose confidently between bracket access and <code>get()</code> depending on whether a missing key is expected or an error.</li>
+<li>Build the Inventory Manager program: create a dictionary of five items with quantities, ask the user for an item name and a quantity to add, update the correct key safely, and print the full inventory — without crashing on a missing key."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to Hour 18 (sets); introduce the key-value problem that dictionaries solve</li>
+<li><strong>0:05–0:14</strong> Core concept: what a dictionary is, real-world analogy, literal syntax, reading values by key</li>
+<li><strong>0:14–0:22</strong> Adding and updating entries: assignment syntax, <code>in</code>-check, what happens when a key already exists</li>
+<li><strong>0:22–0:29</strong> Safe access with <code>get()</code>: <code>get(key)</code>, <code>get(key, default)</code>, side-by-side comparison with bracket notation</li>
+<li><strong>0:29–0:33</strong> Removing entries: <code>del</code>, <code>pop()</code>, <code>clear()</code></li>
+<li><strong>0:33–0:38</strong> Keys must be unique and hashable: duplicate key rule, valid key types, what cannot be a key</li>
+<li><strong>0:38–0:43</strong> Live demo: Inventory Dictionary — typed live, showing <code>KeyError</code> vs <code>get()</code>, updating quantities, adding items</li>
+<li><strong>0:43–0:58</strong> Guided lab: Inventory Manager</li>
+<li><strong>0:58–1:00</strong> Debrief, recap, and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open two clean files before class: <code>hour19_dict_demo.py</code> for the live demo, and <code>hour19_lab_inventory.py</code> with blank comment placeholders as a starter for learners.</li>
+<li>Have a Python REPL terminal open alongside your editor — you will drop into it for quick one-liner experiments in Sections 4 and 5.</li>
+<li>Plan to <strong>deliberately crash the program</strong> with a <code>KeyError</code> during the demo — this is intentional and pedagogically essential. Warn learners that you are doing it on purpose.</li>
+<li>Confirm learners have completed Hour 18 (sets) and are comfortable with the concept of collection types in Python. This hour builds directly on that understanding.</li>
+<li>Have a whiteboard or screen annotation tool ready for Section 4 to sketch the key → value arrow diagram.</li>
+<li>Prepare three short interactive questions to ask during the concept walkthrough; they are marked with <strong>[Ask learners]</strong> throughout this script.</li>
+</ul>
+<p><strong>Say:</strong> "Open your editor, create a fresh file called <code>hour19_dict_demo.py</code>, and get your terminal ready alongside it. Dictionaries are one of the most important data structures in all of Python — almost every real program uses them. This hour is going to feel very relevant very quickly."</p>
+<hr>
+<h2 id="3-opening-script-reconnect-to-earlier-learning-5-minutes">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</h2>
+<h3 id="31-quick-recap-from-hour-18">3.1 Quick recap from Hour 18</h3>
+<p><strong>Say:</strong>
+"Last hour we explored sets. We found out that a set is an unordered collection of <em>unique</em> values — no duplicates ever, and membership checks with <code>in</code> are extremely fast. Sets are brilliant for the 'have I seen this before?' problem. We built a Unique Visitors program and saw how converting a list to a set instantly strips all the duplicates.</p>
+<p>So at this point in the course, we have four collection types under our belt: lists, which are ordered and mutable; tuples, which are ordered and immutable; sets, which are unordered and store only unique values; and today — dictionaries, which are the most powerful and flexible of the four for many common real-world tasks.</p>
+<p>Take thirty seconds: remind your neighbour — or remind yourself if you're working solo — what you remember about sets. What makes them special? What would you use one for? … Great. Hold that thought and let's bridge into today."</p>
+<h3 id="32-the-limitation-that-motivates-dictionaries">3.2 The limitation that motivates dictionaries</h3>
+<p><strong>Say:</strong>
+"Here is a question. Suppose I give you a list like this:"</p>
+<pre><code class="language-python">items = [&quot;apples&quot;, &quot;bananas&quot;, &quot;oranges&quot;, &quot;pears&quot;, &quot;grapes&quot;]
+quantities = [12, 5, 8, 3, 20]
+</code></pre>
+<p><strong>Say:</strong>
+"I have my five fruits in one list and their quantities in another. This works, but it is fragile. How many apples do I have? I have to know that 'apples' is at index 0, and then look up <code>quantities[0]</code>. If I accidentally sort one list but not the other, my data is corrupted. If I insert a new fruit in the middle of <code>items</code>, I have to remember to insert the matching quantity at the exact same position in <code>quantities</code>.</p>
+<p>This is a common beginner pattern, and it breaks. There has to be a better way to say: 'apples goes with 12, bananas goes with 5, oranges goes with 8'. And there is. It is called a dictionary."</p>
+<p><strong>[Transition]</strong> "Let us learn what a dictionary is."</p>
+<hr>
+<h2 id="4-concept-what-is-a-dictionary">4) Concept: What Is a Dictionary?</h2>
+<h3 id="41-the-real-world-analogy">4.1 The real-world analogy</h3>
+<p><strong>Say:</strong>
+"The name 'dictionary' is a great clue. Think of an actual physical dictionary — a book where every word has a definition. If I want to know what 'ephemeral' means, I do not read the entire dictionary from page one. I flip straight to the 'E' section and look up 'ephemeral'. The <em>word</em> is the <strong>key</strong> and the <em>definition</em> is the <strong>value</strong>. The dictionary gives me a direct path from one piece of information to another.</p>
+<p>Python's <code>dict</code> works exactly the same way. You store pairs of information: a key and its associated value. You use the key to look up the value instantly — no looping, no index arithmetic, no searching."</p>
+<p><strong>Draw on whiteboard (or annotate on screen):</strong></p>
+<pre><code>KEY          →   VALUE
+&quot;apples&quot;     →   12
+&quot;bananas&quot;    →   5
+&quot;oranges&quot;    →   8
+&quot;pears&quot;      →   3
+&quot;grapes&quot;     →   20
+</code></pre>
+<p><strong>Say:</strong>
+"Here is another analogy if the dictionary one does not click: think of a contacts app on your phone. You search for 'Maria' — that is the key. The app instantly shows you Maria's phone number — that is the value. You do not scroll through every contact alphabetically; you type the name and get the number. That is exactly what a Python dictionary does.</p>
+<p>Or think of a locker system at a gym. Each locker has a number on it — that is the key. Inside each locker is somebody's bag — that is the value. The locker number gives you direct access to the contents. Different lockers, different keys, different contents."</p>
+<p><strong>[Ask learners]</strong> "Before I show you any code, can someone give me another real-world example of a key-value relationship? Something where you look up one thing to find another?"</p>
+<p><em>(Accept answers: student ID → grade, username → password hash, zip code → city name, book title → author, etc. Briefly acknowledge each one and confirm it fits the key → value pattern.)</em></p>
+<h3 id="42-the-key-value-mental-model">4.2 The key-value mental model</h3>
+<p><strong>Say:</strong>
+"Here is the core mental model: a dictionary is a <em>mapping</em>. It maps each key to exactly one value. The keys form a set — they must be unique. The values can be anything, and they can repeat. Every entry in a dictionary is a key-value <em>pair</em>.</p>
+<p>In Python's documentation and in most teaching, you will also see the word 'item' used to mean a single key-value pair. When I say 'an item in the dictionary', I mean one key together with its value."</p>
+<h3 id="43-creating-a-dictionary-with-literal-syntax">4.3 Creating a dictionary with literal syntax</h3>
+<p><strong>Say:</strong>
+"Let us write this in code. The syntax for a dictionary literal uses curly braces — just like a set. But unlike a set, which is just a list of values, a dictionary contains <em>pairs</em> connected by a colon. The key is on the left of the colon, and the value is on the right. Pairs are separated by commas."</p>
+<p>Type in the REPL or demo file:</p>
+<pre><code class="language-python"># Dictionary literal: {key: value, key: value, ...}
+inventory: dict[str, int] = {
+    &quot;apples&quot;: 12,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;pears&quot;: 3,
+    &quot;grapes&quot;: 20,
+}
+
+print(inventory)
+</code></pre>
+<p><strong>Say:</strong>
+"Notice the type hint I wrote: <code>dict[str, int]</code>. This tells anyone reading the code — including you six months from now — that the keys are strings and the values are integers. You do not have to write type hints, but they are a helpful habit and they make code more readable. Let us run this and see what prints."</p>
+<p><em>(Run it.)</em></p>
+<p><strong>Say:</strong>
+"Python prints the dictionary back to us, curly braces and all, with the colon notation. You can already see the structure clearly. The order Python prints them in is the <em>insertion order</em> — since Python 3.7, dictionaries remember the order you added entries. That is a nice guarantee to have."</p>
+<p><strong>[Ask learners]</strong> "What is the difference between what we just wrote and a set? A set also uses curly braces. How are they different?"</p>
+<p><em>(Listen for: a set has individual values separated by commas; a dictionary has key-colon-value pairs. Confirm and reinforce.)</em></p>
+<h3 id="44-reading-a-value-by-its-key">4.4 Reading a value by its key</h3>
+<p><strong>Say:</strong>
+"To get a value back out of the dictionary, you use square bracket notation — the same square brackets you use to index a list. But instead of a number, you put the key inside."</p>
+<p>Type in the REPL:</p>
+<pre><code class="language-python">print(inventory[&quot;apples&quot;])   # 12
+print(inventory[&quot;grapes&quot;])   # 20
+</code></pre>
+<p><strong>Say:</strong>
+"Python looks up the key 'apples', finds it in the dictionary, and gives back its value, 12. This is called <em>key lookup</em> or <em>subscript access</em>. It is very fast — Python does not scan through the whole dictionary; it uses the key directly, much like how the locker number takes you straight to the right locker.</p>
+<p>Now — what happens if the key does not exist? Let me try something intentional."</p>
+<pre><code class="language-python">print(inventory[&quot;mangoes&quot;])   # 🔴 KeyError!
+</code></pre>
+<p><strong>Say:</strong>
+"Python raises a <code>KeyError</code>. It is telling us: 'I looked everywhere in this dictionary, and there is no key called mangoes.' The program crashes. This is the most common dictionary error beginners encounter, and we will spend real time today learning how to avoid it properly. Keep that error message in mind — we will come back to it in Section 7."</p>
+<hr>
+<h2 id="5-creating-and-reading-dictionaries">5) Creating and Reading Dictionaries</h2>
+<h3 id="51-alternative-the-dict-constructor">5.1 Alternative: the <code>dict()</code> constructor</h3>
+<p><strong>Say:</strong>
+"There is a second way to create a dictionary: the <code>dict()</code> built-in constructor. You pass keyword arguments where the keyword becomes the string key and the value becomes the value."</p>
+<p>Type in REPL:</p>
+<pre><code class="language-python"># Using the dict() constructor
+scores: dict[str, int] = dict(alice=95, bob=87, carol=91)
+print(scores)
+# {'alice': 95, 'bob': 87, 'carol': 91}
+</code></pre>
+<p><strong>Say:</strong>
+"This style is clean and readable for small dictionaries, but it only works when your keys are valid Python identifiers — simple names without spaces or special characters. If your keys are more complex, like 'item code' with a space, you must use the curly-brace literal. For this course, the literal form is the standard — use it by default."</p>
+<h3 id="52-creating-an-empty-dictionary">5.2 Creating an empty dictionary</h3>
+<p><strong>Say:</strong>
+"You will often want to start with an empty dictionary and add things to it dynamically. There are two equivalent ways:"</p>
+<pre><code class="language-python"># These two are identical
+empty_a: dict[str, int] = {}
+empty_b: dict[str, int] = dict()
+
+print(type(empty_a))   # &lt;class 'dict'&gt;
+print(type(empty_b))   # &lt;class 'dict'&gt;
+</code></pre>
+<p><strong>Say:</strong>
+"Important warning: remember that an empty set uses <code>set()</code>, not <code>{}</code>. An empty pair of curly braces always means an empty <em>dictionary</em>, not an empty set. This catches many beginners. If you want an empty set, you must write <code>set()</code>. If you want an empty dictionary, write <code>{}</code> or <code>dict()</code>. Write that difference down somewhere visible."</p>
+<h3 id="53-checking-the-length">5.3 Checking the length</h3>
+<p><strong>Say:</strong>
+"The <code>len()</code> function works on dictionaries just as it does on lists. It tells you how many key-value pairs are in the dictionary."</p>
+<pre><code class="language-python">print(len(inventory))   # 5
+</code></pre>
+<hr>
+<h2 id="6-adding-and-updating-entries">6) Adding and Updating Entries</h2>
+<h3 id="61-adding-a-new-entry">6.1 Adding a new entry</h3>
+<p><strong>Say:</strong>
+"Here is the beautiful simplicity of dictionaries: adding a new entry and updating an existing entry use <em>exactly the same syntax</em>. You write <code>dictionary[key] = value</code>. If the key does not already exist, Python creates it. If it does already exist, Python overwrites the old value with the new one."</p>
+<p>Type and run:</p>
+<pre><code class="language-python"># Adding a brand-new key
+inventory[&quot;mangoes&quot;] = 7
+print(inventory)
+# {'apples': 12, 'bananas': 5, ..., 'mangoes': 7}
+</code></pre>
+<p><strong>Say:</strong>
+"Mangoes did not exist before. Python created a new entry for it with value 7. Now it is in the dictionary. Let us check the length."</p>
+<pre><code class="language-python">print(len(inventory))   # 6
+</code></pre>
+<h3 id="62-updating-an-existing-entry">6.2 Updating an existing entry</h3>
+<p><strong>Say:</strong>
+"Now suppose we get a delivery of 10 more apples. We currently have 12. We want to update the count to 22."</p>
+<pre><code class="language-python"># Updating an existing key
+inventory[&quot;apples&quot;] = 22
+print(inventory[&quot;apples&quot;])   # 22
+</code></pre>
+<p><strong>Say:</strong>
+"Python found the key 'apples', it already existed, and it replaced 12 with 22. The dictionary now has 22 apples. The old value is gone — dictionaries do not keep history. There is still only one entry for 'apples'."</p>
+<h3 id="63-the-in-operator-for-dictionaries">6.3 The <code>in</code> operator for dictionaries</h3>
+<p><strong>Say:</strong>
+"The <code>in</code> operator works with dictionaries, and by default it checks <em>keys</em> — not values. So <code>'apples' in inventory</code> asks: 'Is there a key called apples in this dictionary?' The answer is True or False."</p>
+<pre><code class="language-python">print(&quot;apples&quot; in inventory)    # True
+print(&quot;mangoes&quot; in inventory)   # True  (we just added it!)
+print(&quot;durians&quot; in inventory)   # False
+
+# Not-in also works
+print(&quot;durians&quot; not in inventory)  # True
+</code></pre>
+<p><strong>Say:</strong>
+"This is extremely useful for safe access. Before you look something up, you can check whether the key exists. Like this:"</p>
+<pre><code class="language-python">item_to_check: str = &quot;pears&quot;
+
+if item_to_check in inventory:
+    print(f&quot;{item_to_check}: {inventory[item_to_check]} in stock&quot;)
+else:
+    print(f&quot;{item_to_check} is not in our inventory&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"The <code>in</code>-check followed by bracket access is safe — you only do the bracket lookup <em>after</em> confirming the key exists. This pattern is perfectly correct. However, there is an even more elegant built-in tool designed exactly for this situation, and that is <code>get()</code>. We will meet it in the next section."</p>
+<h3 id="64-common-trap-the-accidental-new-key">6.4 Common trap: the accidental new key</h3>
+<p><strong>Say:</strong>
+"Here is a pitfall I want you to see right now, because it will happen to you eventually. If you make a typo in a key name when <em>assigning</em>, Python does not raise an error — it silently creates a <em>new</em> entry with the misspelled name."</p>
+<pre><code class="language-python"># Oops: typo creates an unwanted new key
+inventory[&quot;applez&quot;] = 999   # Note the 'z'
+print(len(inventory))       # Now 7, not 6!
+print(&quot;apples&quot; in inventory)   # True  (original is fine)
+print(&quot;applez&quot; in inventory)   # True  (whoops, we made a ghost entry)
+</code></pre>
+<p><strong>Say:</strong>
+"This can cause subtle bugs. Your apple count looks fine but you have a phantom 'applez' entry floating around. The fix is careful typing, and later in the optional extension section we will look at normalizing keys to lowercase to reduce some of this class of problem. For now: type your keys carefully and always test with a print to confirm what you expect."</p>
+<hr>
+<h2 id="7-safe-access-with-get">7) Safe Access with <code>get()</code></h2>
+<h3 id="71-the-problem-get-solves">7.1 The problem <code>get()</code> solves</h3>
+<p><strong>Say:</strong>
+"Let us revisit the <code>KeyError</code> crash from earlier. When we wrote <code>inventory['mangoes']</code> and mangoes was not in the dictionary, Python blew up. That is the correct behaviour for Python: failing loudly is better than silently returning a wrong answer. But there are many situations where a missing key is <em>expected</em> — it is not a bug, it is just a normal part of the data. In those cases, a crash is unhelpful.</p>
+<p>Think about the lab we are about to do: the user types a fruit name, and we look it up. The user might type a fruit that is not in the inventory. We do not want to crash. We want to handle it gracefully. That is exactly what <code>get()</code> is designed for."</p>
+<h3 id="72-getkey-returns-none-by-default">7.2 <code>get(key)</code> — returns <code>None</code> by default</h3>
+<p><strong>Say:</strong>
+"The <code>get()</code> method takes a key as its argument and returns the corresponding value if the key exists. If the key does not exist, instead of raising a <code>KeyError</code>, it returns <code>None</code>. <code>None</code> is Python's way of saying 'no value here' — it is not a crash, it is a quiet, safe signal."</p>
+<p>Type and run:</p>
+<pre><code class="language-python"># Safe lookup — no crash even if key is missing
+result = inventory.get(&quot;apples&quot;)
+print(result)       # 12  (key exists)
+
+result = inventory.get(&quot;durians&quot;)
+print(result)       # None  (key does not exist, no crash)
+</code></pre>
+<p><strong>Say:</strong>
+"The program does not crash. It returns <code>None</code>. We can test for that:"</p>
+<pre><code class="language-python">item: str = &quot;durians&quot;
+result = inventory.get(item)
+
+if result is None:
+    print(f&quot;'{item}' is not in our inventory.&quot;)
+else:
+    print(f&quot;We have {result} {item} in stock.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"This is safe, readable, and very Pythonic. Notice I wrote <code>result is None</code> rather than <code>result == None</code> — that is the recommended style in Python for checking against <code>None</code> specifically."</p>
+<h3 id="73-getkey-default-return-your-own-fallback-value">7.3 <code>get(key, default)</code> — return your own fallback value</h3>
+<p><strong>Say:</strong>
+"Even better: <code>get()</code> accepts a second optional argument — a <em>default value</em> to return when the key is missing. Instead of returning <code>None</code>, it returns whatever you specify."</p>
+<pre><code class="language-python"># get() with a default value
+apples_count = inventory.get(&quot;apples&quot;, 0)
+print(apples_count)   # 12  (key exists, default is ignored)
+
+durians_count = inventory.get(&quot;durians&quot;, 0)
+print(durians_count)  # 0   (key missing, returns the default 0)
+</code></pre>
+<p><strong>Say:</strong>
+"This pattern is incredibly useful. The default 0 says: 'if we do not have this item, pretend we have zero of it.' For an inventory system where missing means zero stock, this is exactly right. You can use any default value: a string, a list, a boolean — whatever makes sense in context."</p>
+<h3 id="74-side-by-side-comparison">7.4 Side-by-side comparison</h3>
+<p><strong>Say:</strong>
+"Let me put the three access patterns side by side so you can see the trade-offs clearly."</p>
+<pre><code class="language-python"># Pattern 1: Bracket access — fast and direct, but crashes if key is missing
+# Use when you are CERTAIN the key exists
+quantity = inventory[&quot;apples&quot;]
+
+# Pattern 2: in-check then bracket — explicit, readable, two lines
+# Use when you need to branch on existence anyway
+if &quot;apples&quot; in inventory:
+    quantity = inventory[&quot;apples&quot;]
+
+# Pattern 3: get() — concise, safe, Pythonic
+# Use when a missing key is a normal/expected case
+quantity = inventory.get(&quot;apples&quot;, 0)
+</code></pre>
+<p><strong>[Ask learners]</strong> "When would you choose pattern 1 over pattern 3? … When would pattern 3 be the wrong choice?"</p>
+<p><em>(Listen for: pattern 1 is appropriate when you are truly certain the key exists and a missing key would be a genuine programming bug — you </em>want<em> the crash because it signals something is broken. Pattern 3 is appropriate when the user input might not match, when data might be incomplete, etc. Confirm and synthesize.)</em></p>
+<p><strong>Say:</strong>
+"There is no single right answer for every situation, but as a beginner default: when in doubt, use <code>get()</code> with a sensible default. It is almost always safer."</p>
+<hr>
+<h2 id="8-removing-entries">8) Removing Entries</h2>
+<p><strong>Say:</strong>
+"Sometimes you need to remove a key-value pair from a dictionary. Python gives you three tools for this."</p>
+<h3 id="81-del-direct-deletion">8.1 <code>del</code> — direct deletion</h3>
+<pre><code class="language-python"># del removes the key entirely
+print(&quot;pears&quot; in inventory)   # True
+del inventory[&quot;pears&quot;]
+print(&quot;pears&quot; in inventory)   # False
+print(len(inventory))         # one fewer entry
+</code></pre>
+<p><strong>Say:</strong>
+"If you <code>del</code> a key that does not exist, Python raises a <code>KeyError</code> — same as bracket access. So only use <code>del</code> when you are sure the key is there, or wrap it in an <code>if key in dict</code> check first."</p>
+<h3 id="82-pop-remove-and-return">8.2 <code>pop()</code> — remove and return</h3>
+<pre><code class="language-python"># pop() removes the key AND returns its value
+removed_value = inventory.pop(&quot;bananas&quot;)
+print(f&quot;Removed bananas, they had quantity: {removed_value}&quot;)
+
+# pop() with a default avoids KeyError for missing keys
+missing = inventory.pop(&quot;durians&quot;, 0)
+print(f&quot;Removed durians: {missing}&quot;)   # 0, no crash
+</code></pre>
+<p><strong>Say:</strong>
+"<code>pop()</code> is like <code>get()</code> in that it accepts a default. When you need to both remove an entry <em>and</em> do something with its value, <code>pop()</code> is the right tool."</p>
+<h3 id="83-clear-empty-the-entire-dictionary">8.3 <code>clear()</code> — empty the entire dictionary</h3>
+<pre><code class="language-python"># clear() removes ALL entries — use carefully!
+temp_dict: dict[str, int] = {&quot;a&quot;: 1, &quot;b&quot;: 2}
+temp_dict.clear()
+print(temp_dict)   # {}
+print(len(temp_dict))  # 0
+</code></pre>
+<p><strong>Say:</strong>
+"You will not need <code>clear()</code> often, but it exists. It is the nuclear option: wipes the entire dictionary in one call. The dictionary object itself still exists — it is just empty."</p>
+<hr>
+<h2 id="9-key-concepts-keys-must-be-unique-and-hashable">9) Key Concepts: Keys Must Be Unique and Hashable</h2>
+<h3 id="91-what-happens-when-you-assign-the-same-key-twice">9.1 What happens when you assign the same key twice</h3>
+<p><strong>Say:</strong>
+"Dictionary keys must be unique. There is no such thing as two entries with the same key. If you try to create a dictionary literal with a duplicate key, Python does not raise an error — the <em>last</em> value wins silently."</p>
+<pre><code class="language-python"># Duplicate key in a literal — last value wins
+prices: dict[str, float] = {
+    &quot;apple&quot;: 1.20,
+    &quot;banana&quot;: 0.50,
+    &quot;apple&quot;: 2.50,   # duplicate!
+}
+print(prices)
+# {'apple': 2.50, 'banana': 0.50}
+# The 1.20 is gone. No error was raised.
+</code></pre>
+<p><strong>Say:</strong>
+"This is a footgun. Python does not warn you. The first apple price was silently discarded. The lesson: if you are building a dictionary literal by hand and something seems off, check for duplicate keys. Good editors and linters will flag this, but you should develop the habit of spotting it yourself."</p>
+<h3 id="92-what-types-can-be-keys">9.2 What types can be keys</h3>
+<p><strong>Say:</strong>
+"Keys must be <em>hashable</em>. Without going deep into the theory: hashable means Python can compute a fixed fingerprint — a hash — for the value, and that fingerprint does not change over time. Any <em>immutable</em> built-in type is hashable and therefore usable as a key."</p>
+<p>Valid key types:</p>
+<pre><code class="language-python"># Strings — the most common key type
+d: dict = {&quot;name&quot;: &quot;Alice&quot;}
+
+# Integers — very common for ID-like keys
+d[42] = &quot;the answer&quot;
+
+# Floats — valid, but unusual and risky due to floating-point precision
+d[3.14] = &quot;pi&quot;
+
+# Booleans — valid (True and False are ints internally: 1 and 0)
+d[True] = &quot;yes&quot;
+
+# Tuples — valid IF all elements inside are also hashable
+d[(1, 2)] = &quot;coordinate&quot;
+
+print(d)
+</code></pre>
+<p><strong>Say:</strong>
+"Now, what cannot be a key?"</p>
+<pre><code class="language-python"># Lists CANNOT be keys — they are mutable (unhashable)
+bad_dict = {[1, 2, 3]: &quot;a list key&quot;}   # 🔴 TypeError: unhashable type: 'list'
+</code></pre>
+<p><strong>Say:</strong>
+"Python raises a <code>TypeError</code> immediately. Lists are mutable — they can change — so Python cannot compute a stable hash for them. Sets also cannot be keys for the same reason. If you need a tuple-like key, use a tuple, not a list.</p>
+<p>For this course, your keys will almost always be strings. Integer keys come up in some patterns. That is all you need to remember for now: string and integer keys — always safe."</p>
+<hr>
+<h2 id="10-live-demo-inventory-dictionary">10) Live Demo: Inventory Dictionary</h2>
+<p><em>[Open <code>hour19_dict_demo.py</code> in your editor and type everything below live — do not paste it. Narrate every line as you type.]</em></p>
+<p><strong>Say:</strong>
+"Let us put everything together in one flowing demo. I am going to build an inventory dictionary from scratch, demonstrate the <code>KeyError</code> deliberately, and then show you the safe <code>get()</code> solution. Type along with me."</p>
+<h3 id="step-1-create-the-inventory">Step 1 — Create the inventory</h3>
+<pre><code class="language-python"># hour19_dict_demo.py
+# Live Demo: Inventory Dictionary
+
+# Step 1: Create the inventory with 5 items
+inventory: dict[str, int] = {
+    &quot;apples&quot;: 12,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;pears&quot;: 3,
+    &quot;grapes&quot;: 20,
+}
+
+print(&quot;=== Current Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item}: {qty}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"I'm using <code>inventory.items()</code> inside a <code>for</code> loop — this gives me each key-value pair as a tuple that I unpack into <code>item</code> and <code>qty</code>. We will go much deeper into dictionary iteration next hour; for now just know this is the standard way to print all contents. Run it and confirm we see all five items."</p>
+<p><em>(Run it, confirm output.)</em></p>
+<h3 id="step-2-demonstrate-keyerror">Step 2 — Demonstrate <code>KeyError</code></h3>
+<pre><code class="language-python"># Step 2: Try to access a missing key — THIS WILL CRASH (on purpose!)
+print(&quot;\n--- Attempting to access 'mangoes' ---&quot;)
+print(inventory[&quot;mangoes&quot;])   # 🔴 KeyError: 'mangoes'
+</code></pre>
+<p><strong>Say:</strong>
+"I am running this <em>knowing</em> it will crash. Watch the error message carefully."</p>
+<p><em>(Run it. Let the traceback appear on screen.)</em></p>
+<p><strong>Say:</strong>
+"There it is: <code>KeyError: 'mangoes'</code>. Python is telling us exactly what went wrong — we tried to look up a key that does not exist. The program stopped dead. In a real application, this kind of unhandled crash would be a serious bug. Let us fix it with <code>get()</code>."</p>
+<h3 id="step-3-fix-with-get">Step 3 — Fix with <code>get()</code></h3>
+<pre><code class="language-python"># Step 3: Safe access with get()
+print(&quot;\n--- Safe access with get() ---&quot;)
+
+# get() returns None if key is missing
+result = inventory.get(&quot;mangoes&quot;)
+print(f&quot;get('mangoes') → {result}&quot;)   # None — no crash!
+
+# get() with a default value of 0
+count = inventory.get(&quot;mangoes&quot;, 0)
+print(f&quot;get('mangoes', 0) → {count}&quot;)  # 0
+
+# get() with a key that DOES exist — returns the real value
+count = inventory.get(&quot;apples&quot;, 0)
+print(f&quot;get('apples', 0) → {count}&quot;)   # 12
+</code></pre>
+<p><em>(Run it.)</em></p>
+<p><strong>Say:</strong>
+"No crash. <code>get()</code> returns 0 for a missing key. And when the key does exist, it returns the real value, 12 — the default is ignored. This is exactly the behaviour we want in the lab."</p>
+<h3 id="step-4-update-and-add-entries">Step 4 — Update and add entries</h3>
+<pre><code class="language-python"># Step 4: Updating existing entry and adding a new one
+print(&quot;\n--- Updating inventory ---&quot;)
+
+# Delivery arrived: 10 more apples
+inventory[&quot;apples&quot;] += 10     # same as: inventory[&quot;apples&quot;] = inventory[&quot;apples&quot;] + 10
+print(f&quot;After delivery — apples: {inventory['apples']}&quot;)   # 22
+
+# New item arrives
+inventory[&quot;mangoes&quot;] = 7
+print(f&quot;New item added — mangoes: {inventory['mangoes']}&quot;)  # 7
+
+print(f&quot;\nInventory now has {len(inventory)} items.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Notice <code>inventory['apples'] += 10</code> — this is the compound assignment operator working on a dictionary value. It reads the current value, adds 10, and writes it back. This is a very common pattern for counters and quantity tracking."</p>
+<h3 id="step-5-check-existence-before-deciding">Step 5 — Check existence before deciding</h3>
+<pre><code class="language-python"># Step 5: Using 'in' to decide whether to update or add
+print(&quot;\n--- Smart update using 'in' check ---&quot;)
+
+new_items: dict[str, int] = {&quot;bananas&quot;: 8, &quot;kiwis&quot;: 15, &quot;oranges&quot;: 4}
+
+for item, qty in new_items.items():
+    if item in inventory:
+        inventory[item] += qty
+        print(f&quot;Updated '{item}' → now {inventory[item]}&quot;)
+    else:
+        inventory[item] = qty
+        print(f&quot;Added new item '{item}' → {qty}&quot;)
+
+print(&quot;\n=== Final Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item}: {qty}&quot;)
+</code></pre>
+<p><em>(Run the complete file.)</em></p>
+<p><strong>Say:</strong>
+"Beautiful. We loop through a dictionary of incoming stock, check whether each item already exists, update if it does, and add it fresh if it does not. The complete inventory is printed at the end. This is a realistic pattern — think of a warehouse system receiving a shipment file. Now you build something similar yourself."</p>
+<hr>
+<h2 id="11-hands-on-lab-inventory-manager">11) Hands-on Lab: Inventory Manager</h2>
+<h3 id="111-lab-introduction">11.1 Lab introduction</h3>
+<p><strong>Say:</strong>
+"You have seen me build this — now it is your turn. Open <code>hour19_lab_inventory.py</code> and build the program step by step. I will give you the spec, then starter hints, then we will walk through the solution together at the end."</p>
+<h3 id="112-lab-specification">11.2 Lab specification</h3>
+<p><strong>Goal:</strong> Build an interactive inventory manager.</p>
+<p><strong>Requirements:</strong>
+1. Create a dictionary called <code>inventory</code> with exactly 5 items and their quantities. Use items you choose — fruits, office supplies, game items, anything you like.
+2. Print the inventory neatly at the start, labelled "Current Inventory".
+3. Ask the user to type an item name.
+4. Ask the user how many units to add (as an integer).
+5. If the item exists in the inventory, increase its quantity by the entered amount.
+6. If the item does not exist, tell the user it was not found — do <strong>not</strong> crash, and do <strong>not</strong> silently create a new key.
+7. Print the final inventory, labelled "Updated Inventory".</p>
+<p><strong>Completion criteria:</strong>
+- The correct key is updated.
+- The program does not crash on a missing key.
+- <code>get()</code> or an <code>in</code>-check is used (not bare bracket access for the user-supplied key).
+- The output is readable and labelled.</p>
+<p><strong>Constraints:</strong>
+- No imports needed.
+- No loops (yet) — a single input/update cycle is enough.
+- Keep it simple and correct.</p>
+<h3 id="113-starter-hints">11.3 Starter hints</h3>
+<p><em>Share these on screen:</em></p>
+<pre><code class="language-python"># hour19_lab_inventory.py
+# Inventory Manager — Lab Starter
+
+# 1. Create your inventory dictionary here
+inventory: dict[str, int] = {
+    # your items here
+}
+
+# 2. Print the starting inventory
+print(&quot;=== Current Inventory ===&quot;)
+# TODO: print each item and quantity
+
+# 3. Ask the user for an item name and quantity to add
+item_name: str = input(&quot;Enter item name: &quot;)
+add_qty: int = int(input(&quot;How many to add? &quot;))
+
+# 4. Check if the item exists, update or warn
+# TODO: your logic here
+
+# 5. Print the final inventory
+print(&quot;\n=== Updated Inventory ===&quot;)
+# TODO: print each item and quantity
+</code></pre>
+<p><strong>Say:</strong>
+"Work through each <code>TODO</code> comment in order. The trickiest part is step 4 — deciding how to check. You can use <code>get()</code> with a default or an <code>in</code>-check. Both are correct; pick whichever feels more natural to you right now.</p>
+<p>You have fifteen minutes. I will circulate. If you finish early, try the extension tasks at the bottom of this script. Go."</p>
+<p><em>(Give 15 minutes of work time. Circulate, answer questions, nudge stuck learners with questions like: "What does <code>get()</code> return when the key is missing?" and "What would you need to check before adding to a quantity?" without giving away the answer.)</em></p>
+<h3 id="114-walkthrough-solution">11.4 Walkthrough solution</h3>
+<p><strong>Say:</strong>
+"Let us look at a clean solution together. As always, there are several correct approaches — I will show one that uses <code>get()</code> for the existence check. If yours looks a bit different but works correctly and does not crash, it is valid."</p>
+<pre><code class="language-python"># hour19_lab_inventory.py
+# Inventory Manager — Full Solution
+
+# 1. Create inventory
+inventory: dict[str, int] = {
+    &quot;apples&quot;: 12,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;pears&quot;: 3,
+    &quot;grapes&quot;: 20,
+}
+
+# 2. Print starting inventory
+print(&quot;=== Current Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item:&lt;12} {qty:&gt;4} units&quot;)
+
+# 3. Get user input
+item_name: str = input(&quot;\nEnter item name: &quot;).strip()
+add_qty: int = int(input(&quot;How many to add? &quot;))
+
+# 4. Update or warn
+current_qty: int | None = inventory.get(item_name)
+
+if current_qty is None:
+    print(f&quot;\n'{item_name}' is not in the inventory. No changes made.&quot;)
+else:
+    inventory[item_name] = current_qty + add_qty
+    print(f&quot;\nUpdated '{item_name}': {current_qty} → {inventory[item_name]}&quot;)
+
+# 5. Print final inventory
+print(&quot;\n=== Updated Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item:&lt;12} {qty:&gt;4} units&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"A few details worth noting in this solution:</p>
+<p>First, I used <code>.strip()</code> on the user's input. This trims any accidental leading or trailing spaces the user might have typed. If the user types ' apples ' with spaces around it, the raw string would not match 'apples' in the dictionary — <code>.strip()</code> fixes that.</p>
+<p>Second, in the <code>print</code> format strings I used <code>{item:&lt;12}</code> and <code>{qty:&gt;4}</code>. The <code>&lt;12</code> means 'left-align in a field 12 characters wide'; the <code>&gt;4</code> means 'right-align in a field 4 characters wide'. This lines up the columns so the output looks like a proper table. These are f-string format specifiers — a nice finishing touch that we covered earlier in the course.</p>
+<p>Third, the <code>get()</code> call stores <code>None</code> in <code>current_qty</code> if the key is missing, and we check <code>is None</code> to decide which branch to take. If the key exists, <code>current_qty</code> is the integer value and we add to it directly.</p>
+<p><strong>[Ask learners]</strong> "What would happen if the user typed 'Apples' with a capital A? … Right — it would not match 'apples' in the dictionary. This is case sensitivity in action — one of our key pitfalls, which I want to discuss now."</p>
+<h3 id="115-design-discussion">11.5 Design discussion</h3>
+<p><strong>Say:</strong>
+"One thing this solution does not handle: what if the user types a negative number? Should we allow removing stock? What if they type something that is not a number at all and <code>int()</code> crashes?</p>
+<p>These are real concerns in production code. For this lab, we are keeping it simple — we trust the user to enter a positive integer. But notice how quickly requirements grow. A real inventory system would need: input validation, the ability to subtract stock, a loop to handle multiple updates, saving to a file, and so on. The dictionary is just one piece of that system. Today we are building the foundation."</p>
+<hr>
+<h2 id="12-common-pitfalls">12) Common Pitfalls</h2>
+<p><strong>Say:</strong>
+"Let me walk through the most common mistakes I see learners make with dictionaries. Recognising these patterns will save you debugging time."</p>
+<h3 id="121-case-sensitivity">12.1 Case sensitivity</h3>
+<pre><code class="language-python">inventory: dict[str, int] = {&quot;apples&quot;: 12, &quot;bananas&quot;: 5}
+
+user_input: str = &quot;Apples&quot;   # Capital A
+
+# This will NOT find the key
+print(inventory.get(user_input, 0))   # 0 — not 12!
+
+# Fix: normalize the input to lowercase
+print(inventory.get(user_input.lower(), 0))   # 12 ✅
+</code></pre>
+<p><strong>Say:</strong>
+"Python strings are case-sensitive. <code>'Apples'</code> and <code>'apples'</code> are two completely different strings. If your keys are all lowercase, call <code>.lower()</code> on any user input before using it as a key. If you want to be consistent regardless of input, normalize everything to lowercase when you <em>store</em> it too. We will do this in the optional extension."</p>
+<h3 id="122-typo-creates-a-new-key">12.2 Typo creates a new key</h3>
+<pre><code class="language-python">inventory: dict[str, int] = {&quot;apples&quot;: 12}
+
+# Typo: 'appels' instead of 'apples'
+inventory[&quot;appels&quot;] = 99   # Silent — no error!
+
+print(inventory)
+# {'apples': 12, 'appels': 99}  ← ghost key
+</code></pre>
+<p><strong>Say:</strong>
+"Python does not know the difference between a typo and an intentional new key. Both look the same to the interpreter. The only defence is careful typing and, in larger systems, having a defined set of valid keys that you check against. For now: print your dictionary frequently while developing so you spot unexpected keys early."</p>
+<h3 id="123-confusing-dict-syntax-with-list-syntax">12.3 Confusing dict syntax with list syntax</h3>
+<pre><code class="language-python"># A list uses integer indices
+my_list: list[str] = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+print(my_list[0])   # &quot;a&quot;  — integer index
+
+# A dict uses keys (usually strings)
+my_dict: dict[str, int] = {&quot;a&quot;: 1, &quot;b&quot;: 2}
+print(my_dict[&quot;a&quot;])   # 1  — string key
+
+# Common confusion: trying an integer on a string-keyed dict
+print(my_dict[0])   # 🔴 KeyError: 0
+</code></pre>
+<p><strong>Say:</strong>
+"Both use square brackets, so beginners sometimes write <code>my_dict[0]</code> thinking it will return the first item. It does not — it looks for the <em>key</em> 0, which does not exist. Dictionaries are not indexed by position; they are indexed by key. If you want the first item, you need to know what key to ask for."</p>
+<h3 id="124-bare-bracket-access-on-user-supplied-keys">12.4 Bare bracket access on user-supplied keys</h3>
+<pre><code class="language-python">item: str = input(&quot;Enter item: &quot;)
+
+# ❌ Dangerous: crashes if item is not in inventory
+print(inventory[item])
+
+# ✅ Safe: use get() with a default
+print(inventory.get(item, &quot;Not found&quot;))
+</code></pre>
+<p><strong>Say:</strong>
+"Any time the key comes from outside your code — user input, a file, an API response — treat it as potentially missing. Bracket access is only safe when the key is a literal you typed yourself and you are absolutely certain it exists."</p>
+<h3 id="125-forgetting-that-creates-a-dict-not-a-set">12.5 Forgetting that <code>{}</code> creates a dict, not a set</h3>
+<pre><code class="language-python">mystery = {}
+print(type(mystery))   # &lt;class 'dict'&gt;  ← NOT a set!
+
+# To create an empty set:
+empty_set = set()
+print(type(empty_set))  # &lt;class 'set'&gt;
+</code></pre>
+<p><strong>Say:</strong>
+"This catches learners fresh from the sets lesson. Repeat after me: empty curly braces mean empty <em>dictionary</em>. An empty set needs <code>set()</code>."</p>
+<hr>
+<h2 id="13-optional-extension-lowercase-sorted-print">13) Optional Extension: Lowercase + Sorted Print</h2>
+<p><strong>Say:</strong>
+"If you have finished the lab and want a challenge that stays entirely within Basics scope, here are two extensions. These are real quality-of-life improvements that make your program more robust."</p>
+<h3 id="131-normalize-input-to-lowercase">13.1 Normalize input to lowercase</h3>
+<p><strong>Say:</strong>
+"The fix for case sensitivity is simple: call <code>.lower()</code> on the user's input before using it as a key. This way, 'Apples', 'APPLES', and 'apples' all resolve to the same key."</p>
+<pre><code class="language-python"># Extension 1: normalize user input
+item_name: str = input(&quot;Enter item name: &quot;).strip().lower()
+</code></pre>
+<p><strong>Say:</strong>
+"Now add a companion step: when you create the dictionary, also normalize all keys to lowercase. That way, the stored keys and the user's input are guaranteed to be in the same case. If your keys are already lowercase string literals, they are already normalized — nothing to change."</p>
+<pre><code class="language-python"># Storing with lowercase keys (already the case if you used lowercase literals)
+inventory: dict[str, int] = {
+    &quot;apples&quot;: 12,   # ✅ already lowercase
+    &quot;Bananas&quot;: 5,   # ❌ would cause mismatch
+}
+
+# Better: normalize at creation time
+raw_inventory: dict[str, int] = {&quot;Apples&quot;: 12, &quot;BANANAS&quot;: 5}
+inventory: dict[str, int] = {}
+for key, value in raw_inventory.items():
+    inventory[key.lower()] = value
+# {'apples': 12, 'bananas': 5}
+</code></pre>
+<p><strong>Say:</strong>
+"This version stays fully inside Basics scope. We start with an empty dictionary, loop through each key-value pair in <code>raw_inventory.items()</code>, lowercase the key, and store the same value under the normalized key. The result is a clean dictionary with predictable lowercase keys. If your literal keys are already lowercase, you do not need this extra step — but when data comes from mixed sources, this loop is a clear and reliable cleanup pattern."</p>
+<h3 id="132-print-inventory-sorted-by-item-name">13.2 Print inventory sorted by item name</h3>
+<p><strong>Say:</strong>
+"Dictionaries since Python 3.7 preserve insertion order, but insertion order is not always alphabetical. For a user-facing printout, alphabetical is friendlier. The <code>sorted()</code> function works on a dictionary's keys."</p>
+<pre><code class="language-python"># Extension 2: print inventory sorted alphabetically
+print(&quot;\n=== Updated Inventory (sorted) ===&quot;)
+for item in sorted(inventory):
+    print(f&quot;  {item:&lt;12} {inventory[item]:&gt;4} units&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"<code>sorted(inventory)</code> returns a sorted list of the dictionary's <em>keys</em>. We then use each key to look up the value via <code>inventory[item]</code>. This is one of the most common patterns for displaying dictionaries cleanly. The combination of lowercase normalization and sorted print makes your program feel professional."</p>
+<hr>
+<h2 id="14-debrief-recap-and-exit-ticket">14) Debrief, Recap, and Exit Ticket</h2>
+<h3 id="141-concept-recap-read-aloud">14.1 Concept recap (read aloud)</h3>
+<p><strong>Say:</strong>
+"Let us consolidate everything we covered this hour. I am going to go through the key ideas. For each one, tell me in your head whether you feel confident, a bit shaky, or unsure — be honest with yourself."</p>
+<p>"<strong>One:</strong> A dictionary is a collection of key-value pairs. Keys are unique; values can repeat. You look up a value by its key, not by its position."</p>
+<p>"<strong>Two:</strong> You create a dictionary with curly brace literal syntax: <code>{'key': value, 'key': value}</code>. An empty dictionary is <code>{}</code> — remember, NOT an empty set."</p>
+<p>"<strong>Three:</strong> Reading a value by key uses bracket notation: <code>d['key']</code>. If the key does not exist, Python raises a <code>KeyError</code> — the program crashes."</p>
+<p>"<strong>Four:</strong> You add a new entry and update an existing entry with the same syntax: <code>d['key'] = value</code>. Python decides whether to create or overwrite based on whether the key already exists."</p>
+<p>"<strong>Five:</strong> The <code>in</code> operator checks for key existence: <code>'key' in d</code> returns <code>True</code> or <code>False</code>. Use it before bracket access when you are not sure whether a key exists."</p>
+<p>"<strong>Six:</strong> <code>get(key)</code> returns the value if the key exists, and <code>None</code> if it does not — no crash. <code>get(key, default)</code> returns your specified default instead of <code>None</code>. This is the safest way to access a dictionary when a missing key is a normal possibility."</p>
+<p>"<strong>Seven:</strong> Dictionary keys must be hashable — strings and integers are always fine. Lists cannot be keys."</p>
+<h3 id="142-vocabulary-review">14.2 Vocabulary review</h3>
+<p><strong>Say:</strong>
+"Before we close, here are the key terms from today that you should know by name:
+- <strong>Dictionary</strong> — a mapping of key-value pairs
+- <strong>Key</strong> — the lookup identifier (must be unique and hashable)
+- <strong>Value</strong> — the data associated with a key
+- <strong>Item</strong> — a single key-value pair
+- <strong>KeyError</strong> — the exception raised when you access a missing key with bracket notation
+- <strong><code>get()</code></strong> — the safe access method that returns <code>None</code> (or a default) instead of raising <code>KeyError</code>"</p>
+<h3 id="143-exit-ticket">14.3 Exit ticket</h3>
+<p><strong>Say:</strong>
+"I have one question for you — the exit ticket. Think about it for thirty seconds before answering."</p>
+<blockquote>
+<p><strong>Exit ticket question:</strong> <em>What happens if you access a missing key with <code>dict[key]</code>? What is the alternative, and why would you choose it?</em></p>
+</blockquote>
+<p><strong>Say:</strong>
+"Take thirty seconds. Write your answer on paper, type it in a comment in your file, or just think it through clearly."</p>
+<p><em>(Pause 30 seconds.)</em></p>
+<p><strong>Say:</strong>
+"Here is the model answer: accessing a missing key with bracket notation raises a <code>KeyError</code>, which crashes the program. The alternative is <code>dict.get(key)</code> or <code>dict.get(key, default)</code>, which returns <code>None</code> or the specified default instead of crashing. You choose <code>get()</code> whenever the missing key is an expected possibility — for example, any time the key comes from user input or external data that you cannot guarantee is in the dictionary."</p>
+<h3 id="144-bridge-to-hour-20">14.4 Bridge to Hour 20</h3>
+<p><strong>Say:</strong>
+"Next hour we are going to go deeper into dictionaries by learning how to iterate over them systematically — looping through keys, values, and key-value pairs — and we will explore the counting pattern, which is one of the most powerful and widely used dictionary techniques in all of Python. If you have ever wanted to count how many times each word appears in a text, or how many products fall into each category, that is exactly what we will build.</p>
+<p>Before you leave: make sure your lab file runs correctly, handles a missing key gracefully, and prints the inventory in a readable format. If you have time, try the lowercase normalization extension — it will make Hour 20's work easier."</p>
+<p><strong>Say:</strong>
+"Great work today. Dictionaries are one of those tools that once you learn, you find yourself reaching for constantly. The key-value mental model will serve you in every language, every framework, and every data-processing task you encounter. See you next hour."</p>
+<hr>
+<h2 id="appendix-a-full-demo-file">Appendix A: Full Demo File</h2>
+<p><em>Complete reference for <code>hour19_dict_demo.py</code> — for instructor use only, not distributed to learners before the demo.</em></p>
+<pre><code class="language-python"># hour19_dict_demo.py
+# Live Demo: Inventory Dictionary — Course Hour 19
+
+# ── Step 1: Create the inventory ─────────────────────────────────────────────
+inventory: dict[str, int] = {
+    &quot;apples&quot;: 12,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;pears&quot;: 3,
+    &quot;grapes&quot;: 20,
+}
+
+print(&quot;=== Current Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item:&lt;12} {qty:&gt;4} units&quot;)
+
+# ── Step 2: Trigger a KeyError (intentional) ──────────────────────────────────
+print(&quot;\n--- Attempting to access 'mangoes' ---&quot;)
+# Uncomment to demonstrate the crash:
+# print(inventory[&quot;mangoes&quot;])   # 🔴 KeyError: 'mangoes'
+
+# ── Step 3: Safe access with get() ───────────────────────────────────────────
+print(&quot;\n--- Safe access with get() ---&quot;)
+result = inventory.get(&quot;mangoes&quot;)
+print(f&quot;get('mangoes')    → {result}&quot;)        # None
+
+count = inventory.get(&quot;mangoes&quot;, 0)
+print(f&quot;get('mangoes', 0) → {count}&quot;)         # 0
+
+count = inventory.get(&quot;apples&quot;, 0)
+print(f&quot;get('apples', 0)  → {count}&quot;)         # 12
+
+# ── Step 4: Update and add entries ───────────────────────────────────────────
+print(&quot;\n--- Updating inventory ---&quot;)
+inventory[&quot;apples&quot;] += 10
+print(f&quot;After delivery — apples: {inventory['apples']}&quot;)    # 22
+
+inventory[&quot;mangoes&quot;] = 7
+print(f&quot;New item added  — mangoes: {inventory['mangoes']}&quot;) # 7
+print(f&quot;Inventory now has {len(inventory)} items.&quot;)
+
+# ── Step 5: Smart update using 'in' check ────────────────────────────────────
+print(&quot;\n--- Smart update using 'in' check ---&quot;)
+new_items: dict[str, int] = {&quot;bananas&quot;: 8, &quot;kiwis&quot;: 15, &quot;oranges&quot;: 4}
+
+for item, qty in new_items.items():
+    if item in inventory:
+        inventory[item] += qty
+        print(f&quot;Updated '{item}' → now {inventory[item]}&quot;)
+    else:
+        inventory[item] = qty
+        print(f&quot;Added new item '{item}' → {qty}&quot;)
+
+print(&quot;\n=== Final Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item:&lt;12} {qty:&gt;4} units&quot;)
+</code></pre>
+<hr>
+<h2 id="appendix-b-full-lab-solution-file">Appendix B: Full Lab Solution File</h2>
+<p><em>Complete reference for <code>hour19_lab_inventory.py</code>.</em></p>
+<pre><code class="language-python"># hour19_lab_inventory.py
+# Inventory Manager — Full Solution with Optional Extensions
+# Course Hour 19: Dictionaries Fundamentals
+
+# ── Setup ─────────────────────────────────────────────────────────────────────
+inventory: dict[str, int] = {
+    &quot;apples&quot;: 12,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;pears&quot;: 3,
+    &quot;grapes&quot;: 20,
+}
+
+# ── Print starting inventory ─────────────────────────────────────────────────
+print(&quot;=== Current Inventory ===&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item:&lt;12} {qty:&gt;4} units&quot;)
+
+# ── Get user input ────────────────────────────────────────────────────────────
+item_name: str = input(&quot;\nEnter item name: &quot;).strip().lower()  # Extension: lowercase
+add_qty: int = int(input(&quot;How many to add? &quot;))
+
+# ── Update or warn ────────────────────────────────────────────────────────────
+current_qty: int | None = inventory.get(item_name)
+
+if current_qty is None:
+    print(f&quot;\n'{item_name}' is not in the inventory. No changes made.&quot;)
+else:
+    inventory[item_name] = current_qty + add_qty
+    print(f&quot;\nUpdated '{item_name}': {current_qty} → {inventory[item_name]}&quot;)
+
+# ── Print final inventory (Extension: sorted) ─────────────────────────────────
+print(&quot;\n=== Updated Inventory ===&quot;)
+for item in sorted(inventory):                  # Extension: alphabetical sort
+    print(f&quot;  {item:&lt;12} {inventory[item]:&gt;4} units&quot;)
+</code></pre>
+<hr>
+<h2 id="appendix-c-quick-reference-card">Appendix C: Quick Reference Card</h2>
+<p><em>Print or share with learners as a take-away.</em></p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Syntax</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create dict</td>
+<td><code>d = {"a": 1, "b": 2}</code></td>
+<td>Curly braces, colon pairs</td>
+</tr>
+<tr>
+<td>Empty dict</td>
+<td><code>d = {}</code></td>
+<td>NOT an empty set</td>
+</tr>
+<tr>
+<td>Read value</td>
+<td><code>d["key"]</code></td>
+<td><code>KeyError</code> if missing</td>
+</tr>
+<tr>
+<td>Safe read</td>
+<td><code>d.get("key")</code></td>
+<td>Returns <code>None</code> if missing</td>
+</tr>
+<tr>
+<td>Safe read + default</td>
+<td><code>d.get("key", 0)</code></td>
+<td>Returns <code>0</code> if missing</td>
+</tr>
+<tr>
+<td>Add/update entry</td>
+<td><code>d["key"] = value</code></td>
+<td>Creates or overwrites</td>
+</tr>
+<tr>
+<td>Increment value</td>
+<td><code>d["key"] += 1</code></td>
+<td>Read-add-write in one step</td>
+</tr>
+<tr>
+<td>Check key exists</td>
+<td><code>"key" in d</code></td>
+<td>Returns <code>True</code> or <code>False</code></td>
+</tr>
+<tr>
+<td>Remove entry</td>
+<td><code>del d["key"]</code></td>
+<td><code>KeyError</code> if missing</td>
+</tr>
+<tr>
+<td>Remove + return</td>
+<td><code>d.pop("key", default)</code></td>
+<td>Safe with default</td>
+</tr>
+<tr>
+<td>Count entries</td>
+<td><code>len(d)</code></td>
+<td>Number of key-value pairs</td>
+</tr>
+<tr>
+<td>Loop all pairs</td>
+<td><code>for k, v in d.items():</code></td>
+<td>Both key and value</td>
+</tr>
+<tr>
+<td>Sorted keys</td>
+<td><code>sorted(d)</code></td>
+<td>Returns a list of sorted keys</td>
+</tr>
+</tbody>
+</table>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-reconnect-to-earlier-learning-5-minutes" class="depth-2">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</a></li>
+<li><a href="#31-quick-recap-from-hour-18" class="depth-3">3.1 Quick recap from Hour 18</a></li>
+<li><a href="#32-the-limitation-that-motivates-dictionaries" class="depth-3">3.2 The limitation that motivates dictionaries</a></li>
+<li><a href="#4-concept-what-is-a-dictionary" class="depth-2">4) Concept: What Is a Dictionary?</a></li>
+<li><a href="#41-the-real-world-analogy" class="depth-3">4.1 The real-world analogy</a></li>
+<li><a href="#42-the-key-value-mental-model" class="depth-3">4.2 The key-value mental model</a></li>
+<li><a href="#43-creating-a-dictionary-with-literal-syntax" class="depth-3">4.3 Creating a dictionary with literal syntax</a></li>
+<li><a href="#44-reading-a-value-by-its-key" class="depth-3">4.4 Reading a value by its key</a></li>
+<li><a href="#5-creating-and-reading-dictionaries" class="depth-2">5) Creating and Reading Dictionaries</a></li>
+<li><a href="#51-alternative-the-dict-constructor" class="depth-3">5.1 Alternative: the dict() constructor</a></li>
+<li><a href="#52-creating-an-empty-dictionary" class="depth-3">5.2 Creating an empty dictionary</a></li>
+<li><a href="#53-checking-the-length" class="depth-3">5.3 Checking the length</a></li>
+<li><a href="#6-adding-and-updating-entries" class="depth-2">6) Adding and Updating Entries</a></li>
+<li><a href="#61-adding-a-new-entry" class="depth-3">6.1 Adding a new entry</a></li>
+<li><a href="#62-updating-an-existing-entry" class="depth-3">6.2 Updating an existing entry</a></li>
+<li><a href="#63-the-in-operator-for-dictionaries" class="depth-3">6.3 The in operator for dictionaries</a></li>
+<li><a href="#64-common-trap-the-accidental-new-key" class="depth-3">6.4 Common trap: the accidental new key</a></li>
+<li><a href="#7-safe-access-with-get" class="depth-2">7) Safe Access with get()</a></li>
+<li><a href="#71-the-problem-get-solves" class="depth-3">7.1 The problem get() solves</a></li>
+<li><a href="#72-getkey-returns-none-by-default" class="depth-3">7.2 get(key) — returns None by default</a></li>
+<li><a href="#73-getkey-default-return-your-own-fallback-value" class="depth-3">7.3 get(key, default) — return your own fallback value</a></li>
+<li><a href="#74-side-by-side-comparison" class="depth-3">7.4 Side-by-side comparison</a></li>
+<li><a href="#8-removing-entries" class="depth-2">8) Removing Entries</a></li>
+<li><a href="#81-del-direct-deletion" class="depth-3">8.1 del — direct deletion</a></li>
+<li><a href="#82-pop-remove-and-return" class="depth-3">8.2 pop() — remove and return</a></li>
+<li><a href="#83-clear-empty-the-entire-dictionary" class="depth-3">8.3 clear() — empty the entire dictionary</a></li>
+<li><a href="#9-key-concepts-keys-must-be-unique-and-hashable" class="depth-2">9) Key Concepts: Keys Must Be Unique and Hashable</a></li>
+<li><a href="#91-what-happens-when-you-assign-the-same-key-twice" class="depth-3">9.1 What happens when you assign the same key twice</a></li>
+<li><a href="#92-what-types-can-be-keys" class="depth-3">9.2 What types can be keys</a></li>
+<li><a href="#10-live-demo-inventory-dictionary" class="depth-2">10) Live Demo: Inventory Dictionary</a></li>
+<li><a href="#step-1-create-the-inventory" class="depth-3">Step 1 — Create the inventory</a></li>
+<li><a href="#step-2-demonstrate-keyerror" class="depth-3">Step 2 — Demonstrate KeyError</a></li>
+<li><a href="#step-3-fix-with-get" class="depth-3">Step 3 — Fix with get()</a></li>
+<li><a href="#step-4-update-and-add-entries" class="depth-3">Step 4 — Update and add entries</a></li>
+<li><a href="#step-5-check-existence-before-deciding" class="depth-3">Step 5 — Check existence before deciding</a></li>
+<li><a href="#11-hands-on-lab-inventory-manager" class="depth-2">11) Hands-on Lab: Inventory Manager</a></li>
+<li><a href="#111-lab-introduction" class="depth-3">11.1 Lab introduction</a></li>
+<li><a href="#112-lab-specification" class="depth-3">11.2 Lab specification</a></li>
+<li><a href="#113-starter-hints" class="depth-3">11.3 Starter hints</a></li>
+<li><a href="#114-walkthrough-solution" class="depth-3">11.4 Walkthrough solution</a></li>
+<li><a href="#115-design-discussion" class="depth-3">11.5 Design discussion</a></li>
+<li><a href="#12-common-pitfalls" class="depth-2">12) Common Pitfalls</a></li>
+<li><a href="#121-case-sensitivity" class="depth-3">12.1 Case sensitivity</a></li>
+<li><a href="#122-typo-creates-a-new-key" class="depth-3">12.2 Typo creates a new key</a></li>
+<li><a href="#123-confusing-dict-syntax-with-list-syntax" class="depth-3">12.3 Confusing dict syntax with list syntax</a></li>
+<li><a href="#124-bare-bracket-access-on-user-supplied-keys" class="depth-3">12.4 Bare bracket access on user-supplied keys</a></li>
+<li><a href="#125-forgetting-that-creates-a-dict-not-a-set" class="depth-3">12.5 Forgetting that {} creates a dict, not a set</a></li>
+<li><a href="#13-optional-extension-lowercase-sorted-print" class="depth-2">13) Optional Extension: Lowercase + Sorted Print</a></li>
+<li><a href="#131-normalize-input-to-lowercase" class="depth-3">13.1 Normalize input to lowercase</a></li>
+<li><a href="#132-print-inventory-sorted-by-item-name" class="depth-3">13.2 Print inventory sorted by item name</a></li>
+<li><a href="#14-debrief-recap-and-exit-ticket" class="depth-2">14) Debrief, Recap, and Exit Ticket</a></li>
+<li><a href="#141-concept-recap-read-aloud" class="depth-3">14.1 Concept recap (read aloud)</a></li>
+<li><a href="#142-vocabulary-review" class="depth-3">14.2 Vocabulary review</a></li>
+<li><a href="#143-exit-ticket" class="depth-3">14.3 Exit ticket</a></li>
+<li><a href="#144-bridge-to-hour-20" class="depth-3">14.4 Bridge to Hour 20</a></li>
+<li><a href="#appendix-a-full-demo-file" class="depth-2">Appendix A: Full Demo File</a></li>
+<li><a href="#appendix-b-full-lab-solution-file" class="depth-2">Appendix B: Full Lab Solution File</a></li>
+<li><a href="#appendix-c-quick-reference-card" class="depth-2">Appendix C: Quick Reference Card</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day5_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

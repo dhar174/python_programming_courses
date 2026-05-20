@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Session 12, Hour 2: Capstone Build Sprint | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="12">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day12_Hour2_Basics.md">
+
+    <link rel="prev" href="Day12_Hour1_Basics.html">
+    <link rel="next" href="Day12_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="12" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-12/index.html">Day 12</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Session 12, Hour 2: Capstone Build Sprint</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 12</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day12_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day12_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="hour-intent-and-instructor-framing">Hour Intent and Instructor Framing</h2>
+<p>This hour is a <strong>build sprint</strong>, not a polish hour and not a final assessment hour. Your job is to coach students through completing a working MVP with full CRUD and reliable persistence. Keep the class anchored in Basics scope: clear functions, clean menu flow, predictable JSON read/write, and practical debugging discipline.</p>
+<p>Use this language to set tone in the first minute:</p>
+<blockquote>
+<p>“This hour is about finishing the core engine of your capstone. By the end of this block, your app should reliably create, read, update, and delete records, and those records must still be there after restart. We are not polishing for presentation yet. We are building dependable functionality.”</p>
+</blockquote>
+<p>[Facilitation cue] Write this on the board:</p>
+<ul>
+<li><strong>Goal 1:</strong> CRUD complete</li>
+<li><strong>Goal 2:</strong> Persistence across restart</li>
+<li><strong>Goal 3:</strong> Exactly one quality improvement</li>
+<li><strong>Goal 4:</strong> Test after each feature</li>
+</ul>
+<p>Reinforce the sprint mindset:</p>
+<ul>
+<li>Small steps</li>
+<li>Frequent runs</li>
+<li>Immediate bug fixes</li>
+<li>Keep data schema consistent</li>
+</ul>
+<p>If students ask about “nice-to-have” extras early, respond with:</p>
+<blockquote>
+<p>“Great idea. Park it. If CRUD + persistence are complete and stable, then we can add one optional extension at the end.”</p>
+</blockquote>
+<hr>
+<h2 id="outcomes-runbook-alignment">Outcomes (Runbook Alignment)</h2>
+<p>By the end of Hour 46, students should be able to demonstrate:</p>
+<ol>
+<li><strong>Full CRUD implementation</strong> in their capstone CLI:
+   - Create (add record)
+   - Read (list/search)
+   - Update
+   - Delete</li>
+<li><strong>One UX/robustness improvement</strong> implemented intentionally:
+   - sorted output <strong>or</strong>
+   - confirmation prompts <strong>or</strong>
+   - input validation</li>
+<li><strong>Persistence reliability:</strong> data saves and loads correctly across program restarts.</li>
+</ol>
+<p>Use this explicit success statement:</p>
+<blockquote>
+<p>“If I close your app, run it again, and your previously changed records are still correct, you are meeting today’s main technical requirement.”</p>
+</blockquote>
+<hr>
+<h2 id="pacing-plan-for-this-hour">Pacing Plan for This Hour</h2>
+<p>Keep timing tight and visible. Announce timeboxes to maintain momentum.</p>
+<ul>
+<li><strong>10–15 min:</strong> Instructor talk points (iterative build order + test-as-you-go)</li>
+<li><strong>5–10 min:</strong> Live demo (one mutating feature end-to-end + save/load across restart)</li>
+<li><strong>25–35 min:</strong> Hands-on lab (students complete required features + exactly one quality improvement)</li>
+<li><strong>Last 3–5 min:</strong> Spot checks, completion verification, quick check prompt</li>
+</ul>
+<p>[Facilitation cue] Put a countdown timer where students can see it. At each transition, narrate:</p>
+<blockquote>
+<p>“We are moving from instruction to implementation now.”</p>
+</blockquote>
+<hr>
+<h2 id="technical-baseline-for-consistency-during-the-hour">Technical Baseline for Consistency During the Hour</h2>
+<p>To prevent debugging chaos, insist on one consistent record schema in all examples and coaching conversations. Use this schema for demonstrations:</p>
+<pre><code class="language-python">{
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;Ada Lovelace&quot;,
+    &quot;category&quot;: &quot;VIP&quot;,
+    &quot;status&quot;: &quot;active&quot;
+}
+</code></pre>
+<p>[Facilitation cue] Tell students:</p>
+<blockquote>
+<p>“Whatever your project theme is—contacts, books, tasks, inventory—pick one schema and keep it stable. If save and load disagree on structure, everything else becomes unreliable.”</p>
+</blockquote>
+<p>Recommended storage type:</p>
+<ul>
+<li>In memory: <code>list[dict[str, object]]</code></li>
+<li>On disk: JSON array in <code>capstone_data.json</code></li>
+</ul>
+<p>Do not introduce advanced architecture patterns here. Keep functions straightforward and testable.</p>
+<hr>
+<h2 id="instructor-talk-points-1015-min">Instructor Talk Points (10–15 min)</h2>
+<h3 id="talking-point-1-build-order-is-a-debugging-strategy">Talking Point 1: Build Order Is a Debugging Strategy</h3>
+<p>Say this clearly:</p>
+<blockquote>
+<p>“The order add → list → search → update/delete is not arbitrary. It reduces uncertainty.”</p>
+</blockquote>
+<p>Then explain why:</p>
+<ul>
+<li><strong>Add first:</strong> proves record creation and write path.</li>
+<li><strong>List next:</strong> proves what’s really in memory.</li>
+<li><strong>Search next:</strong> builds targeting logic needed by update/delete.</li>
+<li><strong>Update/delete last:</strong> mutating operations are safer when targeting is already reliable.</li>
+</ul>
+<p>If a student asks to implement delete first, coach with:</p>
+<blockquote>
+<p>“Delete depends on finding the correct record. Build targeting first; then mutation is easy.”</p>
+</blockquote>
+<h3 id="talking-point-2-test-as-you-go-discipline">Talking Point 2: Test-As-You-Go Discipline</h3>
+<p>Use this phrase:</p>
+<blockquote>
+<p>“Do not stack untested code.”</p>
+</blockquote>
+<p>Give them the micro-cycle:</p>
+<ol>
+<li>Write or change one function.</li>
+<li>Run program immediately.</li>
+<li>Execute one realistic scenario.</li>
+<li>Confirm expected output.</li>
+<li>Only then move forward.</li>
+</ol>
+<p>[Facilitation cue] Model this as a call-and-response:</p>
+<ul>
+<li>Instructor: “What do we do after adding a feature?”</li>
+<li>Class: “Run and test.”</li>
+</ul>
+<h3 id="talking-point-3-persistence-is-part-of-correctness">Talking Point 3: Persistence Is Part of Correctness</h3>
+<p>Students often think “it works” means “it works in memory.” Correct that assumption:</p>
+<blockquote>
+<p>“In this capstone, a feature is not complete until it survives restart.”</p>
+</blockquote>
+<p>Define “survives restart” concretely:</p>
+<ol>
+<li>Make a change (add/update/delete).</li>
+<li>Save.</li>
+<li>Exit program.</li>
+<li>Run again.</li>
+<li>Load.</li>
+<li>Verify change still exists exactly as expected.</li>
+</ol>
+<h3 id="talking-point-4-one-quality-improvement-only">Talking Point 4: One Quality Improvement Only</h3>
+<p>Be explicit to prevent scope creep:</p>
+<blockquote>
+<p>“This hour requires exactly one quality improvement. Choose one and do it well. We are practicing prioritization.”</p>
+</blockquote>
+<p>Approved options:</p>
+<ul>
+<li>Sorted output</li>
+<li>Delete confirmations</li>
+<li>Input validation</li>
+</ul>
+<p>Reinforce decision-making:</p>
+<blockquote>
+<p>“Shipping one robust improvement is better than starting three partial ones.”</p>
+</blockquote>
+<h3 id="talking-point-5-debugging-priorities">Talking Point 5: Debugging Priorities</h3>
+<p>Share a practical priority order when bugs appear:</p>
+<ol>
+<li>Confirm function was called.</li>
+<li>Print inspected record or length of list.</li>
+<li>Validate input conversion (<code>int(...)</code>, <code>.strip()</code>).</li>
+<li>Verify <code>save_data(...)</code> runs after mutation.</li>
+<li>Re-open saved JSON and check shape.</li>
+</ol>
+<p>Keep language encouraging:</p>
+<blockquote>
+<p>“A bug during a sprint is normal. The goal is fast diagnosis, not panic.”</p>
+</blockquote>
+<hr>
+<h2 id="live-demo-510-min-one-mutating-feature-end-to-end-restart-proof">Live Demo (5–10 min): One Mutating Feature End-to-End + Restart Proof</h2>
+<h3 id="demo-goal">Demo Goal</h3>
+<p>Implement <strong>update record</strong> end-to-end, then explicitly prove persistence across restart.</p>
+<p>Why update? It exercises targeting logic, mutation, and save behavior in one pass.</p>
+<h3 id="demo-setup-script-before-coding">Demo Setup Script (before coding)</h3>
+<p>Say:</p>
+<blockquote>
+<p>“I already have add/list/search working from earlier steps. I will now implement update, test it immediately, save, restart, and confirm the change persisted.”</p>
+</blockquote>
+<h3 id="minimal-supporting-functions-context">Minimal Supporting Functions (context)</h3>
+<p>Show students the fixed schema and helper functions. Keep names consistent with lab guidance.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+DATA_FILE = Path(&quot;capstone_data.json&quot;)
+Record = dict[str, Any]
+
+
+def load_data(path: Path) -&gt; list[Record]:
+    if not path.exists():
+        return []
+    with path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+        data = json.load(file)
+    if not isinstance(data, list):
+        return []
+    return data
+
+
+def save_data(path: Path, records: list[Record]) -&gt; None:
+    with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(records, file, indent=2)
+
+
+def find_by_id(records: list[Record], record_id: int) -&gt; Record | None:
+    for record in records:
+        if record.get(&quot;id&quot;) == record_id:
+            return record
+    return None
+</code></pre>
+<p>[Facilitation cue] Pause and ask:</p>
+<blockquote>
+<p>“Why is <code>find_by_id</code> helpful before update and delete?”</p>
+</blockquote>
+<p>Expected answer: it centralizes targeting logic and reduces duplicated bugs.</p>
+<h3 id="live-coding-mutating-feature-update">Live Coding: Mutating Feature (Update)</h3>
+<p>Code slowly, narrating each line’s purpose:</p>
+<pre><code class="language-python">def prompt_non_empty(label: str) -&gt; str:
+    while True:
+        value = input(label).strip()
+        if value:
+            return value
+        print(&quot;Value cannot be blank. Please try again.&quot;)
+
+
+def update_record(records: list[Record]) -&gt; bool:
+    raw_id = input(&quot;Enter record ID to update: &quot;).strip()
+    if not raw_id.isdigit():
+        print(&quot;ID must be a number.&quot;)
+        return False
+
+    record_id = int(raw_id)
+    target = find_by_id(records, record_id)
+    if target is None:
+        print(f&quot;No record found with ID {record_id}.&quot;)
+        return False
+
+    print(f&quot;Current name: {target['name']}&quot;)
+    print(f&quot;Current category: {target['category']}&quot;)
+    print(f&quot;Current status: {target['status']}&quot;)
+
+    new_name = prompt_non_empty(&quot;New name: &quot;)
+    new_category = prompt_non_empty(&quot;New category: &quot;)
+    new_status = prompt_non_empty(&quot;New status: &quot;)
+
+    target[&quot;name&quot;] = new_name
+    target[&quot;category&quot;] = new_category
+    target[&quot;status&quot;] = new_status
+    return True
+</code></pre>
+<p>Narration points to include:</p>
+<ul>
+<li>“Validation first, mutation second.”</li>
+<li>“I return <code>True</code> only when a real update happened.”</li>
+<li>“This makes main menu logic cleaner.”</li>
+</ul>
+<h3 id="wire-it-into-menu-save">Wire It Into Menu + Save</h3>
+<pre><code class="language-python">def main() -&gt; None:
+    records = load_data(DATA_FILE)
+
+    while True:
+        print(&quot;\n1) Add  2) List  3) Search  4) Update  5) Delete  6) Exit&quot;)
+        choice = input(&quot;Choose an option: &quot;).strip()
+
+        if choice == &quot;4&quot;:
+            changed = update_record(records)
+            if changed:
+                save_data(DATA_FILE, records)
+                print(&quot;Record updated and saved.&quot;)
+            else:
+                print(&quot;No update performed.&quot;)
+        elif choice == &quot;6&quot;:
+            print(&quot;Goodbye.&quot;)
+            break
+        else:
+            print(&quot;Demo menu: only option 4 and 6 shown here.&quot;)
+</code></pre>
+<h3 id="test-during-demo-deterministic-scenario">Test During Demo (deterministic scenario)</h3>
+<p>Use a predictable scenario, not random data:</p>
+<ol>
+<li>Confirm starting list includes:
+   - <code>{"id": 1, "name": "Ada Lovelace", "category": "VIP", "status": "active"}</code></li>
+<li>Update ID <code>1</code> to:
+   - name: <code>Ada Byron</code>
+   - category: <code>Mentor</code>
+   - status: <code>active</code></li>
+<li>Save and print success.</li>
+</ol>
+<h3 id="explicit-restart-proof-required">Explicit Restart Proof (required)</h3>
+<p>Narrate every step:</p>
+<ol>
+<li>Stop the program.</li>
+<li>Run program again.</li>
+<li>Load records from file.</li>
+<li>List/search ID <code>1</code>.</li>
+<li>Confirm updated values appear.</li>
+</ol>
+<p>Say this sentence explicitly:</p>
+<blockquote>
+<p>“The update is now persistent because it survived process restart, not just because it looked correct immediately after editing.”</p>
+</blockquote>
+<h3 id="demo-debrief-prompt">Demo Debrief Prompt</h3>
+<p>Ask:</p>
+<blockquote>
+<p>“What would break if I removed <code>save_data(...)</code> after update?”</p>
+</blockquote>
+<p>Students should answer: change appears in memory only and disappears after restart.</p>
+<hr>
+<h2 id="hands-on-lab-2535-min-capstone-build-sprint">Hands-On Lab (25–35 min): Capstone Build Sprint</h2>
+<h3 id="student-task-statement">Student Task Statement</h3>
+<p>Read this out:</p>
+<blockquote>
+<p>“You now have sprint time. Your deliverable this hour is complete CRUD plus persistence across runs, and exactly one quality improvement. Keep your schema stable and test each step as you go.”</p>
+</blockquote>
+<h3 id="required-feature-checklist">Required Feature Checklist</h3>
+<p>Students must complete all required features:</p>
+<ol>
+<li>
+<p><strong>Create</strong>
+   Add a new record using the class schema.</p>
+</li>
+<li>
+<p><strong>Read — List</strong>
+   Display records clearly with ID and key fields.</p>
+</li>
+<li>
+<p><strong>Read — Search</strong>
+   Search by at least one field (name is fine).</p>
+</li>
+<li>
+<p><strong>Update</strong>
+   Update an existing record selected by ID.</p>
+</li>
+<li>
+<p><strong>Delete</strong>
+   Delete a record selected by ID.</p>
+</li>
+<li>
+<p><strong>Persistence</strong>
+   Save after each successful mutation and load on program start.</p>
+</li>
+</ol>
+<h3 id="exactly-one-quality-improvement">Exactly One Quality Improvement</h3>
+<p>Students must choose <strong>one and only one</strong>:</p>
+<ul>
+<li>Sorted output in list view, or</li>
+<li>Confirmation prompt before delete, or</li>
+<li>Input validation for blank or invalid values</li>
+</ul>
+<p>[Facilitation cue] Ask each student/team to announce their one choice before coding. This reduces accidental over-scope.</p>
+<h3 id="recommended-build-order-during-lab">Recommended Build Order During Lab</h3>
+<p>Coach students to follow:</p>
+<ol>
+<li>Finish add</li>
+<li>Verify list</li>
+<li>Add search</li>
+<li>Implement update</li>
+<li>Implement delete</li>
+<li>Add one quality improvement</li>
+<li>Run restart test</li>
+</ol>
+<p>Use this recurring reminder every 8–10 minutes:</p>
+<blockquote>
+<p>“Stop coding. Run it once. Confirm behavior. Then continue.”</p>
+</blockquote>
+<h3 id="instructor-circulation-script">Instructor Circulation Script</h3>
+<p>When circulating, avoid taking over keyboards immediately. Start with diagnostic questions:</p>
+<ol>
+<li>“Show me your record schema.”</li>
+<li>“Where do you call save after mutation?”</li>
+<li>“Can you show one restart proof scenario right now?”</li>
+<li>“Which quality improvement did you choose?”</li>
+</ol>
+<p>If they are blocked, use graduated support:</p>
+<ul>
+<li>Hint first</li>
+<li>Point to function boundary second</li>
+<li>Only provide code if needed for progress</li>
+</ul>
+<h3 id="spot-check-protocol-required-during-lab">Spot-Check Protocol (Required During Lab)</h3>
+<p>Use this protocol exactly for each student/team check:</p>
+<ol>
+<li>
+<p><strong>Schema check (30–60 sec):</strong>
+   - Inspect one in-memory record.
+   - Confirm keys are consistent with saved JSON.</p>
+</li>
+<li>
+<p><strong>Mutation check (1–2 min):</strong>
+   - Have student perform one update or delete.
+   - Confirm operation returns clear success/failure message.</p>
+</li>
+<li>
+<p><strong>Save hook check (30 sec):</strong>
+   - Ask where <code>save_data(...)</code> is called.
+   - Verify it runs only on successful mutation.</p>
+</li>
+<li>
+<p><strong>Restart check (1–2 min):</strong>
+   - Exit app.
+   - Relaunch app.
+   - List/search to confirm change persisted.</p>
+</li>
+<li>
+<p><strong>Quality improvement check (30–60 sec):</strong>
+   - Confirm exactly one improvement is implemented.
+   - Ask student to explain why they chose it.</p>
+</li>
+</ol>
+<p>Document quick status mentally or on your roster:</p>
+<ul>
+<li>✅ CRUD complete</li>
+<li>✅ persistence verified</li>
+<li>✅ one quality improvement complete</li>
+<li>⚠ needs follow-up</li>
+</ul>
+<h3 id="time-calls-you-can-use">Time Calls You Can Use</h3>
+<p>At ~20 minutes remaining:</p>
+<blockquote>
+<p>“You should already have add/list/search stable. If not, freeze extras and finish core.”</p>
+</blockquote>
+<p>At ~10 minutes remaining:</p>
+<blockquote>
+<p>“Everyone must run restart proof now. No restart proof, no completion.”</p>
+</blockquote>
+<p>At ~5 minutes remaining:</p>
+<blockquote>
+<p>“Prepare to report one bug you fixed and your debugging method.”</p>
+</blockquote>
+<hr>
+<h2 id="detailed-facilitation-script-for-the-lab-window-instructor-read-aloud-moves">Detailed Facilitation Script for the Lab Window (Instructor Read-Aloud + Moves)</h2>
+<p>Use this section as a near-verbatim guide during the 25–35 minute sprint. You do not need to read every word, but you can use these lines to keep energy, clarity, and focus.</p>
+<h3 id="minute-03-of-lab-launch-and-commit">Minute 0–3 of Lab: Launch and Commit</h3>
+<p>Say:</p>
+<blockquote>
+<p>“You are now in sprint mode. Before writing any code, write down your chosen schema and your one quality improvement. Keep both visible.”</p>
+</blockquote>
+<p>[Facilitation cue] Walk to three different students quickly and ask:</p>
+<ul>
+<li>“Show me your schema keys.”</li>
+<li>“Which one quality improvement did you choose?”</li>
+</ul>
+<p>If a student says, “I’ll decide later,” respond:</p>
+<blockquote>
+<p>“Choose now. Scope decisions made late create rushed bugs.”</p>
+</blockquote>
+<h3 id="minute-38-lock-in-addlist-reliability">Minute 3–8: Lock in Add/List Reliability</h3>
+<p>Say:</p>
+<blockquote>
+<p>“Start by proving add and list are stable. If add and list are unstable, search/update/delete will be unstable too.”</p>
+</blockquote>
+<p>Circulation checks:</p>
+<ul>
+<li>Add one record.</li>
+<li>List records immediately.</li>
+<li>Confirm field names display correctly.</li>
+</ul>
+<p>If a record prints like <code>{'name': 'Ada'}</code> with missing keys, coach:</p>
+<blockquote>
+<p>“Great catch. Standardize now so future functions don’t branch on missing fields.”</p>
+</blockquote>
+<h3 id="minute-814-build-search-as-targeting-foundation">Minute 8–14: Build Search as Targeting Foundation</h3>
+<p>Say:</p>
+<blockquote>
+<p>“Search is not optional glue. It helps you verify targeting logic before mutation.”</p>
+</blockquote>
+<p>Ask students to run a deterministic query:</p>
+<ul>
+<li>Query <code>ada</code> should find <code>Ada Lovelace</code> or <code>Ada Byron</code>.</li>
+<li>Query <code>xyz</code> should return zero matches with a friendly message.</li>
+</ul>
+<p>If they skip zero-result handling, coach:</p>
+<blockquote>
+<p>“In production terms, no-match is normal behavior, not an exception. Handle it clearly.”</p>
+</blockquote>
+<h3 id="minute-1422-implement-updatedelete-save-hook">Minute 14–22: Implement Update/Delete + Save Hook</h3>
+<p>Say:</p>
+<blockquote>
+<p>“Now implement one mutating function at a time, and test right after each one.”</p>
+</blockquote>
+<p>Required test pattern after update:</p>
+<ol>
+<li>Update one known ID.</li>
+<li>List record and verify changed fields.</li>
+<li>Exit and restart.</li>
+<li>Verify change remained.</li>
+</ol>
+<p>Required test pattern after delete:</p>
+<ol>
+<li>Delete one known ID.</li>
+<li>List and confirm removal.</li>
+<li>Exit and restart.</li>
+<li>Confirm deleted record does not return.</li>
+</ol>
+<p>[Facilitation cue] If time pressure appears, prioritize:</p>
+<ol>
+<li>update + save reliability</li>
+<li>delete + save reliability</li>
+<li>then quality improvement</li>
+</ol>
+<h3 id="minute-2230-apply-exactly-one-quality-improvement">Minute 22–30: Apply Exactly One Quality Improvement</h3>
+<p>Say:</p>
+<blockquote>
+<p>“Freeze feature expansion. Now complete one quality improvement cleanly.”</p>
+</blockquote>
+<p>Give students these decision rules:</p>
+<ul>
+<li>If their input handling is weak, choose <strong>input validation</strong>.</li>
+<li>If accidental deletes are happening, choose <strong>confirmations</strong>.</li>
+<li>If readability is poor with larger lists, choose <strong>sorted output</strong>.</li>
+</ul>
+<p>Remind:</p>
+<blockquote>
+<p>“Exactly one quality improvement this hour. Do not add a second one now.”</p>
+</blockquote>
+<h3 id="minute-3035-prove-completion">Minute 30–35: Prove Completion</h3>
+<p>Say:</p>
+<blockquote>
+<p>“You are done only after restart proof.”</p>
+</blockquote>
+<p>Have them perform:</p>
+<ul>
+<li>one mutation,</li>
+<li>one save,</li>
+<li>one restart,</li>
+<li>one verification.</li>
+</ul>
+<p>Then ask for verbal check:</p>
+<blockquote>
+<p>“Which requirement did your restart proof validate?”</p>
+</blockquote>
+<p>Expected answer: persistence across runs.</p>
+<hr>
+<h2 id="coaching-playbook-high-frequency-sprint-scenarios">Coaching Playbook: High-Frequency Sprint Scenarios</h2>
+<p>This section gives you fast, practical responses to common student situations in Hour 46. Use these patterns to keep learners moving without solving everything for them.</p>
+<h3 id="scenario-a-my-update-says-success-but-nothing-changed-after-restart">Scenario A: “My update says success but nothing changed after restart.”</h3>
+<p>Diagnosis path:</p>
+<ol>
+<li>Ask them to show menu branch for update.</li>
+<li>Confirm mutation function returns <code>True</code>.</li>
+<li>Confirm <code>save_data(...)</code> is called when return is <code>True</code>.</li>
+<li>Confirm file path is consistent (<code>capstone_data.json</code> in expected location).</li>
+</ol>
+<p>Instructor script:</p>
+<blockquote>
+<p>“Let’s verify control flow before data flow. Did your function signal success? Then did menu logic save immediately after? Show those two lines first.”</p>
+</blockquote>
+<p>Teaching point:</p>
+<ul>
+<li>Correct behavior depends on both mutation and save hook.</li>
+</ul>
+<h3 id="scenario-b-delete-removed-the-wrong-record">Scenario B: “Delete removed the wrong record.”</h3>
+<p>Diagnosis path:</p>
+<ol>
+<li>Inspect how record is selected (index vs ID).</li>
+<li>Confirm conversion from input string to integer.</li>
+<li>Confirm target is found by stable ID, not list position from a filtered subset.</li>
+</ol>
+<p>Instructor script:</p>
+<blockquote>
+<p>“Deletion should target stable identity, not temporary display order. Let’s check whether you’re deleting by ID or by list index.”</p>
+</blockquote>
+<p>Teaching point:</p>
+<ul>
+<li>IDs are safer than positional assumptions.</li>
+</ul>
+<h3 id="scenario-c-i-get-key-errors-when-listing-or-searching">Scenario C: “I get key errors when listing or searching.”</h3>
+<p>Diagnosis path:</p>
+<ol>
+<li>Print one loaded record.</li>
+<li>Compare with expected schema keys.</li>
+<li>Inspect save function to verify shape.</li>
+</ol>
+<p>Instructor script:</p>
+<blockquote>
+<p>“Before we touch list code, let’s inspect one real record from disk. The data shape usually reveals the bug faster than guessing.”</p>
+</blockquote>
+<p>Teaching point:</p>
+<ul>
+<li>Data-shape validation is a first-class debugging step.</li>
+</ul>
+<h3 id="scenario-d-my-search-returns-weird-results">Scenario D: “My search returns weird results.”</h3>
+<p>Diagnosis path:</p>
+<ol>
+<li>Confirm <code>.lower()</code> on both query and searchable field.</li>
+<li>Confirm <code>str(...)</code> casting if field may not be string.</li>
+<li>Test with deterministic known values.</li>
+</ol>
+<p>Instructor script:</p>
+<blockquote>
+<p>“Let’s run three known queries: one match, multiple matches if possible, and zero matches. Search quality becomes clear immediately.”</p>
+</blockquote>
+<p>Teaching point:</p>
+<ul>
+<li>Good tests include positive and negative cases.</li>
+</ul>
+<h3 id="scenario-e-im-behind-can-i-skip-update-or-delete">Scenario E: “I’m behind; can I skip update or delete?”</h3>
+<p>Instructor response:</p>
+<blockquote>
+<p>“For this hour, CRUD completion is required. Let’s implement the smallest working version now: minimal prompts, clear logic, and immediate save. Fancy UX can wait.”</p>
+</blockquote>
+<p>Rescue strategy:</p>
+<ol>
+<li>Create <code>find_by_id</code>.</li>
+<li>Implement minimal update (one field allowed is acceptable if requirement permits project rubric).</li>
+<li>Implement minimal delete.</li>
+<li>Attach save after each.</li>
+<li>Run restart proof.</li>
+</ol>
+<p>Teaching point:</p>
+<ul>
+<li>Shipping a minimal complete solution beats an incomplete ambitious one.</li>
+</ul>
+<h3 id="scenario-f-can-i-add-color-outputreport-chartsextra-menus-right-now">Scenario F: “Can I add color output/report charts/extra menus right now?”</h3>
+<p>Instructor response:</p>
+<blockquote>
+<p>“Great initiative. Park that for later. Right now, the engineering requirement is correctness + persistence + one quality improvement.”</p>
+</blockquote>
+<p>Teaching point:</p>
+<ul>
+<li>Scope control is a professional skill.</li>
+</ul>
+<hr>
+<h2 id="scripted-mini-conferences-2-minute-check-ins-you-can-reuse">Scripted Mini-Conferences (2-Minute Check-ins You Can Reuse)</h2>
+<p>Use these short scripts to keep interventions consistent and efficient while circulating.</p>
+<h3 id="mini-conference-template-1-progress-calibration">Mini-Conference Template 1: Progress Calibration</h3>
+<ol>
+<li>“Show me your current menu options.”</li>
+<li>“Which CRUD actions are fully working now?”</li>
+<li>“Where is save called after mutation?”</li>
+<li>“Run one restart proof in front of me.”</li>
+<li>“What is your one quality improvement?”</li>
+</ol>
+<p>Closure line:</p>
+<blockquote>
+<p>“Your next smallest step is ___; do that now, then test before adding anything else.”</p>
+</blockquote>
+<h3 id="mini-conference-template-2-bug-triage">Mini-Conference Template 2: Bug Triage</h3>
+<ol>
+<li>“What did you expect?”</li>
+<li>“What happened instead?”</li>
+<li>“What is the smallest repro step?”</li>
+<li>“Which function owns that step?”</li>
+<li>“What one print or check will confirm your hypothesis?”</li>
+</ol>
+<p>Closure line:</p>
+<blockquote>
+<p>“Good. Run that single test and tell me what evidence you get.”</p>
+</blockquote>
+<h3 id="mini-conference-template-3-near-complete-validation">Mini-Conference Template 3: Near-Complete Validation</h3>
+<ol>
+<li>“Run add, then list.”</li>
+<li>“Run update, then list.”</li>
+<li>“Run delete, then list.”</li>
+<li>“Exit and relaunch.”</li>
+<li>“Show persisted state.”</li>
+</ol>
+<p>Closure line:</p>
+<blockquote>
+<p>“You’ve met core criteria. If time remains, choose the optional report export only.”</p>
+</blockquote>
+<hr>
+<h2 id="instructor-demonstration-variants-for-different-class-needs">Instructor Demonstration Variants for Different Class Needs</h2>
+<p>You already demonstrated update as the mutating feature. If you need a backup demo because the room is blocked on a different operation, use one of these deterministic alternatives while keeping the same schema.</p>
+<h3 id="variant-1-delete-with-confirmation-use-only-if-class-selected-confirmations">Variant 1: Delete With Confirmation (Use only if class selected confirmations)</h3>
+<p>If your class trend shows accidental deletes, demo this:</p>
+<pre><code class="language-python">def delete_record_with_confirmation(records: list[Record]) -&gt; bool:
+    raw_id = input(&quot;Enter record ID to delete: &quot;).strip()
+    if not raw_id.isdigit():
+        print(&quot;ID must be a number.&quot;)
+        return False
+
+    record_id = int(raw_id)
+    target = find_by_id(records, record_id)
+    if target is None:
+        print(f&quot;No record found with ID {record_id}.&quot;)
+        return False
+
+    confirm = input(f&quot;Delete '{target['name']}'? (y/n): &quot;).strip().lower()
+    if confirm != &quot;y&quot;:
+        print(&quot;Delete cancelled.&quot;)
+        return False
+
+    records.remove(target)
+    print(f&quot;Record {record_id} deleted.&quot;)
+    return True
+</code></pre>
+<p>Narration line:</p>
+<blockquote>
+<p>“Notice that cancellation is a valid path and should not trigger save.”</p>
+</blockquote>
+<h3 id="variant-2-sorted-list-output-use-only-if-class-selected-sorted-output">Variant 2: Sorted List Output (Use only if class selected sorted output)</h3>
+<pre><code class="language-python">def list_records_sorted(records: list[Record]) -&gt; None:
+    if not records:
+        print(&quot;No records found.&quot;)
+        return
+
+    ordered = sorted(records, key=lambda r: str(r.get(&quot;name&quot;, &quot;&quot;)).lower())
+    print(&quot;\n--- Records (Sorted by Name) ---&quot;)
+    for record in ordered:
+        print(
+            f&quot;ID: {record['id']} | &quot;
+            f&quot;Name: {record['name']} | &quot;
+            f&quot;Category: {record['category']} | &quot;
+            f&quot;Status: {record['status']}&quot;
+        )
+</code></pre>
+<p>Narration line:</p>
+<blockquote>
+<p>“Sorted output is a read-only quality improvement. It improves usability without changing stored data.”</p>
+</blockquote>
+<p>[Facilitation cue] Do not combine these variants in the same student project unless they have already satisfied the “exactly one quality improvement” requirement and you intentionally allow extra work after completion.</p>
+<hr>
+<h2 id="accountability-without-anxiety-what-to-say-when-students-are-stuck">Accountability Without Anxiety: What to Say When Students Are Stuck</h2>
+<p>The sprint should feel focused, not stressful. You can maintain standards while reducing panic using language that is specific and actionable.</p>
+<p>When a student says “I’m lost,” avoid broad advice like “just debug it.” Instead, say:</p>
+<blockquote>
+<p>“You’re not lost; you’re at a specific failing step. Show me the exact input and output that fails.”</p>
+</blockquote>
+<p>When a student says “Nothing works,” reply:</p>
+<blockquote>
+<p>“Let’s find one thing that does work. Can add+list pass right now? We’ll build from that.”</p>
+</blockquote>
+<p>When students compare progress and feel behind:</p>
+<blockquote>
+<p>“Progress is not measured by number of extra features. It’s measured by reliable CRUD and restart persistence.”</p>
+</blockquote>
+<p>When a student worries about imperfect code style:</p>
+<blockquote>
+<p>“Readable and correct is the target for this hour. We can polish phrasing and formatting next hour.”</p>
+</blockquote>
+<p>This language keeps confidence up while preserving delivery expectations.</p>
+<hr>
+<h2 id="evidence-collection-what-you-need-to-observe-before-ending-the-hour">Evidence Collection: What You Need to Observe Before Ending the Hour</h2>
+<p>For each learner/team, aim to capture direct evidence—not just verbal claims—of completion.</p>
+<h3 id="minimum-evidence-set">Minimum Evidence Set</h3>
+<ol>
+<li>They run at least one create operation.</li>
+<li>They run at least one update or delete operation.</li>
+<li>They point to save call after successful mutation.</li>
+<li>They restart the app and prove persisted result.</li>
+<li>They demonstrate exactly one quality improvement.</li>
+</ol>
+<h3 id="if-evidence-is-incomplete">If Evidence Is Incomplete</h3>
+<p>Provide one immediate next action:</p>
+<ul>
+<li>“Run restart proof now.”</li>
+<li>“Show save hook line.”</li>
+<li>“Choose one quality improvement and remove extra unfinished ones.”</li>
+</ul>
+<p>Avoid giving three new tasks at once. One task at a time increases completion rate under time pressure.</p>
+<h3 id="end-of-lab-status-language">End-of-Lab Status Language</h3>
+<p>Use one of these concise statements:</p>
+<ul>
+<li>“Core complete: CRUD + persistence verified.”</li>
+<li>“Almost complete: persistence proof still needed.”</li>
+<li>“In progress: finish delete and save hook first.”</li>
+</ul>
+<p>These statements help students understand exactly where they stand.</p>
+<hr>
+<h2 id="reference-implementation-instructor-fallback-basics-scope">Reference Implementation (Instructor Fallback, Basics Scope)</h2>
+<p>Use this full example only when you need to unblock multiple learners quickly. Keep it as a reference, not a requirement to copy exactly.</p>
+<p>It demonstrates:</p>
+<ul>
+<li>Full CRUD</li>
+<li>JSON persistence</li>
+<li>One quality improvement: <strong>input validation</strong></li>
+<li>Deterministic behavior</li>
+</ul>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+DATA_FILE = Path(&quot;capstone_data.json&quot;)
+Record = dict[str, Any]
+
+
+def load_data(path: Path) -&gt; list[Record]:
+    if not path.exists():
+        return []
+    try:
+        with path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+            data = json.load(file)
+    except json.JSONDecodeError:
+        print(&quot;Warning: data file was invalid JSON. Starting with empty data.&quot;)
+        return []
+
+    if not isinstance(data, list):
+        print(&quot;Warning: data file did not contain a list. Starting with empty data.&quot;)
+        return []
+
+    return data
+
+
+def save_data(path: Path, records: list[Record]) -&gt; None:
+    with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(records, file, indent=2)
+
+
+def next_id(records: list[Record]) -&gt; int:
+    if not records:
+        return 1
+    highest = max(record.get(&quot;id&quot;, 0) for record in records)
+    return int(highest) + 1
+
+
+def prompt_non_empty(label: str) -&gt; str:
+    while True:
+        value = input(label).strip()
+        if value:
+            return value
+        print(&quot;Value cannot be blank. Please try again.&quot;)
+
+
+def add_record(records: list[Record]) -&gt; bool:
+    name = prompt_non_empty(&quot;Name: &quot;)
+    category = prompt_non_empty(&quot;Category: &quot;)
+    status = prompt_non_empty(&quot;Status: &quot;)
+
+    record = {
+        &quot;id&quot;: next_id(records),
+        &quot;name&quot;: name,
+        &quot;category&quot;: category,
+        &quot;status&quot;: status,
+    }
+    records.append(record)
+    print(f&quot;Added record ID {record['id']}.&quot;)
+    return True
+
+
+def list_records(records: list[Record]) -&gt; None:
+    if not records:
+        print(&quot;No records found.&quot;)
+        return
+
+    print(&quot;\n--- Records ---&quot;)
+    for record in records:
+        print(
+            f&quot;ID: {record['id']} | &quot;
+            f&quot;Name: {record['name']} | &quot;
+            f&quot;Category: {record['category']} | &quot;
+            f&quot;Status: {record['status']}&quot;
+        )
+
+
+def search_records(records: list[Record]) -&gt; None:
+    query = input(&quot;Search by name: &quot;).strip().lower()
+    if not query:
+        print(&quot;Search text cannot be blank.&quot;)
+        return
+
+    matches = [r for r in records if query in str(r.get(&quot;name&quot;, &quot;&quot;)).lower()]
+    if not matches:
+        print(&quot;No matching records.&quot;)
+        return
+
+    print(f&quot;\nFound {len(matches)} match(es):&quot;)
+    for record in matches:
+        print(
+            f&quot;ID: {record['id']} | &quot;
+            f&quot;Name: {record['name']} | &quot;
+            f&quot;Category: {record['category']} | &quot;
+            f&quot;Status: {record['status']}&quot;
+        )
+
+
+def find_by_id(records: list[Record], record_id: int) -&gt; Record | None:
+    for record in records:
+        if record.get(&quot;id&quot;) == record_id:
+            return record
+    return None
+
+
+def update_record(records: list[Record]) -&gt; bool:
+    raw_id = input(&quot;Enter record ID to update: &quot;).strip()
+    if not raw_id.isdigit():
+        print(&quot;ID must be a number.&quot;)
+        return False
+
+    record_id = int(raw_id)
+    target = find_by_id(records, record_id)
+    if target is None:
+        print(f&quot;No record found with ID {record_id}.&quot;)
+        return False
+
+    print(&quot;Leave blank to keep current value.&quot;)
+    new_name = input(f&quot;Name [{target['name']}]: &quot;).strip()
+    new_category = input(f&quot;Category [{target['category']}]: &quot;).strip()
+    new_status = input(f&quot;Status [{target['status']}]: &quot;).strip()
+
+    if new_name:
+        target[&quot;name&quot;] = new_name
+    if new_category:
+        target[&quot;category&quot;] = new_category
+    if new_status:
+        target[&quot;status&quot;] = new_status
+
+    print(f&quot;Record {record_id} updated.&quot;)
+    return True
+
+
+def delete_record(records: list[Record]) -&gt; bool:
+    raw_id = input(&quot;Enter record ID to delete: &quot;).strip()
+    if not raw_id.isdigit():
+        print(&quot;ID must be a number.&quot;)
+        return False
+
+    record_id = int(raw_id)
+    target = find_by_id(records, record_id)
+    if target is None:
+        print(f&quot;No record found with ID {record_id}.&quot;)
+        return False
+
+    records.remove(target)
+    print(f&quot;Record {record_id} deleted.&quot;)
+    return True
+
+
+def menu() -&gt; str:
+    print(&quot;\n--- Capstone Menu ---&quot;)
+    print(&quot;1) Add record&quot;)
+    print(&quot;2) List records&quot;)
+    print(&quot;3) Search records&quot;)
+    print(&quot;4) Update record&quot;)
+    print(&quot;5) Delete record&quot;)
+    print(&quot;6) Exit&quot;)
+    return input(&quot;Choose an option: &quot;).strip()
+
+
+def main() -&gt; None:
+    records = load_data(DATA_FILE)
+    print(f&quot;Loaded {len(records)} record(s).&quot;)
+
+    while True:
+        choice = menu()
+
+        if choice == &quot;1&quot;:
+            changed = add_record(records)
+            if changed:
+                save_data(DATA_FILE, records)
+        elif choice == &quot;2&quot;:
+            list_records(records)
+        elif choice == &quot;3&quot;:
+            search_records(records)
+        elif choice == &quot;4&quot;:
+            changed = update_record(records)
+            if changed:
+                save_data(DATA_FILE, records)
+        elif choice == &quot;5&quot;:
+            changed = delete_record(records)
+            if changed:
+                save_data(DATA_FILE, records)
+        elif choice == &quot;6&quot;:
+            print(&quot;Goodbye.&quot;)
+            break
+        else:
+            print(&quot;Invalid option. Choose 1-6.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>[Facilitation cue] If you share this code, still require students to run a restart proof and explain one bug fix from their own process.</p>
+<hr>
+<h2 id="guided-testing-sequence-for-students-use-during-lab">Guided Testing Sequence for Students (Use During Lab)</h2>
+<p>Have students run this exact sequence and read outputs aloud if needed:</p>
+<ol>
+<li>Start app with empty file.</li>
+<li>Add two records:
+   - <code>Ada Lovelace</code>, <code>VIP</code>, <code>active</code>
+   - <code>Grace Hopper</code>, <code>Mentor</code>, <code>active</code></li>
+<li>List records and confirm both appear.</li>
+<li>Search for <code>Ada</code> and confirm one match.</li>
+<li>Update ID <code>1</code> name to <code>Ada Byron</code>.</li>
+<li>Delete ID <code>2</code>.</li>
+<li>List records and confirm only ID <code>1</code> remains with updated name.</li>
+<li>Exit app.</li>
+<li>Relaunch app.</li>
+<li>List records and confirm state matches step 7.</li>
+</ol>
+<p>Explain why this sequence is powerful:</p>
+<ul>
+<li>It covers all CRUD operations.</li>
+<li>It validates both in-memory behavior and disk persistence.</li>
+<li>It exposes save/load mismatch quickly.</li>
+</ul>
+<hr>
+<h2 id="completion-criteria-must-be-met-this-hour">Completion Criteria (Must Be Met This Hour)</h2>
+<p>Use these exact checks for completion:</p>
+<ol>
+<li><strong>All required features implemented</strong>
+   - add, list, search, update, delete</li>
+<li><strong>Persistence across runs</strong>
+   - after mutation, restart still shows correct data</li>
+<li><strong>Exactly one quality improvement</strong>
+   - sorted output or confirmations or input validation</li>
+</ol>
+<p>Completion is binary for this hour:</p>
+<ul>
+<li>If CRUD is partial, not complete.</li>
+<li>If persistence is not proven, not complete.</li>
+<li>If quality improvement is missing, not complete.</li>
+</ul>
+<p>[Facilitation cue] Keep phrasing neutral and supportive:</p>
+<blockquote>
+<p>“You are close. Let’s finish the missing requirement in order: first persistence proof, then we can celebrate completion.”</p>
+</blockquote>
+<hr>
+<h2 id="common-pitfalls-instructor-eyes-open-during-circulation">Common Pitfalls (Instructor Eyes Open During Circulation)</h2>
+<h3 id="pitfall-1-save-not-called-after-updates">Pitfall 1: Save Not Called After Updates</h3>
+<p>Symptom:</p>
+<ul>
+<li>Student updates or deletes successfully.</li>
+<li>Data looks correct immediately.</li>
+<li>After restart, old data returns.</li>
+</ul>
+<p>Root cause:</p>
+<ul>
+<li>Mutation happened in memory, but <code>save_data(...)</code> was not called afterward.</li>
+</ul>
+<p>Fast fix:</p>
+<ol>
+<li>Ensure mutating functions return <code>True</code> only on success.</li>
+<li>In menu logic, call <code>save_data(...)</code> when return is <code>True</code>.</li>
+</ol>
+<p>Coaching line:</p>
+<blockquote>
+<p>“A mutating feature is incomplete until save is triggered after success.”</p>
+</blockquote>
+<h3 id="pitfall-2-data-structure-mismatch-between-save-and-load">Pitfall 2: Data Structure Mismatch Between Save and Load</h3>
+<p>Symptom:</p>
+<ul>
+<li>Load errors or weird behavior during list/search.</li>
+<li>Code expects dict keys, but loaded items are strings or wrong shape.</li>
+</ul>
+<p>Root cause:</p>
+<ul>
+<li>Save function writes one structure, load/feature functions assume another.</li>
+</ul>
+<p>Fast fix:</p>
+<ol>
+<li>Define schema once (board + top of file comment).</li>
+<li>Ensure every function uses same keys (<code>id</code>, <code>name</code>, <code>category</code>, <code>status</code>).</li>
+<li>Print one loaded record to verify shape before deeper debugging.</li>
+</ol>
+<p>Coaching line:</p>
+<blockquote>
+<p>“When data shape drifts, every feature becomes fragile. Stabilize schema first.”</p>
+</blockquote>
+<hr>
+<h2 id="optional-extension-clearly-optional-only-if-core-is-complete">Optional Extension (Clearly Optional, Only If Core Is Complete)</h2>
+<p>If and only if a student has completed all required criteria, offer:</p>
+<h3 id="optional-simple-text-report-export">Optional: Simple Text Report Export</h3>
+<p>Goal:</p>
+<ul>
+<li>Generate a plain text summary file (for example <code>report.txt</code>) showing total record count and current records.</li>
+</ul>
+<p>Keep it simple and deterministic. No timestamps required.</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+def export_report(records: list[dict[str, object]], path: Path) -&gt; None:
+    lines = [&quot;Capstone Report&quot;, &quot;==============&quot;, f&quot;Total records: {len(records)}&quot;, &quot;&quot;]
+    for record in records:
+        lines.append(
+            f&quot;ID {record['id']}: {record['name']} | &quot;
+            f&quot;{record['category']} | {record['status']}&quot;
+        )
+    path.write_text(&quot;\n&quot;.join(lines), encoding=&quot;utf-8&quot;)
+    print(f&quot;Report written to {path}&quot;)
+</code></pre>
+<p>[Facilitation cue] If offering this extension, say:</p>
+<blockquote>
+<p>“This is optional. Do not start this unless CRUD and restart persistence are already proven.”</p>
+</blockquote>
+<hr>
+<h2 id="instructor-language-bank-for-sprint-coaching">Instructor Language Bank for Sprint Coaching</h2>
+<p>Use short, repeatable prompts while circulating:</p>
+<ul>
+<li>“Show me where save happens after mutation.”</li>
+<li>“Can you restart now and prove persistence?”</li>
+<li>“What is your one quality improvement?”</li>
+<li>“What does your loaded data look like? Print one record.”</li>
+<li>“Which feature is the next smallest step?”</li>
+</ul>
+<p>Use confidence-building responses:</p>
+<ul>
+<li>“Good bug report. You already isolated the failing step.”</li>
+<li>“Great: you tested before adding new code.”</li>
+<li>“Nice recovery—you fixed root cause, not just symptom.”</li>
+</ul>
+<p>Avoid accidental drift into Hour 47 by redirecting:</p>
+<ul>
+<li>“README/demo polish is next hour. Right now, finish core behavior.”</li>
+<li>“Keep UI nice enough to use, but prioritize correctness and persistence first.”</li>
+</ul>
+<hr>
+<h2 id="end-of-hour-debrief-flow-35-min">End-of-Hour Debrief Flow (3–5 min)</h2>
+<p>Bring class back together and run this sequence:</p>
+<ol>
+<li>Ask for one volunteer to show restart proof in under 60 seconds.</li>
+<li>Ask a second volunteer to show their one quality improvement.</li>
+<li>Highlight one debugging win from the room.</li>
+<li>Re-state completion standard for anyone still finishing.</li>
+</ol>
+<p>Suggested debrief script:</p>
+<blockquote>
+<p>“Today’s sprint measured engineering discipline: build order, test cycle, and persistence reliability. If your app can mutate data and survive restart, you built a real foundation.”</p>
+</blockquote>
+<hr>
+<h2 id="quick-check-exit-ticket-required-prompt">Quick Check / Exit Ticket (Required Prompt)</h2>
+<p>Ask every learner:</p>
+<blockquote>
+<p><strong>“What is one bug you fixed during this sprint, and how did you figure it out?”</strong></p>
+</blockquote>
+<p>If time allows, ask one follow-up:</p>
+<blockquote>
+<p>“What clue pointed you to the root cause?”</p>
+</blockquote>
+<p>This reinforces debugging process over guesswork and gives you signal for targeted support in the next hour.</p>
+<hr>
+<h2 id="instructor-self-check-before-ending-the-hour">Instructor Self-Check Before Ending the Hour</h2>
+<p>Confirm you stayed aligned to Hour 46 and did not drift:</p>
+<ul>
+<li>[ ] Focus remained on CRUD build sprint</li>
+<li>[ ] Iterative order was taught explicitly: add → list → search → update/delete</li>
+<li>[ ] Test-as-you-go discipline was reinforced repeatedly</li>
+<li>[ ] Live demo included one mutating feature end-to-end</li>
+<li>[ ] Live demo explicitly showed save/load across restart</li>
+<li>[ ] Lab required all features + exactly one quality improvement</li>
+<li>[ ] Spot-check protocol was used during circulation</li>
+<li>[ ] Completion criteria were verified against persistence</li>
+<li>[ ] Common pitfalls were addressed</li>
+<li>[ ] Optional extension was presented as optional only</li>
+<li>[ ] Quick check prompt was delivered</li>
+</ul>
+<p>If all boxes are checked, this hour is complete and correctly aligned to the runbook.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day12_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#hour-intent-and-instructor-framing" class="depth-2">Hour Intent and Instructor Framing</a></li>
+<li><a href="#outcomes-runbook-alignment" class="depth-2">Outcomes (Runbook Alignment)</a></li>
+<li><a href="#pacing-plan-for-this-hour" class="depth-2">Pacing Plan for This Hour</a></li>
+<li><a href="#technical-baseline-for-consistency-during-the-hour" class="depth-2">Technical Baseline for Consistency During the Hour</a></li>
+<li><a href="#instructor-talk-points-1015-min" class="depth-2">Instructor Talk Points (10–15 min)</a></li>
+<li><a href="#talking-point-1-build-order-is-a-debugging-strategy" class="depth-3">Talking Point 1: Build Order Is a Debugging Strategy</a></li>
+<li><a href="#talking-point-2-test-as-you-go-discipline" class="depth-3">Talking Point 2: Test-As-You-Go Discipline</a></li>
+<li><a href="#talking-point-3-persistence-is-part-of-correctness" class="depth-3">Talking Point 3: Persistence Is Part of Correctness</a></li>
+<li><a href="#talking-point-4-one-quality-improvement-only" class="depth-3">Talking Point 4: One Quality Improvement Only</a></li>
+<li><a href="#talking-point-5-debugging-priorities" class="depth-3">Talking Point 5: Debugging Priorities</a></li>
+<li><a href="#live-demo-510-min-one-mutating-feature-end-to-end-restart-proof" class="depth-2">Live Demo (5–10 min): One Mutating Feature End-to-End + Restart Proof</a></li>
+<li><a href="#demo-goal" class="depth-3">Demo Goal</a></li>
+<li><a href="#demo-setup-script-before-coding" class="depth-3">Demo Setup Script (before coding)</a></li>
+<li><a href="#minimal-supporting-functions-context" class="depth-3">Minimal Supporting Functions (context)</a></li>
+<li><a href="#live-coding-mutating-feature-update" class="depth-3">Live Coding: Mutating Feature (Update)</a></li>
+<li><a href="#wire-it-into-menu-save" class="depth-3">Wire It Into Menu + Save</a></li>
+<li><a href="#test-during-demo-deterministic-scenario" class="depth-3">Test During Demo (deterministic scenario)</a></li>
+<li><a href="#explicit-restart-proof-required" class="depth-3">Explicit Restart Proof (required)</a></li>
+<li><a href="#demo-debrief-prompt" class="depth-3">Demo Debrief Prompt</a></li>
+<li><a href="#hands-on-lab-2535-min-capstone-build-sprint" class="depth-2">Hands-On Lab (25–35 min): Capstone Build Sprint</a></li>
+<li><a href="#student-task-statement" class="depth-3">Student Task Statement</a></li>
+<li><a href="#required-feature-checklist" class="depth-3">Required Feature Checklist</a></li>
+<li><a href="#exactly-one-quality-improvement" class="depth-3">Exactly One Quality Improvement</a></li>
+<li><a href="#recommended-build-order-during-lab" class="depth-3">Recommended Build Order During Lab</a></li>
+<li><a href="#instructor-circulation-script" class="depth-3">Instructor Circulation Script</a></li>
+<li><a href="#spot-check-protocol-required-during-lab" class="depth-3">Spot-Check Protocol (Required During Lab)</a></li>
+<li><a href="#time-calls-you-can-use" class="depth-3">Time Calls You Can Use</a></li>
+<li><a href="#detailed-facilitation-script-for-the-lab-window-instructor-read-aloud-moves" class="depth-2">Detailed Facilitation Script for the Lab Window (Instructor Read-Aloud + Moves)</a></li>
+<li><a href="#minute-03-of-lab-launch-and-commit" class="depth-3">Minute 0–3 of Lab: Launch and Commit</a></li>
+<li><a href="#minute-38-lock-in-addlist-reliability" class="depth-3">Minute 3–8: Lock in Add/List Reliability</a></li>
+<li><a href="#minute-814-build-search-as-targeting-foundation" class="depth-3">Minute 8–14: Build Search as Targeting Foundation</a></li>
+<li><a href="#minute-1422-implement-updatedelete-save-hook" class="depth-3">Minute 14–22: Implement Update/Delete + Save Hook</a></li>
+<li><a href="#minute-2230-apply-exactly-one-quality-improvement" class="depth-3">Minute 22–30: Apply Exactly One Quality Improvement</a></li>
+<li><a href="#minute-3035-prove-completion" class="depth-3">Minute 30–35: Prove Completion</a></li>
+<li><a href="#coaching-playbook-high-frequency-sprint-scenarios" class="depth-2">Coaching Playbook: High-Frequency Sprint Scenarios</a></li>
+<li><a href="#scenario-a-my-update-says-success-but-nothing-changed-after-restart" class="depth-3">Scenario A: “My update says success but nothing changed after restart.”</a></li>
+<li><a href="#scenario-b-delete-removed-the-wrong-record" class="depth-3">Scenario B: “Delete removed the wrong record.”</a></li>
+<li><a href="#scenario-c-i-get-key-errors-when-listing-or-searching" class="depth-3">Scenario C: “I get key errors when listing or searching.”</a></li>
+<li><a href="#scenario-d-my-search-returns-weird-results" class="depth-3">Scenario D: “My search returns weird results.”</a></li>
+<li><a href="#scenario-e-im-behind-can-i-skip-update-or-delete" class="depth-3">Scenario E: “I’m behind; can I skip update or delete?”</a></li>
+<li><a href="#scenario-f-can-i-add-color-outputreport-chartsextra-menus-right-now" class="depth-3">Scenario F: “Can I add color output/report charts/extra menus right now?”</a></li>
+<li><a href="#scripted-mini-conferences-2-minute-check-ins-you-can-reuse" class="depth-2">Scripted Mini-Conferences (2-Minute Check-ins You Can Reuse)</a></li>
+<li><a href="#mini-conference-template-1-progress-calibration" class="depth-3">Mini-Conference Template 1: Progress Calibration</a></li>
+<li><a href="#mini-conference-template-2-bug-triage" class="depth-3">Mini-Conference Template 2: Bug Triage</a></li>
+<li><a href="#mini-conference-template-3-near-complete-validation" class="depth-3">Mini-Conference Template 3: Near-Complete Validation</a></li>
+<li><a href="#instructor-demonstration-variants-for-different-class-needs" class="depth-2">Instructor Demonstration Variants for Different Class Needs</a></li>
+<li><a href="#variant-1-delete-with-confirmation-use-only-if-class-selected-confirmations" class="depth-3">Variant 1: Delete With Confirmation (Use only if class selected confirmations)</a></li>
+<li><a href="#variant-2-sorted-list-output-use-only-if-class-selected-sorted-output" class="depth-3">Variant 2: Sorted List Output (Use only if class selected sorted output)</a></li>
+<li><a href="#accountability-without-anxiety-what-to-say-when-students-are-stuck" class="depth-2">Accountability Without Anxiety: What to Say When Students Are Stuck</a></li>
+<li><a href="#evidence-collection-what-you-need-to-observe-before-ending-the-hour" class="depth-2">Evidence Collection: What You Need to Observe Before Ending the Hour</a></li>
+<li><a href="#minimum-evidence-set" class="depth-3">Minimum Evidence Set</a></li>
+<li><a href="#if-evidence-is-incomplete" class="depth-3">If Evidence Is Incomplete</a></li>
+<li><a href="#end-of-lab-status-language" class="depth-3">End-of-Lab Status Language</a></li>
+<li><a href="#reference-implementation-instructor-fallback-basics-scope" class="depth-2">Reference Implementation (Instructor Fallback, Basics Scope)</a></li>
+<li><a href="#guided-testing-sequence-for-students-use-during-lab" class="depth-2">Guided Testing Sequence for Students (Use During Lab)</a></li>
+<li><a href="#completion-criteria-must-be-met-this-hour" class="depth-2">Completion Criteria (Must Be Met This Hour)</a></li>
+<li><a href="#common-pitfalls-instructor-eyes-open-during-circulation" class="depth-2">Common Pitfalls (Instructor Eyes Open During Circulation)</a></li>
+<li><a href="#pitfall-1-save-not-called-after-updates" class="depth-3">Pitfall 1: Save Not Called After Updates</a></li>
+<li><a href="#pitfall-2-data-structure-mismatch-between-save-and-load" class="depth-3">Pitfall 2: Data Structure Mismatch Between Save and Load</a></li>
+<li><a href="#optional-extension-clearly-optional-only-if-core-is-complete" class="depth-2">Optional Extension (Clearly Optional, Only If Core Is Complete)</a></li>
+<li><a href="#optional-simple-text-report-export" class="depth-3">Optional: Simple Text Report Export</a></li>
+<li><a href="#instructor-language-bank-for-sprint-coaching" class="depth-2">Instructor Language Bank for Sprint Coaching</a></li>
+<li><a href="#end-of-hour-debrief-flow-35-min" class="depth-2">End-of-Hour Debrief Flow (3–5 min)</a></li>
+<li><a href="#quick-check-exit-ticket-required-prompt" class="depth-2">Quick Check / Exit Ticket (Required Prompt)</a></li>
+<li><a href="#instructor-self-check-before-ending-the-hour" class="depth-2">Instructor Self-Check Before Ending the Hour</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day12_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day12_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day12_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

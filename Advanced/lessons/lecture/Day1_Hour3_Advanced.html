@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 1, Hour 3: Properties, Invariants, and Custom Exceptions | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="1">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day1_Hour3_Advanced.md">
+
+    <link rel="prev" href="Day1_Hour2_Advanced.html">
+    <link rel="next" href="Day1_Hour4_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="1" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-01/index.html">Day 1</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 1, Hour 3: Properties, Invariants, and Custom Exceptions</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 1</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour4_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day1_Hour3_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 1, Hour 3 of 48</li>
+<li><strong>Focus</strong>: Properties, invariants, and custom exceptions in a tracker-domain model.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 1, Hour 3.</li>
+<li><strong>Prerequisites</strong>: Learners should be able to define classes, write <code>__init__</code> methods, create instances, call methods, write simple service functions, and use basic <code>try</code>/<code>except</code> syntax.</li>
+<li><strong>Advanced trajectory</strong>: This hour moves learners from PCAP-level object syntax toward PCPP1-style defensive domain design: objects protect their own valid state, services communicate domain failures clearly, and caller code handles expected errors without hiding unexpected bugs.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has added at least one validated <code>@property</code>, defined <code>ValidationError</code> and <code>NotFoundError</code>, updated one service function to raise a domain exception, and written caller code that catches specific exceptions and prints user-friendly messages outside the model and service layer.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Hour 2</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect class responsibilities to protecting valid object state</td>
+</tr>
+<tr>
+<td>Outcomes and key vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Define property, backing attribute, invariant, and domain exception</td>
+</tr>
+<tr>
+<td>Concept briefing: controlled access and domain failures</td>
+<td style="text-align: right;">10 min</td>
+<td>Explain why validation belongs at boundaries and why exceptions beat silent failure</td>
+</tr>
+<tr>
+<td>Live demo: validated tracker model and service exception</td>
+<td style="text-align: right;">10 min</td>
+<td>Build deterministic code using <code>@property</code>, <code>ValidationError</code>, and <code>NotFoundError</code></td>
+</tr>
+<tr>
+<td>Guided lab: validation and exceptions</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners add validation, custom exceptions, service raising, and caller handling</td>
+</tr>
+<tr>
+<td>Quick check, completion criteria, and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Confirm specific-exception handling and preview Hour 4</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings above total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays within the runbook's required 25-35 minute lab range. If the room needs support, protect the guided lab by using prepared starter code and live-coding only the property setter, service exception, and caller handling. Do not weaken the required objectives by making validation, <code>ValidationError</code>, or <code>NotFoundError</code> optional; those are core outcomes for this hour.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain a property as controlled access to an attribute.</li>
+<li>Use <code>@property</code> and a setter to validate assignment before data is stored.</li>
+<li>Use a backing attribute such as <code>_title</code> or <code>_priority</code> to avoid recursive property calls.</li>
+<li>Define an invariant as a rule that must always be true for a valid object.</li>
+<li>Identify reasonable invariants for a tracker-domain model, such as a non-empty title or a priority inside an allowed range.</li>
+<li>Define custom exceptions for domain errors, including <code>ValidationError</code> and <code>NotFoundError</code>.</li>
+<li>Explain why returning <code>None</code> or <code>False</code> for domain failures can create silent bugs.</li>
+<li>Update a service function so missing items raise a clear domain exception.</li>
+<li>Write caller-level <code>try</code>/<code>except</code> code that catches specific custom exceptions and prints a user-friendly message outside the model and service.</li>
+<li>Avoid broad <code>except Exception</code> handling except when explicitly discussing it as an anti-pattern.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 1, Hour 3 visible for yourself. The required scope is properties, invariants, custom exceptions, validation rules, service exceptions, caller handling, pitfalls, optional extensions, and a quick check about catching specific exceptions.</li>
+<li>Open the learner project from Hour 2, or prepare a clean <code>advanced_tracker</code> workspace with a <code>src/</code> directory.</li>
+<li>Prepare a blank file named <code>day1_hour3_validation_demo.py</code> for the live demo, or be ready to create it in front of the class.</li>
+<li>Confirm the terminal command for the environment. Use <code>python day1_hour3_validation_demo.py</code> if <code>python</code> works. If the lab requires <code>python3</code>, consistently say and show <code>python3 day1_hour3_validation_demo.py</code>.</li>
+<li>Prepare a board or shared note with these definitions:</li>
+</ul>
+<pre><code class="language-text">Property: controlled access to an attribute.
+Backing attribute: the actual stored value, usually named with a leading underscore.
+Invariant: a rule that must always be true for the object to be valid.
+Domain exception: an error type that describes a meaningful problem in the application domain.
+</code></pre>
+<ul>
+<li>Have the Hour 2 boundary idea ready: model objects represent domain state and behavior; service functions coordinate use cases; caller or UI code decides what to display.</li>
+<li>Be ready to correct two common mistakes early: assigning to the public property inside its own setter, and catching <code>Exception</code> broadly around code that should catch <code>ValidationError</code> or <code>NotFoundError</code> specifically.</li>
+<li>Decide whether learners may continue their Hour 2 tracker domain or use the task tracker shown here. Either is acceptable as long as they meet the completion criteria.</li>
+</ul>
+<p>Suggested board note before the session starts:</p>
+<pre><code class="language-text">Day 1 Hour 3 goals:
+1. Protect model state with @property
+2. Name always-true rules as invariants
+3. Raise ValidationError for invalid domain data
+4. Raise NotFoundError for missing domain objects
+5. Catch specific exceptions at the caller boundary
+</code></pre>
+<hr>
+<h2 id="opening-bridge-from-hour-2-5-minutes">Opening Bridge from Hour 2 (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"In Hour 2, we practiced designing classes from requirements. We asked what an object knows, what it does, and where boundaries belong. We used a tracker-style domain because trackers are familiar: tasks, habits, expenses, inventory items, contacts, books, workouts, or support tickets. The exact domain can change, but the design questions stay the same."</p>
+<p>"One of our most important conclusions was that a model object should own the rules about the thing it represents. A <code>Task</code> object should know what makes a task valid. A <code>Contact</code> object should know what makes a contact valid. A <code>BudgetItem</code> object should know what makes a budget item valid. The terminal interface should not be the only thing preventing bad data, because later we may have a web form, an API endpoint, a test, a file import, or another service function creating those same objects."</p>
+<p>"Today we take the next step. In Hour 2, a class could hold data and expose behavior. In Hour 3, the class starts protecting itself. We are going to use properties to control access to attributes. We are going to name the rules that must always be true. Those rules are called invariants. And we are going to define custom exceptions so domain failures are clear, specific, and catchable."</p>
+<p>Pause and ask:</p>
+<p>"Imagine our task tracker says priority must be between 1 and 5. If I create <code>Task('Refactor report', priority=99)</code>, what should happen?"</p>
+<p>Take two or three responses. Learners may say "print an error," "return False," "do not allow it," or "raise an exception." Use those answers to transition:</p>
+<p>"The core idea is that the object should not quietly become invalid. If a task with priority 99 is not meaningful in our domain, then the model should refuse that value. It should refuse the value at the moment the value is assigned, not three screens later when another function finally notices something is wrong."</p>
+<p>"This is a professional habit. Advanced code does not assume every caller will behave perfectly. Advanced code makes illegal states difficult or impossible to represent."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's name the tools we will use, then we will live-code a small tracker model that enforces its own rules."</p>
+<hr>
+<h2 id="outcomes-and-key-vocabulary-5-minutes">Outcomes and Key Vocabulary (5 minutes)</h2>
+<p>Use this section to make the vocabulary concrete before showing syntax.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"The first term is <strong>property</strong>. In Python, a property lets an attribute look simple from the outside while still running code behind the scenes. From the caller's perspective, <code>task.priority = 3</code> still looks like normal assignment. But inside the class, that assignment can call a setter method that checks the value before storing it."</p>
+<p>"The second term is <strong>backing attribute</strong>. When we use a property, we usually store the actual value in an attribute with a leading underscore, such as <code>_priority</code>. The underscore is a convention that says, 'This is internal. Use the property instead.' It is not the same as strict private visibility in some other languages, but it is an important Python signal."</p>
+<p>Write:</p>
+<pre><code class="language-python">task.priority      # public property
+task._priority     # internal backing attribute
+</code></pre>
+<p>"The third term is <strong>invariant</strong>. An invariant is a rule that must always be true for the object to be valid. Not just usually true. Not just true after the user interface cleans things up. Always true. For a task tracker, examples could be: the title is not empty, priority is from 1 to 5, status is one of a known set of statuses, or completed tasks have a completion timestamp. Today we will keep the invariant small and testable: title must be non-empty, and priority must be an integer from 1 to 5."</p>
+<p>"The fourth term is <strong>custom exception</strong>. Python already has built-in exceptions such as <code>ValueError</code>, <code>KeyError</code>, and <code>TypeError</code>. Those are useful. But in application code, we often want errors that speak the language of our domain. <code>ValidationError</code> tells us a domain value failed validation. <code>NotFoundError</code> tells us a requested domain object does not exist. Those names are more meaningful than returning <code>None</code> and hoping the caller remembers to check."</p>
+<p><strong>Short prediction prompt</strong></p>
+<p>"If a function returns <code>None</code> when it cannot find a task, what might happen if the caller forgets to check for <code>None</code>?"</p>
+<p>Expected learner answers:</p>
+<ul>
+<li>The program may fail later with a confusing error.</li>
+<li>The caller might treat <code>None</code> as a real value.</li>
+<li>The bug may be farther away from the real cause.</li>
+</ul>
+<p>Respond:</p>
+<p>"Exactly. Returning <code>None</code> can be appropriate in some designs, but for required domain operations, a specific exception often gives a clearer signal. It says: this use case failed, and here is the reason."</p>
+<hr>
+<h2 id="concept-briefing-controlled-access-and-domain-failures-10-minutes">Concept Briefing: Controlled Access and Domain Failures (10 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's connect this to our Hour 2 boundary model. We had three rough layers. The model represents the domain object. The service function coordinates a use case. The caller, which could later become a command-line interface or web route, decides how to communicate with a human."</p>
+<p>Write:</p>
+<pre><code class="language-text">Model: protects valid state
+Service: coordinates a use case
+Caller/UI: catches expected errors and displays messages
+</code></pre>
+<p>"A common beginner pattern is to validate only in the user interface. For example, the program asks for a priority, checks whether it is between 1 and 5, and then creates a <code>Task</code>. That is a useful first step, but it is not enough for advanced design. Why? Because the user interface is not the only caller. A test can create a task. A file import can create a task. Another service function can create a task. A future API endpoint can create a task. If the rule matters to the domain, the model should enforce it."</p>
+<p>"That does not mean we never validate anywhere else. In real systems, validation can happen at multiple boundaries. A web form may validate early to give fast feedback. An API may validate request data. But the model should still protect its own invariants. The model is the last line of defense for its own validity."</p>
+<p>"Here is the syntax pattern we will use."</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, priority: int) -&gt; None:
+        self.priority = priority
+
+    @property
+    def priority(self) -&gt; int:
+        return self._priority
+
+    @priority.setter
+    def priority(self, value: int) -&gt; None:
+        if value &lt; 1:
+            raise ValidationError(&quot;Priority must be at least 1.&quot;)
+        self._priority = value
+</code></pre>
+<p>"Notice something subtle and important in <code>__init__</code>: we assign to <code>self.priority</code>, not directly to <code>self._priority</code>. That means object creation uses the same validation path as later assignment. If someone creates a task with a bad priority, the setter rejects it. If someone later changes the priority to a bad value, the same setter rejects it."</p>
+<p>"Also notice what the setter does at the end: <code>self._priority = value</code>. Inside the setter, we store the value in the backing attribute. If we wrote <code>self.priority = value</code> inside the setter, the setter would call itself again, and again, and again, until Python raises a recursion error. That is one of today's main pitfalls."</p>
+<p><strong>Instructor emphasis</strong></p>
+<p>"The property is not about hiding data for the sake of hiding data. It is about making one safe doorway into a piece of state. When every assignment goes through the same doorway, every assignment gets the same validation."</p>
+<p>"Now let's talk about exceptions. Suppose a service function searches a list of tasks by title. If the task is missing, we have choices. We could return <code>None</code>. We could return <code>False</code>. We could print a message inside the service. Or we could raise <code>NotFoundError</code>."</p>
+<p>Write:</p>
+<pre><code class="language-text">Returning None/False:
+- Caller might forget to check
+- Failure can travel silently
+- Error meaning may be ambiguous
+
+Raising a custom exception:
+- Failure is explicit
+- Error type communicates meaning
+- Caller can catch the exact problem it knows how to handle
+</code></pre>
+<p>"The service should not print the user-facing message, because we are still keeping our boundaries clean. The service should raise the domain error. The caller catches that specific error and decides how to present it. Today, our caller will just print a friendly message. Later, that caller could be a menu, a GUI, an API response, or a test assertion."</p>
+<p>"One more point: do not catch <code>Exception</code> broadly around everything. If you catch every exception, you can accidentally hide real programming mistakes. For example, a misspelled variable name raises <code>NameError</code>. A broken method call may raise <code>AttributeError</code>. If you catch all of those and print 'Something went wrong,' you have made debugging harder. Catch the specific errors you expect and know how to handle: <code>ValidationError</code> and <code>NotFoundError</code> today."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's build the small version. Watch for three things: the backing attribute, the model raising <code>ValidationError</code>, and the service raising <code>NotFoundError</code>."</p>
+<hr>
+<h2 id="live-demo-validated-tracker-model-and-service-exception-10-minutes">Live Demo: Validated Tracker Model and Service Exception (10 minutes)</h2>
+<p>The live demo is deterministic and self-contained. Use prepared starter code for the full file if needed, then live-code the property setter, service exception, and caller handling so learners can predict the output without losing lab time. The domain is a task tracker, building directly from Hour 2's model and service boundary ideas.</p>
+<p><strong>Instructor setup</strong></p>
+<p>"Create a file named <code>day1_hour3_validation_demo.py</code>. We are not building a full application. We are building the domain core and a tiny caller script that proves the behavior."</p>
+<h3 id="step-1-define-domain-exceptions">Step 1: Define domain exceptions</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First, we define the exception types. These are small classes, but they matter because they let the rest of the program distinguish expected domain failures from unexpected programming bugs."</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when tracker data violates a domain rule.&quot;&quot;&quot;
+
+
+class NotFoundError(Exception):
+    &quot;&quot;&quot;Raised when a requested tracker item does not exist.&quot;&quot;&quot;
+</code></pre>
+<p>"A custom exception can be as small as a class that inherits from <code>Exception</code>. The class name carries meaning. Later, in the optional extension, we can add an attribute for structured error messages. For now, the message passed when raising the exception is enough."</p>
+<h3 id="step-2-create-a-model-with-validated-properties">Step 2: Create a model with validated properties</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now we create a <code>Task</code> model. It has a title, a priority, and a completed flag. We will validate title and priority with properties. The title must not be empty after trimming whitespace. Priority must be an integer from 1 to 5."</p>
+<pre><code class="language-python">class Task:
+    &quot;&quot;&quot;A task in a small tracker application.&quot;&quot;&quot;
+
+    def __init__(self, title: str, priority: int = 3) -&gt; None:
+        self.title = title
+        self.priority = priority
+        self.completed = False
+
+    @property
+    def title(self) -&gt; str:
+        return self._title
+
+    @title.setter
+    def title(self, value: str) -&gt; None:
+        if not isinstance(value, str):
+            raise ValidationError(&quot;Task title must be text.&quot;)
+        normalized = value.strip()
+        if not normalized:
+            raise ValidationError(&quot;Task title cannot be empty.&quot;)
+        self._title = normalized
+
+    @property
+    def priority(self) -&gt; int:
+        return self._priority
+
+    @priority.setter
+    def priority(self, value: int) -&gt; None:
+        if type(value) is not int:
+            raise ValidationError(&quot;Task priority must be an integer.&quot;)
+        if value &lt; 1 or value &gt; 5:
+            raise ValidationError(&quot;Task priority must be between 1 and 5.&quot;)
+        self._priority = value
+
+    def mark_complete(self) -&gt; None:
+        self.completed = True
+
+    def summary(self) -&gt; str:
+        status = &quot;complete&quot; if self.completed else &quot;open&quot;
+        return f&quot;{self.title} | priority={self.priority} | {status}&quot;
+</code></pre>
+<p>Pause and point to these lines:</p>
+<ul>
+<li><code>self.title = title</code></li>
+<li><code>self.priority = priority</code></li>
+<li><code>self._title = normalized</code></li>
+<li><code>self._priority = value</code></li>
+</ul>
+<p><strong>Instructor explanation</strong></p>
+<p>"The initializer assigns through the public properties. That means the object cannot be created in an invalid state. The setters store in the backing attributes. That means the setters do not call themselves recursively."</p>
+<p>"The title setter also shows a small normalization step: it strips whitespace. If someone gives us <code>'  Write report  '</code>, the stored title becomes <code>'Write report'</code>. If someone gives us only spaces, stripping produces an empty string, and we raise <code>ValidationError</code>."</p>
+<p>"This is a good place to say something about validation consistency. If the constructor strips title whitespace but later assignment does not, the rule is inconsistent. Properties help because creation and later assignment share the same rule."</p>
+<h3 id="step-3-add-a-service-function-that-raises-notfounderror">Step 3: Add a service function that raises <code>NotFoundError</code></h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Next we need one service function. In Hour 2, we separated services from the model. The model knows how to become complete. The service coordinates finding the right task and asking it to become complete."</p>
+<pre><code class="language-python">def complete_task_by_title(tasks: list[Task], title: str) -&gt; Task:
+    &quot;&quot;&quot;Find a task by title and mark it complete.&quot;&quot;&quot;
+    normalized_title = title.strip()
+    for task in tasks:
+        if task.title.casefold() == normalized_title.casefold():
+            task.mark_complete()
+            return task
+    raise NotFoundError(f&quot;No task found with title: {title!r}&quot;)
+</code></pre>
+<p>"Notice that the service raises <code>NotFoundError</code> when the requested task is missing. It does not print. It does not return <code>False</code>. It does not return <code>None</code>. It raises a domain-specific exception. That gives the caller a clear, catchable signal."</p>
+<p>"Also notice that invalid task data is still handled by the model. This service function does not need to re-check whether a task priority is valid, because a real <code>Task</code> object already protects that invariant. Services should not duplicate every model rule. They should rely on model validation where the model owns the rule."</p>
+<h3 id="step-4-add-caller-level-handling-with-specific-exceptions">Step 4: Add caller-level handling with specific exceptions</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Finally, we write a tiny caller script. Think of this as the future command-line menu or UI boundary. This is where we catch expected domain errors and print user-friendly messages."</p>
+<pre><code class="language-python">def main() -&gt; None:
+    tasks = [
+        Task(&quot;Write project outline&quot;, priority=2),
+        Task(&quot;Review pull request&quot;, priority=4),
+    ]
+
+    print(&quot;Initial tasks:&quot;)
+    for task in tasks:
+        print(f&quot;- {task.summary()}&quot;)
+
+    print(&quot;\nCompleting one existing task:&quot;)
+    try:
+        completed_task = complete_task_by_title(tasks, &quot;review pull request&quot;)
+    except NotFoundError as error:
+        print(f&quot;Could not complete task: {error}&quot;)
+    else:
+        print(f&quot;Completed: {completed_task.summary()}&quot;)
+
+    print(&quot;\nTrying invalid model data:&quot;)
+    try:
+        Task(&quot;   &quot;, priority=2)
+    except ValidationError as error:
+        print(f&quot;Could not create task: {error}&quot;)
+
+    print(&quot;\nTrying missing task:&quot;)
+    try:
+        complete_task_by_title(tasks, &quot;Submit invoice&quot;)
+    except NotFoundError as error:
+        print(f&quot;Could not complete task: {error}&quot;)
+
+    print(&quot;\nFinal tasks:&quot;)
+    for task in tasks:
+        print(f&quot;- {task.summary()}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Expected output</strong></p>
+<p>Show or run the file. The output should be deterministic:</p>
+<pre><code class="language-text">Initial tasks:
+- Write project outline | priority=2 | open
+- Review pull request | priority=4 | open
+
+Completing one existing task:
+Completed: Review pull request | priority=4 | complete
+
+Trying invalid model data:
+Could not create task: Task title cannot be empty.
+
+Trying missing task:
+Could not complete task: No task found with title: 'Submit invoice'
+
+Final tasks:
+- Write project outline | priority=2 | open
+- Review pull request | priority=4 | complete
+</code></pre>
+<p><strong>Instructor discussion</strong></p>
+<p>"Let's identify the boundary decisions. The <code>Task</code> model raises <code>ValidationError</code> when its own data is invalid. The <code>complete_task_by_title</code> service raises <code>NotFoundError</code> when it cannot complete the requested use case. The caller catches those specific exceptions and prints messages for a human."</p>
+<p>"This is the pattern you are about to practice. It is small, but it scales. In a larger program, the model might be in <code>models.py</code>, the service might be in <code>services.py</code>, and the caller might be a command-line menu, a web route, or a test. The same responsibilities apply."</p>
+<p><strong>Explicit anti-pattern callout</strong></p>
+<p>"Here is what we are not doing today."</p>
+<pre><code class="language-python"># Anti-pattern for today's lab: too broad.
+try:
+    complete_task_by_title(tasks, &quot;Submit invoice&quot;)
+except Exception:
+    print(&quot;Something went wrong.&quot;)
+</code></pre>
+<p>"This catches too much. It would catch our expected <code>NotFoundError</code>, but it would also catch unrelated bugs. If I misspelled a variable name or called a method that does not exist, this block would hide the real problem behind a vague message. In advanced code, broad exception handling is not a default habit. Catch the errors you can actually handle."</p>
+<hr>
+<h2 id="guided-lab-validation-and-exceptions-25-minutes">Guided Lab: Validation and Exceptions (25 minutes)</h2>
+<p>The lab is required practice, not an optional extension. Learners may continue the model they designed in Hour 2 or use the task tracker model from the demo. The minimum required scope is one validated property, two custom exception classes, one service function that raises a domain exception, and caller code that handles expected errors with user-friendly messages.</p>
+<h3 id="lab-prompt-for-students">Lab prompt for students</h3>
+<p>"Now you will bulletproof one part of your tracker model. Choose a model from Hour 2 or create a small <code>Task</code>, <code>Contact</code>, <code>InventoryItem</code>, <code>Expense</code>, <code>Workout</code>, or <code>Ticket</code> model. Add a rule that must always be true. Enforce that rule with a property. Then define custom exceptions and update one service function so domain errors are explicit."</p>
+<p>Display these requirements:</p>
+<pre><code class="language-text">Required lab work:
+1. Add at least one validated @property to a model.
+2. Use a backing attribute such as _title, _amount, or _priority.
+3. Define ValidationError and NotFoundError.
+4. Raise ValidationError when model data violates a rule.
+5. Update one service function to raise NotFoundError for a missing item.
+6. Catch specific custom exceptions in caller code.
+7. Print user-friendly messages only at the caller/UI boundary.
+</code></pre>
+<h3 id="suggested-student-starting-point">Suggested student starting point</h3>
+<p>If learners need a scaffold, offer this reduced version. Tell them to adapt the names and rules to their own domain.</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when domain data violates a rule.&quot;&quot;&quot;
+
+
+class NotFoundError(Exception):
+    &quot;&quot;&quot;Raised when a requested item cannot be found.&quot;&quot;&quot;
+
+
+class TrackerItem:
+    def __init__(self, name: str, score: int) -&gt; None:
+        self.name = name
+        self.score = score
+
+    @property
+    def name(self) -&gt; str:
+        return self._name
+
+    @name.setter
+    def name(self, value: str) -&gt; None:
+        if not isinstance(value, str):
+            raise ValidationError(&quot;Name must be text.&quot;)
+        normalized = value.strip()
+        if not normalized:
+            raise ValidationError(&quot;Name cannot be empty.&quot;)
+        self._name = normalized
+
+    @property
+    def score(self) -&gt; int:
+        return self._score
+
+    @score.setter
+    def score(self, value: int) -&gt; None:
+        if type(value) is not int:
+            raise ValidationError(&quot;Score must be an integer.&quot;)
+        if value &lt; 0:
+            raise ValidationError(&quot;Score cannot be negative.&quot;)
+        self._score = value
+</code></pre>
+<p>Then add a service function:</p>
+<pre><code class="language-python">def find_item_by_name(items: list[TrackerItem], name: str) -&gt; TrackerItem:
+    normalized_name = name.strip()
+    for item in items:
+        if item.name.casefold() == normalized_name.casefold():
+            return item
+    raise NotFoundError(f&quot;No item found with name: {name!r}&quot;)
+</code></pre>
+<p>And caller handling:</p>
+<pre><code class="language-python">def main() -&gt; None:
+    items = [TrackerItem(&quot;Daily reading&quot;, 10)]
+
+    try:
+        TrackerItem(&quot;   &quot;, 5)
+    except ValidationError as error:
+        print(f&quot;Cannot create item: {error}&quot;)
+
+    try:
+        found_item = find_item_by_name(items, &quot;daily reading&quot;)
+    except NotFoundError as error:
+        print(f&quot;Cannot find item: {error}&quot;)
+    else:
+        print(f&quot;Found: {found_item.name}&quot;)
+
+    try:
+        find_item_by_name(items, &quot;Weekly planning&quot;)
+    except NotFoundError as error:
+        print(f&quot;Cannot find item: {error}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="instructor-circulation-plan">Instructor circulation plan</h3>
+<p>Use the first 5 minutes of lab time to check that everyone has chosen a model and one invariant.</p>
+<p>Ask each learner or pair:</p>
+<ul>
+<li>"What object are you protecting?"</li>
+<li>"What rule must always be true?"</li>
+<li>"Which property setter enforces that rule?"</li>
+<li>"What exception is raised when the rule is violated?"</li>
+</ul>
+<p>Use the next 10 minutes to inspect property implementations.</p>
+<p>Look for:</p>
+<ul>
+<li>A getter decorated with <code>@property</code>.</li>
+<li>A setter decorated with <code>@property_name.setter</code>.</li>
+<li>The initializer assigning through the property, such as <code>self.amount = amount</code>.</li>
+<li>The setter storing in a backing attribute, such as <code>self._amount = value</code>.</li>
+<li>A clear <code>ValidationError</code> message when invalid input is rejected.</li>
+</ul>
+<p>Use the next 10 minutes to inspect service and caller boundaries.</p>
+<p>Look for:</p>
+<ul>
+<li>A service function that searches, updates, or retrieves a domain object.</li>
+<li><code>raise NotFoundError(...)</code> when the service cannot find the requested item.</li>
+<li>No <code>print()</code> inside the model or service for expected domain errors.</li>
+<li>Caller code that catches <code>ValidationError</code> and <code>NotFoundError</code> specifically.</li>
+</ul>
+<p>Use the final 5 minutes to run files and ask the quick check. If many learners are still debugging, keep the quick check verbal while they continue working.</p>
+<h3 id="lab-validation-examples">Lab validation examples</h3>
+<p>Encourage learners to test both successful and failing paths. Give them a checklist like this:</p>
+<pre><code class="language-text">Successful path:
+- Create a valid object.
+- Update the validated property with a valid value.
+- Use the service function to find or update an existing item.
+
+Validation failure:
+- Try an empty name, negative amount, out-of-range priority, or other invalid value.
+- Confirm ValidationError is raised.
+- Confirm the caller prints a friendly message.
+
+Missing item failure:
+- Search for an item that does not exist.
+- Confirm NotFoundError is raised.
+- Confirm the caller prints a friendly message.
+</code></pre>
+<p><strong>Instructor talk track while circulating</strong></p>
+<p>"If your invalid input does not raise an exception, the model is not protecting itself yet. Go back to the property setter and make sure all assignments go through that setter."</p>
+<p>"If your program prints an error from inside the model, move that message to the caller. The model should report the problem by raising an exception. The caller decides what to say to a person."</p>
+<p>"If your service returns <code>None</code> for a required item, decide whether that creates ambiguity. For today's lab, the runbook requires a custom exception for missing items, so use <code>NotFoundError</code>."</p>
+<p>"If your <code>except</code> block says <code>except Exception</code>, narrow it. Catch <code>ValidationError</code> or <code>NotFoundError</code>. If there are two expected failures, use two <code>except</code> blocks. That helps future readers know exactly what the caller is prepared to handle."</p>
+<hr>
+<h2 id="troubleshooting-guide">Troubleshooting Guide</h2>
+<p>Use these explanations when learners get stuck. Keep the tone calm and evidence-based: read the traceback, identify the line, and connect the error to the design rule.</p>
+<h3 id="problem-recursionerror-in-a-property-setter">Problem: RecursionError in a property setter</h3>
+<p>Likely cause:</p>
+<pre><code class="language-python">@priority.setter
+def priority(self, value: int) -&gt; None:
+    self.priority = value
+</code></pre>
+<p>Explanation:</p>
+<p>"Inside the <code>priority</code> setter, assigning to <code>self.priority</code> calls the <code>priority</code> setter again. That repeats until Python stops with <code>RecursionError</code>. Store the accepted value in the backing attribute instead."</p>
+<p>Correct pattern:</p>
+<pre><code class="language-python">@priority.setter
+def priority(self, value: int) -&gt; None:
+    if value &lt; 1:
+        raise ValidationError(&quot;Priority must be at least 1.&quot;)
+    self._priority = value
+</code></pre>
+<h3 id="problem-attributeerror-for-missing-backing-attribute">Problem: AttributeError for missing backing attribute</h3>
+<p>Likely cause:</p>
+<pre><code class="language-python">class Task:
+    @property
+    def priority(self) -&gt; int:
+        return self._priority
+</code></pre>
+<p>But <code>self.priority = priority</code> was never called during initialization, or the setter did not store <code>_priority</code>.</p>
+<p>Explanation:</p>
+<p>"The getter returns the backing attribute. That backing attribute only exists after the setter stores it. Make sure the initializer assigns through the property and the setter stores the accepted value."</p>
+<h3 id="problem-validation-only-works-during-object-creation">Problem: Validation only works during object creation</h3>
+<p>Likely cause:</p>
+<pre><code class="language-python">def __init__(self, priority: int) -&gt; None:
+    if priority &lt; 1:
+        raise ValidationError(&quot;Priority must be at least 1.&quot;)
+    self.priority = priority
+</code></pre>
+<p>But there is no property setter.</p>
+<p>Explanation:</p>
+<p>"This validates the constructor argument, but it does not protect later assignment. If someone writes <code>task.priority = -10</code> after creation, the object can become invalid. A property setter protects both creation and later assignment when <code>__init__</code> assigns through the property."</p>
+<h3 id="problem-service-prints-instead-of-raising">Problem: Service prints instead of raising</h3>
+<p>Likely cause:</p>
+<pre><code class="language-python">def complete_task_by_title(tasks: list[Task], title: str) -&gt; None:
+    for task in tasks:
+        if task.title == title:
+            task.mark_complete()
+            return
+    print(&quot;Task not found&quot;)
+</code></pre>
+<p>Explanation:</p>
+<p>"Printing inside the service ties the service to one presentation style. Raise <code>NotFoundError</code> instead. The caller can print today, return an API response later, or assert the exception in a test."</p>
+<p>Correct pattern:</p>
+<pre><code class="language-python">def complete_task_by_title(tasks: list[Task], title: str) -&gt; Task:
+    for task in tasks:
+        if task.title.casefold() == title.strip().casefold():
+            task.mark_complete()
+            return task
+    raise NotFoundError(f&quot;No task found with title: {title!r}&quot;)
+</code></pre>
+<h3 id="problem-broad-exception-handling-hides-the-real-cause">Problem: Broad exception handling hides the real cause</h3>
+<p>Anti-pattern:</p>
+<pre><code class="language-python">try:
+    task = Task(&quot;Report&quot;, priority=&quot;high&quot;)
+except Exception:
+    print(&quot;Invalid task&quot;)
+</code></pre>
+<p>Explanation:</p>
+<p>"This catches <code>ValidationError</code>, but it also catches unrelated bugs. If the constructor had a typo inside it, the caller would still print <code>Invalid task</code>, and debugging would be harder. Catch the exception you expect."</p>
+<p>Better:</p>
+<pre><code class="language-python">try:
+    task = Task(&quot;Report&quot;, priority=&quot;high&quot;)
+except ValidationError as error:
+    print(f&quot;Invalid task: {error}&quot;)
+</code></pre>
+<hr>
+<h2 id="completion-criteria">Completion Criteria</h2>
+<p>By the end of the lab, each learner should be able to show the following working evidence:</p>
+<ol>
+<li>A model class with at least one validated <code>@property</code>.</li>
+<li>A backing attribute used by the property setter.</li>
+<li>At least one explicit invariant, such as non-empty name, positive amount, valid priority range, or allowed status.</li>
+<li>A <code>ValidationError</code> class and a <code>NotFoundError</code> class.</li>
+<li>Invalid model input triggering a clear <code>ValidationError</code>.</li>
+<li>One service function raising <code>NotFoundError</code> when a requested item is missing.</li>
+<li>Caller-level <code>try</code>/<code>except</code> code catching specific custom exceptions.</li>
+<li>User-friendly messages printed only by caller or UI-style code, not inside the model or service.</li>
+</ol>
+<p>If a learner has all eight items, they have met the Hour 3 core objective.</p>
+<hr>
+<h2 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h2>
+<h3 id="pitfall-1-treating-properties-as-decoration-instead-of-control">Pitfall 1: Treating properties as decoration instead of control</h3>
+<p>Some learners will add <code>@property</code> but still assign directly to the backing attribute from outside the class. Redirect them:</p>
+<p>"If outside code writes <code>task._priority = -5</code>, it bypasses the validation doorway. In normal application code, use <code>task.priority = value</code>. The leading underscore tells us the attribute is internal."</p>
+<h3 id="pitfall-2-catching-exception-broadly">Pitfall 2: Catching <code>Exception</code> broadly</h3>
+<p>Reinforce this repeatedly:</p>
+<p>"Catching <code>Exception</code> broadly can hide the cause. It is like covering every warning light on a dashboard with one sticker that says 'car problem.' For today's lab, catch <code>ValidationError</code> and <code>NotFoundError</code> specifically."</p>
+<h3 id="pitfall-3-validation-rules-that-are-too-strict">Pitfall 3: Validation rules that are too strict</h3>
+<p>Examples:</p>
+<ul>
+<li>Rejecting all lowercase titles even though lowercase titles are meaningful.</li>
+<li>Requiring a description to be 100 characters long when the tracker only needs a brief note.</li>
+<li>Rejecting names with hyphens or apostrophes without a domain reason.</li>
+</ul>
+<p>Instructor phrasing:</p>
+<p>"A validation rule should protect a real domain requirement, not personal preference. If the rule makes valid real-world data impossible, it is too strict."</p>
+<h3 id="pitfall-4-validation-rules-that-are-inconsistent">Pitfall 4: Validation rules that are inconsistent</h3>
+<p>Examples:</p>
+<ul>
+<li>Constructor strips whitespace, but later assignment does not.</li>
+<li>One service accepts case-insensitive names, while another requires exact case.</li>
+<li>A priority of 0 is allowed in one place and rejected in another.</li>
+</ul>
+<p>Instructor phrasing:</p>
+<p>"Inconsistent validation is dangerous because users and developers cannot predict what the program accepts. Put the rule in one owner whenever possible. For object state, that owner is usually the model property."</p>
+<h3 id="pitfall-5-returning-none-or-false-for-required-domain-failures">Pitfall 5: Returning <code>None</code> or <code>False</code> for required domain failures</h3>
+<p>For optional lookups, returning <code>None</code> can be a deliberate design. But today's runbook objective is explicit domain exceptions.</p>
+<p>Instructor phrasing:</p>
+<p>"If the use case requires an item to exist, a missing item is not just a negative answer. It is a failed domain operation. Raise <code>NotFoundError</code> so the caller must handle it."</p>
+<h3 id="pitfall-6-printing-from-the-model-or-service">Pitfall 6: Printing from the model or service</h3>
+<p>Learners may be used to printing wherever the problem occurs. Connect back to Hour 2 boundaries:</p>
+<p>"The model and service should be usable from a terminal app, a web app, or a test. Printing inside them forces one kind of user interface. Raise an exception and let the caller decide how to communicate."</p>
+<hr>
+<h2 id="optional-extensions-for-fast-finishers">Optional Extensions for Fast Finishers</h2>
+<p>These extensions stay inside the Advanced scope. They should not replace the required lab criteria.</p>
+<h3 id="extension-1-add-an-error-message-attribute-to-validationerror">Extension 1: Add an error message attribute to <code>ValidationError</code></h3>
+<p>Fast finishers can make the exception store a clear message attribute.</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when tracker data violates a domain rule.&quot;&quot;&quot;
+
+    def __init__(self, message: str) -&gt; None:
+        self.message = message
+        super().__init__(message)
+</code></pre>
+<p>Caller code still works:</p>
+<pre><code class="language-python">try:
+    Task(&quot;&quot;, priority=2)
+except ValidationError as error:
+    print(f&quot;Validation failed: {error.message}&quot;)
+</code></pre>
+<p>Instructor note:</p>
+<p>"This is useful when caller code wants structured access to the message. In larger systems, you might store a field name, an error code, or a dictionary of field errors. Keep it simple today."</p>
+<h3 id="extension-2-add-a-helper-for-normalization">Extension 2: Add a helper for normalization</h3>
+<p>Fast finishers can extract normalization into a helper function or method.</p>
+<pre><code class="language-python">def normalize_title(value: str) -&gt; str:
+    if not isinstance(value, str):
+        raise ValidationError(&quot;Task title must be text.&quot;)
+    return value.strip()
+</code></pre>
+<p>Then use it in the setter:</p>
+<pre><code class="language-python">@title.setter
+def title(self, value: str) -&gt; None:
+    normalized = normalize_title(value)
+    if not normalized:
+        raise ValidationError(&quot;Task title cannot be empty.&quot;)
+    self._title = normalized
+</code></pre>
+<p>Instructor note:</p>
+<p>"Normalization means making input consistent before validation or storage. Common examples are trimming whitespace, normalizing case for comparisons, or converting repeated internal spaces to a single space. Do not over-normalize in a way that changes meaningful user data."</p>
+<h3 id="extension-3-add-a-second-invariant">Extension 3: Add a second invariant</h3>
+<p>Fast finishers can add a second validated property, such as status:</p>
+<pre><code class="language-python">@property
+def status(self) -&gt; str:
+    return self._status
+
+@status.setter
+def status(self, value: str) -&gt; None:
+    allowed_statuses = {&quot;open&quot;, &quot;blocked&quot;, &quot;complete&quot;}
+    normalized = value.strip().casefold()
+    if normalized not in allowed_statuses:
+        raise ValidationError(&quot;Status must be open, blocked, or complete.&quot;)
+    self._status = normalized
+</code></pre>
+<p>Instructor note:</p>
+<p>"This is useful practice, but remind learners not to add ten rules before the first rule works. Advanced design grows in small tested steps."</p>
+<hr>
+<h2 id="quick-checks-and-exit-ticket-5-minutes">Quick Checks and Exit Ticket (5 minutes)</h2>
+<p>Use these during the final minutes or while circulating during the lab.</p>
+<h3 id="quick-check-1">Quick check 1</h3>
+<p>Question:</p>
+<p>"Why do we assign <code>self.priority = priority</code> in <code>__init__</code> instead of assigning directly to <code>self._priority</code>?"</p>
+<p>Expected answer:</p>
+<p>"Assigning through <code>self.priority</code> calls the property setter, so object creation uses the same validation as later assignment."</p>
+<h3 id="quick-check-2">Quick check 2</h3>
+<p>Question:</p>
+<p>"What is an invariant?"</p>
+<p>Expected answer:</p>
+<p>"An invariant is a rule that must always be true for an object to be valid."</p>
+<h3 id="quick-check-3">Quick check 3</h3>
+<p>Question:</p>
+<p>"Why is catching <code>ValidationError</code> or <code>NotFoundError</code> specifically better than catching everything with <code>except Exception</code>?"</p>
+<p>Expected answer:</p>
+<p>"Specific catches handle the domain errors we expect without hiding unrelated programming bugs. Broad catches can make debugging harder by covering up the real cause."</p>
+<h3 id="quick-check-4">Quick check 4</h3>
+<p>Question:</p>
+<p>"Where should the user-friendly message be printed in today's design: inside the model, inside the service, or in caller/UI code?"</p>
+<p>Expected answer:</p>
+<p>"In caller or UI code. The model and service raise domain exceptions; the caller decides what to display."</p>
+<h3 id="exit-ticket-prompt">Exit ticket prompt</h3>
+<p>"Write one sentence naming an invariant in your model and one sentence naming the exception raised when that invariant is violated."</p>
+<p>Examples:</p>
+<pre><code class="language-text">Invariant: A task priority must be an integer from 1 to 5.
+Exception: The Task priority setter raises ValidationError when priority is invalid.
+</code></pre>
+<hr>
+<h2 id="wrap-up">Wrap-Up</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Today we made our tracker models more trustworthy. In Hour 2, we asked what each object knows and does. In Hour 3, we made sure an object cannot quietly hold data that violates its own rules."</p>
+<p>"The main pattern is simple but powerful. A property gives controlled access. A backing attribute stores the accepted value. An invariant names the rule that must remain true. A custom exception communicates a domain failure clearly. A caller catches the specific exception and chooses a user-friendly message."</p>
+<p>"This design keeps responsibilities separated. The model protects itself. The service coordinates use cases and reports domain failures. The caller or UI communicates with people. That separation is part of the move from PCAP-level syntax toward PCPP1-level design judgment."</p>
+<p>"In the next hour, we will continue shaping the tracker design by looking at composition and inheritance decisions. The validation work from this hour will still matter. Once objects protect their own state, we can combine them with more confidence."</p>
+<p><strong>Final instructor reminder</strong></p>
+<p>"Before you leave this hour, make sure your file runs in both success and failure cases. A validation rule is not complete until you have seen it accept good data and reject bad data with a clear, specific exception."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour4_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-hour-2-5-minutes" class="depth-2">Opening Bridge from Hour 2 (5 minutes)</a></li>
+<li><a href="#outcomes-and-key-vocabulary-5-minutes" class="depth-2">Outcomes and Key Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-controlled-access-and-domain-failures-10-minutes" class="depth-2">Concept Briefing: Controlled Access and Domain Failures (10 minutes)</a></li>
+<li><a href="#live-demo-validated-tracker-model-and-service-exception-10-minutes" class="depth-2">Live Demo: Validated Tracker Model and Service Exception (10 minutes)</a></li>
+<li><a href="#step-1-define-domain-exceptions" class="depth-3">Step 1: Define domain exceptions</a></li>
+<li><a href="#step-2-create-a-model-with-validated-properties" class="depth-3">Step 2: Create a model with validated properties</a></li>
+<li><a href="#step-3-add-a-service-function-that-raises-notfounderror" class="depth-3">Step 3: Add a service function that raises NotFoundError</a></li>
+<li><a href="#step-4-add-caller-level-handling-with-specific-exceptions" class="depth-3">Step 4: Add caller-level handling with specific exceptions</a></li>
+<li><a href="#guided-lab-validation-and-exceptions-25-minutes" class="depth-2">Guided Lab: Validation and Exceptions (25 minutes)</a></li>
+<li><a href="#lab-prompt-for-students" class="depth-3">Lab prompt for students</a></li>
+<li><a href="#suggested-student-starting-point" class="depth-3">Suggested student starting point</a></li>
+<li><a href="#instructor-circulation-plan" class="depth-3">Instructor circulation plan</a></li>
+<li><a href="#lab-validation-examples" class="depth-3">Lab validation examples</a></li>
+<li><a href="#troubleshooting-guide" class="depth-2">Troubleshooting Guide</a></li>
+<li><a href="#problem-recursionerror-in-a-property-setter" class="depth-3">Problem: RecursionError in a property setter</a></li>
+<li><a href="#problem-attributeerror-for-missing-backing-attribute" class="depth-3">Problem: AttributeError for missing backing attribute</a></li>
+<li><a href="#problem-validation-only-works-during-object-creation" class="depth-3">Problem: Validation only works during object creation</a></li>
+<li><a href="#problem-service-prints-instead-of-raising" class="depth-3">Problem: Service prints instead of raising</a></li>
+<li><a href="#problem-broad-exception-handling-hides-the-real-cause" class="depth-3">Problem: Broad exception handling hides the real cause</a></li>
+<li><a href="#completion-criteria" class="depth-2">Completion Criteria</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-2">Common Pitfalls to Watch For</a></li>
+<li><a href="#pitfall-1-treating-properties-as-decoration-instead-of-control" class="depth-3">Pitfall 1: Treating properties as decoration instead of control</a></li>
+<li><a href="#pitfall-2-catching-exception-broadly" class="depth-3">Pitfall 2: Catching Exception broadly</a></li>
+<li><a href="#pitfall-3-validation-rules-that-are-too-strict" class="depth-3">Pitfall 3: Validation rules that are too strict</a></li>
+<li><a href="#pitfall-4-validation-rules-that-are-inconsistent" class="depth-3">Pitfall 4: Validation rules that are inconsistent</a></li>
+<li><a href="#pitfall-5-returning-none-or-false-for-required-domain-failures" class="depth-3">Pitfall 5: Returning None or False for required domain failures</a></li>
+<li><a href="#pitfall-6-printing-from-the-model-or-service" class="depth-3">Pitfall 6: Printing from the model or service</a></li>
+<li><a href="#optional-extensions-for-fast-finishers" class="depth-2">Optional Extensions for Fast Finishers</a></li>
+<li><a href="#extension-1-add-an-error-message-attribute-to-validationerror" class="depth-3">Extension 1: Add an error message attribute to ValidationError</a></li>
+<li><a href="#extension-2-add-a-helper-for-normalization" class="depth-3">Extension 2: Add a helper for normalization</a></li>
+<li><a href="#extension-3-add-a-second-invariant" class="depth-3">Extension 3: Add a second invariant</a></li>
+<li><a href="#quick-checks-and-exit-ticket-5-minutes" class="depth-2">Quick Checks and Exit Ticket (5 minutes)</a></li>
+<li><a href="#quick-check-1" class="depth-3">Quick check 1</a></li>
+<li><a href="#quick-check-2" class="depth-3">Quick check 2</a></li>
+<li><a href="#quick-check-3" class="depth-3">Quick check 3</a></li>
+<li><a href="#quick-check-4" class="depth-3">Quick check 4</a></li>
+<li><a href="#exit-ticket-prompt" class="depth-3">Exit ticket prompt</a></li>
+<li><a href="#wrap-up" class="depth-2">Wrap-Up</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day1_Hour3_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour2_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour4_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

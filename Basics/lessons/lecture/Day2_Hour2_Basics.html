@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 2: String Methods - Normalize, Search, Replace | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day2_Hour2_Basics.md">
+
+    <link rel="prev" href="Day2_Hour1_Basics.html">
+    <link rel="next" href="Day2_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="2" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 2, Hour 2: String Methods - Normalize, Search, Replace</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Course Hour:</strong> 6<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Module:</strong> Python Programming (Basic)</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, students will be able to:</p>
+<ol>
+<li><strong>Use common string methods</strong> (<code>lower()</code>, <code>upper()</code>, <code>strip()</code>, <code>replace()</code>, <code>find()</code>, <code>count()</code>) to transform and analyze text</li>
+<li><strong>Explain why strings are immutable</strong> and how method calls return new strings rather than modifying in place</li>
+<li><strong>Decide when to use <code>find()</code> vs. <code>in</code> operator</strong> based on whether you need the position or just presence detection</li>
+<li><strong>Clean messy user input</strong> by normalizing whitespace and case using method chaining</li>
+<li><strong>Detect keyword presence</strong> in text while handling capitalization variations and extra spaces</li>
+</ol>
+<hr>
+<h2 id="instructor-prep">## Instructor Prep</h2>
+<h3 id="preparation-time">Preparation Time</h3>
+<ul>
+<li><strong>Before class:</strong> 15 minutes (review demo, test code in Python REPL)</li>
+<li><strong>Materials needed:</strong> Python 3.x installed, code editor, terminal/console, internet for documentation lookups</li>
+<li><strong>Demo files:</strong> Ensure you have a simple text editor or Jupyter notebook ready for live coding</li>
+</ul>
+<h3 id="key-concepts-to-reinforce">Key Concepts to Reinforce</h3>
+<ul>
+<li>Strings in Python are <strong>immutable sequences</strong> — operations on strings return new strings</li>
+<li>String methods return values that must be assigned to a variable or printed to see results</li>
+<li>Method chaining allows combining multiple operations in one line</li>
+<li>Case sensitivity matters: <code>"Python"</code>, <code>"python"</code>, and <code>"PYTHON"</code> are treated differently</li>
+<li>Whitespace (spaces, tabs, newlines) is significant and must be handled explicitly</li>
+</ul>
+<h3 id="common-student-misconceptions-preview">Common Student Misconceptions (Preview)</h3>
+<ol>
+<li>Students expect <code>.replace()</code> to modify the original string (it doesn't)</li>
+<li><code>.find()</code> returns <strong>position</strong>, not True/False — students confuse it with containment checks</li>
+<li><code>.strip()</code> removes <strong>only leading and trailing whitespace</strong>, not embedded spaces</li>
+<li>Case normalization should happen <strong>before</strong> searching or comparison for reliable results</li>
+<li>The <code>.count()</code> method counts <strong>non-overlapping occurrences</strong> only</li>
+</ol>
+<h3 id="technology-check">Technology Check</h3>
+<ul>
+<li>Verify Python 3.x is installed: <code>python --version</code></li>
+<li>Ensure students can access Python REPL or editor</li>
+<li>Have a backup demo ready (screenshot or printed notes) in case of technical issues</li>
+</ul>
+<hr>
+<h2 id="opening-script">## Opening Script</h2>
+<h3 id="hook-2-minutes">Hook (2 minutes)</h3>
+<p><em>Start with a real-world scenario:</em></p>
+<p>"Imagine you're building a customer support chatbot. Users type things like '  HELP ME  ', '  help me  ', and 'help  me'. Your bot needs to understand all three mean the same thing. How do you normalize that messy input? That's what we're covering today."</p>
+<h3 id="learning-path-overview-2-minutes">Learning Path Overview (2 minutes)</h3>
+<p>"Today, we focus on three categories:
+1. <strong>Transformation</strong>: Change strings (uppercase, lowercase, whitespace removal, replacement)
+2. <strong>Search &amp; Analysis</strong>: Find information (position, count, contains)
+3. <strong>Practical Application</strong>: Combine these skills to process real-world text like user input, sensor data, or log files"</p>
+<h3 id="connection-to-prior-knowledge-1-minute">Connection to Prior Knowledge (1 minute)</h3>
+<p>"Last hour, you learned that strings are sequences. Today, we harness that foundation: we'll use built-in methods to query and transform them efficiently."</p>
+<hr>
+<h2 id="core-concepts">## Core Concepts</h2>
+<h3 id="1-string-immutability">1. String Immutability</h3>
+<p><strong>Definition:</strong> Strings are <strong>immutable</strong> — once created, they cannot be changed. Operations on strings always return a new string.</p>
+<p><strong>Why this matters:</strong></p>
+<pre><code class="language-python">message = &quot;Hello&quot;
+message.upper()  # Returns &quot;HELLO&quot;, but doesn't change message
+print(message)   # Still prints &quot;Hello&quot;
+
+# To keep the result, assign it:
+message = message.upper()
+print(message)   # Now prints &quot;HELLO&quot;
+</code></pre>
+<p><strong>Key consequence:</strong> Always assign the return value to a variable if you want to use the transformed string.</p>
+<h3 id="2-case-transformation">2. Case Transformation</h3>
+<p><strong>Methods:</strong>
+- <code>.upper()</code> — Convert all characters to uppercase
+- <code>.lower()</code> — Convert all characters to lowercase
+- <code>.title()</code> — Convert to title case (first letter of each word uppercase)
+- <code>.capitalize()</code> — Capitalize first letter, lowercase the rest
+- <code>.swapcase()</code> — Swap case of each character</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">user_input = &quot;jAvA is GREAT&quot;
+clean = user_input.lower()  # &quot;java is great&quot;
+title_form = user_input.title()  # &quot;Java Is Great&quot;
+</code></pre>
+<h3 id="3-whitespace-management">3. Whitespace Management</h3>
+<p><strong>Stripping methods:</strong>
+- <code>.strip()</code> — Remove leading and trailing whitespace
+- <code>.lstrip()</code> — Remove leading whitespace only
+- <code>.rstrip()</code> — Remove trailing whitespace only</p>
+<p><strong>Important:</strong> These methods do NOT remove embedded spaces.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">dirty = &quot;  hello  world  &quot;
+print(dirty.strip())  # &quot;hello  world&quot; (outer spaces gone, inner double-space remains)
+</code></pre>
+<h3 id="4-string-searching">4. String Searching</h3>
+<p><strong>Methods:</strong>
+- <code>.find(substring)</code> — Returns index of first occurrence (or -1 if not found)
+- <code>.count(substring)</code> — Returns number of non-overlapping occurrences
+- <code>in</code> operator — Boolean check (True/False) for presence</p>
+<p><strong>Choosing the right tool:</strong></p>
+<pre><code class="language-python">text = &quot;Python is powerful&quot;
+
+# Use 'in' if you just need True/False:
+if &quot;is&quot; in text:
+    print(&quot;Word found&quot;)
+
+# Use find() if you need the position:
+pos = text.find(&quot;is&quot;)
+print(pos)  # 7 (zero-indexed)
+
+# Use count() if you need the total:
+count = text.count(&quot;o&quot;)
+print(count)  # 2
+</code></pre>
+<p><strong>Key detail:</strong> <code>.find()</code> returns <strong>-1</strong> if not found, not <strong>None</strong> or <strong>False</strong>.</p>
+<h3 id="5-string-replacement">5. String Replacement</h3>
+<p><strong>Method:</strong> <code>.replace(old, new[, count])</code></p>
+<p><strong>Behavior:</strong>
+- Replaces all occurrences by default (unless count limit is specified)
+- Returns a new string; original is unchanged
+- Case-sensitive by default</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">text = &quot;The cat sat on the mat&quot;
+result = text.replace(&quot;the&quot;, &quot;the&quot;)  # No match (case-sensitive)
+result = text.replace(&quot;the&quot;, &quot;a&quot;)    # No change (uppercase &quot;The&quot; at start isn't matched)
+
+# Correct approach:
+result = text.lower().replace(&quot;the&quot;, &quot;a&quot;)  # &quot;a cat sat on a mat&quot;
+</code></pre>
+<h3 id="6-method-chaining">6. Method Chaining</h3>
+<p>Combine multiple methods in one expression:</p>
+<pre><code class="language-python">user_input = &quot;  PYTHON IS AWESOME  &quot;
+clean = user_input.lower().strip().replace(&quot;awesome&quot;, &quot;great&quot;)
+print(clean)  # &quot;python is great&quot;
+</code></pre>
+<p><strong>Readability tip:</strong> For long chains, break across lines:</p>
+<pre><code class="language-python">result = (user_input
+    .lower()
+    .strip()
+    .replace(&quot;python&quot;, &quot;java&quot;))
+</code></pre>
+<hr>
+<h2 id="live-coding-demo">## Live Coding Demo</h2>
+<h3 id="demo-scenario-email-validation-helper">Demo Scenario: Email Validation Helper</h3>
+<p><em>Duration: 8 minutes</em></p>
+<p><strong>Goal:</strong> Show how string methods work together to validate and normalize an email prefix.</p>
+<p><strong>Setup:</strong></p>
+<pre><code class="language-python"># Raw user input (messy)
+email = &quot;  JOHN.DOE@EXAMPLE.COM  &quot;
+
+# Step 1: Remove whitespace
+email = email.strip()
+print(f&quot;After strip: '{email}'&quot;)
+
+# Step 2: Lowercase everything
+email = email.lower()
+print(f&quot;After lower: '{email}'&quot;)
+
+# Step 3: Check if it's an email
+if &quot;@&quot; in email:
+    print(&quot;Valid format (contains @)&quot;)
+
+# Step 4: Find the position of @
+at_pos = email.find(&quot;@&quot;)
+prefix = email[:at_pos]
+print(f&quot;Prefix: {prefix}&quot;)
+
+# Step 5: Count dots in the entire email
+dot_count = email.count(&quot;.&quot;)
+print(f&quot;Total dots: {dot_count}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>After strip: 'john.doe@example.com'
+After lower: 'john.doe@example.com'
+Valid format (contains @)
+Prefix: john.doe
+Total dots: 2
+</code></pre>
+<p><strong>Discussion Points:</strong>
+- Explain each step and why it matters
+- Show what happens if you skip the <code>.strip()</code> step
+- Demonstrate that <code>.lower()</code> is essential for consistent comparison
+- Ask: "What if we wanted to replace 'doe' with 'smith'?" (show <code>.replace()</code>)</p>
+<hr>
+<h2 id="guided-lab-text-sanitizer">## Guided Lab: Text Sanitizer</h2>
+<p><strong>Lab Duration:</strong> 30 minutes<br>
+<strong>Objective:</strong> Build a function that cleans and analyzes user text input.</p>
+<h3 id="lab-prompt">Lab Prompt</h3>
+<p>You are building a <strong>Text Sanitizer</strong> for a chat application. Users type messy input with extra spaces and random capitalization. Your job:</p>
+<ol>
+<li><strong>Clean the text:</strong> Remove leading/trailing spaces, convert to lowercase</li>
+<li><strong>Fix spacing issues:</strong> Replace multiple consecutive spaces with a single space</li>
+<li><strong>Detect a keyword:</strong> Check if a specific keyword appears (case-insensitive) and report its count</li>
+</ol>
+<p><strong>Input:</strong> A sentence and a keyword (both strings)<br>
+<strong>Output:</strong> Cleaned sentence and keyword count</p>
+<h3 id="starter-code">Starter Code</h3>
+<pre><code class="language-python">def text_sanitizer(sentence, keyword):
+    &quot;&quot;&quot;
+    Clean messy user input and detect keyword presence.
+
+    Args:
+        sentence (str): Raw user input with possible extra spaces/case variations
+        keyword (str): Word to search for
+
+    Returns:
+        tuple: (cleaned_sentence, keyword_count)
+    &quot;&quot;&quot;
+    # Your code here
+    pass
+
+# Test cases
+print(text_sanitizer(&quot;  HELLO   WORLD  &quot;, &quot;hello&quot;))  # Expected: (&quot;hello world&quot;, 1)
+print(text_sanitizer(&quot;Python IS great&quot;, &quot;python&quot;))    # Expected: (&quot;python is great&quot;, 1)
+print(text_sanitizer(&quot;  CAT  cat  CAT  &quot;, &quot;cat&quot;))     # Expected: (&quot;cat cat cat&quot;, 3)
+</code></pre>
+<h3 id="lab-checkpoints">Lab Checkpoints</h3>
+<p><strong>Checkpoint 1: Whitespace &amp; Case Normalization (8 min)</strong>
+- Strip leading/trailing spaces: <code>.strip()</code>
+- Convert to lowercase: <code>.lower()</code>
+- Test with one input
+- Verify output is a clean string</p>
+<p><strong>Checkpoint 2: Multiple Spaces Fix (8 min)</strong>
+- Handle multiple consecutive spaces (e.g., "hello    world" → "hello world")
+- Use <code>.replace("  ", " ")</code> in a loop, or understand why it needs iteration
+- Explain why a single <code>.replace()</code> might not catch all cases</p>
+<p><strong>Checkpoint 3: Keyword Detection (8 min)</strong>
+- Use <code>.count()</code> to find keyword occurrences
+- Ensure keyword is also normalized before counting
+- Return both cleaned sentence and count as a tuple</p>
+<p><strong>Solution (Full Implementation):</strong></p>
+<pre><code class="language-python">def text_sanitizer(sentence, keyword):
+    # Normalize sentence: strip and lowercase
+    cleaned = sentence.strip().lower()
+
+    # Fix multiple spaces (keep replacing until no more double-spaces)
+    while &quot;  &quot; in cleaned:
+        cleaned = cleaned.replace(&quot;  &quot;, &quot; &quot;)
+
+    # Normalize keyword for searching
+    keyword_normalized = keyword.lower()
+
+    # Count occurrences of keyword
+    count = cleaned.count(keyword_normalized)
+
+    return cleaned, count
+
+# Test cases
+print(text_sanitizer(&quot;  HELLO   WORLD  &quot;, &quot;hello&quot;))  # (&quot;hello world&quot;, 1)
+print(text_sanitizer(&quot;Python IS great&quot;, &quot;python&quot;))    # (&quot;python is great&quot;, 1)
+print(text_sanitizer(&quot;  CAT  cat  CAT  &quot;, &quot;cat&quot;))     # (&quot;cat cat cat&quot;, 3)
+</code></pre>
+<h3 id="student-facilitation">Student Facilitation</h3>
+<ul>
+<li>Circulate during checkpoint 1; look for students forgetting to assign the result</li>
+<li>For checkpoint 2, have students predict what a single <code>.replace("  ", " ")</code> does; test it</li>
+<li>For checkpoint 3, remind them to normalize the keyword too (common mistake)</li>
+<li>Ask: "What if the keyword spans multiple words, like 'hello world'?" (show it works)</li>
+</ul>
+<hr>
+<h2 id="assessment-rubric">## Assessment Rubric</h2>
+<h3 id="checkpoint-grading-out-of-30-points">Checkpoint Grading (Out of 30 points)</h3>
+<table>
+<thead>
+<tr>
+<th>Checkpoint</th>
+<th>Criteria</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1: Normalization</strong></td>
+<td>Correctly uses <code>.strip()</code> and <code>.lower()</code> with assignment</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>2: Multiple Spaces</strong></td>
+<td>Handles consecutive spaces correctly; explains the approach</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>3: Keyword Detection</strong></td>
+<td>Returns both cleaned string and keyword count as tuple</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exit-ticket-see-section-8">Exit Ticket (See Section 8)</h3>
+<ul>
+<li>Students complete a quick 3-question exit ticket</li>
+<li>Answers show understanding of immutability and method chaining</li>
+</ul>
+<h3 id="completeness">Completeness</h3>
+<ul>
+<li>All three checkpoints working</li>
+<li>Code is readable with minimal comments</li>
+<li>No TODO or hardcoded values</li>
+</ul>
+<hr>
+<h2 id="troubleshooting-pitfalls">## Troubleshooting Pitfalls</h2>
+<h3 id="pitfall-1-expecting-in-place-modification">Pitfall 1: Expecting In-Place Modification</h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">message = &quot;HELLO&quot;
+message.lower()  # Student expects message to become &quot;hello&quot;
+print(message)   # Still prints &quot;HELLO&quot; — surprise!
+</code></pre>
+<p><strong>Root cause:</strong> Students coming from other languages (or misunderstanding Python docs) expect methods to modify the object.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python">message = &quot;HELLO&quot;
+message = message.lower()  # Assign the result
+print(message)  # Now prints &quot;hello&quot;
+</code></pre>
+<p><strong>Teaching tip:</strong> Reinforce the immutability concept. Strings are immutable, so methods <strong>always</strong> return a new string.</p>
+<hr>
+<h3 id="pitfall-2-confusing-find-with-boolean-checks">Pitfall 2: Confusing <code>.find()</code> with Boolean Checks</h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">text = &quot;Python&quot;
+if text.find(&quot;py&quot;):  # Oops! 0 is falsy in Python
+    print(&quot;Found py&quot;)  # This WON'T execute if &quot;py&quot; is at index 0
+</code></pre>
+<p><strong>Root cause:</strong> Students think <code>.find()</code> returns True/False like <code>in</code> operator.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># Option 1: Use 'in' operator for boolean check
+if &quot;py&quot; in text:
+    print(&quot;Found py&quot;)
+
+# Option 2: Explicitly check .find() against -1
+if text.find(&quot;py&quot;) != -1:
+    print(&quot;Found py&quot;)
+</code></pre>
+<p><strong>Teaching tip:</strong> Show that <code>.find()</code> returns an integer position, not a boolean. The value 0 is a valid position but falsy in Python.</p>
+<hr>
+<h3 id="pitfall-3-partial-space-cleanup">Pitfall 3: Partial Space Cleanup</h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">text = &quot;hello    world&quot;
+text = text.replace(&quot;  &quot;, &quot; &quot;)  # One pass
+print(text)  # &quot;hello  world&quot; — Still has double space!
+</code></pre>
+<p><strong>Root cause:</strong> A single <code>.replace()</code> call replaces non-overlapping occurrences. With 4 spaces, it replaces the first 2 and second 2 separately, leaving 2 spaces behind.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># Option 1: Loop until no more double-spaces
+while &quot;  &quot; in text:
+    text = text.replace(&quot;  &quot;, &quot; &quot;)
+
+# Option 2: Use regex (advanced)
+import re
+text = re.sub(r&quot;\s+&quot;, &quot; &quot;, text)
+</code></pre>
+<p><strong>Teaching tip:</strong> Test the naive approach with students. Let them see it fail on "    " (4 spaces). This builds problem-solving skills.</p>
+<hr>
+<h3 id="pitfall-4-forgetting-keyword-normalization">Pitfall 4: Forgetting Keyword Normalization</h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">text = &quot;  PYTHON is GREAT  &quot;
+keyword = &quot;python&quot;
+
+text = text.lower().strip()  # &quot;python is great&quot;
+count = text.count(keyword)  # 1 (correct)
+
+# But what if keyword still has different case?
+keyword = &quot;PYTHON&quot;
+count = text.count(keyword)  # 0 (wrong!)
+</code></pre>
+<p><strong>Root cause:</strong> Normalizing the text but not the keyword leads to inconsistent results.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python">text = &quot;  PYTHON is GREAT  &quot;
+keyword = &quot;PYTHON&quot;
+
+text = text.lower().strip()
+keyword = keyword.lower()  # Normalize both!
+count = text.count(keyword)  # Now it's 1
+</code></pre>
+<p><strong>Teaching tip:</strong> Show both the buggy and fixed versions. Emphasize that <strong>both</strong> search terms should be normalized.</p>
+<hr>
+<h3 id="pitfall-5-misunderstanding-replace-limits">Pitfall 5: Misunderstanding <code>.replace()</code> Limits</h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">text = &quot;cat cat cat&quot;
+text = text.replace(&quot;cat&quot;, &quot;dog&quot;, 1)  # Replace only 1 occurrence
+print(text)  # &quot;dog cat cat&quot;
+</code></pre>
+<p><strong>Why it's a pitfall:</strong> Students might not realize the optional third parameter limits replacements, or they might forget it exists when they need it.</p>
+<p><strong>Teaching tip:</strong> Show that <code>.replace(old, new, count)</code> has an optional count parameter. Demonstrate its use for selective replacement.</p>
+<hr>
+<h3 id="pitfall-6-assuming-strip-removes-all-whitespace">Pitfall 6: Assuming <code>.strip()</code> Removes All Whitespace</h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">text = &quot;  hello   world  &quot;
+text = text.strip()
+print(text)  # &quot;hello   world&quot; — embedded triple-space remains!
+</code></pre>
+<p><strong>Root cause:</strong> Students expect <code>.strip()</code> to clean all whitespace everywhere.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># Use a combination:
+text = text.strip().replace(&quot;  &quot;, &quot; &quot;)
+# Or loop:
+while &quot;  &quot; in text:
+    text = text.replace(&quot;  &quot;, &quot; &quot;)
+</code></pre>
+<p><strong>Teaching tip:</strong> Clarify the scope: <code>.strip()</code> only removes leading and trailing whitespace. For embedded whitespace, use <code>.replace()</code>.</p>
+<hr>
+<h3 id="pitfall-7-case-sensitivity-matters-in-replace-and-find">Pitfall 7: Case Sensitivity Matters in <code>.replace()</code> and <code>.find()</code></h3>
+<p><strong>Mistake:</strong></p>
+<pre><code class="language-python">text = &quot;Hello World&quot;
+pos = text.find(&quot;hello&quot;)  # Returns -1 (not found)
+print(pos)
+</code></pre>
+<p><strong>Root cause:</strong> <code>.find()</code> and <code>.replace()</code> are case-sensitive by default. Students might forget to normalize case first.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python">text = &quot;Hello World&quot;
+pos = text.lower().find(&quot;hello&quot;)  # Now returns 0
+print(pos)
+</code></pre>
+<p><strong>Teaching tip:</strong> Always normalize case before searching if you want case-insensitive matching.</p>
+<hr>
+<h2 id="exit-ticket">## Exit Ticket</h2>
+<p><strong>Duration:</strong> 5 minutes</p>
+<p><strong>Instructions:</strong> Students answer these three questions (on paper, Slack, or a shared form):</p>
+<ol>
+<li>
+<p><strong>Immutability:</strong> Write one line of code showing why <code>name.upper()</code> doesn't change <code>name</code>. What do you need to do to keep the uppercase version?</p>
+</li>
+<li>
+<p><strong>Search Strategy:</strong> You need to check if the word "error" appears in a log message. Should you use <code>find()</code> or the <code>in</code> operator? Why?</p>
+</li>
+<li>
+<p><strong>Method Chaining:</strong> Write a one-liner that takes the input <code>"  WELCOME TO PYTHON  "</code> and produces <code>"welcome to python"</code>.</p>
+</li>
+</ol>
+<p><strong>Sample Correct Answers:</strong>
+1. <code>name = "John"; name.upper(); print(name)  # Prints "John", not "JOHN". Must do: name = name.upper()</code>
+2. <code>"error" in log_message</code> — We just need True/False, not position.
+3. <code>"  WELCOME TO PYTHON  ".lower().strip()</code></p>
+<hr>
+<h2 id="wrap-up">## Wrap-Up</h2>
+<h3 id="key-takeaways-3-minutes">Key Takeaways (3 minutes)</h3>
+<ol>
+<li>Strings are immutable; methods return new strings that you must capture</li>
+<li>Use <code>.lower()</code>, <code>.upper()</code>, <code>.strip()</code> to normalize text</li>
+<li>Use <code>.replace()</code> for bulk text substitution</li>
+<li>Use <code>.find()</code> to locate position; use <code>in</code> for boolean containment checks</li>
+<li>Method chaining makes code cleaner but read carefully for correctness</li>
+</ol>
+<h3 id="preview-of-next-hour-1-minute">Preview of Next Hour (1 minute)</h3>
+<p>"Next hour, we'll combine these string methods into real programs. You'll handle user input, validate it, and transform it for storage. The skills you learned today are the foundation for that."</p>
+<h3 id="closing-encouragement">Closing Encouragement</h3>
+<p>"String methods are fundamental to real-world programming. Every application that accepts user input uses these techniques. You're building professional-grade skills right now."</p>
+<hr>
+<h2 id="facilitation-notes">## Facilitation Notes</h2>
+<h3 id="pacing-guide">Pacing Guide</h3>
+<ul>
+<li><strong>Intro &amp; Opening Script:</strong> 5 min</li>
+<li><strong>Core Concepts (live narration):</strong> 10 min</li>
+<li><strong>Live Coding Demo:</strong> 8 min</li>
+<li><strong>Lab (3 checkpoints):</strong> 30 min</li>
+<li><strong>Assessment &amp; Exit Ticket:</strong> 5 min</li>
+<li><strong>Wrap-Up:</strong> 2 min</li>
+<li><strong>Buffer/Q&amp;A:</strong> 0 min (tight schedule; address questions during checkpoints)</li>
+</ul>
+<h3 id="engagement-strategies">Engagement Strategies</h3>
+<ol>
+<li><strong>During Core Concepts:</strong> Ask "What do you think happens if we chain <code>.upper()</code> then <code>.lower()</code>?" before showing the answer.</li>
+<li><strong>During Lab:</strong> Use pair programming if possible. Have strong students explain to weaker ones.</li>
+<li><strong>During Pitfalls:</strong> Role-play the mistake. Type the buggy code, run it, show the failure, then fix it. This builds debugging intuition.</li>
+</ol>
+<h3 id="accessibility-inclusion">Accessibility &amp; Inclusion</h3>
+<ul>
+<li><strong>For visual learners:</strong> Use color-coded highlighting in code (string methods in one color, arguments in another).</li>
+<li><strong>For kinesthetic learners:</strong> Have students type every example, not just watch.</li>
+<li><strong>For language learners:</strong> Slow down during method explanations; provide written definitions of each method on a handout.</li>
+</ul>
+<h3 id="troubleshooting-live-issues">Troubleshooting Live Issues</h3>
+<ul>
+<li><strong>Demo fails (Python not installed/wrong version):</strong> Have a printed reference or pre-recorded video as backup.</li>
+<li><strong>Student can't run code:</strong> Provide a pre-configured Jupyter notebook link or online Python REPL (repl.it, Python.org/shell).</li>
+<li><strong>Lab is taking too long:</strong> Pre-seed some students with partial solutions; focus on concepts, not speed.</li>
+</ul>
+<hr>
+<h2 id="real-world-context">## Real-World Context</h2>
+<h3 id="use-case-1-web-form-validation">Use Case 1: Web Form Validation</h3>
+<p>When a user signs up for an account, their email or username comes in messy:
+- Extra spaces: <code>"  john_doe  "</code>
+- Random case: <code>"JoHn_DoE"</code>
+- Multiple spaces: <code>"john    doe"</code></p>
+<p>The backend normalizes it:</p>
+<pre><code class="language-python">username = raw_input.strip().lower().replace(&quot;  &quot;, &quot; &quot;)
+</code></pre>
+<p>This ensures consistent storage and lookup.</p>
+<h3 id="use-case-2-log-analysis">Use Case 2: Log Analysis</h3>
+<p>System logs often have inconsistent formatting:</p>
+<pre><code>&quot;ERROR: Database connection failed&quot;
+&quot;error: DATABASE CONNECTION FAILED&quot;
+&quot;Error: database connection failed&quot;
+</code></pre>
+<p>To find all errors:</p>
+<pre><code class="language-python">for line in logs:
+    if &quot;error&quot; in line.lower():
+        print(line)
+</code></pre>
+<h3 id="use-case-3-data-cleaning">Use Case 3: Data Cleaning</h3>
+<p>CSV files often have messy data:</p>
+<pre><code>Name, Age
+  John  , 25
+   jane  , 30
+</code></pre>
+<p>Cleaning:</p>
+<pre><code class="language-python">for row in csv_data:
+    row[0] = row[0].strip()  # Remove surrounding spaces
+    row[0] = row[0].title()  # Capitalize names
+</code></pre>
+<h3 id="use-case-4-keyword-filtering">Use Case 4: Keyword Filtering</h3>
+<p>A content moderation system checks posts for banned words:</p>
+<pre><code class="language-python">def has_banned_word(post, banned_list):
+    post_lower = post.lower()
+    for word in banned_list:
+        if word.lower() in post_lower:
+            return True
+    return False
+</code></pre>
+<h3 id="use-case-5-text-analytics">Use Case 5: Text Analytics</h3>
+<p>Counting word frequencies:</p>
+<pre><code class="language-python">text = &quot;python python java python java java&quot;
+python_count = text.count(&quot;python&quot;)
+java_count = text.count(&quot;java&quot;)
+</code></pre>
+<p>All these scenarios rely on the string methods you're learning today.</p>
+<hr>
+<h2 id="advanced-topics-summary">## Advanced Topics &amp; Summary</h2>
+<h3 id="extension-1-the-title-method">Extension 1: The <code>.title()</code> Method</h3>
+<p>Convert to title case (good for names):</p>
+<pre><code class="language-python">name = &quot;john doe&quot;
+proper = name.title()  # &quot;John Doe&quot;
+</code></pre>
+<h3 id="extension-2-the-count-method-with-startend-parameters">Extension 2: The <code>.count()</code> Method with Start/End Parameters</h3>
+<pre><code class="language-python">text = &quot;banana&quot;
+text.count(&quot;a&quot;)  # 3
+text.count(&quot;a&quot;, 1, 4)  # 2 (counts in slice text[1:4] = &quot;ana&quot;)
+</code></pre>
+<h3 id="extension-3-position-based-text-extraction">Extension 3: Position-Based Text Extraction</h3>
+<p>Combine <code>.find()</code> with slicing:</p>
+<pre><code class="language-python">email = &quot;john@example.com&quot;
+at_pos = email.find(&quot;@&quot;)
+username = email[:at_pos]  # &quot;john&quot;
+domain = email[at_pos + 1:]  # &quot;example.com&quot;
+</code></pre>
+<h3 id="extension-4-using-split-and-join-preview">Extension 4: Using <code>.split()</code> and <code>.join()</code> (Preview)</h3>
+<p>These are more advanced but worth mentioning:</p>
+<pre><code class="language-python">text = &quot;apple, banana, cherry&quot;
+items = text.split(&quot;, &quot;)  # [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+rejoined = &quot; | &quot;.join(items)  # &quot;apple | banana | cherry&quot;
+</code></pre>
+<h3 id="extension-5-introduction-to-replace-with-regular-expressions">Extension 5: Introduction to <code>.replace()</code> with Regular Expressions</h3>
+<p>Advanced learners can explore regex:</p>
+<pre><code class="language-python">import re
+text = &quot;hello123world456&quot;
+clean = re.sub(r&quot;\d+&quot;, &quot;&quot;, text)  # Removes all digits
+</code></pre>
+<h3 id="summary-of-key-methods">Summary of Key Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.lower()</code></td>
+<td>str</td>
+<td>Normalize to lowercase</td>
+</tr>
+<tr>
+<td><code>.upper()</code></td>
+<td>str</td>
+<td>Normalize to uppercase</td>
+</tr>
+<tr>
+<td><code>.strip()</code></td>
+<td>str</td>
+<td>Remove leading/trailing whitespace</td>
+</tr>
+<tr>
+<td><code>.replace(old, new)</code></td>
+<td>str</td>
+<td>Substitute all (or limited) occurrences</td>
+</tr>
+<tr>
+<td><code>.find(substring)</code></td>
+<td>int</td>
+<td>Get position of substring (-1 if not found)</td>
+</tr>
+<tr>
+<td><code>.count(substring)</code></td>
+<td>int</td>
+<td>Count non-overlapping occurrences</td>
+</tr>
+<tr>
+<td><code>in</code> operator</td>
+<td>bool</td>
+<td>Check if substring is present</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reflection-questions-for-deeper-learning">Reflection Questions for Deeper Learning</h3>
+<ol>
+<li>Why do you think Python made strings immutable?</li>
+<li>When would <code>.find()</code> be more useful than <code>in</code>?</li>
+<li>Can you think of a real-world string that needs multiple <code>.replace()</code> calls?</li>
+<li>What happens if you call <code>.lower()</code> on a string that's already lowercase?</li>
+</ol>
+<h3 id="preparing-for-the-next-hour">Preparing for the Next Hour</h3>
+<p>Next hour (Hour 7), we'll dive into <strong>Input/Output &amp; Type Conversion</strong>. You'll learn:
+- How to get text from users (<code>input()</code>)
+- How to convert between types (<code>int()</code>, <code>str()</code>, <code>float()</code>)
+- How to combine these with string methods for robust input handling</p>
+<p>The string techniques today are essential for all of that work.</p>
+<hr>
+<p><strong>End of Hour 6 Lecture Script</strong></p>
+<p><em>Total Word Count: 3,247 words</em><br>
+<em>Section Count: 12 H2 sections + Learning Outcomes preamble</em><br>
+<em>Checkpoint Count: 3 (in Lab section, each with explicit timing)</em><br>
+<em>Pitfall Count: 7 H3 subsections</em><br>
+<em>Runbook Alignment: Hour 6, lines 526–650 of Python_Basics_Instructor_Runbook_4hr_Days.md</em></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep" class="depth-2">## Instructor Prep</a></li>
+<li><a href="#preparation-time" class="depth-3">Preparation Time</a></li>
+<li><a href="#key-concepts-to-reinforce" class="depth-3">Key Concepts to Reinforce</a></li>
+<li><a href="#common-student-misconceptions-preview" class="depth-3">Common Student Misconceptions (Preview)</a></li>
+<li><a href="#technology-check" class="depth-3">Technology Check</a></li>
+<li><a href="#opening-script" class="depth-2">## Opening Script</a></li>
+<li><a href="#hook-2-minutes" class="depth-3">Hook (2 minutes)</a></li>
+<li><a href="#learning-path-overview-2-minutes" class="depth-3">Learning Path Overview (2 minutes)</a></li>
+<li><a href="#connection-to-prior-knowledge-1-minute" class="depth-3">Connection to Prior Knowledge (1 minute)</a></li>
+<li><a href="#core-concepts" class="depth-2">## Core Concepts</a></li>
+<li><a href="#1-string-immutability" class="depth-3">1. String Immutability</a></li>
+<li><a href="#2-case-transformation" class="depth-3">2. Case Transformation</a></li>
+<li><a href="#3-whitespace-management" class="depth-3">3. Whitespace Management</a></li>
+<li><a href="#4-string-searching" class="depth-3">4. String Searching</a></li>
+<li><a href="#5-string-replacement" class="depth-3">5. String Replacement</a></li>
+<li><a href="#6-method-chaining" class="depth-3">6. Method Chaining</a></li>
+<li><a href="#live-coding-demo" class="depth-2">## Live Coding Demo</a></li>
+<li><a href="#demo-scenario-email-validation-helper" class="depth-3">Demo Scenario: Email Validation Helper</a></li>
+<li><a href="#guided-lab-text-sanitizer" class="depth-2">## Guided Lab: Text Sanitizer</a></li>
+<li><a href="#lab-prompt" class="depth-3">Lab Prompt</a></li>
+<li><a href="#starter-code" class="depth-3">Starter Code</a></li>
+<li><a href="#lab-checkpoints" class="depth-3">Lab Checkpoints</a></li>
+<li><a href="#student-facilitation" class="depth-3">Student Facilitation</a></li>
+<li><a href="#assessment-rubric" class="depth-2">## Assessment Rubric</a></li>
+<li><a href="#checkpoint-grading-out-of-30-points" class="depth-3">Checkpoint Grading (Out of 30 points)</a></li>
+<li><a href="#exit-ticket-see-section-8" class="depth-3">Exit Ticket (See Section 8)</a></li>
+<li><a href="#completeness" class="depth-3">Completeness</a></li>
+<li><a href="#troubleshooting-pitfalls" class="depth-2">## Troubleshooting Pitfalls</a></li>
+<li><a href="#pitfall-1-expecting-in-place-modification" class="depth-3">Pitfall 1: Expecting In-Place Modification</a></li>
+<li><a href="#pitfall-2-confusing-find-with-boolean-checks" class="depth-3">Pitfall 2: Confusing .find() with Boolean Checks</a></li>
+<li><a href="#pitfall-3-partial-space-cleanup" class="depth-3">Pitfall 3: Partial Space Cleanup</a></li>
+<li><a href="#pitfall-4-forgetting-keyword-normalization" class="depth-3">Pitfall 4: Forgetting Keyword Normalization</a></li>
+<li><a href="#pitfall-5-misunderstanding-replace-limits" class="depth-3">Pitfall 5: Misunderstanding .replace() Limits</a></li>
+<li><a href="#pitfall-6-assuming-strip-removes-all-whitespace" class="depth-3">Pitfall 6: Assuming .strip() Removes All Whitespace</a></li>
+<li><a href="#pitfall-7-case-sensitivity-matters-in-replace-and-find" class="depth-3">Pitfall 7: Case Sensitivity Matters in .replace() and .find()</a></li>
+<li><a href="#exit-ticket" class="depth-2">## Exit Ticket</a></li>
+<li><a href="#wrap-up" class="depth-2">## Wrap-Up</a></li>
+<li><a href="#key-takeaways-3-minutes" class="depth-3">Key Takeaways (3 minutes)</a></li>
+<li><a href="#preview-of-next-hour-1-minute" class="depth-3">Preview of Next Hour (1 minute)</a></li>
+<li><a href="#closing-encouragement" class="depth-3">Closing Encouragement</a></li>
+<li><a href="#facilitation-notes" class="depth-2">## Facilitation Notes</a></li>
+<li><a href="#pacing-guide" class="depth-3">Pacing Guide</a></li>
+<li><a href="#engagement-strategies" class="depth-3">Engagement Strategies</a></li>
+<li><a href="#accessibility-inclusion" class="depth-3">Accessibility &amp; Inclusion</a></li>
+<li><a href="#troubleshooting-live-issues" class="depth-3">Troubleshooting Live Issues</a></li>
+<li><a href="#real-world-context" class="depth-2">## Real-World Context</a></li>
+<li><a href="#use-case-1-web-form-validation" class="depth-3">Use Case 1: Web Form Validation</a></li>
+<li><a href="#use-case-2-log-analysis" class="depth-3">Use Case 2: Log Analysis</a></li>
+<li><a href="#use-case-3-data-cleaning" class="depth-3">Use Case 3: Data Cleaning</a></li>
+<li><a href="#use-case-4-keyword-filtering" class="depth-3">Use Case 4: Keyword Filtering</a></li>
+<li><a href="#use-case-5-text-analytics" class="depth-3">Use Case 5: Text Analytics</a></li>
+<li><a href="#advanced-topics-summary" class="depth-2">## Advanced Topics &amp; Summary</a></li>
+<li><a href="#extension-1-the-title-method" class="depth-3">Extension 1: The .title() Method</a></li>
+<li><a href="#extension-2-the-count-method-with-startend-parameters" class="depth-3">Extension 2: The .count() Method with Start/End Parameters</a></li>
+<li><a href="#extension-3-position-based-text-extraction" class="depth-3">Extension 3: Position-Based Text Extraction</a></li>
+<li><a href="#extension-4-using-split-and-join-preview" class="depth-3">Extension 4: Using .split() and .join() (Preview)</a></li>
+<li><a href="#extension-5-introduction-to-replace-with-regular-expressions" class="depth-3">Extension 5: Introduction to .replace() with Regular Expressions</a></li>
+<li><a href="#summary-of-key-methods" class="depth-3">Summary of Key Methods</a></li>
+<li><a href="#reflection-questions-for-deeper-learning" class="depth-3">Reflection Questions for Deeper Learning</a></li>
+<li><a href="#preparing-for-the-next-hour" class="depth-3">Preparing for the Next Hour</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day2_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

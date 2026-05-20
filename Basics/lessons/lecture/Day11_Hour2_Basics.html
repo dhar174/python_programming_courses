@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 11, Hour 2: JSON Persistence (Instructor Script) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="11">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day11_Hour2_Basics.md">
+
+    <link rel="prev" href="Day11_Hour1_Basics.html">
+    <link rel="next" href="Day11_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="11" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-11/index.html">Day 11</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 11, Hour 2: JSON Persistence (Instructor Script)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 11</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day11_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-intent-for-this-hour">Instructor intent for this hour</h2>
+<p>This hour is where learners move from “my program works while it is running” to “my program remembers things tomorrow.” Keep repeating that idea. Most beginners can build menu loops and simple CRUD logic by now, but many still think in temporary memory. This lesson makes persistence concrete, practical, and safe.</p>
+<p>Your goals in this hour are tightly aligned to the runbook:</p>
+<ul>
+<li>Learners can <strong>serialize data to JSON</strong>.</li>
+<li>Learners can <strong>load JSON back into Python structures</strong>.</li>
+<li>Learners understand the difference between Python objects in memory and JSON text on disk.</li>
+<li>Learners can explain why <code>json.dump()</code> cannot write a custom object directly.</li>
+<li>Learners can implement missing-file and corrupted-file handling so their app does not crash.</li>
+</ul>
+<p>Keep the tone practical and confidence-building. We are not teaching databases, advanced serialization frameworks, or architecture patterns. We are teaching a reliable Basics-level persistence workflow that learners can use immediately in their own small projects.</p>
+<hr>
+<h2 id="outcomes-state-these-clearly-at-the-start">Outcomes (state these clearly at the start)</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Use <code>json.dump()</code> to save Python data to a <code>.json</code> file.</li>
+<li>Use <code>json.load()</code> to read JSON from a file back into Python data structures.</li>
+<li>Identify JSON-supported types: object/dict, array/list, string, number, boolean, null.</li>
+<li>Convert one simple class object to/from dictionaries using <code>to_dict()</code> and <code>from_dict()</code>.</li>
+<li>Build a small app flow where data loads on startup and saves after changes.</li>
+<li>Handle two critical error conditions safely:
+   - missing file (<code>FileNotFoundError</code>)
+   - corrupted JSON (<code>json.JSONDecodeError</code>)</li>
+</ol>
+<hr>
+<h2 id="run-of-show-60-minutes-total">Run-of-show (60 minutes total)</h2>
+<p>Use this structure as your pacing guide:</p>
+<ul>
+<li><strong>0:00–0:05</strong>: Warm-up and framing (why persistence matters)</li>
+<li><strong>0:05–0:20</strong>: Instructor talk points (10–15 min target)</li>
+<li><strong>0:20–0:30</strong>: Live demo (5–10 min target)</li>
+<li><strong>0:30–1:00</strong>: Hands-on lab (25–35 min target) + checkoffs</li>
+</ul>
+<p>If your class runs faster, spend extra time on lab troubleshooting and extension tasks. If your class runs slower, keep the core path: save/load + missing/corrupt file handling.</p>
+<hr>
+<h2 id="prerequisites-you-should-quickly-confirm">Prerequisites you should quickly confirm</h2>
+<p>Before diving in, verify learners can already:</p>
+<ul>
+<li>create and use <code>dict</code> and <code>list</code></li>
+<li>open files with <code>with open(...)</code></li>
+<li>call functions and read basic tracebacks</li>
+<li>run the same script multiple times from the same folder</li>
+</ul>
+<p>If one of these is shaky, do a 2-minute refresh now. Don’t let hidden prerequisites block the hour.</p>
+<hr>
+<h2 id="opening-script-what-to-say-in-the-first-35-minutes">Opening script (what to say in the first 3–5 minutes)</h2>
+<p>Suggested speaking guide:</p>
+<p>“Up to now, many of our programs forget everything when they stop running. That’s normal because variables live in RAM and RAM is temporary. Today we’ll fix that using JSON files. JSON gives us a universal text format for storing app data. We’ll save Python data structures to disk with <code>json.dump()</code>, then load them back with <code>json.load()</code>. We’ll also handle missing and corrupted files, because real users and real files are messy. By the end of the hour, your app should remember data across runs without crashing.”</p>
+<p>Prediction prompt:</p>
+<ul>
+<li>“If I close a Python script right now, what happens to its variables?”</li>
+<li>“What kind of data should survive restarts in a to-do app or contacts app?”</li>
+</ul>
+<p>Use one or two student answers to connect motivation to real projects.</p>
+<hr>
+<h2 id="instructor-talk-points-1015-min">Instructor talk points (10–15 min)</h2>
+<p>The runbook asks for JSON basics, supported types, and object mapping via <code>to_dict/from_dict</code>. Use the following 12-point flow.</p>
+<h3 id="talk-point-1-persistence-vs-memory">Talk point 1: Persistence vs memory</h3>
+<ul>
+<li>Memory (<code>list</code>, <code>dict</code>, objects in variables) is temporary.</li>
+<li>Files are durable across program runs.</li>
+<li>Persistence means writing program state to storage, then restoring it later.</li>
+</ul>
+<p>Say:</p>
+<p>“Think of memory as a whiteboard in a room. When class ends, someone erases it. A file is like a notebook you can reopen tomorrow.”</p>
+<h3 id="talk-point-2-what-json-is">Talk point 2: What JSON is</h3>
+<ul>
+<li>JSON = JavaScript Object Notation.</li>
+<li>Language-neutral text format.</li>
+<li>Human-readable and machine-readable.</li>
+</ul>
+<p>Show a tiny JSON snippet verbally:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Ada&quot;,
+  &quot;active&quot;: true,
+  &quot;score&quot;: 98
+}
+</code></pre>
+<p>Remind learners: JSON booleans are lowercase <code>true/false</code>, and null is <code>null</code>.</p>
+<h3 id="talk-point-3-python-json-module">Talk point 3: Python <code>json</code> module</h3>
+<ul>
+<li>Built into standard library (<code>import json</code>).</li>
+<li>Core functions today:</li>
+<li><code>json.dump(python_data, file_handle)</code></li>
+<li><code>json.load(file_handle)</code></li>
+</ul>
+<p>Clarify pronunciation and meaning:</p>
+<ul>
+<li>dump = write out</li>
+<li>load = read in</li>
+</ul>
+<h3 id="talk-point-4-file-modes-still-matter">Talk point 4: File modes still matter</h3>
+<ul>
+<li><code>"w"</code> for write (overwrites existing content)</li>
+<li><code>"r"</code> for read</li>
+<li>optional <code>"a"</code> for append (not typical for JSON document persistence)</li>
+</ul>
+<p>Use this line:</p>
+<p>“<code>json</code> handles format conversion, but you still control file opening and closing.”</p>
+<h3 id="talk-point-5-json-supported-types-map-to-python-basics">Talk point 5: JSON-supported types map to Python basics</h3>
+<p>Give this exact mapping table on screen:</p>
+<table>
+<thead>
+<tr>
+<th>JSON</th>
+<th>Python on load</th>
+<th>Python before dump</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>object</td>
+<td><code>dict</code></td>
+<td><code>dict</code></td>
+</tr>
+<tr>
+<td>array</td>
+<td><code>list</code></td>
+<td><code>list</code> or <code>tuple</code></td>
+</tr>
+<tr>
+<td>string</td>
+<td><code>str</code></td>
+<td><code>str</code></td>
+</tr>
+<tr>
+<td>number</td>
+<td><code>int</code> or <code>float</code></td>
+<td><code>int</code> or <code>float</code></td>
+</tr>
+<tr>
+<td>true/false</td>
+<td><code>bool</code></td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td>null</td>
+<td><code>None</code></td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>Important note: tuples become lists in JSON and come back as lists.</p>
+<h3 id="talk-point-6-indent-for-readability">Talk point 6: <code>indent</code> for readability</h3>
+<ul>
+<li><code>json.dump(data, f, indent=2)</code> makes file easy to inspect.</li>
+<li>Pretty printing is optional but valuable in teaching and debugging.</li>
+</ul>
+<p>Tie to optional extension later: pretty print with <code>indent=2</code>.</p>
+<h3 id="talk-point-7-determinism-and-classroom-safety">Talk point 7: Determinism and classroom safety</h3>
+<p>For this course, use deterministic data:</p>
+<ul>
+<li>No random values</li>
+<li>No network calls</li>
+<li>No system-specific absolute paths</li>
+</ul>
+<p>Say:</p>
+<p>“If everyone runs the same code with the same starting file, everyone should see the same behavior. That makes debugging and instruction much easier.”</p>
+<h3 id="talk-point-8-missing-file-is-normal">Talk point 8: Missing file is normal</h3>
+<p>First run usually has no saved file.</p>
+<ul>
+<li>Use <code>try/except FileNotFoundError</code></li>
+<li>Start with default data if file does not exist</li>
+</ul>
+<p>This satisfies one completion criterion: no crash when file missing.</p>
+<h3 id="talk-point-9-corrupted-json-is-also-normal-in-real-life">Talk point 9: Corrupted JSON is also normal in real life</h3>
+<p>Learners must recognize:</p>
+<ul>
+<li><code>json.JSONDecodeError</code> happens when file content is invalid JSON.</li>
+<li>App should recover gracefully, not crash.</li>
+</ul>
+<p>Recovery strategy for Basics:</p>
+<ul>
+<li>print warning</li>
+<li>load fallback default data</li>
+</ul>
+<p>Optional extension later: backup before overwrite to reduce risk.</p>
+<h3 id="talk-point-10-why-custom-objects-fail-with-jsondump">Talk point 10: Why custom objects fail with <code>json.dump()</code></h3>
+<p>By default, JSON encoder does not know your class structure.</p>
+<p>If you do:</p>
+<pre><code class="language-python">json.dump(my_book_object, f)
+</code></pre>
+<p>you get:</p>
+<p><code>TypeError: Object of type Book is not JSON serializable</code></p>
+<p>Because JSON only supports generic data types, not Python class instances.</p>
+<h3 id="talk-point-11-simple-object-mapping-with-todictfromdict">Talk point 11: Simple object mapping with <code>to_dict/from_dict</code></h3>
+<p>Keep it basic:</p>
+<ul>
+<li><code>to_dict()</code> converts object → serializable dictionary</li>
+<li><code>from_dict()</code> converts dictionary → object</li>
+</ul>
+<p>No advanced serializers, no custom encoders, no metaclasses.</p>
+<h3 id="talk-point-12-save-points-in-app-workflow">Talk point 12: Save points in app workflow</h3>
+<p>Common app pattern:</p>
+<ol>
+<li>Program starts.</li>
+<li>Try load JSON from disk.</li>
+<li>If missing/corrupt, use fallback defaults.</li>
+<li>User makes changes.</li>
+<li>Program saves updated data to disk.</li>
+<li>Next run restores those changes.</li>
+</ol>
+<p>Have learners repeat this flow aloud once. It helps retention.</p>
+<hr>
+<h2 id="live-demo-510-min-required-runbook-demo-object-mapping">Live demo (5–10 min): required runbook demo + object mapping</h2>
+<p>This demo is deterministic and classroom-safe. It includes:</p>
+<ul>
+<li>dump dict/list to <code>data.json</code></li>
+<li>load and print</li>
+<li>operational <code>FileNotFoundError</code> and <code>JSONDecodeError</code> handling</li>
+<li>one simple class with <code>to_dict/from_dict</code></li>
+</ul>
+<h3 id="demo-setup-instructions">Demo setup instructions</h3>
+<p>Create a new file named <code>json_persistence_demo.py</code> in the same folder where learners are running code.</p>
+<p>Paste and run this complete script:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from pathlib import Path
+
+DATA_PATH = Path(&quot;data.json&quot;)
+
+
+@dataclass
+class Task:
+    task_id: int
+    title: str
+    done: bool = False
+
+    def to_dict(self) -&gt; dict:
+        return {
+            &quot;task_id&quot;: self.task_id,
+            &quot;title&quot;: self.title,
+            &quot;done&quot;: self.done,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;Task&quot;:
+        return cls(
+            task_id=int(data[&quot;task_id&quot;]),
+            title=str(data[&quot;title&quot;]),
+            done=bool(data[&quot;done&quot;]),
+        )
+
+
+def build_demo_payload() -&gt; dict:
+    # Deterministic fallback dataset (no randomness, no external dependencies)
+    tasks = [
+        Task(task_id=1, title=&quot;Review JSON basics&quot;, done=True),
+        Task(task_id=2, title=&quot;Practice dump and load&quot;, done=False),
+    ]
+    return {
+        &quot;app_name&quot;: &quot;Hour42 Demo&quot;,
+        &quot;version&quot;: 1,
+        &quot;tasks&quot;: [task.to_dict() for task in tasks],  # object mapping here
+        &quot;tags&quot;: [&quot;python&quot;, &quot;json&quot;, &quot;persistence&quot;],
+    }
+
+
+def save_data(payload: dict, path: Path) -&gt; None:
+    with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(payload, file, indent=2)
+
+
+def load_data(path: Path, fallback: dict) -&gt; dict:
+    try:
+        with path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print(f&quot;[INFO] {path} not found. Using fallback data.&quot;)
+        return fallback
+    except json.JSONDecodeError:
+        print(f&quot;[WARNING] {path} is corrupted JSON. Using fallback data.&quot;)
+        return fallback
+
+
+def print_loaded_data(loaded: dict) -&gt; None:
+    print(&quot;\nLoaded dictionary:&quot;)
+    print(loaded)
+
+    print(&quot;\nTasks as Task objects reconstructed with from_dict:&quot;)
+    task_objects = [Task.from_dict(item) for item in loaded.get(&quot;tasks&quot;, [])]
+    for task in task_objects:
+        status = &quot;done&quot; if task.done else &quot;not done&quot;
+        print(f&quot;- Task {task.task_id}: {task.title} ({status})&quot;)
+
+
+def main() -&gt; None:
+    fallback_payload = build_demo_payload()
+
+    print(&quot;[STEP 1] Load payload from data.json (or fallback if file is missing/corrupt)&quot;)
+    loaded_payload = load_data(DATA_PATH, fallback_payload)
+    print(&quot;[OK] Load complete.&quot;)
+
+    print(&quot;\n[STEP 2] Save deterministic payload to data.json&quot;)
+    save_data(loaded_payload, DATA_PATH)
+    print(&quot;[OK] Save complete.&quot;)
+
+    print_loaded_data(loaded_payload)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-narration-checklist">Demo narration checklist</h3>
+<p>As you run the script, narrate these exact ideas:</p>
+<ol>
+<li>We are writing a dictionary that contains a list and primitive JSON-compatible values.</li>
+<li>The <code>Task</code> objects are converted to dictionaries first via <code>to_dict()</code>.</li>
+<li>We read with <code>json.load()</code> and get a Python dictionary back.</li>
+<li>We map dictionaries back to <code>Task</code> objects with <code>from_dict()</code>.</li>
+<li>We protect load with <code>FileNotFoundError</code> and <code>json.JSONDecodeError</code>.</li>
+</ol>
+<h3 id="mini-corruption-test-operationalize-jsondecodeerror-handling">Mini corruption test (operationalize JSONDecodeError handling)</h3>
+<p>After first successful run:</p>
+<ol>
+<li>Open <code>data.json</code>.</li>
+<li>Intentionally break it by deleting a comma.</li>
+<li>Save file.</li>
+<li>Run <code>json_persistence_demo.py</code> again.</li>
+</ol>
+<p>Expected result:</p>
+<ul>
+<li>Script prints warning about corrupted JSON.</li>
+<li>Script continues running with fallback data.</li>
+<li>Script rewrites a valid <code>data.json</code> in Step 2 save.</li>
+<li>No crash.</li>
+</ul>
+<p>This is crucial. Learners should see this behavior, not just hear about it.</p>
+<h3 id="mini-missing-file-test">Mini missing-file test</h3>
+<ol>
+<li>Delete <code>data.json</code>.</li>
+<li>Run script again.</li>
+</ol>
+<p>Expected:</p>
+<ul>
+<li>Script prints info message that file is missing.</li>
+<li>Uses fallback data.</li>
+<li>Recreates valid <code>data.json</code> in Step 2 save.</li>
+</ul>
+<p>You just demonstrated both required resilience conditions in a deterministic way.</p>
+<hr>
+<h2 id="transition-into-lab-what-to-say">Transition into lab (what to say)</h2>
+<p>“Now you’ll implement the same persistence lifecycle in your own mini app: load at startup, modify data, save after changes, survive missing/corrupted files. If you don’t have a previous app ready, you’ll use today’s fallback starter so everyone can complete the hour.”</p>
+<hr>
+<h2 id="hands-on-lab-2535-min-json-persistence-mini-app">Hands-on lab (25–35 min): JSON persistence mini app</h2>
+<h3 id="lab-objective">Lab objective</h3>
+<p>Implement persistence for app data using <code>data.json</code> so that:</p>
+<ul>
+<li>app data persists across runs</li>
+<li>app does not crash when file is missing</li>
+<li>app handles corrupted JSON with a safe fallback</li>
+<li>app saves again after changes</li>
+</ul>
+<h3 id="deterministic-fallback-mini-app-dataset-required-support">Deterministic fallback mini-app dataset (required support)</h3>
+<p>Use this starter dataset so learners do <strong>not</strong> need a previous app:</p>
+<pre><code class="language-python">DEFAULT_DATA = {
+    &quot;next_id&quot;: 4,
+    &quot;contacts&quot;: [
+        {&quot;id&quot;: 1, &quot;name&quot;: &quot;Ava&quot;, &quot;email&quot;: &quot;ava@example.com&quot;},
+        {&quot;id&quot;: 2, &quot;name&quot;: &quot;Noah&quot;, &quot;email&quot;: &quot;noah@example.com&quot;},
+        {&quot;id&quot;: 3, &quot;name&quot;: &quot;Mia&quot;, &quot;email&quot;: &quot;mia@example.com&quot;},
+    ],
+}
+</code></pre>
+<p>This dataset is deterministic, realistic, and easy to test.</p>
+<h3 id="lab-scaffold-give-students-this-full-baseline">Lab scaffold (give students this full baseline)</h3>
+<p>Create <code>contacts_json_app.py</code>:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+
+DATA_PATH = Path(&quot;data.json&quot;)
+
+DEFAULT_DATA = {
+    &quot;next_id&quot;: 4,
+    &quot;contacts&quot;: [
+        {&quot;id&quot;: 1, &quot;name&quot;: &quot;Ava&quot;, &quot;email&quot;: &quot;ava@example.com&quot;},
+        {&quot;id&quot;: 2, &quot;name&quot;: &quot;Noah&quot;, &quot;email&quot;: &quot;noah@example.com&quot;},
+        {&quot;id&quot;: 3, &quot;name&quot;: &quot;Mia&quot;, &quot;email&quot;: &quot;mia@example.com&quot;},
+    ],
+}
+
+
+def load_data(path: Path) -&gt; dict:
+    try:
+        with path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+            data = json.load(file)
+            if &quot;next_id&quot; not in data or &quot;contacts&quot; not in data:
+                print(&quot;[WARNING] data.json missing expected keys. Using defaults.&quot;)
+                return {
+                    &quot;next_id&quot;: DEFAULT_DATA[&quot;next_id&quot;],
+                    &quot;contacts&quot;: [dict(item) for item in DEFAULT_DATA[&quot;contacts&quot;]],
+                }
+            return data
+    except FileNotFoundError:
+        print(&quot;[INFO] data.json not found. Starting with default data.&quot;)
+        return {
+            &quot;next_id&quot;: DEFAULT_DATA[&quot;next_id&quot;],
+            &quot;contacts&quot;: [dict(item) for item in DEFAULT_DATA[&quot;contacts&quot;]],
+        }
+    except json.JSONDecodeError:
+        print(&quot;[WARNING] data.json is corrupted JSON. Starting with default data.&quot;)
+        return {
+            &quot;next_id&quot;: DEFAULT_DATA[&quot;next_id&quot;],
+            &quot;contacts&quot;: [dict(item) for item in DEFAULT_DATA[&quot;contacts&quot;]],
+        }
+
+
+def save_data(path: Path, data: dict) -&gt; None:
+    with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(data, file, indent=2)
+
+
+def list_contacts(data: dict) -&gt; None:
+    print(&quot;\n--- Contacts ---&quot;)
+    contacts = data[&quot;contacts&quot;]
+    if not contacts:
+        print(&quot;No contacts found.&quot;)
+        return
+    for contact in contacts:
+        print(f'{contact[&quot;id&quot;]}: {contact[&quot;name&quot;]} &lt;{contact[&quot;email&quot;]}&gt;')
+
+
+def add_contact(data: dict) -&gt; None:
+    print(&quot;\n--- Add Contact ---&quot;)
+    name = input(&quot;Name: &quot;).strip()
+    email = input(&quot;Email: &quot;).strip()
+
+    if not name or not email:
+        print(&quot;[ERROR] Name and email are required.&quot;)
+        return
+
+    new_contact = {
+        &quot;id&quot;: data[&quot;next_id&quot;],
+        &quot;name&quot;: name,
+        &quot;email&quot;: email,
+    }
+    data[&quot;contacts&quot;].append(new_contact)
+    data[&quot;next_id&quot;] += 1
+    print(&quot;[OK] Contact added.&quot;)
+
+
+def main() -&gt; None:
+    data = load_data(DATA_PATH)
+
+    while True:
+        print(&quot;\n=== Contact App (JSON) ===&quot;)
+        print(&quot;1. List contacts&quot;)
+        print(&quot;2. Add contact&quot;)
+        print(&quot;3. Save and exit&quot;)
+        choice = input(&quot;Choose 1-3: &quot;).strip()
+
+        if choice == &quot;1&quot;:
+            list_contacts(data)
+        elif choice == &quot;2&quot;:
+            add_contact(data)
+        elif choice == &quot;3&quot;:
+            save_data(DATA_PATH, data)
+            print(&quot;[OK] Data saved to data.json. Goodbye.&quot;)
+            break
+        else:
+            print(&quot;[ERROR] Invalid choice. Enter 1, 2, or 3.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="lab-tasks-student-instructions">Lab tasks (student instructions)</h3>
+<h4 id="task-1-run-baseline-app-and-inspect-behavior">Task 1: Run baseline app and inspect behavior</h4>
+<ol>
+<li>Run <code>contacts_json_app.py</code>.</li>
+<li>Choose “List contacts.”</li>
+<li>Choose “Save and exit.”</li>
+<li>Open <code>data.json</code> and inspect its structure.</li>
+</ol>
+<p>Expected:</p>
+<ul>
+<li>JSON file exists.</li>
+<li>It contains <code>next_id</code> and <code>contacts</code>.</li>
+<li>File is pretty-printed (<code>indent=2</code>).</li>
+</ul>
+<h4 id="task-2-verify-persistence-across-runs">Task 2: Verify persistence across runs</h4>
+<ol>
+<li>Run app again.</li>
+<li>Add one new contact.</li>
+<li>Save and exit.</li>
+<li>Run app again.</li>
+<li>List contacts.</li>
+</ol>
+<p>Expected:</p>
+<ul>
+<li>Newly added contact is still there.</li>
+<li>IDs remain consistent and incrementing.</li>
+</ul>
+<p>This proves data persists across runs.</p>
+<h4 id="task-3-verify-missing-file-safety">Task 3: Verify missing-file safety</h4>
+<ol>
+<li>Delete <code>data.json</code>.</li>
+<li>Run app.</li>
+<li>List contacts.</li>
+</ol>
+<p>Expected:</p>
+<ul>
+<li>App does <strong>not</strong> crash.</li>
+<li>App shows default contacts.</li>
+<li>Saving recreates <code>data.json</code>.</li>
+</ul>
+<h4 id="task-4-verify-corrupted-file-safety-operational-acceptance">Task 4: Verify corrupted-file safety (operational acceptance)</h4>
+<ol>
+<li>Open <code>data.json</code> and break syntax, for example delete a quote or comma.</li>
+<li>Save file.</li>
+<li>Run app.</li>
+</ol>
+<p>Expected:</p>
+<ul>
+<li>App prints warning about corrupted JSON (<code>JSONDecodeError</code> handling path).</li>
+<li>App does not crash.</li>
+<li>App uses default dataset.</li>
+</ul>
+<p>This is now part of acceptance verification, not optional discussion.</p>
+<h4 id="task-5-save-after-changes">Task 5: Save after changes</h4>
+<ol>
+<li>Add another contact.</li>
+<li>Save and exit.</li>
+<li>Reopen file and verify update.</li>
+</ol>
+<p>Expected:</p>
+<ul>
+<li>New contact appears in file.</li>
+<li>Next run loads updated data.</li>
+</ul>
+<h3 id="instructor-facilitation-notes-during-lab">Instructor facilitation notes during lab</h3>
+<p>Walk the room (or breakout channels) with these quick checks:</p>
+<ul>
+<li>“Show me your <code>load_data</code> function. Do you catch both missing and corrupted cases?”</li>
+<li>“Show me where your save happens after changes.”</li>
+<li>“Can you demonstrate persistence with two runs?”</li>
+<li>“Can you explain <code>json.dump</code> vs <code>json.load</code> without reading your code?”</li>
+</ul>
+<p>If students finish early, give extension tasks (below).</p>
+<hr>
+<h2 id="lab-completion-criteria-must-be-explicit">Lab completion criteria (must be explicit)</h2>
+<p>Students are complete when all are true:</p>
+<ol>
+<li><strong>Persistence works across runs</strong>: data saved in one run appears in later runs.</li>
+<li><strong>Missing file does not crash app</strong>: handled gracefully with fallback data.</li>
+<li><strong>Corrupted JSON does not crash app</strong>: <code>json.JSONDecodeError</code> path is handled and app continues.</li>
+<li><strong>After changes, data saves again</strong>: modifications are written back to <code>data.json</code>.</li>
+</ol>
+<p>Note: The runbook specifically requires no crash when file missing. This script also operationalizes corrupted-file handling to satisfy real-world robustness and your critique adjustment.</p>
+<hr>
+<h2 id="common-pitfalls-to-watch-for-and-fixes">Common pitfalls to watch for (and fixes)</h2>
+<h3 id="pitfall-1-trying-to-dump-custom-object-directly">Pitfall 1: Trying to dump custom object directly</h3>
+<p>Symptom:</p>
+<p><code>TypeError: Object of type Contact is not JSON serializable</code></p>
+<p>Cause:</p>
+<p>Custom Python object was passed directly to <code>json.dump</code>.</p>
+<p>Fix:</p>
+<p>Convert object to dictionary first:</p>
+<pre><code class="language-python">json.dump(contact.to_dict(), file, indent=2)
+</code></pre>
+<p>or for list of objects:</p>
+<pre><code class="language-python">json.dump([c.to_dict() for c in contacts], file, indent=2)
+</code></pre>
+<h3 id="pitfall-2-crashing-when-file-doesnt-exist">Pitfall 2: Crashing when file doesn’t exist</h3>
+<p>Symptom:</p>
+<p><code>FileNotFoundError</code> on first run.</p>
+<p>Cause:</p>
+<p>Program assumes <code>data.json</code> already exists.</p>
+<p>Fix:</p>
+<p>Add <code>try/except FileNotFoundError</code> and return default data.</p>
+<h3 id="pitfall-3-crashing-on-invalid-json">Pitfall 3: Crashing on invalid JSON</h3>
+<p>Symptom:</p>
+<p><code>json.JSONDecodeError</code> when loading file.</p>
+<p>Cause:</p>
+<p>File was manually edited incorrectly or partially written.</p>
+<p>Fix:</p>
+<p>Catch <code>json.JSONDecodeError</code>, warn user, load fallback defaults.</p>
+<h3 id="pitfall-4-forgetting-to-save-after-mutation">Pitfall 4: Forgetting to save after mutation</h3>
+<p>Symptom:</p>
+<p>User adds contact, exits, data disappears.</p>
+<p>Cause:</p>
+<p>Changes happened in memory only; no save call executed.</p>
+<p>Fix:</p>
+<p>Call <code>save_data(...)</code> on explicit save/exit action (or after every write operation if desired).</p>
+<h3 id="pitfall-5-confusing-json-booleansnull-with-python-values">Pitfall 5: Confusing JSON booleans/null with Python values</h3>
+<p>Symptom:</p>
+<p>Expecting <code>True</code> in JSON file, sees <code>true</code> instead.</p>
+<p>Cause:</p>
+<p>JSON has its own literal spellings.</p>
+<p>Fix:</p>
+<p>Explain conversion is automatic:</p>
+<ul>
+<li>Python <code>True</code> ↔ JSON <code>true</code></li>
+<li>Python <code>None</code> ↔ JSON <code>null</code></li>
+</ul>
+<h3 id="pitfall-6-overbuilding-beyond-basics">Pitfall 6: Overbuilding beyond Basics</h3>
+<p>Symptom:</p>
+<p>Student starts building complex serializer classes or database migration logic.</p>
+<p>Cause:</p>
+<p>Scope drift.</p>
+<p>Fix:</p>
+<p>Bring them back to hour outcomes: <code>dump/load</code>, supported types, simple <code>to_dict/from_dict</code>, safe file handling.</p>
+<hr>
+<h2 id="optional-extensions-if-time-remains-still-basics-scope">Optional extensions (if time remains, still Basics scope)</h2>
+<p>These align to the runbook’s optional ideas and stay beginner-friendly.</p>
+<h3 id="extension-a-backup-previous-json-before-overwrite">Extension A: Backup previous JSON before overwrite</h3>
+<p>Goal:</p>
+<p>Before writing new data, save old file as <code>data.backup.json</code>.</p>
+<p>Simple implementation:</p>
+<pre><code class="language-python">from pathlib import Path
+import json
+
+DATA_PATH = Path(&quot;data.json&quot;)
+BACKUP_PATH = Path(&quot;data.backup.json&quot;)
+
+
+def save_with_backup(path: Path, backup_path: Path, data: dict) -&gt; None:
+    if path.exists():
+        backup_path.write_text(path.read_text(encoding=&quot;utf-8&quot;), encoding=&quot;utf-8&quot;)
+        print(&quot;[INFO] Backup created at data.backup.json&quot;)
+
+    with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(data, file, indent=2)
+</code></pre>
+<p>Teaching note: This is a practical safety net for accidental corruption.</p>
+<h3 id="extension-b-pretty-print-with-indent2-everywhere">Extension B: Pretty print with <code>indent=2</code> everywhere</h3>
+<p>Goal:</p>
+<p>Make JSON files easy for humans to inspect and debug.</p>
+<p>Reminder:</p>
+<pre><code class="language-python">json.dump(data, file, indent=2)
+</code></pre>
+<p>If students used compact JSON, have them compare readability side by side.</p>
+<hr>
+<h2 id="simple-object-mapping-mini-section-one-class-only-basics-level">Simple object mapping mini-section (one class only, Basics level)</h2>
+<p>Use this if learners ask, “Can I save my class objects?”</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class Note:
+    note_id: int
+    text: str
+
+    def to_dict(self) -&gt; dict:
+        return {
+            &quot;note_id&quot;: self.note_id,
+            &quot;text&quot;: self.text,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;Note&quot;:
+        return cls(
+            note_id=int(data[&quot;note_id&quot;]),
+            text=str(data[&quot;text&quot;]),
+        )
+</code></pre>
+<p>Usage pattern:</p>
+<pre><code class="language-python">note = Note(note_id=1, text=&quot;Remember to persist data&quot;)
+payload = note.to_dict()
+
+loaded_note = Note.from_dict(payload)
+</code></pre>
+<p>Keep it here. Do not introduce custom encoders/decoders in this hour.</p>
+<hr>
+<h2 id="assessment-and-quick-checks-during-instruction">Assessment and quick checks during instruction</h2>
+<p>Ask these short checks while teaching:</p>
+<ol>
+<li>“What is the difference between <code>json.dump</code> and <code>json.load</code>?”</li>
+<li>“Which Python types are safe to dump directly?”</li>
+<li>“What exception do we catch for corrupted JSON?”</li>
+<li>“Why do we need default data on first run?”</li>
+<li>“If I add a contact but never save, what happens next run?”</li>
+</ol>
+<p>Look for conceptual clarity, not memorized wording.</p>
+<hr>
+<h2 id="exit-ticket-required-quick-check">Exit ticket (required quick check)</h2>
+<p><strong>Question:</strong> Why can’t <code>json.dump()</code> write a custom object directly?</p>
+<p><strong>Model answer:</strong>
+Because JSON only supports basic language-neutral data types (object, array, string, number, boolean, null). A custom Python object includes class-specific behavior and structure JSON does not understand. We must first convert the object to a JSON-compatible representation, usually a dictionary via <code>to_dict()</code>.</p>
+<hr>
+<h2 id="suggested-speaking-script-long-form-near-verbatim">Suggested speaking script (long-form, near-verbatim)</h2>
+<p>Use this if you want a tighter delivery script during class.</p>
+<p>“Let’s make our programs remember. Right now, if we store data in a list or dictionary and then close the script, that data disappears. Variables live in memory, and memory is temporary. We need a persistence format, and for Basics, JSON is a perfect fit.</p>
+<p>JSON is plain text. It is language-neutral, easy to read, and included in Python via the built-in <code>json</code> module. We don’t install anything. Two functions matter most today: <code>json.dump</code> to write Python data into a file, and <code>json.load</code> to read JSON from a file back into Python data.</p>
+<p>When you hear ‘dump,’ think ‘write out.’ When you hear ‘load,’ think ‘read in.’</p>
+<p>Now let’s connect Python types to JSON types. A Python <code>dict</code> maps to a JSON object. A Python list maps to a JSON array. Strings, numbers, booleans, and <code>None</code> map naturally too. One detail: if you dump a tuple, JSON stores it like an array, so when you load it back you get a list, not a tuple.</p>
+<p>We also want readable files. If I use <code>indent=2</code>, the JSON file is pretty printed and easy to debug. That’s not required for machines, but great for people.</p>
+<p>Now important real-world behavior: on first run, <code>data.json</code> might not exist. That is normal, not an error in your logic. So we catch <code>FileNotFoundError</code> and start from default data.</p>
+<p>Second real-world behavior: files can be corrupted. Maybe someone edited manually and broke syntax, maybe a save was interrupted. When JSON is invalid, <code>json.load</code> raises <code>JSONDecodeError</code>. Our app should not crash. We catch that exception and recover with fallback defaults.</p>
+<p>Now one common beginner confusion: ‘Why can’t I just dump my custom class object?’ Great question. JSON has no idea what your class is. It only understands basic, language-neutral structures. So we convert object to dictionary first using <code>to_dict</code>, and after loading we can rebuild the object with <code>from_dict</code>.</p>
+<p>Our app flow today is simple and powerful: startup load, user changes data, save changes, next run restores state. If you can do this reliably, your projects become much more useful.</p>
+<p>As we demo, watch for four anchors: what gets written, what gets loaded, where exceptions are handled, and where object mapping happens.”</p>
+<p>After demo:</p>
+<p>“Now your lab is to apply this workflow in a small contact app. If you don’t have a previous app, use the fallback starter dataset so everyone can complete the objective. Your checkoff is not only ‘it saves’ but also ‘it survives missing and corrupted files.’”</p>
+<p>When circulating:</p>
+<p>“Show me where your app decides fallback data. Show me where you save after mutation. Show me one run-to-run persistence proof.”</p>
+<p>Wrap-up:</p>
+<p>“Today is one of the biggest practical upgrades in the course. You moved from temporary scripts to stateful programs. Next time you build even a tiny app, you now have a durable data strategy.”</p>
+<hr>
+<h2 id="instructor-troubleshooting-guide-for-this-hour">Instructor troubleshooting guide for this hour</h2>
+<p>Use these fast fixes during lab support.</p>
+<h3 id="error-typeerror-object-of-type-is-not-json-serializable">Error: <code>TypeError: Object of type ... is not JSON serializable</code></h3>
+<p>Ask:</p>
+<ul>
+<li>“Are you dumping a class instance directly?”</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Convert with <code>to_dict()</code> first.</li>
+</ul>
+<h3 id="error-jsondecodeerror">Error: <code>JSONDecodeError</code></h3>
+<p>Ask:</p>
+<ul>
+<li>“Can we open <code>data.json</code> and check commas, quotes, and brackets?”</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>restore from default data path in code</li>
+<li>optionally delete bad file and rerun</li>
+</ul>
+<h3 id="error-filenotfounderror-on-load">Error: <code>FileNotFoundError</code> on load</h3>
+<p>Ask:</p>
+<ul>
+<li>“Do you have a <code>try/except</code> around your <code>json.load</code> call?”</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>catch file missing and return default dataset.</li>
+</ul>
+<h3 id="symptom-data-not-persisting">Symptom: Data not persisting</h3>
+<p>Ask:</p>
+<ul>
+<li>“Where exactly do you call <code>save_data</code>?”</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>ensure save is called on exit or after write actions.</li>
+</ul>
+<h3 id="symptom-data-overwritten-unexpectedly">Symptom: Data overwritten unexpectedly</h3>
+<p>Ask:</p>
+<ul>
+<li>“Are you always writing defaults at startup before load?”</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>load first, then only save after user changes (or explicit save action).</li>
+</ul>
+<hr>
+<h2 id="stretch-discussion-prompts-if-class-is-ahead">Stretch discussion prompts (if class is ahead)</h2>
+<p>Stay in Basics while deepening thinking:</p>
+<ol>
+<li>“What are tradeoffs of one <code>data.json</code> file versus multiple smaller files?”</li>
+<li>“Would you save after every change or only on exit? Why?”</li>
+<li>“If file corruption is detected, should we automatically overwrite, or ask user?”</li>
+<li>“How might backup files reduce recovery risk?”</li>
+</ol>
+<p>These prompts build design reasoning without adding advanced tooling.</p>
+<hr>
+<h2 id="recap-last-23-minutes">Recap (last 2–3 minutes)</h2>
+<p>Recap script:</p>
+<p>“Today you learned JSON persistence using the standard library. You can now write Python data to disk with <code>json.dump</code>, read it back with <code>json.load</code>, and recover safely from missing and corrupted files. You also saw why custom objects need a dictionary mapping through <code>to_dict</code> and <code>from_dict</code>. In lab, you proved persistence across runs and no-crash behavior for missing files, plus graceful handling for invalid JSON. That is production-minded thinking at a Basics level.”</p>
+<p>Quick final call:</p>
+<ul>
+<li>“Before you leave, run your app one more time and prove to yourself: add data, save, rerun, reload, verify.”</li>
+</ul>
+<hr>
+<h2 id="extended-lab-coaching-script-use-if-learners-need-more-structure">Extended lab coaching script (use if learners need more structure)</h2>
+<p>If your group needs tighter scaffolding, run this guided sequence slowly and have everyone type each step. This section is still Basics-level and reinforces the same runbook requirements.</p>
+<h3 id="step-by-step-coaching-pass">Step-by-step coaching pass</h3>
+<p><strong>Step 1: Confirm startup load path</strong></p>
+<p>Ask learners to point to exactly where <code>load_data(DATA_PATH)</code> is called.
+Prompt:</p>
+<ul>
+<li>“Does your program load once at startup before the menu loop?”</li>
+<li>“If <code>data.json</code> is missing, what exact object do you return?”</li>
+</ul>
+<p>Expected answer: a dictionary with keys like <code>next_id</code> and <code>contacts</code>.</p>
+<p><strong>Step 2: Confirm safe fallback structure</strong></p>
+<p>Many beginner bugs come from returning the wrong shape. If one student returns <code>[]</code> while the app expects a dict, later code fails.</p>
+<p>Have learners print structure once:</p>
+<pre><code class="language-python">data = load_data(DATA_PATH)
+print(type(data), data.keys())
+</code></pre>
+<p>Then remove debug print.</p>
+<p><strong>Step 3: Confirm mutation in memory</strong></p>
+<p>When adding a contact, ask:</p>
+<ul>
+<li>“Which line changes <code>data</code>?”</li>
+<li>“Which line increments <code>next_id</code>?”</li>
+</ul>
+<p>If students create <code>new_contact</code> but forget to append, nothing persists.</p>
+<p><strong>Step 4: Confirm explicit save timing</strong></p>
+<p>Students often assume data auto-saves.
+Ask:</p>
+<ul>
+<li>“When exactly is <code>save_data</code> called?”</li>
+<li>“Can your program exit without saving?”</li>
+</ul>
+<p>In this lab, “Save and exit” is explicit, so they can reason about persistence behavior.</p>
+<p><strong>Step 5: Run acceptance sequence live</strong></p>
+<p>Have learners execute this exact acceptance script:</p>
+<ol>
+<li>Delete <code>data.json</code>.</li>
+<li>Start app.</li>
+<li>List contacts (should show fallback defaults).</li>
+<li>Add one contact named <code>Liam</code> with <code>liam@example.com</code>.</li>
+<li>Save and exit.</li>
+<li>Restart app.</li>
+<li>List contacts (Liam should still exist).</li>
+<li>Open <code>data.json</code>, remove a comma to corrupt JSON.</li>
+<li>Start app again (should warn and recover, not crash).</li>
+</ol>
+<p>This sequence operationalizes both runbook completion and resilience behavior.</p>
+<h3 id="common-debugging-dialogue-you-can-use">Common debugging dialogue you can use</h3>
+<p>When a student says, “It doesn’t work,” avoid immediately fixing it. Guide:</p>
+<ol>
+<li>“What exactly happened versus what did you expect?”</li>
+<li>“What was the last successful step?”</li>
+<li>“What line threw the error?”</li>
+<li>“What is the type of the value on that line?”</li>
+<li>“What minimal change can we test next?”</li>
+</ol>
+<p>This helps students learn process, not just patches.</p>
+<h3 id="three-quick-rescue-patterns">Three quick rescue patterns</h3>
+<p><strong>Rescue pattern A: Reset to known good default</strong></p>
+<p>If a student app is heavily broken, have them:</p>
+<ul>
+<li>copy the baseline scaffold again</li>
+<li>run it once successfully</li>
+<li>re-add their custom changes one at a time</li>
+</ul>
+<p><strong>Rescue pattern B: Validate JSON file directly</strong></p>
+<p>If load keeps failing:</p>
+<ul>
+<li>open <code>data.json</code></li>
+<li>verify brackets/braces/quotes/commas</li>
+<li>if uncertain, delete file and rerun to regenerate</li>
+</ul>
+<p><strong>Rescue pattern C: Print before and after save</strong></p>
+<pre><code class="language-python">print(&quot;Before save:&quot;, data)
+save_data(DATA_PATH, data)
+</code></pre>
+<p>Then inspect <code>data.json</code> and compare with print output.</p>
+<h3 id="instructor-decision-rule-for-pacing">Instructor decision rule for pacing</h3>
+<p>If at least 70% of learners can:</p>
+<ul>
+<li>add a record</li>
+<li>save</li>
+<li>rerun and see persistence</li>
+</ul>
+<p>then move into extension work.</p>
+<p>If less than 70% can do this, pause and do a full-class re-demo of:</p>
+<ul>
+<li>load with exceptions</li>
+<li>one mutation</li>
+<li>save and rerun</li>
+</ul>
+<p>Keep the class on core outcomes rather than optional polish.</p>
+<hr>
+<h2 id="reference-snippets-for-boardslide-use">Reference snippets for board/slide use</h2>
+<h3 id="minimal-save">Minimal save</h3>
+<pre><code class="language-python">import json
+
+data = {&quot;name&quot;: &quot;Ava&quot;, &quot;score&quot;: 100}
+with open(&quot;data.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    json.dump(data, file, indent=2)
+</code></pre>
+<h3 id="minimal-load-with-resilience">Minimal load with resilience</h3>
+<pre><code class="language-python">import json
+
+try:
+    with open(&quot;data.json&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+        data = json.load(file)
+except FileNotFoundError:
+    data = {&quot;name&quot;: &quot;Default User&quot;, &quot;score&quot;: 0}
+except json.JSONDecodeError:
+    data = {&quot;name&quot;: &quot;Default User&quot;, &quot;score&quot;: 0}
+</code></pre>
+<h3 id="object-mapping-essentials">Object mapping essentials</h3>
+<pre><code class="language-python">class User:
+    def __init__(self, user_id: int, name: str) -&gt; None:
+        self.user_id = user_id
+        self.name = name
+
+    def to_dict(self) -&gt; dict:
+        return {&quot;user_id&quot;: self.user_id, &quot;name&quot;: self.name}
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;User&quot;:
+        return cls(user_id=int(data[&quot;user_id&quot;]), name=str(data[&quot;name&quot;]))
+</code></pre>
+<hr>
+<h2 id="final-instructor-checklist-use-before-ending-hour">Final instructor checklist (use before ending hour)</h2>
+<ul>
+<li>[ ] I explicitly stated both outcomes.</li>
+<li>[ ] I explained <code>json.dump</code> and <code>json.load</code> basics.</li>
+<li>[ ] I taught JSON-supported data types clearly.</li>
+<li>[ ] I showed one class with <code>to_dict/from_dict</code> only (no advanced serializer).</li>
+<li>[ ] I ran a live demo writing and loading <code>data.json</code>.</li>
+<li>[ ] I demonstrated missing-file handling.</li>
+<li>[ ] I demonstrated corrupted-file (<code>JSONDecodeError</code>) handling in practice.</li>
+<li>[ ] Students had a deterministic fallback mini-app dataset.</li>
+<li>[ ] Lab required load on startup and save after changes.</li>
+<li>[ ] Completion checks included persistence across runs and no crash when file missing.</li>
+<li>[ ] I asked the quick check: why custom objects cannot be dumped directly.</li>
+</ul>
+<p>If all boxes are checked, this hour is aligned with runbook Hour 42 and classroom-ready.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-intent-for-this-hour" class="depth-2">Instructor intent for this hour</a></li>
+<li><a href="#outcomes-state-these-clearly-at-the-start" class="depth-2">Outcomes (state these clearly at the start)</a></li>
+<li><a href="#run-of-show-60-minutes-total" class="depth-2">Run-of-show (60 minutes total)</a></li>
+<li><a href="#prerequisites-you-should-quickly-confirm" class="depth-2">Prerequisites you should quickly confirm</a></li>
+<li><a href="#opening-script-what-to-say-in-the-first-35-minutes" class="depth-2">Opening script (what to say in the first 3–5 minutes)</a></li>
+<li><a href="#instructor-talk-points-1015-min" class="depth-2">Instructor talk points (10–15 min)</a></li>
+<li><a href="#talk-point-1-persistence-vs-memory" class="depth-3">Talk point 1: Persistence vs memory</a></li>
+<li><a href="#talk-point-2-what-json-is" class="depth-3">Talk point 2: What JSON is</a></li>
+<li><a href="#talk-point-3-python-json-module" class="depth-3">Talk point 3: Python json module</a></li>
+<li><a href="#talk-point-4-file-modes-still-matter" class="depth-3">Talk point 4: File modes still matter</a></li>
+<li><a href="#talk-point-5-json-supported-types-map-to-python-basics" class="depth-3">Talk point 5: JSON-supported types map to Python basics</a></li>
+<li><a href="#talk-point-6-indent-for-readability" class="depth-3">Talk point 6: indent for readability</a></li>
+<li><a href="#talk-point-7-determinism-and-classroom-safety" class="depth-3">Talk point 7: Determinism and classroom safety</a></li>
+<li><a href="#talk-point-8-missing-file-is-normal" class="depth-3">Talk point 8: Missing file is normal</a></li>
+<li><a href="#talk-point-9-corrupted-json-is-also-normal-in-real-life" class="depth-3">Talk point 9: Corrupted JSON is also normal in real life</a></li>
+<li><a href="#talk-point-10-why-custom-objects-fail-with-jsondump" class="depth-3">Talk point 10: Why custom objects fail with json.dump()</a></li>
+<li><a href="#talk-point-11-simple-object-mapping-with-todictfromdict" class="depth-3">Talk point 11: Simple object mapping with to_dict/from_dict</a></li>
+<li><a href="#talk-point-12-save-points-in-app-workflow" class="depth-3">Talk point 12: Save points in app workflow</a></li>
+<li><a href="#live-demo-510-min-required-runbook-demo-object-mapping" class="depth-2">Live demo (5–10 min): required runbook demo + object mapping</a></li>
+<li><a href="#demo-setup-instructions" class="depth-3">Demo setup instructions</a></li>
+<li><a href="#demo-narration-checklist" class="depth-3">Demo narration checklist</a></li>
+<li><a href="#mini-corruption-test-operationalize-jsondecodeerror-handling" class="depth-3">Mini corruption test (operationalize JSONDecodeError handling)</a></li>
+<li><a href="#mini-missing-file-test" class="depth-3">Mini missing-file test</a></li>
+<li><a href="#transition-into-lab-what-to-say" class="depth-2">Transition into lab (what to say)</a></li>
+<li><a href="#hands-on-lab-2535-min-json-persistence-mini-app" class="depth-2">Hands-on lab (25–35 min): JSON persistence mini app</a></li>
+<li><a href="#lab-objective" class="depth-3">Lab objective</a></li>
+<li><a href="#deterministic-fallback-mini-app-dataset-required-support" class="depth-3">Deterministic fallback mini-app dataset (required support)</a></li>
+<li><a href="#lab-scaffold-give-students-this-full-baseline" class="depth-3">Lab scaffold (give students this full baseline)</a></li>
+<li><a href="#lab-tasks-student-instructions" class="depth-3">Lab tasks (student instructions)</a></li>
+<li><a href="#task-1-run-baseline-app-and-inspect-behavior" class="depth-4">Task 1: Run baseline app and inspect behavior</a></li>
+<li><a href="#task-2-verify-persistence-across-runs" class="depth-4">Task 2: Verify persistence across runs</a></li>
+<li><a href="#task-3-verify-missing-file-safety" class="depth-4">Task 3: Verify missing-file safety</a></li>
+<li><a href="#task-4-verify-corrupted-file-safety-operational-acceptance" class="depth-4">Task 4: Verify corrupted-file safety (operational acceptance)</a></li>
+<li><a href="#task-5-save-after-changes" class="depth-4">Task 5: Save after changes</a></li>
+<li><a href="#instructor-facilitation-notes-during-lab" class="depth-3">Instructor facilitation notes during lab</a></li>
+<li><a href="#lab-completion-criteria-must-be-explicit" class="depth-2">Lab completion criteria (must be explicit)</a></li>
+<li><a href="#common-pitfalls-to-watch-for-and-fixes" class="depth-2">Common pitfalls to watch for (and fixes)</a></li>
+<li><a href="#pitfall-1-trying-to-dump-custom-object-directly" class="depth-3">Pitfall 1: Trying to dump custom object directly</a></li>
+<li><a href="#pitfall-2-crashing-when-file-doesnt-exist" class="depth-3">Pitfall 2: Crashing when file doesn’t exist</a></li>
+<li><a href="#pitfall-3-crashing-on-invalid-json" class="depth-3">Pitfall 3: Crashing on invalid JSON</a></li>
+<li><a href="#pitfall-4-forgetting-to-save-after-mutation" class="depth-3">Pitfall 4: Forgetting to save after mutation</a></li>
+<li><a href="#pitfall-5-confusing-json-booleansnull-with-python-values" class="depth-3">Pitfall 5: Confusing JSON booleans/null with Python values</a></li>
+<li><a href="#pitfall-6-overbuilding-beyond-basics" class="depth-3">Pitfall 6: Overbuilding beyond Basics</a></li>
+<li><a href="#optional-extensions-if-time-remains-still-basics-scope" class="depth-2">Optional extensions (if time remains, still Basics scope)</a></li>
+<li><a href="#extension-a-backup-previous-json-before-overwrite" class="depth-3">Extension A: Backup previous JSON before overwrite</a></li>
+<li><a href="#extension-b-pretty-print-with-indent2-everywhere" class="depth-3">Extension B: Pretty print with indent=2 everywhere</a></li>
+<li><a href="#simple-object-mapping-mini-section-one-class-only-basics-level" class="depth-2">Simple object mapping mini-section (one class only, Basics level)</a></li>
+<li><a href="#assessment-and-quick-checks-during-instruction" class="depth-2">Assessment and quick checks during instruction</a></li>
+<li><a href="#exit-ticket-required-quick-check" class="depth-2">Exit ticket (required quick check)</a></li>
+<li><a href="#suggested-speaking-script-long-form-near-verbatim" class="depth-2">Suggested speaking script (long-form, near-verbatim)</a></li>
+<li><a href="#instructor-troubleshooting-guide-for-this-hour" class="depth-2">Instructor troubleshooting guide for this hour</a></li>
+<li><a href="#error-typeerror-object-of-type-is-not-json-serializable" class="depth-3">Error: TypeError: Object of type ... is not JSON serializable</a></li>
+<li><a href="#error-jsondecodeerror" class="depth-3">Error: JSONDecodeError</a></li>
+<li><a href="#error-filenotfounderror-on-load" class="depth-3">Error: FileNotFoundError on load</a></li>
+<li><a href="#symptom-data-not-persisting" class="depth-3">Symptom: Data not persisting</a></li>
+<li><a href="#symptom-data-overwritten-unexpectedly" class="depth-3">Symptom: Data overwritten unexpectedly</a></li>
+<li><a href="#stretch-discussion-prompts-if-class-is-ahead" class="depth-2">Stretch discussion prompts (if class is ahead)</a></li>
+<li><a href="#recap-last-23-minutes" class="depth-2">Recap (last 2–3 minutes)</a></li>
+<li><a href="#extended-lab-coaching-script-use-if-learners-need-more-structure" class="depth-2">Extended lab coaching script (use if learners need more structure)</a></li>
+<li><a href="#step-by-step-coaching-pass" class="depth-3">Step-by-step coaching pass</a></li>
+<li><a href="#common-debugging-dialogue-you-can-use" class="depth-3">Common debugging dialogue you can use</a></li>
+<li><a href="#three-quick-rescue-patterns" class="depth-3">Three quick rescue patterns</a></li>
+<li><a href="#instructor-decision-rule-for-pacing" class="depth-3">Instructor decision rule for pacing</a></li>
+<li><a href="#reference-snippets-for-boardslide-use" class="depth-2">Reference snippets for board/slide use</a></li>
+<li><a href="#minimal-save" class="depth-3">Minimal save</a></li>
+<li><a href="#minimal-load-with-resilience" class="depth-3">Minimal load with resilience</a></li>
+<li><a href="#object-mapping-essentials" class="depth-3">Object mapping essentials</a></li>
+<li><a href="#final-instructor-checklist-use-before-ending-hour" class="depth-2">Final instructor checklist (use before ending hour)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day11_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day11_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

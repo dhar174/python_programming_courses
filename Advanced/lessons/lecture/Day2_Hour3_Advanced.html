@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 3: Pythonic Class Ergonomics (repr/str/equality) + Light Type Hints | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day2_Hour3_Advanced.md">
+
+    <link rel="prev" href="Day2_Hour2_Advanced.html">
+    <link rel="next" href="Day2_Hour4_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="2" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 2, Hour 3: Pythonic Class Ergonomics (repr/str/equality) + Light Type Hints</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour4_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour3_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 2, Hour 3 of 48, also Hour 7 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Making model objects easier to debug, log, display, and prepare for serialization by using <code>__repr__</code>, <code>__str__</code>, light type hints, and a required checkpoint-prep <code>to_dict()</code> helper.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 2, Hour 7.</li>
+<li><strong>Prerequisites</strong>: Learners should be comfortable defining classes, writing <code>__init__</code>, creating objects, reading simple tracebacks, using lists and dictionaries, and understanding the Day 2 Hour 1 Factory and Day 2 Hour 2 Strategy ideas.</li>
+<li><strong>Advanced trajectory</strong>: This hour stays in the PCAP-to-PCPP1 path. Learners already know how to make classes. The advanced step is making classes pleasant and reliable to use in a larger application, especially when objects appear in logs, lists, debug output, UI text, and checkpoint review.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has upgraded a model so objects print cleanly, debug output is useful, simple type hints document expected inputs and outputs, and a <code>to_dict()</code> or similar serialization helper is ready for the Day 2 Hour 4 checkpoint.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Day 2 Hour 2 Strategy</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect chosen behavior to readable and debuggable objects</td>
+</tr>
+<tr>
+<td>Outcomes, setup, and vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Define class ergonomics, <code>__repr__</code>, <code>__str__</code>, light type hints, and serialization readiness</td>
+</tr>
+<tr>
+<td>Concept briefing: readable objects and light hints</td>
+<td style="text-align: right;">10 min</td>
+<td>Explain developer-facing versus user-facing string output and why hints help humans and tools</td>
+</tr>
+<tr>
+<td>Live demo: upgrade a model for debugging and display</td>
+<td style="text-align: right;">10 min</td>
+<td>Add <code>__repr__</code>, <code>__str__</code>, type hints, and checkpoint-prep <code>to_dict()</code> to a small model</td>
+</tr>
+<tr>
+<td>Guided lab: make your model pleasant to work with</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners upgrade their main model and prepare for the checkpoint</td>
+</tr>
+<tr>
+<td>Quick checks, pitfalls, completion criteria, and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Verify when to use <code>repr</code> versus <code>str</code>, name pitfalls, and bridge to Checkpoint 1</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten the concept examples rather than removing hands-on practice. The required outcome is practical: objects should print cleanly, type hints should be correct and should not change runtime behavior, and learners should leave ready for the Day 2 Hour 4 domain and service layer checkpoint.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain why the default custom-object display, such as <code>&lt;__main__.Task object at 0x...&gt;</code>, is not enough for a growing application.</li>
+<li>Implement <code>__repr__(self) -&gt; str</code> so developers can inspect objects in logs, tracebacks, debugger views, containers, and the Python REPL.</li>
+<li>Implement <code>__str__(self) -&gt; str</code> so users see a friendly display string in a CLI, UI label, report, or simple <code>print()</code> call.</li>
+<li>Distinguish the purpose of <code>repr(obj)</code> from <code>str(obj)</code> without treating either one as decoration.</li>
+<li>Add light type hints to a model constructor and at least three methods or functions using simple built-in annotations such as <code>str</code>, <code>int</code>, <code>bool</code>, <code>list[str]</code>, and <code>dict[str, object]</code>.</li>
+<li>Explain that type hints help humans and tools, but do not automatically enforce types at runtime.</li>
+<li>Avoid overcomplicated typing imports when simple annotations communicate enough for the current design.</li>
+<li>Recognize the common bug where <code>__str__</code>, <code>__repr__</code>, or another value-returning method accidentally returns <code>None</code>.</li>
+<li>Add or refine a <code>to_dict()</code> method as a checkpoint-prep serialization step for Day 2 Hour 4.</li>
+<li>Keep equality comparison as a light sidebar or extension, including the caution that custom equality can affect hashability and set or dictionary-key behavior.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 2, Hour 7 visible. The required scope is Pythonic class ergonomics, <code>__repr__</code>, <code>__str__</code>, light type hints, a lab that improves the main model, completion criteria that objects print cleanly and hints do not break runtime, pitfalls around overcomplicated typing and unexpected <code>None</code>, and the quick check about <code>repr</code> versus <code>str</code>.</li>
+<li>Also keep the runbook section for Session 2, Hour 8 visible. Hour 8 requires a stable domain and service layer and specifically requires serialization helpers, with <code>to_dict</code> at minimum. This hour should prepare learners for that checkpoint rather than leaving serialization as a casual extra.</li>
+<li>Open the Day 2 Hour 2 Strategy lecture if you want the bridge nearby. Hour 2 taught that strategies choose behavior. Today teaches that the objects moving through those strategies must be readable when displayed and debuggable when something goes wrong.</li>
+<li>Prepare a clean file or notebook cell for the live demo. A suggested name is <code>day2_hour3_ergonomics_demo.py</code>. The demo code below is self-contained and deterministic.</li>
+<li>Confirm the terminal command for the room. Use <code>python day2_hour3_ergonomics_demo.py</code> if <code>python</code> works. If your environment uses <code>python3</code>, consistently show <code>python3 day2_hour3_ergonomics_demo.py</code>.</li>
+<li>Prepare this board note before class:</li>
+</ul>
+<pre><code class="language-text">Day 2 Hour 3 goals:
+1. __repr__ = developer/debug string.
+2. __str__ = user/display string.
+3. Type hints = readable intent for humans and tools.
+4. Keep hints simple.
+5. to_dict() = checkpoint-prep serialization helper.
+</code></pre>
+<ul>
+<li>Be ready to correct two common mistakes early. First, learners may write <code>print(...)</code> inside <code>__str__</code> or <code>__repr__</code> instead of returning a string. Second, learners may try to solve every possible type problem with advanced typing syntax. Keep the scope light: use simple built-in annotations and focus on readability.</li>
+<li>Decide how strict to be about <code>to_dict()</code> during lab. The recommended instruction is: "If you finish the main ergonomics work during lab, add <code>to_dict()</code> now. If you do not finish it during this hour, it becomes a must-finish item before the next checkpoint begins." This keeps the hour aligned with both Hour 7 and Hour 8.</li>
+</ul>
+<hr>
+<h2 id="opening-bridge-from-day-2-hour-2-strategy-5-minutes">Opening Bridge from Day 2 Hour 2 Strategy (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Welcome back. In the previous hour we worked with the Strategy Pattern. The important design idea was that strategies choose behavior. We had stable workflow code, and then we selected a sorting strategy, validation strategy, filtering strategy, or callable object to change how that workflow behaved."</p>
+<p>"Today we stay in that same design neighborhood, but we focus on the objects that move through those workflows. A strategy can choose the right behavior, but when something goes wrong, the instructor, the developer, the tester, and the future maintainer still need to understand what object was involved."</p>
+<p>"Here is the bridge sentence for this hour: <strong>strategies choose behavior; class ergonomics make the chosen objects readable and debuggable.</strong>"</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Strategy: Which behavior should we use?
+Class ergonomics: Can we understand the objects while using that behavior?
+</code></pre>
+<p>"Imagine a tracker application. We have a <code>Task</code> object. Yesterday, we might have sorted tasks by title or priority using a strategy. That is useful. But now suppose the sorted output is wrong. You print the list of tasks and Python shows this:"</p>
+<pre><code class="language-text">[&lt;__main__.Task object at 0x000001F2A8C4D910&gt;, &lt;__main__.Task object at 0x000001F2A8C4DA50&gt;]
+</code></pre>
+<p>"That output technically identifies two objects, but it does not tell us the title, the status, the priority, or the identifier. It forces us to inspect each object manually. In a small script that is annoying. In a larger application it slows down debugging and makes logs nearly useless."</p>
+<p>"Now imagine the same list prints like this:"</p>
+<pre><code class="language-text">[Task(task_id=101, title='Write tests', status='open', priority=2),
+ Task(task_id=102, title='Review PR', status='blocked', priority=1)]
+</code></pre>
+<p>"That is a different experience. Suddenly we can see what data moved through the strategy. We can see whether the sort order makes sense. We can paste part of the output into a bug report. We can compare expected and actual results without opening the debugger."</p>
+<p>Pause and ask:</p>
+<p>"Where do you currently see objects in your tracker project? In <code>print()</code> calls? In lists? In logs? In error messages? In UI labels?"</p>
+<p>Take two or three answers. Listen for CLI output, debugging lists, service-layer results, validation errors, and checkpoint demos. Then connect:</p>
+<p>"Those are the places where Pythonic class ergonomics matter. We are not adding magic methods because they look fancy. We are adding them because they make real development work easier."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's name the vocabulary, then we will upgrade a simple model live. We will keep the typing light. We are not doing advanced typing theory today. We are making code easier to read, easier to inspect, and ready for the checkpoint."</p>
+<hr>
+<h2 id="outcomes-setup-and-vocabulary-5-minutes">Outcomes, Setup, and Vocabulary (5 minutes)</h2>
+<p>Use this section to make the hour practical. Learners should see that these methods are small but high-impact.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"By the end of this hour, your main model should be more pleasant to work with. Pleasant does not mean cute or clever. It means that when the object appears in the places objects naturally appear, the output helps you."</p>
+<p>"First term: <strong>class ergonomics</strong>. Ergonomics is about how comfortable and effective something is to use. A chair can be technically a chair but uncomfortable to sit in. A class can technically store data but be uncomfortable to debug, print, log, or pass around. Today we improve the developer experience and the user-facing display experience of our classes."</p>
+<p>"Second term: <code>__repr__</code>. Pronounce it 'dunder repr' or just 'repr'. This is the developer-facing representation of an object. In Python, <code>repr(obj)</code> asks the object, 'How should developers inspect you?' Lists and dictionaries use <code>repr()</code> for the objects inside them. The interactive Python prompt uses <code>repr()</code> when it displays expression results. Debuggers and logs often benefit from repr-style output."</p>
+<p>"A useful rule is: <code>__repr__</code> is for developers. It should be specific. It should include the important fields that help us understand the object's state. For simple model objects, it often looks like a constructor call."</p>
+<p>"Third term: <code>__str__</code>. This is the user-facing or friendly string version of an object. <code>print(obj)</code> prefers <code>str(obj)</code>. A CLI menu, status message, UI label, or report line should usually use <code>__str__</code> because users do not need every internal detail."</p>
+<p>"A useful rule is: <code>__str__</code> is for users. It should be readable. It can be shorter and more polished than <code>__repr__</code>."</p>
+<p>"Fourth term: <strong>type hints</strong>. A type hint is an annotation that documents what kind of value a variable, parameter, or return value is expected to have. Type hints help humans understand the contract. They help IDEs autocomplete and warn. They help static tools if a team chooses to use them. But in normal Python execution, a hint does not automatically block the wrong value at runtime."</p>
+<p>Show this tiny example:</p>
+<pre><code class="language-python">def summarize_title(title: str) -&gt; str:
+    return title.strip().title()
+</code></pre>
+<p>"This says <code>title</code> should be a string and the function should return a string. That is enough for today's scope."</p>
+<p>"Fifth term: <strong>serialization readiness</strong>. Serialization means converting an object into a form that can be saved or sent, such as a dictionary that later becomes JSON. In the next hour, Checkpoint 1 requires serialization helpers, <code>to_dict</code> at minimum. So today we will treat <code>to_dict()</code> as checkpoint preparation, not as a random optional nice-to-have."</p>
+<p><strong>Transition</strong></p>
+<p>"Now let's talk about how these pieces behave in Python, and then we will code the upgrade."</p>
+<hr>
+<h2 id="concept-briefing-readable-objects-and-light-hints-10-minutes">Concept Briefing: Readable Objects and Light Hints (10 minutes)</h2>
+<h3 id="1-why-the-default-object-display-is-not-enough">1. Why the default object display is not enough</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"When we create a custom class and do nothing special, Python still gives it a representation. That representation usually includes the class name and a memory address. For example:"</p>
+<pre><code class="language-text">&lt;__main__.Task object at 0x000001F2A8C4D910&gt;
+</code></pre>
+<p>"This is not wrong. Python is telling us: this is a <code>Task</code> object, and here is where it lives in memory. The problem is that the memory address is rarely the information we need during application debugging. We usually need the object's meaningful state: id, title, status, priority, owner, or created date."</p>
+<p>"When a bug report says 'sorting is wrong', a memory address does not help. When a checkpoint reviewer runs your demo and prints your service-layer list, memory addresses do not show that your data is correct. When a log line says a record failed validation, a memory address does not explain which record failed."</p>
+<p>"So we give our class a better developer representation by implementing <code>__repr__</code>."</p>
+<h3 id="2-repr-is-for-developers">2. <code>__repr__</code> is for developers</h3>
+<p>Write or display:</p>
+<pre><code class="language-python">def __repr__(self) -&gt; str:
+    return (
+        &quot;Task(&quot;
+        f&quot;task_id={self.task_id!r}, &quot;
+        f&quot;title={self.title!r}, &quot;
+        f&quot;status={self.status!r}, &quot;
+        f&quot;priority={self.priority!r}&quot;
+        &quot;)&quot;
+    )
+</code></pre>
+<p>"Notice a few choices. First, it returns a string. It does not print. Python expects <code>__repr__</code> to return a string. If it returns <code>None</code>, Python will raise an error like <code>TypeError: __repr__ returned non-string (type NoneType)</code>."</p>
+<p>"Second, the output includes field names. Field names make debug output easier to read than a plain tuple of values."</p>
+<p>"Third, the example uses <code>!r</code> inside the f-string. That means use <code>repr()</code> for the individual value. For strings, it includes quotes, so the output is clearer. Compare <code>title=Write tests</code> with <code>title='Write tests'</code>. The second one makes it obvious that the title is a string. It also makes empty strings and extra spaces easier to notice."</p>
+<p>"For a simple domain model, a good <code>__repr__</code> often looks like code you could use to recreate the object. It does not have to be perfect for every class, but it should be unambiguous enough for debugging."</p>
+<h3 id="3-str-is-for-users">3. <code>__str__</code> is for users</h3>
+<p>Write or display:</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return f&quot;#{self.task_id} {self.title} [{self.status}]&quot;
+</code></pre>
+<p>"This output is shorter and friendlier. It is what we might show in a CLI list or a simple UI line. It does not include every internal detail. It chooses what the user needs."</p>
+<p>"The most important contrast is this:"</p>
+<pre><code class="language-text">repr(task) -&gt; Task(task_id=101, title='Write tests', status='open', priority=2)
+str(task)  -&gt; #101 Write tests [open]
+</code></pre>
+<p>"Neither is universally better. They serve different audiences. If I am debugging a failed sort or inspecting a list in the REPL, I want <code>repr</code>. If I am printing a user-facing menu, I want <code>str</code>."</p>
+<h3 id="4-how-python-chooses-between-them">4. How Python chooses between them</h3>
+<p>"Python uses these methods in predictable ways."</p>
+<pre><code class="language-python">task = Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2)
+
+print(task)        # Uses str(task), which calls task.__str__()
+print(str(task))   # Also user-facing
+print(repr(task))  # Developer-facing
+print([task])      # The list uses repr(task) for the item inside
+</code></pre>
+<p>"This is why learners sometimes think their <code>__str__</code> is broken. They print a list of objects and see the <code>__repr__</code> output. That is expected. Containers such as lists and dictionaries use <code>repr()</code> for their contents because container output is usually developer-facing."</p>
+<h3 id="5-type-hints-are-lightweight-documentation">5. Type hints are lightweight documentation</h3>
+<p>"Now let's add type hints, but keep them light. The point today is not to master every feature in the <code>typing</code> module. The point is to make our intent obvious."</p>
+<p>Show:</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, task_id: int, title: str, status: str, priority: int) -&gt; None:
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+</code></pre>
+<p>"The constructor returns <code>None</code> because constructors initialize the object; they do not return a separate result. For normal methods, annotate the return value based on what the method returns."</p>
+<pre><code class="language-python">def is_complete(self) -&gt; bool:
+    return self.status == &quot;done&quot;
+
+def to_dict(self) -&gt; dict[str, object]:
+    return {
+        &quot;task_id&quot;: self.task_id,
+        &quot;title&quot;: self.title,
+        &quot;status&quot;: self.status,
+        &quot;priority&quot;: self.priority,
+    }
+</code></pre>
+<p>"The return type <code>dict[str, object]</code> means the keys are strings and the values may be different simple types. In this dictionary, some values are integers and some are strings. <code>object</code> is a simple way to say 'values can be mixed' without introducing advanced typing. That is enough for this course moment."</p>
+<p>"Important: type hints do not replace validation. If your constructor says <code>priority: int</code>, Python will still let someone call <code>Task(101, 'Write tests', 'open', 'high')</code> unless your code checks it. Type hints document intent and help tools. Validation enforces rules at runtime. We have already practiced validation in earlier hours."</p>
+<h3 id="6-equality-is-a-sidebar-not-the-main-lesson">6. Equality is a sidebar, not the main lesson</h3>
+<p>"The file title for this hour includes equality because equality is part of Pythonic class ergonomics. We will keep it light today because the runbook emphasis is <code>repr</code>, <code>str</code>, and type hints."</p>
+<p>"By default, two custom objects compare equal only if they are the same object in memory. Sometimes you want two different <code>Task</code> objects with the same id to count as equal. That is when <code>__eq__</code> can help."</p>
+<pre><code class="language-python">def __eq__(self, other: object) -&gt; bool:
+    if not isinstance(other, Task):
+        return False
+    return self.task_id == other.task_id
+</code></pre>
+<p>"But there is a real footgun: when you define equality on a mutable class, Python may make the object unhashable. That affects use in sets and as dictionary keys. That behavior protects you from bugs where an object changes after it has been placed in a hash-based collection. For today, treat equality as an optional extension. If your project needs it, keep it simple and test it. Do not let equality take over the hour."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's now code the required pieces. Watch how the object becomes easier to inspect after only a few small methods."</p>
+<hr>
+<h2 id="live-demo-upgrade-a-model-for-debugging-and-display-10-minutes">Live Demo: Upgrade a Model for Debugging and Display (10 minutes)</h2>
+<p>The live demo is deterministic and runnable as plain Python. Type it in stages so learners can predict each output before you run it. If time is tight, paste the final version but still pause at the key questions.</p>
+<h3 id="step-1-start-with-a-baseline-model">Step 1: Start with a baseline model</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First I will create a small <code>Task</code> model with no string methods. This is similar to many beginner classes: it stores data correctly, but it does not explain itself well when printed."</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, task_id, title, status, priority):
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+
+
+tasks = [
+    Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2),
+    Task(102, &quot;Review PR&quot;, &quot;blocked&quot;, 1),
+]
+
+print(tasks[0])
+print(tasks)
+</code></pre>
+<p>Ask:</p>
+<p>"What do you expect this to print? Will we see the task title?"</p>
+<p>Run it. The exact memory address will differ, but the shape will be similar:</p>
+<pre><code class="language-text">&lt;__main__.Task object at 0x000001F2A8C4D910&gt;
+[&lt;__main__.Task object at 0x000001F2A8C4D910&gt;, &lt;__main__.Task object at 0x000001F2A8C4DA50&gt;]
+</code></pre>
+<p>"That is the problem we are solving. The object exists, but the display does not help us."</p>
+<h3 id="step-2-add-type-hints-and-repr">Step 2: Add type hints and <code>__repr__</code></h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now I will add light type hints to the constructor and add <code>__repr__</code>. The type hints communicate expected values. The <code>__repr__</code> method improves developer-facing output."</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, task_id: int, title: str, status: str, priority: int) -&gt; None:
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+
+    def __repr__(self) -&gt; str:
+        return (
+            &quot;Task(&quot;
+            f&quot;task_id={self.task_id!r}, &quot;
+            f&quot;title={self.title!r}, &quot;
+            f&quot;status={self.status!r}, &quot;
+            f&quot;priority={self.priority!r}&quot;
+            &quot;)&quot;
+        )
+
+
+tasks = [
+    Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2),
+    Task(102, &quot;Review PR&quot;, &quot;blocked&quot;, 1),
+]
+
+print(tasks[0])
+print(tasks)
+</code></pre>
+<p>Ask before running:</p>
+<p>"We added <code>__repr__</code>, but not <code>__str__</code>. What should <code>print(tasks[0])</code> use?"</p>
+<p>Expected answer:</p>
+<p>"If <code>__str__</code> is missing, Python falls back to <code>__repr__</code> for a direct <code>print()</code> call."</p>
+<p>Run it:</p>
+<pre><code class="language-text">Task(task_id=101, title='Write tests', status='open', priority=2)
+[Task(task_id=101, title='Write tests', status='open', priority=2), Task(task_id=102, title='Review PR', status='blocked', priority=1)]
+</code></pre>
+<p>"This is already much better. The list output is readable because lists use each item's <code>repr()</code>."</p>
+<h3 id="step-3-add-str-for-user-facing-display">Step 3: Add <code>__str__</code> for user-facing display</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now I will add <code>__str__</code>. The user does not need every field in constructor style. The user needs a clean summary."</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, task_id: int, title: str, status: str, priority: int) -&gt; None:
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+
+    def __repr__(self) -&gt; str:
+        return (
+            &quot;Task(&quot;
+            f&quot;task_id={self.task_id!r}, &quot;
+            f&quot;title={self.title!r}, &quot;
+            f&quot;status={self.status!r}, &quot;
+            f&quot;priority={self.priority!r}&quot;
+            &quot;)&quot;
+        )
+
+    def __str__(self) -&gt; str:
+        return f&quot;#{self.task_id} {self.title} [{self.status}, priority {self.priority}]&quot;
+
+
+task = Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2)
+tasks = [
+    task,
+    Task(102, &quot;Review PR&quot;, &quot;blocked&quot;, 1),
+]
+
+print(task)
+print(repr(task))
+print(tasks)
+</code></pre>
+<p>Run it:</p>
+<pre><code class="language-text">#101 Write tests [open, priority 2]
+Task(task_id=101, title='Write tests', status='open', priority=2)
+[Task(task_id=101, title='Write tests', status='open', priority=2), Task(task_id=102, title='Review PR', status='blocked', priority=1)]
+</code></pre>
+<p>"Now we can see the split clearly. <code>print(task)</code> is user-friendly. <code>repr(task)</code> and list output are developer-friendly."</p>
+<h3 id="step-4-add-hints-to-a-couple-methods-and-checkpoint-prep-todict">Step 4: Add hints to a couple methods and checkpoint-prep <code>to_dict()</code></h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The runbook for the next hour requires serialization helpers, <code>to_dict</code> at minimum. So I want to model that now. This is not a deep serialization lesson yet. It is a readiness step. A domain object should know how to expose its simple data in a dictionary shape that a service layer, JSON writer, API response, or test can use."</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, task_id: int, title: str, status: str, priority: int) -&gt; None:
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+
+    def __repr__(self) -&gt; str:
+        return (
+            &quot;Task(&quot;
+            f&quot;task_id={self.task_id!r}, &quot;
+            f&quot;title={self.title!r}, &quot;
+            f&quot;status={self.status!r}, &quot;
+            f&quot;priority={self.priority!r}&quot;
+            &quot;)&quot;
+        )
+
+    def __str__(self) -&gt; str:
+        return f&quot;#{self.task_id} {self.title} [{self.status}, priority {self.priority}]&quot;
+
+    def is_complete(self) -&gt; bool:
+        return self.status == &quot;done&quot;
+
+    def rename(self, new_title: str) -&gt; None:
+        self.title = new_title.strip()
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {
+            &quot;task_id&quot;: self.task_id,
+            &quot;title&quot;: self.title,
+            &quot;status&quot;: self.status,
+            &quot;priority&quot;: self.priority,
+        }
+
+
+def format_task_for_log(task: Task) -&gt; str:
+    return f&quot;Saving {task!r}&quot;
+
+
+task = Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2)
+
+print(str(task))
+print(repr(task))
+print(task.is_complete())
+print(format_task_for_log(task))
+print(task.to_dict())
+
+task.rename(&quot;Write focused tests&quot;)
+print(str(task))
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">#101 Write tests [open, priority 2]
+Task(task_id=101, title='Write tests', status='open', priority=2)
+False
+Saving Task(task_id=101, title='Write tests', status='open', priority=2)
+{'task_id': 101, 'title': 'Write tests', 'status': 'open', 'priority': 2}
+#101 Write focused tests [open, priority 2]
+</code></pre>
+<p>"Notice a few things. <code>is_complete</code> returns a <code>bool</code>. <code>rename</code> returns <code>None</code> because it changes the object in place. <code>to_dict</code> returns a dictionary. The helper function <code>format_task_for_log</code> receives a <code>Task</code> and returns a string. These hints are not advanced, but they clarify intent."</p>
+<p>"Also notice <code>task!r</code> in the logging helper. Inside an f-string, <code>!r</code> asks for <code>repr(task)</code>. That is a nice way to say, 'Use the developer-facing representation here.'"</p>
+<h3 id="step-5-show-the-common-none-pitfall-quickly">Step 5: Show the common <code>None</code> pitfall quickly</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Here is the mistake to watch for during lab."</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    print(f&quot;#{self.task_id} {self.title}&quot;)
+</code></pre>
+<p>"This looks reasonable at first glance, but it is wrong. It prints inside the method and then returns <code>None</code> by default. Python requires <code>__str__</code> to return a string. The correct version is:"</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return f&quot;#{self.task_id} {self.title}&quot;
+</code></pre>
+<p>"Remember: <code>__str__</code>, <code>__repr__</code>, <code>to_dict</code>, and any method annotated as returning a value must actually return that value."</p>
+<p><strong>Transition</strong></p>
+<p>"Now it is your turn. You will upgrade your main model. Keep it simple, run it frequently, and check both developer-facing and user-facing output."</p>
+<hr>
+<h2 id="guided-lab-make-your-model-pleasant-to-work-with-25-minutes">Guided Lab: Make Your Model Pleasant to Work With (25 minutes)</h2>
+<h3 id="lab-goal">Lab goal</h3>
+<p>Upgrade the main model in your tracker project so it is easier to debug, easier to display, lightly type-hinted, and ready for the Day 2 Hour 4 checkpoint.</p>
+<p><strong>Instructor framing</strong></p>
+<p>"This lab is not about adding a lot of new application behavior. It is about making your existing model easier to use correctly. The model should explain itself in debug output, display cleanly for a user, and expose a dictionary shape for tomorrow's checkpoint work."</p>
+<h3 id="required-lab-tasks">Required lab tasks</h3>
+<p>Ask learners to complete these tasks in order:</p>
+<ol>
+<li>
+<p><strong>Choose your main model.</strong>
+   - Examples: <code>Task</code>, <code>Contact</code>, <code>InventoryItem</code>, <code>Expense</code>, <code>Note</code>, or <code>TrackerRecord</code>.
+   - If your project has more than one model, choose the one that appears most often in service-layer output.</p>
+</li>
+<li>
+<p><strong>Add or improve <code>__repr__(self) -&gt; str</code>.</strong>
+   - Include the fields that matter for debugging.
+   - Prefer field names in the output.
+   - Use <code>!r</code> for values where quotes or exact representation help.
+   - Example shape:</p>
+</li>
+</ol>
+<pre><code class="language-python">def __repr__(self) -&gt; str:
+    return (
+        &quot;Task(&quot;
+        f&quot;task_id={self.task_id!r}, &quot;
+        f&quot;title={self.title!r}, &quot;
+        f&quot;status={self.status!r}&quot;
+        &quot;)&quot;
+    )
+</code></pre>
+<ol start="3">
+<li><strong>Add or improve <code>__str__(self) -&gt; str</code>.</strong>
+   - Make it short and friendly.
+   - Aim for CLI, UI, report, or menu readability.
+   - Do not include every internal detail unless the user genuinely needs it.
+   - Example shape:</li>
+</ol>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return f&quot;#{self.task_id} {self.title} [{self.status}]&quot;
+</code></pre>
+<ol start="4">
+<li><strong>Add type hints to at least three methods or functions.</strong>
+   - Include the constructor if it does not already have hints.
+   - Include both parameters and return values.
+   - Keep hints simple. Use <code>str</code>, <code>int</code>, <code>bool</code>, <code>float</code>, <code>list[str]</code>, and <code>dict[str, object]</code> where useful.
+   - Good examples:</li>
+</ol>
+<pre><code class="language-python">def __init__(self, task_id: int, title: str, status: str) -&gt; None:
+    ...
+
+def is_complete(self) -&gt; bool:
+    ...
+
+def rename(self, new_title: str) -&gt; None:
+    ...
+</code></pre>
+<ol start="5">
+<li><strong>Checkpoint-prep requirement: add or refine <code>to_dict(self) -&gt; dict[str, object]</code>.</strong>
+   - This is required for checkpoint readiness even if you do not finish it inside the 25-minute lab.
+   - If you finish early, complete it now.
+   - If time runs out, mark it as a must-finish before Day 2 Hour 4 begins.
+   - The next hour's checkpoint requires serialization helpers, <code>to_dict</code> at minimum.
+   - Example:</li>
+</ol>
+<pre><code class="language-python">def to_dict(self) -&gt; dict[str, object]:
+    return {
+        &quot;task_id&quot;: self.task_id,
+        &quot;title&quot;: self.title,
+        &quot;status&quot;: self.status,
+    }
+</code></pre>
+<ol start="6">
+<li><strong>Run a small output check.</strong>
+   - Instantiate at least two objects.
+   - Print one object directly.
+   - Print <code>repr(one_object)</code>.
+   - Print a list containing both objects.
+   - Print <code>one_object.to_dict()</code>.
+   - Confirm the output is readable in both logs and UI-style display.</li>
+</ol>
+<h3 id="suggested-learner-test-snippet">Suggested learner test snippet</h3>
+<p>Learners can adapt this snippet to their model names and fields:</p>
+<pre><code class="language-python">item_one = Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2)
+item_two = Task(102, &quot;Review PR&quot;, &quot;blocked&quot;, 1)
+
+print(&quot;User display:&quot;)
+print(item_one)
+
+print(&quot;\nDeveloper display:&quot;)
+print(repr(item_one))
+
+print(&quot;\nList/debug display:&quot;)
+print([item_one, item_two])
+
+print(&quot;\nSerialization shape:&quot;)
+print(item_one.to_dict())
+</code></pre>
+<p>Expected qualities:</p>
+<ul>
+<li>The user display is clean and short.</li>
+<li>The developer display includes class name and important fields.</li>
+<li>The list display is useful, not memory-address noise.</li>
+<li>The dictionary contains stable keys for the next checkpoint.</li>
+</ul>
+<h3 id="instructor-circulation-checklist">Instructor circulation checklist</h3>
+<p>As learners work, circulate with these checks:</p>
+<ul>
+<li>"Show me <code>print(your_object)</code>. Is that what a user should see?"</li>
+<li>"Show me <code>repr(your_object)</code>. Is that enough for you to debug a failed service-layer operation?"</li>
+<li>"Show me a list of two objects. Does the list output help?"</li>
+<li>"Show me three type hints. Are they simple and correct?"</li>
+<li>"Show me one method annotated with <code>-&gt; None</code>. Does it really return nothing?"</li>
+<li>"Show me one method annotated with a value such as <code>-&gt; str</code>, <code>-&gt; bool</code>, or <code>-&gt; dict[str, object]</code>. Does it actually return that value?"</li>
+<li>"Show me <code>to_dict()</code>. Are the keys stable and predictable?"</li>
+</ul>
+<h3 id="lab-pacing">Lab pacing</h3>
+<p>Use this pacing guide:</p>
+<ul>
+<li>Minutes 0-5: Learners choose the model and add <code>__repr__</code>.</li>
+<li>Minutes 5-9: Learners add <code>__str__</code>.</li>
+<li>Minutes 9-15: Learners add simple type hints to at least three methods or functions.</li>
+<li>Minutes 15-20: Learners add or refine <code>to_dict()</code> for checkpoint readiness.</li>
+<li>Minutes 20-25: Learners run output checks and fix any <code>None</code> or formatting mistakes.</li>
+</ul>
+<h3 id="if-learners-finish-early">If learners finish early</h3>
+<p>Offer one optional extension, keeping equality light:</p>
+<p><strong>Option A: Add equality comparison.</strong></p>
+<pre><code class="language-python">def __eq__(self, other: object) -&gt; bool:
+    if not isinstance(other, Task):
+        return False
+    return self.task_id == other.task_id
+</code></pre>
+<p>Tell learners:</p>
+<p>"If you add equality, test it. Also know the footgun: custom equality on mutable objects can affect hashability, which affects using instances in sets or as dictionary keys. That is why equality is an extension today, not the center of the lab."</p>
+<p><strong>Option B: Add a small logging helper.</strong></p>
+<pre><code class="language-python">def format_task_for_log(task: Task) -&gt; str:
+    return f&quot;Processing {task!r}&quot;
+</code></pre>
+<p>Tell learners:</p>
+<p>"This is a good place to practice <code>!r</code> in an f-string. Logs usually want developer-facing output."</p>
+<p>Do not introduce dataclasses, pydantic, mypy configuration, abstract base classes, protocols, or advanced generic typing in this lab. Those may be useful in other contexts, but they are outside today's runbook scope.</p>
+<hr>
+<h2 id="troubleshooting-and-common-pitfalls">Troubleshooting and Common Pitfalls</h2>
+<p>Use these notes during the lab and the final wrap-up.</p>
+<h3 id="pitfall-1-str-or-repr-prints-instead-of-returns">Pitfall 1: <code>__str__</code> or <code>__repr__</code> prints instead of returns</h3>
+<p>Problem:</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    print(self.title)
+</code></pre>
+<p>Why it fails:</p>
+<ul>
+<li><code>print()</code> returns <code>None</code>.</li>
+<li>Python expects <code>__str__</code> to return a string.</li>
+<li>The annotation says <code>-&gt; str</code>, but the method does not return a string.</li>
+</ul>
+<p>Fix:</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return self.title
+</code></pre>
+<p>Instructor language:</p>
+<p>"String methods should answer Python's question, not do Python's job. Python asks, 'What string should represent you?' Your method should return the answer."</p>
+<h3 id="pitfall-2-overcomplicated-typing">Pitfall 2: Overcomplicated typing</h3>
+<p>Problem:</p>
+<pre><code class="language-python">from typing import Any, Callable, Iterable, Mapping, MutableMapping, Optional, Protocol, TypeVar
+</code></pre>
+<p>Why it is a problem today:</p>
+<ul>
+<li>These tools can be useful, but they distract from the required skill.</li>
+<li>Learners may spend the lab fighting syntax instead of improving the model.</li>
+<li>The runbook says light type hints.</li>
+</ul>
+<p>Fix:</p>
+<pre><code class="language-python">def to_dict(self) -&gt; dict[str, object]:
+    ...
+</code></pre>
+<p>Instructor language:</p>
+<p>"If a simple built-in annotation explains the method, use the simple annotation. Advanced typing is not the goal today. Readability is the goal."</p>
+<h3 id="pitfall-3-hints-treated-as-runtime-validation">Pitfall 3: Hints treated as runtime validation</h3>
+<p>Problem:</p>
+<pre><code class="language-python">def __init__(self, priority: int) -&gt; None:
+    self.priority = priority
+
+task = Task(&quot;high&quot;)
+</code></pre>
+<p>Why it is a problem:</p>
+<ul>
+<li>Python does not automatically reject <code>"high"</code> just because the hint says <code>int</code>.</li>
+<li>If the value must be enforced, write validation.</li>
+</ul>
+<p>Fix:</p>
+<pre><code class="language-python">def __init__(self, priority: int) -&gt; None:
+    if not isinstance(priority, int):
+        raise TypeError(&quot;priority must be an integer&quot;)
+    self.priority = priority
+</code></pre>
+<p>Instructor language:</p>
+<p>"Hints communicate. Validation enforces. We often use both, but they are not the same tool."</p>
+<h3 id="pitfall-4-repr-hides-important-state">Pitfall 4: <code>__repr__</code> hides important state</h3>
+<p>Problem:</p>
+<pre><code class="language-python">def __repr__(self) -&gt; str:
+    return &quot;Task()&quot;
+</code></pre>
+<p>Why it is a problem:</p>
+<ul>
+<li>The output no longer shows enough data to debug.</li>
+<li>A list of different tasks will look like <code>[Task(), Task(), Task()]</code>.</li>
+</ul>
+<p>Fix:</p>
+<pre><code class="language-python">def __repr__(self) -&gt; str:
+    return f&quot;Task(task_id={self.task_id!r}, title={self.title!r}, status={self.status!r})&quot;
+</code></pre>
+<p>Instructor language:</p>
+<p>"A good <code>repr</code> earns its place by helping you inspect state. Include the fields that explain the object's identity and current condition."</p>
+<h3 id="pitfall-5-str-becomes-too-technical">Pitfall 5: <code>__str__</code> becomes too technical</h3>
+<p>Problem:</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return (
+        f&quot;Task(task_id={self.task_id!r}, title={self.title!r}, &quot;
+        f&quot;status={self.status!r}, priority={self.priority!r}, &quot;
+        f&quot;created_at={self.created_at!r}, updated_at={self.updated_at!r})&quot;
+    )
+</code></pre>
+<p>Why it is a problem:</p>
+<ul>
+<li>The user-facing display is too noisy.</li>
+<li>It duplicates the role of <code>__repr__</code>.</li>
+</ul>
+<p>Fix:</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return f&quot;#{self.task_id} {self.title} [{self.status}]&quot;
+</code></pre>
+<p>Instructor language:</p>
+<p>"If the output is for a user, make a choice. What does the user need at a glance?"</p>
+<h3 id="pitfall-6-equality-grows-beyond-the-hour">Pitfall 6: Equality grows beyond the hour</h3>
+<p>Problem:</p>
+<p>Learners spend most of the lab designing complicated equality rules.</p>
+<p>Why it is a problem:</p>
+<ul>
+<li>The runbook emphasis is <code>__repr__</code>, <code>__str__</code>, and type hints.</li>
+<li>Equality can be useful, but it has consequences for hashability and collection behavior.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Keep equality as an optional extension.</li>
+<li>If used, compare one stable identifier or a small set of meaningful fields.</li>
+<li>Test <code>a == b</code> and <code>a != b</code>.</li>
+<li>Avoid making mutable objects dictionary keys unless the design is deliberate.</li>
+</ul>
+<p>Instructor language:</p>
+<p>"Equality is a real Pythonic ergonomics topic, but today it is a sidebar. Do not let it steal time from readable objects and checkpoint readiness."</p>
+<hr>
+<h2 id="quick-checks-completion-criteria-and-wrap-up-5-minutes">Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)</h2>
+<h3 id="quick-check-1-repr-versus-str">Quick check 1: <code>repr</code> versus <code>str</code></h3>
+<p>Ask:</p>
+<p>"When would you look at <code>__repr__</code> output versus <code>__str__</code> output?"</p>
+<p>Expected answer:</p>
+<p>"Use <code>__repr__</code> output when debugging, inspecting logs, looking at objects inside lists or dictionaries, using the Python REPL, or trying to understand exact object state. Use <code>__str__</code> output when displaying a friendly message to a user, such as a CLI menu item, UI label, report line, or normal <code>print()</code> meant for people using the app."</p>
+<p>Follow-up if time allows:</p>
+<p>"If you print a list of objects, which representation does Python usually use for the items?"</p>
+<p>Expected answer:</p>
+<p>"The list uses <code>repr()</code> for its items."</p>
+<h3 id="quick-check-2-type-hints">Quick check 2: Type hints</h3>
+<p>Ask:</p>
+<p>"Do type hints automatically stop bad values at runtime?"</p>
+<p>Expected answer:</p>
+<p>"No. They help humans and tools. Runtime validation still needs explicit code."</p>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>Before learners leave, ask them to verify:</p>
+<ul>
+<li>Their main model has <code>__repr__(self) -&gt; str</code>.</li>
+<li>Their main model has <code>__str__(self) -&gt; str</code>.</li>
+<li>Objects print cleanly for user-facing output.</li>
+<li>Lists or logs of objects show useful developer-facing output.</li>
+<li>At least three methods or functions have simple, correct type hints.</li>
+<li>Hints do not break runtime behavior.</li>
+<li>Methods annotated as returning a value actually return that value.</li>
+<li>Methods annotated as <code>-&gt; None</code> are intentionally used for side effects.</li>
+<li><code>to_dict(self) -&gt; dict[str, object]</code> exists or is clearly marked as a must-finish before the next checkpoint.</li>
+</ul>
+<h3 id="closing-bridge-to-day-2-hour-4-checkpoint-1">Closing bridge to Day 2 Hour 4 Checkpoint 1</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Today we made the model easier to work with. That may sound small, but it has a direct checkpoint purpose. In the next hour, Checkpoint 1 asks for a stable domain and service layer. A stable core is not just code that exists. It is code that can be demonstrated, inspected, and reused by later GUI or API layers."</p>
+<p>"When the checkpoint reviewer runs your small demo script, clean <code>__str__</code> output makes the application easier to understand. When something fails, useful <code>__repr__</code> output makes debugging faster. When another developer reads your method signatures, light type hints explain what values are expected. And when we move toward persistence, APIs, or JSON, <code>to_dict()</code> gives the object a predictable serialization shape."</p>
+<p>"So the bridge is this: <strong>Hour 7 made objects readable and debuggable; Hour 8 checks that the domain and service layer are stable and serialization-ready.</strong>"</p>
+<p>"Before the next hour begins, make sure your main model has the required ergonomics and a <code>to_dict()</code> helper. If you did not finish <code>to_dict()</code> during lab, treat it as checkpoint preparation homework, not as optional polish."</p>
+<h3 id="final-instructor-note">Final instructor note</h3>
+<p>"Praise small improvements here. A learner who changes unreadable object output into clear <code>repr</code>, clear <code>str</code>, and a simple dictionary shape has made a professional-quality improvement. Keep reinforcing that advanced Python is often about making code easier to reason about, not making code more complicated."</p>
+<hr>
+<h2 id="instructor-reference-complete-demo-code">Instructor Reference: Complete Demo Code</h2>
+<p>Use this complete snippet if you need a clean reference during class.</p>
+<pre><code class="language-python">class Task:
+    def __init__(self, task_id: int, title: str, status: str, priority: int) -&gt; None:
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+
+    def __repr__(self) -&gt; str:
+        return (
+            &quot;Task(&quot;
+            f&quot;task_id={self.task_id!r}, &quot;
+            f&quot;title={self.title!r}, &quot;
+            f&quot;status={self.status!r}, &quot;
+            f&quot;priority={self.priority!r}&quot;
+            &quot;)&quot;
+        )
+
+    def __str__(self) -&gt; str:
+        return f&quot;#{self.task_id} {self.title} [{self.status}, priority {self.priority}]&quot;
+
+    def is_complete(self) -&gt; bool:
+        return self.status == &quot;done&quot;
+
+    def rename(self, new_title: str) -&gt; None:
+        self.title = new_title.strip()
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {
+            &quot;task_id&quot;: self.task_id,
+            &quot;title&quot;: self.title,
+            &quot;status&quot;: self.status,
+            &quot;priority&quot;: self.priority,
+        }
+
+
+def format_task_for_log(task: Task) -&gt; str:
+    return f&quot;Saving {task!r}&quot;
+
+
+def main() -&gt; None:
+    task = Task(101, &quot;Write tests&quot;, &quot;open&quot;, 2)
+    tasks = [
+        task,
+        Task(102, &quot;Review PR&quot;, &quot;blocked&quot;, 1),
+    ]
+
+    print(&quot;User display:&quot;)
+    print(task)
+
+    print(&quot;\nDeveloper display:&quot;)
+    print(repr(task))
+
+    print(&quot;\nList/debug display:&quot;)
+    print(tasks)
+
+    print(&quot;\nCompletion check:&quot;)
+    print(task.is_complete())
+
+    print(&quot;\nLog message:&quot;)
+    print(format_task_for_log(task))
+
+    print(&quot;\nSerialization shape:&quot;)
+    print(task.to_dict())
+
+    task.rename(&quot;Write focused tests&quot;)
+    print(&quot;\nAfter rename:&quot;)
+    print(task)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">User display:
+#101 Write tests [open, priority 2]
+
+Developer display:
+Task(task_id=101, title='Write tests', status='open', priority=2)
+
+List/debug display:
+[Task(task_id=101, title='Write tests', status='open', priority=2), Task(task_id=102, title='Review PR', status='blocked', priority=1)]
+
+Completion check:
+False
+
+Log message:
+Saving Task(task_id=101, title='Write tests', status='open', priority=2)
+
+Serialization shape:
+{'task_id': 101, 'title': 'Write tests', 'status': 'open', 'priority': 2}
+
+After rename:
+#101 Write focused tests [open, priority 2]
+</code></pre>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour4_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-day-2-hour-2-strategy-5-minutes" class="depth-2">Opening Bridge from Day 2 Hour 2 Strategy (5 minutes)</a></li>
+<li><a href="#outcomes-setup-and-vocabulary-5-minutes" class="depth-2">Outcomes, Setup, and Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-readable-objects-and-light-hints-10-minutes" class="depth-2">Concept Briefing: Readable Objects and Light Hints (10 minutes)</a></li>
+<li><a href="#1-why-the-default-object-display-is-not-enough" class="depth-3">1. Why the default object display is not enough</a></li>
+<li><a href="#2-repr-is-for-developers" class="depth-3">2. __repr__ is for developers</a></li>
+<li><a href="#3-str-is-for-users" class="depth-3">3. __str__ is for users</a></li>
+<li><a href="#4-how-python-chooses-between-them" class="depth-3">4. How Python chooses between them</a></li>
+<li><a href="#5-type-hints-are-lightweight-documentation" class="depth-3">5. Type hints are lightweight documentation</a></li>
+<li><a href="#6-equality-is-a-sidebar-not-the-main-lesson" class="depth-3">6. Equality is a sidebar, not the main lesson</a></li>
+<li><a href="#live-demo-upgrade-a-model-for-debugging-and-display-10-minutes" class="depth-2">Live Demo: Upgrade a Model for Debugging and Display (10 minutes)</a></li>
+<li><a href="#step-1-start-with-a-baseline-model" class="depth-3">Step 1: Start with a baseline model</a></li>
+<li><a href="#step-2-add-type-hints-and-repr" class="depth-3">Step 2: Add type hints and __repr__</a></li>
+<li><a href="#step-3-add-str-for-user-facing-display" class="depth-3">Step 3: Add __str__ for user-facing display</a></li>
+<li><a href="#step-4-add-hints-to-a-couple-methods-and-checkpoint-prep-todict" class="depth-3">Step 4: Add hints to a couple methods and checkpoint-prep to_dict()</a></li>
+<li><a href="#step-5-show-the-common-none-pitfall-quickly" class="depth-3">Step 5: Show the common None pitfall quickly</a></li>
+<li><a href="#guided-lab-make-your-model-pleasant-to-work-with-25-minutes" class="depth-2">Guided Lab: Make Your Model Pleasant to Work With (25 minutes)</a></li>
+<li><a href="#lab-goal" class="depth-3">Lab goal</a></li>
+<li><a href="#required-lab-tasks" class="depth-3">Required lab tasks</a></li>
+<li><a href="#suggested-learner-test-snippet" class="depth-3">Suggested learner test snippet</a></li>
+<li><a href="#instructor-circulation-checklist" class="depth-3">Instructor circulation checklist</a></li>
+<li><a href="#lab-pacing" class="depth-3">Lab pacing</a></li>
+<li><a href="#if-learners-finish-early" class="depth-3">If learners finish early</a></li>
+<li><a href="#troubleshooting-and-common-pitfalls" class="depth-2">Troubleshooting and Common Pitfalls</a></li>
+<li><a href="#pitfall-1-str-or-repr-prints-instead-of-returns" class="depth-3">Pitfall 1: __str__ or __repr__ prints instead of returns</a></li>
+<li><a href="#pitfall-2-overcomplicated-typing" class="depth-3">Pitfall 2: Overcomplicated typing</a></li>
+<li><a href="#pitfall-3-hints-treated-as-runtime-validation" class="depth-3">Pitfall 3: Hints treated as runtime validation</a></li>
+<li><a href="#pitfall-4-repr-hides-important-state" class="depth-3">Pitfall 4: __repr__ hides important state</a></li>
+<li><a href="#pitfall-5-str-becomes-too-technical" class="depth-3">Pitfall 5: __str__ becomes too technical</a></li>
+<li><a href="#pitfall-6-equality-grows-beyond-the-hour" class="depth-3">Pitfall 6: Equality grows beyond the hour</a></li>
+<li><a href="#quick-checks-completion-criteria-and-wrap-up-5-minutes" class="depth-2">Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)</a></li>
+<li><a href="#quick-check-1-repr-versus-str" class="depth-3">Quick check 1: repr versus str</a></li>
+<li><a href="#quick-check-2-type-hints" class="depth-3">Quick check 2: Type hints</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#closing-bridge-to-day-2-hour-4-checkpoint-1" class="depth-3">Closing bridge to Day 2 Hour 4 Checkpoint 1</a></li>
+<li><a href="#final-instructor-note" class="depth-3">Final instructor note</a></li>
+<li><a href="#instructor-reference-complete-demo-code" class="depth-2">Instructor Reference: Complete Demo Code</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour3_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour2_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour4_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 11 Hour 3 (Hour 43): Directories + Paths with pathlib (Instructor Script) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="11">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day11_Hour3_Basics.md">
+
+    <link rel="prev" href="Day11_Hour2_Basics.html">
+    <link rel="next" href="Day11_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="11" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-11/index.html">Day 11</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 11 Hour 3 (Hour 43): Directories + Paths with pathlib (Instructor Script)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 11</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day11_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-intent-and-alignment">Instructor intent and alignment</h2>
+<p>This hour is the bridge between “I can read/write one file” and “I can build programs that keep working when moved to another machine, another folder, or another teammate’s environment.” In Hour 42, learners saved JSON. In Hour 43, we make that persistence reliable by teaching directory creation and file discovery with <code>pathlib</code>.</p>
+<p>This script is aligned to the runbook for Hour 43 and intentionally emphasizes portable path patterns:</p>
+<ul>
+<li>Teach <code>Path.cwd()</code> conceptually so students understand working directory behavior.</li>
+<li>Use a <strong>script/project-relative base path</strong> for implementation reliability.</li>
+<li>Avoid hardcoded personal folders (<code>Desktop</code>, <code>Downloads</code>, user-specific home paths).</li>
+<li>Use directory discovery (<code>iterdir</code>, <code>glob</code>) instead of hardcoding file names.</li>
+</ul>
+<p>If learners leave this hour with one key habit, it should be: “My code computes paths from the project, not from my personal machine layout.”</p>
+<h2 id="outcomes-state-these-at-the-start">Outcomes (state these at the start)</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Use <code>pathlib</code> to build reliable file paths.</li>
+<li>Create a <code>data/</code> directory safely if it does not exist.</li>
+<li>List directory contents with <code>iterdir()</code> and pattern-match files with <code>glob()</code>.</li>
+<li>Discover available JSON files dynamically and choose one deterministically.</li>
+<li>Explain why discovery avoids hardcoding and improves portability.</li>
+</ol>
+<h2 id="prerequisites-and-setup-check-quick">Prerequisites and setup check (quick)</h2>
+<p>Learners should already be able to:</p>
+<ul>
+<li>Run Python scripts from a terminal and/or IDE.</li>
+<li>Read and write JSON at a basic level (<code>json.dump</code>, <code>json.load</code>).</li>
+<li>Understand basic <code>if</code> statements and loops.</li>
+</ul>
+<p>Ask learners to confirm:</p>
+<ul>
+<li>They are in their course project folder.</li>
+<li>They can run <code>python --version</code>.</li>
+<li>They can create and run a new <code>.py</code> file in their project.</li>
+</ul>
+<hr>
+<h2 id="suggested-minute-by-minute-flow-for-instructor-pacing">Suggested minute-by-minute flow (for instructor pacing)</h2>
+<ul>
+<li><strong>0:00–0:04</strong> — Hook + outcomes</li>
+<li><strong>0:04–0:18</strong> — Talk points (conceptual framing + best practices)</li>
+<li><strong>0:18–0:28</strong> — Live demo (create folder, save JSON, discover files)</li>
+<li><strong>0:28–0:55</strong> — Hands-on lab (build it independently, run from different starts)</li>
+<li><strong>0:55–1:00</strong> — Debrief + quick-check question</li>
+</ul>
+<p>If class pace is slower, trim optional extension first, not the deterministic discovery pattern.</p>
+<hr>
+<h2 id="talk-points-1015-min-speaking-guide">Talk points (10–15 min): speaking guide</h2>
+<p>Use this section as near-verbatim lecture notes if helpful.</p>
+<h3 id="1-relative-vs-absolute-paths">1) Relative vs absolute paths</h3>
+<p>“Let’s begin with a very practical question: <em>where exactly is your file?</em> In Python, there are two common path styles:</p>
+<ul>
+<li><strong>Absolute path</strong>: full location from the drive/root, like
+  <code>C:\Users\Ava\Downloads\data.json</code> (Windows)
+  or <code>/Users/ava/Downloads/data.json</code> (macOS/Linux).</li>
+<li><strong>Relative path</strong>: location relative to a base folder, like <code>data/data.json</code>.</li>
+</ul>
+<p>Absolute paths are not always wrong, but they are usually bad for shared code because they include machine-specific details. If I hardcode my personal <code>Downloads</code> path and send you the script, it fails on your computer.”</p>
+<p>Pause and ask:</p>
+<blockquote>
+<p>“If you see <code>C:\Users\myname\Desktop\...</code> in shared code, what risk do you immediately see?”</p>
+</blockquote>
+<p>Expected learner response: It works only for one user/machine.</p>
+<p>Reinforce:</p>
+<p>“Exactly. We want paths that survive movement: different user account, different machine, different terminal starting folder.”</p>
+<h3 id="2-why-opendatajson-sometimes-works-and-sometimes-fails">2) Why <code>open("data.json")</code> sometimes works and sometimes fails</h3>
+<p>“Many beginners start with this:</p>
+<pre><code class="language-python">with open(&quot;data.json&quot;) as file:
+    ...
+</code></pre>
+<p>Sometimes it works. Sometimes it throws <code>FileNotFoundError</code>. Why? Because <code>"data.json"</code> is a <strong>relative path</strong>. Relative to what? Relative to the <strong>current working directory</strong> (CWD), not necessarily the script’s folder.”</p>
+<p>Explain with a simple scenario:</p>
+<ul>
+<li>Script is in <code>project/app.py</code>.</li>
+<li>Data file is in <code>project/data/data.json</code>.</li>
+<li>If terminal is started in <code>project/</code>, maybe things work if code is written carefully.</li>
+<li>If terminal is started in parent folder and script is run with a different command path, naive relative assumptions can break.</li>
+</ul>
+<p>“So the bug is often not the file itself. The bug is <em>which folder Python thinks is the base</em>.”</p>
+<h3 id="3-pathcwd-and-pathdata-concept-first">3) <code>Path.cwd()</code> and <code>Path("data")</code>: concept first</h3>
+<p>“<code>pathlib</code> gives us a modern way to work with paths as objects, not fragile strings.</p>
+<ul>
+<li><code>Path.cwd()</code> shows the current working directory.</li>
+<li><code>Path("data")</code> means a relative path called <code>data</code> from the current working directory.</li>
+</ul>
+<p>So <code>Path.cwd() / "data"</code> and <code>Path("data")</code> are both tied to CWD unless we anchor them differently.”</p>
+<p>Show this short conceptual snippet:</p>
+<pre><code class="language-python">from pathlib import Path
+
+print(f&quot;Current working directory: {Path.cwd()}&quot;)
+print(f&quot;Relative path object: {Path('data')}&quot;)
+</code></pre>
+<p>Say clearly:</p>
+<p>“I am showing <code>Path.cwd()</code> so you understand behavior. I am <strong>not</strong> saying ‘build final app logic from CWD.’ CWD can change depending on where you launched the command.”</p>
+<h3 id="4-reliable-pattern-scriptproject-relative-base-directory">4) Reliable pattern: script/project-relative base directory</h3>
+<p>“For production-minded basic code, we anchor paths to the script or project root, then join into <code>data/</code>.</p>
+<p>Core pattern:</p>
+<pre><code class="language-python">from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / &quot;data&quot;
+</code></pre>
+<p><code>__file__</code> is the current script path. <code>resolve()</code> gives us an absolute, normalized path. <code>.parent</code> gives the folder containing the script.”</p>
+<p>Important classroom caveat:</p>
+<p>“This pattern assumes your script is in the project root. If your script sits one level deeper (for example <code>project/src/app.py</code>), then your project root might be <code>BASE_DIR.parent</code>. The idea is unchanged: choose a stable project-relative base once, then build all paths from that.”</p>
+<p>Say this explicitly to avoid confusion:</p>
+<p>“Our <strong>best-practice target today</strong> is: derive from script/project location, not from a personal folder and not from whichever folder the terminal happened to start in.”</p>
+<h3 id="5-creating-folders-safely-mkdirexistoktrue">5) Creating folders safely: <code>mkdir(exist_ok=True)</code></h3>
+<p>“If our app needs <code>data/</code>, we should create it safely:</p>
+<pre><code class="language-python">DATA_DIR.mkdir(exist_ok=True)
+</code></pre>
+<p><code>exist_ok=True</code> means:
+- if folder doesn’t exist, create it
+- if it already exists, do not crash”</p>
+<p>Optionally mention parent directories (without dwelling too long):</p>
+<p>“If you need to create multiple missing levels, add <code>parents=True</code>. Today, <code>data/</code> is one level under the project root, so <code>exist_ok=True</code> is enough.”</p>
+<h3 id="6-discover-files-dynamically-iterdir-and-glob">6) Discover files dynamically: <code>iterdir()</code> and <code>glob()</code></h3>
+<p>“Hardcoding file names can become fragile:</p>
+<ul>
+<li>maybe the file is <code>data.json</code> today</li>
+<li>tomorrow it’s <code>settings.json</code> or <code>save_2026_01_13.json</code></li>
+</ul>
+<p>Directory discovery lets the program inspect what exists.</p>
+<ul>
+<li><code>iterdir()</code> gives every item in a directory.</li>
+<li><code>glob("*.json")</code> gives items matching a pattern.”</li>
+</ul>
+<p>Use this pattern:</p>
+<pre><code class="language-python">all_items = sorted(DATA_DIR.iterdir(), key=lambda p: p.name.lower())
+json_files = sorted(DATA_DIR.glob(&quot;*.json&quot;), key=lambda p: p.name.lower())
+</code></pre>
+<p>Call out deterministic ordering:</p>
+<p>“Notice <code>sorted(...)</code>. File system iteration order is not guaranteed. Sorting gives consistent output, consistent demos, consistent tests, and fewer ‘it worked on my machine’ moments.”</p>
+<h3 id="7-why-discovery-avoids-hardcoding">7) Why discovery avoids hardcoding</h3>
+<p>“Directory discovery gives three practical wins:</p>
+<ol>
+<li><strong>Resilience</strong>: code adapts if filenames change.</li>
+<li><strong>Visibility</strong>: easier debugging because you can print what exists.</li>
+<li><strong>Scalability</strong>: supports multiple save files without rewriting core logic.”</li>
+</ol>
+<p>Bridge to lab:</p>
+<p>“In the lab, you’ll create <code>data/data.json</code>, print discovered files, and if multiple JSON files exist, choose one deterministically so your program behavior is predictable.”</p>
+<h3 id="8-project-relative-best-practice-statement-say-this-exactly">8) Project-relative best practice statement (say this exactly)</h3>
+<p>“In shared code, we avoid hardcoded <code>Desktop</code> or <code>Downloads</code> paths. We build a stable base path from the script/project root and join into <code>data/</code>. We use <code>Path.cwd()</code> to understand runtime context, but we do not depend on CWD as our final architecture.”</p>
+<p>Pause for a quick comprehension check:</p>
+<blockquote>
+<p>“What is the difference between ‘knowing CWD’ and ‘depending on CWD’?”</p>
+</blockquote>
+<p>Desired answer: CWD helps debug context, but reliable code should use a stable project-relative anchor.</p>
+<hr>
+<h2 id="live-demo-510-min-create-folder-write-json-discover-files">Live demo (5–10 min): create folder, write JSON, discover files</h2>
+<h3 id="demo-goal-to-announce">Demo goal to announce</h3>
+<p>“We will write one script that:</p>
+<ol>
+<li>Computes a project-relative <code>data/</code> folder path with <code>pathlib</code>.</li>
+<li>Creates that folder if needed.</li>
+<li>Saves JSON into the folder.</li>
+<li>Lists directory contents and prints JSON file names.</li>
+<li>Handles the ‘no JSON files found’ case deterministically.</li>
+<li>If JSON files exist, chooses one deterministic file path.”</li>
+</ol>
+<h3 id="demo-script-runnable">Demo script (runnable)</h3>
+<p>Create a file such as <code>path_demo.py</code> in the project root and paste:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+
+def build_paths() -&gt; tuple[Path, Path]:
+    &quot;&quot;&quot;
+    Return (base_dir, data_dir) anchored to this script location.
+    &quot;&quot;&quot;
+    base_dir = Path(__file__).resolve().parent
+    data_dir = base_dir / &quot;data&quot;
+    return base_dir, data_dir
+
+
+def ensure_data_dir(data_dir: Path) -&gt; None:
+    &quot;&quot;&quot;
+    Create data directory if it does not exist.
+    &quot;&quot;&quot;
+    data_dir.mkdir(exist_ok=True)
+
+
+def write_demo_json(target_file: Path) -&gt; None:
+    &quot;&quot;&quot;
+    Write a small JSON payload to demonstrate persistence.
+    &quot;&quot;&quot;
+    payload: dict[str, Any] = {
+        &quot;student&quot;: &quot;demo_user&quot;,
+        &quot;score&quot;: 100,
+        &quot;level&quot;: 5,
+    }
+    with target_file.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(payload, file, indent=2)
+
+
+def list_all_items(data_dir: Path) -&gt; list[Path]:
+    &quot;&quot;&quot;
+    Return all directory items sorted by name (deterministic order).
+    &quot;&quot;&quot;
+    return sorted(data_dir.iterdir(), key=lambda p: p.name.lower())
+
+
+def list_json_files(data_dir: Path) -&gt; list[Path]:
+    &quot;&quot;&quot;
+    Return *.json files sorted by name (deterministic order).
+    &quot;&quot;&quot;
+    return sorted(data_dir.glob(&quot;*.json&quot;), key=lambda p: p.name.lower())
+
+
+def choose_json_file(json_files: list[Path]) -&gt; Path | None:
+    &quot;&quot;&quot;
+    Deterministically choose the first file in sorted order.
+    Return None if no JSON files exist.
+    &quot;&quot;&quot;
+    if not json_files:
+        return None
+    return json_files[0]
+
+
+def main() -&gt; None:
+    base_dir, data_dir = build_paths()
+
+    # Teach CWD conceptually, but do not depend on it for path logic.
+    print(f&quot;Current working directory (concept): {Path.cwd()}&quot;)
+    print(f&quot;Script/project-relative base (implementation): {base_dir}&quot;)
+
+    ensure_data_dir(data_dir)
+    print(f&quot;Ensured data directory exists: {data_dir}&quot;)
+
+    print(&quot;\nDiscovery pass 1 (before writing any demo save):&quot;)
+    json_files_before = list_json_files(data_dir)
+    if not json_files_before:
+        print(&quot;No save files found.&quot;)
+    else:
+        for file_path in json_files_before:
+            print(f&quot;- {file_path.name}&quot;)
+
+    demo_file = data_dir / &quot;save1.json&quot;
+    write_demo_json(demo_file)
+    print(f&quot;Wrote demo JSON to: {demo_file}&quot;)
+
+    print(&quot;\nAll items currently in data/:&quot;)
+    all_items = list_all_items(data_dir)
+    if not all_items:
+        print(&quot;- (empty directory)&quot;)
+    else:
+        for item in all_items:
+            item_type = &quot;DIR &quot; if item.is_dir() else &quot;FILE&quot;
+            print(f&quot;- [{item_type}] {item.name}&quot;)
+
+    print(&quot;\nDiscovery pass 2 (after writing demo save):&quot;)
+    json_files = list_json_files(data_dir)
+    if not json_files:
+        print(&quot;No save files found.&quot;)
+    else:
+        for file_path in json_files:
+            print(f&quot;- {file_path.name}&quot;)
+
+    selected = choose_json_file(json_files)
+    if selected is None:
+        print(&quot;Chosen file: None (no JSON files available)&quot;)
+    else:
+        print(f&quot;Chosen file (deterministic): {selected}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-narration-script-what-to-say-while-codingrunning">Demo narration script (what to say while coding/running)</h3>
+<ol>
+<li>
+<p><strong>Start with <code>build_paths()</code></strong>
+   - “I’m deriving <code>base_dir</code> from <code>__file__</code>, not from CWD.”
+   - “This keeps path logic stable even if terminal launch folder changes.”</p>
+</li>
+<li>
+<p><strong>Show CWD without depending on it</strong>
+   - “I still print <code>Path.cwd()</code> for visibility and debugging.”
+   - “Understanding CWD helps explain behavior, but CWD is not our anchor.”</p>
+</li>
+<li>
+<p><strong>Create data folder</strong>
+   - “<code>mkdir(exist_ok=True)</code> prevents errors when rerunning scripts.”
+   - “Rerunnable scripts are a professionalism habit.”</p>
+</li>
+<li>
+<p><strong>Write JSON using <code>Path.open()</code></strong>
+   - “With <code>pathlib</code>, paths remain <code>Path</code> objects end-to-end.”
+   - “Using <code>encoding='utf-8'</code> is explicit and good practice.”</p>
+</li>
+<li>
+<p><strong>List with <code>iterdir()</code></strong>
+   - “This includes files and folders.”
+   - “I sort by lowercase name for deterministic output.”</p>
+</li>
+<li>
+<p><strong>Filter with <code>glob("*.json")</code></strong>
+   - “Pattern matching finds only JSON files.”
+   - “Again, sort to avoid non-deterministic ordering.”</p>
+</li>
+<li>
+<p><strong>No-files behavior</strong>
+   - “If there are zero JSON files, print <code>No save files found.</code>”
+   - “Never assume a file exists unless you checked.”</p>
+</li>
+<li>
+<p><strong>Deterministic choice</strong>
+   - “When multiple JSON files exist, I pick the first sorted one.”
+   - “Even a simple deterministic rule is better than random behavior.”</p>
+</li>
+</ol>
+<h3 id="optional-micro-variation-during-demo">Optional micro-variation during demo</h3>
+<p>If time allows, create an extra file manually:</p>
+<pre><code class="language-python">extra_file = data_dir / &quot;z_backup.json&quot;
+write_demo_json(extra_file)
+</code></pre>
+<p>Then re-run and show that sorted selection still chooses <code>save1.json</code> (assuming lexical order), proving deterministic behavior.</p>
+<h3 id="what-to-highlight-after-running">What to highlight after running</h3>
+<p>Ask:</p>
+<ol>
+<li>“Did our path logic rely on CWD for final behavior?” (No.)</li>
+<li>“Can this script be rerun safely?” (Yes, <code>exist_ok=True</code>.)</li>
+<li>“Is file discovery hardcoded?” (No, uses <code>glob</code>.)</li>
+<li>“Is selection deterministic?” (Yes, sorted then first.)</li>
+</ol>
+<hr>
+<h2 id="hands-on-lab-2535-min-data-folder-deterministic-discovery">Hands-on lab (25–35 min): data folder + deterministic discovery</h2>
+<h3 id="lab-framing-for-learners">Lab framing for learners</h3>
+<p>“You will now build your own version of this pattern. Your goal is not just to make it work once. Your goal is to make it reliable.”</p>
+<h3 id="lab-requirements-present-clearly">Lab requirements (present clearly)</h3>
+<p>Create a script (for example <code>lab_data_paths.py</code>) that does all of the following:</p>
+<ol>
+<li>Create a <code>data/</code> folder safely using <code>pathlib</code>.</li>
+<li>Save JSON to <code>data/data.json</code>.</li>
+<li>Run correctly even if terminal starts from different locations (within reason) by anchoring paths to script/project location.</li>
+<li>Print the names of all files in <code>data/</code>.</li>
+<li>Find all <code>.json</code> files in <code>data/</code> with <code>glob("*.json")</code>.</li>
+<li>If multiple JSON files exist, choose one deterministically (sorted first match) and print the chosen path.</li>
+<li>If no JSON files exist, print a clear no-files message.</li>
+</ol>
+<h3 id="suggested-lab-scaffold-students-can-start-from-this">Suggested lab scaffold (students can start from this)</h3>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def get_data_dir() -&gt; Path:
+    base_dir = Path(__file__).resolve().parent
+    return base_dir / &quot;data&quot;
+
+
+def main() -&gt; None:
+    data_dir = get_data_dir()
+    data_dir.mkdir(exist_ok=True)
+
+    print(&quot;Discovery pass 1 (before writing):&quot;)
+    json_files_before = sorted(data_dir.glob(&quot;*.json&quot;), key=lambda p: p.name.lower())
+    if not json_files_before:
+        print(&quot;No save files found.&quot;)
+        print(&quot;Chosen JSON path: None&quot;)
+    else:
+        print(&quot;JSON files discovered:&quot;)
+        for path in json_files_before:
+            print(f&quot;- {path.name}&quot;)
+        print(f&quot;Chosen JSON path: {json_files_before[0]}&quot;)
+
+    target_file = data_dir / &quot;data.json&quot;
+    payload = {&quot;app&quot;: &quot;lab&quot;, &quot;status&quot;: &quot;ok&quot;}
+    with target_file.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(payload, file, indent=2)
+
+    print(f&quot;Data directory: {data_dir}&quot;)
+    print(&quot;All file names in data/:&quot;)
+    for path in sorted(data_dir.iterdir(), key=lambda p: p.name.lower()):
+        print(f&quot;- {path.name}&quot;)
+
+    print(&quot;\nDiscovery pass 2 (after writing data.json):&quot;)
+    json_files = sorted(data_dir.glob(&quot;*.json&quot;), key=lambda p: p.name.lower())
+    if not json_files:
+        print(&quot;No save files found.&quot;)
+        print(&quot;Chosen JSON path: None&quot;)
+    else:
+        chosen = json_files[0]
+        print(&quot;JSON files discovered:&quot;)
+        for path in json_files:
+            print(f&quot;- {path.name}&quot;)
+        print(f&quot;Chosen JSON path: {chosen}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="instructor-support-script-during-lab-circulation">Instructor support script during lab circulation</h3>
+<p>When students are coding, walk and ask targeted questions:</p>
+<ol>
+<li>“Where does your base path come from?”</li>
+<li>“Are you using <code>Path.cwd()</code> as final logic, or just as debug information?”</li>
+<li>“Did you include <code>exist_ok=True</code>?”</li>
+<li>“Are your glob results sorted?”</li>
+<li>“What happens if no JSON files exist?”</li>
+</ol>
+<p>These questions quickly reveal whether learners understand the reliability goal.</p>
+<h3 id="run-from-different-starts-check-within-reason">Run-from-different-starts check (within reason)</h3>
+<p>Have learners test at least two launches:</p>
+<ul>
+<li>Launch from project folder.</li>
+<li>Launch from a parent folder using a path to the script.</li>
+</ul>
+<p>Expected result: their script still points to the same <code>data/</code> location because it is script-relative.</p>
+<p>If using an IDE, note:</p>
+<ul>
+<li>IDEs often set CWD to project folder automatically, which can hide path bugs.</li>
+<li>Ask learners to test in terminal too.</li>
+</ul>
+<h3 id="deterministic-multi-file-test">Deterministic multi-file test</h3>
+<p>Ask learners to create at least one extra JSON file in <code>data/</code>, for example:</p>
+<ul>
+<li><code>a.json</code></li>
+<li><code>z.json</code></li>
+</ul>
+<p>Then rerun and confirm:</p>
+<ul>
+<li><code>glob("*.json")</code> results are sorted.</li>
+<li>Chosen file is the first sorted entry every time.</li>
+</ul>
+<p>This demonstrates reproducible behavior.</p>
+<h3 id="minimal-expected-output-shape-example">Minimal expected output shape (example)</h3>
+<p>Actual absolute paths differ by machine, but output should look roughly like:</p>
+<pre><code class="language-text">Data directory: C:\...\project\data
+All file names in data/:
+- a.json
+- data.json
+- z.json
+JSON files discovered:
+- a.json
+- data.json
+- z.json
+Chosen JSON path: C:\...\project\data\a.json
+</code></pre>
+<p>If no JSON files exist at discovery time, they should get:</p>
+<pre><code class="language-text">No save files found.
+Chosen JSON path: None
+</code></pre>
+<hr>
+<h2 id="completion-criteria-use-for-gradingspot-checks">Completion criteria (use for grading/spot checks)</h2>
+<p>A submission meets expectations when all are true:</p>
+<ol>
+<li>Uses <code>pathlib</code> path objects for core path operations.</li>
+<li>Targets a project/script-relative <code>data/</code> directory (not hardcoded personal folders).</li>
+<li>Creates folder safely with <code>mkdir(exist_ok=True)</code>.</li>
+<li>Saves JSON to <code>data/data.json</code>.</li>
+<li>Lists file names in <code>data/</code> using directory iteration.</li>
+<li>Discovers JSON files with <code>glob("*.json")</code>.</li>
+<li>Sorts discovery results for deterministic ordering.</li>
+<li>Implements explicit no-files handling.</li>
+<li>If multiple JSON files exist, chooses one deterministically and prints chosen path.</li>
+</ol>
+<p>Stretch quality indicators:</p>
+<ul>
+<li>Uses small helper functions for readability.</li>
+<li>Uses clear variable names (<code>data_dir</code>, <code>json_files</code>, <code>chosen_file</code>).</li>
+<li>Uses <code>encoding="utf-8"</code> and consistent output formatting.</li>
+</ul>
+<hr>
+<h2 id="common-pitfalls-and-instructor-interventions">Common pitfalls and instructor interventions</h2>
+<h3 id="pitfall-1-hardcoded-absolute-paths">Pitfall 1: Hardcoded absolute paths</h3>
+<p><strong>Example of issue</strong></p>
+<pre><code class="language-python">data_dir = Path(&quot;C:/Users/Ava/Desktop/data&quot;)
+</code></pre>
+<p><strong>Why it fails</strong></p>
+<ul>
+<li>Tied to one username and one machine.</li>
+<li>Breaks in class VMs, on teammates’ systems, and in CI.</li>
+</ul>
+<p><strong>Intervention line</strong></p>
+<p>“Replace personal machine paths with a computed project-relative base derived from <code>__file__</code>.”</p>
+<h3 id="pitfall-2-cwd-dependent-final-pattern">Pitfall 2: CWD-dependent final pattern</h3>
+<p><strong>Example of issue</strong></p>
+<pre><code class="language-python">data_dir = Path.cwd() / &quot;data&quot;
+</code></pre>
+<p><strong>Why it’s fragile</strong></p>
+<ul>
+<li>Works only when command runs from the expected directory.</li>
+<li>Fails when launched from different terminal location.</li>
+</ul>
+<p><strong>Intervention line</strong></p>
+<p>“Use <code>Path.cwd()</code> for awareness/debugging, not as your final anchor for project data paths.”</p>
+<h3 id="pitfall-3-forgetting-existoktrue">Pitfall 3: Forgetting <code>exist_ok=True</code></h3>
+<p><strong>Example of issue</strong></p>
+<pre><code class="language-python">data_dir.mkdir()
+</code></pre>
+<p><strong>Problem</strong></p>
+<ul>
+<li>Crashes on second run if folder already exists.</li>
+</ul>
+<p><strong>Intervention line</strong></p>
+<p>“Make scripts rerunnable: <code>mkdir(exist_ok=True)</code>.”</p>
+<h3 id="pitfall-4-assuming-glob-order">Pitfall 4: Assuming <code>glob()</code> order</h3>
+<p><strong>Example of issue</strong></p>
+<pre><code class="language-python">json_files = list(data_dir.glob(&quot;*.json&quot;))
+chosen = json_files[0]
+</code></pre>
+<p><strong>Problem</strong></p>
+<ul>
+<li>Order may differ across environments/filesystems.</li>
+</ul>
+<p><strong>Intervention line</strong></p>
+<p>“Sort first, then choose: deterministic behavior is a quality habit.”</p>
+<h3 id="pitfall-5-not-handling-empty-results">Pitfall 5: Not handling empty results</h3>
+<p><strong>Problem</strong></p>
+<ul>
+<li>Index error when <code>json_files[0]</code> on empty list.</li>
+</ul>
+<p><strong>Intervention line</strong></p>
+<p>“Always branch on empty list before choosing an element.”</p>
+<h3 id="pitfall-6-mixing-strings-and-paths-inconsistently">Pitfall 6: Mixing strings and paths inconsistently</h3>
+<p><strong>Problem</strong></p>
+<ul>
+<li>String concatenation with slashes can become messy and platform-fragile.</li>
+</ul>
+<p><strong>Intervention line</strong></p>
+<p>“Keep values as <code>Path</code> objects until the final display step.”</p>
+<hr>
+<h2 id="optional-extension-if-learners-finish-early">Optional extension (if learners finish early)</h2>
+<h3 id="extension-allow-user-to-choose-file-name">Extension: allow user to choose file name</h3>
+<p>Goal: keep discovery logic, but let user optionally specify target name.</p>
+<p>Rules:</p>
+<ul>
+<li>If user enters blank input, default to <code>data.json</code>.</li>
+<li>Force <code>.json</code> suffix if missing.</li>
+<li>Save to chosen file in <code>data/</code>.</li>
+<li>Re-run discovery and deterministic selection.</li>
+</ul>
+<p>Example extension snippet:</p>
+<pre><code class="language-python">name = input(&quot;Enter save filename (blank = data.json): &quot;).strip()
+if not name:
+    name = &quot;data.json&quot;
+if not name.lower().endswith(&quot;.json&quot;):
+    name += &quot;.json&quot;
+
+target = data_dir / name
+</code></pre>
+<p>Teaching note:</p>
+<p>This extension reinforces that path handling and input handling are connected. Even here, avoid accepting full absolute paths from users in a basics script unless that is explicitly the lesson goal.</p>
+<hr>
+<h2 id="full-reference-implementation-for-instructor-answer-key">Full reference implementation (for instructor answer key)</h2>
+<p>Use this if you need a complete, classroom-safe model solution.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+
+def get_project_base() -&gt; Path:
+    &quot;&quot;&quot;
+    Return a stable base directory for project-relative paths.
+    Assumes this script is stored in the project root.
+    &quot;&quot;&quot;
+    return Path(__file__).resolve().parent
+
+
+def get_data_dir(base_dir: Path) -&gt; Path:
+    &quot;&quot;&quot;
+    Return project data directory path.
+    &quot;&quot;&quot;
+    return base_dir / &quot;data&quot;
+
+
+def ensure_directory(path: Path) -&gt; None:
+    &quot;&quot;&quot;
+    Ensure directory exists without crashing if already present.
+    &quot;&quot;&quot;
+    path.mkdir(exist_ok=True)
+
+
+def save_json(path: Path, payload: dict[str, Any]) -&gt; None:
+    &quot;&quot;&quot;
+    Save payload as formatted JSON.
+    &quot;&quot;&quot;
+    with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        json.dump(payload, file, indent=2)
+
+
+def discover_all_files(directory: Path) -&gt; list[Path]:
+    &quot;&quot;&quot;
+    Return all files/directories sorted by lowercase name.
+    &quot;&quot;&quot;
+    return sorted(directory.iterdir(), key=lambda p: p.name.lower())
+
+
+def discover_json_files(directory: Path) -&gt; list[Path]:
+    &quot;&quot;&quot;
+    Return all .json files sorted by lowercase name.
+    &quot;&quot;&quot;
+    return sorted(directory.glob(&quot;*.json&quot;), key=lambda p: p.name.lower())
+
+
+def choose_deterministic(json_files: list[Path]) -&gt; Path | None:
+    &quot;&quot;&quot;
+    Choose the first file in sorted list, or None if empty.
+    &quot;&quot;&quot;
+    if not json_files:
+        return None
+    return json_files[0]
+
+
+def print_discovery(all_items: list[Path], json_files: list[Path]) -&gt; None:
+    &quot;&quot;&quot;
+    Print discovered items and JSON files.
+    &quot;&quot;&quot;
+    print(&quot;All items in data/:&quot;)
+    if not all_items:
+        print(&quot;- (empty directory)&quot;)
+    else:
+        for item in all_items:
+            print(f&quot;- {item.name}&quot;)
+
+    print(&quot;\nJSON files in data/:&quot;)
+    if not json_files:
+        print(&quot;No save files found.&quot;)
+    else:
+        for file_path in json_files:
+            print(f&quot;- {file_path.name}&quot;)
+
+
+def main() -&gt; None:
+    base_dir = get_project_base()
+    data_dir = get_data_dir(base_dir)
+
+    # Concept check: CWD is useful information, but not our path anchor.
+    print(f&quot;CWD (conceptual): {Path.cwd()}&quot;)
+    print(f&quot;Base directory (implementation): {base_dir}&quot;)
+
+    ensure_directory(data_dir)
+
+    primary_file = data_dir / &quot;data.json&quot;
+    payload: dict[str, Any] = {
+        &quot;course&quot;: &quot;python_basics&quot;,
+        &quot;hour&quot;: 43,
+        &quot;topic&quot;: &quot;pathlib_directories&quot;,
+    }
+    save_json(primary_file, payload)
+    print(f&quot;Saved JSON to: {primary_file}&quot;)
+
+    all_items = discover_all_files(data_dir)
+    json_files = discover_json_files(data_dir)
+    print_discovery(all_items, json_files)
+
+    chosen = choose_deterministic(json_files)
+    if chosen is None:
+        print(&quot;\nChosen JSON file: None&quot;)
+    else:
+        print(f&quot;\nChosen JSON file (deterministic): {chosen}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<hr>
+<h2 id="debrief-prompts-last-5-minutes">Debrief prompts (last 5 minutes)</h2>
+<p>Use 2–4 of these questions:</p>
+<ol>
+<li>“What problem does <code>pathlib</code> solve compared with manual string path building?”</li>
+<li>“What is CWD, and why can relying on it be risky?”</li>
+<li>“What does <code>mkdir(exist_ok=True)</code> buy us in day-to-day coding?”</li>
+<li>“Why sort <code>glob()</code> results before selecting a file?”</li>
+<li>“How does directory discovery reduce hardcoded assumptions?”</li>
+</ol>
+<p>Invite one student to explain:</p>
+<p>“How would you adapt today’s pattern if your script were in <code>src/</code> and <code>data/</code> were at project root?”</p>
+<p>Expected idea:</p>
+<ul>
+<li>Adjust base directory once (for example <code>Path(__file__).resolve().parent.parent</code>) and keep the rest unchanged.</li>
+</ul>
+<hr>
+<h2 id="quick-check-exit-ticket">Quick-check / exit ticket</h2>
+<p><strong>Question:</strong> What is the difference between a relative path and an absolute path, and why do we prefer project-relative path construction in shared code?</p>
+<p><strong>Strong answer:</strong>
+An absolute path contains a full machine-specific location from the drive/root (for example a full <code>C:\...</code> path). A relative path is interpreted from a base location. In shared code, we prefer constructing paths from a stable project/script-relative base so the code works across machines and different terminal start locations. We can inspect <code>Path.cwd()</code> to understand runtime context, but we should avoid making CWD the final dependency for core file paths.</p>
+<hr>
+<h2 id="instructor-close-out-reminder">Instructor close-out reminder</h2>
+<p>Before ending the hour, reinforce one sentence:</p>
+<p>“Reliable Python file handling starts with reliable path construction: anchor to project/script root, create folders safely, discover files dynamically, and keep behavior deterministic.”</p>
+<hr>
+<h2 id="extended-instructor-speaking-script-optional-near-verbatim-delivery">Extended instructor speaking script (optional near-verbatim delivery)</h2>
+<p>Use this when you want a slower, fully narrated version of the hour. You can read this almost directly.</p>
+<p>“Team, today we are solving a real software reliability problem: paths that work on my machine but fail on yours. This is one of the most common beginner-to-intermediate pain points, and fixing it now will save you time for the rest of this course and in real jobs.</p>
+<p>Let’s start with a quick truth: files are not floating in space. Every file path is interpreted from somewhere. If that ‘somewhere’ is unstable, your program becomes unstable. That ‘somewhere’ is often the current working directory. If your terminal starts in a different folder, your file path can silently point to the wrong place.</p>
+<p>Here is where many people get tricked: they run their code from an IDE, and the IDE quietly uses the project folder as working directory. Everything looks correct. Then they run the same script in a plain terminal started elsewhere and suddenly get <code>FileNotFoundError</code>. So the code wasn’t truly robust. It was accidentally correct in one environment.</p>
+<p>Our goal today is not to memorize <code>pathlib</code> methods. Our goal is to adopt a reliable mental model:</p>
+<ol>
+<li>choose a stable base path once</li>
+<li>build all internal data paths from that base</li>
+<li>create required folders safely</li>
+<li>discover what files exist instead of assuming file names</li>
+<li>make selection behavior deterministic</li>
+</ol>
+<p>If you implement those five ideas, your code quality jumps immediately.</p>
+<p>Now, concept check: what is an absolute path? Full path from drive/root. What is a relative path? Path interpreted from a base location. Are relative paths bad? No. They are excellent if you control the base correctly.</p>
+<p>And this is our key nuance: we teach <code>Path.cwd()</code> because it explains behavior, but we do not anchor core app data logic to CWD. Instead, we anchor to script/project location. That gives us stability across launch contexts.</p>
+<p>You may wonder, ‘Can I ever use <code>Path.cwd()</code> in real code?’ Yes, for diagnostics, for CLI tools intentionally designed around working directory, or for specific workflows where CWD is the contract. But for today’s persistent app data in a project repository, script/project-relative is the better default.</p>
+<p>Second concept: folder creation. Robust scripts are rerunnable. If I run the same script ten times, it should not fail on run two because a directory already exists. <code>mkdir(exist_ok=True)</code> gives us rerun safety.</p>
+<p>Third concept: discovery. Hardcoded file names seem easy until the first rename, backup, or versioned save file. If your app can inspect <code>data/</code> and identify all JSON files, you can adapt to changes with minimal code edits.</p>
+<p>Fourth concept: deterministic ordering. Operating systems and filesystems do not guarantee the same order when listing files. If you pick ‘the first file’ without sorting, your behavior may differ across machines. Sorting is a tiny step that prevents inconsistent outcomes.</p>
+<p>As we code, I want you to keep asking: ‘Is this robust if someone else runs it from a different place?’ That question is what professional developers ask every day.</p>
+<p>In lab time, I care less about fancy output and more about path reliability. If your script correctly creates <code>data/</code>, writes <code>data/data.json</code>, lists files, handles no-files case, and deterministically chooses one JSON file when multiple exist, you have met the real goal.</p>
+<p>Let’s build this carefully and narrate each choice so you understand not just what to type, but why each line exists.”</p>
+<hr>
+<h2 id="guided-qa-prompts-to-deepen-understanding">Guided Q&amp;A prompts to deepen understanding</h2>
+<p>Use these during lecture or lab debrief. Each prompt includes a model explanation you can paraphrase.</p>
+<h3 id="prompt-1">Prompt 1</h3>
+<p><strong>Ask:</strong> “Why is <code>Path(__file__).resolve().parent</code> usually more stable than <code>Path.cwd()</code> for app data paths?”</p>
+<p><strong>Model explanation:</strong>
+<code>__file__</code> points to the script location, which usually stays tied to project layout. <code>Path.cwd()</code> depends on where the command was launched. Since launch location changes frequently, CWD-based paths can break unexpectedly. Script-relative anchoring reduces that variability.</p>
+<h3 id="prompt-2">Prompt 2</h3>
+<p><strong>Ask:</strong> “What does <code>exist_ok=True</code> protect us from?”</p>
+<p><strong>Model explanation:</strong>
+It prevents <code>mkdir</code> from raising an error when the directory already exists, making scripts safe to rerun.</p>
+<h3 id="prompt-3">Prompt 3</h3>
+<p><strong>Ask:</strong> “Why use <code>glob("*.json")</code> instead of hardcoding <code>data.json</code>?”</p>
+<p><strong>Model explanation:</strong>
+Discovery supports multiple files, renamed files, and dynamic workflows. Hardcoding one file name locks behavior and fails when naming changes.</p>
+<h3 id="prompt-4">Prompt 4</h3>
+<p><strong>Ask:</strong> “Why sort file lists before choosing one?”</p>
+<p><strong>Model explanation:</strong>
+Directory iteration order is not guaranteed. Sorting guarantees reproducible behavior and avoids machine-dependent selection differences.</p>
+<h3 id="prompt-5">Prompt 5</h3>
+<p><strong>Ask:</strong> “Is absolute path always wrong?”</p>
+<p><strong>Model explanation:</strong>
+No, absolute paths can be useful in specific system tasks, deployment scripts, or controlled environments. But for shared classroom projects, hardcoded personal absolute paths are fragile and not portable.</p>
+<h3 id="prompt-6">Prompt 6</h3>
+<p><strong>Ask:</strong> “What does ‘within reason’ mean when we test from different terminal starts?”</p>
+<p><strong>Model explanation:</strong>
+It means we test realistic launch contexts (project folder, parent folder, IDE terminal), but we still assume the project structure exists and script location is valid. We are not testing broken installations.</p>
+<hr>
+<h2 id="troubleshooting-playbook-for-instructor-rapid-diagnosis">Troubleshooting playbook for instructor (rapid diagnosis)</h2>
+<p>Use this checklist when a learner says, “It doesn’t work.”</p>
+<h3 id="step-a-read-the-exact-error-dont-guess">Step A: Read the exact error, don’t guess</h3>
+<p>Ask learner to read the full traceback. Identify:</p>
+<ul>
+<li>exception type (<code>FileNotFoundError</code>, <code>PermissionError</code>, etc.)</li>
+<li>exact line number</li>
+<li>exact path shown</li>
+</ul>
+<p>Most path bugs are obvious once the printed path is inspected.</p>
+<h3 id="step-b-print-path-diagnostics">Step B: Print path diagnostics</h3>
+<p>Have learner add:</p>
+<pre><code class="language-python">print(f&quot;CWD: {Path.cwd()}&quot;)
+print(f&quot;Script file: {Path(__file__).resolve()}&quot;)
+print(f&quot;Base dir: {base_dir}&quot;)
+print(f&quot;Data dir: {data_dir}&quot;)
+</code></pre>
+<p>Compare expected and actual values.</p>
+<h3 id="step-c-validate-directory-exists-when-expected">Step C: Validate directory exists when expected</h3>
+<p>Have learner run:</p>
+<pre><code class="language-python">print(data_dir.exists(), data_dir.is_dir())
+</code></pre>
+<p>If false, check whether <code>mkdir</code> executed before write operations.</p>
+<h3 id="step-d-validate-file-discovery-assumptions">Step D: Validate file discovery assumptions</h3>
+<p>If learner expects JSON files but sees none, ask them to print:</p>
+<pre><code class="language-python">for item in sorted(data_dir.iterdir(), key=lambda p: p.name.lower()):
+    print(item.name)
+</code></pre>
+<p>Sometimes files exist but have a different extension (<code>.JSON</code>, <code>.txt</code>, typo).</p>
+<h3 id="step-e-confirm-deterministic-choice-logic">Step E: Confirm deterministic choice logic</h3>
+<p>If chosen file seems inconsistent, check that sorting is present <strong>before</strong> choosing first item.</p>
+<h3 id="step-f-check-for-hidden-platform-gotchas">Step F: Check for hidden platform gotchas</h3>
+<ul>
+<li>Windows backslash vs forward slash issues are mostly solved by using <code>Path</code>.</li>
+<li>Case sensitivity varies by filesystem; sorting with <code>.lower()</code> helps stable display.</li>
+<li>Locked files can produce permission errors; ask learner to close editors/viewers that hold locks.</li>
+</ul>
+<h3 id="step-g-keep-fixes-minimal-and-test-incrementally">Step G: Keep fixes minimal and test incrementally</h3>
+<p>After each fix, rerun and observe output. Avoid rewriting everything at once.</p>
+<p>Instructor note:</p>
+<p>When many students fail similarly, stop and do a 3-minute class reset:</p>
+<ol>
+<li>show base path pattern again</li>
+<li>show <code>mkdir(exist_ok=True)</code> again</li>
+<li>show sorted <code>glob</code> again</li>
+</ol>
+<p>This usually resolves most blockers quickly.</p>
+<hr>
+<h2 id="additional-lab-facilitation-notes-for-mixed-pace-classrooms">Additional lab facilitation notes (for mixed-pace classrooms)</h2>
+<h3 id="fast-finishers">Fast-finishers</h3>
+<p>Give them one of these:</p>
+<ol>
+<li>Add command-line flag to print absolute chosen path only.</li>
+<li>Add function that returns summary dictionary:
+   - total items
+   - total JSON files
+   - chosen file name or <code>None</code></li>
+<li>Add secondary deterministic rule (for discussion only), such as choose newest file after sorted tie-break by name.</li>
+</ol>
+<p>Keep scope within Basics and avoid external packages.</p>
+<h3 id="learners-needing-support">Learners needing support</h3>
+<p>Provide a reduced target:</p>
+<ol>
+<li>Make <code>data/</code> directory.</li>
+<li>Save <code>data/data.json</code>.</li>
+<li>Print files with <code>iterdir()</code>.</li>
+</ol>
+<p>Then layer:</p>
+<ol start="4">
+<li><code>glob("*.json")</code></li>
+<li>sorted results</li>
+<li>no-files branch</li>
+<li>deterministic chosen file</li>
+</ol>
+<p>This scaffolding prevents overwhelm.</p>
+<h3 id="pairing-strategy">Pairing strategy</h3>
+<p>For struggling groups, pair one “navigator” and one “driver”:</p>
+<ul>
+<li>Driver types only.</li>
+<li>Navigator reads requirements and checks completion criteria.</li>
+<li>Switch roles every 6–8 minutes.</li>
+</ul>
+<p>This keeps both learners engaged and reduces passive watching.</p>
+<hr>
+<h2 id="rubric-style-feedback-phrases-copypaste-ready">Rubric-style feedback phrases (copy/paste ready)</h2>
+<p>Use these concise comments when reviewing student work.</p>
+<h3 id="strong">Strong</h3>
+<ul>
+<li>“Great reliability pattern: script-relative base + <code>pathlib</code> path joins.”</li>
+<li>“Nice rerunnable folder setup with <code>mkdir(exist_ok=True)</code>.”</li>
+<li>“Excellent deterministic handling: sorted <code>glob</code> before selecting first file.”</li>
+<li>“Clear no-files branch prevents index errors and improves user feedback.”</li>
+</ul>
+<h3 id="needs-improvement">Needs improvement</h3>
+<ul>
+<li>“Current solution depends on CWD; anchor to script/project location for portability.”</li>
+<li>“Hardcoded personal absolute path limits shareability. Replace with project-relative construction.”</li>
+<li>“Please sort glob results before choosing one file to keep behavior deterministic.”</li>
+<li>“Handle empty JSON list explicitly before indexing.”</li>
+</ul>
+<hr>
+<h2 id="final-recap-script-12-minutes">Final recap script (1–2 minutes)</h2>
+<p>Use this closing language to consolidate transfer:</p>
+<p>“Today you moved from file access that works accidentally to file access that works intentionally.
+You learned:</p>
+<ul>
+<li>how to reason about relative vs absolute paths</li>
+<li>how CWD affects relative paths</li>
+<li>why we inspect CWD but avoid depending on it for core app data</li>
+<li>how to anchor paths to script/project location</li>
+<li>how to create directories safely with <code>mkdir(exist_ok=True)</code></li>
+<li>how to discover files with <code>iterdir()</code> and <code>glob()</code></li>
+<li>why sorted discovery gives deterministic, repeatable behavior</li>
+</ul>
+<p>If you keep these habits in your next project, your code will be easier to run, easier to debug, and easier to share.”</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-intent-and-alignment" class="depth-2">Instructor intent and alignment</a></li>
+<li><a href="#outcomes-state-these-at-the-start" class="depth-2">Outcomes (state these at the start)</a></li>
+<li><a href="#prerequisites-and-setup-check-quick" class="depth-2">Prerequisites and setup check (quick)</a></li>
+<li><a href="#suggested-minute-by-minute-flow-for-instructor-pacing" class="depth-2">Suggested minute-by-minute flow (for instructor pacing)</a></li>
+<li><a href="#talk-points-1015-min-speaking-guide" class="depth-2">Talk points (10–15 min): speaking guide</a></li>
+<li><a href="#1-relative-vs-absolute-paths" class="depth-3">1) Relative vs absolute paths</a></li>
+<li><a href="#2-why-opendatajson-sometimes-works-and-sometimes-fails" class="depth-3">2) Why open(&quot;data.json&quot;) sometimes works and sometimes fails</a></li>
+<li><a href="#3-pathcwd-and-pathdata-concept-first" class="depth-3">3) Path.cwd() and Path(&quot;data&quot;): concept first</a></li>
+<li><a href="#4-reliable-pattern-scriptproject-relative-base-directory" class="depth-3">4) Reliable pattern: script/project-relative base directory</a></li>
+<li><a href="#5-creating-folders-safely-mkdirexistoktrue" class="depth-3">5) Creating folders safely: mkdir(exist_ok=True)</a></li>
+<li><a href="#6-discover-files-dynamically-iterdir-and-glob" class="depth-3">6) Discover files dynamically: iterdir() and glob()</a></li>
+<li><a href="#7-why-discovery-avoids-hardcoding" class="depth-3">7) Why discovery avoids hardcoding</a></li>
+<li><a href="#8-project-relative-best-practice-statement-say-this-exactly" class="depth-3">8) Project-relative best practice statement (say this exactly)</a></li>
+<li><a href="#live-demo-510-min-create-folder-write-json-discover-files" class="depth-2">Live demo (5–10 min): create folder, write JSON, discover files</a></li>
+<li><a href="#demo-goal-to-announce" class="depth-3">Demo goal to announce</a></li>
+<li><a href="#demo-script-runnable" class="depth-3">Demo script (runnable)</a></li>
+<li><a href="#demo-narration-script-what-to-say-while-codingrunning" class="depth-3">Demo narration script (what to say while coding/running)</a></li>
+<li><a href="#optional-micro-variation-during-demo" class="depth-3">Optional micro-variation during demo</a></li>
+<li><a href="#what-to-highlight-after-running" class="depth-3">What to highlight after running</a></li>
+<li><a href="#hands-on-lab-2535-min-data-folder-deterministic-discovery" class="depth-2">Hands-on lab (25–35 min): data folder + deterministic discovery</a></li>
+<li><a href="#lab-framing-for-learners" class="depth-3">Lab framing for learners</a></li>
+<li><a href="#lab-requirements-present-clearly" class="depth-3">Lab requirements (present clearly)</a></li>
+<li><a href="#suggested-lab-scaffold-students-can-start-from-this" class="depth-3">Suggested lab scaffold (students can start from this)</a></li>
+<li><a href="#instructor-support-script-during-lab-circulation" class="depth-3">Instructor support script during lab circulation</a></li>
+<li><a href="#run-from-different-starts-check-within-reason" class="depth-3">Run-from-different-starts check (within reason)</a></li>
+<li><a href="#deterministic-multi-file-test" class="depth-3">Deterministic multi-file test</a></li>
+<li><a href="#minimal-expected-output-shape-example" class="depth-3">Minimal expected output shape (example)</a></li>
+<li><a href="#completion-criteria-use-for-gradingspot-checks" class="depth-2">Completion criteria (use for grading/spot checks)</a></li>
+<li><a href="#common-pitfalls-and-instructor-interventions" class="depth-2">Common pitfalls and instructor interventions</a></li>
+<li><a href="#pitfall-1-hardcoded-absolute-paths" class="depth-3">Pitfall 1: Hardcoded absolute paths</a></li>
+<li><a href="#pitfall-2-cwd-dependent-final-pattern" class="depth-3">Pitfall 2: CWD-dependent final pattern</a></li>
+<li><a href="#pitfall-3-forgetting-existoktrue" class="depth-3">Pitfall 3: Forgetting exist_ok=True</a></li>
+<li><a href="#pitfall-4-assuming-glob-order" class="depth-3">Pitfall 4: Assuming glob() order</a></li>
+<li><a href="#pitfall-5-not-handling-empty-results" class="depth-3">Pitfall 5: Not handling empty results</a></li>
+<li><a href="#pitfall-6-mixing-strings-and-paths-inconsistently" class="depth-3">Pitfall 6: Mixing strings and paths inconsistently</a></li>
+<li><a href="#optional-extension-if-learners-finish-early" class="depth-2">Optional extension (if learners finish early)</a></li>
+<li><a href="#extension-allow-user-to-choose-file-name" class="depth-3">Extension: allow user to choose file name</a></li>
+<li><a href="#full-reference-implementation-for-instructor-answer-key" class="depth-2">Full reference implementation (for instructor answer key)</a></li>
+<li><a href="#debrief-prompts-last-5-minutes" class="depth-2">Debrief prompts (last 5 minutes)</a></li>
+<li><a href="#quick-check-exit-ticket" class="depth-2">Quick-check / exit ticket</a></li>
+<li><a href="#instructor-close-out-reminder" class="depth-2">Instructor close-out reminder</a></li>
+<li><a href="#extended-instructor-speaking-script-optional-near-verbatim-delivery" class="depth-2">Extended instructor speaking script (optional near-verbatim delivery)</a></li>
+<li><a href="#guided-qa-prompts-to-deepen-understanding" class="depth-2">Guided Q&amp;A prompts to deepen understanding</a></li>
+<li><a href="#prompt-1" class="depth-3">Prompt 1</a></li>
+<li><a href="#prompt-2" class="depth-3">Prompt 2</a></li>
+<li><a href="#prompt-3" class="depth-3">Prompt 3</a></li>
+<li><a href="#prompt-4" class="depth-3">Prompt 4</a></li>
+<li><a href="#prompt-5" class="depth-3">Prompt 5</a></li>
+<li><a href="#prompt-6" class="depth-3">Prompt 6</a></li>
+<li><a href="#troubleshooting-playbook-for-instructor-rapid-diagnosis" class="depth-2">Troubleshooting playbook for instructor (rapid diagnosis)</a></li>
+<li><a href="#step-a-read-the-exact-error-dont-guess" class="depth-3">Step A: Read the exact error, don’t guess</a></li>
+<li><a href="#step-b-print-path-diagnostics" class="depth-3">Step B: Print path diagnostics</a></li>
+<li><a href="#step-c-validate-directory-exists-when-expected" class="depth-3">Step C: Validate directory exists when expected</a></li>
+<li><a href="#step-d-validate-file-discovery-assumptions" class="depth-3">Step D: Validate file discovery assumptions</a></li>
+<li><a href="#step-e-confirm-deterministic-choice-logic" class="depth-3">Step E: Confirm deterministic choice logic</a></li>
+<li><a href="#step-f-check-for-hidden-platform-gotchas" class="depth-3">Step F: Check for hidden platform gotchas</a></li>
+<li><a href="#step-g-keep-fixes-minimal-and-test-incrementally" class="depth-3">Step G: Keep fixes minimal and test incrementally</a></li>
+<li><a href="#additional-lab-facilitation-notes-for-mixed-pace-classrooms" class="depth-2">Additional lab facilitation notes (for mixed-pace classrooms)</a></li>
+<li><a href="#fast-finishers" class="depth-3">Fast-finishers</a></li>
+<li><a href="#learners-needing-support" class="depth-3">Learners needing support</a></li>
+<li><a href="#pairing-strategy" class="depth-3">Pairing strategy</a></li>
+<li><a href="#rubric-style-feedback-phrases-copypaste-ready" class="depth-2">Rubric-style feedback phrases (copy/paste ready)</a></li>
+<li><a href="#strong" class="depth-3">Strong</a></li>
+<li><a href="#needs-improvement" class="depth-3">Needs improvement</a></li>
+<li><a href="#final-recap-script-12-minutes" class="depth-2">Final recap script (1–2 minutes)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day11_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day11_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

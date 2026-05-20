@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 10, Hour 1: Introduction to Object-Oriented Programming – Classes, Objects, and the self Parameter | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="10">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day10_Hour1_Basics.md">
+
+    <link rel="prev" href="Day9_Hour4_Basics.html">
+    <link rel="next" href="Day10_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="10" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-10/index.html">Day 10</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 10, Hour 1: Introduction to Object-Oriented Programming – Classes, Objects, and the self Parameter</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 10</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day10_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="1-learning-outcomes">1. Learning Outcomes</h2>
+<p>By the end of this hour, students will be able to:</p>
+<ol>
+<li>
+<p><strong>Create a basic class using the <code>class</code> keyword with an <code>__init__</code> method</strong> – Students will understand the syntax and structure of Python class definitions, including the constructor method that initializes new objects.</p>
+</li>
+<li>
+<p><strong>Instantiate objects from a class and call methods on those objects</strong> – Students will practice creating instances and invoking methods with proper object dot notation.</p>
+</li>
+<li>
+<p><strong>Distinguish between a class (blueprint) and an object (instance)</strong> – Students will articulate how classes serve as templates and objects represent concrete instances with their own state and behavior.</p>
+</li>
+<li>
+<p><strong>Use instance attributes with the <code>self</code> parameter to store object-specific data</strong> – Students will understand how <code>self</code> enables each object to maintain unique attribute values independent of other instances.</p>
+</li>
+<li>
+<p><strong>Understand the role of methods and the <code>self</code> parameter in class behavior</strong> – Students will recognize that <code>self</code> is a reference to the current object and that methods operate on that object's data.</p>
+</li>
+</ol>
+<hr>
+<h2 id="2-instructor-prep">2. Instructor Prep</h2>
+<h3 id="learning-context-prerequisites">Learning Context &amp; Prerequisites</h3>
+<p>Before teaching this hour, ensure students are comfortable with:
+- <strong>Function definitions and calls</strong> – They should know how to write <code>def func():</code> and call <code>func()</code>.
+- <strong>Dictionaries and key-value pairs</strong> – Objects use attributes similar to dictionary key-value storage.
+- <strong>Conditional logic and loops</strong> – Essential for practice exercises and lab work.
+- <strong>Variable scope</strong> – Helps explain why <code>self</code> is necessary to distinguish instance attributes.</p>
+<h3 id="setup-materials-needed">Setup &amp; Materials Needed</h3>
+<p><strong>Code Examples Prepared Ahead:</strong>
+1. A simple <code>Contact</code> class with <code>__init__</code>, attributes, and a display method (provided in Live Demo).
+2. A <code>Book</code> class for the guided practice walkthrough.
+3. A partially completed <code>BankAccount</code> class for the lab exercise.</p>
+<p><strong>Code Environment:</strong>
+- Python 3.x (3.8+) installed and verified.
+- Interactive Python terminal (REPL) or Jupyter Notebook for live demonstrations.
+- All code examples saved in plain <code>.py</code> files in your instructor directory for quick copy-paste.</p>
+<p><strong>Student Materials:</strong>
+- Access to Python IDE (VS Code, PyCharm, or Thonny) or cloud-based Python (Replit, Google Colab).
+- Blank starter files for the practice walkthrough and lab exercise provided in advance.</p>
+<h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
+<ol>
+<li><strong>Forgetting the <code>self</code> parameter</strong> – Students often write <code>def __init__(name):</code> instead of <code>def __init__(self, name):</code>.</li>
+<li><strong>Confusing class attributes with instance attributes</strong> – Emphasize that each object has its own copy of attributes.</li>
+<li><strong>Not calling methods correctly</strong> – Students may try <code>Contact.display()</code> instead of <code>contact.display()</code> (forgetting the instance).</li>
+<li><strong>Treating <code>__init__</code> as optional</strong> – Reinforce that <code>__init__</code> is the standard way to initialize objects (though not strictly mandatory).</li>
+<li><strong>Misunderstanding <code>self</code></strong> – Students sometimes think <code>self</code> is a keyword like <code>def</code>; clarify it is just a variable name by convention.</li>
+</ol>
+<h3 id="timing-breakdown-2535-minutes-for-lab">Timing Breakdown (25–35 minutes for lab)</h3>
+<ul>
+<li><strong>Opening &amp; Context</strong> (2 min)</li>
+<li><strong>Concept Briefing</strong> (6–7 min)</li>
+<li><strong>Live Demo with Contact Class</strong> (4–5 min)</li>
+<li><strong>Guided Practice Walkthrough</strong> (5–6 min)</li>
+<li><strong>Lab Exercise with Checkpoints</strong> (8–10 min)</li>
+<li><strong>Wrap-Up &amp; Quick Questions</strong> (2 min)</li>
+</ul>
+<hr>
+<h2 id="3-opening-script">3. Opening Script</h2>
+<p><strong>[Read verbatim or closely paraphrase the following to open the hour]</strong></p>
+<p>"Welcome to Hour 37! Today we're crossing into one of the most powerful and widely used features of Python: Object-Oriented Programming, or OOP. </p>
+<p>So far, we've built programs using functions and data structures like lists and dictionaries. But what if we could bundle data and the functions that operate on that data into a single, reusable package? That's exactly what OOP lets us do.</p>
+<p>Think about a real-world scenario. A bank might manage thousands of accounts. Each account has properties—like a balance and an account holder's name—and actions that you can perform on it—like depositing or withdrawing money. In procedural programming, we'd write separate functions and pass data to them. But in OOP, we can model a 'BankAccount' as a class that bundles everything together: the account properties and the operations specific to accounts.</p>
+<p>Today, we'll introduce the fundamentals: <strong>what classes are, how to define them, how to create objects (called 'instantiating'), and how the special <code>self</code> parameter works.</strong> We'll start simple and build up to a practical lab where you'll create your own class. By the end of this hour, you'll have the mental model and hands-on experience to build real-world object-oriented solutions."</p>
+<hr>
+<h2 id="4-concept-briefing">4. Concept Briefing</h2>
+<h3 id="41-what-is-a-class">4.1 What Is a Class?</h3>
+<p>A <strong>class</strong> is a blueprint or template for creating objects. Just as a cookie cutter defines the shape of cookies you make, a class defines the structure and behavior of objects you create. Think of a class as a factory—you design the factory once, and then it produces many products (objects) all following the same design.</p>
+<p><strong>Key Points:</strong>
+- A class is defined using the <code>class</code> keyword.
+- It describes what attributes (data) an object will have and what methods (actions) it can perform.
+- No object exists yet—the class is just a definition.
+- A class is abstract until you create an instance from it.
+- Multiple classes can coexist in the same program, each with different purposes.</p>
+<p><strong>Example analogy:</strong></p>
+<pre><code>Cookie Cutter (class) → 🍪 Cookie 1, 🍪 Cookie 2, 🍪 Cookie 3 (objects/instances)
+</code></pre>
+<p><strong>Why classes matter:</strong>
+In procedural programming (the style you've used so far), you might write a function like <code>display_contact(name, phone)</code> and another like <code>update_contact_phone(name, phone)</code>. But these functions are disconnected—you have to pass all the data separately each time. With a class, all the data (name, phone) and all the operations (display, update) are bundled together into a single cohesive unit. This is especially powerful when you have many related pieces of data and many operations on that data.</p>
+<h3 id="42-what-is-an-object-instance">4.2 What Is an Object (Instance)?</h3>
+<p>An <strong>object</strong> is a concrete realization of a class. When you use a class to create an object, that object is called an <strong>instance</strong> of the class.</p>
+<p><strong>Key Points:</strong>
+- Each object is independent; changes to one object do not affect another.
+- Each object has its own state (attribute values).
+- Multiple objects can be created from the same class.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">class Contact:
+    pass
+
+# Create three objects (instances) of the Contact class
+alice = Contact()
+bob = Contact()
+charlie = Contact()
+
+# Each is a separate object
+print(alice)     # &lt;__main__.Contact object at 0x...&gt;
+print(bob)       # &lt;__main__.Contact object at 0x...&gt; (different address)
+print(charlie)   # &lt;__main__.Contact object at 0x...&gt; (different address)
+</code></pre>
+<h3 id="43-attributes-and-the-self-parameter">4.3 Attributes and the <code>self</code> Parameter</h3>
+<p><strong>Attributes</strong> are variables that belong to an object. They store the object's state or data. Think of attributes as the "properties" or "characteristics" of an object.</p>
+<p>The <strong><code>self</code> parameter</strong> is a reference to the current object. It allows methods to access and modify the object's own attributes. Without <code>self</code>, there would be no way for a method to know which object it's operating on.</p>
+<p><strong>How <code>self</code> works (detailed explanation):</strong>
+- When you call a method on an object, Python automatically passes the object as the first argument to the method.
+- That argument is received as <code>self</code> inside the method.
+- Inside the method, <code>self.attribute_name</code> refers to that specific object's attribute.
+- <code>self</code> is not a keyword—it's just a variable name by convention. You could technically call it something else (like <code>this</code> or <code>obj</code>), but the Python community uses <code>self</code> consistently.</p>
+<p><strong>Concrete <code>self</code> example with annotations:</strong></p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name):
+        self.name = name       # self refers to THIS object
+        self.phone = None      # Each Contact object gets its own name and phone
+
+# When we create an object:
+alice = Contact(&quot;Alice&quot;)
+# Internally, Python does: Contact.__init__(alice, &quot;Alice&quot;)
+# Inside __init__, self IS alice, so self.name IS alice.name
+
+bob = Contact(&quot;Bob&quot;)
+# Internally, Python does: Contact.__init__(bob, &quot;Bob&quot;)
+# Inside __init__, self IS bob, so self.name IS bob.name
+
+# Now verify the independence:
+print(alice.name)  # &quot;Alice&quot; (alice's version of name)
+print(bob.name)    # &quot;Bob&quot; (bob's version of name)
+
+# Each object has its own separate attributes
+print(id(alice))   # Some memory address like 140234678...
+print(id(bob))     # A different memory address like 140234679...
+# They're completely separate objects in memory
+</code></pre>
+<p><strong>Why <code>self</code> is necessary:</strong>
+Without <code>self</code>, there would be no way for methods to distinguish between different objects:</p>
+<pre><code class="language-python"># HYPOTHETICAL (doesn't work this way):
+class Contact:
+    def __init__(name):  # No self!
+        name = name  # Which name? The parameter? A global?
+
+    def display():  # No self!
+        print(name)  # Which contact's name? Impossible to know!
+
+# The language wouldn't know which object to operate on!
+</code></pre>
+<p><strong>Instance attributes vs. local variables:</strong></p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name):
+        self.name = name  # Instance attribute—belongs to the object
+        phone = &quot;555-0000&quot;  # Local variable—only exists in __init__
+
+    def display(self):
+        print(self.name)  # This works (instance attribute)
+        print(phone)  # ERROR! phone only existed in __init__
+</code></pre>
+<p><strong>The <code>self</code> pattern in methods:</strong></p>
+<pre><code class="language-python">class BankAccount:
+    def __init__(self, initial_balance):
+        self.balance = initial_balance
+
+    def deposit(self, amount):
+        self.balance = self.balance + amount  # Modify this object's balance
+
+    def get_balance(self):
+        return self.balance  # Return this object's balance
+
+# Each method operates on the specific object it was called on:
+acc1 = BankAccount(1000)
+acc2 = BankAccount(500)
+
+acc1.deposit(100)  # self is acc1; acc1.balance becomes 1100
+acc2.deposit(50)   # self is acc2; acc2.balance becomes 550
+
+print(acc1.get_balance())  # 1100 (acc1's balance)
+print(acc2.get_balance())  # 550 (acc2's balance)
+</code></pre>
+<h3 id="44-the-init-method-constructor">4.4 The <code>__init__</code> Method (Constructor)</h3>
+<p>The <code>__init__</code> method is a special method called a <strong>constructor</strong>. It runs automatically when you create a new object and sets up the object's initial state.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-python">class ClassName:
+    def __init__(self, param1, param2):
+        self.attr1 = param1
+        self.attr2 = param2
+</code></pre>
+<p><strong>Key Points:</strong>
+- <code>__init__</code> has two leading and two trailing underscores (double underscore).
+- It always has <code>self</code> as the first parameter.
+- It runs once when the object is created: <code>obj = ClassName(val1, val2)</code>.
+- It is not required (a class works without it), but it is the standard way to initialize objects.</p>
+<p><strong>Why <code>__init__</code> is useful:</strong>
+Without <code>__init__</code>:</p>
+<pre><code class="language-python">class Contact:
+    pass
+
+c = Contact()
+c.name = &quot;Alice&quot;  # Manually set attribute after creation (error-prone)
+</code></pre>
+<p>With <code>__init__</code>:</p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name):
+        self.name = name  # Attribute set up automatically, consistently
+
+c = Contact(&quot;Alice&quot;)  # Clean and clear
+</code></pre>
+<h3 id="45-methods">4.5 Methods</h3>
+<p>A <strong>method</strong> is a function that belongs to a class. Methods define the actions or behaviors that objects can perform. Methods are how you interact with objects and modify their state.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-python">class ClassName:
+    def __init__(self, param):
+        self.param = param
+
+    def method_name(self):
+        # Use self to access the object's attributes
+        return self.param
+
+    def another_method(self, arg):
+        # Methods can perform actions, modify attributes, or return values
+        self.param = self.param + arg
+        return self.param
+
+    def action_method(self):
+        # Methods don't have to return anything
+        print(f&quot;Object has param: {self.param}&quot;)
+</code></pre>
+<p><strong>Calling methods:</strong></p>
+<pre><code class="language-python">obj = ClassName(&quot;value&quot;)
+result = obj.method_name()           # Calls method, may return a value
+result2 = obj.another_method(5)      # Methods can take additional arguments
+obj.action_method()                  # Call a method that doesn't return anything
+</code></pre>
+<p><strong>Method types and patterns:</strong></p>
+<p><strong>1. Getter methods</strong> – Return information about the object's state:</p>
+<pre><code class="language-python">class Student:
+    def __init__(self, name, gpa):
+        self.name = name
+        self.gpa = gpa
+
+    def get_name(self):
+        return self.name
+
+    def get_gpa(self):
+        return self.gpa
+</code></pre>
+<p><strong>2. Setter methods</strong> – Modify the object's state:</p>
+<pre><code class="language-python">    def set_gpa(self, new_gpa):
+        self.gpa = new_gpa  # Update this object's gpa
+
+    def set_name(self, new_name):
+        self.name = new_name  # Update this object's name
+</code></pre>
+<p><strong>3. Action methods</strong> – Perform an action without returning a value:</p>
+<pre><code class="language-python">    def display_info(self):
+        print(f&quot;Name: {self.name}, GPA: {self.gpa}&quot;)
+
+    def increment_year(self):
+        self.year = self.year + 1
+</code></pre>
+<p><strong>4. Query methods</strong> – Ask questions about the object's state:</p>
+<pre><code class="language-python">    def has_high_gpa(self):
+        return self.gpa &gt;= 3.5
+
+    def is_passing(self):
+        return self.gpa &gt;= 2.0
+</code></pre>
+<p><strong>Why <code>self</code> in methods:</strong>
+Inside a method, <code>self</code> refers to the specific object the method was called on. This allows different objects to maintain independent state:</p>
+<pre><code class="language-python">class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        # self refers to the specific Circle object
+        return 3.14159 * self.radius ** 2
+
+    def circumference(self):
+        # Again, self refers to the specific Circle object
+        return 2 * 3.14159 * self.radius
+
+    def scale_up(self, factor):
+        # Modify this specific object's radius
+        self.radius = self.radius * factor
+
+# Create and use different circles:
+circle1 = Circle(5)
+circle2 = Circle(10)
+
+print(circle1.area())  # Uses circle1's radius (5)
+print(circle2.area())  # Uses circle2's radius (10)
+
+circle1.scale_up(2)    # Doubles circle1's radius to 10
+print(circle1.radius)  # 10
+print(circle2.radius)  # 10 (circle2 is unchanged)
+
+# Both circles can call the same methods, but each operates on its own data
+</code></pre>
+<p><strong>Method interactions:</strong>
+Methods can call other methods on the same object:</p>
+<pre><code class="language-python">class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
+    def info(self):
+        # One method calling another method
+        area = self.area()
+        perim = self.perimeter()
+        print(f&quot;Area: {area}, Perimeter: {perim}&quot;)
+
+rect = Rectangle(4, 5)
+rect.info()  # Calls area() and perimeter() internally
+# Output: Area: 20, Perimeter: 18
+</code></pre>
+<hr>
+<h2 id="5-live-demo-with-contact-class">5. Live Demo with Contact Class</h2>
+<p><strong>[Demonstrate this live in an interactive Python terminal. Type code line by line and show output.]</strong></p>
+<h3 id="51-define-and-instantiate-a-contact-class">5.1 Define and Instantiate a Contact Class</h3>
+<pre><code class="language-python">class Contact:
+    &quot;&quot;&quot;A simple contact record.&quot;&quot;&quot;
+
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def display(self):
+        print(f&quot;Name: {self.name}&quot;)
+        print(f&quot;Phone: {self.phone}&quot;)
+
+    def call_info(self):
+        return f&quot;Calling {self.name} at {self.phone}&quot;
+
+# Create two Contact objects
+alice = Contact(&quot;Alice Johnson&quot;, &quot;555-0001&quot;)
+bob = Contact(&quot;Bob Smith&quot;, &quot;555-0002&quot;)
+
+print(alice.name)      # Output: Alice Johnson
+print(bob.name)        # Output: Bob Smith
+print(alice.call_info())  # Output: Calling Alice Johnson at 555-0001
+</code></pre>
+<h3 id="52-show-attribute-independence">5.2 Show Attribute Independence</h3>
+<pre><code class="language-python"># Verify each object has its own attributes
+print(f&quot;Alice's phone: {alice.phone}&quot;)  # 555-0001
+print(f&quot;Bob's phone: {bob.phone}&quot;)      # 555-0002
+
+# Modify one object's attributes—does not affect the other
+alice.phone = &quot;555-9999&quot;
+print(f&quot;Alice's phone now: {alice.phone}&quot;)  # 555-9999
+print(f&quot;Bob's phone still: {bob.phone}&quot;)    # 555-0002 (unchanged)
+</code></pre>
+<h3 id="53-call-methods-on-different-objects">5.3 Call Methods on Different Objects</h3>
+<pre><code class="language-python"># Each object calls its own method with its own data
+alice.display()
+# Output:
+# Name: Alice Johnson
+# Phone: 555-9999
+
+bob.display()
+# Output:
+# Name: Bob Smith
+# Phone: 555-0002
+</code></pre>
+<h3 id="54-emphasize-the-self-connection">5.4 Emphasize the <code>self</code> Connection</h3>
+<pre><code class="language-python"># When we call alice.display(), Python passes alice as self
+# Inside the method, self.name is alice.name
+# Similarly, when we call bob.display(), self is bob
+
+# You can verify this by looking at the object's memory address
+print(id(alice))        # Some address like 140234678...
+print(type(alice))      # &lt;class '__main__.Contact'&gt;
+</code></pre>
+<p><strong>Talking Point:</strong> "Notice how <code>alice.display()</code> uses alice's data, and <code>bob.display()</code> uses bob's data. That's the magic of <code>self</code>—it always refers to the object the method was called on."</p>
+<hr>
+<h2 id="6-guided-practice-walkthrough-building-a-book-class">6. Guided Practice Walkthrough: Building a Book Class</h2>
+<p><strong>[Lead students through this step-by-step. Have them type along or follow along in their notebooks.]</strong></p>
+<h3 id="61-outline-the-book-class">6.1 Outline the Book Class</h3>
+<p>"We're going to build a <code>Book</code> class that represents a book with a title, author, and number of pages. Let's start with the structure."</p>
+<pre><code class="language-python">class Book:
+    &quot;&quot;&quot;Represents a book with basic information.&quot;&quot;&quot;
+
+    def __init__(self, title, author, pages):
+        # Set up the book's initial state
+        self.title = title
+        self.author = author
+        self.pages = pages
+</code></pre>
+<p><strong>Talking Point:</strong> "Notice we have three instance attributes: <code>title</code>, <code>author</code>, and <code>pages</code>. Each <code>Book</code> object will have its own copies of these."</p>
+<h3 id="62-add-a-display-method">6.2 Add a Display Method</h3>
+<pre><code class="language-python">    def display_info(self):
+        &quot;&quot;&quot;Display the book's information.&quot;&quot;&quot;
+        print(f&quot;Title: {self.title}&quot;)
+        print(f&quot;Author: {self.author}&quot;)
+        print(f&quot;Pages: {self.pages}&quot;)
+</code></pre>
+<p><strong>Talking Point:</strong> "This method uses <code>self</code> to access the current book's attributes. When we call <code>book1.display_info()</code>, Python passes <code>book1</code> as <code>self</code> inside the method."</p>
+<h3 id="63-add-a-summary-method">6.3 Add a Summary Method</h3>
+<pre><code class="language-python">    def summary(self):
+        &quot;&quot;&quot;Return a brief summary of the book.&quot;&quot;&quot;
+        return f&quot;{self.title} by {self.author} ({self.pages} pages)&quot;
+</code></pre>
+<h3 id="64-create-and-use-book-objects">6.4 Create and Use Book Objects</h3>
+<pre><code class="language-python"># Create book objects
+book1 = Book(&quot;1984&quot;, &quot;George Orwell&quot;, 328)
+book2 = Book(&quot;To Kill a Mockingbird&quot;, &quot;Harper Lee&quot;, 281)
+
+# Use the methods
+book1.display_info()
+# Output:
+# Title: 1984
+# Author: George Orwell
+# Pages: 328
+
+print(book2.summary())  
+# Output: To Kill a Mockingbird by Harper Lee (281 pages)
+
+# Access attributes directly
+print(f&quot;Book 1 has {book1.pages} pages.&quot;)  # Book 1 has 328 pages.
+print(f&quot;Book 2 has {book2.pages} pages.&quot;)  # Book 2 has 281 pages.
+</code></pre>
+<p><strong>Talking Point:</strong> "Each book object is independent. <code>book1</code> and <code>book2</code> are completely separate objects in memory, each with their own attribute values."</p>
+<h3 id="65-demonstrate-independence">6.5 Demonstrate Independence</h3>
+<pre><code class="language-python"># Modify one book's attributes
+book1.pages = 350  # Extended edition!
+
+print(book1.summary())  # &quot;1984 by George Orwell (350 pages)&quot;
+print(book2.summary())  # &quot;To Kill a Mockingbird by Harper Lee (281 pages)&quot;
+# book2 is unaffected
+</code></pre>
+<hr>
+<h2 id="7-lab-exercise-bankaccount-class-with-7-checkpoints">7. Lab Exercise: BankAccount Class with 7 Checkpoints</h2>
+<p>Students now build a <code>BankAccount</code> class with progressive checkpoints. Time: 8–10 minutes.</p>
+<h3 id="checkpoint-1-define-the-class-and-init-method">Checkpoint 1: Define the Class and <code>__init__</code> Method</h3>
+<p>Create a <code>BankAccount</code> class with <code>__init__</code> that accepts <code>account_holder</code> and <code>initial_balance</code>:</p>
+<pre><code class="language-python">class BankAccount:
+    def __init__(self, account_holder, initial_balance):
+        self.account_holder = account_holder
+        self.balance = initial_balance
+</code></pre>
+<p><strong>Verification:</strong> Create two accounts and verify they have independent balances:</p>
+<pre><code class="language-python">acc1 = BankAccount(&quot;Alice&quot;, 1000)
+acc2 = BankAccount(&quot;Bob&quot;, 500)
+print(acc1.balance)  # Should print 1000
+print(acc2.balance)  # Should print 500
+</code></pre>
+<h3 id="checkpoint-2-add-a-display-method">Checkpoint 2: Add a Display Method</h3>
+<p>Add a method to display the account details:</p>
+<pre><code class="language-python">    def display_account(self):
+        print(f&quot;Account Holder: {self.account_holder}&quot;)
+        print(f&quot;Current Balance: ${self.balance}&quot;)
+</code></pre>
+<p><strong>Verification:</strong></p>
+<pre><code class="language-python">acc1.display_account()
+# Should output:
+# Account Holder: Alice
+# Current Balance: $1000
+</code></pre>
+<h3 id="checkpoint-3-add-a-deposit-method">Checkpoint 3: Add a Deposit Method</h3>
+<p>Add a method to deposit money:</p>
+<pre><code class="language-python">    def deposit(self, amount):
+        self.balance = self.balance + amount
+        print(f&quot;Deposited ${amount}. New balance: ${self.balance}&quot;)
+</code></pre>
+<p><strong>Verification:</strong></p>
+<pre><code class="language-python">acc1.deposit(200)  # Should print &quot;Deposited $200. New balance: $1200&quot;
+print(acc1.balance)  # Should be 1200
+</code></pre>
+<h3 id="checkpoint-4-add-a-withdrawal-method">Checkpoint 4: Add a Withdrawal Method</h3>
+<p>Add a method to withdraw money (with a simple safety check):</p>
+<pre><code class="language-python">    def withdraw(self, amount):
+        if amount &lt;= self.balance:
+            self.balance = self.balance - amount
+            print(f&quot;Withdrew ${amount}. New balance: ${self.balance}&quot;)
+        else:
+            print(f&quot;Insufficient funds. Your balance is ${self.balance}&quot;)
+</code></pre>
+<p><strong>Verification:</strong></p>
+<pre><code class="language-python">acc1.withdraw(300)  # Should succeed
+acc1.withdraw(5000)  # Should print &quot;Insufficient funds...&quot;
+</code></pre>
+<h3 id="checkpoint-5-add-a-get-balance-method">Checkpoint 5: Add a Get Balance Method</h3>
+<p>Add a simple method that returns the current balance (useful for other code to use):</p>
+<pre><code class="language-python">    def get_balance(self):
+        return self.balance
+</code></pre>
+<p><strong>Verification:</strong></p>
+<pre><code class="language-python">current = acc1.get_balance()
+print(f&quot;Balance: ${current}&quot;)  # Should print current balance
+</code></pre>
+<h3 id="checkpoint-6-add-a-transfer-method">Checkpoint 6: Add a Transfer Method</h3>
+<p>Add a method to transfer funds from one account to another:</p>
+<pre><code class="language-python">    def transfer_to(self, recipient_account, amount):
+        if amount &lt;= self.balance:
+            self.balance = self.balance - amount
+            recipient_account.balance = recipient_account.balance + amount
+            print(f&quot;Transferred ${amount} from {self.account_holder} to {recipient_account.account_holder}&quot;)
+        else:
+            print(f&quot;Cannot transfer. {self.account_holder} has insufficient funds.&quot;)
+</code></pre>
+<p><strong>Verification:</strong></p>
+<pre><code class="language-python">acc1.transfer_to(acc2, 100)
+# Should print transfer message and update both accounts
+print(acc1.balance)  # Should be reduced
+print(acc2.balance)  # Should be increased
+</code></pre>
+<h3 id="checkpoint-7-full-account-summary-and-independence-check">Checkpoint 7: Full Account Summary and Independence Check</h3>
+<p>Verify the complete class works correctly and that both accounts operate independently:</p>
+<pre><code class="language-python">print(&quot;=== Final Account Status ===&quot;)
+acc1.display_account()
+acc2.display_account()
+
+# Verify independence—changing one doesn't affect the other
+acc1.deposit(50)
+print(f&quot;After acc1 deposit, acc1 balance: {acc1.balance}&quot;)
+print(f&quot;After acc1 deposit, acc2 balance: {acc2.balance}&quot;)
+# acc2 balance should remain unchanged
+</code></pre>
+<hr>
+<h2 id="8-troubleshooting-common-issues">8. Troubleshooting Common Issues</h2>
+<h3 id="issue-1-nameerror-name-self-is-not-defined">Issue 1: "NameError: name 'self' is not defined"</h3>
+<p><strong>Cause:</strong> Student used <code>self</code> outside of a method, or forgot to pass <code>self</code> in the method definition.</p>
+<pre><code class="language-python"># WRONG:
+class Contact:
+    def __init__(name):  # Missing self
+        self.name = name  # NameError: self is not defined
+
+# RIGHT:
+class Contact:
+    def __init__(self, name):  # Include self as first parameter
+        self.name = name
+</code></pre>
+<p><strong>Fix:</strong> Remind students that <code>self</code> is required as the first parameter in every method. It is not optional. Every method needs it, even if the method doesn't use it:</p>
+<pre><code class="language-python">class Timer:
+    def start(self):  # Even if this method doesn't use self, it still needs to be there
+        print(&quot;Timer started&quot;)
+</code></pre>
+<h3 id="issue-2-typeerror-init-missing-1-required-positional-argument">Issue 2: "TypeError: <strong>init</strong>() missing 1 required positional argument"</h3>
+<p><strong>Cause:</strong> Student created an object without providing the required arguments, or the method signature expects different arguments.</p>
+<pre><code class="language-python"># WRONG:
+class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+alice = Contact(&quot;Alice&quot;)  # Missing phone argument
+# TypeError: __init__() missing 1 required positional argument: 'phone'
+
+# RIGHT:
+alice = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)  # Provide all required arguments
+</code></pre>
+<p><strong>Fix:</strong> Check the method signature and ensure all required arguments are provided when creating the object. If an argument is optional, use a default value:</p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name, phone=None):  # phone has a default
+        self.name = name
+        self.phone = phone
+
+alice = Contact(&quot;Alice&quot;)  # Now works; phone defaults to None
+bob = Contact(&quot;Bob&quot;, &quot;555-0002&quot;)  # Can also provide phone
+</code></pre>
+<h3 id="issue-3-modifying-one-object-affects-another">Issue 3: Modifying one object affects another</h3>
+<p><strong>Cause:</strong> Students often accidentally share attribute definitions by using class-level attributes instead of instance attributes, or by assigning mutable objects (lists, dicts) that get shared.</p>
+<pre><code class="language-python"># WRONG (all instances share the same list):
+class Container:
+    items = []  # Class attribute—shared by ALL instances!
+
+    def add_item(self, item):
+        self.items.append(item)
+
+c1 = Container()
+c2 = Container()
+c1.add_item(&quot;A&quot;)
+print(c2.items)  # [&quot;A&quot;] — WRONG! c2's items should be empty
+
+# RIGHT (each instance has its own list):
+class Container:
+    def __init__(self):
+        self.items = []  # Instance attribute—unique per object
+
+    def add_item(self, item):
+        self.items.append(item)
+
+c1 = Container()
+c2 = Container()
+c1.add_item(&quot;A&quot;)
+print(c2.items)  # [] — CORRECT! c2's items is independent
+</code></pre>
+<p><strong>Fix:</strong> Use <code>__init__</code> to set up instance attributes so each object gets its own copy. If you need to share data across all instances, be explicit about it:</p>
+<pre><code class="language-python">class User:
+    total_users = 0  # Class attribute—shared intentionally
+
+    def __init__(self, name):
+        self.name = name  # Instance attribute—unique per object
+        User.total_users += 1  # Explicitly access class attribute
+
+u1 = User(&quot;Alice&quot;)
+u2 = User(&quot;Bob&quot;)
+print(User.total_users)  # 2 (all users share this count)
+</code></pre>
+<h3 id="issue-4-forgetting-parentheses-when-calling-a-method">Issue 4: Forgetting parentheses when calling a method</h3>
+<p><strong>Cause:</strong> Student accesses the method object itself instead of calling it.</p>
+<pre><code class="language-python"># WRONG:
+result = alice.display  # Returns the method object, does not call it
+# &lt;bound method Contact.display of ...&gt;
+
+# RIGHT:
+alice.display()  # Calls the method with parentheses
+</code></pre>
+<p><strong>Fix:</strong> Remind students that methods are functions and must be called with <code>()</code>. Without parentheses, you get the method object itself, not the result of calling it.</p>
+<h3 id="issue-5-trying-to-call-a-method-on-the-class-instead-of-an-instance">Issue 5: Trying to call a method on the class instead of an instance</h3>
+<p><strong>Cause:</strong> Student calls a method on the class directly, bypassing the object.</p>
+<pre><code class="language-python"># WRONG:
+Contact.display()  # TypeError: display() missing 1 required positional argument: 'self'
+
+# RIGHT:
+alice = Contact(&quot;Alice&quot;)
+alice.display()  # Call on the instance
+</code></pre>
+<p><strong>Fix:</strong> Explain that methods are called on objects (instances), not on the class itself. The class is the blueprint; instances are what you call methods on:</p>
+<pre><code class="language-python">class Dog:
+    def bark(self):
+        print(&quot;Woof!&quot;)
+
+# Dog is a class (blueprint)
+# dog1 is an instance of the class
+dog1 = Dog()
+dog1.bark()  # Correct—call method on instance
+
+# Dog.bark() doesn't work because there's no &quot;dog&quot; to bark
+# Methods need an object to operate on
+</code></pre>
+<h3 id="issue-6-mixing-up-selfattribute-and-local-variables">Issue 6: Mixing up <code>self.attribute</code> and local variables</h3>
+<p><strong>Cause:</strong> Student creates local variables instead of instance attributes, or tries to use instance attributes after they've gone out of scope.</p>
+<pre><code class="language-python"># WRONG:
+class Contact:
+    def __init__(self, name):
+        name = name  # This creates a local variable, not an instance attribute!
+
+    def display(self):
+        print(self.name)  # Error: self doesn't have 'name'
+
+# RIGHT:
+class Contact:
+    def __init__(self, name):
+        self.name = name  # This creates an instance attribute
+
+alice = Contact(&quot;Alice&quot;)
+alice.display()  # Works correctly
+</code></pre>
+<p><strong>Fix:</strong> Always use <code>self.attribute_name</code> to create and access instance attributes. Local variables (without <code>self.</code>) are only available within that specific method.</p>
+<h3 id="issue-7-incorrect-understanding-of-what-init-returns">Issue 7: Incorrect understanding of what <code>__init__</code> returns</h3>
+<p><strong>Cause:</strong> Student tries to capture a return value from <code>__init__</code> or expects <code>__init__</code> to return the object.</p>
+<pre><code class="language-python"># WRONG:
+alice = Contact.__init__(&quot;Alice&quot;)  # Incorrect usage
+# OR expecting __init__ to return something
+
+# RIGHT:
+alice = Contact(&quot;Alice&quot;)  # Calling the constructor, which implicitly returns the object
+</code></pre>
+<p><strong>Fix:</strong> Clarify that <code>__init__</code> doesn't return anything (or returns <code>None</code>). The constructor call <code>ClassName(...)</code> automatically creates and returns the new object. You don't call <code>__init__</code> directly.</p>
+<hr>
+<h2 id="9-quick-check-questions">9. Quick-Check Questions</h2>
+<p>Ask these questions to gauge comprehension:</p>
+<ol>
+<li>
+<p><strong>What is the difference between a class and an object?</strong>
+   - Expected: A class is a blueprint or template; an object is a specific instance created from that blueprint.</p>
+</li>
+<li>
+<p><strong>Why do we use <code>self</code> as the first parameter in methods?</strong>
+   - Expected: <code>self</code> refers to the current object, allowing methods to access and modify that object's attributes.</p>
+</li>
+<li>
+<p><strong>What does <code>__init__</code> do?</strong>
+   - Expected: <code>__init__</code> is a constructor method that runs automatically when an object is created and initializes the object's attributes.</p>
+</li>
+<li>
+<p><strong>If I create two <code>Contact</code> objects and modify one's <code>name</code> attribute, does it affect the other?</strong>
+   - Expected: No, each object is independent with its own set of attributes.</p>
+</li>
+<li>
+<p><strong>How do you call a method on an object?</strong>
+   - Expected: Using dot notation: <code>object.method()</code> or <code>object.method(arguments)</code>.</p>
+</li>
+</ol>
+<hr>
+<h2 id="10-wrap-up-transition">10. Wrap-Up &amp; Transition</h2>
+<p><strong>[Summarize the hour with the following talking points]</strong></p>
+<p>"Excellent work! Today you've learned the fundamentals of Object-Oriented Programming. You now understand:</p>
+<ul>
+<li><strong>Classes as blueprints</strong>: A class defines the structure and behavior of objects.</li>
+<li><strong>Objects as instances</strong>: Each object is independent with its own state.</li>
+<li><strong>The <code>self</code> parameter</strong>: It refers to the current object, enabling each object to manage its own data.</li>
+<li><strong>Methods as actions</strong>: Methods define what objects can do, and they operate on the object's own attributes.</li>
+</ul>
+<p>These concepts form the foundation of OOP. In the next session, we'll build on this by introducing <strong>inheritance</strong>, where one class can extend another. But the mental model you've developed today—classes, objects, attributes, and methods—will carry forward into all advanced OOP topics.</p>
+<p>For now, practice building small classes. The more you build, the more natural the syntax and thinking will become. In your next hour, we'll explore inheritance and see how classes can build upon each other. Great effort today!"</p>
+<hr>
+<h2 id="11-facilitation-notes">11. Facilitation Notes</h2>
+<h3 id="pacing-strategy">Pacing Strategy</h3>
+<ul>
+<li><strong>If students are struggling:</strong> Spend more time on Concept Briefing and Live Demo. Simplify the Book class walkthrough and reduce the number of lab checkpoints (focus on 1–3). Use simpler examples like a <code>Light</code> class (on/off, brightness) before moving to more complex ones.</li>
+<li><strong>If students are confident:</strong> Extend the lab with additional methods (like <code>__str__</code> for better display) or challenge them to add attribute validation in <code>__init__</code>. Ask them to think about what other methods would be useful for a BankAccount.</li>
+<li><strong>Monitor comprehension throughout:</strong> Ask students to explain concepts in their own words rather than just writing code. This reveals deeper understanding.</li>
+</ul>
+<h3 id="engagement-tips">Engagement Tips</h3>
+<ul>
+<li><strong>Use real-world analogies consistently:</strong> Compare classes to blueprints, templates, or recipes throughout the hour. Return to these analogies when students seem confused.</li>
+<li><strong>Live coding matters—type in real time:</strong> Don't use pre-prepared slides for code. Type in the interactive terminal, not just slides. Show errors and fix them live. This models debugging and shows that errors are normal.</li>
+<li><strong>Encourage questions as learning opportunities:</strong> OOP is conceptually new for many students. Frame questions as opportunities to deepen understanding, not as interruptions.</li>
+<li><strong>Peer explanation:</strong> Have students explain the Contact or Book class to each other in their own words. Teaching others reinforces learning.</li>
+<li><strong>Use physical analogies:</strong> Draw diagrams of the object, its attributes, and methods on a whiteboard. Visual representation helps abstract concepts become concrete.</li>
+</ul>
+<h3 id="demo-troubleshooting">Demo Troubleshooting</h3>
+<ul>
+<li><strong>If code fails:</strong> Show the error message, read it aloud, explain what it means. This models debugging behavior that students should emulate.</li>
+<li><strong>If a student's code doesn't work:</strong> Celebrate the error as a learning opportunity and work through it together with the class. Don't just fix it silently.</li>
+<li><strong>If stuck:</strong> Step back and draw a diagram of the object, its attributes, and methods to visualize the structure. Sometimes students just need a different perspective.</li>
+<li><strong>Avoid "just works" magic:</strong> When something works, explain why. When something fails, explain why it failed. Never gloss over the "why."</li>
+</ul>
+<h3 id="timing-recovery-strategies">Timing Recovery Strategies</h3>
+<ul>
+<li><strong>Running over?</strong> Prioritize Concept Briefing and Live Demo. The lab checkpoints can be assigned as practice homework or completed in the next session's opening minutes.</li>
+<li><strong>Ahead of schedule?</strong> Use the extra time for deeper exploration: ask "What if we added this method?" or "How would we modify the BankAccount to track transaction history?" Have students build additional methods collaboratively.</li>
+<li><strong>Lab checkpoint overflow?</strong> Designate some checkpoints as "homework" or "extension" tasks that students complete after class.</li>
+</ul>
+<h3 id="support-materials-resources">Support Materials &amp; Resources</h3>
+<ul>
+<li><strong>Starter code availability:</strong> Have starter code for the lab available so students can copy-paste and focus on the logic rather than syntax.</li>
+<li><strong>Reference card:</strong> Provide a reference card with the class syntax template for students to keep as a quick reference.</li>
+<li><strong>Recorded demo:</strong> Offer a recorded demo video for students who want to review after class.</li>
+<li><strong>Office hours cheat sheet:</strong> Have a list of common mistakes and fixes available for students seeking help.</li>
+<li><strong>Peer review prompts:</strong> Prepare simple prompts like "Does the method use <code>self</code> correctly?" to guide peer reviews during lab time.</li>
+</ul>
+<h3 id="classroom-dynamics">Classroom Dynamics</h3>
+<ul>
+<li><strong>Mix up activities:</strong> Alternate between teacher talk, live demo, guided walkthrough, and independent lab work to maintain engagement.</li>
+<li><strong>Monitor participation:</strong> Notice who's struggling and who's comfortable. Adjust support accordingly.</li>
+<li><strong>Celebrate success:</strong> When a student gets their first class working, acknowledge it. These small wins build confidence.</li>
+<li><strong>Normalize confusion:</strong> Remind students that confusion is part of learning. "If you're confused, you're probably learning something new—that's exactly where we want to be."</li>
+</ul>
+<h3 id="post-class-follow-up">Post-Class Follow-Up</h3>
+<ul>
+<li><strong>Collect completed labs:</strong> Review a few lab implementations to identify common misconceptions for the next session.</li>
+<li><strong>Send a recap email:</strong> Summarize key concepts and point students to resources for practice.</li>
+<li><strong>Offer practice problems:</strong> Provide 2–3 simple class-building challenges for homework.</li>
+</ul>
+<h3 id="technical-setup-check-before-class">Technical Setup Check (Before Class)</h3>
+<ul>
+<li>✅ Python 3.x (3.8+) installed and tested on your demo machine</li>
+<li>✅ Code examples copied to your working directory and tested</li>
+<li>✅ Interactive terminal (REPL) or Jupyter Notebook working</li>
+<li>✅ Slides or talking points organized</li>
+<li>✅ Starter code prepared and tested</li>
+<li>✅ Student machines have Python available</li>
+</ul>
+<hr>
+<h2 id="12-assessment-differentiation">12. Assessment &amp; Differentiation</h2>
+<h3 id="formative-assessment-during-the-hour">Formative Assessment (During the Hour)</h3>
+<ol>
+<li>
+<p><strong>Observation during lab work:</strong> Are students correctly using <code>self</code>? Are they creating independent objects? Watch for: forgetting <code>self</code>, calling methods on the class instead of instances, accidentally sharing attributes between objects.</p>
+</li>
+<li>
+<p><strong>Quick-check questions:</strong> Use the 5 questions in Section 9 to gauge understanding at the end. Listen for accurate language (students should say "instance" not "copy," should understand <code>self</code> refers to the current object).</p>
+</li>
+<li>
+<p><strong>Code review:</strong> Review a few students' <code>BankAccount</code> implementations during the lab to identify misconceptions. Look for patterns (e.g., if multiple students forget <code>self</code>, spend extra time reinforcing it).</p>
+</li>
+<li>
+<p><strong>Pair monitoring:</strong> If students are working in pairs, observe their interactions. Do they explain concepts to each other? Can they debug together?</p>
+</li>
+<li>
+<p><strong>Checkpoint verification:</strong> As students complete each checkpoint, quickly verify correctness. This gives them immediate feedback and prevents errors from compounding.</p>
+</li>
+</ol>
+<h3 id="differentiation-strategies">Differentiation Strategies</h3>
+<p><strong>For students who are struggling:</strong>
+- Reduce the scope: Focus on 2–3 lab checkpoints (e.g., just <code>__init__</code>, <code>display_account</code>, and <code>deposit</code>).
+- Provide more scaffolding: Offer pseudocode or skeleton code with blanks to fill in.
+- Pair them with a confident peer for the lab work.
+- Use simpler examples: Use a <code>Lamp</code> class (on/off, brightness) instead of <code>BankAccount</code>. Fewer methods, fewer attributes.
+- Pre-teach key concepts: Before the hour, meet with struggling students and go through a simple class example one-on-one.
+- Extend examples they understand: Start with <code>Contact</code>, then extend it by adding one method at a time.</p>
+<p><strong>For students who are advanced:</strong>
+- Extend the challenge: Ask them to add input validation (e.g., reject negative deposits).
+- Introduce new concepts early: Show them <code>__str__</code> method to customize how objects are printed.
+- Challenge them to add a <code>transaction_log</code> attribute that records all deposits and withdrawals as a list.
+- Have them explain OOP concepts to the class or write a summary blog post.
+- Assign a "deep dive" extension: "What other methods would a BankAccount need in real life? Build 2–3 more."
+- Introduce class-level thinking: Ask them to think about what attributes and methods a <code>Bank</code> class would need (meta-thinking about class design).</p>
+<p><strong>For students at grade level:</strong>
+- Standard lab with all 7 checkpoints (as designed).
+- Encourage them to extend one checkpoint with additional functionality (e.g., add a fee calculation).
+- Have them review and provide feedback to peers' code.</p>
+<h3 id="assessment-criteria-for-the-lab">Assessment Criteria for the Lab</h3>
+<p>A successful lab implementation should:
+- ✅ Have a correctly defined <code>__init__</code> method with <code>self</code> and appropriate attributes.
+- ✅ Include methods that use <code>self</code> to access and modify attributes.
+- ✅ Demonstrate that two different account objects maintain independent balances.
+- ✅ Show correct method calls with object dot notation (<code>account.method()</code>).
+- ✅ Handle edge cases (like insufficient funds for withdrawal).
+- ✅ Use appropriate variable names and consistent code style.
+- ✅ Include comments explaining key sections (optional but encouraged).</p>
+<p><strong>Grading rubric</strong> (if applicable):
+| Criterion | Points | Exemplary | Proficient | Developing | Beginning |
+|-----------|--------|-----------|-----------|-----------|-----------|
+| Class Definition &amp; <code>__init__</code> | 20 | Correct use of <code>__init__</code>, all attributes set | Minor issues with structure | Missing attributes or incorrect <code>self</code> | No <code>__init__</code> or fundamentally broken |
+| Methods &amp; <code>self</code> | 20 | All methods use <code>self</code> correctly | Most methods correct, minor issues | Several methods missing or incorrect <code>self</code> | Methods not using <code>self</code> or missing |
+| Object Independence | 20 | Two objects clearly maintain separate state | Objects mostly independent | Some attribute mixing | No evidence of independence |
+| Method Calls | 20 | All calls use correct dot notation | Most calls correct | Some incorrect call syntax | Incorrect or missing calls |
+| Edge Cases &amp; Logic | 20 | Handles errors (insufficient funds, etc.) | Basic logic correct | Partial logic implementation | Logic not implemented |
+| <strong>Total</strong> | <strong>100</strong> | 90–100 | 80–89 | 70–79 | &lt;70 |</p>
+<h3 id="common-misconceptions-to-address">Common Misconceptions to Address</h3>
+<table>
+<thead>
+<tr>
+<th>Misconception</th>
+<th>Reality</th>
+<th>How to Address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"<code>self</code> is a keyword like <code>def</code>"</td>
+<td><code>self</code> is just a variable name by convention. You could name it <code>this</code> or <code>obj</code>, but don't.</td>
+<td>Show that <code>self</code> is just a parameter name. You could rename it, but no one does.</td>
+</tr>
+<tr>
+<td>"Objects all share the same attributes"</td>
+<td>Each object instance has its own set of attribute values.</td>
+<td>Show two objects modifying one attribute; demonstrate the other is unaffected.</td>
+</tr>
+<tr>
+<td>"<code>__init__</code> is optional"</td>
+<td>It's not strictly mandatory, but it's the standard way to set up objects consistently.</td>
+<td>Show the problem of manual attribute assignment vs. using <code>__init__</code>.</td>
+</tr>
+<tr>
+<td>"I can call <code>ClassName.method()</code>"</td>
+<td>Methods are called on objects: <code>obj.method()</code>. Calling on the class won't work (missing <code>self</code>).</td>
+<td>Demonstrate the error and show why <code>self</code> is needed.</td>
+</tr>
+<tr>
+<td>"Using <code>self.name = name</code> is redundant"</td>
+<td>It's not. It distinguishes the local <code>name</code> parameter from the instance attribute <code>self.name</code>.</td>
+<td>Show the difference: with and without <code>self.</code></td>
+</tr>
+<tr>
+<td>"Methods are like functions I've used before"</td>
+<td>Methods are similar but tied to objects. They automatically receive <code>self</code> as the first argument.</td>
+<td>Show the function vs. method syntax side-by-side.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="homework-practice-extension">Homework / Practice Extension</h3>
+<p>Assign one of the following to reinforce the hour's learning:</p>
+<ol>
+<li>
+<p><strong>Build a <code>Person</code> class</strong> with attributes (name, age, email) and methods (greet, update_email, get_info). Example:
+   ```python
+   class Person:
+       def <strong>init</strong>(self, name, age, email):
+           self.name = name
+           self.age = age
+           self.email = email</p>
+<p>def greet(self):
+       print(f"Hello, I'm {self.name}")</p>
+<p>def have_birthday(self):
+       self.age += 1
+   ```</p>
+</li>
+<li>
+<p><strong>Expand the <code>BankAccount</code></strong> class by adding a <code>transaction_history</code> attribute that records each deposit/withdrawal as a list of strings. Example:
+   <code>python
+   self.transaction_history = []
+   # Then in each method, append to the list:
+   self.transaction_history.append(f"Deposited ${amount}")</code></p>
+</li>
+<li>
+<p><strong>Create a <code>Student</code> class</strong> with (name, student_id, gpa) and methods to update_gpa, display_info, and check_standing (pass/fail based on GPA).</p>
+</li>
+<li>
+<p><strong>Reflection writing:</strong> "Explain to someone who has never programmed what a class is and why it's useful. Use the Contact or Book class as an example." (Encourage them to use their own words and analogies.)</p>
+</li>
+<li>
+<p><strong>Design a class from scratch:</strong> Pick something from your own life (Playlist, Game, Pet, Car, etc.) and design what attributes and methods it should have. Write 2–3 attributes and 2–3 methods (pseudocode is fine).</p>
+</li>
+<li>
+<p><strong>Debug someone else's code:</strong> Provide a broken BankAccount implementation with common errors and have students identify and fix them.</p>
+</li>
+</ol>
+<h3 id="follow-up-resources-for-students">Follow-Up Resources for Students</h3>
+<ul>
+<li><strong>Python.org documentation:</strong> https://docs.python.org/3/tutorial/classes.html</li>
+<li><strong>W3Schools OOP tutorial:</strong> https://www.w3schools.com/python/python_oops.asp</li>
+<li><strong>Visualizer tool:</strong> Use Python Tutor (https://pythontutor.com/) to visualize object creation and method calls step-by-step.</li>
+<li><strong>Practice problems:</strong> Provide links to coding challenge sites (LeetCode, HackerRank, CodeWars) with beginner-level class challenges.</li>
+<li><strong>Office hours:</strong> Make yourself available for follow-up questions on class design and <code>self</code>.</li>
+</ul>
+<hr>
+<p><strong>End of Day 10, Hour 1 Lecture Script</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-learning-outcomes" class="depth-2">1. Learning Outcomes</a></li>
+<li><a href="#2-instructor-prep" class="depth-2">2. Instructor Prep</a></li>
+<li><a href="#learning-context-prerequisites" class="depth-3">Learning Context &amp; Prerequisites</a></li>
+<li><a href="#setup-materials-needed" class="depth-3">Setup &amp; Materials Needed</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-3">Common Pitfalls to Watch For</a></li>
+<li><a href="#timing-breakdown-2535-minutes-for-lab" class="depth-3">Timing Breakdown (25–35 minutes for lab)</a></li>
+<li><a href="#3-opening-script" class="depth-2">3. Opening Script</a></li>
+<li><a href="#4-concept-briefing" class="depth-2">4. Concept Briefing</a></li>
+<li><a href="#41-what-is-a-class" class="depth-3">4.1 What Is a Class?</a></li>
+<li><a href="#42-what-is-an-object-instance" class="depth-3">4.2 What Is an Object (Instance)?</a></li>
+<li><a href="#43-attributes-and-the-self-parameter" class="depth-3">4.3 Attributes and the self Parameter</a></li>
+<li><a href="#44-the-init-method-constructor" class="depth-3">4.4 The __init__ Method (Constructor)</a></li>
+<li><a href="#45-methods" class="depth-3">4.5 Methods</a></li>
+<li><a href="#5-live-demo-with-contact-class" class="depth-2">5. Live Demo with Contact Class</a></li>
+<li><a href="#51-define-and-instantiate-a-contact-class" class="depth-3">5.1 Define and Instantiate a Contact Class</a></li>
+<li><a href="#52-show-attribute-independence" class="depth-3">5.2 Show Attribute Independence</a></li>
+<li><a href="#53-call-methods-on-different-objects" class="depth-3">5.3 Call Methods on Different Objects</a></li>
+<li><a href="#54-emphasize-the-self-connection" class="depth-3">5.4 Emphasize the self Connection</a></li>
+<li><a href="#6-guided-practice-walkthrough-building-a-book-class" class="depth-2">6. Guided Practice Walkthrough: Building a Book Class</a></li>
+<li><a href="#61-outline-the-book-class" class="depth-3">6.1 Outline the Book Class</a></li>
+<li><a href="#62-add-a-display-method" class="depth-3">6.2 Add a Display Method</a></li>
+<li><a href="#63-add-a-summary-method" class="depth-3">6.3 Add a Summary Method</a></li>
+<li><a href="#64-create-and-use-book-objects" class="depth-3">6.4 Create and Use Book Objects</a></li>
+<li><a href="#65-demonstrate-independence" class="depth-3">6.5 Demonstrate Independence</a></li>
+<li><a href="#7-lab-exercise-bankaccount-class-with-7-checkpoints" class="depth-2">7. Lab Exercise: BankAccount Class with 7 Checkpoints</a></li>
+<li><a href="#checkpoint-1-define-the-class-and-init-method" class="depth-3">Checkpoint 1: Define the Class and __init__ Method</a></li>
+<li><a href="#checkpoint-2-add-a-display-method" class="depth-3">Checkpoint 2: Add a Display Method</a></li>
+<li><a href="#checkpoint-3-add-a-deposit-method" class="depth-3">Checkpoint 3: Add a Deposit Method</a></li>
+<li><a href="#checkpoint-4-add-a-withdrawal-method" class="depth-3">Checkpoint 4: Add a Withdrawal Method</a></li>
+<li><a href="#checkpoint-5-add-a-get-balance-method" class="depth-3">Checkpoint 5: Add a Get Balance Method</a></li>
+<li><a href="#checkpoint-6-add-a-transfer-method" class="depth-3">Checkpoint 6: Add a Transfer Method</a></li>
+<li><a href="#checkpoint-7-full-account-summary-and-independence-check" class="depth-3">Checkpoint 7: Full Account Summary and Independence Check</a></li>
+<li><a href="#8-troubleshooting-common-issues" class="depth-2">8. Troubleshooting Common Issues</a></li>
+<li><a href="#issue-1-nameerror-name-self-is-not-defined" class="depth-3">Issue 1: &quot;NameError: name &#x27;self&#x27; is not defined&quot;</a></li>
+<li><a href="#issue-2-typeerror-init-missing-1-required-positional-argument" class="depth-3">Issue 2: &quot;TypeError: init() missing 1 required positional argument&quot;</a></li>
+<li><a href="#issue-3-modifying-one-object-affects-another" class="depth-3">Issue 3: Modifying one object affects another</a></li>
+<li><a href="#issue-4-forgetting-parentheses-when-calling-a-method" class="depth-3">Issue 4: Forgetting parentheses when calling a method</a></li>
+<li><a href="#issue-5-trying-to-call-a-method-on-the-class-instead-of-an-instance" class="depth-3">Issue 5: Trying to call a method on the class instead of an instance</a></li>
+<li><a href="#issue-6-mixing-up-selfattribute-and-local-variables" class="depth-3">Issue 6: Mixing up self.attribute and local variables</a></li>
+<li><a href="#issue-7-incorrect-understanding-of-what-init-returns" class="depth-3">Issue 7: Incorrect understanding of what __init__ returns</a></li>
+<li><a href="#9-quick-check-questions" class="depth-2">9. Quick-Check Questions</a></li>
+<li><a href="#10-wrap-up-transition" class="depth-2">10. Wrap-Up &amp; Transition</a></li>
+<li><a href="#11-facilitation-notes" class="depth-2">11. Facilitation Notes</a></li>
+<li><a href="#pacing-strategy" class="depth-3">Pacing Strategy</a></li>
+<li><a href="#engagement-tips" class="depth-3">Engagement Tips</a></li>
+<li><a href="#demo-troubleshooting" class="depth-3">Demo Troubleshooting</a></li>
+<li><a href="#timing-recovery-strategies" class="depth-3">Timing Recovery Strategies</a></li>
+<li><a href="#support-materials-resources" class="depth-3">Support Materials &amp; Resources</a></li>
+<li><a href="#classroom-dynamics" class="depth-3">Classroom Dynamics</a></li>
+<li><a href="#post-class-follow-up" class="depth-3">Post-Class Follow-Up</a></li>
+<li><a href="#technical-setup-check-before-class" class="depth-3">Technical Setup Check (Before Class)</a></li>
+<li><a href="#12-assessment-differentiation" class="depth-2">12. Assessment &amp; Differentiation</a></li>
+<li><a href="#formative-assessment-during-the-hour" class="depth-3">Formative Assessment (During the Hour)</a></li>
+<li><a href="#differentiation-strategies" class="depth-3">Differentiation Strategies</a></li>
+<li><a href="#assessment-criteria-for-the-lab" class="depth-3">Assessment Criteria for the Lab</a></li>
+<li><a href="#common-misconceptions-to-address" class="depth-3">Common Misconceptions to Address</a></li>
+<li><a href="#homework-practice-extension" class="depth-3">Homework / Practice Extension</a></li>
+<li><a href="#follow-up-resources-for-students" class="depth-3">Follow-Up Resources for Students</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day10_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day10_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4, Hour 3: If-Elif-Else Flow and Nested Conditions | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="4">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day4_Hour3_Basics.md">
+
+    <link rel="prev" href="Day4_Hour2_Basics.html">
+    <link rel="next" href="Day4_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="4" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-04/index.html">Day 4</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 4, Hour 3: If-Elif-Else Flow and Nested Conditions</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 4</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day4_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Course Hour</strong>: 15<br>
+<strong>Session</strong>: Day 4 (Session 4), Hour 3<br>
+<strong>Duration</strong>: 60 minutes  </p>
+<hr>
+<h2 id="1-learning-outcomes">1. Learning Outcomes</h2>
+<p>After this instructional hour, learners will be able to:</p>
+<ul>
+<li><strong>Write if/elif/else statements</strong> to create branching logic where different code blocks execute based on different conditions.</li>
+<li><strong>Understand execution flow</strong> in conditionals: recognize that only ONE block executes, and that order matters when using <code>elif</code>.</li>
+<li><strong>Design clear decision trees</strong> with proper boundary conditions to avoid overlapping or unreachable code branches.</li>
+<li><strong>Handle nested conditions</strong> (conditionals within conditionals) and understand when nesting is appropriate vs. when <code>and</code>/<code>or</code> is clearer.</li>
+<li><strong>Debug conditional logic</strong> by tracing through execution paths and testing boundary values systematically.</li>
+</ul>
+<hr>
+<h2 id="2-instructor-prep-section">2. Instructor Prep Section</h2>
+<h3 id="pre-class-checklist">Pre-Class Checklist</h3>
+<ul>
+<li>[ ] Have Python 3 IDE ready with a clean script file</li>
+<li>[ ] Test all demo code before class; confirm output matches expectations</li>
+<li>[ ] Prepare the shipping calculator (or similar tiered pricing) demo to use live</li>
+<li>[ ] Draw a flowchart or decision tree on paper/whiteboard to visualize conditional branches</li>
+<li>[ ] Prepare 3–4 "mystery conditionals" for prediction exercises</li>
+<li>[ ] Have the shipping calculator lab rubric visible</li>
+<li>[ ] Prepare a "common mistakes" reference: overlapping conditions, unreachable branches, indentation errors</li>
+</ul>
+<h3 id="timing-breakdown">Timing Breakdown</h3>
+<ul>
+<li><strong>Opening Script</strong> (4 min)</li>
+<li><strong>Conceptual Briefing: If/Elif/Else Structure</strong> (8 min)</li>
+<li><strong>Conceptual Briefing: Order Matters &amp; Nested Conditions</strong> (7 min)</li>
+<li><strong>Live Demo: Shipping Tiers with If/Elif/Else</strong> (11 min)</li>
+<li><strong>Guided Practice Walkthrough</strong> (8 min)</li>
+<li><strong>Lab Checkpoint 1: Shipping Calculator</strong> (18 min)</li>
+<li><strong>Wrap-Up + Quick-Check Questions</strong> (4 min)</li>
+</ul>
+<h3 id="materials-resources">Materials &amp; Resources</h3>
+<ul>
+<li>IDE or Python REPL</li>
+<li>Flowchart or Venn diagram (for visualizing branches)</li>
+<li>Sample code: tiered discount, shipping cost, grade letter grade examples</li>
+<li>Shipping calculator lab prompt (provided below)</li>
+<li>Whiteboard or shared doc for live code</li>
+</ul>
+<hr>
+<h2 id="3-opening-script">3. Opening Script</h2>
+<p><strong>[Read or paraphrase to set context, ~4 minutes]</strong></p>
+<p>"Welcome back! Yesterday, we learned how to <em>ask</em> questions with comparisons and boolean logic. Today, we're learning how Python <em>answers</em> those questions and <em>does something different</em> based on the answer.</p>
+<p>Think of it like a flowchart:
+- 'Is the package under 10 lbs?' → YES → Free shipping
+- 'Is it between 10 and 50 lbs?' → YES → Charge $5
+- 'Is it over 50 lbs?' → YES → Charge $15</p>
+<p>Or think of a video game:
+- 'Did the player press up?' → YES → Move up
+- 'Did the player press down?' → YES → Move down
+- If neither → Do nothing</p>
+<p>This is called <strong>conditional execution</strong> or <strong>branching</strong>. And we use <code>if</code>, <code>elif</code>, and <code>else</code> to do it.</p>
+<p>By the end of this hour, you'll be able to write programs that make smart decisions based on different scenarios. Let's go!"</p>
+<hr>
+<h2 id="4-conceptual-briefing-part-a-the-if-elif-else-structure-8-minutes">4. Conceptual Briefing Part A: The If-Elif-Else Structure (8 minutes)</h2>
+<h3 id="the-basic-pattern">The Basic Pattern</h3>
+<p>An <code>if</code> statement lets your code make a decision:</p>
+<pre><code class="language-python">if condition:
+    # This code runs ONLY if condition is True
+    # do something
+</code></pre>
+<p><strong>Key points</strong>:
+- The colon (<code>:</code>) ends the <code>if</code> line
+- The block is <strong>indented</strong> (4 spaces in Python)
+- Only runs if the condition is <code>True</code></p>
+<h3 id="example-simple-if">Example: Simple If</h3>
+<pre><code class="language-python">age = 18
+if age &gt;= 18:
+    print(&quot;You can vote!&quot;)
+</code></pre>
+<p>Output: <code>You can vote!</code></p>
+<p>If <code>age</code> were 17, nothing would print.</p>
+<h3 id="adding-else-the-alternative">Adding Else: The Alternative</h3>
+<p><code>else</code> handles the case when the condition is <code>False</code>:</p>
+<pre><code class="language-python">age = 17
+if age &gt;= 18:
+    print(&quot;You can vote!&quot;)
+else:
+    print(&quot;You must wait for your 18th birthday.&quot;)
+</code></pre>
+<p>Output: <code>You must wait for your 18th birthday.</code></p>
+<p><strong>The Rule</strong>: Exactly ONE block runs—either <code>if</code> or <code>else</code>, never both.</p>
+<h3 id="multiple-branches-elif">Multiple Branches: Elif</h3>
+<p>When you have more than two options, use <code>elif</code> (short for "else if"):</p>
+<pre><code class="language-python">age = 16
+if age &lt; 13:
+    print(&quot;You are a child.&quot;)
+elif age &lt; 18:
+    print(&quot;You are a teenager.&quot;)
+else:
+    print(&quot;You are an adult.&quot;)
+</code></pre>
+<p>Output: <code>You are a teenager.</code></p>
+<p><strong>The Structure</strong>:</p>
+<pre><code>if [first condition]:
+    [block A]
+elif [second condition]:
+    [block B]
+elif [third condition]:
+    [block C]
+else:
+    [block D]
+</code></pre>
+<p><strong>Critical Rule</strong>: Python checks conditions in order from top to bottom. As soon as ONE condition is <code>True</code>, that block runs, and the rest are skipped.</p>
+<h3 id="example-shipping-cost-three-tiers">Example: Shipping Cost (Three Tiers)</h3>
+<pre><code class="language-python">weight = 25
+if weight &lt;= 10:
+    cost = 0      # Free
+elif weight &lt;= 50:
+    cost = 5      # Standard
+else:
+    cost = 15     # Heavy
+
+print(f&quot;Shipping cost: ${cost}&quot;)
+</code></pre>
+<p>Output: <code>Shipping cost: $5</code></p>
+<p><strong>Trace through the logic</strong>:
+1. Is weight &lt;= 10? No (25 is not &lt;= 10)
+2. Is weight &lt;= 50? Yes (25 is &lt;= 50) → Run this block, set cost = 5
+3. Skip the else</p>
+<hr>
+<h2 id="5-conceptual-briefing-part-b-order-matters-nested-conditions-7-minutes">5. Conceptual Briefing Part B: Order Matters &amp; Nested Conditions (7 minutes)</h2>
+<h3 id="why-order-matters-a-critical-lesson">Why Order Matters: A Critical Lesson</h3>
+<p><strong>The Wrong Way (Overlapping Conditions)</strong>:</p>
+<pre><code class="language-python">age = 16
+if age &gt;= 18:
+    print(&quot;Adult&quot;)
+elif age &gt;= 13:
+    print(&quot;Teen or Adult&quot;)
+else:
+    print(&quot;Child&quot;)
+</code></pre>
+<p>Output: <code>Child</code>  (Correct by accident!)</p>
+<p><strong>The Problem</strong>: The second <code>elif</code> (age &gt;= 13) could match, but we never reach it because the first condition fails and we skip to else. This logic is unclear and fragile.</p>
+<p><strong>The Right Way (Non-Overlapping, Clear Boundaries)</strong>:</p>
+<pre><code class="language-python">age = 16
+if age &lt; 13:
+    print(&quot;Child&quot;)
+elif age &lt; 18:
+    print(&quot;Teen&quot;)
+else:
+    print(&quot;Adult&quot;)
+</code></pre>
+<p>Output: <code>Teen</code></p>
+<p><strong>Why this is better</strong>:
+- Each range is distinct and clear.
+- No overlaps (age can't be both &lt; 13 and &lt; 18).
+- Easy to test boundaries: 0, 12, 13, 17, 18, 99.</p>
+<h3 id="common-mistake-unreachable-code">Common Mistake: Unreachable Code</h3>
+<pre><code class="language-python"># BAD: The second branch can never run!
+if x &gt; 0:
+    print(&quot;x is positive&quot;)
+elif x &gt; 10:
+    print(&quot;x is greater than 10&quot;)
+else:
+    print(&quot;x is not positive&quot;)
+</code></pre>
+<p><strong>Why</strong>: If <code>x &gt; 10</code> is true, then <code>x &gt; 0</code> is also true, so we've already entered the first block. The second branch is unreachable.</p>
+<p><strong>Fix</strong>:</p>
+<pre><code class="language-python">if x &gt; 10:
+    print(&quot;x is greater than 10&quot;)
+elif x &gt; 0:
+    print(&quot;x is positive (but &lt;= 10)&quot;)
+else:
+    print(&quot;x is not positive&quot;)
+</code></pre>
+<p><strong>Lesson</strong>: Order your conditions from most specific to most general.</p>
+<h3 id="nested-conditionals-when-and-why">Nested Conditionals: When and Why</h3>
+<p>A <strong>nested conditional</strong> is an <code>if</code> inside another <code>if</code>:</p>
+<pre><code class="language-python">age = 25
+has_license = True
+
+if age &gt;= 18:
+    if has_license:
+        print(&quot;You can drive.&quot;)
+    else:
+        print(&quot;You're an adult but can't drive yet.&quot;)
+else:
+    print(&quot;You must be an adult to drive.&quot;)
+</code></pre>
+<p>Output: <code>You can drive.</code></p>
+<p><strong>When to nest</strong>:
+- When you need to check a second condition <em>only if</em> the first is true.
+- Example: "Is the user an adult?" (first check) → "Does the adult have a license?" (second check, nested).</p>
+<p><strong>When to use <code>and</code> instead</strong>:
+- If both conditions apply equally, use <code>and</code> to keep it flat and readable.</p>
+<pre><code class="language-python"># Nested (OK but harder to read):
+if age &gt;= 18:
+    if has_license:
+        print(&quot;Can drive&quot;)
+
+# Flat with `and` (clearer):
+if age &gt;= 18 and has_license:
+    print(&quot;Can drive&quot;)
+</code></pre>
+<p><strong>Rule of Thumb</strong>: Flat is usually better. Use nesting only when the second condition logically depends on the first.</p>
+<hr>
+<h2 id="5-live-demo-shipping-cost-calculator-with-ifelifelse-11-minutes">5. Live Demo: Shipping Cost Calculator with If/Elif/Else (11 minutes)</h2>
+<p><strong>Scenario</strong>: "We're building a shipping cost calculator. The rule is:
+- Packages up to 10 lbs: FREE
+- Packages 10–50 lbs: $5
+- Packages 50–100 lbs: $12
+- Packages over 100 lbs: Need a special quote (error for now)</p>
+<p>Let's code this live and test boundary values."</p>
+<h3 id="demo-part-1-the-basic-structure">Demo Part 1: The Basic Structure</h3>
+<pre><code class="language-python">weight = 25
+
+if weight &lt;= 10:
+    cost = 0
+elif weight &lt;= 50:
+    cost = 5
+elif weight &lt;= 100:
+    cost = 12
+else:
+    print(&quot;Too heavy. Contact support.&quot;)
+    cost = None  # No cost yet
+
+print(f&quot;Weight: {weight} lbs, Cost: ${cost}&quot;)
+</code></pre>
+<p><strong>Narration</strong>: "Notice the order: we check small weights first, then progressively larger. Each condition is mutually exclusive. Run this with weight = 25."</p>
+<p>Output: <code>Weight: 25 lbs, Cost: $5</code></p>
+<h3 id="demo-part-2-test-boundary-values">Demo Part 2: Test Boundary Values</h3>
+<pre><code class="language-python">def check_cost(w):
+    if w &lt;= 10:
+        cost = 0
+    elif w &lt;= 50:
+        cost = 5
+    elif w &lt;= 100:
+        cost = 12
+    else:
+        cost = None
+    return cost
+
+# Test boundaries
+print(f&quot;9 lbs: ${check_cost(9)}&quot;)     # Should be 0
+print(f&quot;10 lbs: ${check_cost(10)}&quot;)   # Should be 0 (boundary, included in first)
+print(f&quot;11 lbs: ${check_cost(11)}&quot;)   # Should be 5
+print(f&quot;50 lbs: ${check_cost(50)}&quot;)   # Should be 5 (boundary)
+print(f&quot;51 lbs: ${check_cost(51)}&quot;)   # Should be 12
+print(f&quot;100 lbs: ${check_cost(100)}&quot;) # Should be 12 (boundary)
+print(f&quot;101 lbs: ${check_cost(101)}&quot;) # Should be None
+</code></pre>
+<p><strong>Narration</strong>: "Boundaries are where bugs hide! Notice 10 lbs gets free shipping (0) because &lt;= includes 10. At 11 lbs, we jump to $5. At 50, we're still $5. This is correct and consistent."</p>
+<h3 id="demo-part-3-add-discount-logic-nested">Demo Part 3: Add Discount Logic (Nested)</h3>
+<pre><code class="language-python">weight = 35
+is_member = True
+
+if weight &lt;= 10:
+    base_cost = 0
+elif weight &lt;= 50:
+    base_cost = 5
+elif weight &lt;= 100:
+    base_cost = 12
+else:
+    base_cost = None
+
+# Apply membership discount if applicable
+if base_cost is not None:
+    if is_member:
+        final_cost = base_cost * 0.9  # 10% off
+    else:
+        final_cost = base_cost
+else:
+    final_cost = None
+
+print(f&quot;Weight: {weight} lbs, Member: {is_member}&quot;)
+print(f&quot;Base cost: ${base_cost}, Final cost: ${final_cost}&quot;)
+</code></pre>
+<p><strong>Narration</strong>: "Now we nest a second check: if we have a valid cost AND the customer is a member, apply a 10% discount. Notice how we check <code>base_cost is not None</code> first to avoid errors."</p>
+<p>Output: <code>Weight: 35 lbs, Member: True</code> / <code>Base cost: $5, Final cost: $4.5</code></p>
+<h3 id="demo-part-4-prediction-moment">Demo Part 4: Prediction Moment</h3>
+<p>"What will this print?"</p>
+<pre><code class="language-python">weight = 50
+is_member = False
+
+if weight &lt;= 10:
+    base_cost = 0
+elif weight &lt;= 50:
+    base_cost = 5
+else:
+    base_cost = 12
+
+final_cost = base_cost * 0.9 if is_member else base_cost
+print(f&quot;Final: ${final_cost}&quot;)
+</code></pre>
+<p>Give learners 10 seconds, then reveal: <code>Final: $5</code> (because is_member is False, so no discount).</p>
+<hr>
+<h2 id="6-guided-practice-walkthrough-8-minutes">6. Guided Practice Walkthrough (8 minutes)</h2>
+<p><strong>The Scenario</strong>: "Let's build a grade letter assignment system. The rules:
+- 90–100: A
+- 80–89: B
+- 70–79: C
+- 60–69: D
+- Below 60: F</p>
+<p>Let's code this together, step by step."</p>
+<h3 id="step-1-set-up-the-score">Step 1: Set Up the Score</h3>
+<pre><code class="language-python">score = 87
+print(f&quot;Score: {score}&quot;)
+</code></pre>
+<h3 id="step-2-build-the-ifelifelse">Step 2: Build the If/Elif/Else</h3>
+<pre><code class="language-python">score = 87
+
+if score &gt;= 90:
+    grade = &quot;A&quot;
+elif score &gt;= 80:
+    grade = &quot;B&quot;
+elif score &gt;= 70:
+    grade = &quot;C&quot;
+elif score &gt;= 60:
+    grade = &quot;D&quot;
+else:
+    grade = &quot;F&quot;
+
+print(f&quot;Score: {score}, Grade: {grade}&quot;)
+</code></pre>
+<p><strong>Instructor Talk</strong>: "Notice: we check from highest score down. Why? Because if score is 95, it's &gt;= 90, so we stop there. We don't need to check &gt;= 80 because 95 is already &gt;=90. Order matters!"</p>
+<p>Output: <code>Score: 87, Grade: B</code></p>
+<h3 id="step-3-add-a-message">Step 3: Add a Message</h3>
+<pre><code class="language-python">score = 87
+
+if score &gt;= 90:
+    grade = &quot;A&quot;
+    message = &quot;Excellent!&quot;
+elif score &gt;= 80:
+    grade = &quot;B&quot;
+    message = &quot;Good job!&quot;
+elif score &gt;= 70:
+    grade = &quot;C&quot;
+    message = &quot;Satisfactory.&quot;
+elif score &gt;= 60:
+    grade = &quot;D&quot;
+    message = &quot;Needs improvement.&quot;
+else:
+    grade = &quot;F&quot;
+    message = &quot;See me after class.&quot;
+
+print(f&quot;Score: {score}&quot;)
+print(f&quot;Grade: {grade}&quot;)
+print(f&quot;Message: {message}&quot;)
+</code></pre>
+<p><strong>Instructor Talk</strong>: "Each branch can have multiple statements. We set both grade and message. They stay associated with that branch."</p>
+<p>Output:</p>
+<pre><code>Score: 87
+Grade: B
+Message: Good job!
+</code></pre>
+<h3 id="step-4-test-multiple-scores">Step 4: Test Multiple Scores</h3>
+<pre><code class="language-python">def assign_grade(score):
+    if score &gt;= 90:
+        grade = &quot;A&quot;
+    elif score &gt;= 80:
+        grade = &quot;B&quot;
+    elif score &gt;= 70:
+        grade = &quot;C&quot;
+    elif score &gt;= 60:
+        grade = &quot;D&quot;
+    else:
+        grade = &quot;F&quot;
+    return grade
+
+print(f&quot;95: {assign_grade(95)}&quot;)  # A
+print(f&quot;87: {assign_grade(87)}&quot;)  # B
+print(f&quot;75: {assign_grade(75)}&quot;)  # C
+print(f&quot;65: {assign_grade(65)}&quot;)  # D
+print(f&quot;55: {assign_grade(55)}&quot;)  # F
+print(f&quot;80: {assign_grade(80)}&quot;)  # B (boundary)
+</code></pre>
+<p><strong>Instructor Talk</strong>: "We wrap it in a function so we can test many scores at once. Notice score 80 gets a B, not an A, because we check &gt;= 90 first."</p>
+<hr>
+<h2 id="7-lab-with-checkpoints-shipping-calculator">7. Lab with Checkpoints: Shipping Calculator</h2>
+<p><strong>Lab Duration</strong>: 18 minutes<br>
+<strong>Objective</strong>: Implement tiered pricing logic with clear boundaries and proper ordering.</p>
+<h3 id="lab-prompt">Lab Prompt</h3>
+<p>Write a program that calculates shipping cost based on package weight. The rules are:</p>
+<ul>
+<li><strong>0–5 lbs</strong>: $3</li>
+<li><strong>5–15 lbs</strong>: $7</li>
+<li><strong>15–30 lbs</strong>: $12</li>
+<li><strong>30–50 lbs</strong>: $18</li>
+<li><strong>Over 50 lbs</strong>: "Cannot ship"</li>
+</ul>
+<p>Your program should:
+1. Ask the user for the weight (as a number)
+2. Determine the appropriate cost tier
+3. Print the cost or error message</p>
+<p><strong>Example outputs</strong>:
+- Input: 3 lbs → "Shipping cost: $3"
+- Input: 10 lbs → "Shipping cost: $7"
+- Input: 51 lbs → "Cannot ship: package too heavy"</p>
+<h3 id="checkpoint-1-input-type-conversion-4-minutes">Checkpoint 1: Input &amp; Type Conversion (4 minutes)</h3>
+<p><strong>Your code should have</strong>:
+- One <code>input()</code> prompt for weight
+- Conversion to <code>float</code> (e.g., <code>weight = float(input(...))</code>)
+- Verification that the input was converted correctly (test with multiple values)</p>
+<p><strong>Test</strong>: Run with input 12.5 and verify it's treated as a number, not a string.</p>
+<h3 id="checkpoint-2-ifelifelse-structure-8-minutes">Checkpoint 2: If/Elif/Else Structure (8 minutes)</h3>
+<p><strong>Build the conditional</strong>:</p>
+<pre><code class="language-python">weight = float(input(&quot;Package weight in lbs: &quot;))
+
+if weight &lt;= 5:
+    cost = 3
+elif weight &lt;= 15:
+    cost = 7
+elif weight &lt;= 30:
+    cost = 12
+elif weight &lt;= 50:
+    cost = 18
+else:
+    message = &quot;Cannot ship&quot;
+
+# Print result
+if weight &lt;= 50:
+    print(f&quot;Weight: {weight} lbs, Shipping cost: ${cost}&quot;)
+else:
+    print(f&quot;Weight: {weight} lbs, {message}&quot;)
+</code></pre>
+<p><strong>Test cases</strong>:
+- 2 lbs → $3
+- 5 lbs → $3 (boundary, included in first tier)
+- 6 lbs → $7
+- 15 lbs → $7 (boundary)
+- 30 lbs → $12 (boundary)
+- 50 lbs → $18 (boundary)
+- 51 lbs → "Cannot ship"</p>
+<h3 id="checkpoint-3-testing-boundaries-6-minutes">Checkpoint 3: Testing Boundaries (6 minutes)</h3>
+<p><strong>Test each boundary value</strong>:
+- 0, 5, 5.01 (around 5 lb boundary)
+- 15, 15.01 (around 15 lb boundary)
+- 30, 30.01 (around 30 lb boundary)
+- 50, 50.01 (around 50 lb boundary)</p>
+<p>Verify that:
+- The boundary value itself is included in the correct tier
+- Values just below and above transition correctly
+- Output is clear and readable</p>
+<hr>
+<h2 id="8-troubleshooting-pitfalls">8. Troubleshooting Pitfalls</h2>
+<h3 id="pitfall-1-forgetting-the-colon-after-condition">Pitfall 1: Forgetting the Colon After Condition</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">if age &gt;= 18        # Missing colon!
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>Error</strong>: <code>SyntaxError: invalid syntax</code></p>
+<p><strong>Why</strong>: Python uses the colon to mark the start of a block. Without it, Python doesn't know a block is coming.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python">if age &gt;= 18:       # Colon included
+    print(&quot;Adult&quot;)
+</code></pre>
+<hr>
+<h3 id="pitfall-2-incorrect-indentation">Pitfall 2: Incorrect Indentation</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">if age &gt;= 18:
+print(&quot;Adult&quot;)      # Not indented!
+</code></pre>
+<p><strong>Error</strong>: <code>IndentationError: expected an indented block</code></p>
+<p><strong>Why</strong>: Python requires consistent indentation (usually 4 spaces). Without it, Python doesn't recognize the block as part of the <code>if</code>.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python">if age &gt;= 18:
+    print(&quot;Adult&quot;)  # Indented with 4 spaces
+</code></pre>
+<p><strong>Tip</strong>: Use an IDE that auto-indents. After you type a colon and press Enter, most IDEs indent automatically.</p>
+<hr>
+<h3 id="pitfall-3-unreachable-elif-branches">Pitfall 3: Unreachable Elif Branches</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">score = 95
+if score &gt; 90:
+    grade = &quot;A&quot;
+elif score &gt; 80:
+    grade = &quot;B&quot;    # This will never execute for scores &gt; 90
+else:
+    grade = &quot;C&quot;
+</code></pre>
+<p><strong>Why</strong>: If <code>score &gt; 90</code> is true, we enter the first block and never check <code>elif score &gt; 80</code>. For a score of 95, the first condition is true, so the second is never evaluated.</p>
+<p><strong>The Problem</strong>: This happens when you order conditions from general to specific, allowing earlier conditions to "catch" values that later conditions could also match.</p>
+<p><strong>The Fix</strong> (order from most specific to most general):</p>
+<pre><code class="language-python">score = 95
+if score &gt;= 90:
+    grade = &quot;A&quot;    # Check most restrictive first
+elif score &gt;= 80:
+    grade = &quot;B&quot;    # Then less restrictive
+else:
+    grade = &quot;C&quot;
+</code></pre>
+<p><strong>Test this</strong>: Score 95 → A (correct). Score 85 → B (correct). Score 75 → C (correct).</p>
+<hr>
+<h3 id="pitfall-4-overlapping-boundaries">Pitfall 4: Overlapping Boundaries</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">weight = 15
+if weight &lt; 15:
+    cost = 5
+elif weight &lt;= 15:
+    cost = 7
+</code></pre>
+<p><strong>Problem</strong>: At exactly 15 lbs, the first condition is false (15 &lt; 15 is false), so we check the second (15 &lt;= 15 is true) and get $7. But this is inconsistent design. Is 15 lbs in the first tier or second?</p>
+<p><strong>The Fix</strong> (use non-overlapping ranges):</p>
+<pre><code class="language-python">weight = 15
+if weight &lt;= 5:
+    cost = 3
+elif weight &lt;= 15:
+    cost = 7    # Now 15 is clearly in this tier
+elif weight &lt;= 30:
+    cost = 12
+</code></pre>
+<p><strong>Test</strong>: 5 lbs → $3, 15 lbs → $7, 16 lbs → $12. All boundaries are consistent and clear.</p>
+<hr>
+<h3 id="pitfall-5-using-instead-of-comparison-ranges">Pitfall 5: Using <code>==</code> Instead of Comparison Ranges</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">score = 87
+if score == 90:
+    grade = &quot;A&quot;
+elif score == 80:
+    grade = &quot;B&quot;    # This only matches exactly 80!
+</code></pre>
+<p><strong>Problem</strong>: You're checking for exact values, not ranges. Score 87 matches none of these, so grade is never set.</p>
+<p><strong>The Fix</strong> (use <code>&gt;=</code> to define ranges):</p>
+<pre><code class="language-python">score = 87
+if score &gt;= 90:
+    grade = &quot;A&quot;
+elif score &gt;= 80:
+    grade = &quot;B&quot;
+</code></pre>
+<hr>
+<h2 id="9-quick-check-questions">9. Quick-Check Questions</h2>
+<p><strong>Ask these in rapid succession (2–3 min total). Encourage verbal responses or quick polling.</strong></p>
+<ol>
+<li>
+<p><strong>"What does this print?"</strong>
+   <code>python
+   x = 15
+   if x &lt; 10:
+       print("Small")
+   elif x &lt; 20:
+       print("Medium")
+   else:
+       print("Large")</code>
+   <em>(Expected: "Medium")</em></p>
+</li>
+<li>
+<p><strong>"True or False: Both the <code>if</code> and <code>elif</code> blocks can run in the same execution."</strong><br>
+<em>(Expected: False. Only ONE block runs.)</em></p>
+</li>
+<li>
+<p><strong>"Why do we order conditions from most specific to most general in an if/elif chain?"</strong><br>
+<em>(Expected: To avoid unreachable code and ensure consistent logic.)</em></p>
+</li>
+<li>
+<p><strong>"What's the colon (<code>:</code>) for at the end of <code>if age &gt;= 18:</code>?"</strong><br>
+<em>(Expected: It marks the start of a block that will be indented.)</em></p>
+</li>
+<li>
+<p><strong>"If I have a weight boundary at 50 lbs, should I use <code>weight &lt; 50</code> or <code>weight &lt;= 50</code>?"</strong><br>
+<em>(Expected: It depends on your rule, but be consistent. If 50 is supposed to be in the lower tier, use <code>&lt;=</code>.)</em></p>
+</li>
+</ol>
+<hr>
+<h2 id="10-wrap-up-4-minutes">10. Wrap-Up (4 minutes)</h2>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>If/elif/else structure</strong>: Branching logic where only ONE block executes.</li>
+<li><strong>Order matters</strong>: Check from most specific to most general. Once a condition is true, the rest are skipped.</li>
+<li><strong>Boundaries are critical</strong>: Use <code>&lt;=</code> and <code>&gt;=</code> to include edge values. Test boundary values to catch bugs.</li>
+<li><strong>One block, one time</strong>: Remember, if age &gt;= 18 is true, elif age &gt;= 65 is never checked. They're mutually exclusive paths.</li>
+<li><strong>Nested vs. flat</strong>: Use flat (<code>and</code>/<code>or</code>) when conditions are independent. Use nesting when one logically depends on the other.</li>
+<li><strong>Unreachable code</strong>: If an <code>elif</code> or <code>else</code> never runs in your tests, check your condition order.</li>
+</ol>
+<h3 id="real-world-connections">Real-World Connections</h3>
+<p>Conditional logic is everywhere:
+- <strong>E-commerce</strong>: Discount tiers based on order value
+- <strong>Banking</strong>: Account types based on balance
+- <strong>Games</strong>: Different actions based on user input
+- <strong>Automation</strong>: Different responses based on sensor data
+- <strong>Grading systems</strong>: Letter grades based on numeric scores</p>
+<h3 id="looking-ahead">Looking Ahead</h3>
+<p>Next hour is Checkpoint 1, where you'll apply boolean logic, comparisons, and conditionals all together in a comprehensive mini-project. Everything you've learned in the past two hours comes together.</p>
+<hr>
+<h2 id="11-facilitation-notes">11. Facilitation Notes</h2>
+<h3 id="pacing-flexibility">Pacing &amp; Flexibility</h3>
+<ul>
+<li><strong>If learners are quick</strong>: Introduce nested conditions more deeply, or ask them to trace complex if/elif/else chains.</li>
+<li><strong>If learners are struggling</strong>: Spend more time on the concept that "only one block runs." Use a physical analogy: "You're at a fork in the road. You choose one path and never look back."</li>
+<li><strong>If time is tight</strong>: Skip the nested conditions section and focus on if/elif/else.</li>
+</ul>
+<h3 id="engagement-tips">Engagement Tips</h3>
+<ol>
+<li><strong>Prediction before running</strong>: Always ask "What will this print?" before executing code.</li>
+<li><strong>Flowchart drawing</strong>: Sketch decision trees on the whiteboard. Visual learners benefit greatly.</li>
+<li><strong>Boundary testing</strong>: Emphasize that bugs hide at boundaries. Make testing a habit.</li>
+<li><strong>Real-world scenarios</strong>: "Imagine you're programming the checkout process for an online store. How would you tier shipping costs?"</li>
+</ol>
+<h3 id="troubleshooting-on-the-fly">Troubleshooting On the Fly</h3>
+<ul>
+<li><strong>"Nothing is printing."</strong> → Check if the condition is true. Add a print statement before the if to verify.</li>
+<li><strong>"The wrong block is running."</strong> → Trace through the conditions in order. Is the first one actually true?</li>
+<li><strong>"IndentationError."</strong> → Check that every line in the block has the same indentation (usually 4 spaces).</li>
+</ul>
+<h3 id="encouraging-code-tracing">Encouraging Code Tracing</h3>
+<p>Teach learners to trace their own code:
+1. Read the condition aloud.
+2. Evaluate it (true or false).
+3. If true, follow that block. If false, skip to the next condition.
+4. Stop as soon as you find a true condition.</p>
+<hr>
+<h2 id="12-assessment-rubric">12. Assessment Rubric</h2>
+<h3 id="shipping-calculator-lab-rubric-20-points-total">Shipping Calculator Lab Rubric (20 points total)</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Points</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input &amp; Type Conversion</strong></td>
+<td>3</td>
+<td>Program prompts for weight. Uses <code>float()</code> to convert. Input is treated as a number.</td>
+</tr>
+<tr>
+<td><strong>Correct If/Elif/Else Structure</strong></td>
+<td>5</td>
+<td>All five weight tiers are checked in correct order. Conditions are mutually exclusive and correctly bounded.</td>
+</tr>
+<tr>
+<td><strong>Boundary Correctness</strong></td>
+<td>4</td>
+<td>Boundary values (5, 15, 30, 50 lbs) are correctly assigned to tiers. No off-by-one errors.</td>
+</tr>
+<tr>
+<td><strong>Clear Output</strong></td>
+<td>4</td>
+<td>Prints shipping cost or error message. Output is readable and correctly formatted.</td>
+</tr>
+<tr>
+<td><strong>Testing &amp; Edge Cases</strong></td>
+<td>2</td>
+<td>Program tested on at least 3 different weights. Boundaries are tested.</td>
+</tr>
+<tr>
+<td><strong>Code Quality</strong></td>
+<td>2</td>
+<td>Readable variable names, reasonable comments, logical structure.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="grading-scale">Grading Scale</h3>
+<ul>
+<li><strong>18–20 points</strong>: Excellent. All tiers correct, all boundaries tested, output is clear.</li>
+<li><strong>15–17 points</strong>: Good. Logic correct, minor boundary issues or unclear output.</li>
+<li><strong>12–14 points</strong>: Satisfactory. Core logic works, but edge cases or output clarity issues.</li>
+<li><strong>Below 12</strong>: Needs rework. Significant logic errors or missing components.</li>
+</ul>
+<h3 id="feedback-template">Feedback Template</h3>
+<p><strong>For Excellent Work</strong>:
+"Your shipping calculator is perfect! You correctly ordered the conditions from smallest to largest weight, and your boundaries are spot-on. Your code is clean and easy to read."</p>
+<p><strong>For Good Work</strong>:
+"You've got the logic right! I noticed a small issue with [specific boundary]. Let's trace through what happens at exactly [boundary value]. You're close!"</p>
+<p><strong>For Needs Rework</strong>:
+"Your structure is on the right track, but I see an issue with [specific problem]. Let's trace through the conditions together step by step. What happens when weight is [test value]?"</p>
+<hr>
+<p><strong>End of Hour 3 Lecture Script</strong></p>
+<hr>
+<p><em>Word count: 3,300+ words</em></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-learning-outcomes" class="depth-2">1. Learning Outcomes</a></li>
+<li><a href="#2-instructor-prep-section" class="depth-2">2. Instructor Prep Section</a></li>
+<li><a href="#pre-class-checklist" class="depth-3">Pre-Class Checklist</a></li>
+<li><a href="#timing-breakdown" class="depth-3">Timing Breakdown</a></li>
+<li><a href="#materials-resources" class="depth-3">Materials &amp; Resources</a></li>
+<li><a href="#3-opening-script" class="depth-2">3. Opening Script</a></li>
+<li><a href="#4-conceptual-briefing-part-a-the-if-elif-else-structure-8-minutes" class="depth-2">4. Conceptual Briefing Part A: The If-Elif-Else Structure (8 minutes)</a></li>
+<li><a href="#the-basic-pattern" class="depth-3">The Basic Pattern</a></li>
+<li><a href="#example-simple-if" class="depth-3">Example: Simple If</a></li>
+<li><a href="#adding-else-the-alternative" class="depth-3">Adding Else: The Alternative</a></li>
+<li><a href="#multiple-branches-elif" class="depth-3">Multiple Branches: Elif</a></li>
+<li><a href="#example-shipping-cost-three-tiers" class="depth-3">Example: Shipping Cost (Three Tiers)</a></li>
+<li><a href="#5-conceptual-briefing-part-b-order-matters-nested-conditions-7-minutes" class="depth-2">5. Conceptual Briefing Part B: Order Matters &amp; Nested Conditions (7 minutes)</a></li>
+<li><a href="#why-order-matters-a-critical-lesson" class="depth-3">Why Order Matters: A Critical Lesson</a></li>
+<li><a href="#common-mistake-unreachable-code" class="depth-3">Common Mistake: Unreachable Code</a></li>
+<li><a href="#nested-conditionals-when-and-why" class="depth-3">Nested Conditionals: When and Why</a></li>
+<li><a href="#5-live-demo-shipping-cost-calculator-with-ifelifelse-11-minutes" class="depth-2">5. Live Demo: Shipping Cost Calculator with If/Elif/Else (11 minutes)</a></li>
+<li><a href="#demo-part-1-the-basic-structure" class="depth-3">Demo Part 1: The Basic Structure</a></li>
+<li><a href="#demo-part-2-test-boundary-values" class="depth-3">Demo Part 2: Test Boundary Values</a></li>
+<li><a href="#demo-part-3-add-discount-logic-nested" class="depth-3">Demo Part 3: Add Discount Logic (Nested)</a></li>
+<li><a href="#demo-part-4-prediction-moment" class="depth-3">Demo Part 4: Prediction Moment</a></li>
+<li><a href="#6-guided-practice-walkthrough-8-minutes" class="depth-2">6. Guided Practice Walkthrough (8 minutes)</a></li>
+<li><a href="#step-1-set-up-the-score" class="depth-3">Step 1: Set Up the Score</a></li>
+<li><a href="#step-2-build-the-ifelifelse" class="depth-3">Step 2: Build the If/Elif/Else</a></li>
+<li><a href="#step-3-add-a-message" class="depth-3">Step 3: Add a Message</a></li>
+<li><a href="#step-4-test-multiple-scores" class="depth-3">Step 4: Test Multiple Scores</a></li>
+<li><a href="#7-lab-with-checkpoints-shipping-calculator" class="depth-2">7. Lab with Checkpoints: Shipping Calculator</a></li>
+<li><a href="#lab-prompt" class="depth-3">Lab Prompt</a></li>
+<li><a href="#checkpoint-1-input-type-conversion-4-minutes" class="depth-3">Checkpoint 1: Input &amp; Type Conversion (4 minutes)</a></li>
+<li><a href="#checkpoint-2-ifelifelse-structure-8-minutes" class="depth-3">Checkpoint 2: If/Elif/Else Structure (8 minutes)</a></li>
+<li><a href="#checkpoint-3-testing-boundaries-6-minutes" class="depth-3">Checkpoint 3: Testing Boundaries (6 minutes)</a></li>
+<li><a href="#8-troubleshooting-pitfalls" class="depth-2">8. Troubleshooting Pitfalls</a></li>
+<li><a href="#pitfall-1-forgetting-the-colon-after-condition" class="depth-3">Pitfall 1: Forgetting the Colon After Condition</a></li>
+<li><a href="#pitfall-2-incorrect-indentation" class="depth-3">Pitfall 2: Incorrect Indentation</a></li>
+<li><a href="#pitfall-3-unreachable-elif-branches" class="depth-3">Pitfall 3: Unreachable Elif Branches</a></li>
+<li><a href="#pitfall-4-overlapping-boundaries" class="depth-3">Pitfall 4: Overlapping Boundaries</a></li>
+<li><a href="#pitfall-5-using-instead-of-comparison-ranges" class="depth-3">Pitfall 5: Using == Instead of Comparison Ranges</a></li>
+<li><a href="#9-quick-check-questions" class="depth-2">9. Quick-Check Questions</a></li>
+<li><a href="#10-wrap-up-4-minutes" class="depth-2">10. Wrap-Up (4 minutes)</a></li>
+<li><a href="#key-takeaways" class="depth-3">Key Takeaways</a></li>
+<li><a href="#real-world-connections" class="depth-3">Real-World Connections</a></li>
+<li><a href="#looking-ahead" class="depth-3">Looking Ahead</a></li>
+<li><a href="#11-facilitation-notes" class="depth-2">11. Facilitation Notes</a></li>
+<li><a href="#pacing-flexibility" class="depth-3">Pacing &amp; Flexibility</a></li>
+<li><a href="#engagement-tips" class="depth-3">Engagement Tips</a></li>
+<li><a href="#troubleshooting-on-the-fly" class="depth-3">Troubleshooting On the Fly</a></li>
+<li><a href="#encouraging-code-tracing" class="depth-3">Encouraging Code Tracing</a></li>
+<li><a href="#12-assessment-rubric" class="depth-2">12. Assessment Rubric</a></li>
+<li><a href="#shipping-calculator-lab-rubric-20-points-total" class="depth-3">Shipping Calculator Lab Rubric (20 points total)</a></li>
+<li><a href="#grading-scale" class="depth-3">Grading Scale</a></li>
+<li><a href="#feedback-template" class="depth-3">Feedback Template</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day4_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day4_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

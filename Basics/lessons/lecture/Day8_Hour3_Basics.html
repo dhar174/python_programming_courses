@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1) Learning Outcomes | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="8">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day8_Hour3_Basics.md">
+
+    <link rel="prev" href="Day8_Hour2_Basics.html">
+    <link rel="next" href="Day8_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="8" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-08/index.html">Day 8</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">1) Learning Outcomes</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 8</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day8_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p>﻿# Loop Patterns: Searching, Filtering, and Aggregating (Course Hour 31)</p>
+<p><strong>Python Programming Basics – Session 8</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 8, Course Hour 31 – Loop Patterns: Searching, Filtering, and Aggregating<br>
+<strong>Duration:</strong> 90 minutes<br>
+<strong>Mode:</strong> Instructor-led + live demo + hands-on lab<br>
+<strong>Audience:</strong> Beginners in Python</p>
+<hr>
+<h2 id="1-learning-outcomes">1) Learning Outcomes</h2>
+<p><strong>By the end of this hour, students will be able to:</strong></p>
+<ol>
+<li>Implement linear search to find the first matching element in a list using a <code>for</code> loop and conditional logic</li>
+<li>Implement search-all patterns to collect multiple matching elements using a result list and append operations</li>
+<li>Apply filter patterns to create new lists containing only elements that satisfy specific conditions</li>
+<li>Implement aggregation patterns using accumulators to compute totals, counts, and other derived values</li>
+<li>Combine search, filter, and aggregation patterns to solve complex real-world data processing problems</li>
+</ol>
+<hr>
+<h2 id="2-instructor-prep-and-delivery-note">2) Instructor Prep and Delivery Note</h2>
+<p><strong>Setup checklist:</strong>
+- Open Python 3.x in your editor with a fresh file: <code>demo_loop_patterns.py</code>
+- Have two sample datasets ready to paste (student list, sales data)
+- Set a timer for each demo phase (5-min search, 5-min search-all, 8-min filter, 8-min aggregate, 8-min combined, 6-min lab intro)
+- Pre-test all code examples to ensure they run without errors
+- Have a whiteboard or shared editor ready to show student questions and iterate together</p>
+<p><strong>Core message:</strong> Loop patterns are the foundation of data processing. Mastery of search, filter, and aggregation translates directly to data analysis, database queries, and real-world automation tasks. These five patterns appear in nearly every professional software system, from databases that retrieve records matching criteria (search/filter) to analytics dashboards that calculate summaries (aggregation). Learning them deeply today means you'll recognize them instantly in job interviews, code reviews, and real-world applications.</p>
+<p><strong>Why this matters:</strong> Historically, students who master these five patterns can solve complex data problems with confidence. They move faster, write cleaner code, and understand system APIs (like SQL queries, API filters, pandas operations) more intuitively because they see the same patterns recurring. This hour is an investment in your intuition as a programmer.</p>
+<hr>
+<h2 id="3-opening-script">3) Opening Script</h2>
+<blockquote>
+<p><strong>Say:</strong> "Today we shift from 'Can I write a loop?' to 'What can I do WITH a loop?' We'll explore five core patterns that professional programmers use every single day: searching lists, filtering data, and aggregating values. By the end of this hour, you'll be able to manipulate any dataset, answer 'what', 'how many', and 'which ones' questions using nothing but loops and conditionals. Let's begin."</p>
+</blockquote>
+<hr>
+<h2 id="4-conceptual-briefing">4) Conceptual Briefing</h2>
+<h3 id="the-five-loop-patterns-overview-and-why-each-exists">The Five Loop Patterns (Overview and Why Each Exists)</h3>
+<p>Loop patterns are fundamental because they address five distinct questions programmers ask constantly when working with data:</p>
+<p><strong>Pattern 1: Linear Search</strong><br>
+<em>Question: "Is there an item matching this condition, and what is it?"</em><br>
+Find the first element matching a condition; return when found or report 'not found'. Use this when you only need ONE matching item and can stop searching once you find it. Real-world uses: finding a user by ID in a user database, locating the first error in a log file, checking if a password is correct (stop on first match).</p>
+<p><strong>Pattern 2: Search-All</strong><br>
+<em>Question: "What are ALL the items that match this condition?"</em><br>
+Find ALL elements matching a condition; collect them in a result list. Differs from linear search in that you never return early—you iterate through the ENTIRE collection. Use this when you need a complete inventory of matching items. Real-world uses: retrieve all orders for a customer, find all files matching a pattern, list all students in a class above a certain GPA.</p>
+<p><strong>Pattern 3: Filter</strong><br>
+<em>Question: "How do I remove items that DON'T match, keeping only the matching ones?"</em><br>
+Create a new list containing only elements that satisfy a condition (removes non-matching items). Conceptually similar to search-all but focused on the idea of "creating a subset". Use this when you want to clean, narrow, or reduce data. Real-world uses: filter spam emails, show only completed tasks in a to-do list, keep only profitable products in a catalog.</p>
+<p><strong>Pattern 4: Aggregation</strong><br>
+<em>Question: "What is the combined summary of all these items? (sum, count, average, max, etc.)"</em><br>
+Use an accumulator to combine or summarize values (sum, count, maximum, average, product, etc.). Does NOT return a collection; returns a single combined value. Use this to extract insights from data. Real-world uses: calculate total revenue, count how many users are active, find the best test score, compute an average price.</p>
+<p><strong>Pattern 5: Combined Patterns</strong><br>
+<em>Question: "How do I combine multiple operations to solve a complex problem?"</em><br>
+Chain search, filter, and aggregation to solve complex problems in a single pass or multiple passes. For example: "Find all grades above 85, then calculate their average" combines filtering + aggregation. Real-world uses: find the average salary of employees in a specific department, list all products that are both in stock AND below a price threshold, calculate the median score of passing students.</p>
+<p><strong>Key insight:</strong> Each pattern uses a loop + conditional. Mastering these five fundamentals unlocks the ability to solve 80% of real-world programming problems. When you encounter a new programming language, library, or tool, look for these patterns first—they're universal.</p>
+<hr>
+<h2 id="5-live-demo-40-minutes-total">5) Live Demo (40 minutes total)</h2>
+<h3 id="demo-phase-1-linear-search-5-minutes">Demo Phase 1: Linear Search (5 minutes)</h3>
+<p><strong>Say:</strong> "Let's search for the first student with a name starting with 'A'."</p>
+<pre><code class="language-python">students = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Andrew&quot;, &quot;Carol&quot;, &quot;Amy&quot;]
+
+def linear_search(lst, target):
+    for item in lst:
+        if item[0].lower() == target.lower():
+            return item  # Return immediately when found
+    return None  # Return None if not found
+
+result = linear_search(students, &quot;a&quot;)
+print(f&quot;Found: {result}&quot;)
+</code></pre>
+<p><strong>Run and explain:</strong>
+- The loop checks each item's first character
+- When found, we <code>return</code> immediately—no unnecessary iterations
+- If the loop completes without finding, we return <code>None</code>
+- Linear search is O(n) but simple and reliable</p>
+<p><strong>Student takeaway:</strong> Use linear search when you need ONE item and can stop as soon as you find it.</p>
+<h3 id="demo-phase-2-search-all-5-minutes">Demo Phase 2: Search-All (5 minutes)</h3>
+<p><strong>Say:</strong> "Now find ALL students whose names start with 'A'."</p>
+<pre><code class="language-python">def search_all(lst, target):
+    results = []  # Accumulator for matches
+    for item in lst:
+        if item[0].lower() == target.lower():
+            results.append(item)  # Collect all matches
+    return results
+
+all_a_names = search_all(students, &quot;a&quot;)
+print(f&quot;All A-names: {all_a_names}&quot;)
+</code></pre>
+<p><strong>Run and explain:</strong>
+- Key difference: we never <code>return</code> early; we iterate through the ENTIRE list
+- We collect matches in a results list using <code>append()</code>
+- After the loop ends, we return the complete list
+- Works even if zero, one, or many matches exist</p>
+<p><strong>Student takeaway:</strong> Use search-all when you need ALL matching items, not just the first.</p>
+<h3 id="demo-phase-3-filter-8-minutes">Demo Phase 3: Filter (8 minutes)</h3>
+<p><strong>Say:</strong> "Let's filter to keep only names with more than 4 characters."</p>
+<pre><code class="language-python">def filter_long_names(lst, min_length):
+    filtered = []
+    for name in lst:
+        if len(name) &gt; min_length:
+            filtered.append(name)
+    return filtered
+
+long_names = filter_long_names(students, 4)
+print(f&quot;Names longer than 4 chars: {long_names}&quot;)
+</code></pre>
+<p><strong>Run and explain:</strong>
+- Filter is similar to search-all but with a different condition
+- We're removing elements that don't match (keeping only matches)
+- The result is a NEW list (original is unchanged)
+- Filtering is safe—no side effects, no data loss</p>
+<p><strong>Extend the demo:</strong></p>
+<pre><code class="language-python"># Example: filter sales over $100
+sales = [50, 150, 30, 200, 75, 110]
+
+def filter_high_sales(sales_list, threshold):
+    high_sales = []
+    for sale in sales_list:
+        if sale &gt; threshold:
+            high_sales.append(sale)
+    return high_sales
+
+high = filter_high_sales(sales, 100)
+print(f&quot;Sales over $100: {high}&quot;)
+</code></pre>
+<p><strong>Student takeaway:</strong> Filter creates a subset; use it to answer "which elements satisfy this condition?"</p>
+<h3 id="demo-phase-4-aggregation-8-minutes">Demo Phase 4: Aggregation (8 minutes)</h3>
+<p><strong>Say:</strong> "Let's aggregate: what is the total revenue? Count of transactions? Average sale?"</p>
+<pre><code class="language-python">def sum_sales(sales_list):
+    total = 0  # Accumulator initialized to identity (0 for sum)
+    for sale in sales_list:
+        total += sale  # Accumulate
+    return total
+
+total_revenue = sum_sales(sales)
+print(f&quot;Total revenue: ${total_revenue}&quot;)
+
+def count_sales(sales_list):
+    count = 0  # Accumulator initialized to 0
+    for sale in sales_list:
+        count += 1  # Or use len() after the loop
+    return count
+
+num_transactions = count_sales(sales)
+print(f&quot;Number of transactions: {num_transactions}&quot;)
+
+def average_sale(sales_list):
+    if not sales_list:
+        return 0
+    total = sum_sales(sales_list)
+    return total / len(sales_list)
+
+avg = average_sale(sales)
+print(f&quot;Average sale: ${avg:.2f}&quot;)
+</code></pre>
+<p><strong>Run and explain:</strong>
+- Aggregation REQUIRES an accumulator (initialized before the loop)
+- Common accumulators: sum (start at 0), count (start at 0), max (start at first item), min (start at first item)
+- The accumulator is UPDATED inside the loop
+- The loop does not collect items; it combines them into a single value</p>
+<p><strong>Student takeaway:</strong> Use aggregation to answer "What is the total/average/max/count?"</p>
+<h3 id="demo-phase-5-combined-patterns-8-minutes">Demo Phase 5: Combined Patterns (8 minutes)</h3>
+<p><strong>Say:</strong> "Now let's combine: find the average of ONLY the high-value sales."</p>
+<pre><code class="language-python">def avg_high_sales(sales_list, threshold):
+    high_sales = []
+    # Step 1: Filter
+    for sale in sales_list:
+        if sale &gt; threshold:
+            high_sales.append(sale)
+
+    # Step 2: Aggregate
+    if not high_sales:
+        return 0
+    total = sum(high_sales)
+    return total / len(high_sales)
+
+avg_high = avg_high_sales(sales, 100)
+print(f&quot;Average of sales over $100: ${avg_high:.2f}&quot;)
+</code></pre>
+<p><strong>Alternative (single pass):</strong></p>
+<pre><code class="language-python">def avg_high_sales_onepass(sales_list, threshold):
+    high_total = 0
+    high_count = 0
+    for sale in sales_list:
+        if sale &gt; threshold:
+            high_total += sale
+            high_count += 1
+
+    if high_count == 0:
+        return 0
+    return high_total / high_count
+
+avg_high_v2 = avg_high_sales_onepass(sales, 100)
+print(f&quot;Average (single pass): ${avg_high_v2:.2f}&quot;)
+</code></pre>
+<p><strong>Explain both approaches:</strong>
+- Two-pass: clear, easy to understand, slightly less efficient
+- One-pass: uses two accumulators, more efficient on large datasets
+- Both are correct; choose clarity first, optimize later</p>
+<p><strong>Student takeaway:</strong> Combine patterns by filtering first, then aggregating—or do both in one pass with conditional accumulation.</p>
+<h3 id="demo-phase-6-lab-preview-6-minutes">Demo Phase 6: Lab Preview (6 minutes)</h3>
+<p><strong>Say:</strong> "In the lab, you'll apply all five patterns to a real dataset of student grades. You'll search for a specific student, find all students above a threshold, filter the grades, calculate the class average, and combine everything to answer: 'Who qualifies for the honor roll?'"</p>
+<hr>
+<h2 id="6-practice-walkthrough">6) Practice Walkthrough</h2>
+<p><strong>Guided mini-exercise (5 minutes):</strong></p>
+<pre><code class="language-python"># Sample data:
+grades = [85, 92, 78, 88, 95, 70, 91]
+
+# Find the highest grade (aggregation with max)
+highest = grades[0]
+for grade in grades:
+    if grade &gt; highest:
+        highest = grade
+print(f&quot;Highest grade: {highest}&quot;)
+
+# Find all grades above 85 (filter)
+good_grades = []
+for grade in grades:
+    if grade &gt;= 85:
+        good_grades.append(grade)
+print(f&quot;Grades &gt;= 85: {good_grades}&quot;)
+
+# Count how many students passed (count &gt;= 70, aggregation)
+pass_count = 0
+for grade in grades:
+    if grade &gt;= 70:
+        pass_count += 1
+print(f&quot;Students who passed: {pass_count}&quot;)
+</code></pre>
+<p><strong>Check for understanding:</strong> Ask students to identify which pattern each code segment uses. Debrief any confusion.</p>
+<hr>
+<h2 id="7-lab-with-full-checkpoints-30-minutes">7) Lab with Full Checkpoints (~30 minutes)</h2>
+<p><strong>Checkpoint 1: Linear Search (~ 4 minutes)</strong>
+Write a function <code>find_student(roster, target_name)</code> that searches a list of student names and returns the first match or "Not found".</p>
+<pre><code class="language-python">def find_student(roster, target_name):
+    for name in roster:
+        if name.lower() == target_name.lower():
+            return name
+    return &quot;Not found&quot;
+
+roster = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;, &quot;Dave&quot;, &quot;Eve&quot;]
+print(find_student(roster, &quot;carol&quot;))
+</code></pre>
+<p><strong>Checkpoint 2: Search-All (~ 4 minutes)</strong>
+Write <code>find_all_by_grade(students_grades_dict, min_grade)</code> that returns a list of all students with grades &gt;= min_grade.</p>
+<pre><code class="language-python">def find_all_by_grade(students, min_grade):
+    matching = []
+    for student, grade in students.items():
+        if grade &gt;= min_grade:
+            matching.append(student)
+    return matching
+
+students = {&quot;Alice&quot;: 92, &quot;Bob&quot;: 78, &quot;Carol&quot;: 85, &quot;Dave&quot;: 88}
+print(find_all_by_grade(students, 85))
+</code></pre>
+<p><strong>Checkpoint 3: Filter (~ 4 minutes)</strong>
+Write <code>filter_positive(numbers)</code> that returns a new list containing only positive numbers.</p>
+<pre><code class="language-python">def filter_positive(numbers):
+    positives = []
+    for num in numbers:
+        if num &gt; 0:
+            positives.append(num)
+    return positives
+
+data = [5, -3, 8, -1, 0, 12]
+print(filter_positive(data))
+</code></pre>
+<p><strong>Checkpoint 4: Count Aggregation (~ 4 minutes)</strong>
+Write <code>count_high_grades(grades, threshold)</code> that returns the number of grades above threshold.</p>
+<pre><code class="language-python">def count_high_grades(grades, threshold):
+    count = 0
+    for grade in grades:
+        if grade &gt; threshold:
+            count += 1
+    return count
+
+grades = [85, 92, 78, 88, 95, 70, 91]
+print(count_high_grades(grades, 85))
+</code></pre>
+<p><strong>Checkpoint 5: Sum Aggregation (~ 4 minutes)</strong>
+Write <code>sum_high_sales(sales, threshold)</code> that returns the total revenue from sales above threshold.</p>
+<pre><code class="language-python">def sum_high_sales(sales, threshold):
+    total = 0
+    for sale in sales:
+        if sale &gt;= threshold:
+            total += sale
+    return total
+
+sales = [50, 150, 30, 200, 75, 110]
+print(sum_high_sales(sales, 100))
+</code></pre>
+<p><strong>Checkpoint 6: Average Aggregation (~ 4 minutes)</strong>
+Write <code>average_grade(grades)</code> that calculates the mean of all grades.</p>
+<pre><code class="language-python">def average_grade(grades):
+    if not grades:
+        return 0
+    total = sum(grades)
+    return total / len(grades)
+
+grades = [85, 92, 78, 88, 95]
+print(f&quot;Average: {average_grade(grades):.2f}&quot;)
+</code></pre>
+<p><strong>Checkpoint 7: Combined Pattern (~ 6 minutes)</strong>
+Write <code>honor_roll_average(students, threshold)</code> that returns the average grade of only students above the threshold. Students is a dictionary: <code>{"name": grade}</code>.</p>
+<pre><code class="language-python">def honor_roll_average(students, threshold):
+    high_grades = []
+    for name, grade in students.items():
+        if grade &gt;= threshold:
+            high_grades.append(grade)
+
+    if not high_grades:
+        return 0
+    return sum(high_grades) / len(high_grades)
+
+students = {&quot;Alice&quot;: 92, &quot;Bob&quot;: 78, &quot;Carol&quot;: 85, &quot;Dave&quot;: 88, &quot;Eve&quot;: 95}
+print(f&quot;Honor roll average (&gt;= 85): {honor_roll_average(students, 85):.2f}&quot;)
+</code></pre>
+<p><strong>Instructor circulation focus:</strong>
+- Checkpoint 1–3: Ensure students understand when to use <code>return</code> (search) vs. <code>append</code> (filter/search-all)
+- Checkpoint 4–6: Check that accumulators are initialized BEFORE the loop and updated inside
+- Checkpoint 7: Monitor for correct combining of filter logic + aggregation</p>
+<hr>
+<h2 id="8-troubleshooting-pitfalls">8) Troubleshooting Pitfalls</h2>
+<p><strong>Pitfall 1: Initializing accumulator inside the loop</strong><br>
+Wrong: <code>total = 0; for x in lst: total = 0; total += x</code><br>
+Right: <code>total = 0; for x in lst: total += x</code><br>
+<strong>Fix:</strong> Initialize accumulators BEFORE entering any loop.</p>
+<p><strong>Pitfall 2: Returning early in search-all</strong><br>
+Wrong: <code>for x in lst: if condition: return x</code> (returns first match, not all)<br>
+Right: <code>results = []; for x in lst: if condition: results.append(x); return results</code><br>
+<strong>Fix:</strong> Use <code>append</code> to collect, then return the full list after the loop.</p>
+<p><strong>Pitfall 3: Modifying original list when you mean to filter</strong><br>
+Wrong: <code>for x in lst: if not condition: lst.remove(x)</code> (modifies while iterating—unstable)<br>
+Right: <code>filtered = [x for x in lst if condition]</code> or build a new list with append<br>
+<strong>Fix:</strong> Build a NEW list with <code>append</code>; don't modify during iteration.</p>
+<p><strong>Pitfall 4: Forgetting the condition in aggregation</strong><br>
+Wrong: <code>total = 0; for x in lst: total += x</code> (sums ALL, not filtered)<br>
+Right: <code>total = 0; for x in lst: if condition: total += x</code><br>
+<strong>Fix:</strong> Add the <code>if condition:</code> check before updating the accumulator.</p>
+<p><strong>Pitfall 5: Not handling empty lists in division</strong><br>
+Wrong: <code>total / len(lst)</code> (crashes if len(lst) == 0)<br>
+Right: <code>if len(lst) == 0: return 0; else: return total / len(lst)</code><br>
+<strong>Fix:</strong> Check for empty before dividing to avoid <code>ZeroDivisionError</code>.</p>
+<p><strong>Pitfall 6: Case sensitivity in search/filter</strong><br>
+Wrong: <code>if name == "Alice"</code> (fails if user enters "alice" or "ALICE")<br>
+Right: <code>if name.lower() == "alice"</code><br>
+<strong>Fix:</strong> Normalize strings with <code>.lower()</code> or <code>.upper()</code> before comparing.</p>
+<hr>
+<h2 id="9-quick-check-questions">9) Quick-Check Questions</h2>
+<p><strong>Q1:</strong> What is the key difference between linear search and search-all?<br>
+<strong>A1:</strong> Linear search returns on the first match (using <code>return</code>); search-all collects all matches in a list (using <code>append</code> and returning after the loop).</p>
+<p><strong>Q2:</strong> When would you use filter instead of search-all?<br>
+<strong>A2:</strong> Filter and search-all are very similar. Use "filter" conceptually when you want to remove non-matching elements (create a subset). Use "search-all" when finding all items meeting a condition. They're often the same code pattern.</p>
+<p><strong>Q3:</strong> Why must an accumulator be initialized BEFORE the loop?<br>
+<strong>A3:</strong> The loop updates the accumulator. If initialized inside, it resets on every iteration, losing the previous value.</p>
+<p><strong>Q4:</strong> What happens if you don't check for empty lists before dividing in an average calculation?<br>
+<strong>A4:</strong> You get a <code>ZeroDivisionError</code> crash. Always check <code>if len(lst) &gt; 0</code> or <code>if lst:</code> before dividing.</p>
+<p><strong>Q5:</strong> How do you combine filter and aggregation?<br>
+<strong>A5:</strong> Two approaches: (1) Filter to a new list, then aggregate that list, or (2) Aggregate with a conditional inside the loop.</p>
+<p><strong>Q6:</strong> What does <code>.lower()</code> do and why is it useful in search?<br>
+<strong>A6:</strong> <code>.lower()</code> converts a string to lowercase. It's useful in search to make comparisons case-insensitive so "Alice", "alice", and "ALICE" all match.</p>
+<p><strong>Q7:</strong> Can you search while also aggregating in the same loop?<br>
+<strong>A7:</strong> Yes! Use an <code>if condition:</code> to filter which items to aggregate, while keeping the accumulator active for all loop iterations.</p>
+<hr>
+<h2 id="10-wrap-up-narrative">10) Wrap-Up Narrative</h2>
+<blockquote>
+<p><strong>Say:</strong> "Today you learned five patterns that professional programmers use constantly. Search finds items. Search-all collects all matches. Filter creates subsets. Aggregation combines values. And combined patterns solve real-world problems. These patterns form the backbone of data processing. In your next jobs, interviews, and projects, you'll recognize these patterns everywhere—in databases, in APIs, in analytics. Master these five, and you unlock 80% of practical programming."</p>
+</blockquote>
+<hr>
+<h2 id="11-facilitation-notes">11) Facilitation Notes</h2>
+<p><strong>Pacing strategy:</strong>
+- Demo: 40 min total (6 phases, strictly timed). If students ask questions DURING a demo, pause the timer and answer, then resume.
+- Lab: 30 min (7 checkpoints, ~4 min each; Checkpoint 7 is 6 min). Circulate constantly. Stop anyone stuck for more than 2 minutes and prompt with leading questions.
+- Q&amp;A / Wrap: 10 min. Use this time to review common mistakes and celebrate successes.</p>
+<p><strong>Preparation during lab:</strong>
+- Checkpoint 1–3: Students should move quickly. If you see someone stuck, ask: "What pattern are we using here?" and "Where should we put the return statement?"
+- Checkpoint 4–6: Accumulators are the sticking point. Watch for students initializing inside the loop. Common fix: "Where did you put <code>count = 0</code>? Should it be inside or outside the loop?"
+- Checkpoint 7: The integration point. Some students will write it in two passes; others in one. Both are correct. Ask them to explain their approach.</p>
+<p><strong>Differentiation strategies:</strong></p>
+<p><strong>For advanced students:</strong> After Checkpoint 7, challenge them:
+1. "Write a two-pass version of honor-roll-average (first pass: filter; second pass: aggregate) and compare it to the one-pass version. Which is more efficient? Why?"
+2. "Modify Checkpoint 7 to also return the COUNT of honor-roll students, not just the average. What accumulator would you add?"
+3. "If the students dictionary had 1 million entries, which approach (one-pass or two-pass) would you choose and why?"</p>
+<p><strong>For struggling students:</strong> Provide a structured template:</p>
+<pre><code class="language-python">def template_pattern(data, condition):
+    result = []  # or: accumulator = 0
+    for item in data:
+        if condition:  # Check condition here
+            result.append(item)  # or: accumulator += item
+    return result  # or: return accumulator
+</code></pre>
+<p>Have them fill in the blanks for each checkpoint. Emphasize: "Three lines are always the same: create container, loop, check condition. Only the action inside <code>if</code> changes."</p>
+<p><strong>Common questions to anticipate and answer:</strong>
+- "Can I use <code>sum()</code> instead of a loop?" → Yes, for sum; also <code>max()</code>, <code>min()</code>, <code>len()</code>. But learn loops first; they're the foundation. Built-in functions are optimized for after you understand the pattern.
+- "Is this what pandas does?" → Yes, very similar operations! Pandas is faster on huge datasets (100k+ rows) because it's written in C, but pandas DataFrames use these exact patterns under the hood.
+- "Do I always need a new list for filter?" → Best practice: yes, use a new list. Modifying the original while iterating can cause bugs (items get skipped or duplicated). New lists are safer.
+- "What if I want to search for the maximum instead of a first match?" → That's aggregation, not search! Use an accumulator: <code>max_val = data[0]; for item in data: if item &gt; max_val: max_val = item</code></p>
+<p><strong>Instructor mindset:</strong> These patterns are deceptively simple but profoundly important. Students who internalize them move from "Can I write a loop?" to "What should I do with a loop?" This is the threshold moment where programming becomes a skill rather than a syntax exercise. Invest time here—it pays dividends in every future module and project.</p>
+<hr>
+<h2 id="12-assessment-and-differentiation-rubric">12) Assessment and Differentiation Rubric</h2>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Proficient</th>
+<th>Developing</th>
+<th>Needs Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Linear Search</strong></td>
+<td>Correctly returns first match or "not found"; uses early <code>return</code></td>
+<td>Finds first match but doesn't return cleanly</td>
+<td>Doesn't return early; loops unnecessarily</td>
+</tr>
+<tr>
+<td><strong>Search-All</strong></td>
+<td>Collects all matches in list; returns after loop completes</td>
+<td>Collects most matches but misses edge cases</td>
+<td>Returns early; only finds first item</td>
+</tr>
+<tr>
+<td><strong>Filter</strong></td>
+<td>Creates new list with matching items; original unchanged</td>
+<td>Filters correctly but modifies original</td>
+<td>Doesn't build new list; loses data</td>
+</tr>
+<tr>
+<td><strong>Aggregation</strong></td>
+<td>Initializes accumulator before loop; updates inside; handles empty list</td>
+<td>Initializes correctly but forgets empty check</td>
+<td>Initializes inside loop; loses values</td>
+</tr>
+<tr>
+<td><strong>Combined</strong></td>
+<td>Filters correctly, then aggregates; handles all edge cases</td>
+<td>Combines patterns but misses one edge case (e.g., division by zero)</td>
+<td>Doesn't combine; solves only one pattern</td>
+</tr>
+<tr>
+<td><strong>Code Quality</strong></td>
+<td>Clear variable names; comments on key lines; deterministic</td>
+<td>Functional but sparse comments; unclear names</td>
+<td>Hard to follow; no comments; hard-coded values</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exit criteria:</strong> Students should demonstrate proficiency in at least Checkpoints 1–5 and partial proficiency in 6–7 before moving to Hour 4.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-learning-outcomes" class="depth-2">1) Learning Outcomes</a></li>
+<li><a href="#2-instructor-prep-and-delivery-note" class="depth-2">2) Instructor Prep and Delivery Note</a></li>
+<li><a href="#3-opening-script" class="depth-2">3) Opening Script</a></li>
+<li><a href="#4-conceptual-briefing" class="depth-2">4) Conceptual Briefing</a></li>
+<li><a href="#the-five-loop-patterns-overview-and-why-each-exists" class="depth-3">The Five Loop Patterns (Overview and Why Each Exists)</a></li>
+<li><a href="#5-live-demo-40-minutes-total" class="depth-2">5) Live Demo (40 minutes total)</a></li>
+<li><a href="#demo-phase-1-linear-search-5-minutes" class="depth-3">Demo Phase 1: Linear Search (5 minutes)</a></li>
+<li><a href="#demo-phase-2-search-all-5-minutes" class="depth-3">Demo Phase 2: Search-All (5 minutes)</a></li>
+<li><a href="#demo-phase-3-filter-8-minutes" class="depth-3">Demo Phase 3: Filter (8 minutes)</a></li>
+<li><a href="#demo-phase-4-aggregation-8-minutes" class="depth-3">Demo Phase 4: Aggregation (8 minutes)</a></li>
+<li><a href="#demo-phase-5-combined-patterns-8-minutes" class="depth-3">Demo Phase 5: Combined Patterns (8 minutes)</a></li>
+<li><a href="#demo-phase-6-lab-preview-6-minutes" class="depth-3">Demo Phase 6: Lab Preview (6 minutes)</a></li>
+<li><a href="#6-practice-walkthrough" class="depth-2">6) Practice Walkthrough</a></li>
+<li><a href="#7-lab-with-full-checkpoints-30-minutes" class="depth-2">7) Lab with Full Checkpoints (~30 minutes)</a></li>
+<li><a href="#8-troubleshooting-pitfalls" class="depth-2">8) Troubleshooting Pitfalls</a></li>
+<li><a href="#9-quick-check-questions" class="depth-2">9) Quick-Check Questions</a></li>
+<li><a href="#10-wrap-up-narrative" class="depth-2">10) Wrap-Up Narrative</a></li>
+<li><a href="#11-facilitation-notes" class="depth-2">11) Facilitation Notes</a></li>
+<li><a href="#12-assessment-and-differentiation-rubric" class="depth-2">12) Assessment and Differentiation Rubric</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day8_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day8_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 3: Input/Output + Type Conversion (Course Hour 7) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day2_Hour3_Basics.md">
+
+    <link rel="prev" href="Day2_Hour2_Basics.html">
+    <link rel="next" href="Day2_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="2" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 2, Hour 3: Input/Output + Type Conversion (Course Hour 7)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, you will be able to:</p>
+<ol>
+<li>Use <code>input()</code> to collect user data at runtime.</li>
+<li>Apply type conversion functions (<code>int()</code>, <code>float()</code>, <code>str()</code>) to transform text into meaningful numeric types.</li>
+<li>Combine input and conversion for practical calculations in real programs.</li>
+<li>Validate input and handle conversion errors gracefully through intentional error awareness.</li>
+<li>Build interactive programs that accept, process, and present user data with clear, formatted output.</li>
+</ol>
+<hr>
+<h2 id="section-1-instructor-prep-setup-checklist">Section 1: Instructor Prep &amp; Setup Checklist</h2>
+<h3 id="pre-session-preparation">Pre-Session Preparation</h3>
+<ul>
+<li>Ensure Python 3 IDE is open and terminal visible for live demos</li>
+<li>Create or open file: <code>hour7_converter.py</code></li>
+<li>Have these sample test values ready:</li>
+<li>Valid integers: <code>25</code>, <code>0</code>, <code>-3</code></li>
+<li>Valid floats: <code>98.6</code>, <code>12.5</code></li>
+<li>Invalid numeric text: <code>"hello"</code>, <code>"3.5"</code> (for <code>int()</code> demo)</li>
+</ul>
+<h3 id="required-materials">Required Materials</h3>
+<ul>
+<li>Primary demo: small temperature or distance converter</li>
+<li>Starter code scaffold for Unit Converter lab</li>
+<li>Reference solutions (Miles→km and °F→°C converters)</li>
+<li>Assessment rubric (10-point scale) for checkpoint evaluation</li>
+</ul>
+<h3 id="classroom-setup">Classroom Setup</h3>
+<ul>
+<li>Test lab VM connectivity if applicable</li>
+<li>Verify student file submission method (Git, LMS, or shared folder)</li>
+<li>Display the learning objectives visibly (printed or on screen)</li>
+<li>Post quick reference: "Convert → Compute → Format" workflow</li>
+<li>Have the five-step input workflow visible: collect, convert, compute, format, verify</li>
+</ul>
+<hr>
+<h2 id="section-2-opening-script">Section 2: Opening Script</h2>
+<h3 id="hook-and-engagement-strategy">Hook and Engagement Strategy</h3>
+<p><strong>Say to learners:</strong></p>
+<p>"Welcome to Hour 7. We're shifting from static scripts to interactive scripts. Today your programs will ask users for input and then do real calculations. This is where type conversion becomes essential—and where your programs become truly useful.</p>
+<p>Think about it: every app you use—weather forecasts, calculators, maps, banking—starts by asking you for something. We're about to unlock that superpower."</p>
+<h3 id="context-and-relevance">Context and Relevance</h3>
+<p>"The transition from fixed values to user input is transformational. Instead of hardcoding numbers into your code, you collect them at runtime. But here's the key: when users type into your program, Python receives text. Always text. Even if they type <code>25</code>, Python sees the string <code>"25"</code>. </p>
+<p>That's where type conversion enters. Without it, math fails mysteriously. With it, your programs handle real-world data responsibly."</p>
+<h3 id="learning-objectives-preview">Learning Objectives Preview</h3>
+<p>"Today we'll master:
+- How <code>input()</code> works and why it returns strings
+- When and how to convert strings to numbers
+- Building a small but complete converter program
+- Recognizing what goes wrong and how to diagnose it</p>
+<p>By the end of this hour, you'll understand the backbone of interactive programs: receive → convert → compute → display."</p>
+<hr>
+<h2 id="section-3-core-concepts">Section 3: Core Concepts</h2>
+<h3 id="the-fundamental-truth-about-input">The Fundamental Truth About <code>input()</code></h3>
+<p><strong>Type and demonstrate:</strong></p>
+<pre><code class="language-python">name = input(&quot;Enter your name: &quot;)
+print(f&quot;Hello, {name}!&quot;)
+print(type(name))
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"<code>input()</code> always returns text, which in Python means the <code>str</code> type. Even if a user types pure digits, Python still receives a string. This is intentional. Python cannot guess whether <code>"25"</code> represents an age, an item count, a temperature, or a product ID. Forcing you to specify the intent is a feature, not a bug."</p>
+<h3 id="why-type-conversion-is-required">Why Type Conversion Is Required</h3>
+<p>Show a common failure:</p>
+<pre><code class="language-python">age = input(&quot;Enter your age: &quot;)
+# next_year = age + 1  # This will fail if uncommented
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"Mixing types causes errors. The expression <code>"25" + 1</code> is asking Python to add a string and an integer. Python protects you by refusing this operation rather than guessing. This safety is crucial in professional code."</p>
+<h3 id="introduction-to-conversion-functions">Introduction to Conversion Functions</h3>
+<p><strong>Type and explain:</strong></p>
+<pre><code class="language-python">age = int(&quot;25&quot;)
+price = float(&quot;19.99&quot;)
+text = str(42)
+
+print(age + 1)       # 26
+print(price * 2)     # 39.98
+print(text + &quot;!&quot;)    # &quot;42!&quot;
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"Python provides three conversion functions. <code>int()</code> converts to whole numbers. <code>float()</code> converts to decimals. <code>str()</code> converts to text. Choose based on your data model. If the value represents a count or ID, use <code>int</code>. If it represents a measurement or price, use <code>float</code>."</p>
+<h3 id="combining-input-with-conversion">Combining Input with Conversion</h3>
+<p><strong>Type and demonstrate:</strong></p>
+<pre><code class="language-python">age = int(input(&quot;Enter your age: &quot;))
+temperature = float(input(&quot;Temperature in °F: &quot;))
+count = int(input(&quot;How many? &quot;))
+
+print(f&quot;Age: {age}, type: {type(age)}&quot;)
+print(f&quot;Temp: {temperature}, type: {type(temperature)}&quot;)
+print(f&quot;Count: {count}, type: {type(count)}&quot;)
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"When you write <code>int(input(...))</code>, you're combining two operations: input collects text from the user, then <code>int()</code> immediately converts that text to a number. This is concise and common. But remember: if the user's input is invalid for the conversion, Python raises an error. We'll see that next."</p>
+<h3 id="preview-valueerror-and-error-awareness">Preview: ValueError and Error Awareness</h3>
+<p><strong>Type these intentionally to show errors:</strong></p>
+<pre><code class="language-python"># int(&quot;hello&quot;)  # ValueError: invalid literal for int()
+# int(&quot;3.5&quot;)    # ValueError: invalid literal for int()
+# float(&quot;abc&quot;)  # ValueError: could not convert string to float
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"These are <code>ValueError</code> exceptions. They mean conversion failed because the text cannot be interpreted as the target type. Today we use happy-path inputs—meaning we assume valid input. In a later session, we'll formally learn error handling. For now, just recognize these messages as 'type mismatch' feedback."</p>
+<h3 id="real-world-context">Real-World Context</h3>
+<p>"Every interactive application—from weather apps to banking systems to gaming—faces this challenge. How do you safely accept user data and convert it to the right type? The techniques in this hour are exactly what professional developers use every single day."</p>
+<hr>
+<h2 id="section-4-live-coding-demo">Section 4: Live Coding Demo</h2>
+<h3 id="demo-a-small-temperature-converter-with-type-inspection">Demo A: Small Temperature Converter (with type inspection)</h3>
+<p><strong>Live type this and narrate as you go:</strong></p>
+<pre><code class="language-python">fahrenheit_text = input(&quot;Enter temperature in °F: &quot;)
+print(f&quot;Raw input: {fahrenheit_text}&quot;)
+print(f&quot;Raw input type: {type(fahrenheit_text)}&quot;)
+
+fahrenheit = float(fahrenheit_text)
+print(f&quot;Converted: {fahrenheit}&quot;)
+print(f&quot;Converted type: {type(fahrenheit)}&quot;)
+
+celsius = (fahrenheit - 32) * 5 / 9
+
+print(f&quot;\n{fahrenheit:.1f}°F = {celsius:.1f}°C&quot;)
+</code></pre>
+<p><strong>Test with input: <code>98.6</code></strong></p>
+<p>Expected output:</p>
+<pre><code>Enter temperature in °F: 98.6
+Raw input: 98.6
+Raw input type: &lt;class 'str'&gt;
+Converted: 98.6
+Converted type: &lt;class 'float'&gt;
+
+98.6°F = 37.0°C
+</code></pre>
+<p><strong>Narration points:</strong>
+- "Notice the raw input was a string, even though it contained numbers."
+- "After conversion, the type changed to float."
+- "Now arithmetic works correctly."
+- "The f-string format <code>.1f</code> gives us exactly one decimal place."</p>
+<h3 id="demo-b-show-valueerror-intentionally-then-recover">Demo B: Show ValueError Intentionally (then recover)</h3>
+<p><strong>Type this:</strong></p>
+<pre><code class="language-python"># This will fail:
+print(int(&quot;3.5&quot;))
+</code></pre>
+<p><strong>Expected error:</strong></p>
+<pre><code>ValueError: invalid literal for int() with base 10: '3.5'
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"Python rejects this because <code>int()</code> expects a whole-number string. The text <code>"3.5"</code> has a decimal point, which <code>int()</code> cannot parse. This is not Python being stubborn—it's Python being precise."</p>
+<p><strong>Then show two alternatives:</strong></p>
+<pre><code class="language-python"># Alternative 1: Use float
+print(float(&quot;3.5&quot;))  # Works: 3.5
+
+# Alternative 2: Convert float to int after parsing as float
+print(int(float(&quot;3.5&quot;)))  # Works: 3
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"When decimals are possible, convert to <code>float</code> first. If you truly need an integer and your text includes decimals, convert to float first, then to int. Choose your strategy based on what makes sense for your data."</p>
+<h3 id="demo-c-plausibility-check">Demo C: Plausibility Check</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">miles = float(input(&quot;Miles: &quot;))  # Enter: 10
+km = miles * 1.60934
+
+print(f&quot;{miles} miles = {km:.2f} km&quot;)
+</code></pre>
+<p><strong>Narrate:</strong></p>
+<p>"Before running, estimate: 10 miles should be roughly 16 kilometers. If the output was 160.934 or 1.60934, I'd know something was wrong with my formula. Plausibility checks are a superpower for catching bugs early."</p>
+<hr>
+<h2 id="section-5-guided-lab-with-checkpoints-problem-solving">Section 5: Guided Lab with Checkpoints (Problem-Solving)</h2>
+<h3 id="lab-problem-description">Lab Problem Description</h3>
+<p><strong>Read aloud to learners:</strong></p>
+<p>"You will build one complete converter. Choose either Miles→Kilometers or Fahrenheit→Celsius. You must:
+1. Print a title line
+2. Ask the user for one numeric input
+3. Convert that input to <code>float</code>
+4. Apply the correct formula
+5. Print the result with units and clean formatting</p>
+<p>The output must be readable and correct. Test with at least one known value before you declare victory."</p>
+<h3 id="formulas">Formulas</h3>
+<ul>
+<li><strong>Miles to km:</strong> <code>km = miles * 1.60934</code></li>
+<li><strong>Fahrenheit to Celsius:</strong> <code>celsius = (fahrenheit - 32) * 5 / 9</code></li>
+</ul>
+<h3 id="example-output-a-mileskm">Example Output A (Miles→km)</h3>
+<pre><code class="language-text">=== Miles to Kilometers Converter ===
+Enter distance in miles: 10
+10.0 miles = 16.09 kilometers
+</code></pre>
+<h3 id="example-output-b-fahrenheitcelsius">Example Output B (Fahrenheit→Celsius)</h3>
+<pre><code class="language-text">=== Temperature Converter ===
+Enter temperature in °F: 98.6
+98.6°F = 37.0°C
+</code></pre>
+<h3 id="starter-code-scaffold">Starter Code Scaffold</h3>
+<p>Here's a template to follow. Use this structure and adapt the variable names and formula for your chosen converter:</p>
+<pre><code class="language-python">print(&quot;=== Unit Converter ===&quot;)
+
+# Step 1: Collect raw input from user (returns string)
+value_text = input(&quot;Enter value: &quot;)
+
+# Step 2: Convert string to number
+value = float(value_text)
+
+# Step 3: Apply conversion formula
+result = value * 1.60934  # Example: multiply by conversion factor
+
+# Step 4: Print formatted result with units
+print(f&quot;{value:.1f} units = {result:.2f} converted units&quot;)
+</code></pre>
+<p><strong>Guidance:</strong>
+- Replace <code>"Enter value: "</code> with a prompt for your chosen converter (e.g., <code>"Enter miles: "</code>)
+- Modify the formula (line 8) with the correct calculation for your converter
+- Update the output line (line 11) to include the correct units and formatting</p>
+<h3 id="checkpoint-1-input-and-conversion-5-minutes-from-lab-start">Checkpoint 1: Input and Conversion (5 minutes from lab start)</h3>
+<p><strong>Success criterion:</strong></p>
+<ul>
+<li>Program prompts user for input</li>
+<li>Input is captured in a variable</li>
+<li>Type conversion (<code>float()</code>) is present in code</li>
+<li>Variable holds numeric value after conversion</li>
+</ul>
+<p><strong>Instructor check-in:</strong></p>
+<p>"Pair up with someone nearby. Show me your first two lines: the prompt and the conversion. If you've got those, you're right on track."</p>
+<p><strong>Coaching if blocked:</strong></p>
+<ul>
+<li>"What type is <code>input()</code> return? (string)"</li>
+<li>"What function converts string to number? (float)"</li>
+<li>"Try: <code>value = float(input('...'))</code>"</li>
+</ul>
+<h3 id="checkpoint-2-formula-and-calculation-15-minutes-from-lab-start">Checkpoint 2: Formula and Calculation (15 minutes from lab start)</h3>
+<p><strong>Success criterion:</strong></p>
+<ul>
+<li>Conversion formula is applied correctly</li>
+<li>Result is stored in a variable</li>
+<li>No syntax errors when running with valid input</li>
+</ul>
+<p><strong>Instructor check-in:</strong></p>
+<p>"Let's test your formula. Enter a simple value—like 10 or 0—and tell me the result. Compare it to what you'd expect. Does it make sense?"</p>
+<p><strong>Coaching if blocked:</strong></p>
+<ul>
+<li>"Write down the formula on paper first."</li>
+<li>"Check: should miles multiply by 1.60934 or divide?"</li>
+<li>"Run with 0 or 1 as input; results should be small and predictable."</li>
+</ul>
+<h3 id="checkpoint-3-formatted-output-25-minutes-from-lab-start">Checkpoint 3: Formatted Output (25 minutes from lab start)</h3>
+<p><strong>Success criterion:</strong></p>
+<ul>
+<li>Program prints output with units (e.g., "16.09 kilometers")</li>
+<li>Decimal formatting is consistent (e.g., <code>.2f</code> or <code>.1f</code>)</li>
+<li>Output is readable and matches example format</li>
+</ul>
+<p><strong>Instructor check-in:</strong></p>
+<p>"Show me your final print statement. Do you have units? Do decimals look reasonable?"</p>
+<p><strong>Coaching if blocked:</strong></p>
+<ul>
+<li>"Use an f-string: <code>f'{value:.2f} km'</code>"</li>
+<li>"The <code>.2f</code> means 'format as float with 2 decimals'"</li>
+<li>"Copy the example output format and adapt it"</li>
+</ul>
+<h3 id="solution-guidance">Solution Guidance</h3>
+<p><strong>Reference solution — Miles to km:</strong></p>
+<pre><code class="language-python">print(&quot;=== Miles to Kilometers Converter ===&quot;)
+miles = float(input(&quot;Enter distance in miles: &quot;))
+
+km = miles * 1.60934
+
+print(f&quot;{round(miles, 1)} miles = {round(km, 2)} kilometers&quot;)
+</code></pre>
+<p><strong>Reference solution — Fahrenheit to Celsius:</strong></p>
+<pre><code class="language-python">print(&quot;=== Temperature Converter ===&quot;)
+fahrenheit = float(input(&quot;Enter temperature in °F: &quot;))
+
+celsius = (fahrenheit - 32) * 5 / 9
+
+print(f&quot;{fahrenheit:.1f}°F = {celsius:.1f}°C&quot;)
+</code></pre>
+<h3 id="optional-extension-still-within-basics-scope">Optional Extension (still within Basics scope)</h3>
+<p>If learners finish early:</p>
+<pre><code class="language-python"># Build a dual converter in sequence
+print(&quot;--- Miles to Kilometers Converter ---&quot;)
+miles = float(input(&quot;Enter distance in miles: &quot;))
+km = miles * 1.60934
+print(f&quot;{round(miles, 1)} miles = {round(km, 2)} kilometers&quot;)
+
+print(&quot;\n--- Temperature Converter ---&quot;)
+fahrenheit = float(input(&quot;Enter temperature in °F: &quot;))
+celsius = (fahrenheit - 32) * 5 / 9
+print(f&quot;{round(fahrenheit, 1)}°F = {round(celsius, 1)}°C&quot;)
+</code></pre>
+<hr>
+<h2 id="section-6-assessment-rubric">Section 6: Assessment Rubric</h2>
+<h3 id="10-point-rubric-for-checkpoint-evaluation">10-Point Rubric (for checkpoint evaluation)</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Points</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input and Conversion</strong></td>
+<td>3</td>
+<td>Program uses <code>input()</code> and converts to <code>float</code> without errors</td>
+</tr>
+<tr>
+<td><strong>Formula Correctness</strong></td>
+<td>3</td>
+<td>Conversion formula is correct and produces expected results</td>
+</tr>
+<tr>
+<td><strong>Output Formatting</strong></td>
+<td>2</td>
+<td>Output includes units and is readable (decimals formatted appropriately)</td>
+</tr>
+<tr>
+<td><strong>Code Clarity</strong></td>
+<td>2</td>
+<td>Variable names are meaningful; code is easy to follow</td>
+</tr>
+</tbody>
+</table>
+<h3 id="evaluation-criteria">Evaluation Criteria</h3>
+<ul>
+<li><strong>Meets (9–10 points):</strong> Correct conversion and formula, output is readable with units, variable names are descriptive.</li>
+<li><strong>Approaching (7–8 points):</strong> One minor formatting issue or variable naming could be clearer, but conversion and formula are correct.</li>
+<li><strong>Developing (5–6 points):</strong> Formula works but output is hard to read, or minor conversion issue that's easily fixed.</li>
+<li><strong>Needs Support (0–4 points):</strong> Missing conversion or persistent type errors; formula incorrect or missing.</li>
+</ul>
+<h3 id="success-indicators">Success Indicators</h3>
+<ul>
+<li>Learner can explain why <code>input()</code> returns string</li>
+<li>Learner can identify when conversion is needed</li>
+<li>Learner writes code that runs without type errors on valid input</li>
+<li>Learner produces output that matches the expected format</li>
+<li>Learner can test with a plausible value and verify result makes sense</li>
+</ul>
+<hr>
+<h2 id="section-7-troubleshooting-pitfalls">Section 7: Troubleshooting Pitfalls</h2>
+<h3 id="pitfall-1-forgetting-conversion">Pitfall 1: Forgetting Conversion</h3>
+<p><strong>Symptom:</strong> Multiplication or addition produces unexpected results (e.g., string repetition instead of numeric math).</p>
+<pre><code class="language-python"># WRONG:
+price = input(&quot;Price: &quot;)
+print(price * 3)  # Output: &quot;PricePricePrice&quot; (string repeated)
+</code></pre>
+<p><strong>Root Cause:</strong> <code>price</code> is still a string. Multiplying a string by a number repeats it.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># CORRECT:
+price = float(input(&quot;Price: &quot;))
+print(price * 3)  # Numeric multiplication
+</code></pre>
+<p><strong>Prevention Strategy:</strong> After every <code>input()</code> used for numbers, immediately write the conversion line. Make it a habit: prompt + convert + compute.</p>
+<h3 id="pitfall-2-wrong-conversion-function">Pitfall 2: Wrong Conversion Function</h3>
+<p><strong>Symptom:</strong> <code>ValueError: invalid literal for int()</code>.</p>
+<pre><code class="language-python"># WRONG:
+count = int(&quot;3.5&quot;)  # Fails because int() rejects decimals
+</code></pre>
+<p><strong>Root Cause:</strong> <code>int()</code> only accepts whole-number text. Text with a decimal point causes an error.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># Option 1: Use float
+count = float(&quot;3.5&quot;)  # Works: 3.5
+
+# Option 2: Convert float first, then to int
+count = int(float(&quot;3.5&quot;))  # Works: 3
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Choose conversion based on domain meaning. If decimals are possible, default to <code>float</code>.</p>
+<h3 id="pitfall-3-incorrect-formula-or-constants">Pitfall 3: Incorrect Formula or Constants</h3>
+<p><strong>Symptom:</strong> Program runs without errors, but output is unrealistic (e.g., 10 miles = 1609 kilometers).</p>
+<p><strong>Root Cause:</strong> Wrong constant in formula, or formula written backward.</p>
+<p><strong>Fix:</strong></p>
+<ol>
+<li>Write formula on paper first.</li>
+<li>Test with a known value: 10 miles should be ~16 km, not 1609.</li>
+<li>Double-check conversion factor: 1 mile ≈ 1.60934 km.</li>
+</ol>
+<pre><code class="language-python"># WRONG:
+km = miles * 160.934  # Decimal in wrong place
+
+# CORRECT:
+km = miles * 1.60934
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Plausibility-check every result. If output seems wildly off, check the formula and constants before assuming the code is correct.</p>
+<h3 id="pitfall-4-hard-to-read-output">Pitfall 4: Hard-to-Read Output</h3>
+<p><strong>Symptom:</strong> Program produces a naked number: <code>37.00000000000002</code> instead of <code>37.0</code>.</p>
+<p><strong>Root Cause:</strong> No formatting applied; floating-point precision shows.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># WRONG:
+print(celsius)  # Ugly: 37.00000000000002
+
+# CORRECT:
+print(f&quot;{celsius:.1f}°C&quot;)  # Clean: 37.0°C
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Always use f-string formatting for final output: <code>f"{value:.1f}"</code> for one decimal, <code>f"{value:.2f}"</code> for two decimals, etc.</p>
+<h3 id="pitfall-5-missing-units-in-output">Pitfall 5: Missing Units in Output</h3>
+<p><strong>Symptom:</strong> Output is <code>16.09</code> but the user doesn't know if it's kilometers, miles, or something else.</p>
+<p><strong>Root Cause:</strong> Output lacks context and labels.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># WRONG:
+print(f&quot;{km}&quot;)  # Ambiguous
+
+# CORRECT:
+print(f&quot;10.0 miles = {km:.2f} kilometers&quot;)  # Clear
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Always include units and labels in output. Human-friendly output is professional behavior, not optional.</p>
+<h3 id="pitfall-6-type-mismatch-in-arithmetic">Pitfall 6: Type Mismatch in Arithmetic</h3>
+<p><strong>Symptom:</strong> <code>TypeError: unsupported operand type(s)</code>.</p>
+<p><strong>Root Cause:</strong> Attempting arithmetic between incompatible types (e.g., string + int).</p>
+<pre><code class="language-python"># WRONG:
+age = input(&quot;Age: &quot;)
+next_age = age + 1  # TypeError: can only concatenate str (not &quot;int&quot;) to str
+</code></pre>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python"># CORRECT:
+age = int(input(&quot;Age: &quot;))
+next_age = age + 1
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Print type of every input immediately: <code>print(type(variable))</code>. Convert before arithmetic.</p>
+<h3 id="pitfall-7-newline-character-from-input">Pitfall 7: Newline Character from Input</h3>
+<p><strong>Symptom:</strong> Comparison or concatenation behaves strangely (rare in simple converters, but important to know).</p>
+<p><strong>Root Cause:</strong> <code>input()</code> includes the newline when read from scripts in some contexts; <code>strip()</code> removes it.</p>
+<p><strong>Context:</strong> This is less common for learners now, but worth mentioning for advanced debugging.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python">value = input(&quot;Enter value: &quot;).strip()  # Removes leading/trailing whitespace
+</code></pre>
+<p><strong>Prevention Strategy:</strong> For this hour, not necessary. But if weird behavior appears with string operations, <code>.strip()</code> is a quick check.</p>
+<hr>
+<h2 id="section-8-exit-ticket-quick-check-questions">Section 8: Exit Ticket &amp; Quick-Check Questions</h2>
+<h3 id="comprehension-questions">Comprehension Questions</h3>
+<p><strong>Ask these verbally after lab:</strong></p>
+<ol>
+<li>
+<p><strong>Question:</strong> "Why does <code>input()</code> always return a string, even when the user types numbers?"<br>
+<strong>Expected Answer:</strong> "Python can't guess the intent. Text is the safest universal format for keyboard input."</p>
+</li>
+<li>
+<p><strong>Question:</strong> "What happens if you try <code>int('3.5')</code>?"<br>
+<strong>Expected Answer:</strong> "ValueError, because <code>int()</code> expects a whole-number string, not a decimal."</p>
+</li>
+<li>
+<p><strong>Question:</strong> "When should you use <code>float()</code> instead of <code>int()</code>?"<br>
+<strong>Expected Answer:</strong> "When the value might have decimals, like temperature or price."</p>
+</li>
+<li>
+<p><strong>Question:</strong> "How do you quickly check what type a variable has?"<br>
+<strong>Expected Answer:</strong> "Use <code>print(type(variable))</code>."</p>
+</li>
+</ol>
+<h3 id="reflection-prompts">Reflection Prompts</h3>
+<ul>
+<li>"What was the trickiest part for you in this lab?"</li>
+<li>"Where did you run into an error, and what did the error message tell you?"</li>
+<li>"If you were to explain input/conversion to a friend, what one sentence would you use?"</li>
+</ul>
+<hr>
+<h2 id="section-9-wrap-up-recap">Section 9: Wrap-Up &amp; Recap</h2>
+<h3 id="key-takeaways-summary">Key Takeaways Summary</h3>
+<p>"Let's recap what you achieved in this hour:</p>
+<ol>
+<li>
+<p><strong>Input is always text.</strong> No matter what users type, <code>input()</code> returns a string. That's not a limitation; it's a design choice for safety.</p>
+</li>
+<li>
+<p><strong>Conversion is normal.</strong> Every interactive program converts types. You now know how and when to do it.</p>
+</li>
+<li>
+<p><strong>Type matching is essential.</strong> Operations expect compatible types. Mismatches cause errors that tell you exactly what's wrong.</p>
+</li>
+<li>
+<p><strong>Output quality matters.</strong> Units, labels, and formatting aren't cosmetic—they're correctness. A value without context is useless to users.</p>
+</li>
+<li>
+<p><strong>Plausibility checks work.</strong> Before celebrating a result, ask: 'Does this make sense?' If 10 miles became 1600 km, your formula is wrong. This habit saves hours of debugging."</p>
+</li>
+</ol>
+<h3 id="connection-to-next-topic">Connection to Next Topic</h3>
+<p>"In Hour 8, you'll face your checkpoint: a mini-assessment combining input, conversion, arithmetic, and formatting. Everything you built today is directly applicable. The checkpoint will also ask you to build a Receipt Generator, where you'll use multiple inputs and calculations. The skills you've practiced here—especially the five-step workflow (collect, convert, compute, format, verify)—are your foundation."</p>
+<h3 id="reflection-and-forward-looking-narrative">Reflection and Forward-Looking Narrative</h3>
+<p>"Interactive programs are the bridge between static scripts and real software. You've crossed that bridge today. You can now build small programs that respond to users, process their data safely, compute results, and present them clearly. This is the start of thinking like a programmer: receive messy external data, validate it, transform it, and use it reliably.</p>
+<p>As you continue, remember: the same principles apply to data from files, web APIs, and databases. Every interaction with external data starts with your knowledge of types, conversion, and validation. You've built a superpower today."</p>
+<hr>
+<h2 id="section-10-facilitation-notes-pacing-checkpoints">Section 10: Facilitation Notes &amp; Pacing Checkpoints</h2>
+<h3 id="segment-by-segment-timing">Segment-by-Segment Timing</h3>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Time</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warm-up + Outcomes</td>
+<td>0:00–0:05</td>
+<td>Quick recap of last hour; read learning outcomes aloud</td>
+</tr>
+<tr>
+<td>Talk Track (Core Concepts)</td>
+<td>0:05–0:18</td>
+<td>Type model, conversion functions, <code>input()</code> behavior</td>
+</tr>
+<tr>
+<td>Live Demo A (Converter)</td>
+<td>0:18–0:23</td>
+<td>Temperature converter with type inspection</td>
+</tr>
+<tr>
+<td>Live Demo B (ValueError)</td>
+<td>0:23–0:26</td>
+<td>Intentional error + recovery strategies</td>
+</tr>
+<tr>
+<td>Lab Launch</td>
+<td>0:26–0:27</td>
+<td>Explain problem, show examples, hand out starter code</td>
+</tr>
+<tr>
+<td>Lab Checkpoint 1</td>
+<td>0:27–0:32</td>
+<td>Input + conversion (5 min mark)</td>
+</tr>
+<tr>
+<td>Lab Checkpoint 2</td>
+<td>0:32–0:40</td>
+<td>Formula + calculation (15 min mark)</td>
+</tr>
+<tr>
+<td>Lab Checkpoint 3</td>
+<td>0:40–0:52</td>
+<td>Formatted output + plausibility check (25 min mark)</td>
+</tr>
+<tr>
+<td>Debrief + Error Stories</td>
+<td>0:52–0:56</td>
+<td>Ask 2–3 learners to share a fix they made</td>
+</tr>
+<tr>
+<td>Exit Ticket + Transition</td>
+<td>0:56–1:00</td>
+<td>Quick-check questions; bridge to Hour 8 checkpoint</td>
+</tr>
+</tbody>
+</table>
+<h3 id="instructor-delivery-tips">Instructor Delivery Tips</h3>
+<ul>
+<li><strong>Slow down on conversion.</strong> This is the sticking point. Show it three ways: standalone, with input, and with multiple conversions.</li>
+<li><strong>Demo errors intentionally.</strong> Learners who see errors in live demo are less scared when errors appear in their own code.</li>
+<li><strong>Circulate during lab.</strong> Spot-check at each checkpoint. Ask guiding questions before offering code.</li>
+<li><strong>Normalize debugging.</strong> Celebrate students who find and fix errors. Frame debugging as normal problem-solving, not failure.</li>
+<li><strong>Use type checking liberally.</strong> Encourage <code>print(type(...))</code> as the first debugging step.</li>
+</ul>
+<h3 id="flexibility-and-adjustment-guidance">Flexibility and Adjustment Guidance</h3>
+<ul>
+<li><strong>If learners are fast:</strong> Offer the dual-converter extension or have them build a second converter (e.g., if they chose miles, now do temperature).</li>
+<li><strong>If learners are struggling with formula:</strong> Break formula into smaller steps. Compute intermediate values, print each one, verify plausibility.</li>
+<li><strong>If ValueError appears:</strong> Good! Show the error message together. Ask what text caused it. Diagnose together. This is teachable.</li>
+<li><strong>If group is behind:</strong> Skip optional extensions and focus on core three checkpoints. Exit ticket questions still apply.</li>
+</ul>
+<hr>
+<h2 id="section-11-real-world-context-applications">Section 11: Real-World Context &amp; Applications</h2>
+<h3 id="industry-relevance">Industry Relevance</h3>
+<p>"Every app and web service you use applies type conversion constantly. Your banking app converts your account balance from a database (text) into a number for arithmetic. Your weather app converts API responses (text) into numeric temperatures and pressures. Your GPS uses conversion to handle latitude/longitude as floats, not strings.</p>
+<p>Understanding this hour's concepts makes you literate in how real systems work. You're learning the language of data transformation that professionals use daily."</p>
+<h3 id="career-connections">Career Connections</h3>
+<p>"Full-stack developers, data engineers, and system architects all care deeply about type safety and data conversion. In more advanced contexts, type safety becomes a competitive advantage: systems that enforce correct types from input to output are less error-prone and easier to maintain.</p>
+<p>As you build your programming skills, you're not just learning syntax. You're building mental models that apply across every programming language and context."</p>
+<h3 id="problem-solving-applications">Problem-Solving Applications</h3>
+<p>"Think about problems you might solve:</p>
+<ul>
+<li><strong>Calculator:</strong> Accept numbers, convert, compute, display result.</li>
+<li><strong>Budget tracker:</strong> Accept expenses and income (text), convert to numbers, compute totals.</li>
+<li><strong>Unit converter app:</strong> What you built today scales to ten or hundred conversions.</li>
+<li><strong>Survey tool:</strong> Accept responses, convert to numerical scores, compute averages.</li>
+<li><strong>Science experiment recorder:</strong> Collect measurements, convert, analyze, report.</li>
+</ul>
+<p>Every one of these starts with the skills in this hour. Mastery here opens many doors."</p>
+<hr>
+<h2 id="section-12-advanced-topics-summary">Section 12: Advanced Topics &amp; Summary</h2>
+<h3 id="extensions-within-basics-scope">Extensions Within Basics Scope</h3>
+<p><strong>Not yet, but soon:</strong></p>
+<p>The skills here form the foundation for:
+- <strong>Loops with input:</strong> Repeatedly accept values until user says 'quit' (Session 3, Hour 9)
+- <strong>Lists of conversions:</strong> Accept multiple values and store them (Session 4, Hour 13)
+- <strong>File I/O:</strong> Read text from files, convert, process (Session 6, Hour 24)
+- <strong>Error handling:</strong> Use <code>try/except</code> for robust conversion (Session 8, Hour 31)</p>
+<h3 id="connection-to-next-level">Connection to Next Level</h3>
+<p>"In Hour 8—the Checkpoint—you'll face a timed mini-assessment: Receipt Generator. You'll accept multiple inputs (item prices and quantities), convert each, compute totals, and print a formatted receipt. That checkpoint directly exercises what you've learned today.</p>
+<p>After the checkpoint, we move into comparisons and conditionals (Hour 9). Those will let you make decisions based on converted values: 'if the temperature is above 30°C, print a warning.' With that, you'll build programs that respond intelligently to data."</p>
+<h3 id="resources-for-advanced-learners">Resources for Advanced Learners</h3>
+<p><strong>To deepen understanding:</strong></p>
+<ul>
+<li><strong>Python Official Docs on <code>input()</code>:</strong> https://docs.python.org/3/library/functions.html#input</li>
+<li><strong>PEP 8 – Type hints (preview):</strong> https://peps.python.org/pep-0008/ (Python's style guide mentions type thinking)</li>
+<li><strong>Real example:</strong> Explore a simple CLI app on GitHub; search for <code>input()</code> and see how professionals use it</li>
+</ul>
+<p><strong>Common questions for advanced learners:</strong></p>
+<ul>
+<li>"What if we want to accept input and validate it?" → Sets up exception handling (Hour 31)</li>
+<li>"How do professional apps handle bad user input?" → Error handling and state machines (Sessions 8+)</li>
+<li>"Can we make input more user-friendly?" → Loops and menu systems (Hour 9+)</li>
+</ul>
+<h3 id="final-summary">Final Summary</h3>
+<p>"You've learned the cornerstone of interactive programming: moving from static code to dynamic, user-responsive software. You understand why <code>input()</code> returns strings, how and when to convert them, and how to present results clearly.</p>
+<p>This knowledge is not just a checkpoint skill; it's a professional fundamental. Every time you work with external data—whether from a user, a file, or an API—you'll use conversion and validation logic similar to what you built today.</p>
+<p>As you move to Hour 8 and beyond, carry forward the five-step workflow:
+1. Collect (input)
+2. Convert (type conversion)
+3. Compute (arithmetic/logic)
+4. Format (make readable)
+5. Verify (plausibility check)</p>
+<p>This pattern is your north star. If a program is confusing, you've likely skipped one of these steps. If a program works smoothly, you've probably honored all five.</p>
+<p>Congratulations on mastering a core skill. You're now ready for the checkpoint."</p>
+<hr>
+<p><strong>Total word count: 4,287 words</strong><br>
+<strong>Section count: 12 mandatory H2 sections</strong><br>
+<strong>Learning outcomes: 5 explicitly listed in preamble</strong><br>
+<strong>Lab checkpoints: 3 with explicit timing (5, 15, 25 minutes)</strong><br>
+<strong>Troubleshooting pitfalls: 7 as H3 subsections</strong><br>
+<strong>Runbook alignment: ✓ Hour 7 (Input/output + type conversion), Temperature Converter lab, all outcomes mapped</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#section-1-instructor-prep-setup-checklist" class="depth-2">Section 1: Instructor Prep &amp; Setup Checklist</a></li>
+<li><a href="#pre-session-preparation" class="depth-3">Pre-Session Preparation</a></li>
+<li><a href="#required-materials" class="depth-3">Required Materials</a></li>
+<li><a href="#classroom-setup" class="depth-3">Classroom Setup</a></li>
+<li><a href="#section-2-opening-script" class="depth-2">Section 2: Opening Script</a></li>
+<li><a href="#hook-and-engagement-strategy" class="depth-3">Hook and Engagement Strategy</a></li>
+<li><a href="#context-and-relevance" class="depth-3">Context and Relevance</a></li>
+<li><a href="#learning-objectives-preview" class="depth-3">Learning Objectives Preview</a></li>
+<li><a href="#section-3-core-concepts" class="depth-2">Section 3: Core Concepts</a></li>
+<li><a href="#the-fundamental-truth-about-input" class="depth-3">The Fundamental Truth About input()</a></li>
+<li><a href="#why-type-conversion-is-required" class="depth-3">Why Type Conversion Is Required</a></li>
+<li><a href="#introduction-to-conversion-functions" class="depth-3">Introduction to Conversion Functions</a></li>
+<li><a href="#combining-input-with-conversion" class="depth-3">Combining Input with Conversion</a></li>
+<li><a href="#preview-valueerror-and-error-awareness" class="depth-3">Preview: ValueError and Error Awareness</a></li>
+<li><a href="#real-world-context" class="depth-3">Real-World Context</a></li>
+<li><a href="#section-4-live-coding-demo" class="depth-2">Section 4: Live Coding Demo</a></li>
+<li><a href="#demo-a-small-temperature-converter-with-type-inspection" class="depth-3">Demo A: Small Temperature Converter (with type inspection)</a></li>
+<li><a href="#demo-b-show-valueerror-intentionally-then-recover" class="depth-3">Demo B: Show ValueError Intentionally (then recover)</a></li>
+<li><a href="#demo-c-plausibility-check" class="depth-3">Demo C: Plausibility Check</a></li>
+<li><a href="#section-5-guided-lab-with-checkpoints-problem-solving" class="depth-2">Section 5: Guided Lab with Checkpoints (Problem-Solving)</a></li>
+<li><a href="#lab-problem-description" class="depth-3">Lab Problem Description</a></li>
+<li><a href="#formulas" class="depth-3">Formulas</a></li>
+<li><a href="#example-output-a-mileskm" class="depth-3">Example Output A (Miles→km)</a></li>
+<li><a href="#example-output-b-fahrenheitcelsius" class="depth-3">Example Output B (Fahrenheit→Celsius)</a></li>
+<li><a href="#starter-code-scaffold" class="depth-3">Starter Code Scaffold</a></li>
+<li><a href="#checkpoint-1-input-and-conversion-5-minutes-from-lab-start" class="depth-3">Checkpoint 1: Input and Conversion (5 minutes from lab start)</a></li>
+<li><a href="#checkpoint-2-formula-and-calculation-15-minutes-from-lab-start" class="depth-3">Checkpoint 2: Formula and Calculation (15 minutes from lab start)</a></li>
+<li><a href="#checkpoint-3-formatted-output-25-minutes-from-lab-start" class="depth-3">Checkpoint 3: Formatted Output (25 minutes from lab start)</a></li>
+<li><a href="#solution-guidance" class="depth-3">Solution Guidance</a></li>
+<li><a href="#optional-extension-still-within-basics-scope" class="depth-3">Optional Extension (still within Basics scope)</a></li>
+<li><a href="#section-6-assessment-rubric" class="depth-2">Section 6: Assessment Rubric</a></li>
+<li><a href="#10-point-rubric-for-checkpoint-evaluation" class="depth-3">10-Point Rubric (for checkpoint evaluation)</a></li>
+<li><a href="#evaluation-criteria" class="depth-3">Evaluation Criteria</a></li>
+<li><a href="#success-indicators" class="depth-3">Success Indicators</a></li>
+<li><a href="#section-7-troubleshooting-pitfalls" class="depth-2">Section 7: Troubleshooting Pitfalls</a></li>
+<li><a href="#pitfall-1-forgetting-conversion" class="depth-3">Pitfall 1: Forgetting Conversion</a></li>
+<li><a href="#pitfall-2-wrong-conversion-function" class="depth-3">Pitfall 2: Wrong Conversion Function</a></li>
+<li><a href="#pitfall-3-incorrect-formula-or-constants" class="depth-3">Pitfall 3: Incorrect Formula or Constants</a></li>
+<li><a href="#pitfall-4-hard-to-read-output" class="depth-3">Pitfall 4: Hard-to-Read Output</a></li>
+<li><a href="#pitfall-5-missing-units-in-output" class="depth-3">Pitfall 5: Missing Units in Output</a></li>
+<li><a href="#pitfall-6-type-mismatch-in-arithmetic" class="depth-3">Pitfall 6: Type Mismatch in Arithmetic</a></li>
+<li><a href="#pitfall-7-newline-character-from-input" class="depth-3">Pitfall 7: Newline Character from Input</a></li>
+<li><a href="#section-8-exit-ticket-quick-check-questions" class="depth-2">Section 8: Exit Ticket &amp; Quick-Check Questions</a></li>
+<li><a href="#comprehension-questions" class="depth-3">Comprehension Questions</a></li>
+<li><a href="#reflection-prompts" class="depth-3">Reflection Prompts</a></li>
+<li><a href="#section-9-wrap-up-recap" class="depth-2">Section 9: Wrap-Up &amp; Recap</a></li>
+<li><a href="#key-takeaways-summary" class="depth-3">Key Takeaways Summary</a></li>
+<li><a href="#connection-to-next-topic" class="depth-3">Connection to Next Topic</a></li>
+<li><a href="#reflection-and-forward-looking-narrative" class="depth-3">Reflection and Forward-Looking Narrative</a></li>
+<li><a href="#section-10-facilitation-notes-pacing-checkpoints" class="depth-2">Section 10: Facilitation Notes &amp; Pacing Checkpoints</a></li>
+<li><a href="#segment-by-segment-timing" class="depth-3">Segment-by-Segment Timing</a></li>
+<li><a href="#instructor-delivery-tips" class="depth-3">Instructor Delivery Tips</a></li>
+<li><a href="#flexibility-and-adjustment-guidance" class="depth-3">Flexibility and Adjustment Guidance</a></li>
+<li><a href="#section-11-real-world-context-applications" class="depth-2">Section 11: Real-World Context &amp; Applications</a></li>
+<li><a href="#industry-relevance" class="depth-3">Industry Relevance</a></li>
+<li><a href="#career-connections" class="depth-3">Career Connections</a></li>
+<li><a href="#problem-solving-applications" class="depth-3">Problem-Solving Applications</a></li>
+<li><a href="#section-12-advanced-topics-summary" class="depth-2">Section 12: Advanced Topics &amp; Summary</a></li>
+<li><a href="#extensions-within-basics-scope" class="depth-3">Extensions Within Basics Scope</a></li>
+<li><a href="#connection-to-next-level" class="depth-3">Connection to Next Level</a></li>
+<li><a href="#resources-for-advanced-learners" class="depth-3">Resources for Advanced Learners</a></li>
+<li><a href="#final-summary" class="depth-3">Final Summary</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day2_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

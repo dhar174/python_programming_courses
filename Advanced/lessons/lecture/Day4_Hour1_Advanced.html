@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4, Hour 1: HTTP Client Work – requests + JSON Contracts | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="4">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day4_Hour1_Advanced.md">
+
+    <link rel="prev" href="Day3_Hour4_Advanced.html">
+    <link rel="next" href="Day4_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="4" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-04/index.html">Day 4</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 4, Hour 1: HTTP Client Work – requests + JSON Contracts</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 4</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day4_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Advanced – Session 4</strong></p>
+<hr>
+<h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 4, Hour 1 of 48, also Hour 13 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Building a reliable HTTP client with <code>requests</code>, explicit timeouts, structured error handling, and JSON contract checks.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 4, Hour 13.</li>
+<li><strong>Prerequisites</strong>: Learners should have completed the Day 3 tracker work or have equivalent familiarity with small service wrappers, logging, exceptions, and validating data before trusting it.</li>
+<li><strong>Advanced trajectory</strong>: This hour moves from local application reliability into external-service reliability. Learners are not building a full API server yet; they are learning how a Python program responsibly consumes another service.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner can write a small API consumer that sets a timeout, handles network and HTTP failures, validates JSON shape, and prints friendly messages for timeout, 404, 500, and invalid JSON situations.</li>
+</ul>
+<p>Important instructor positioning:</p>
+<ul>
+<li>Keep repeating the phrase <strong>outside data is untrusted until checked</strong>. It links directly to the JSON contract idea.</li>
+<li>The required lab must be protected. Students need time to implement the happy path and then exercise distinct failure branches.</li>
+<li>Do not let the hour drift into Flask routes, authentication systems, advanced retries/backoff, async clients, or production API architecture. Those topics can be named as future directions, but Hour 13 is about one reliable HTTP client wrapper.</li>
+<li>If internet access is unreliable, use an instructor-provided local endpoint or prepared response examples. The learning target is the client behavior, not dependence on a specific public service.</li>
+<li>Friendly user messages and developer diagnostics are different audiences. This is a useful bridge from Day 3 logging into Session 4 API work.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<p><strong>Total Time:</strong> 60 minutes<br>
+- Recap &amp; Transition from Session 3: 4 minutes
+- HTTP client fundamentals: 9 minutes
+- JSON contracts, status codes, and timeout patterns: 10 minutes
+- Live Demo (public API consumer with wrapper function): 8 minutes
+- Hands-On Lab (API consumer with failure-branch checks): 26 minutes
+- Debrief &amp; Exit Ticket: 3 minutes</p>
+<p>This one-hour plan totals exactly 60 minutes: 4 + 9 + 10 + 8 + 26 + 3 = 60. The hands-on lab is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the concept discussion runs long, shorten the demo narration rather than reducing the student practice, because the lab is where learners prove they can handle success, timeout, 404, 500, and invalid JSON cases.</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, you will be able to:
+1. Explain the practical difference between an HTTP client and an API server
+2. Use the <code>requests</code> library to send a <code>GET</code> request and parse JSON safely
+3. Set a timeout on every request and explain why timeouts matter in real systems
+4. Use <code>response.raise_for_status()</code> and structured exception handling for network failures
+5. Treat JSON as a contract by validating required keys and expected value types before use
+6. Write a small wrapper function so request logic is not repeated throughout an application
+7. Build a user-friendly API consumer that handles timeout, 404, 500, and invalid JSON cases gracefully</p>
+<hr>
+<h2 id="section-1-recap-transition-from-session-3-4-minutes">Section 1: Recap &amp; Transition from Session 3 (4 minutes)</h2>
+<h3 id="quick-re-entry">Quick Re-entry</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome to Session 4. Up to this point in the advanced course, you have been building stronger program structure: organizing code into reusable functions and classes, separating responsibilities, and thinking about applications as systems instead of as one-off scripts. That matters today, because as soon as a program starts talking to something outside itself, the stakes change.</p>
+<p>In the earlier sessions, most of our programs worked with data that was already inside Python: lists, dictionaries, objects, files we controlled, and logic we wrote. Today we start consuming data that comes from somewhere else. That “somewhere else” might be a public API, an internal service, a local development endpoint, or a future capstone backend.</p>
+<p>The mental shift I want you to make is this: <strong>outside data is untrusted until we check it</strong>. It may be late. It may be malformed. It may be missing keys. The server may be down. The JSON may not match what we assumed yesterday. Professional-grade software is not the software that works only in the happy path; professional-grade software is software that behaves predictably when the world gets messy.</p>
+<p>So in this hour we are not just learning how to “call an API.” We are learning how to build a small, reliable client.</p>
+<h3 id="framing-the-hour">Framing the Hour</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is the storyline for this hour:</p>
+<ul>
+<li>First, we will define what an HTTP client is and why applications use one.</li>
+<li>Then we will talk about practical HTTP concerns: methods, status codes, timeouts, and failures.</li>
+<li>After that, we will introduce a very important design habit: <strong>JSON is a contract</strong>.</li>
+<li>Then I will demo a tiny client wrapper built with <code>requests</code>.</li>
+<li>Finally, you will build a small consumer script that handles both success and failure cases cleanly.</li>
+</ul>
+<p><strong>[Ask students:]</strong> Before we start typing, where have you seen an application use outside data? Weather apps? Maps? Streaming recommendations? Payment systems? Inventory dashboards?</p>
+<p>[Pause. Invite 2–3 examples.]</p>
+<p>Exactly. Nearly every serious application is, in some form, an HTTP client.</p>
+<hr>
+<h2 id="section-2-http-client-fundamentals-9-minutes">Section 2: HTTP Client Fundamentals (9 minutes)</h2>
+<h3 id="what-an-http-client-does">What an HTTP Client Does</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>An HTTP client is simply code that sends an HTTP request to a server and receives an HTTP response. The client asks for something; the server answers. That answer might be HTML for a browser, JSON for a program, or an error if something went wrong.</p>
+<p>At a high level, think of the client as the side initiating the conversation. Our Python program becomes the client. A service on another machine becomes the server. We do not need to memorize the entire HTTP specification today. We need a practical model that lets us build reliable code.</p>
+<p>The request usually includes:</p>
+<ul>
+<li>a method such as <code>GET</code> or <code>POST</code></li>
+<li>a URL</li>
+<li>optional query parameters</li>
+<li>optional headers</li>
+<li>sometimes a request body</li>
+</ul>
+<p>The response usually includes:</p>
+<ul>
+<li>a status code such as 200, 404, or 500</li>
+<li>headers</li>
+<li>a body, often JSON in API work</li>
+</ul>
+<h3 id="get-vs-post-at-a-high-level">GET vs POST at a High Level</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>For this hour, the two verbs I want students to hear clearly are <code>GET</code> and <code>POST</code>.</p>
+<ul>
+<li><code>GET</code> means “please give me data.”</li>
+<li><code>POST</code> means “please accept this data or create something.”</li>
+</ul>
+<p>We are focusing mainly on <code>GET</code> because it is the cleanest place to start. It lets us practice receiving and validating JSON without adding the complexity of request payloads. But students should still hear the distinction because their capstones may eventually need both.</p>
+<p><strong>[Prediction prompt:]</strong> If I say “fetch the current weather,” which method sounds more likely: <code>GET</code> or <code>POST</code>?</p>
+<p>[Pause. Students should say <code>GET</code>.]</p>
+<p>Correct. We are asking for information, not sending a new record to be created.</p>
+<h3 id="why-we-use-the-requests-library">Why We Use the <code>requests</code> Library</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Python includes lower-level tools for networking, but <code>requests</code> is widely used because it gives us a readable, ergonomic interface. Its value for learners is that it removes noise so we can concentrate on good client behavior.</p>
+<p>A very small example looks like this:</p>
+<pre><code class="language-python">import requests
+
+response = requests.get(&quot;https://example.com/api/items&quot;, timeout=5)
+print(response.status_code)
+print(response.text)
+</code></pre>
+<p>That is approachable, but it is not yet robust. If the server hangs, we need a timeout. If the server returns a 404 or 500, we need structured handling. If the body is not valid JSON, we need a fallback plan. If the JSON shape changes, we need validation. Those are the habits that separate classroom demos from dependable code.</p>
+<h3 id="the-reality-of-failure">The Reality of Failure</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students often assume a request either “works” or “does not work.” In real systems there are multiple kinds of not-working, and they matter because the user-facing message should match the failure.</p>
+<p>A few examples:</p>
+<ul>
+<li>The network is unavailable.</li>
+<li>DNS fails.</li>
+<li>The server takes too long.</li>
+<li>The server responds, but with a 404.</li>
+<li>The server responds, but with a 500.</li>
+<li>The server responds with text that is not valid JSON.</li>
+<li>The server responds with valid JSON, but not the JSON we expected.</li>
+</ul>
+<p>All of those are different. Good client code distinguishes them where it is useful and gives friendly, safe feedback.</p>
+<hr>
+<h2 id="section-3-json-contracts-timeouts-and-status-codes-10-minutes">Section 3: JSON Contracts, Timeouts, and Status Codes (10 minutes)</h2>
+<h3 id="always-set-a-timeout">Always Set a Timeout</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is one of the most practical lessons in the entire session: <strong>always set a timeout</strong>.</p>
+<p>If students remember only one implementation habit from today, let it be that one. Without a timeout, the program can wait indefinitely for a server response. In a small script, that feels like a frozen program. In a real application, that becomes a terrible user experience and, potentially, a reliability incident.</p>
+<p>A timeout says, “I am willing to wait this long, and after that I will handle the situation myself.”</p>
+<p>Examples:</p>
+<pre><code class="language-python">requests.get(url, timeout=5)
+requests.get(url, timeout=(3, 10))
+</code></pre>
+<p>The first form is a single overall timeout value. The second form separates connection timeout and read timeout. At this stage, students do not need deep networking theory. They just need to understand that the client should never hang forever.</p>
+<p><strong>[Quick check:]</strong> What is the difference between “the server is slow” and “the client hangs forever”? The first is a situation we can manage. The second is a program design mistake if we forgot the timeout.</p>
+<h3 id="prefer-raiseforstatus">Prefer <code>raise_for_status()</code></h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>We could manually inspect <code>response.status_code</code> everywhere, but a cleaner habit is to call <code>response.raise_for_status()</code>. That method raises an exception for 4xx and 5xx responses.</p>
+<p>Why is that helpful?</p>
+<p>Because it keeps happy-path code clean and pushes failures into exception-handling logic where they belong.</p>
+<pre><code class="language-python">response = requests.get(url, timeout=5)
+response.raise_for_status()
+data = response.json()
+</code></pre>
+<p>This reads as: request, verify success, parse body.</p>
+<p>We can then catch <code>requests.HTTPError</code> and present a safe, useful message.</p>
+<h3 id="json-is-a-contract-not-just-a-blob-of-data">JSON Is a Contract, Not Just a Blob of Data</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is the most important design concept of the hour: <strong>JSON is a contract</strong>.</p>
+<p>Beginners often write code that assumes the response is exactly what they imagined:</p>
+<pre><code class="language-python">title = data[&quot;title&quot;]
+user_id = data[&quot;userId&quot;]
+</code></pre>
+<p>That may work until the API changes, or the field is missing, or the value type shifts from <code>int</code> to <code>str</code>, or the endpoint returns a list instead of a dictionary. Suddenly the code crashes somewhere far from the actual problem.</p>
+<p>A better approach is to define the minimum contract you require before using the data.</p>
+<p>For example:</p>
+<ul>
+<li>The payload must be a dictionary.</li>
+<li>It must contain <code>id</code>, <code>title</code>, and <code>body</code>.</li>
+<li><code>id</code> must be an integer.</li>
+<li><code>title</code> and <code>body</code> must be strings.</li>
+</ul>
+<p>This does not need to become enterprise-grade schema tooling for today’s lesson. A small validation function is enough to teach the principle.</p>
+<h3 id="friendly-failure-categories">Friendly Failure Categories</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>I want students to leave with a simple mapping between failure types and user-facing responses:</p>
+<ul>
+<li><strong>Timeout</strong> → “The service took too long to respond.”</li>
+<li><strong>Connection problem</strong> → “The service may be unreachable.”</li>
+<li><strong>HTTP error</strong> → “The service returned an error.”</li>
+<li><strong>Invalid JSON</strong> → “The service returned unreadable data.”</li>
+<li><strong>Contract mismatch</strong> → “The service response did not match expectations.”</li>
+</ul>
+<p>Notice what is missing from those messages: stack traces, raw server internals, and confusing technical noise. We can log details for developers, but users should get a calm, actionable message.</p>
+<h3 id="a-simple-wrapper-function-pattern">A Simple Wrapper Function Pattern</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>One common anti-pattern is repeating request logic everywhere in an application. A better habit is to create a tiny wrapper function or client function that centralizes the request behavior.</p>
+<p>That wrapper can:</p>
+<ul>
+<li>set the timeout</li>
+<li>call <code>raise_for_status()</code></li>
+<li>parse JSON</li>
+<li>validate required structure</li>
+<li>log failures</li>
+<li>return clean Python data to the rest of the program</li>
+</ul>
+<p>The benefit is not just less typing. The benefit is consistency. When you later update your timeout strategy, add headers, or improve error handling, you do it in one place.</p>
+<hr>
+<h2 id="section-4-live-demo-public-api-consumer-with-a-wrapper-function-8-minutes">Section 4: Live Demo – Public API Consumer with a Wrapper Function (8 minutes)</h2>
+<h3 id="demo-setup">Demo Setup</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>I’m going to use a public sample endpoint for demonstration. If internet access is restricted in your environment, switch this to an instructor-provided local endpoint. The teaching goal is the same: make a request, parse JSON, validate the contract, and handle failures.</p>
+<p>As I code, I want students watching for four specific moves:</p>
+<ol>
+<li>I set a timeout.</li>
+<li>I call <code>raise_for_status()</code>.</li>
+<li>I validate the JSON structure.</li>
+<li>I return a friendly message on failure.</li>
+</ol>
+<pre><code class="language-python">from __future__ import annotations
+
+import logging
+from typing import Any
+
+import requests
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format=&quot;%(levelname)s: %(message)s&quot;)
+
+
+class APIContractError(Exception):
+    &quot;&quot;&quot;Raised when API data does not match the expected shape.&quot;&quot;&quot;
+
+
+def validate_post_contract(payload: dict[str, Any]) -&gt; None:
+    required_fields: dict[str, type] = {
+        &quot;id&quot;: int,
+        &quot;title&quot;: str,
+        &quot;body&quot;: str,
+    }
+
+    for field_name, expected_type in required_fields.items():
+        if field_name not in payload:
+            raise APIContractError(f&quot;Missing required field: {field_name}&quot;)
+        if not isinstance(payload[field_name], expected_type):
+            actual_type = type(payload[field_name]).__name__
+            expected_name = expected_type.__name__
+            raise APIContractError(
+                f&quot;Field '{field_name}' expected {expected_name}, got {actual_type}&quot;
+            )
+
+
+def fetch_post(post_id: int) -&gt; dict[str, Any] | None:
+    url = f&quot;https://jsonplaceholder.typicode.com/posts/{post_id}&quot;
+
+    try:
+        response = requests.get(url, timeout=(3, 10))
+        response.raise_for_status()
+        data: Any = response.json()
+
+        if not isinstance(data, dict):
+            raise APIContractError(&quot;Expected a JSON object&quot;)
+
+        validate_post_contract(data)
+        return data
+
+    except requests.Timeout:
+        logger.error(&quot;The service timed out.&quot;)
+    except requests.ConnectionError:
+        logger.error(&quot;The service appears unreachable.&quot;)
+    except requests.HTTPError as error:
+        status_code = (
+            error.response.status_code
+            if error.response is not None
+            else &quot;unknown&quot;
+        )
+        logger.error(&quot;The service returned an HTTP error: %s&quot;, status_code)
+    except requests.exceptions.JSONDecodeError:
+        logger.error(&quot;The service returned invalid JSON.&quot;)
+    except APIContractError as error:
+        logger.error(&quot;The JSON contract was not satisfied: %s&quot;, error)
+
+    return None
+
+
+def main() -&gt; None:
+    post = fetch_post(post_id=1)
+    if post is None:
+        print(&quot;Sorry, we could not load the post right now.&quot;)
+        return
+
+    print(f&quot;Post #{post['id']}&quot;)
+    print(f&quot;Title: {post['title']}&quot;)
+    print(f&quot;Preview: {post['body'][:60]}...&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-narration">Demo Narration</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Walk line by line. Do not rush the wrapper pattern.</p>
+<p>Start with the custom exception. Explain that a contract mismatch is not exactly the same kind of problem as a timeout or 404. Naming the problem makes the code easier to reason about.</p>
+<p>Then point to <code>validate_post_contract()</code>. Explain that this is not overengineering. It is a small safety checkpoint between unknown input and trusted application logic.</p>
+<p>Then point to <code>fetch_post()</code>. Emphasize that the rest of the application does not need to know about status codes, timeout tuples, or <code>requests</code> internals. It asks for a post. The wrapper deals with transport-level concerns.</p>
+<p><strong>[Prediction prompt:]</strong> What do you think happens if the endpoint returns HTML instead of JSON?</p>
+<p>[Pause.]</p>
+<p>Right: <code>response.json()</code> will fail, and we want that failure to become a friendly message and a useful log entry.</p>
+<p><strong>[Instructor action:]</strong> If possible, intentionally demonstrate one failure at a time:</p>
+<ul>
+<li>Change the URL to a missing path to trigger a 404.</li>
+<li>Use a deliberately tiny timeout to discuss timeout behavior.</li>
+<li>Point to where invalid JSON would be caught.</li>
+</ul>
+<p>If the environment does not make it easy to trigger a real timeout, narrate it conceptually. The goal is the pattern, not the drama.</p>
+<h3 id="teaching-notes-during-the-demo">Teaching Notes During the Demo</h3>
+<p><strong>[Circulate / observe:]</strong></p>
+<p>Watch for students copying the code without understanding why each <code>except</code> exists. Pause and ask:</p>
+<ul>
+<li>Which block handles a timeout?</li>
+<li>Which block handles a valid response with unexpected content?</li>
+<li>Why do we check <code>isinstance(data, dict)</code> before validation?</li>
+</ul>
+<p>If students answer those questions correctly, they are moving beyond syntax into design thinking.</p>
+<hr>
+<h2 id="section-5-hands-on-lab-api-consumer-with-failure-branch-checks-26-minutes">Section 5: Hands-On Lab – API Consumer with Failure-Branch Checks (26 minutes)</h2>
+<h3 id="lab-framing">Lab Framing</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now students will build their own small API consumer. Keep the scope modest. This is not an API framework. It is a single script or tiny client module that demonstrates disciplined request handling.</p>
+<p>The lab target is intentionally close to the demo, but not identical. I want them to type, adapt, and make decisions.</p>
+<h3 id="student-task">Student Task</h3>
+<p><strong>Lab: API Consumer</strong></p>
+<p>Students should build a script that:</p>
+<ul>
+<li>calls an HTTP endpoint</li>
+<li>parses JSON and displays selected fields</li>
+<li>uses <code>timeout=...</code> on every request</li>
+<li>handles non-200 responses with a friendly message</li>
+<li>distinguishes at least these failure cases:</li>
+<li>timeout</li>
+<li>connection or network failure</li>
+<li>404</li>
+<li>500</li>
+<li>invalid JSON</li>
+<li>validates that required keys exist before using them</li>
+</ul>
+<p>If students are unsure which endpoint to use, provide one. A simple public JSON endpoint or instructor-provided local endpoint is fine.</p>
+<h3 id="required-lab-milestones">Required Lab Milestones</h3>
+<p>Use these milestones to make the 26-minute lab concrete. Students should not stop after the first successful request.</p>
+<ol>
+<li><strong>Happy path first.</strong> Call a known-good endpoint, parse the JSON, validate at least one required field, and print selected fields in a user-friendly format.</li>
+<li><strong>Timeout path.</strong> Confirm that every request call includes <code>timeout=...</code>. If a real timeout is hard to trigger in class, have students point to the <code>except requests.Timeout</code> block and explain the message it would show.</li>
+<li><strong>404 path.</strong> Change the URL or identifier to something missing and verify the program prints a friendly "not found" style message rather than a traceback.</li>
+<li><strong>500 path.</strong> Use an instructor-provided endpoint, mock response, or prepared discussion case if the public API does not offer a stable 500. The required habit is that 5xx responses are handled separately from success.</li>
+<li><strong>Invalid JSON path.</strong> Use a non-JSON endpoint, local sample, or instructor-provided response to verify that JSON parsing failures do not crash the program.</li>
+<li><strong>Contract mismatch path.</strong> Adjust the expected key name temporarily and confirm the program catches missing or wrong-typed data before using it.</li>
+<li><strong>Connection failure path.</strong> Use a deliberately invalid host, a stopped local endpoint, or an instructor-provided scenario to verify the program reports "service unreachable" instead of crashing.</li>
+</ol>
+<p>The point is not that every student must find a perfect public endpoint for every failure. The point is that every student can show where each failure is handled and can demonstrate at least the happy path plus one real failure during class.</p>
+<h3 id="suggested-lab-timing">Suggested Lab Timing</h3>
+<ul>
+<li>First 5 minutes: choose endpoint, run one successful request, and print a status or small payload summary.</li>
+<li>Next 6 minutes: move request logic into <code>fetch_resource()</code> with <code>timeout=...</code>, <code>raise_for_status()</code>, and <code>response.json()</code>.</li>
+<li>Next 6 minutes: add contract checks for required keys and expected types.</li>
+<li>Next 6 minutes: add friendly branches for timeout, connection failure, 404/500 HTTP errors, invalid JSON, and contract mismatch.</li>
+<li>Final 3 minutes: run one success case and one failure case, then write a short note explaining the difference between timeout and retry.</li>
+</ul>
+<h3 id="suggested-starter-shape">Suggested Starter Shape</h3>
+<pre><code class="language-python">from __future__ import annotations
+
+from typing import Any
+import logging
+
+import requests
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=&quot;%(asctime)s %(levelname)s %(message)s&quot;,
+)
+logger = logging.getLogger(__name__)
+
+
+class APIContractError(Exception):
+    pass
+
+
+def fetch_resource(url: str) -&gt; dict[str, Any] | None:
+    # Students implement this.
+    raise NotImplementedError
+
+
+def main() -&gt; None:
+    # Students call fetch_resource() and print selected fields.
+    raise NotImplementedError
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<p>A student solution is complete when:</p>
+<ul>
+<li>the request succeeds and prints parsed output</li>
+<li>the client does not hang indefinitely</li>
+<li>at least one required field is validated before use</li>
+<li>timeout, connection failure, 404, 500, and invalid JSON each produce a friendly user-facing message</li>
+<li>the code avoids duplicating request logic all over the script</li>
+</ul>
+<h3 id="circulation-notes">Circulation Notes</h3>
+<p><strong>[Circulate:]</strong></p>
+<p>When circulating, prioritize these questions:</p>
+<ol>
+<li><strong>Did the student set a timeout?</strong> If not, that is the first intervention.</li>
+<li><strong>Are they calling <code>raise_for_status()</code>?</strong> If not, show how this simplifies their branching.</li>
+<li><strong>Are they assuming keys exist?</strong> Ask, “What happens if <code>title</code> is missing?”</li>
+<li><strong>Are they printing raw exceptions directly to users?</strong> Encourage safe, plain-language messages.</li>
+<li><strong>Have they repeated request code in multiple places?</strong> Suggest a wrapper function.</li>
+</ol>
+<p>If a student is stuck, reduce the problem:</p>
+<ul>
+<li>first, print the status code</li>
+<li>then parse JSON</li>
+<li>then validate one field</li>
+<li>then add one <code>except</code> block at a time</li>
+</ul>
+<p>That sequencing helps anxious learners regain momentum.</p>
+<h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
+<ul>
+<li>No timeout set, so the request may hang.</li>
+<li>Calling <code>.json()</code> and assuming it always works.</li>
+<li>Assuming <code>response.status_code == 200</code> is the only success worth considering without using <code>raise_for_status()</code>.</li>
+<li>Accessing <code>data["title"]</code> before checking that <code>data</code> is a dictionary.</li>
+<li>Catching a giant broad <code>except Exception:</code> first and masking the real problem.</li>
+<li>Treating logging and user messages as the same audience.</li>
+</ul>
+<h3 id="optional-extensions">Optional Extensions</h3>
+<p>If a student finishes early, suggest one of these:</p>
+<ul>
+<li>add query parameters with <code>params={...}</code></li>
+<li>add a simple retry loop with up to 3 attempts for timeout or connection failure</li>
+<li>create a second wrapper function for another endpoint</li>
+<li>convert validated JSON into a small dataclass or typed dictionary shape</li>
+</ul>
+<p>Be careful that extensions do not replace the required foundation. This hour is about reliability habits, not feature sprawl.</p>
+<hr>
+<h3 id="instructor-troubleshooting-playbook">Instructor Troubleshooting Playbook</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Before we close the lab, I want students to hear the debugging mindset out loud, because network bugs can feel mysterious if you treat the internet like magic. Here is the progression I want to model whenever a student says, “My API code doesn’t work.”</p>
+<p><strong>Step 1: Identify which layer is failing.</strong></p>
+<p>Ask, “Did the request fail before the server responded, or did the server respond with something unexpected?” That separates transport problems from application-data problems.</p>
+<ul>
+<li>If there is a timeout, the server may be slow or unreachable.</li>
+<li>If there is a 404, the path may be wrong.</li>
+<li>If there is a 500, the server had an internal problem.</li>
+<li>If <code>response.json()</code> fails, the body may not be valid JSON.</li>
+<li>If the contract validator fails, the JSON exists but the structure is not what the code expects.</li>
+</ul>
+<p>Students gain confidence when they learn that not every failure belongs to the same bucket.</p>
+<p><strong>Step 2: Reduce the number of assumptions.</strong></p>
+<p>If a student has a long script, ask them to strip it down temporarily.</p>
+<ul>
+<li>Print the URL.</li>
+<li>Print the status code.</li>
+<li>Print one safe summary of the response.</li>
+<li>Validate one required field.</li>
+<li>Then add the rest back.</li>
+</ul>
+<p>That sequence prevents students from debugging ten moving parts at once.</p>
+<p><strong>Step 3: Compare the failure message to the user experience.</strong></p>
+<p>Ask, “If you were using this program instead of writing it, would this output help you?”</p>
+<p>A raw traceback may help a developer, but it does not help most users. A strong answer often looks like two channels:</p>
+<ul>
+<li>a friendly console message for the user</li>
+<li>a detailed log entry for the developer</li>
+</ul>
+<p>This is an excellent moment to reinforce the audience difference between user-facing communication and diagnostics.</p>
+<p><strong>Step 4: Check for repeated request code.</strong></p>
+<p>If a student has nearly identical <code>requests.get(...)</code> code in three places, coach them to pull it into a wrapper. That one suggestion often improves both readability and reliability at the same time.</p>
+<h3 id="instructor-mini-conferences-during-circulation">Instructor Mini-Conferences During Circulation</h3>
+<p><strong>[Circulate:]</strong></p>
+<p>When you stop at a student’s station, avoid grabbing the keyboard too quickly. Instead, ask short, targeted questions that reveal whether they understand the design choices.</p>
+<p>A useful mini-conference sounds like this:</p>
+<ul>
+<li>“Show me where your timeout is set.”</li>
+<li>“Where do you handle 4xx and 5xx responses?”</li>
+<li>“What happens if the JSON body is a list instead of a dictionary?”</li>
+<li>“What happens if the <code>title</code> key is missing?”</li>
+<li>“Where would you change behavior if every request in the app needed a different timeout later?”</li>
+</ul>
+<p>These questions do two things. First, they expose fragile code quickly. Second, they reinforce that engineering means making deliberate choices, not just getting output once.</p>
+<h3 id="sample-student-misconceptions-and-how-to-respond">Sample Student Misconceptions and How to Respond</h3>
+<p><strong>Misconception 1: “If I got data once, the code is fine.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>Not yet. One successful response proves the happy path. Reliable client code proves it can behave sensibly when the service is slow, missing, or inconsistent.</p>
+<p><strong>Misconception 2: “I checked status code 200, so I’m done.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>A 200 means the server answered successfully at the HTTP layer. It does not guarantee the JSON is valid or that the structure matches your expectations. HTTP success is not the same thing as application-level correctness.</p>
+<p><strong>Misconception 3: “I can just catch <code>Exception</code> for everything.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>You can, but then you lose clarity. A timeout and invalid JSON are different problems. Specific exceptions help you respond more intelligently and debug faster.</p>
+<p><strong>Misconception 4: “Retries and timeouts are basically the same.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>A timeout defines how long one attempt may wait. A retry defines whether you will try again after a failed attempt. They solve related but different problems.</p>
+<h3 id="optional-instructor-driven-reflection-if-time-remains">Optional Instructor-Driven Reflection if Time Remains</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If the room is moving quickly, pause for a two-minute reflection and ask students to write short answers to these prompts:</p>
+<ol>
+<li>What is one failure mode your client now handles that it did not handle at the start of the hour?</li>
+<li>What part of the JSON contract are you validating explicitly?</li>
+<li>If you had to add a second endpoint tomorrow, what code could you reuse immediately?</li>
+</ol>
+<p>This reflection turns the lab from a copy exercise into an architecture exercise.</p>
+<h3 id="strong-solution-characteristics-to-call-out-publicly">Strong Solution Characteristics to Call Out Publicly</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When you spotlight student work, do not only praise the student whose program has the fanciest output. Look for evidence of dependable habits. Public praise should go toward things like:</p>
+<ul>
+<li>clean wrapper functions</li>
+<li>specific exception handling</li>
+<li>calm, friendly failure messages</li>
+<li>explicit timeout use</li>
+<li>a clear validation step before accessing JSON fields</li>
+</ul>
+<p>That teaches the room what “good” means in this course.</p>
+<h3 id="final-reinforcement-talking-points-before-debrief">Final Reinforcement Talking Points Before Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If I have one extra minute before the formal debrief, I want to say this very directly: an HTTP client is not “done” when it returns data once. It is much closer to done when another developer can read the wrapper function, understand the contract, and trust that the obvious failure paths were considered.</p>
+<p>That means students should walk away from this hour with a new default instinct. When they see an API call in their own project, the automatic questions should be:</p>
+<ul>
+<li>Where is the timeout?</li>
+<li>What happens on 4xx and 5xx?</li>
+<li>What if the body is not valid JSON?</li>
+<li>What if the JSON shape changes?</li>
+<li>Where is the reusable wrapper?</li>
+</ul>
+<p>If those questions become habits, this hour has paid off far beyond a single exercise.</p>
+<h2 id="section-6-debrief-exit-ticket-3-minutes">Section 6: Debrief &amp; Exit Ticket (3 minutes)</h2>
+<h3 id="group-debrief">Group Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Bring students back together and anchor the main ideas.</p>
+<p>Today was about making a Python program interact with a service responsibly. The technical skills matter, but the deeper habits matter more:</p>
+<ul>
+<li>set a timeout every time</li>
+<li>let status errors surface through <code>raise_for_status()</code></li>
+<li>treat JSON as a contract, not a guess</li>
+<li>centralize request logic in a wrapper function</li>
+<li>show users a friendly message while logging useful detail for developers</li>
+</ul>
+<p>If students only learn how to fetch a JSON payload, they have learned a trick. If they learn how to fetch data <strong>safely and predictably</strong>, they have learned an engineering habit.</p>
+<p><strong>[Ask students:]</strong> What failure case felt most surprising today: timeout, invalid JSON, or contract mismatch?</p>
+<p>Invite one or two answers. Use those answers to reinforce that robust software is designed for imperfect conditions.</p>
+<h3 id="exit-ticket">Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<ol>
+<li>What is the difference between a timeout and a retry?</li>
+<li>Why is <code>response.raise_for_status()</code> usually cleaner than manually checking every status code branch?</li>
+<li>What does it mean to say “JSON is a contract”?</li>
+<li>Name one reason to put request logic inside a wrapper function.</li>
+</ol>
+<p><strong>[Expected direction of answers:]</strong></p>
+<ul>
+<li>A timeout limits how long we wait for one attempt; a retry is a decision to try again after a failed attempt.</li>
+<li><code>raise_for_status()</code> keeps success-path code cleaner and moves failures into structured exception handling.</li>
+<li>JSON being a contract means we validate required keys and expected types before trusting the data.</li>
+<li>A wrapper avoids duplication and gives us one place to manage timeouts, logging, and validation.</li>
+</ul>
+<h3 id="instructor-closing-line">Instructor Closing Line</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Next hour, we will stay connected to real application work, but we will shift from reliability in network calls to reliability in security habits. Keep today’s mindset with you: outside input should be handled carefully, not casually.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#section-1-recap-transition-from-session-3-4-minutes" class="depth-2">Section 1: Recap &amp; Transition from Session 3 (4 minutes)</a></li>
+<li><a href="#quick-re-entry" class="depth-3">Quick Re-entry</a></li>
+<li><a href="#framing-the-hour" class="depth-3">Framing the Hour</a></li>
+<li><a href="#section-2-http-client-fundamentals-9-minutes" class="depth-2">Section 2: HTTP Client Fundamentals (9 minutes)</a></li>
+<li><a href="#what-an-http-client-does" class="depth-3">What an HTTP Client Does</a></li>
+<li><a href="#get-vs-post-at-a-high-level" class="depth-3">GET vs POST at a High Level</a></li>
+<li><a href="#why-we-use-the-requests-library" class="depth-3">Why We Use the requests Library</a></li>
+<li><a href="#the-reality-of-failure" class="depth-3">The Reality of Failure</a></li>
+<li><a href="#section-3-json-contracts-timeouts-and-status-codes-10-minutes" class="depth-2">Section 3: JSON Contracts, Timeouts, and Status Codes (10 minutes)</a></li>
+<li><a href="#always-set-a-timeout" class="depth-3">Always Set a Timeout</a></li>
+<li><a href="#prefer-raiseforstatus" class="depth-3">Prefer raise_for_status()</a></li>
+<li><a href="#json-is-a-contract-not-just-a-blob-of-data" class="depth-3">JSON Is a Contract, Not Just a Blob of Data</a></li>
+<li><a href="#friendly-failure-categories" class="depth-3">Friendly Failure Categories</a></li>
+<li><a href="#a-simple-wrapper-function-pattern" class="depth-3">A Simple Wrapper Function Pattern</a></li>
+<li><a href="#section-4-live-demo-public-api-consumer-with-a-wrapper-function-8-minutes" class="depth-2">Section 4: Live Demo – Public API Consumer with a Wrapper Function (8 minutes)</a></li>
+<li><a href="#demo-setup" class="depth-3">Demo Setup</a></li>
+<li><a href="#demo-narration" class="depth-3">Demo Narration</a></li>
+<li><a href="#teaching-notes-during-the-demo" class="depth-3">Teaching Notes During the Demo</a></li>
+<li><a href="#section-5-hands-on-lab-api-consumer-with-failure-branch-checks-26-minutes" class="depth-2">Section 5: Hands-On Lab – API Consumer with Failure-Branch Checks (26 minutes)</a></li>
+<li><a href="#lab-framing" class="depth-3">Lab Framing</a></li>
+<li><a href="#student-task" class="depth-3">Student Task</a></li>
+<li><a href="#required-lab-milestones" class="depth-3">Required Lab Milestones</a></li>
+<li><a href="#suggested-lab-timing" class="depth-3">Suggested Lab Timing</a></li>
+<li><a href="#suggested-starter-shape" class="depth-3">Suggested Starter Shape</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#circulation-notes" class="depth-3">Circulation Notes</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-3">Common Pitfalls to Watch For</a></li>
+<li><a href="#optional-extensions" class="depth-3">Optional Extensions</a></li>
+<li><a href="#instructor-troubleshooting-playbook" class="depth-3">Instructor Troubleshooting Playbook</a></li>
+<li><a href="#instructor-mini-conferences-during-circulation" class="depth-3">Instructor Mini-Conferences During Circulation</a></li>
+<li><a href="#sample-student-misconceptions-and-how-to-respond" class="depth-3">Sample Student Misconceptions and How to Respond</a></li>
+<li><a href="#optional-instructor-driven-reflection-if-time-remains" class="depth-3">Optional Instructor-Driven Reflection if Time Remains</a></li>
+<li><a href="#strong-solution-characteristics-to-call-out-publicly" class="depth-3">Strong Solution Characteristics to Call Out Publicly</a></li>
+<li><a href="#final-reinforcement-talking-points-before-debrief" class="depth-3">Final Reinforcement Talking Points Before Debrief</a></li>
+<li><a href="#section-6-debrief-exit-ticket-3-minutes" class="depth-2">Section 6: Debrief &amp; Exit Ticket (3 minutes)</a></li>
+<li><a href="#group-debrief" class="depth-3">Group Debrief</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit Ticket</a></li>
+<li><a href="#instructor-closing-line" class="depth-3">Instructor Closing Line</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day4_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day4_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour4_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

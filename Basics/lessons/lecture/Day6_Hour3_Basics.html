@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 6, Hour 3: Mini-Project – In-Memory Tracker (Course Hour 23) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="6">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day6_Hour3_Basics.md">
+
+    <link rel="prev" href="Day6_Hour2_Basics.html">
+    <link rel="next" href="Day6_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="6" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-06/index.html">Day 6</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 6, Hour 3: Mini-Project – In-Memory Tracker (Course Hour 23)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 6</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day6_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 6</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 6, Course Hour 23 – Mini-project: in-memory tracker<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided mini-project lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 23. This hour is about synthesis. Learners should combine the data-structure ideas from Session 5 and the first half of Session 6 into one coherent mini application that runs completely in memory. Stay firmly within Basics scope: no file I/O, no classes, no external packages, and no advanced menu-loop architecture. The runbook allows several themes. For consistency and clarity, this script uses a <strong>Book Library Tracker</strong> built as a <strong>list of dictionaries</strong>. That model is pedagogically strong because each book is one record with named fields, and the outer list stores many records in order. Learners will add a record, list all records, and search records. Keep the project approachable. The point is not architectural perfection. The point is helping learners feel how multiple small skills fit together into a useful program. Every <strong>Say:</strong> block is written to be read nearly verbatim; adapt naturally, but keep the conceptual scaffolding and encouragement.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Explain why a list of dictionaries is a good fit for a small in-memory tracker with multiple records.</li>
+<li>Build a small tracker that stores records, adds a new record, lists all records, and searches records.</li>
+<li>Read and write record fields using clear dictionary keys.</li>
+<li>Loop through a list of records and format output cleanly with f-strings.</li>
+<li>Describe one reason you chose this storage model instead of a different one."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Frame the mini-project and define success</li>
+<li><strong>0:05–0:15</strong> Choose a storage model and justify it</li>
+<li><strong>0:15–0:28</strong> Live demo: scaffold data and one add action</li>
+<li><strong>0:28–0:47</strong> Guided mini-project build: add, list, search</li>
+<li><strong>0:47–0:55</strong> Debrief and walkthrough</li>
+<li><strong>0:55–1:00</strong> Recap and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file called <code>hour23_tracker_demo.py</code>.</li>
+<li>Open a second file called <code>hour23_book_tracker_lab.py</code> with section headers only.</li>
+<li>Prepare a starter dataset of three books.</li>
+<li>Make sure learners know this project is <strong>in memory only</strong>. No save/load yet.</li>
+<li>Decide in advance that the standard class version of the project will be the <strong>Book Library Tracker</strong>.</li>
+<li>Be ready to explain why a list of dictionaries fits better than a plain list of strings for this project.</li>
+<li>Prepare one example search that succeeds and one that fails.</li>
+</ul>
+<p><strong>Say:</strong> "This hour is where your data-structure skills start to feel like real application-building. We are going to build something small, but it will feel like a tiny program with real features instead of a one-line exercise."</p>
+<hr>
+<h2 id="3-opening-script-from-isolated-patterns-to-a-coherent-program-5-minutes">3) Opening Script: From Isolated Patterns to a Coherent Program (~5 minutes)</h2>
+<h3 id="31-reconnect-to-earlier-learning">3.1 Reconnect to earlier learning</h3>
+<p><strong>Say:</strong>
+"In Session 5, we learned the main built-in data structures. In Hour 21, we practiced choosing among them. In Hour 22, we drilled the core patterns quickly.</p>
+<p>Now we are going to combine those ideas into one mini-project. This matters because real programs are rarely about one isolated line like <code>set(my_list)</code> or <code>counts[word] = counts.get(word, 0) + 1</code>. Real programs organize data, update it, print it clearly, and let the user ask useful questions."</p>
+<h3 id="32-define-the-mini-project-goal">3.2 Define the mini-project goal</h3>
+<p><strong>Say:</strong>
+"Our mini-project today is an <strong>in-memory tracker</strong>. ‘In memory’ means while the program is running, the data lives in Python variables. When the program stops, the data disappears. That is completely fine for today because our focus is structure, not saving files yet.</p>
+<p>The tracker will let us:
+- store records
+- add a new record
+- list all records
+- search records</p>
+<p>That is enough to feel like a real little application."</p>
+<h3 id="33-why-we-are-using-a-book-tracker">3.3 Why we are using a book tracker</h3>
+<p><strong>Say:</strong>
+"The runbook allows several themes like expenses, contacts, or a book library. Today we will use a <strong>Book Library Tracker</strong> because it gives us natural fields: title, author, and genre.</p>
+<p>Each book is one record. Many books together form the collection. That immediately raises a design question: how should we store the data?"</p>
+<hr>
+<h2 id="4-choosing-the-storage-model-10-minutes">4) Choosing the Storage Model (~10 minutes)</h2>
+<h3 id="41-option-1-a-plain-list-of-strings">4.1 Option 1: A plain list of strings</h3>
+<p><strong>Say:</strong>
+"Before we write code, let’s compare a few possible storage models.</p>
+<p>Option 1 is a plain list of strings."</p>
+<pre><code class="language-python">books = [&quot;Dune&quot;, &quot;1984&quot;, &quot;The Hobbit&quot;]
+</code></pre>
+<p><strong>Say:</strong>
+"This is simple, but it only stores one piece of information per book. The moment we also want author and genre, it stops fitting well."</p>
+<h3 id="42-option-2-a-dictionary-mapping-title-to-author">4.2 Option 2: A dictionary mapping title to author</h3>
+<p><strong>Say:</strong>
+"Option 2 is a dictionary from title to author."</p>
+<pre><code class="language-python">books = {
+    &quot;Dune&quot;: &quot;Frank Herbert&quot;,
+    &quot;1984&quot;: &quot;George Orwell&quot;,
+}
+</code></pre>
+<p><strong>Say:</strong>
+"This is better for lookup by title, but now where does genre go? We could make the value another dictionary, but that is a bigger jump than we need right now."</p>
+<h3 id="43-option-3-a-list-of-dictionaries">4.3 Option 3: A list of dictionaries</h3>
+<p><strong>Say:</strong>
+"Option 3 is a list of dictionaries."</p>
+<pre><code class="language-python">books = [
+    {&quot;title&quot;: &quot;Dune&quot;, &quot;author&quot;: &quot;Frank Herbert&quot;, &quot;genre&quot;: &quot;Science Fiction&quot;},
+    {&quot;title&quot;: &quot;1984&quot;, &quot;author&quot;: &quot;George Orwell&quot;, &quot;genre&quot;: &quot;Dystopian&quot;},
+]
+</code></pre>
+<p><strong>Say:</strong>
+"Now each book is one record with named fields, and the outer list stores many records in order. That is a very strong fit for our Basics mini-project.</p>
+<ul>
+<li>A list makes sense because we have many records.</li>
+<li>A dictionary makes sense because each record has named fields.</li>
+<li>The code stays readable.</li>
+<li>We can add, list, and search without introducing advanced ideas."</li>
+</ul>
+<h3 id="44-name-the-design-choice-explicitly">4.4 Name the design choice explicitly</h3>
+<p><strong>Say:</strong>
+"So our storage model is:</p>
+<ul>
+<li><strong>outer structure:</strong> list</li>
+<li><strong>inner structure:</strong> dictionary</li>
+</ul>
+<p>That means: one list holds all books, and each book is a dictionary with keys like <code>title</code>, <code>author</code>, and <code>genre</code>."</p>
+<h3 id="45-ask-learners-to-justify-it-back">4.5 Ask learners to justify it back</h3>
+<p><strong>Ask learners:</strong>
+"Why not just use one giant dictionary? Why might a list of dictionaries be a clearer teaching choice here?"</p>
+<p>Take a few answers.</p>
+<p><strong>Say:</strong>
+"Good. The important idea is that each book is a separate record, and the list keeps many records together cleanly."</p>
+<hr>
+<h2 id="5-starter-data-and-program-shape-5-minutes">5) Starter Data and Program Shape (~5 minutes)</h2>
+<h3 id="51-type-the-starter-dataset">5.1 Type the starter dataset</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">books: list[dict[str, str]] = [
+    {&quot;title&quot;: &quot;Dune&quot;, &quot;author&quot;: &quot;Frank Herbert&quot;, &quot;genre&quot;: &quot;Science Fiction&quot;},
+    {&quot;title&quot;: &quot;1984&quot;, &quot;author&quot;: &quot;George Orwell&quot;, &quot;genre&quot;: &quot;Dystopian&quot;},
+    {&quot;title&quot;: &quot;The Hobbit&quot;, &quot;author&quot;: &quot;J.R.R. Tolkien&quot;, &quot;genre&quot;: &quot;Fantasy&quot;},
+]
+</code></pre>
+<p><strong>Say:</strong>
+"This gives us three starting records so we have something to list and search before we even add new data. That is a good development habit: give yourself realistic starter data so you can test features quickly."</p>
+<h3 id="52-preview-the-three-required-features">5.2 Preview the three required features</h3>
+<p><strong>Say:</strong>
+"Our tracker only needs three minimum features today:</p>
+<ol>
+<li><strong>Add</strong> a book</li>
+<li><strong>List</strong> all books</li>
+<li><strong>Search</strong> for a book by title</li>
+</ol>
+<p>That is intentionally modest. A project becomes much easier when the minimum requirements are clear."</p>
+<h3 id="53-the-simple-first-teaching-principle">5.3 The “simple first” teaching principle</h3>
+<p><strong>Say:</strong>
+"We are not building a full menu loop today unless you want it as an extension later. We are going to keep the project linear and simple so the focus stays on data structures and clean thinking."</p>
+<hr>
+<h2 id="6-live-demo-scaffold-the-tracker-and-build-the-add-feature-13-minutes">6) Live Demo: Scaffold the Tracker and Build the Add Feature (~13 minutes)</h2>
+<h3 id="61-frame-the-live-demo">6.1 Frame the live demo</h3>
+<p><strong>Say:</strong>
+"I am going to build the first feature live: adding a new book. As I type, pay attention to what information belongs in the dictionary and what belongs in the outer list."</p>
+<h3 id="62-type-the-add-feature">6.2 Type the add feature</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">new_title: str = input(&quot;Enter a book title: &quot;)
+new_author: str = input(&quot;Enter the author: &quot;)
+new_genre: str = input(&quot;Enter the genre: &quot;)
+
+new_book: dict[str, str] = {
+    &quot;title&quot;: new_title,
+    &quot;author&quot;: new_author,
+    &quot;genre&quot;: new_genre,
+}
+
+books.append(new_book)
+print(&quot;Book added.&quot;)
+</code></pre>
+<h3 id="63-narrate-the-structure-carefully">6.3 Narrate the structure carefully</h3>
+<p><strong>Say:</strong>
+"Let me say the structure out loud.</p>
+<ul>
+<li>We ask the user for three text values.</li>
+<li>We create one dictionary called <code>new_book</code>.</li>
+<li>The keys are field names: <code>title</code>, <code>author</code>, and <code>genre</code>.</li>
+<li>The values come from the user.</li>
+<li>Then we append that whole dictionary to the outer list.</li>
+</ul>
+<p>So the list stores records, and each record stores named fields."</p>
+<h3 id="64-test-immediately">6.4 Test immediately</h3>
+<p><strong>Say:</strong>
+"Never trust a feature you have not tested. I am going to enter one sample book right now."</p>
+<p>Run it with a sample such as:
+- title: <code>Pride and Prejudice</code>
+- author: <code>Jane Austen</code>
+- genre: <code>Classic</code></p>
+<h3 id="65-confirm-the-data-changed">6.5 Confirm the data changed</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">print(books)
+</code></pre>
+<p><strong>Say:</strong>
+"For debugging, printing the raw data structure is fine. For final user-facing output, we want cleaner formatting. That leads us into the next feature: listing all books clearly."</p>
+<hr>
+<h2 id="7-core-teaching-section-build-a-clear-list-feature-8-minutes">7) Core Teaching Section: Build a Clear List Feature (~8 minutes)</h2>
+<h3 id="71-explain-why-formatting-matters">7.1 Explain why formatting matters</h3>
+<p><strong>Say:</strong>
+"One habit beginners often need to develop is the difference between <em>debug output</em> and <em>user-friendly output</em>.</p>
+<p>Debug output is printing the raw list or raw dictionary to inspect what is inside.
+User-friendly output is formatting the information in a way a person can read easily.</p>
+<p>Both are useful, but they are not the same thing."</p>
+<h3 id="72-type-the-list-feature">7.2 Type the list feature</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">print(&quot;\nLibrary books:&quot;)
+for book in books:
+    print(f&quot;- {book['title']} by {book['author']} ({book['genre']})&quot;)
+</code></pre>
+<h3 id="73-narrate-the-loop">7.3 Narrate the loop</h3>
+<p><strong>Say:</strong>
+"This loop is a good example of nested thinking that is still beginner-friendly.</p>
+<ul>
+<li>The outer structure is a list, so we loop through it.</li>
+<li>Each <code>book</code> is a dictionary.</li>
+<li>Inside the loop, we access the fields by key.</li>
+<li>Then we format the output with an f-string.</li>
+</ul>
+<p>This is one of the first moments where data structures start to feel genuinely useful together."</p>
+<h3 id="74-ask-learners-to-predict-output">7.4 Ask learners to predict output</h3>
+<p><strong>Ask learners:</strong>
+"What do you think will print now that we added one more book?"</p>
+<p>Run it.</p>
+<h3 id="75-discuss-readability">7.5 Discuss readability</h3>
+<p><strong>Say:</strong>
+"Notice how much easier this is to read than printing the raw list of dictionaries. The data structure is the same. What changed is the way we present it."</p>
+<hr>
+<h2 id="8-core-teaching-section-build-a-search-feature-9-minutes">8) Core Teaching Section: Build a Search Feature (~9 minutes)</h2>
+<h3 id="81-frame-the-search-requirement">8.1 Frame the search requirement</h3>
+<p><strong>Say:</strong>
+"Now let’s add the third feature: search by title. This feature is especially valuable because it turns our program from static output into something the user can ask a question of."</p>
+<h3 id="82-keep-the-search-logic-simple">8.2 Keep the search logic simple</h3>
+<p><strong>Say:</strong>
+"Because our outer structure is a list, searching means looping through the books and comparing each title.</p>
+<p>Could we design the data differently to make title lookup more direct? Yes, with a dictionary keyed by title. But for today’s project, the list-of-dicts model is easier to understand and more flexible for multiple fields."</p>
+<h3 id="83-type-the-search-feature">8.3 Type the search feature</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">search_title: str = input(&quot;\nEnter a title to search for: &quot;)
+found: bool = False
+
+for book in books:
+    if book[&quot;title&quot;].lower() == search_title.lower():
+        print(&quot;Found book:&quot;)
+        print(f&quot;  Title:  {book['title']}&quot;)
+        print(f&quot;  Author: {book['author']}&quot;)
+        print(f&quot;  Genre:  {book['genre']}&quot;)
+        found = True
+        break
+
+if not found:
+    print(&quot;Book not found.&quot;)
+</code></pre>
+<h3 id="84-explain-the-case-normalization-choice">8.4 Explain the case-normalization choice</h3>
+<p><strong>Say:</strong>
+"Notice that I used <code>.lower()</code> on both sides of the comparison. That means if the stored title is <code>Dune</code> and the user types <code>dune</code>, the search still works. That is a small Basics-level improvement that makes the program friendlier."</p>
+<h3 id="85-explain-the-found-flag">8.5 Explain the <code>found</code> flag</h3>
+<p><strong>Say:</strong>
+"The <code>found</code> variable starts as <code>False</code>. If we find a matching book, we print it, set <code>found = True</code>, and break out of the loop. After the loop, if <code>found</code> is still <code>False</code>, we print <code>Book not found.</code></p>
+<p>That is a standard beginner-friendly search pattern."</p>
+<h3 id="86-test-both-outcomes">8.6 Test both outcomes</h3>
+<p>Run once with an existing title and once with a missing title.</p>
+<p><strong>Say:</strong>
+"Always test both the success path and the failure path. Real programs need both."</p>
+<hr>
+<h2 id="9-guided-lab-build-your-own-tracker-version-19-minutes">9) Guided Lab: Build Your Own Tracker Version (~19 minutes)</h2>
+<h3 id="91-lab-framing">9.1 Lab framing</h3>
+<p><strong>Say:</strong>
+"Now it is your turn. You will build your own in-memory book tracker. You can follow the class version closely, but you should type it yourself and make sure you understand the role of each structure."</p>
+<h3 id="92-lab-prompt">9.2 Lab prompt</h3>
+<h3 id="mini-project-book-library-tracker-in-memory">Mini-Project — Book Library Tracker (In Memory)</h3>
+<p>Build a small Python program that stores books using a <strong>list of dictionaries</strong>.</p>
+<p>Each book record must include:
+- <code>title</code>
+- <code>author</code>
+- <code>genre</code></p>
+<p>Your program must do the following:
+1. Start with at least <strong>three</strong> book records already in the list.
+2. Ask the user for one new book and add it to the list.
+3. Print all books in a clean, readable format.
+4. Ask the user for a title to search.
+5. Print the matching book if found, or a clear message if not found.</p>
+<h3 id="93-completion-criteria">9.3 Completion criteria</h3>
+<pre><code class="language-text">Completion criteria
+</code></pre>
+<ul>
+<li>Uses at least one list and one dictionary meaningfully.</li>
+<li>Starts with at least three records.</li>
+<li>Adds a new record correctly.</li>
+<li>Lists all records clearly using formatted output.</li>
+<li>Search works for both found and not-found cases.</li>
+<li>Code remains in Basics scope and runs without crashing.</li>
+</ul>
+<h3 id="94-suggested-build-order-for-learners">9.4 Suggested build order for learners</h3>
+<p><strong>Say:</strong>
+"A strong build order is:</p>
+<ol>
+<li>Create the starter list of dictionaries.</li>
+<li>Test printing the raw data.</li>
+<li>Add one new dictionary and append it.</li>
+<li>Build the formatted list output.</li>
+<li>Build the search feature last.</li>
+</ol>
+<p>That order keeps the project manageable."</p>
+<h3 id="95-hints-to-release-after-a-few-minutes">9.5 Hints to release after a few minutes</h3>
+<p><strong>Say:</strong>
+"A few helpful reminders:</p>
+<ul>
+<li>The list holds many books.</li>
+<li>Each book is one dictionary.</li>
+<li>When listing books, loop through the list.</li>
+<li>When searching, compare the user input to <code>book['title']</code>.</li>
+<li>If your code is getting tangled, comment out the last part and get one feature working at a time."</li>
+</ul>
+<h3 id="96-common-pitfalls-to-watch-for">9.6 Common pitfalls to watch for</h3>
+<pre><code class="language-text">Common pitfalls to watch for
+</code></pre>
+<ul>
+<li>Storing each new book as a list instead of a dictionary</li>
+<li>Using different key names in different records, such as <code>name</code> in one place and <code>title</code> in another</li>
+<li>Printing the raw list and thinking the formatting requirement is complete</li>
+<li>Forgetting to set or check the <code>found</code> flag in the search logic</li>
+<li>Comparing titles without normalizing case and then assuming search is broken</li>
+<li>Creating the new book but forgetting to append it to <code>books</code></li>
+</ul>
+<h3 id="97-optional-extensions-for-early-finishers">9.7 Optional extensions for early finishers</h3>
+<pre><code class="language-text">Optional extensions (stay in Basics scope)
+</code></pre>
+<ul>
+<li>Add a <code>year</code> field as a string or integer.</li>
+<li>Sort the books by title before printing, if appropriate for your learners.</li>
+<li>Add a simple update feature such as changing the genre of a searched book.</li>
+<li>Add a delete-by-title feature using a loop and <code>pop()</code> or <code>remove()</code> carefully.</li>
+<li>Wrap listing and searching into small functions if learners are already comfortable previewing function ideas, but do not require it in this hour.</li>
+</ul>
+<h3 id="98-instructor-circulation-prompts">9.8 Instructor circulation prompts</h3>
+<p>Use short coaching questions:</p>
+<p><strong>Say:</strong>
+"Which part of your data is the collection of records, and which part is one record?"</p>
+<p><strong>Say:</strong>
+"If I point at one <code>book</code>, what type is it? What keys does it have?"</p>
+<p><strong>Say:</strong>
+"Show me where the new dictionary gets appended to the list."</p>
+<p><strong>Say:</strong>
+"Can your search handle a title that does not exist yet? Test that before you call it finished."</p>
+<hr>
+<h2 id="10-debrief-and-walkthrough-8-minutes">10) Debrief and Walkthrough (~8 minutes)</h2>
+<h3 id="101-invite-a-few-learners-to-share">10.1 Invite a few learners to share</h3>
+<p><strong>Say:</strong>
+"Let’s come back together. I want to hear from a few people about what storage model you used and why it made sense."</p>
+<p>Even though the standard model is list of dictionaries, some learners may have experimented. Invite short shares.</p>
+<h3 id="102-model-the-reasoning-explicitly">10.2 Model the reasoning explicitly</h3>
+<p><strong>Say:</strong>
+"A strong explanation sounds like this: ‘I used a list of dictionaries because I had many books, and each book had multiple named fields. The list let me store many records, and the dictionary made each record readable.’</p>
+<p>That kind of explanation shows design understanding, not just code copying."</p>
+<h3 id="103-highlight-good-output-habits">10.3 Highlight good output habits</h3>
+<p><strong>Say:</strong>
+"I also want to praise anyone who moved beyond printing the raw structure and created readable output. That is an underrated programming skill. Programs are for people, not just for Python."</p>
+<h3 id="104-normalize-partial-completion">10.4 Normalize partial completion</h3>
+<p><strong>Say:</strong>
+"If you completed add and list but your search is still shaky, that is still useful progress. Make a note of exactly where the search logic got confusing. That gives you a clear practice target."</p>
+<hr>
+<h2 id="11-recap-exit-ticket-5-minutes">11) Recap + Exit Ticket (~5 minutes)</h2>
+<h3 id="111-recap-the-main-lessons">11.1 Recap the main lessons</h3>
+<p><strong>Say:</strong>
+"Today’s big lesson was that data structures become much more meaningful when they work together.</p>
+<p>We used:
+- a <strong>list</strong> to hold many records
+- a <strong>dictionary</strong> to represent one record with named fields
+- a <strong>loop</strong> to list records
+- a simple search pattern to find one matching record</p>
+<p>That is a very real slice of application-building."</p>
+<h3 id="112-exit-ticket">11.2 Exit ticket</h3>
+<pre><code class="language-text">Quick check / exit ticket
+</code></pre>
+<p>Ask learners one or more of these:</p>
+<ol>
+<li>Why was a list of dictionaries a good fit for this tracker?</li>
+<li>What is one advantage of named dictionary keys like <code>title</code> and <code>author</code>?</li>
+<li>What part of the mini-project felt easiest? What part felt hardest?</li>
+<li>If you changed the project theme to contacts or expenses, what would stay structurally the same?</li>
+</ol>
+<h3 id="113-bridge-to-hour-24">11.3 Bridge to Hour 24</h3>
+<p><strong>Say:</strong>
+"In the next hour, you will use these data-structure skills in Checkpoint 3. The checkpoint task is simpler than today’s mini-project, but it will ask you to work independently and safely — especially with dictionary access."</p>
+<hr>
+<h2 id="12-guided-build-milestones-for-the-lab-block">12) Guided Build Milestones for the Lab Block</h2>
+<h3 id="121-why-milestones-help-beginners">12.1 Why milestones help beginners</h3>
+<p><strong>Say:</strong>
+"When learners build a mini-project, one of the easiest ways for them to get overwhelmed is to think of the whole project as one giant task. Milestones solve that problem. They turn one mini-project into several smaller wins."</p>
+<h3 id="122-milestone-1-define-the-starting-data">12.2 Milestone 1 — Define the starting data</h3>
+<p><strong>Say:</strong>
+"The first milestone is simply getting the starter list of dictionaries written correctly. If a learner completes this part, they already have a meaningful data model. Encourage them to print the raw structure once and confirm that every book has the same keys."</p>
+<p>Checklist for Milestone 1:
+- <code>books</code> is a list
+- each item in <code>books</code> is a dictionary
+- every dictionary has <code>title</code>, <code>author</code>, and <code>genre</code>
+- the code runs before adding any user input</p>
+<h3 id="123-milestone-2-add-one-new-record">12.3 Milestone 2 — Add one new record</h3>
+<p><strong>Say:</strong>
+"The second milestone is collecting user input and creating one new dictionary. Beginners often understand the overall project but get tangled right at the moment when several input values need to become one record. Slow them down here."</p>
+<p>Coaching language:</p>
+<p><strong>Say:</strong>
+"What are the three values you need from the user? Good. Now place those three values into one dictionary. Only after that do you append it to the list."</p>
+<h3 id="124-milestone-3-print-all-records-clearly">12.4 Milestone 3 — Print all records clearly</h3>
+<p><strong>Say:</strong>
+"The third milestone is readable output. This is where the project starts to feel satisfying, because learners can see all of their records printed cleanly."</p>
+<p>Ask:
+- "What does one line of output for one book need to include?"
+- "Can someone reading your screen understand the data without seeing the raw dictionary syntax?"</p>
+<h3 id="125-milestone-4-search-successfully">12.5 Milestone 4 — Search successfully</h3>
+<p><strong>Say:</strong>
+"The fourth milestone is a successful search for an existing title. I recommend getting the found-case working before worrying about the not-found case."</p>
+<h3 id="126-milestone-5-handle-not-found-safely">12.6 Milestone 5 — Handle not-found safely</h3>
+<p><strong>Say:</strong>
+"The fifth milestone is the complete search feature: existing title works, missing title gives a clear message, and the program does not crash. That is often the moment when the project becomes truly complete."</p>
+<h3 id="127-why-this-matters-for-learner-confidence">12.7 Why this matters for learner confidence</h3>
+<p><strong>Say:</strong>
+"Milestones matter because they let learners say, 'I have part of it working.' That is much more motivating than feeling like everything is broken just because the final feature is not complete yet."</p>
+<hr>
+<h2 id="13-troubleshooting-and-coaching-guide-for-the-mini-project">13) Troubleshooting and Coaching Guide for the Mini-Project</h2>
+<h3 id="131-if-a-learner-uses-inconsistent-keys">13.1 If a learner uses inconsistent keys</h3>
+<p><strong>Say:</strong>
+"One of the most common bugs in record-based projects is inconsistent key naming. A learner may use <code>title</code> in one dictionary and <code>book_title</code> in another, or <code>author</code> in one place and <code>writer</code> in another. When that happens, the loop logic looks broken even though the real problem is inconsistent structure."</p>
+<p>Coaching prompt:</p>
+<p><strong>Say:</strong>
+"Pick one book record and read its keys out loud. Now compare that to the keys your print or search code expects. Do they match exactly?"</p>
+<h3 id="132-if-a-learner-stores-books-as-lists-instead-of-dictionaries">13.2 If a learner stores books as lists instead of dictionaries</h3>
+<p><strong>Say:</strong>
+"Sometimes learners fall back to a list like <code>['Dune', 'Frank Herbert', 'Science Fiction']</code>. That can work, but it is harder to read and much easier to misuse because the meaning depends on remembering positions."</p>
+<p>Use this coaching line:</p>
+<p><strong>Say:</strong>
+"Right now your code depends on remembering that index 0 means title, index 1 means author, and index 2 means genre. Would named keys make that clearer?"</p>
+<h3 id="133-if-a-learner-prints-only-the-raw-data">13.3 If a learner prints only the raw data</h3>
+<p><strong>Say:</strong>
+"Do not scold raw-data printing. It is useful for debugging. Instead, distinguish between debugging output and final output."</p>
+<p>Coaching line:</p>
+<p><strong>Say:</strong>
+"Printing the raw list showed you the structure, which is good. Now what would a person-friendly version look like if this were a real little app?"</p>
+<h3 id="134-if-the-search-logic-never-finds-a-match">13.4 If the search logic never finds a match</h3>
+<p><strong>Say:</strong>
+"Common causes include:
+- comparing to the wrong key
+- case mismatch
+- searching before the new record was appended
+- indentation that places the <code>if not found</code> logic inside the loop"</p>
+<p>Ask:
+- "What exact value is stored under <code>book['title']</code>?"
+- "What exact value did the user type?"
+- "Where does your <code>break</code> happen?"</p>
+<h3 id="135-if-the-learners-code-is-getting-too-tangled">13.5 If the learner’s code is getting too tangled</h3>
+<p><strong>Say:</strong>
+"Encourage them to comment out the unfinished feature and return to the last working version. A stable partial solution is much more useful than a fully tangled file."</p>
+<h3 id="136-if-a-learner-finishes-very-early">13.6 If a learner finishes very early</h3>
+<p><strong>Say:</strong>
+"Give them a meaningful extension, not just extra typing. Good extensions include:
+- add a <code>year</code> field
+- add an update feature
+- sort by title before listing
+- count how many books are in each genre using a dictionary"</p>
+<p>This keeps the work in scope while still stretching strong learners.</p>
+<h3 id="137-if-a-learner-is-behind">13.7 If a learner is behind</h3>
+<p><strong>Say:</strong>
+"Reduce the goal temporarily. Ask them to complete just three things:</p>
+<ol>
+<li>one correct starter list</li>
+<li>one successful append</li>
+<li>one readable listing loop</li>
+</ol>
+<p>Once those work, search becomes much easier to add."</p>
+<hr>
+<h2 id="14-debrief-extension-make-the-design-reasoning-explicit">14) Debrief Extension: Make the Design Reasoning Explicit</h2>
+<h3 id="141-questions-to-ask-during-debrief">14.1 Questions to ask during debrief</h3>
+<p>Use some of these prompts:</p>
+<ul>
+<li>"Why was the outer structure a list?"</li>
+<li>"Why was each individual book a dictionary?"</li>
+<li>"What did named keys make easier?"</li>
+<li>"What was the hardest part: add, list, or search?"</li>
+<li>"If you changed the project to contacts or expenses, what structure would stay the same?"</li>
+</ul>
+<h3 id="142-model-the-transfer-to-other-themes">14.2 Model the transfer to other themes</h3>
+<p><strong>Say:</strong>
+"One reason this mini-project matters is that the structure generalizes. If I replace books with contacts, each record still has named fields. If I replace books with expenses, each record still has named fields. The exact field names change, but the design pattern remains useful."</p>
+<h3 id="143-highlight-the-projects-hidden-lesson">14.3 Highlight the project’s hidden lesson</h3>
+<p><strong>Say:</strong>
+"The hidden lesson today is that programs become easier to reason about when the data shape matches the real-world shape of the problem. We had many books, so we used a list. Each book had named facts, so we used a dictionary. That is good modeling at a beginner level."</p>
+<hr>
+<h2 id="15-appendix-instructor-quick-reference">15) Appendix: Instructor Quick Reference</h2>
+<h3 id="151-why-this-project-is-still-firmly-basics-level">15.1 Why this project is still firmly Basics-level</h3>
+<p><strong>Say:</strong>
+"This project is still firmly in Basics scope because it uses only the tools learners already know: lists, dictionaries, loops, <code>input()</code>, conditionals, string methods, and formatted printing. No file handling, no classes, no external libraries."</p>
+<h3 id="152-acceptable-variations-during-the-lab">15.2 Acceptable variations during the lab</h3>
+<p>If a learner chooses a different runbook-approved theme such as contacts, expenses, or a simple book list, that is acceptable if the program still:</p>
+<ul>
+<li>stores records in memory</li>
+<li>uses at least one list and one dictionary meaningfully</li>
+<li>includes add, list, and search</li>
+<li>prints readable output</li>
+</ul>
+<h3 id="153-compact-reminder-pattern-for-a-record-based-tracker">15.3 Compact reminder pattern for a record-based tracker</h3>
+<pre><code class="language-python">records = [
+    {&quot;field1&quot;: &quot;value1&quot;, &quot;field2&quot;: &quot;value2&quot;},
+]
+
+new_record = {&quot;field1&quot;: user_value1, &quot;field2&quot;: user_value2}
+records.append(new_record)
+
+for record in records:
+    print(record[&quot;field1&quot;])
+</code></pre>
+<p><strong>Say:</strong>
+"Again, do not treat this as a magic template. Treat it as a pattern you can adapt when you have many records and each record has named fields."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-from-isolated-patterns-to-a-coherent-program-5-minutes" class="depth-2">3) Opening Script: From Isolated Patterns to a Coherent Program (~5 minutes)</a></li>
+<li><a href="#31-reconnect-to-earlier-learning" class="depth-3">3.1 Reconnect to earlier learning</a></li>
+<li><a href="#32-define-the-mini-project-goal" class="depth-3">3.2 Define the mini-project goal</a></li>
+<li><a href="#33-why-we-are-using-a-book-tracker" class="depth-3">3.3 Why we are using a book tracker</a></li>
+<li><a href="#4-choosing-the-storage-model-10-minutes" class="depth-2">4) Choosing the Storage Model (~10 minutes)</a></li>
+<li><a href="#41-option-1-a-plain-list-of-strings" class="depth-3">4.1 Option 1: A plain list of strings</a></li>
+<li><a href="#42-option-2-a-dictionary-mapping-title-to-author" class="depth-3">4.2 Option 2: A dictionary mapping title to author</a></li>
+<li><a href="#43-option-3-a-list-of-dictionaries" class="depth-3">4.3 Option 3: A list of dictionaries</a></li>
+<li><a href="#44-name-the-design-choice-explicitly" class="depth-3">4.4 Name the design choice explicitly</a></li>
+<li><a href="#45-ask-learners-to-justify-it-back" class="depth-3">4.5 Ask learners to justify it back</a></li>
+<li><a href="#5-starter-data-and-program-shape-5-minutes" class="depth-2">5) Starter Data and Program Shape (~5 minutes)</a></li>
+<li><a href="#51-type-the-starter-dataset" class="depth-3">5.1 Type the starter dataset</a></li>
+<li><a href="#52-preview-the-three-required-features" class="depth-3">5.2 Preview the three required features</a></li>
+<li><a href="#53-the-simple-first-teaching-principle" class="depth-3">5.3 The “simple first” teaching principle</a></li>
+<li><a href="#6-live-demo-scaffold-the-tracker-and-build-the-add-feature-13-minutes" class="depth-2">6) Live Demo: Scaffold the Tracker and Build the Add Feature (~13 minutes)</a></li>
+<li><a href="#61-frame-the-live-demo" class="depth-3">6.1 Frame the live demo</a></li>
+<li><a href="#62-type-the-add-feature" class="depth-3">6.2 Type the add feature</a></li>
+<li><a href="#63-narrate-the-structure-carefully" class="depth-3">6.3 Narrate the structure carefully</a></li>
+<li><a href="#64-test-immediately" class="depth-3">6.4 Test immediately</a></li>
+<li><a href="#65-confirm-the-data-changed" class="depth-3">6.5 Confirm the data changed</a></li>
+<li><a href="#7-core-teaching-section-build-a-clear-list-feature-8-minutes" class="depth-2">7) Core Teaching Section: Build a Clear List Feature (~8 minutes)</a></li>
+<li><a href="#71-explain-why-formatting-matters" class="depth-3">7.1 Explain why formatting matters</a></li>
+<li><a href="#72-type-the-list-feature" class="depth-3">7.2 Type the list feature</a></li>
+<li><a href="#73-narrate-the-loop" class="depth-3">7.3 Narrate the loop</a></li>
+<li><a href="#74-ask-learners-to-predict-output" class="depth-3">7.4 Ask learners to predict output</a></li>
+<li><a href="#75-discuss-readability" class="depth-3">7.5 Discuss readability</a></li>
+<li><a href="#8-core-teaching-section-build-a-search-feature-9-minutes" class="depth-2">8) Core Teaching Section: Build a Search Feature (~9 minutes)</a></li>
+<li><a href="#81-frame-the-search-requirement" class="depth-3">8.1 Frame the search requirement</a></li>
+<li><a href="#82-keep-the-search-logic-simple" class="depth-3">8.2 Keep the search logic simple</a></li>
+<li><a href="#83-type-the-search-feature" class="depth-3">8.3 Type the search feature</a></li>
+<li><a href="#84-explain-the-case-normalization-choice" class="depth-3">8.4 Explain the case-normalization choice</a></li>
+<li><a href="#85-explain-the-found-flag" class="depth-3">8.5 Explain the found flag</a></li>
+<li><a href="#86-test-both-outcomes" class="depth-3">8.6 Test both outcomes</a></li>
+<li><a href="#9-guided-lab-build-your-own-tracker-version-19-minutes" class="depth-2">9) Guided Lab: Build Your Own Tracker Version (~19 minutes)</a></li>
+<li><a href="#91-lab-framing" class="depth-3">9.1 Lab framing</a></li>
+<li><a href="#92-lab-prompt" class="depth-3">9.2 Lab prompt</a></li>
+<li><a href="#mini-project-book-library-tracker-in-memory" class="depth-3">Mini-Project — Book Library Tracker (In Memory)</a></li>
+<li><a href="#93-completion-criteria" class="depth-3">9.3 Completion criteria</a></li>
+<li><a href="#94-suggested-build-order-for-learners" class="depth-3">9.4 Suggested build order for learners</a></li>
+<li><a href="#95-hints-to-release-after-a-few-minutes" class="depth-3">9.5 Hints to release after a few minutes</a></li>
+<li><a href="#96-common-pitfalls-to-watch-for" class="depth-3">9.6 Common pitfalls to watch for</a></li>
+<li><a href="#97-optional-extensions-for-early-finishers" class="depth-3">9.7 Optional extensions for early finishers</a></li>
+<li><a href="#98-instructor-circulation-prompts" class="depth-3">9.8 Instructor circulation prompts</a></li>
+<li><a href="#10-debrief-and-walkthrough-8-minutes" class="depth-2">10) Debrief and Walkthrough (~8 minutes)</a></li>
+<li><a href="#101-invite-a-few-learners-to-share" class="depth-3">10.1 Invite a few learners to share</a></li>
+<li><a href="#102-model-the-reasoning-explicitly" class="depth-3">10.2 Model the reasoning explicitly</a></li>
+<li><a href="#103-highlight-good-output-habits" class="depth-3">10.3 Highlight good output habits</a></li>
+<li><a href="#104-normalize-partial-completion" class="depth-3">10.4 Normalize partial completion</a></li>
+<li><a href="#11-recap-exit-ticket-5-minutes" class="depth-2">11) Recap + Exit Ticket (~5 minutes)</a></li>
+<li><a href="#111-recap-the-main-lessons" class="depth-3">11.1 Recap the main lessons</a></li>
+<li><a href="#112-exit-ticket" class="depth-3">11.2 Exit ticket</a></li>
+<li><a href="#113-bridge-to-hour-24" class="depth-3">11.3 Bridge to Hour 24</a></li>
+<li><a href="#12-guided-build-milestones-for-the-lab-block" class="depth-2">12) Guided Build Milestones for the Lab Block</a></li>
+<li><a href="#121-why-milestones-help-beginners" class="depth-3">12.1 Why milestones help beginners</a></li>
+<li><a href="#122-milestone-1-define-the-starting-data" class="depth-3">12.2 Milestone 1 — Define the starting data</a></li>
+<li><a href="#123-milestone-2-add-one-new-record" class="depth-3">12.3 Milestone 2 — Add one new record</a></li>
+<li><a href="#124-milestone-3-print-all-records-clearly" class="depth-3">12.4 Milestone 3 — Print all records clearly</a></li>
+<li><a href="#125-milestone-4-search-successfully" class="depth-3">12.5 Milestone 4 — Search successfully</a></li>
+<li><a href="#126-milestone-5-handle-not-found-safely" class="depth-3">12.6 Milestone 5 — Handle not-found safely</a></li>
+<li><a href="#127-why-this-matters-for-learner-confidence" class="depth-3">12.7 Why this matters for learner confidence</a></li>
+<li><a href="#13-troubleshooting-and-coaching-guide-for-the-mini-project" class="depth-2">13) Troubleshooting and Coaching Guide for the Mini-Project</a></li>
+<li><a href="#131-if-a-learner-uses-inconsistent-keys" class="depth-3">13.1 If a learner uses inconsistent keys</a></li>
+<li><a href="#132-if-a-learner-stores-books-as-lists-instead-of-dictionaries" class="depth-3">13.2 If a learner stores books as lists instead of dictionaries</a></li>
+<li><a href="#133-if-a-learner-prints-only-the-raw-data" class="depth-3">13.3 If a learner prints only the raw data</a></li>
+<li><a href="#134-if-the-search-logic-never-finds-a-match" class="depth-3">13.4 If the search logic never finds a match</a></li>
+<li><a href="#135-if-the-learners-code-is-getting-too-tangled" class="depth-3">13.5 If the learner’s code is getting too tangled</a></li>
+<li><a href="#136-if-a-learner-finishes-very-early" class="depth-3">13.6 If a learner finishes very early</a></li>
+<li><a href="#137-if-a-learner-is-behind" class="depth-3">13.7 If a learner is behind</a></li>
+<li><a href="#14-debrief-extension-make-the-design-reasoning-explicit" class="depth-2">14) Debrief Extension: Make the Design Reasoning Explicit</a></li>
+<li><a href="#141-questions-to-ask-during-debrief" class="depth-3">14.1 Questions to ask during debrief</a></li>
+<li><a href="#142-model-the-transfer-to-other-themes" class="depth-3">14.2 Model the transfer to other themes</a></li>
+<li><a href="#143-highlight-the-projects-hidden-lesson" class="depth-3">14.3 Highlight the project’s hidden lesson</a></li>
+<li><a href="#15-appendix-instructor-quick-reference" class="depth-2">15) Appendix: Instructor Quick Reference</a></li>
+<li><a href="#151-why-this-project-is-still-firmly-basics-level" class="depth-3">15.1 Why this project is still firmly Basics-level</a></li>
+<li><a href="#152-acceptable-variations-during-the-lab" class="depth-3">15.2 Acceptable variations during the lab</a></li>
+<li><a href="#153-compact-reminder-pattern-for-a-record-based-tracker" class="depth-3">15.3 Compact reminder pattern for a record-based tracker</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day6_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day6_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 8, Hour 1: For Loops and Iteration (Course Hour 29) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="8">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day8_Hour1_Basics.md">
+
+    <link rel="prev" href="Day7_Hour4_Basics.html">
+    <link rel="next" href="Day8_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="8" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-08/index.html">Day 8</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 8, Hour 1: For Loops and Iteration (Course Hour 29)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 8</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day8_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 8</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 8, Course Hour 29 – For Loops and Iteration (state management focus)<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="section-1-learning-outcomes">Section 1: Learning Outcomes</h2>
+<p>By the end of this hour, you will be able to:</p>
+<ol>
+<li>Build a menu-driven <code>while True</code> loop that keeps a program running until the user explicitly chooses to quit.</li>
+<li>Display a clean list of options to the user and gracefully handle repeated menu cycles.</li>
+<li>Route user actions (like 'Add', 'List', 'Search', 'Quit') using <code>if/elif/else</code> logic to dispatch the correct behavior.</li>
+<li>Explain why initializing state (data structures like lists and dictionaries) <em>outside</em> the loop is necessary to preserve data across menu cycles.</li>
+<li>Implement input validation and error handling within a menu-driven application to guide users toward valid choices.</li>
+</ol>
+<hr>
+<h2 id="section-2-instructor-prep-and-delivery-note">Section 2: Instructor Prep and Delivery Note</h2>
+<p><strong>Pre-Session Setup:</strong>
+- Open two empty Python files ready for live coding:
+  - <code>hour29_menu_demo.py</code> – for demonstrating the concept progression
+  - <code>hour29_menu_lab.py</code> – for showing the lab solution at the end
+- Familiarize yourself with the exact structure you want to build during the live demo (starting with the scaffold, then adding the routing logic, then adding state management).
+- Test the demo code to ensure there are no syntax errors before class begins.
+- Have the runbook learning outcomes and lab specification nearby for quick reference.</p>
+<p><strong>Delivery Philosophy:</strong>
+This hour introduces the foundational pattern of interactive, event-driven programming. Nearly every CLI tool, game, and application your learners will encounter works on this same principle: present options, accept input, act, and repeat. Emphasize that mastering this pattern will unlock the ability to build real, usable programs—not just scripts that run once and exit. Encourage learners to type along with the live demo; this reinforces muscle memory and helps them see the progression.</p>
+<hr>
+<h2 id="section-3-opening-script-5-minutes">Section 3: Opening Script (~5 minutes)</h2>
+<p><strong>Say:</strong>
+"Up until now, many of our programs ran from top to bottom and then stopped. You run it, you perhaps give it one input, it calculates something, prints the result, and exits.</p>
+<p>But think about the applications you use every day—like a text editor, an ATM, a game, or a banking app. They don't just run once and exit. They present you with options, wait for you to do something, react to your choice, and then present the options again. They stay alive until you explicitly tell them to stop.</p>
+<p>Today we are going to learn the pattern that makes our Python programs do exactly that. We are going to build <strong>menu loops</strong>—the backbone of nearly every interactive CLI application you'll ever write.</p>
+<p>A CLI menu pattern has three essential structural parts:
+1. <strong>An infinite loop</strong> that keeps the program running until explicitly told to stop.
+2. <strong>A menu display</strong> (a block of print statements) showing the user their choices.
+3. <strong>Input gathering and routing logic</strong> (<code>if/elif/else</code>) that carries out the specific action or breaks out of the loop.</p>
+<p>This pattern is fundamental. Master it, and you unlock the ability to build real, usable programs."</p>
+<hr>
+<h2 id="section-4-conceptual-briefing">Section 4: Conceptual Briefing</h2>
+<h3 id="the-core-pattern-while-true-and-break">The Core Pattern: <code>while True</code> and <code>break</code></h3>
+<p><strong>Say:</strong>
+"To keep a program alive, we use a <code>while True</code> loop. Because <code>True</code> is always true, this loop theoretically runs forever. To stop it, we use a <strong>sentinel value</strong> and a <code>break</code> statement—our escape hatch.</p>
+<p>Here's the fundamental scaffold every menu follows:"</p>
+<pre><code class="language-python">while True:
+    # Display options
+    print(&quot;\n--- Main Menu ---&quot;)
+    print(&quot;1. Option 1&quot;)
+    print(&quot;2. Option 2&quot;)
+    print(&quot;3. Quit&quot;)
+
+    # Get user input
+    choice = input(&quot;Enter your choice: &quot;)
+
+    # Route and execute
+    if choice == '3':
+        print(&quot;Goodbye!&quot;)
+        break  # This escapes the loop
+    else:
+        print(f&quot;You chose {choice}&quot;)
+</code></pre>
+<p><strong>Key insight:</strong> Without the <code>break</code>, the user is trapped forever. The <code>break</code> is your exit strategy. This is not a flaw—it's by design. The sentinel value (in this case, the choice '3' representing 'Quit') is our intentional control mechanism.</p>
+<p>When we run this scaffold and the user enters '3', Python executes the <code>break</code> statement, which immediately exits the innermost loop and continues execution after the loop block. If there is no code after the loop, the program ends cleanly. This is the core control flow principle you need to master for any interactive application.</p>
+<h3 id="routing-actions-with-ifelifelse">Routing Actions with <code>if/elif/else</code></h3>
+<p><strong>Say:</strong>
+"Once we have the framework, we expand it to actually <em>do</em> things. Each menu choice triggers different behavior via <code>if/elif</code> statements. The final <code>else</code> catches invalid input—a built-in validation mechanism.</p>
+<p>Here's the expansion pattern:"</p>
+<pre><code class="language-python">if choice == '1':
+    print(&quot;You chose Action 1&quot;)
+elif choice == '2':
+    print(&quot;You chose Action 2&quot;)
+elif choice == '3':
+    print(&quot;Goodbye!&quot;)
+    break
+else:
+    print(&quot;Invalid choice. Please try again.&quot;)
+</code></pre>
+<p><strong>Why this structure matters:</strong> Each <code>elif</code> represents a distinct code path. The program examines the user's choice and executes exactly one block—the one that matches. If none match, the <code>else</code> block runs. This is deterministic and predictable behavior.</p>
+<p>In real applications, each branch might do significantly more: read from a file, perform calculations, modify a data structure, or call a function. The point is that the menu acts as a dispatcher—it routes traffic based on the user's selection. This is the fundamental pattern of command-driven interfaces."</p>
+<h3 id="state-management-data-outside-the-loop-critical">State Management: Data <em>Outside</em> the Loop (Critical!)</h3>
+<p><strong>Say:</strong>
+"Here's the most common mistake: initializing data structures <em>inside</em> the loop. Every loop iteration, that initialization runs again, wiping out all previous data. This is one of the top three bugs beginners make with menu loops, so let's be crystal clear about it.</p>
+<p><strong>WRONG:</strong></p>
+<pre><code class="language-python">while True:
+    items = []  # This resets every iteration!
+    # ... menu logic ...
+</code></pre>
+<p><strong>RIGHT:</strong></p>
+<pre><code class="language-python">items = []  # Initialize OUTSIDE the loop
+
+while True:
+    # ... menu logic ...
+    # items now persists across all iterations
+</code></pre>
+<p><strong>Why this matters:</strong> Python reads and executes code line-by-line. When it encounters a line inside a loop, it executes that line <em>every time</em> the loop cycles. So if <code>items = []</code> is inside the loop, items gets reset to an empty list on every single iteration. Any data you added in the previous iteration is lost.</p>
+<p>By contrast, if <code>items = []</code> is outside the loop (before the <code>while</code> statement), Python executes it exactly once, before the loop ever starts. The list is created once and persists throughout the program's lifetime until the loop ends or the program exits.</p>
+<p>This principle applies to all persistent state: lists, dictionaries, counters, flags, user preferences—anything that needs to survive across menu cycles must be initialized before the loop starts. This is crucial. Many students struggle with this point, so internalize it now."</p>
+<hr>
+<h2 id="section-5-live-demo-1525-minutes">Section 5: Live Demo (15–25 minutes)</h2>
+<p><strong>Say:</strong>
+"Let's build a complete, working menu application together. I'll demonstrate the full pattern: infinite loop, menu display, input routing, and persistent state. Please type along in your editor—this builds muscle memory."</p>
+<h3 id="demo-inventory-tracker">Demo: Inventory Tracker</h3>
+<p><strong>Open <code>hour29_menu_demo.py</code> and type line-by-line, narrating each piece:</strong></p>
+<pre><code class="language-python"># Inventory Tracker - A Complete Menu Application
+
+print(&quot;Welcome to the Inventory Tracker!&quot;)
+print(&quot;=&quot; * 40)
+
+# Initialize state OUTSIDE the loop
+inventory = []
+
+# Main menu loop
+while True:
+    # Display the menu
+    print(&quot;\n--- INVENTORY MENU ---&quot;)
+    print(&quot;1. Add an item&quot;)
+    print(&quot;2. View all items&quot;)
+    print(&quot;3. Search for an item&quot;)
+    print(&quot;4. Count items&quot;)
+    print(&quot;5. Quit&quot;)
+
+    # Get the user's choice
+    choice = input(&quot;\nEnter your choice (1-5): &quot;)
+
+    # Route based on choice
+    if choice == '1':
+        item = input(&quot;What item to add? &quot;)
+        inventory.append(item)
+        print(f&quot;✓ Added '{item}' to inventory.&quot;)
+
+    elif choice == '2':
+        print(&quot;\n--- CURRENT INVENTORY ---&quot;)
+        if not inventory:
+            print(&quot;(empty)&quot;)
+        else:
+            for idx, item in enumerate(inventory, 1):
+                print(f&quot;{idx}. {item}&quot;)
+
+    elif choice == '3':
+        query = input(&quot;Search for what? &quot;)
+        if query in inventory:
+            print(f&quot;✓ Found '{query}' in inventory!&quot;)
+        else:
+            print(f&quot;✗ '{query}' not found.&quot;)
+
+    elif choice == '4':
+        count = len(inventory)
+        print(f&quot;Total items: {count}&quot;)
+
+    elif choice == '5':
+        print(&quot;Thank you for using Inventory Tracker. Goodbye!&quot;)
+        break
+
+    else:
+        print(&quot;Invalid choice. Please enter 1-5.&quot;)
+</code></pre>
+<p><strong>Run the demo and test all features:</strong>
+- Add several items
+- List to show persistence
+- Search for both existing and non-existing items
+- Verify that data persists across loop cycles
+- Quit cleanly with <code>break</code></p>
+<p><strong>Say:</strong>
+"Notice that <code>inventory</code> stays alive the entire time. We add to it, display it, search within it—all because it was initialized outside the loop. If we had put <code>inventory = []</code> inside the loop, every menu cycle would have erased everything we added. That's the critical mistake to avoid."</p>
+<hr>
+<h2 id="section-6-practice-walkthrough-10-minutes">Section 6: Practice Walkthrough (10 minutes)</h2>
+<p><strong>Say:</strong>
+"Let's build one more example together, but this time with a dictionary. I'll show you how the same pattern adapts to different data types."</p>
+<h3 id="demo-phone-book">Demo: Phone Book</h3>
+<p><strong>Type into a new file or on screen:</strong></p>
+<pre><code class="language-python"># Phone Book - Menu Pattern with Dictionary
+
+phone_book = {}
+
+while True:
+    print(&quot;\n--- PHONE BOOK MENU ---&quot;)
+    print(&quot;1. Add contact&quot;)
+    print(&quot;2. Look up contact&quot;)
+    print(&quot;3. Remove contact&quot;)
+    print(&quot;4. List all contacts&quot;)
+    print(&quot;5. Quit&quot;)
+
+    choice = input(&quot;Choose: &quot;)
+
+    if choice == '1':
+        name = input(&quot;Name? &quot;)
+        number = input(&quot;Phone number? &quot;)
+        phone_book[name] = number
+        print(f&quot;Added {name}.&quot;)
+
+    elif choice == '2':
+        name = input(&quot;Look up: &quot;)
+        if name in phone_book:
+            print(f&quot;{name}: {phone_book[name]}&quot;)
+        else:
+            print(&quot;Not found.&quot;)
+
+    elif choice == '3':
+        name = input(&quot;Remove: &quot;)
+        if name in phone_book:
+            del phone_book[name]
+            print(f&quot;Removed {name}.&quot;)
+        else:
+            print(&quot;Not found.&quot;)
+
+    elif choice == '4':
+        if not phone_book:
+            print(&quot;(empty)&quot;)
+        else:
+            for name, number in phone_book.items():
+                print(f&quot;{name}: {number}&quot;)
+
+    elif choice == '5':
+        print(&quot;Goodbye!&quot;)
+        break
+
+    else:
+        print(&quot;Invalid choice.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Same pattern, different data structure. The framework doesn't change—only what operations we perform on our data changes."</p>
+<hr>
+<h2 id="section-7-lab-with-checkpoints-30-minutes">Section 7: Lab with Checkpoints (30 minutes)</h2>
+<p><strong>Say:</strong>
+"Now it's your turn. You'll create a menu-driven application using a data structure of your choice. You have 30 minutes. Here are the checkpoints to guide you:"</p>
+<h3 id="checkpoint-1-initialize-state-2-minutes">Checkpoint 1: Initialize State (2 minutes)</h3>
+<p>Create a Python file. Initialize your chosen data structure <em>outside</em> any loop. Example:</p>
+<pre><code class="language-python">my_list = []
+# or
+my_dict = {}
+</code></pre>
+<h3 id="checkpoint-2-build-the-loop-structure-5-minutes">Checkpoint 2: Build the Loop Structure (5 minutes)</h3>
+<p>Create the skeleton of your menu:</p>
+<pre><code class="language-python">while True:
+    print(&quot;\n--- MY MENU ---&quot;)
+    print(&quot;1. Option 1&quot;)
+    print(&quot;2. Option 2&quot;)
+    print(&quot;3. Quit&quot;)
+
+    choice = input(&quot;&gt; &quot;)
+
+    if choice == '3':
+        break
+    else:
+        print(&quot;You chose:&quot;, choice)
+</code></pre>
+<p>Run it to confirm the loop works and exits cleanly.</p>
+<h3 id="checkpoint-3-implement-add-feature-8-minutes">Checkpoint 3: Implement "Add" Feature (8 minutes)</h3>
+<p>Add logic for the user to add a new item to your collection:</p>
+<pre><code class="language-python">if choice == '1':
+    item = input(&quot;What to add? &quot;)
+    my_list.append(item)  # or my_dict[key] = value
+    print(&quot;Added!&quot;)
+</code></pre>
+<p>Test by adding a few items and checking the menu cycles correctly.</p>
+<h3 id="checkpoint-4-implement-view-feature-8-minutes">Checkpoint 4: Implement "View" Feature (8 minutes)</h3>
+<p>Add logic to display all items in your collection:</p>
+<pre><code class="language-python">elif choice == '2':
+    print(&quot;Current items:&quot;)
+    for item in my_list:
+        print(f&quot;  - {item}&quot;)
+</code></pre>
+<p>Test that data persists across menu cycles.</p>
+<h3 id="checkpoint-5-add-search-or-delete-5-minutes">Checkpoint 5: Add "Search" or "Delete" (5 minutes)</h3>
+<p>Implement one additional feature (search, delete, update, or count). Test thoroughly.</p>
+<h3 id="checkpoint-6-input-validation-2-minutes">Checkpoint 6: Input Validation (2 minutes)</h3>
+<p>Add an <code>else</code> clause at the end to catch invalid menu choices:</p>
+<pre><code class="language-python">else:
+    print(&quot;Invalid choice. Please try again.&quot;)
+</code></pre>
+<hr>
+<h2 id="section-8-troubleshooting-pitfalls">Section 8: Troubleshooting Pitfalls</h2>
+<ol>
+<li>
+<p><strong>Infinite loop traps:</strong> If your program never returns to the menu, you may have nested loops or forgotten <code>break</code>. Check your indentation and ensure <code>break</code> is at the top level of the menu loop, not inside an inner conditional.</p>
+</li>
+<li>
+<p><strong>Data loss on loop restart:</strong> If your data disappears after each menu cycle, you initialized it inside the loop. Move all state declarations to before the <code>while True</code> line.</p>
+</li>
+<li>
+<p><strong>Invalid input causing crashes:</strong> If the program crashes when users enter unexpected input, wrap input in <code>try/except</code> or validate choices against a known set.</p>
+</li>
+<li>
+<p><strong>Menu not displaying:</strong> Ensure your <code>print</code> statements showing the menu are inside the loop, not outside. If they're outside, the menu only shows once.</p>
+</li>
+<li>
+<p><strong>Forgetting the break:</strong> Without a <code>break</code> statement in your quit option, the program never exits. The user is trapped forever in the loop.</p>
+</li>
+<li>
+<p><strong>Indentation chaos:</strong> Python's indentation-based syntax means misaligned lines can cause unexpected behavior. Use your editor's indentation guides. Lines inside the loop should be indented; lines outside should not be.</p>
+</li>
+<li>
+<p><strong>Testing only the happy path:</strong> Students often test only valid inputs. Spend time testing edge cases: invalid menu choices, empty collections, repeated operations, and quit sequences.</p>
+</li>
+</ol>
+<hr>
+<h2 id="section-9-quick-check-questions">Section 9: Quick-Check Questions</h2>
+<ol>
+<li>
+<p><strong>Why do we initialize data (lists, dictionaries) outside the <code>while True</code> loop instead of inside?</strong>
+   - <em>Answer:</em> Because Python re-executes every line inside the loop on each iteration. If we initialize inside, every cycle resets our data to empty. By initializing outside, the data persists across cycles.</p>
+</li>
+<li>
+<p><strong>What is the purpose of the <code>break</code> statement in a menu loop?</strong>
+   - <em>Answer:</em> The <code>break</code> statement exits the loop, allowing the program to end cleanly. Without it, <code>while True</code> would run forever (unless the program crashes).</p>
+</li>
+<li>
+<p><strong>How do we route different menu choices to different actions?</strong>
+   - <em>Answer:</em> We use <code>if/elif/else</code> statements to check the user's input and execute the corresponding code block for each choice.</p>
+</li>
+<li>
+<p><strong>What is an example of a real-world application that uses a menu loop pattern?</strong>
+   - <em>Answer:</em> ATMs, text editors, email clients, game menus, banking apps, any interactive console application. They all present choices, wait for input, act, and then repeat.</p>
+</li>
+<li>
+<p><strong>If a user enters an invalid menu choice (like '99' when only 1-5 are valid), what should happen?</strong>
+   - <em>Answer:</em> The <code>else</code> clause should catch it and display an error message like "Invalid choice. Please try again." Then the loop naturally cycles back and re-displays the menu, giving the user another chance.</p>
+</li>
+</ol>
+<hr>
+<h2 id="section-10-wrap-up-narrative-2-minutes">Section 10: Wrap-Up Narrative (~2 minutes)</h2>
+<p><strong>Say:</strong>
+"Today we've mastered the menu loop—the cornerstone pattern of interactive programming. You now understand:</p>
+<ul>
+<li>How to use <code>while True</code> with a clear <code>break</code> strategy to keep a program alive and let it exit cleanly.</li>
+<li>How to display a menu and route user choices via <code>if/elif/else</code>.</li>
+<li>Why data must be initialized <em>outside</em> the loop to survive across menu cycles.</li>
+<li>How to build real, event-driven applications that respond to repeated user input.</li>
+</ul>
+<p>This pattern scales beautifully. From a simple task tracker to a full-featured database interface, the framework remains the same. The only thing that changes is the complexity of the operations you perform on your data.</p>
+<p>Next hour, we'll add robust input validation and error handling to make these applications bulletproof. For now, practice building different menus with different data types. Get comfortable with the rhythm: display, input, route, repeat."</p>
+<hr>
+<h2 id="section-11-facilitation-notes">Section 11: Facilitation Notes</h2>
+<h3 id="pacing-strategy">Pacing Strategy</h3>
+<ul>
+<li><strong>0:00–0:05</strong> — Opening: Set context and enthusiasm. Real-world relevance is key.</li>
+<li><strong>0:05–0:13</strong> — Conceptual Briefing: Move briskly through the three key concepts (loop structure, routing, state management). Use a whiteboard or projector to annotate code as you explain.</li>
+<li><strong>0:13–0:33</strong> — Live Demos (20 min): Inventory Tracker demo (15 min, all features tested), then Phone Book demo (5 min). Build slowly, pausing after each logical block. Encourage students to ask questions.</li>
+<li><strong>0:33–1:03</strong> — Checkpoints Lab (30 min): Circulate frequently. By checkpoint 3, most students should have a working "add" feature. By checkpoint 5, they should have at least a "view" and ideally a second feature (search/delete).</li>
+<li><strong>1:03–1:08</strong> — Q&amp;A and troubleshooting.</li>
+<li><strong>1:08–1:10</strong> — Wrap-up and exit ticket.</li>
+</ul>
+<h3 id="circulation-checklist-during-lab">Circulation Checklist During Lab</h3>
+<p>Watch for and intervene on:
+- Students initializing data <em>inside</em> the loop (ask them to trace what happens each iteration).
+- Students nesting loops incorrectly (e.g., a menu inside a menu with no clear exit).
+- Students who don't print the menu on every iteration (leading to a confusing UX).
+- Students whose <code>break</code> is in the wrong indentation level.</p>
+<h3 id="qa-strategies">Q&amp;A Strategies</h3>
+<ul>
+<li><strong>"Why does my data disappear?"</strong> → Trace the execution line-by-line. Point out where data is initialized and ask, "When does this line run?"</li>
+<li><strong>"How do I exit?"</strong> → Confirm they have a <code>break</code> statement. Check its indentation.</li>
+<li><strong>"Can I use a different data type?"</strong> → Absolutely. Demonstrate with a dict or set to show the pattern scales.</li>
+</ul>
+<h3 id="engagement-tips">Engagement Tips</h3>
+<ul>
+<li>Use live demo failures as teaching moments. If a bug appears, debug it visibly. Say, "I made a mistake on purpose—let's find it together."</li>
+<li>Celebrate small wins. When a student gets their first menu working, acknowledge it.</li>
+<li>Challenge faster students: "Can you add a feature to count items?" or "Can you modify this to use a dictionary instead?"</li>
+</ul>
+<hr>
+<h2 id="section-12-assessment-and-differentiation-rubric">Section 12: Assessment and Differentiation Rubric</h2>
+<h3 id="formative-assessment-criteria">Formative Assessment Criteria</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Proficient</th>
+<th>Developing</th>
+<th>Not Yet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Loop Structure</strong></td>
+<td><code>while True</code> present; <code>break</code> used correctly to exit; program runs without hanging</td>
+<td>Loop present but <code>break</code> may be missing or misplaced; occasional hang-ups</td>
+<td>Loop missing or infinite without exit mechanism</td>
+</tr>
+<tr>
+<td><strong>Menu Display</strong></td>
+<td>Menu clearly printed on each iteration; options numbered and easy to follow</td>
+<td>Menu displayed but may be missing on some iterations or lacks clarity</td>
+<td>No menu or menu only displayed once</td>
+</tr>
+<tr>
+<td><strong>Input Routing</strong></td>
+<td><code>if/elif/else</code> correctly routes all choices; each choice triggers intended action</td>
+<td>Most choices routed correctly; some edge cases missed</td>
+<td>Routing missing or severely incomplete</td>
+</tr>
+<tr>
+<td><strong>State Management</strong></td>
+<td>Data structure (list/dict) initialized outside loop; data persists across iterations</td>
+<td>Data structure present but may be reset on some iterations</td>
+<td>Data lost on each iteration or not present</td>
+</tr>
+<tr>
+<td><strong>Input Validation</strong></td>
+<td>Invalid choices handled gracefully; user directed to re-enter</td>
+<td>Invalid choices sometimes cause errors or are ignored</td>
+<td>No validation; crashes or silent failures</td>
+</tr>
+<tr>
+<td><strong>Code Readability</strong></td>
+<td>Well-commented; variable names clear; indentation consistent</td>
+<td>Mostly readable; minor inconsistencies in naming or comments</td>
+<td>Difficult to follow; inconsistent indentation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rubric-scoring">Rubric Scoring</h3>
+<ul>
+<li><strong>Proficient (3 points):</strong> Meets all criteria in the "Proficient" column. Student demonstrates solid understanding.</li>
+<li><strong>Developing (2 points):</strong> Meets criteria in the "Developing" column with minor gaps. Student has core understanding but needs refinement.</li>
+<li><strong>Not Yet (1 point):</strong> Meets criteria in the "Not Yet" column. Student needs significant rework or re-teaching.</li>
+</ul>
+<h3 id="differentiation-strategies">Differentiation Strategies</h3>
+<p><strong>For Faster Learners:</strong>
+- Extend the lab with additional features: "Delete" items, "Edit" items, "Sort" items, "Count" items, or filtering by category.
+- Have them implement a <strong>nested menu</strong> (a submenu within a choice).
+- Challenge them to use a more complex data type (list of dictionaries) or add file I/O to persist data.</p>
+<p><strong>For Struggling Learners:</strong>
+- Provide a partially complete scaffold with comments indicating where to fill in code.
+- Pair with a peer mentor for the lab portion.
+- Reduce the scope: focus on "Add" and "View" only; skip "Delete" and "Edit" for now.
+- Use a simpler data type (list) instead of a dictionary.</p>
+<p><strong>For Advanced Learners:</strong>
+- Introduce multi-level menus with submenus.
+- Discuss design patterns: command pattern, state pattern, MVC separation.
+- Show how this pattern scales to web frameworks (Flask routes, Django views).
+- Challenge: "How would you persist this menu's data to a file so it survives program restarts?"</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#section-1-learning-outcomes" class="depth-2">Section 1: Learning Outcomes</a></li>
+<li><a href="#section-2-instructor-prep-and-delivery-note" class="depth-2">Section 2: Instructor Prep and Delivery Note</a></li>
+<li><a href="#section-3-opening-script-5-minutes" class="depth-2">Section 3: Opening Script (~5 minutes)</a></li>
+<li><a href="#section-4-conceptual-briefing" class="depth-2">Section 4: Conceptual Briefing</a></li>
+<li><a href="#the-core-pattern-while-true-and-break" class="depth-3">The Core Pattern: while True and break</a></li>
+<li><a href="#routing-actions-with-ifelifelse" class="depth-3">Routing Actions with if/elif/else</a></li>
+<li><a href="#state-management-data-outside-the-loop-critical" class="depth-3">State Management: Data Outside the Loop (Critical!)</a></li>
+<li><a href="#section-5-live-demo-1525-minutes" class="depth-2">Section 5: Live Demo (15–25 minutes)</a></li>
+<li><a href="#demo-inventory-tracker" class="depth-3">Demo: Inventory Tracker</a></li>
+<li><a href="#section-6-practice-walkthrough-10-minutes" class="depth-2">Section 6: Practice Walkthrough (10 minutes)</a></li>
+<li><a href="#demo-phone-book" class="depth-3">Demo: Phone Book</a></li>
+<li><a href="#section-7-lab-with-checkpoints-30-minutes" class="depth-2">Section 7: Lab with Checkpoints (30 minutes)</a></li>
+<li><a href="#checkpoint-1-initialize-state-2-minutes" class="depth-3">Checkpoint 1: Initialize State (2 minutes)</a></li>
+<li><a href="#checkpoint-2-build-the-loop-structure-5-minutes" class="depth-3">Checkpoint 2: Build the Loop Structure (5 minutes)</a></li>
+<li><a href="#checkpoint-3-implement-add-feature-8-minutes" class="depth-3">Checkpoint 3: Implement &quot;Add&quot; Feature (8 minutes)</a></li>
+<li><a href="#checkpoint-4-implement-view-feature-8-minutes" class="depth-3">Checkpoint 4: Implement &quot;View&quot; Feature (8 minutes)</a></li>
+<li><a href="#checkpoint-5-add-search-or-delete-5-minutes" class="depth-3">Checkpoint 5: Add &quot;Search&quot; or &quot;Delete&quot; (5 minutes)</a></li>
+<li><a href="#checkpoint-6-input-validation-2-minutes" class="depth-3">Checkpoint 6: Input Validation (2 minutes)</a></li>
+<li><a href="#section-8-troubleshooting-pitfalls" class="depth-2">Section 8: Troubleshooting Pitfalls</a></li>
+<li><a href="#section-9-quick-check-questions" class="depth-2">Section 9: Quick-Check Questions</a></li>
+<li><a href="#section-10-wrap-up-narrative-2-minutes" class="depth-2">Section 10: Wrap-Up Narrative (~2 minutes)</a></li>
+<li><a href="#section-11-facilitation-notes" class="depth-2">Section 11: Facilitation Notes</a></li>
+<li><a href="#pacing-strategy" class="depth-3">Pacing Strategy</a></li>
+<li><a href="#circulation-checklist-during-lab" class="depth-3">Circulation Checklist During Lab</a></li>
+<li><a href="#qa-strategies" class="depth-3">Q&amp;A Strategies</a></li>
+<li><a href="#engagement-tips" class="depth-3">Engagement Tips</a></li>
+<li><a href="#section-12-assessment-and-differentiation-rubric" class="depth-2">Section 12: Assessment and Differentiation Rubric</a></li>
+<li><a href="#formative-assessment-criteria" class="depth-3">Formative Assessment Criteria</a></li>
+<li><a href="#rubric-scoring" class="depth-3">Rubric Scoring</a></li>
+<li><a href="#differentiation-strategies" class="depth-3">Differentiation Strategies</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day8_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day8_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 3, Hour 1: Project Structure, Packages, Imports, and Config | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="3">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day3_Hour1_Advanced.md">
+
+    <link rel="prev" href="Day2_Hour4_Advanced.html">
+    <link rel="next" href="Day3_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="3" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-03/index.html">Day 3</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 3, Hour 1: Project Structure, Packages, Imports, and Config</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 3</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day3_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 3, Hour 1 of 48, also Hour 9 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Organizing the checkpointed model and service code into a beginner-safe package structure, using clean imports, and introducing light configuration constants.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 3, Hour 9.</li>
+<li><strong>Prerequisites</strong>: Learners should have completed or nearly completed the Day 2 Hour 4 Checkpoint 1 core. They should have a tracker-style domain model, a service layer, custom exceptions such as <code>ValidationError</code> and <code>NotFoundError</code>, and a small demo that proves the core works.</li>
+<li><strong>Advanced trajectory</strong>: This hour stays on the PCAP-to-PCPP1 path. Learners are not publishing packages, creating a full packaging configuration, or managing dependency tooling yet. The advanced step is learning how project shape affects imports, execution, maintainability, and future GUI/API layers.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has moved <code>models.py</code> and <code>services.py</code> into <code>src/tracker/</code>, updated package-internal imports to use relative imports, and run the demo from the project root with <code>python -m src.tracker.demo</code>.</li>
+</ul>
+<p>Important instructor positioning:</p>
+<ul>
+<li>Use one consistent convention for this hour: <code>project_root/src/tracker/</code> contains the package, and the demo module lives at <code>src/tracker/demo.py</code>.</li>
+<li>Inside <code>src/tracker/</code>, use package-relative imports such as <code>from .models import Task</code> and <code>from .exceptions import ValidationError</code>.</li>
+<li>Run from the project root with <code>python -m src.tracker.demo</code>. On Windows, <code>py -m src.tracker.demo</code> is also acceptable.</li>
+<li>Do not teach a shorter module path that treats <code>tracker</code> as already installed in this hour. Do not teach a root <code>demo.py</code> that imports <code>from tracker...</code> while the package is stored under <code>src/tracker/</code>. Without packaging or <code>PYTHONPATH</code>, that layout commonly fails. Later packaging or editable installs can make direct <code>tracker</code> imports work, but that is a future note, not today's target.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Checkpoint 1</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect the working Day 2 core to professional project structure</td>
+</tr>
+<tr>
+<td>Outcomes, setup, and vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Define package, module, <code>src</code>, entry point, absolute import, relative import, and config</td>
+</tr>
+<tr>
+<td>Concept briefing: structure, imports, and config</td>
+<td style="text-align: right;">12 min</td>
+<td>Explain the beginner-safe <code>src/tracker/</code> convention, import rules, and light environment configuration</td>
+</tr>
+<tr>
+<td>Live demo: move the core into <code>src/tracker/</code></td>
+<td style="text-align: right;">10 min</td>
+<td>Move model/service code, update imports, and run <code>python -m src.tracker.demo</code></td>
+</tr>
+<tr>
+<td>Guided lab: restructure your tracker</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners create the package, move files, update imports, run the exact demo command, and optionally add <code>config.py</code></td>
+</tr>
+<tr>
+<td>Quick checks, pitfalls, and wrap-up</td>
+<td style="text-align: right;">3 min</td>
+<td>Verify understanding, name common failures, and bridge to logging and error reporting</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 12 + 10 + 25 + 3. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten examples in the concept briefing rather than shrinking the restructure practice. The required outcome is practical: the project still runs after restructure, and imports are clean and consistent.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain why a working checkpoint project often needs a cleaner package structure before adding logging, file operations, GUI, API, or persistence layers.</li>
+<li>Describe the course convention for this hour: <code>project_root/src/tracker/</code> with <code>src/tracker/__init__.py</code>, <code>models.py</code>, <code>services.py</code>, <code>exceptions.py</code>, and <code>demo.py</code>.</li>
+<li>Move existing <code>models.py</code> and <code>services.py</code> into <code>src/tracker/</code> without changing the domain behavior of <code>Task</code>, <code>TaskService</code>, <code>ValidationError</code>, <code>NotFoundError</code>, or <code>to_dict()</code>.</li>
+<li>Use package-relative imports inside the package, such as <code>from .models import Task</code>.</li>
+<li>Run the demo from the project root as a module with <code>python -m src.tracker.demo</code> or, on Windows, <code>py -m src.tracker.demo</code>.</li>
+<li>Explain why running <code>python src/tracker/demo.py</code> is different from running <code>python -m src.tracker.demo</code>.</li>
+<li>Identify common causes of <code>ModuleNotFoundError</code>: wrong working directory, wrong entry file, inconsistent import style, missing <code>__init__.py</code>, name collisions, or assuming packaging behavior that has not been configured.</li>
+<li>Recognize and avoid circular imports between <code>models.py</code>, <code>services.py</code>, and <code>demo.py</code>.</li>
+<li>Avoid naming project files after standard library modules such as <code>logging.py</code>, <code>json.py</code>, <code>email.py</code>, <code>pathlib.py</code>, or <code>sqlite3.py</code>.</li>
+<li>Add a light optional <code>config.py</code> with constants such as <code>DATA_DIR</code> and <code>DB_PATH</code>, optionally reading an environment variable through <code>os.environ.get()</code>.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 3, Hour 9 visible. The required scope is project structure, packages, imports, and light config. The required lab is to create <code>src/tracker/</code>, move <code>models.py</code> and <code>services.py</code>, update imports, and confirm the demo still works.</li>
+<li>Review the Day 2 Hour 4 Checkpoint 1 expectations. Learners should already have a core model and service layer. Today's job is organization, not rebuilding the model from scratch.</li>
+<li>Prepare a small before-and-after folder sketch on the board:</li>
+</ul>
+<pre><code class="language-text">Before:
+project_root/
+    models.py
+    services.py
+    exceptions.py
+    demo.py
+
+After for this hour:
+project_root/
+    src/
+        tracker/
+            __init__.py
+            exceptions.py
+            models.py
+            services.py
+            demo.py
+</code></pre>
+<ul>
+<li>Decide how to address learner naming differences. Use this sentence: "I will say <code>Task</code>, <code>TaskService</code>, <code>ValidationError</code>, <code>NotFoundError</code>, <code>to_dict()</code>, <code>models.py</code>, <code>services.py</code>, <code>exceptions.py</code>, and <code>config.py</code>. If your project uses <code>TaskRecord</code> or <code>TrackerRecord</code>, adapt the names while preserving the responsibilities."</li>
+<li>Confirm the terminal command for your room. Prefer <code>python -m src.tracker.demo</code>. If learners are on Windows and use the Python launcher, show <code>py -m src.tracker.demo</code> as a variant.</li>
+<li>Prepare to correct one subtle import issue early: <code>src/tracker/</code> is not the same as an installed package named <code>tracker</code>. Today we run through the <code>src.tracker.demo</code> module path because we have not introduced <code>pyproject.toml</code>, editable installs, or dependency packaging.</li>
+<li>If showing the optional environment variable, use Windows-friendly PowerShell syntax first:</li>
+</ul>
+<pre><code class="language-powershell">$env:TRACKER_DATA_DIR = &quot;data&quot;
+python -m src.tracker.demo
+$env:TRACKER_DATA_DIR = $null
+</code></pre>
+<p>You may briefly mention that macOS/Linux shells often use <code>export TRACKER_DATA_DIR=data</code>, but do not rely only on that syntax.</p>
+<p>Suggested board note:</p>
+<pre><code class="language-text">Today's rule:
+Run from project root:
+python -m src.tracker.demo
+
+Inside src/tracker/:
+from .models import Task
+from .exceptions import ValidationError
+
+Do not run package modules as loose files.
+</code></pre>
+<hr>
+<h2 id="opening-bridge-from-checkpoint-1-5-minutes">Opening Bridge from Checkpoint 1 (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Welcome back. At the end of Day 2, you reached an important checkpoint. You proved that your core tracker logic can stand on its own. You have a model, such as <code>Task</code>, <code>TaskRecord</code>, or <code>TrackerRecord</code>. You have service behavior, such as add, list, search, update, and delete. You have custom exceptions such as <code>ValidationError</code> and <code>NotFoundError</code>. You have a <code>to_dict()</code> helper so objects can become plain dictionaries. And, most importantly, you have a small demo that proves the core works."</p>
+<p>"That is a real milestone. Today we are not throwing that work away. We are giving it a professional home."</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Day 2 result: working core
+Day 3 Hour 1 goal: organized core
+</code></pre>
+<p>"A working core is necessary, but it is not enough for a growing application. If all of our code sits in the project root, the next features become more fragile. In the next hours we will add logging, safer file operations, decorators, and eventually GUI, database, API, testing, and packaging work. Each of those layers needs to find the core code reliably."</p>
+<p>"So today's question is not only, 'Does the code work?' The question is:"</p>
+<pre><code class="language-text">Can another part of the application import and use this code predictably?
+</code></pre>
+<p>"That is why project structure matters. Structure is not decoration. Structure is how we tell future readers, future tools, and future versions of ourselves where responsibilities live."</p>
+<p>Pause and ask:</p>
+<p>"Think about your checkpoint project. If I opened it right now, where would I find the model? Where would I find the service layer? Where would I find the demo? Would that be obvious to someone who did not write it?"</p>
+<p>Take two or three answers. Expect variation. Some learners may have everything in one file. Some may already have separate files. Some may have a folder but uncertain imports.</p>
+<p>Affirm:</p>
+<p>"All of those starting points are normal. The goal today is not to shame early structure. Early code often starts flat because that helps us learn the behavior. The goal now is to move from a learning shape to a growth shape."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's name the vocabulary first. Then I will show a careful restructure live. The important part is that the same demo still runs after the move."</p>
+<hr>
+<h2 id="outcomes-setup-and-vocabulary-5-minutes">Outcomes, Setup, and Vocabulary (5 minutes)</h2>
+<p>Use this section to make the terms concrete. Keep the language pragmatic.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"By the end of this hour, you should be able to organize your tracker core into a package and run it without import confusion. The target result is not fancy. It is stable."</p>
+<p>"Here is the vocabulary we need."</p>
+<p>"First, a <strong>module</strong> is a Python file. <code>models.py</code> is a module. <code>services.py</code> is a module. <code>demo.py</code> is a module."</p>
+<p>"Second, a <strong>package</strong> is a directory of modules that Python can treat as one organized unit. In today's structure, <code>tracker</code> is our package because it contains files such as <code>models.py</code>, <code>services.py</code>, and <code>__init__.py</code>."</p>
+<p>"Third, <code>__init__.py</code> is the file that marks <code>tracker</code> as a regular Python package for our purposes. It can be empty. That is fine. Do not turn it into a second application. Today, its job is simply to say, 'This directory is package code.'"</p>
+<p>"Fourth, <code>src</code> is a project organization folder. It keeps application code separate from project files such as <code>README.md</code>, notes, data folders, and later tests. In professional Python projects, <code>src</code> layout also helps avoid accidental imports from the wrong place. Today we are using a beginner-safe stepping stone version of that idea."</p>
+<p>Write or display:</p>
+<pre><code class="language-text">project_root/
+    src/
+        tracker/
+            __init__.py
+            models.py
+            services.py
+            exceptions.py
+            demo.py
+</code></pre>
+<p>"Fifth, an <strong>entry point</strong> is the code we run to start the program. Today our entry point is the demo module, <code>src/tracker/demo.py</code>, but we do not run it as a loose file. We run it as a module from the project root:"</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>"If you use the Windows Python launcher, this is also acceptable:"</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+</code></pre>
+<p>"Sixth, an <strong>absolute import</strong> names the full import path from a location Python knows how to search. Later, after packaging is configured, you may see imports like <code>from tracker.services import TaskService</code>. Today we are not doing that because we have not installed the package and we have not configured packaging."</p>
+<p>"Seventh, a <strong>relative import</strong> uses dots to import from nearby modules inside the same package. Inside <code>src/tracker/services.py</code>, we can write:"</p>
+<pre><code class="language-python">from .models import Task
+from .exceptions import NotFoundError
+</code></pre>
+<p>"The dot means 'from this package.' This is practical inside the package because <code>services.py</code>, <code>models.py</code>, and <code>exceptions.py</code> live together."</p>
+<p>"Finally, <strong>config</strong> means values that guide the application but are not the main business logic. Examples include <code>DATA_DIR</code>, <code>DB_PATH</code>, a default file name, or a log directory. Today we keep config light: constants in <code>config.py</code>, with an optional environment variable for one value."</p>
+<p><strong>Transition</strong></p>
+<p>"Now let's connect those terms to the real decisions that prevent import errors."</p>
+<hr>
+<h2 id="concept-briefing-structure-imports-and-config-12-minutes">Concept Briefing: Structure, Imports, and Config (12 minutes)</h2>
+<h3 id="1-why-use-srctracker">1. Why use <code>src/tracker/</code>?</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"A flat project can be perfectly fine for a one-file exercise. But our capstone is no longer a one-file exercise. It is becoming an application with layers."</p>
+<p>"A clean structure gives each layer a place to live. The package name, <code>tracker</code>, tells us this is the application core. The module names tell us the responsibilities:"</p>
+<pre><code class="language-text">models.py      domain objects such as Task
+services.py    operations such as add, list, update, delete
+exceptions.py  custom exceptions such as ValidationError and NotFoundError
+demo.py        small runnable proof that the package works
+config.py      optional constants such as DATA_DIR and DB_PATH
+</code></pre>
+<p>"This organization helps humans first. A new reader can find the model without scanning a giant script. A future GUI can import the service without copying code. A future API can call the same service. A future test can target one module."</p>
+<p>"The organization also helps Python tools. Tools such as linters, test runners, and packaging systems expect code to have a consistent location. We are not going deep into those tools today, but we are preparing for them."</p>
+<h3 id="2-the-import-rule-for-this-hour">2. The import rule for this hour</h3>
+<p>"Here is the safest import rule for today's project:"</p>
+<pre><code class="language-text">Inside src/tracker/, use relative imports.
+Run the demo from the project root with python -m src.tracker.demo.
+</code></pre>
+<p>"For example, <code>services.py</code> should not need to guess where <code>models.py</code> is. They are siblings inside the same package. So <code>services.py</code> can say:"</p>
+<pre><code class="language-python">from .models import Task
+</code></pre>
+<p>"That is different from:"</p>
+<pre><code class="language-python">from models import Task
+</code></pre>
+<p>"The second version sometimes works when files are flat and you run from one exact folder. Then it breaks after the move because Python is no longer searching the same place in the same way. Beginner projects often accumulate imports that work only by accident. We want imports that work because the structure is clear."</p>
+<p>"It is also different from:"</p>
+<pre><code class="language-python">from tracker.models import Task
+</code></pre>
+<p>"That import is common in installed packages, and later packaging work may make it appropriate. But in this hour, we are not introducing <code>pyproject.toml</code>, editable installs, or changing <code>PYTHONPATH</code>. If we store code in <code>src/tracker/</code> and have not installed it, a root script that says <code>from tracker.models import Task</code> often fails because Python does not automatically treat <code>src</code> as the top of installed packages. To avoid teaching a broken half-step, we will use <code>python -m src.tracker.demo</code> and relative imports inside the package."</p>
+<h3 id="3-why-python-m-matters">3. Why <code>python -m</code> matters</h3>
+<p>"The <code>-m</code> flag tells Python: run this module by its import path, not as a random loose file. That matters for relative imports."</p>
+<p>"When we run:"</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>"from the project root, Python understands that <code>demo.py</code> belongs to the <code>src.tracker</code> package path. Then <code>demo.py</code> can use imports such as:"</p>
+<pre><code class="language-python">from .services import TaskService
+from .exceptions import ValidationError
+</code></pre>
+<p>"If we instead run:"</p>
+<pre><code class="language-powershell">python src/tracker/demo.py
+</code></pre>
+<p>"Python treats <code>demo.py</code> more like a standalone script. The package context can be missing, and relative imports may fail with a message like 'attempted relative import with no known parent package.' The file did not become bad. We ran it the wrong way."</p>
+<p>Use this phrase:</p>
+<pre><code class="language-text">Package modules should be run as package modules.
+</code></pre>
+<h3 id="4-common-import-pitfalls">4. Common import pitfalls</h3>
+<p>"There are three big pitfalls I want you to notice before they happen."</p>
+<p>"First, <strong>circular imports</strong>. A circular import happens when two modules depend on each other during import time. For example, <code>models.py</code> imports <code>TaskService</code>, and <code>services.py</code> imports <code>Task</code>. Python begins loading <code>models.py</code>, then jumps to <code>services.py</code>, then jumps back to a half-loaded <code>models.py</code>. The result can be confusing errors."</p>
+<p>"A good rule is: models should usually not import services. Models define the data and validation rules. Services use models. The dependency should mostly point one way:"</p>
+<pre><code class="language-text">services.py -&gt; models.py
+services.py -&gt; exceptions.py
+models.py -&gt; exceptions.py
+demo.py -&gt; services.py
+demo.py -&gt; exceptions.py
+</code></pre>
+<p>"Second, <strong>running the wrong entry file</strong>. If relative imports fail, check the command before rewriting all the code. Are you in the project root? Did you run <code>python -m src.tracker.demo</code> exactly?"</p>
+<p>"Third, <strong>naming collisions</strong>. Do not name your files after standard library modules. A file named <code>logging.py</code>, <code>json.py</code>, <code>email.py</code>, <code>pathlib.py</code>, or <code>sqlite3.py</code> can shadow the real standard library module. Then imports fail in surprising ways."</p>
+<h3 id="5-light-configuration">5. Light configuration</h3>
+<p>"Configuration is another small cleanup. If <code>services.py</code> hard-codes a path such as <code>'C:/Users/MyName/Desktop/tracker/data/tasks.json'</code>, the project will probably fail on someone else's computer. Even a relative string like <code>'data/tasks.json'</code> can become duplicated in several files."</p>
+<p>"A light <code>config.py</code> gives those values one home:"</p>
+<pre><code class="language-python">from pathlib import Path
+
+DATA_DIR = Path(&quot;data&quot;)
+DB_PATH = DATA_DIR / &quot;tracker.db&quot;
+</code></pre>
+<p>"If we want a little flexibility, we can read an environment variable:"</p>
+<pre><code class="language-python">import os
+from pathlib import Path
+
+DATA_DIR = Path(os.environ.get(&quot;TRACKER_DATA_DIR&quot;, &quot;data&quot;))
+DB_PATH = DATA_DIR / &quot;tracker.db&quot;
+</code></pre>
+<p>"On Windows PowerShell, setting that environment variable for the current terminal looks like this:"</p>
+<pre><code class="language-powershell">$env:TRACKER_DATA_DIR = &quot;data&quot;
+python -m src.tracker.demo
+</code></pre>
+<p>"This is intentionally light. We are not building a secrets manager or deployment system. We are learning the habit of centralizing values that multiple modules need."</p>
+<p><strong>Transition</strong></p>
+<p>"Now I will do the restructure live. Watch for two things: I move files first, then I update imports, then I run the exact module command from the project root."</p>
+<hr>
+<h2 id="live-demo-move-the-core-into-srctracker-10-minutes">Live Demo: Move the Core into <code>src/tracker/</code> (10 minutes)</h2>
+<h3 id="demo-framing">Demo framing</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"I am going to start from the checkpoint shape. Your exact project may differ, but the responsibilities should look familiar. I have a model called <code>Task</code>, a service called <code>TaskService</code>, custom exceptions, and a demo. If your code uses <code>TaskRecord</code> or <code>TrackerRecord</code>, adapt the names. Do not rename good code just to match mine."</p>
+<p>"The before shape is:"</p>
+<pre><code class="language-text">project_root/
+    exceptions.py
+    models.py
+    services.py
+    demo.py
+</code></pre>
+<p>"The after shape for this hour is:"</p>
+<pre><code class="language-text">project_root/
+    src/
+        tracker/
+            __init__.py
+            exceptions.py
+            models.py
+            services.py
+            demo.py
+</code></pre>
+<p>"The behavior should not change. We are changing the address of the code and the imports that connect it."</p>
+<h3 id="step-1-create-the-package-folders">Step 1: Create the package folders</h3>
+<p>Narrate while creating the folders in the editor or terminal:</p>
+<pre><code class="language-powershell">mkdir src
+mkdir src\tracker
+New-Item -ItemType File src\tracker\__init__.py
+</code></pre>
+<p>If a learner uses macOS/Linux syntax later, they can use <code>mkdir -p src/tracker</code> and <code>touch src/tracker/__init__.py</code>, but keep the live demo Windows-friendly if the room is Windows-based.</p>
+<p>Say:</p>
+<p>"The <code>__init__.py</code> file can be empty. Empty is not a problem. Empty means the package exists and we are not adding surprise behavior at import time."</p>
+<h3 id="step-2-move-the-core-files">Step 2: Move the core files</h3>
+<p>Move:</p>
+<pre><code class="language-text">exceptions.py -&gt; src/tracker/exceptions.py
+models.py     -&gt; src/tracker/models.py
+services.py   -&gt; src/tracker/services.py
+demo.py       -&gt; src/tracker/demo.py
+</code></pre>
+<p>Say:</p>
+<p>"I am moving the demo inside the package for this hour because that lets us use one consistent execution command: <code>python -m src.tracker.demo</code>. Later in a fully packaged project, you might have a root command, console script, or installed package import. Not today."</p>
+<h3 id="step-3-update-exceptionspy">Step 3: Update <code>exceptions.py</code></h3>
+<p>Show a compact version:</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when task data violates a domain rule.&quot;&quot;&quot;
+
+
+class NotFoundError(Exception):
+    &quot;&quot;&quot;Raised when a requested task does not exist.&quot;&quot;&quot;
+</code></pre>
+<p>Say:</p>
+<p>"Exceptions usually do not need imports from the rest of the package. That makes them safe to import from both models and services."</p>
+<h3 id="step-4-update-modelspy">Step 4: Update <code>models.py</code></h3>
+<p>Show:</p>
+<pre><code class="language-python">from .exceptions import ValidationError
+
+
+class Task:
+    VALID_PRIORITIES = {&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;}
+
+    def __init__(self, task_id: int, title: str, priority: str = &quot;medium&quot;) -&gt; None:
+        cleaned_title = title.strip()
+        cleaned_priority = priority.strip().lower()
+
+        if not cleaned_title:
+            raise ValidationError(&quot;Task title cannot be empty.&quot;)
+
+        if cleaned_priority not in self.VALID_PRIORITIES:
+            raise ValidationError(
+                f&quot;Priority must be one of: {sorted(self.VALID_PRIORITIES)}&quot;
+            )
+
+        self.task_id = task_id
+        self.title = cleaned_title
+        self.priority = cleaned_priority
+        self.completed = False
+
+    def mark_complete(self) -&gt; None:
+        self.completed = True
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {
+            &quot;task_id&quot;: self.task_id,
+            &quot;title&quot;: self.title,
+            &quot;priority&quot;: self.priority,
+            &quot;completed&quot;: self.completed,
+        }
+
+    def __repr__(self) -&gt; str:
+        return (
+            &quot;Task(&quot;
+            f&quot;task_id={self.task_id!r}, &quot;
+            f&quot;title={self.title!r}, &quot;
+            f&quot;priority={self.priority!r}, &quot;
+            f&quot;completed={self.completed!r}&quot;
+            &quot;)&quot;
+        )
+</code></pre>
+<p>Say:</p>
+<p>"Notice the import: <code>from .exceptions import ValidationError</code>. The dot matters. It tells Python that <code>exceptions.py</code> is a sibling module in the same package. I am not writing <code>from exceptions import ValidationError</code> anymore because this is no longer flat script code."</p>
+<h3 id="step-5-update-servicespy">Step 5: Update <code>services.py</code></h3>
+<p>Show:</p>
+<pre><code class="language-python">from .exceptions import NotFoundError, ValidationError
+from .models import Task
+
+
+class TaskService:
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+
+    def add(self, task: Task) -&gt; None:
+        if task.task_id in self._tasks:
+            raise ValidationError(f&quot;Task {task.task_id} already exists.&quot;)
+        self._tasks[task.task_id] = task
+
+    def list_all(self) -&gt; list[Task]:
+        return list(self._tasks.values())
+
+    def get(self, task_id: int) -&gt; Task:
+        try:
+            return self._tasks[task_id]
+        except KeyError as exc:
+            raise NotFoundError(f&quot;Task {task_id} was not found.&quot;) from exc
+
+    def mark_complete(self, task_id: int) -&gt; Task:
+        task = self.get(task_id)
+        task.mark_complete()
+        return task
+</code></pre>
+<p>Say:</p>
+<p>"Again, the imports are relative because these modules live together. Also notice the dependency direction: service imports model; model does not import service. That helps avoid circular imports."</p>
+<h3 id="step-6-update-demopy">Step 6: Update <code>demo.py</code></h3>
+<p>Show:</p>
+<pre><code class="language-python">from .exceptions import NotFoundError, ValidationError
+from .models import Task
+from .services import TaskService
+
+
+def run_demo() -&gt; None:
+    service = TaskService()
+
+    service.add(Task(1, &quot;Organize project&quot;, &quot;high&quot;))
+    service.add(Task(2, &quot;Add logging next&quot;, &quot;medium&quot;))
+    service.mark_complete(1)
+
+    print(&quot;Current tasks:&quot;)
+    for task in service.list_all():
+        print(task.to_dict())
+
+    try:
+        service.get(99)
+    except NotFoundError as exc:
+        print(f&quot;Expected missing task error: {exc}&quot;)
+
+    try:
+        service.add(Task(3, &quot;   &quot;, &quot;low&quot;))
+    except ValidationError as exc:
+        print(f&quot;Expected validation error: {exc}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    run_demo()
+</code></pre>
+<p>Say:</p>
+<p>"This demo proves the package still works. It uses the model, the service, both custom exceptions, and <code>to_dict()</code>. It also catches expected errors at the caller boundary. The service raises; the demo decides how to print."</p>
+<h3 id="step-7-run-from-the-project-root">Step 7: Run from the project root</h3>
+<p>Show and run:</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>Windows launcher variant:</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+</code></pre>
+<p>Expected output will be similar to:</p>
+<pre><code class="language-text">Current tasks:
+{'task_id': 1, 'title': 'Organize project', 'priority': 'high', 'completed': True}
+{'task_id': 2, 'title': 'Add logging next', 'priority': 'medium', 'completed': False}
+Expected missing task error: Task 99 was not found.
+Expected validation error: Task title cannot be empty.
+</code></pre>
+<p>Say:</p>
+<p>"The validation instruction is simple: run this exact command from the project root. If it fails, read the error before changing code. The first questions are: Am I in the project root? Did I use <code>-m</code>? Are the imports inside the package relative? Is <code>__init__.py</code> present in <code>src/tracker/</code>?"</p>
+<h3 id="optional-live-add-on-configpy">Optional live add-on: <code>config.py</code></h3>
+<p>If time allows, add:</p>
+<pre><code class="language-python">import os
+from pathlib import Path
+
+DATA_DIR = Path(os.environ.get(&quot;TRACKER_DATA_DIR&quot;, &quot;data&quot;))
+DB_PATH = DATA_DIR / &quot;tracker.db&quot;
+</code></pre>
+<p>Then mention:</p>
+<p>"This does not connect to a database yet. <code>DB_PATH</code> is just a central constant we can use later. The value lives in one place instead of being copied through the code."</p>
+<p>Show PowerShell syntax:</p>
+<pre><code class="language-powershell">$env:TRACKER_DATA_DIR = &quot;data&quot;
+python -m src.tracker.demo
+$env:TRACKER_DATA_DIR = $null
+</code></pre>
+<p><strong>Transition</strong></p>
+<p>"Now it is your turn. Your lab goal is not to copy my exact <code>Task</code> class. Your lab goal is to move your working core into the package shape and prove the demo still runs."</p>
+<hr>
+<h2 id="guided-lab-restructure-your-tracker-25-minutes">Guided Lab: Restructure Your Tracker (25 minutes)</h2>
+<h3 id="lab-prompt">Lab prompt</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"For the next 25 minutes, restructure your checkpoint project. Start with your working code. If your code was not fully complete at the checkpoint, still use the best current version. The focus is package structure and imports."</p>
+<p>"Your target structure is:"</p>
+<pre><code class="language-text">project_root/
+    src/
+        tracker/
+            __init__.py
+            exceptions.py
+            models.py
+            services.py
+            demo.py
+</code></pre>
+<p>"Adapt names if needed. If your project uses <code>TaskRecord</code> instead of <code>Task</code>, keep it. If your service is called <code>TrackerService</code> instead of <code>TaskService</code>, keep it. The required responsibilities are model, service, exceptions, and runnable demo."</p>
+<h3 id="required-lab-steps">Required lab steps</h3>
+<ol>
+<li>Create the package folder.</li>
+</ol>
+<pre><code class="language-powershell">mkdir src
+mkdir src\tracker
+New-Item -ItemType File src\tracker\__init__.py
+</code></pre>
+<p>If the files or folders already exist, learners can skip or use the editor to create missing pieces.</p>
+<ol start="2">
+<li>Move existing files into the package.</li>
+</ol>
+<pre><code class="language-text">models.py -&gt; src/tracker/models.py
+services.py -&gt; src/tracker/services.py
+exceptions.py -&gt; src/tracker/exceptions.py
+demo.py -&gt; src/tracker/demo.py
+</code></pre>
+<p>If learners currently have one large file, give this adaptation:</p>
+<p>"Move the model class into <code>models.py</code>, the service class or service functions into <code>services.py</code>, custom exceptions into <code>exceptions.py</code>, and the runnable example into <code>demo.py</code>. Do not perfect every design detail during this lab. Make the responsibilities visible first."</p>
+<ol start="3">
+<li>Update package-internal imports.</li>
+</ol>
+<p>Examples:</p>
+<pre><code class="language-python">from .models import Task
+from .services import TaskService
+from .exceptions import ValidationError, NotFoundError
+</code></pre>
+<p>Common replacements:</p>
+<pre><code class="language-text">from models import Task
+becomes
+from .models import Task
+
+from exceptions import ValidationError
+becomes
+from .exceptions import ValidationError
+</code></pre>
+<ol start="4">
+<li>Confirm dependency direction.</li>
+</ol>
+<p>Use this quick map:</p>
+<pre><code class="language-text">models.py should not import services.py
+services.py may import models.py
+models.py and services.py may import exceptions.py
+demo.py may import models.py, services.py, and exceptions.py
+</code></pre>
+<ol start="5">
+<li>Run the demo from the project root.</li>
+</ol>
+<p>Required validation command:</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>Windows launcher variant:</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+</code></pre>
+<p>Tell learners:</p>
+<p>"Do not validate this lab by running <code>python src/tracker/demo.py</code>. That may fail even when your package is correct, because it runs the file outside the package context. Use the exact module command."</p>
+<ol start="6">
+<li>Confirm the demo behavior.</li>
+</ol>
+<p>Minimum evidence:</p>
+<ul>
+<li>At least one valid <code>Task</code> or equivalent model is created.</li>
+<li>The service adds and lists records.</li>
+<li>At least one <code>to_dict()</code> result is shown or inspected.</li>
+<li>A missing record path raises or catches <code>NotFoundError</code>.</li>
+<li>An invalid input path raises or catches <code>ValidationError</code>.</li>
+<li>The demo command exits without an import error.</li>
+</ul>
+<h3 id="optional-extension-add-configpy">Optional extension: add <code>config.py</code></h3>
+<p>If learners finish early, ask them to add:</p>
+<pre><code class="language-python">import os
+from pathlib import Path
+
+DATA_DIR = Path(os.environ.get(&quot;TRACKER_DATA_DIR&quot;, &quot;data&quot;))
+DB_PATH = DATA_DIR / &quot;tracker.db&quot;
+</code></pre>
+<p>Then import it where useful:</p>
+<pre><code class="language-python">from .config import DATA_DIR, DB_PATH
+</code></pre>
+<p>Suggested light use in <code>demo.py</code>:</p>
+<pre><code class="language-python">from .config import DATA_DIR, DB_PATH
+
+
+def show_config() -&gt; None:
+    print(f&quot;Data directory: {DATA_DIR}&quot;)
+    print(f&quot;Database path: {DB_PATH}&quot;)
+</code></pre>
+<p>Keep the extension limited:</p>
+<p>"Do not build a database layer right now. Do not add deployment settings. Do not introduce a config framework. The extension is only to centralize constants."</p>
+<h3 id="instructor-circulation-guide">Instructor circulation guide</h3>
+<p>As learners work, circulate with these prompts:</p>
+<ul>
+<li>"Show me the command you are using to run the demo."</li>
+<li>"Which file imports <code>Task</code>?"</li>
+<li>"Does <code>models.py</code> import <code>services.py</code>? If yes, can we reverse that dependency?"</li>
+<li>"Is <code>__init__.py</code> present in <code>src/tracker/</code>?"</li>
+<li>"Are you importing with <code>from .models import ...</code> inside the package?"</li>
+<li>"Did any file get named <code>logging.py</code>, <code>json.py</code>, <code>email.py</code>, <code>pathlib.py</code>, or <code>sqlite3.py</code>?"</li>
+<li>"What changed: behavior, or only structure and imports?"</li>
+</ul>
+<p>Use this intervention when a learner has a <code>ModuleNotFoundError</code>:</p>
+<ol>
+<li>Ask them not to change code yet.</li>
+<li>Ask them to show the current working directory.</li>
+<li>Ask them to show the exact command.</li>
+<li>Ask them to show the failing import line.</li>
+<li>Decide whether the problem is command context, missing file, missing <code>__init__.py</code>, spelling/case mismatch, or inconsistent import style.</li>
+</ol>
+<p>Say:</p>
+<p>"Import errors are feedback about how Python is finding code. Do not randomly add folders to <code>sys.path</code>. First make the structure and command consistent."</p>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>Learners are done when:</p>
+<ul>
+<li><code>src/tracker/__init__.py</code> exists.</li>
+<li><code>models.py</code> and <code>services.py</code> are inside <code>src/tracker/</code>.</li>
+<li>Custom exceptions are available from <code>src/tracker/exceptions.py</code> or an equivalent package module.</li>
+<li>Imports inside <code>src/tracker/</code> are clean and consistent, preferably relative imports.</li>
+<li>The project runs after restructure using <code>python -m src.tracker.demo</code> from the project root.</li>
+<li>The demo still proves the core behavior from Checkpoint 1.</li>
+<li>No module is named after a standard library package.</li>
+<li>Optional: <code>config.py</code> contains simple constants such as <code>DATA_DIR</code> and <code>DB_PATH</code>.</li>
+</ul>
+<h3 id="if-learners-finish-early">If learners finish early</h3>
+<p>Give one of these small extensions:</p>
+<ol>
+<li>Add <code>config.py</code> with <code>DATA_DIR</code> and <code>DB_PATH</code>.</li>
+<li>Add a short package comment to <code>__init__.py</code>, such as a one-line docstring.</li>
+<li>Improve the demo output so it clearly labels happy path and expected error path.</li>
+<li>Add one more deterministic service operation to the demo, such as mark complete or delete.</li>
+</ol>
+<p>Do not let fast finishers jump into publishing packages, full packaging metadata, dependency managers, or deployment. Keep the hour scoped.</p>
+<hr>
+<h2 id="quick-checks-pitfalls-and-wrap-up-3-minutes">Quick Checks, Pitfalls, and Wrap-Up (3 minutes)</h2>
+<h3 id="quick-check">Quick check</h3>
+<p>Ask:</p>
+<p>"What usually causes <code>ModuleNotFoundError</code> in student projects when they start restructuring?"</p>
+<p>Expected answers:</p>
+<ul>
+<li>Running from the wrong directory.</li>
+<li>Running the wrong entry file, such as <code>python src/tracker/demo.py</code> instead of <code>python -m src.tracker.demo</code>.</li>
+<li>Using flat imports like <code>from models import Task</code> after files moved into a package.</li>
+<li>Forgetting <code>src/tracker/__init__.py</code>.</li>
+<li>Spelling or capitalization mismatch in file names or package names.</li>
+<li>Naming a module after a standard library module.</li>
+<li>Assuming <code>from tracker...</code> works even though the package has not been installed and packaging has not been configured.</li>
+</ul>
+<p>Affirm:</p>
+<p>"Good. The big habit is to check the command, the working directory, and the import style before rewriting the application."</p>
+<h3 id="pitfall-review">Pitfall review</h3>
+<p>Use this table quickly:</p>
+<table>
+<thead>
+<tr>
+<th>Pitfall</th>
+<th>Symptom</th>
+<th>Fix for this hour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Circular imports</td>
+<td>Partially initialized module errors or imports that fail unpredictably</td>
+<td>Keep dependencies one-way: services use models; models do not use services</td>
+</tr>
+<tr>
+<td>Running the wrong entry file</td>
+<td>Relative import error or no known parent package</td>
+<td>Run from project root with <code>python -m src.tracker.demo</code></td>
+</tr>
+<tr>
+<td>Flat imports after moving files</td>
+<td><code>ModuleNotFoundError: No module named 'models'</code></td>
+<td>Use <code>from .models import Task</code> inside <code>src/tracker/</code></td>
+</tr>
+<tr>
+<td>Standard library name collision</td>
+<td><code>import logging</code> or <code>import json</code> behaves strangely</td>
+<td>Rename local files that shadow standard library modules</td>
+</tr>
+<tr>
+<td>Over-scoping config</td>
+<td>Learners start building deployment settings or secret systems</td>
+<td>Keep <code>config.py</code> to constants such as <code>DATA_DIR</code> and <code>DB_PATH</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="closing-bridge-to-day-3-hour-2">Closing bridge to Day 3 Hour 2</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Today we did a quiet but important professional move. We did not add a flashy new feature. We made the existing core easier to find, easier to import, and easier to grow. That matters because the next hour adds logging and error reporting."</p>
+<p>"Logging works best when the project has a predictable shape. If services live in <code>services.py</code>, we know where service logs belong. If custom exceptions live in <code>exceptions.py</code>, we know what errors we are reporting. If the demo runs as a module, we can trigger success and failure paths consistently."</p>
+<p>"So the bridge is:"</p>
+<pre><code class="language-text">Clean structure makes clean diagnostics possible.
+</code></pre>
+<p>"Next hour, we will add practical logging. We will use levels such as DEBUG, INFO, WARNING, and ERROR. We will log service events and expected errors without dumping confusing stack traces on end users. The structure you created today gives that logging work a stable place to attach."</p>
+<h3 id="exit-ticket">Exit ticket</h3>
+<p>Ask learners to write or say one sentence:</p>
+<p>"What import or structure rule will you check first the next time you see <code>ModuleNotFoundError</code>?"</p>
+<p>Collect two or three answers if time allows. End with:</p>
+<p>"For now, your validation command is still the same: from the project root, run <code>python -m src.tracker.demo</code>. If that works, you have completed the core restructure for this hour."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-checkpoint-1-5-minutes" class="depth-2">Opening Bridge from Checkpoint 1 (5 minutes)</a></li>
+<li><a href="#outcomes-setup-and-vocabulary-5-minutes" class="depth-2">Outcomes, Setup, and Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-structure-imports-and-config-12-minutes" class="depth-2">Concept Briefing: Structure, Imports, and Config (12 minutes)</a></li>
+<li><a href="#1-why-use-srctracker" class="depth-3">1. Why use src/tracker/?</a></li>
+<li><a href="#2-the-import-rule-for-this-hour" class="depth-3">2. The import rule for this hour</a></li>
+<li><a href="#3-why-python-m-matters" class="depth-3">3. Why python -m matters</a></li>
+<li><a href="#4-common-import-pitfalls" class="depth-3">4. Common import pitfalls</a></li>
+<li><a href="#5-light-configuration" class="depth-3">5. Light configuration</a></li>
+<li><a href="#live-demo-move-the-core-into-srctracker-10-minutes" class="depth-2">Live Demo: Move the Core into src/tracker/ (10 minutes)</a></li>
+<li><a href="#demo-framing" class="depth-3">Demo framing</a></li>
+<li><a href="#step-1-create-the-package-folders" class="depth-3">Step 1: Create the package folders</a></li>
+<li><a href="#step-2-move-the-core-files" class="depth-3">Step 2: Move the core files</a></li>
+<li><a href="#step-3-update-exceptionspy" class="depth-3">Step 3: Update exceptions.py</a></li>
+<li><a href="#step-4-update-modelspy" class="depth-3">Step 4: Update models.py</a></li>
+<li><a href="#step-5-update-servicespy" class="depth-3">Step 5: Update services.py</a></li>
+<li><a href="#step-6-update-demopy" class="depth-3">Step 6: Update demo.py</a></li>
+<li><a href="#step-7-run-from-the-project-root" class="depth-3">Step 7: Run from the project root</a></li>
+<li><a href="#optional-live-add-on-configpy" class="depth-3">Optional live add-on: config.py</a></li>
+<li><a href="#guided-lab-restructure-your-tracker-25-minutes" class="depth-2">Guided Lab: Restructure Your Tracker (25 minutes)</a></li>
+<li><a href="#lab-prompt" class="depth-3">Lab prompt</a></li>
+<li><a href="#required-lab-steps" class="depth-3">Required lab steps</a></li>
+<li><a href="#optional-extension-add-configpy" class="depth-3">Optional extension: add config.py</a></li>
+<li><a href="#instructor-circulation-guide" class="depth-3">Instructor circulation guide</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#if-learners-finish-early" class="depth-3">If learners finish early</a></li>
+<li><a href="#quick-checks-pitfalls-and-wrap-up-3-minutes" class="depth-2">Quick Checks, Pitfalls, and Wrap-Up (3 minutes)</a></li>
+<li><a href="#quick-check" class="depth-3">Quick check</a></li>
+<li><a href="#pitfall-review" class="depth-3">Pitfall review</a></li>
+<li><a href="#closing-bridge-to-day-3-hour-2" class="depth-3">Closing bridge to Day 3 Hour 2</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit ticket</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day3_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour4_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

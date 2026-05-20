@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 8, Hour 1: Optional ORM Slice or Deeper SQL Practice | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="8">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day8_Hour1_Advanced.md">
+
+    <link rel="prev" href="Day7_Hour4_Advanced.html">
+    <link rel="next" href="Day8_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="8" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-08/index.html">Day 8</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 8, Hour 1: Optional ORM Slice or Deeper SQL Practice</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 8</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day8_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Advanced - Session 8</strong></p>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<p><strong>Total Time:</strong> 60 minutes<br>
+- Reconnect to the data-driven app milestone: 5 minutes<br>
+- Direct instruction on abstraction choices: 15 minutes<br>
+- Live demo of two valid paths: 10 minutes<br>
+- Guided build time: 25 minutes<br>
+- Debrief, tradeoffs, and exit ticket: 5 minutes</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, learners will be able to:
+1. Explain in plain language what an ORM is and what problem it is trying to solve
+2. Compare an ORM-based approach with a deeper SQL approach without treating either as "the one right answer"
+3. Implement one practical extension to the SQLite-backed tracker application
+4. Describe the tradeoff between convenience and transparency when choosing a data-access layer
+5. Stay within the course scope by using either a tiny SQLAlchemy example or a focused SQL summary query</p>
+<hr>
+<h2 id="instructor-prep-notes">Instructor Prep Notes</h2>
+<ul>
+<li>Default capstone example: a tracker app with records containing <code>id</code>, <code>title</code>, <code>category</code>, <code>status</code>, <code>priority</code>, and <code>created_at</code></li>
+<li>Primary path for most cohorts: deeper SQL practice with aggregates and grouped summaries</li>
+<li>Optional path only if the lab supports package installs cleanly: a very small SQLAlchemy model and one or two queries</li>
+<li>Keep the tone pragmatic: this is an exposure hour, not an ORM mastery hour</li>
+<li>Reassure learners that either path satisfies the runbook objective</li>
+<li>Have the existing SQLite database ready with at least 10-20 seed rows so grouped queries are meaningful</li>
+</ul>
+<hr>
+<h2 id="section-1-reconnect-to-yesterdays-momentum-5-minutes">Section 1: Reconnect to Yesterday's Momentum (5 minutes)</h2>
+<h3 id="opening-framing">Opening Framing</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome back. We now have a data-driven application, which is a big step forward. Up to this point, we have spent time thinking carefully about models, services, repositories, SQLite, and safe CRUD behavior. Today we are not starting over. Today we are extending the same architecture and becoming more intentional about how we talk to the database.</p>
+<p>This hour is a fork in the road by design, and that is a good thing. Some environments support a tiny ORM experiment. Some do not. Some learners benefit from seeing a higher-level abstraction. Others benefit more from getting better at raw SQL. The runbook gives us permission to choose either one because the real learning outcome is not "memorize SQLAlchemy syntax." The real learning outcome is: understand what you gain, what you lose, and how to keep your app maintainable.</p>
+<p>When students hear "optional ORM slice," they sometimes assume the ORM path is more advanced and therefore automatically better. I want you to actively push against that assumption. A small app with clean SQL can be excellent. An ORM can be helpful, but it can also hide details that beginners still need to see. So our message today is simple: use the right level of abstraction for the team, the lab, and the project.</p>
+<h3 id="why-this-hour-matters">Why This Hour Matters</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Yesterday we translated objects into tables and tables back into objects. That mapping work is exactly where ORMs try to help. If we do not use an ORM, then we should still deepen our SQL enough to answer practical questions such as:</p>
+<ul>
+<li>How many records are in each status?</li>
+<li>Which categories are growing fastest?</li>
+<li>Which priorities are most common this week?</li>
+<li>How do we summarize data without exporting it first?</li>
+</ul>
+<p>That is why both tracks belong in the same hour. One path explores a tool that automates object-to-table mapping. The other path sharpens the SQL skills that every Python developer benefits from, even if they later use an ORM professionally.</p>
+<h3 id="message-to-learners">Message to Learners</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>I want you to hear this clearly: you do not need to finish both tracks. You need to complete one track well, explain the tradeoffs clearly, and keep your application stable. Stability beats novelty every time in a course project.</p>
+<hr>
+<h2 id="section-2-core-concept-walkthrough-15-minutes">Section 2: Core Concept Walkthrough (15 minutes)</h2>
+<h3 id="what-an-orm-does">What an ORM Does</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>ORM stands for Object-Relational Mapper. That name sounds bigger than it is. An ORM is a tool that helps Python objects and relational database tables speak to each other. Instead of hand-writing every SQL statement and then manually converting rows into Python objects, the ORM gives you a model class and an API for creating, querying, updating, and deleting data.</p>
+<p>At a high level, an ORM often gives you:</p>
+<ul>
+<li>Python classes that correspond to tables</li>
+<li>Fields on those classes that correspond to columns</li>
+<li>A session or unit-of-work object for database interaction</li>
+<li>Query methods that generate SQL under the hood</li>
+<li>Some validation or declarative metadata close to the model definition</li>
+</ul>
+<p>That can improve consistency. It can reduce repetitive SQL. It can make some refactors easier. But it also adds a new abstraction layer. If the abstraction is not understood, debugging becomes harder, not easier.</p>
+<h3 id="what-raw-sql-gives-you">What Raw SQL Gives You</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Raw SQL gives you direct control. You see the exact query. You see the parameters. You know exactly what runs against the database. For learners who are still building intuition, that transparency matters. SQL also travels well across languages and frameworks. Even if a learner later switches to another tech stack, the ability to reason about <code>SELECT</code>, <code>JOIN</code>, <code>GROUP BY</code>, <code>COUNT</code>, <code>LIMIT</code>, and <code>WHERE</code> will stay valuable.</p>
+<p>There is another practical reason to emphasize SQL: our course project is not trying to build a giant enterprise system. We are trying to build a solid, usable application with clear data rules. For that scale, SQLite plus clean SQL is often enough.</p>
+<h3 id="the-real-comparison">The Real Comparison</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is the comparison I want learners to remember:</p>
+<ul>
+<li>ORM advantage: less repetitive mapping code, potentially faster development for common patterns</li>
+<li>ORM disadvantage: more abstraction, package dependency, hidden SQL, and more concepts to learn</li>
+<li>SQL advantage: clarity, portability, low dependency footprint, easy to debug in small apps</li>
+<li>SQL disadvantage: more boilerplate and more manual row-to-object conversion</li>
+</ul>
+<p>This comparison is more honest than saying one is modern and the other is outdated. Both are modern. Both are useful. The right question is: "What helps this project and this team right now?"</p>
+<h3 id="scope-guardrails">Scope Guardrails</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Today is not the day for migration frameworks, lazy-loading debates, advanced relationships, session lifecycle deep dives, or schema-generation magic. If learners start chasing those topics, gently bring them back. We are doing a tiny slice, not a full ORM course.</p>
+<p>Likewise, if we stay on the SQL path, we are not trying to become database administrators in one hour. We are focusing on practical grouped summaries and safe query construction.</p>
+<h3 id="whiteboard-comparison">Whiteboard Comparison</h3>
+<p>You can draw the following on the board:</p>
+<pre><code class="language-text">UI/API -&gt; Service -&gt; Repository -&gt; SQLite
+
+Option A:
+UI/API -&gt; Service -&gt; ORM model/session -&gt; SQLite
+
+Option B:
+UI/API -&gt; Service -&gt; SQL repository -&gt; SQLite
+</code></pre>
+<p>Then narrate:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Notice what stays the same across both options: the service layer still matters, the repository idea still matters, and SQLite is still the source of truth. That architectural continuity is what protects us from chaos.</p>
+<hr>
+<h2 id="section-3-live-demo-10-minutes">Section 3: Live Demo (10 minutes)</h2>
+<h3 id="demo-track-a-tiny-sqlalchemy-slice">Demo Track A: Tiny SQLAlchemy Slice</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If the environment supports SQLAlchemy, I will show the smallest useful example I can. I am not trying to impress you with syntax. I am trying to show you the shape of the abstraction.</p>
+<pre><code class="language-python">from sqlalchemy import create_engine, Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class RecordRow(Base):
+    __tablename__ = &quot;records&quot;
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String)
+    category: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+
+
+engine = create_engine(&quot;sqlite:///data/tracker.db&quot;)
+
+with Session(engine) as session:
+    rows = session.query(RecordRow).all()
+    for row in rows:
+        print(row.id, row.title, row.status)
+</code></pre>
+<p>Now narrate what learners should notice:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The class is acting as a table description. The <code>Session</code> is our entry point for work with the database. The query returns Python objects with attributes. That is the convenience story in one screenful.</p>
+<p>But then ask the important question:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Would I replace my current repository with this right now, in the middle of the course, if the team is already succeeding with raw SQL? Maybe not. The tool is useful, but the timing matters.</p>
+<h3 id="demo-track-b-deeper-sql-practice">Demo Track B: Deeper SQL Practice</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now let me show the SQL path that every cohort can use without additional packages. We already have a <code>records</code> table. I want a status summary. Instead of loading every row and counting in Python, I can let the database do the grouping.</p>
+<pre><code class="language-python">import sqlite3
+
+
+def summarize_by_status(db_path: str) -&gt; list[tuple[str, int]]:
+    query = &quot;&quot;&quot;
+        SELECT status, COUNT(*) AS total
+        FROM records
+        GROUP BY status
+        ORDER BY total DESC, status ASC
+    &quot;&quot;&quot;
+    with sqlite3.connect(db_path) as connection:
+        cursor = connection.execute(query)
+        return cursor.fetchall()
+
+
+for status, total in summarize_by_status(&quot;data/tracker.db&quot;):
+    print(f&quot;{status}: {total}&quot;)
+</code></pre>
+<p>Then extend it slightly:</p>
+<pre><code class="language-python">def summarize_category_for_status(db_path: str, status: str) -&gt; list[tuple[str, int]]:
+    query = &quot;&quot;&quot;
+        SELECT category, COUNT(*) AS total
+        FROM records
+        WHERE status = ?
+        GROUP BY category
+        ORDER BY total DESC, category ASC
+    &quot;&quot;&quot;
+    with sqlite3.connect(db_path) as connection:
+        cursor = connection.execute(query, (status,))
+        return cursor.fetchall()
+</code></pre>
+<p>Explain the teaching point:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is still very readable. It is parameterized. It is practical. And it answers questions a stakeholder might actually ask. That is the kind of SQL skill that pays off immediately.</p>
+<h3 id="demo-debrief">Demo Debrief</h3>
+<p>Ask:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Which demo felt clearer to you? Which one felt faster to write? Which one would be easier for a new teammate to debug at 4 PM on a Friday?</p>
+<p>That question usually produces better thinking than, "Which one is more advanced?"</p>
+<hr>
+<h2 id="section-4-guided-build-and-lab-coaching-25-minutes">Section 4: Guided Build and Lab Coaching (25 minutes)</h2>
+<h3 id="lab-brief">Lab Brief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>For lab time, you will choose one path. Path A is the ORM mini-lab if the environment supports it. Path B is the SQL mini-lab. If you are undecided, choose Path B. It is the safer, more universal option and it directly improves your current application.</p>
+<h3 id="path-a-orm-mini-lab">Path A: ORM Mini-Lab</h3>
+<p>Learners should:</p>
+<ol>
+<li>Install SQLAlchemy only if lab policy and package support are confirmed</li>
+<li>Create one model class that represents the <code>records</code> table</li>
+<li>Open a session and list rows</li>
+<li>Explain how the ORM model maps to the table</li>
+<li>Write down one advantage and one disadvantage in their README or notes</li>
+</ol>
+<p>Coach with language like:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Do not rebuild your whole app around SQLAlchemy today. The target is exposure and explanation. If you can define one model, run one query, and explain the mapping, you have succeeded.</p>
+<h3 id="path-b-sql-mini-lab">Path B: SQL Mini-Lab</h3>
+<p>Learners should:</p>
+<ol>
+<li>Add one grouped summary query to the repository or reporting helper</li>
+<li>Print a useful summary such as records by status or records by category</li>
+<li>Keep the query parameterized if it accepts user input</li>
+<li>Add a small display or command-line output that proves the query works</li>
+<li>Capture the result in a <code>reports/</code> text file or console example for later demo use</li>
+</ol>
+<p>You can suggest a starting point:</p>
+<pre><code class="language-python">def summarize_by_category(self) -&gt; list[tuple[str, int]]:
+    query = &quot;&quot;&quot;
+        SELECT category, COUNT(*) AS total
+        FROM records
+        GROUP BY category
+        ORDER BY total DESC, category ASC
+    &quot;&quot;&quot;
+    with sqlite3.connect(self.db_path) as connection:
+        return connection.execute(query).fetchall()
+</code></pre>
+<p>Then ask learners to think one layer higher:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Where should this live? Inside the service layer? Inside the repository? In a separate reporting helper? There is not only one defensible answer, but there are bad answers. A bad answer is putting this query directly inside a GUI callback or a Flask route. Keep the separation clean.</p>
+<h3 id="circulation-talking-points">Circulation Talking Points</h3>
+<p>As you circulate, listen for these patterns:</p>
+<ul>
+<li>Learner tries to concatenate strings into SQL</li>
+<li>Learner starts a huge ORM refactor instead of a tiny slice</li>
+<li>Learner cannot explain what problem the new query answers</li>
+<li>Learner duplicates logic that should live in the repository</li>
+<li>Learner is building a summary in Python after fetching all rows unnecessarily</li>
+</ul>
+<p>Use short coaching nudges:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>What question is this query answering?</p>
+<p>Could the database do that count for you?</p>
+<p>If you swap storage later, which interface do you want to keep stable?</p>
+<p>Where would a teammate look first for this logic?</p>
+<h3 id="sample-instructor-walkthrough-for-a-stuck-learner">Sample Instructor Walkthrough for a Stuck Learner</h3>
+<p>If a learner is stuck, narrate a small recovery path:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's simplify. We do not need the perfect report. We need one summary that works. Start with a plain SQL query. Run it in a tiny script. Once the result is correct, move it into the repository. Then call it from a service or report helper. Stable, small, testable.</p>
+<p>If the learner is on the ORM path and losing time:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Pause the package exploration. Keep one model, one session, one read query. The success condition is understanding the idea, not replacing your whole codebase.</p>
+<hr>
+<h2 id="section-5-debrief-tradeoffs-and-exit-ticket-5-minutes">Section 5: Debrief, Tradeoffs, and Exit Ticket (5 minutes)</h2>
+<h3 id="group-debrief-prompts">Group Debrief Prompts</h3>
+<p>Invite two or three learners to share:</p>
+<ul>
+<li>What path did you choose?</li>
+<li>What question did your query or model help answer?</li>
+<li>What felt easier than expected?</li>
+<li>What felt more complex than you hoped?</li>
+</ul>
+<h3 id="common-pitfalls-to-name-explicitly">Common Pitfalls to Name Explicitly</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Before we move on, let me name the most common mistakes from this hour so you can recognize them quickly next time:</p>
+<ul>
+<li>Installing a new package without confirming the environment supports it</li>
+<li>Switching architecture mid-course because the abstraction looked exciting</li>
+<li>Writing unsafe SQL with string concatenation</li>
+<li>Creating reports in the UI layer instead of the repository or service layer</li>
+<li>Forgetting the difference between "interesting experiment" and "working project"</li>
+</ul>
+<h3 id="key-takeaway-script">Key Takeaway Script</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is the one sentence I want you to remember: abstraction is only helpful when it reduces confusion more than it adds confusion. That is the standard. Not trendiness. Not novelty. Clarity.</p>
+<h3 id="exit-ticket">Exit Ticket</h3>
+<p>Ask learners to answer out loud or in a chat message:</p>
+<ol>
+<li>Name one advantage of an ORM.</li>
+<li>Name one disadvantage of an ORM.</li>
+<li>If you stayed with SQL, what is one new kind of question your database can answer now?</li>
+</ol>
+<h3 id="transition-to-the-next-hour">Transition to the Next Hour</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>In the next hour we are going to do something even more important than choosing abstractions: we are going to wire the repository cleanly into the application so our service layer can swap storage backends without breaking the UI. That architectural discipline is what makes the rest of the capstone realistic.</p>
+<hr>
+<h2 id="instructor-coaching-appendix">Instructor Coaching Appendix</h2>
+<h3 id="whiteboard-plan-for-day-8">Whiteboard Plan for Day 8</h3>
+<p>Use this appendix to slow the class down and make the database-to-application relationship visible. Draw three boxes on the board labeled <code>service</code>, <code>repository</code>, and <code>database</code>. Under the service box, list the verbs the learner cares about: add, list, get, update, delete, search. Under the repository box, list the translation work: SQL statements, parameter binding, row mapping, commits, initialization. Under the database box, list the tables and constraints that make the information durable. Then say out loud that the whole day is about keeping those responsibilities separate so the application stays understandable.</p>
+<p>After drawing the three boxes, add arrows in both directions. Explain that reads flow from the database into rows, from rows into objects, and then into the service layer for the rest of the application. Writes flow the other way. This visual helps students stop imagining the database as magic storage and start imagining it as one layer in a system.</p>
+<p>When you reach Hour 29, add a note beside the repository box that says <code>raw SQL or ORM abstraction</code>. Explain that this is the day's controlled fork. The application still needs a stable service layer either way. In Hour 30, emphasize the arrow from the application entry point into the service constructor. In Hour 31, add <code>search, filter, limit, offset</code> near the repository box. In Hour 32, circle the entire diagram and say that the checkpoint is evaluating whether all three boxes cooperate cleanly.</p>
+<h3 id="listen-fors-during-guided-practice">Listen-Fors During Guided Practice</h3>
+<p>As learners work today, listen less for jargon and more for evidence that they understand the architectural consequences of their decisions. Strong signs include statements like these:</p>
+<ul>
+<li>"I kept the route or callback simple and let the service call the repository."</li>
+<li>"I moved the query into the repository because the GUI should not know SQL."</li>
+<li>"I reset the offset when the search term changes."</li>
+<li>"I proved persistence by restarting the app."</li>
+<li>"I picked the SQL path because it fit the lab and the project better."</li>
+</ul>
+<p>Worry signs include comments like these:</p>
+<ul>
+<li>"I copied the JSON save here just in case."</li>
+<li>"I think it updates the right record because it usually lines up with the list index."</li>
+<li>"I added an ORM and now I need to rewrite the whole project."</li>
+<li>"I built the query with string formatting because it was faster."</li>
+<li>"The app still shows the record after delete, so I guess it worked."</li>
+</ul>
+<p>When you hear a worry sign, do not immediately solve the code for the learner. Ask a clarifying question first. Good examples are:</p>
+<ul>
+<li>"What is your source of truth now?"</li>
+<li>"Where would a teammate look for that logic?"</li>
+<li>"What ID is actually being passed into the update or delete call?"</li>
+<li>"How could you prove the query is correct outside the interface?"</li>
+<li>"If you restart the app, what result should you see?"</li>
+</ul>
+<p>These questions reinforce design reasoning rather than just patching symptoms.</p>
+<h3 id="common-misconceptions-to-correct-immediately">Common Misconceptions to Correct Immediately</h3>
+<p>One common misconception is that a database-backed app is automatically well designed. It is not. A poorly structured project can still use SQLite. The value comes from clear boundaries, safe queries, and predictable behavior. Say this directly so students do not confuse the presence of a <code>.db</code> file with architectural quality.</p>
+<p>A second misconception is that an ORM is the "advanced" choice and raw SQL is somehow a beginner fallback. That framing is misleading. In small and medium-sized applications, raw SQL can be the clearer and more honest option. Emphasize that abstraction is a tradeoff, not a badge of seniority.</p>
+<p>A third misconception is that search is mostly a UI feature. Search is partly a UI feature, but the real correctness lives lower down. If the repository does not return the right rows, the prettiest search box in the world does not matter. Keep pushing students to validate the data access layer before blaming the interface.</p>
+<p>A fourth misconception is that pagination is just a performance trick. In reality, it is also a usability pattern. It limits cognitive load, keeps result sets manageable, and supports predictable navigation. Even if students never implement sophisticated pagination professionally, understanding why <code>LIMIT</code> and <code>OFFSET</code> exist will help them reason about data-heavy interfaces.</p>
+<h3 id="suggested-mini-conferences-for-each-hour">Suggested Mini-Conferences for Each Hour</h3>
+<p>For Hour 29, ask students to explain the benefit and cost of the path they chose. If they chose the ORM slice, ask what the ORM is saving them from writing manually. If they chose deeper SQL, ask what direct SQL makes easier to understand or debug.</p>
+<p>For Hour 30, ask students to point to the exact line where the repository is injected into the service. Then ask what stayed the same above that line when the storage implementation changed. This quickly reveals whether they understand the point of the repository pattern.</p>
+<p>For Hour 31, ask students to state the search behavior they expect before they run it. A student who can say, "an empty term should show all rows, a term should search title and category, and a new search should reset to page one" usually has a much stronger implementation plan.</p>
+<p>For Hour 32, ask students to narrate their milestone demo before they give it. If their explanation is confused, the demo is often confused too. Coaching the narrative helps surface missing initialization steps, unclear sources of truth, and hidden assumptions.</p>
+<h3 id="pacing-adjustments">Pacing Adjustments</h3>
+<p>If the cohort is behind schedule, treat Hour 29 as a SQL deepening hour only. Do not force the ORM branch. Students gain more from one clear summary query and a stable architecture than from a rushed package experiment that creates confusion.</p>
+<p>If Hour 30 runs long because many students are still unwinding older JSON persistence, pause feature work and explicitly direct them to remove or disable the second source of truth. That cleanup is worth more than squeezing in extra polish.</p>
+<p>If students struggle with Hour 31, narrow the success condition. Search first, then filter, then pagination. In a mixed-ability cohort, requiring all three at once can bury the learning objective.</p>
+<p>If the checkpoint hour reveals widespread instability, reduce the public demo requirement and spend more time on guided debugging. The milestone is still valuable if it turns into a structured bug-fix session, as long as learners connect the bugs back to architecture and data access practices.</p>
+<h3 id="evidence-of-mastery-for-day-8">Evidence of Mastery for Day 8</h3>
+<p>A student has met the spirit of Day 8 when they can do more than show a working interface. Look for these evidence points:</p>
+<ul>
+<li>They can explain why the database is now the system of record.</li>
+<li>They can point to a repository method and explain what it returns.</li>
+<li>They can prove persistence across restart instead of merely claiming it.</li>
+<li>They can describe at least one safe SQL practice they used.</li>
+<li>They can separate a UI concern from a repository concern.</li>
+<li>They can describe one tradeoff in the ORM versus raw SQL discussion.</li>
+</ul>
+<p>A particularly strong student can also explain what they intentionally did not build yet. That shows scope control, which is a professional skill.</p>
+<h3 id="end-of-day-instructor-wrap-script">End-of-Day Instructor Wrap Script</h3>
+<p>Use this if you want a clean close to the session:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Today was about moving from a project that merely stores some information to a project that behaves like a real data-driven application. You made choices about abstraction, storage, integration, search, and reliability. Those choices matter because they determine whether the next layer of the capstone will feel stable or fragile. If your application can now create, retrieve, update, delete, search, and persist across restarts with a clear source of truth, that is real progress. Do not underestimate it.</p>
+<p>Before the next session, encourage students to write down one thing they cleaned up architecturally and one bug they still want to understand better. That reflection makes the jump into Flask and API work much smoother.</p>
+<hr>
+<h2 id="facilitation-toolkit">Facilitation Toolkit</h2>
+<h3 id="pre-class-quick-check">Pre-Class Quick Check</h3>
+<p>Before this hour begins, spend thirty seconds confirming that learners have the right file, environment, and mental context open. Many instruction problems that look conceptual are actually setup drift. Ask learners to open the project folder, point to the main entry file for the hour, and remind themselves which layer they are primarily working in. If the hour is centered on the API, ask them to name the route, service, and repository layers. If the hour is centered on analytics, ask them to name the dataset and report path. If the hour is centered on testing or packaging, ask them to name the target command they expect to run before the hour ends. This tiny reset reduces confusion and gives the room a shared starting line.</p>
+<p>A second quick check is motivational rather than technical. Tell learners what "done" looks like in one sentence. Students perform better when the finish line is visible. For example, say: "By the end of this hour, you should be able to show one stable route with predictable errors," or "By the end of this hour, you should have one repeatable report artifact saved in the reports folder." The clarity matters more than the elegance of the wording.</p>
+<h3 id="layer-specific-observation-checklist">Layer-Specific Observation Checklist</h3>
+<p>As you circulate, avoid scanning only for syntax errors. Look for the layer-specific habits that show whether the learner is truly aligning with the course architecture.</p>
+<p>For interface-facing work, check whether the learner is keeping the interface thin and delegating correctly. Look for signs that they are handling input, calling a service, and formatting output rather than placing business logic directly in callbacks or route handlers.</p>
+<p>For service-layer work, check whether the learner is enforcing rules consistently and raising the right custom exceptions. Ask whether the same rule would behave the same way from multiple entry points.</p>
+<p>For repository or persistence work, check whether the learner is using parameterized queries, committing intentionally, and mapping rows or outputs predictably. Ask whether there is one clear source of truth.</p>
+<p>For analysis and reporting work, check whether the learner can explain how data moves from source to artifact. Ask what cleaning decisions were made and whether the result could be reproduced tomorrow.</p>
+<p>For testing and packaging work, check whether the learner is proving meaningful behaviors rather than merely following a checklist. Ask what risk the test or fresh-run step is reducing.</p>
+<p>This checklist helps you stay aligned to the course outcomes instead of getting trapped in line-by-line debugging for the whole hour.</p>
+<h3 id="coaching-ladder-for-stuck-learners">Coaching Ladder for Stuck Learners</h3>
+<p>Use a three-step coaching ladder when a learner is stuck.</p>
+<p>Step one is diagnosis by description. Ask the learner to describe what they expected, what actually happened, and what they already checked. This keeps you from jumping into the wrong problem too early.</p>
+<p>Step two is scope reduction. Help the learner shrink the problem to the smallest reproducible step. If a full GUI flow is failing, test the service method alone. If the full report fails, run the export alone. If the packaged app will not start, verify imports and environment setup before touching build tools. Small proofs are often faster than large guesses.</p>
+<p>Step three is boundary identification. Ask which layer should own the fix. Many student problems persist because they keep applying the patch in the wrong layer. A route bug gets fixed in the service, a repository bug gets patched in the UI, or a packaging issue gets blamed on test code. Naming the layer often reveals the correct next action.</p>
+<p>When learners are very anxious, narrate your thought process slowly and visibly. Say things like, "I want to verify the assumption before I change the code," or "Let's confirm the source of truth first." This models calm technical reasoning and reduces the impulse to thrash.</p>
+<h3 id="differentiation-moves-for-mixed-ability-cohorts">Differentiation Moves for Mixed-Ability Cohorts</h3>
+<p>In almost every class, some learners finish early while others are still stabilizing the basics. Use differentiation deliberately instead of letting the room split into boredom on one side and panic on the other.</p>
+<p>For learners who need more support, narrow the success condition without changing the underlying outcome. Replace a full feature set with the smallest honest version. One route before five. One query before search plus paging plus sorting. One report artifact before a whole dashboard. One integration test before an elaborate suite. The learner still practices the right habit, just with reduced surface area.</p>
+<p>For learners who are ready for more challenge, add a bounded extension that reinforces the same lesson rather than a completely different topic. Examples include adding one more filter option, improving error messages, adding a second chart type, or writing one additional negative test. Bound the extension tightly so it does not become an escape hatch into unrelated rabbit holes.</p>
+<p>A useful phrase for both groups is: "Keep the same architecture, change the ambition level." That sentence helps advanced learners stretch without drifting and helps struggling learners simplify without feeling like they failed.</p>
+<h3 id="discussion-prompts-that-reveal-understanding">Discussion Prompts That Reveal Understanding</h3>
+<p>When you want to know whether a learner truly understands the hour, ask questions that require reasoning instead of recall. Useful prompts include:</p>
+<ul>
+<li>What part of this workflow would break first if the source of truth changed unexpectedly?</li>
+<li>What behavior in your code is currently easiest to explain to a teammate, and why?</li>
+<li>Where is the most fragile coupling in your design right now?</li>
+<li>If you had to test or demo only one thing from this hour, what would give the strongest evidence that the concept is working?</li>
+<li>What did you intentionally leave out to keep the project aligned with the course scope?</li>
+</ul>
+<p>These prompts are helpful because they work across architecture, API, analytics, testing, and packaging topics. They also generate better class discussion than simply asking whether the code runs.</p>
+<h3 id="common-classroom-risks-and-soft-interventions">Common Classroom Risks and Soft Interventions</h3>
+<p>One risk is silent divergence, where learners are working on different interpretations of the same task. You can reduce this by pausing for a thirty-second midpoint recap and restating the minimum success condition. Another risk is overbuilding, where a learner adds complexity because the simpler version feels too small. In that case, praise the initiative but redirect toward finishing the stable milestone first.</p>
+<p>A third risk is shallow success, where the code appears to work once but the learner cannot explain why. Do not ignore that just because the output looks correct. Ask for a short explanation. If the explanation is weak, there is still learning work to do.</p>
+<p>A fourth risk is perfection paralysis. Some learners freeze because they want the cleanest possible solution before they will run anything. Encourage executable increments. A visible imperfect step is often more teachable than a perfect idea still trapped in someone's head.</p>
+<h3 id="evidence-collection-for-informal-assessment">Evidence Collection for Informal Assessment</h3>
+<p>If you need to assess quickly during the hour, look for five kinds of evidence:</p>
+<ul>
+<li>A concrete artifact exists, such as a running endpoint, saved report, passing test, or updated README.</li>
+<li>The learner can explain the responsibility of the layer they are touching.</li>
+<li>The learner can name one failure mode and how they checked it.</li>
+<li>The learner can connect the work back to the capstone architecture or delivery goals.</li>
+<li>The learner can identify one next improvement without losing sight of the current milestone.</li>
+</ul>
+<p>This evidence-based approach is more reliable than grading on confidence or speed alone.</p>
+<h3 id="end-of-hour-documentation-prompt">End-of-Hour Documentation Prompt</h3>
+<p>Before learners leave the hour, ask them to capture three short notes in their own project documentation or notebook:</p>
+<ol>
+<li>What changed?</li>
+<li>What was verified?</li>
+<li>What still needs attention?</li>
+</ol>
+<p>This takes very little time, but it creates continuity between hours and improves final demos because learners have a record of decisions, validations, and remaining risks. It also makes the project feel like professional technical work instead of a sequence of disconnected classroom exercises.</p>
+<h3 id="closing-script-you-can-reuse">Closing Script You Can Reuse</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The point of this hour was not only to produce code or artifacts. It was to practice the habit behind the code: keeping boundaries clear, proving behavior honestly, and making the project easier to understand for the next person who touches it. If you can explain what changed, show evidence that it works, and name what still needs improvement, then you are making real progress.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#instructor-prep-notes" class="depth-2">Instructor Prep Notes</a></li>
+<li><a href="#section-1-reconnect-to-yesterdays-momentum-5-minutes" class="depth-2">Section 1: Reconnect to Yesterday&#x27;s Momentum (5 minutes)</a></li>
+<li><a href="#opening-framing" class="depth-3">Opening Framing</a></li>
+<li><a href="#why-this-hour-matters" class="depth-3">Why This Hour Matters</a></li>
+<li><a href="#message-to-learners" class="depth-3">Message to Learners</a></li>
+<li><a href="#section-2-core-concept-walkthrough-15-minutes" class="depth-2">Section 2: Core Concept Walkthrough (15 minutes)</a></li>
+<li><a href="#what-an-orm-does" class="depth-3">What an ORM Does</a></li>
+<li><a href="#what-raw-sql-gives-you" class="depth-3">What Raw SQL Gives You</a></li>
+<li><a href="#the-real-comparison" class="depth-3">The Real Comparison</a></li>
+<li><a href="#scope-guardrails" class="depth-3">Scope Guardrails</a></li>
+<li><a href="#whiteboard-comparison" class="depth-3">Whiteboard Comparison</a></li>
+<li><a href="#section-3-live-demo-10-minutes" class="depth-2">Section 3: Live Demo (10 minutes)</a></li>
+<li><a href="#demo-track-a-tiny-sqlalchemy-slice" class="depth-3">Demo Track A: Tiny SQLAlchemy Slice</a></li>
+<li><a href="#demo-track-b-deeper-sql-practice" class="depth-3">Demo Track B: Deeper SQL Practice</a></li>
+<li><a href="#demo-debrief" class="depth-3">Demo Debrief</a></li>
+<li><a href="#section-4-guided-build-and-lab-coaching-25-minutes" class="depth-2">Section 4: Guided Build and Lab Coaching (25 minutes)</a></li>
+<li><a href="#lab-brief" class="depth-3">Lab Brief</a></li>
+<li><a href="#path-a-orm-mini-lab" class="depth-3">Path A: ORM Mini-Lab</a></li>
+<li><a href="#path-b-sql-mini-lab" class="depth-3">Path B: SQL Mini-Lab</a></li>
+<li><a href="#circulation-talking-points" class="depth-3">Circulation Talking Points</a></li>
+<li><a href="#sample-instructor-walkthrough-for-a-stuck-learner" class="depth-3">Sample Instructor Walkthrough for a Stuck Learner</a></li>
+<li><a href="#section-5-debrief-tradeoffs-and-exit-ticket-5-minutes" class="depth-2">Section 5: Debrief, Tradeoffs, and Exit Ticket (5 minutes)</a></li>
+<li><a href="#group-debrief-prompts" class="depth-3">Group Debrief Prompts</a></li>
+<li><a href="#common-pitfalls-to-name-explicitly" class="depth-3">Common Pitfalls to Name Explicitly</a></li>
+<li><a href="#key-takeaway-script" class="depth-3">Key Takeaway Script</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit Ticket</a></li>
+<li><a href="#transition-to-the-next-hour" class="depth-3">Transition to the Next Hour</a></li>
+<li><a href="#instructor-coaching-appendix" class="depth-2">Instructor Coaching Appendix</a></li>
+<li><a href="#whiteboard-plan-for-day-8" class="depth-3">Whiteboard Plan for Day 8</a></li>
+<li><a href="#listen-fors-during-guided-practice" class="depth-3">Listen-Fors During Guided Practice</a></li>
+<li><a href="#common-misconceptions-to-correct-immediately" class="depth-3">Common Misconceptions to Correct Immediately</a></li>
+<li><a href="#suggested-mini-conferences-for-each-hour" class="depth-3">Suggested Mini-Conferences for Each Hour</a></li>
+<li><a href="#pacing-adjustments" class="depth-3">Pacing Adjustments</a></li>
+<li><a href="#evidence-of-mastery-for-day-8" class="depth-3">Evidence of Mastery for Day 8</a></li>
+<li><a href="#end-of-day-instructor-wrap-script" class="depth-3">End-of-Day Instructor Wrap Script</a></li>
+<li><a href="#facilitation-toolkit" class="depth-2">Facilitation Toolkit</a></li>
+<li><a href="#pre-class-quick-check" class="depth-3">Pre-Class Quick Check</a></li>
+<li><a href="#layer-specific-observation-checklist" class="depth-3">Layer-Specific Observation Checklist</a></li>
+<li><a href="#coaching-ladder-for-stuck-learners" class="depth-3">Coaching Ladder for Stuck Learners</a></li>
+<li><a href="#differentiation-moves-for-mixed-ability-cohorts" class="depth-3">Differentiation Moves for Mixed-Ability Cohorts</a></li>
+<li><a href="#discussion-prompts-that-reveal-understanding" class="depth-3">Discussion Prompts That Reveal Understanding</a></li>
+<li><a href="#common-classroom-risks-and-soft-interventions" class="depth-3">Common Classroom Risks and Soft Interventions</a></li>
+<li><a href="#evidence-collection-for-informal-assessment" class="depth-3">Evidence Collection for Informal Assessment</a></li>
+<li><a href="#end-of-hour-documentation-prompt" class="depth-3">End-of-Hour Documentation Prompt</a></li>
+<li><a href="#closing-script-you-can-reuse" class="depth-3">Closing Script You Can Reuse</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day8_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day8_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour4_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

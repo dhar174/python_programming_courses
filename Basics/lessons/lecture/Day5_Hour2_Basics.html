@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5, Hour 2: Sets — Uniqueness + Membership (Course Hour 18) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day5_Hour2_Basics.md">
+
+    <link rel="prev" href="Day5_Hour1_Basics.html">
+    <link rel="next" href="Day5_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="5" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 5, Hour 2: Sets — Uniqueness + Membership (Course Hour 18)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 5</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 5, Course Hour 18 – Sets: uniqueness + membership<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 18. The entire hour focuses on sets: what they are, why uniqueness is built in, how to use them for fast membership checks, and how a few key operations (union, intersection, difference) solve real problems. Stay firmly within Basics scope — do not introduce frozensets, set comprehensions, or the <code>collections</code> module here. The key outcomes are (1) using <code>set()</code> to strip duplicates from a list, (2) checking membership with <code>in</code>, (3) building intuition for when a set beats a list, and (4) understanding why sets are unordered and how to work with that. The lab ties everything together in a practical "Unique Visitors" program that learners build step by step. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip or abbreviate the conceptual explanations.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Create a set using a set literal and using the <code>set()</code> constructor to convert a list, and explain in plain language what makes a set different from a list or tuple.</li>
+<li>Add items to a set with <code>add()</code>, remove items safely with <code>discard()</code>, and describe why sets never store duplicate values.</li>
+<li>Check whether a value exists in a set using the <code>in</code> operator and explain why this is conceptually faster than checking a list.</li>
+<li>Use union (<code>|</code>), intersection (<code>&amp;</code>), and difference (<code>-</code>) to combine or compare two sets, and give a real example of when each operation is useful.</li>
+<li>Build the Unique Visitors program: collect ten names from the user, store them in a list, convert to a set, and report the unique count — then explain why the duplicate names disappeared."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to Hour 17 (tuples); set up the problem sets solve</li>
+<li><strong>0:05–0:14</strong> Core concept: what a set is, analogy, literal syntax, <code>set()</code> constructor</li>
+<li><strong>0:14–0:22</strong> Adding, removing, and clearing: <code>add()</code>, <code>discard()</code>, <code>remove()</code>, <code>pop()</code>, <code>clear()</code></li>
+<li><strong>0:22–0:28</strong> Membership checks: <code>in</code> with sets vs lists, conceptual speed difference</li>
+<li><strong>0:28–0:34</strong> Set operations: union, intersection, difference with classroom examples</li>
+<li><strong>0:34–0:39</strong> Sets are unordered — demo and <code>sorted()</code> as the display fix</li>
+<li><strong>0:39–0:43</strong> Live demo: list of names → set (typed live in class)</li>
+<li><strong>0:43–0:58</strong> Guided lab: Unique Visitors</li>
+<li><strong>0:58–1:00</strong> Debrief, recap, and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open two clean files before class: <code>hour18_sets_demo.py</code> for the live demo, and <code>hour18_lab_visitors.py</code> with blank comment placeholders as a starter for learners.</li>
+<li>Have a Python REPL terminal ready for quick interactive experiments in Sections 4 and 5.</li>
+<li>Prepare to type the exact "wrong" code first (using <code>{}</code> for an empty set) — this is a planned pitfall demonstration, not an accident.</li>
+<li>Confirm learners have completed Hour 17 (tuples) and Hour 15–16 (lists deep dive). This hour builds directly on list knowledge.</li>
+<li>Have a whiteboard or screen annotation tool ready to sketch the "bag of unique tags" analogy.</li>
+</ul>
+<p><strong>Say:</strong> "Get your editor open and a fresh empty file ready. The best way to learn sets is to type the code yourself and watch what happens. This hour will be very hands-on."</p>
+<hr>
+<h2 id="3-opening-script-reconnect-to-earlier-learning-5-minutes">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</h2>
+<h3 id="31-quick-recap-from-hour-17">3.1 Quick recap from Hour 17</h3>
+<p><strong>Say:</strong>
+"Last hour we learned about tuples. We found out that a tuple is like a locked list — it holds an ordered sequence of values that cannot be changed after creation. We used tuples for (x, y) coordinates and saw how unpacking lets us pull those values into named variables cleanly.</p>
+<p>Tuples are the right tool when you have a small, fixed group of related values that belong together and should never change.</p>
+<p>Now, today's question is different. Today we are going to think about a situation that comes up constantly in real programs: what do you do when you need a collection where every item is unique — where duplicates simply should not exist?"</p>
+<h3 id="32-the-everyday-problem-of-duplicates">3.2 The everyday problem of duplicates</h3>
+<p><strong>Say:</strong>
+"Let me paint a picture. Imagine you are running a conference and you have a sign-in sheet. Over the course of the day, people walk up and write their name. The sheet looks like this:</p>
+<pre><code>Alice
+Bob
+Alice
+Carol
+Bob
+Bob
+David
+Alice
+</code></pre>
+<p>At the end of the day, someone asks: 'How many unique attendees did we have today?'</p>
+<p>You know the answer is four — Alice, Bob, Carol, and David — but to get that answer from the raw list you have to scan through and mentally filter out the repeats.</p>
+<p>Now imagine this is not eight names but eight thousand names. Or eighty thousand. Filtering duplicates by hand — or even by writing a loop that checks every entry against every other entry — gets expensive fast.</p>
+<p>Python has a data structure built precisely for this problem. It is called a <strong>set</strong>, and its defining property is simple: a set can only ever contain each value once. No duplicates. Not because you have to prevent them manually — because the structure itself refuses to store them."</p>
+<h3 id="33-transition-and-roadmap">3.3 Transition and roadmap</h3>
+<p><strong>Say:</strong>
+"Here is what we are going to cover this hour. First, we will understand what a set is and how to create one. Then we will look at how to add and remove items. After that we will explore why sets are so good at answering the question 'is this value in here?' — the membership check. We will also look at three simple operations — union, intersection, and difference — that let you combine or compare two sets in ways that are very useful in real programs. And we will finish with a hands-on lab where you build a Unique Visitors program from scratch.</p>
+<p>Let's start."</p>
+<hr>
+<h2 id="4-concept-what-is-a-set">4) Concept: What Is a Set?</h2>
+<h3 id="41-the-bag-of-unique-tags-analogy">4.1 The bag-of-unique-tags analogy</h3>
+<p><strong>Say:</strong>
+"Think of a set like a bag of tags. Each tag has a value written on it. Here is the key rule: you can only have one tag with any given value in the bag. If you try to drop in a tag that says 'Alice' and there is already a tag in the bag that says 'Alice', the bag rejects it. You end up with exactly one 'Alice' tag, no matter how many times you try to add it.</p>
+<p>Now compare that to a list, which is more like a queue of numbered tickets. You can have as many tickets with the same number as you like — the list just keeps adding them to the end. Lists care about order and allow duplicates. Sets do not care about order and refuse duplicates.</p>
+<p>That is the core trade-off in one sentence: <strong>lists are ordered and allow duplicates; sets are unordered and enforce uniqueness.</strong>"</p>
+<h3 id="42-set-literal-syntax">4.2 Set literal syntax</h3>
+<p><strong>Say:</strong>
+"Let's look at the syntax. A set literal uses curly braces, just like this:"</p>
+<pre><code class="language-python"># A set literal — curly braces with comma-separated values
+fruits: set = {&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;}
+print(fruits)
+</code></pre>
+<p><strong>Say:</strong>
+"Type that into your REPL and run it. Notice two things: first, there are no duplicates (we only put one of each in). Second, when Python prints the set, the order might be different from the order you typed the items in. We will talk about why that is in a moment — it is one of the most important things to understand about sets.</p>
+<p>Now let me show you what happens when you deliberately add a duplicate right in the literal:"</p>
+<pre><code class="language-python"># Python silently keeps only one copy
+colours: set = {&quot;red&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;}
+print(colours)  # Only 3 items: {'red', 'blue', 'green'}
+print(len(colours))  # 3
+</code></pre>
+<p><strong>Say:</strong>
+"Try that. Python does not raise an error. It does not warn you. It just quietly keeps one copy of each value and discards the rest. That is sets doing their job automatically."</p>
+<h3 id="43-the-set-constructor-converting-a-list-to-a-set">4.3 The <code>set()</code> constructor — converting a list to a set</h3>
+<p><strong>Say:</strong>
+"The most common way to use a set in practice is not to write a set literal. It is to start with a list — which you already know how to build — and convert it.</p>
+<p>That is where the <code>set()</code> constructor comes in."</p>
+<pre><code class="language-python"># Start with a list that has duplicates
+names_list: list[str] = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Alice&quot;, &quot;Carol&quot;, &quot;Bob&quot;, &quot;Bob&quot;, &quot;David&quot;]
+
+# Convert to a set — duplicates vanish automatically
+unique_names: set[str] = set(names_list)
+
+print(unique_names)        # {'Alice', 'Bob', 'Carol', 'David'} (order may vary)
+print(len(unique_names))   # 4
+</code></pre>
+<p><strong>Say:</strong>
+"Let me read that code out loud so we absorb what is happening.</p>
+<p>We start with <code>names_list</code> — a regular Python list with seven items, including two Alices, three Bobs, and a Carol and a David.</p>
+<p>We call <code>set(names_list)</code>, passing the whole list in. Python reads through every item, and for each one, if it has not seen that value before, it keeps it. If it has seen it before, it throws it away. The result is a new set with four items: one Alice, one Bob, one Carol, one David.</p>
+<p>That is the duplicate-removal pattern you will use over and over again in real programs. Build a list in whatever way makes sense — from user input, from a file, from an API — then call <code>set()</code> on it to get the unique values."</p>
+<h3 id="44-important-distinction-is-not-an-empty-set">4.4 Important distinction: <code>{}</code> is NOT an empty set</h3>
+<p><strong>Say:</strong>
+"Before we go further, I want to flag a trap that catches almost every Python beginner at some point. Let me show you two things that look similar but are completely different:"</p>
+<pre><code class="language-python"># This creates an empty DICTIONARY, not an empty set
+empty_dict = {}
+print(type(empty_dict))  # &lt;class 'dict'&gt;
+
+# This creates an empty SET — use set() with no arguments
+empty_set = set()
+print(type(empty_set))   # &lt;class 'set'&gt;
+</code></pre>
+<p><strong>Say:</strong>
+"In Python, a pair of empty curly braces <code>{}</code> creates an empty <em>dictionary</em>, not an empty set. Dictionaries also use curly braces, and when Python sees <code>{}</code> it defaults to dictionary. To get an empty set you must write <code>set()</code> explicitly.</p>
+<p>This is one of the most common beginner mistakes with sets. We will come back to it in the pitfalls section, but I want to plant that flag in your memory right now: <strong>empty set = <code>set()</code>, not <code>{}</code></strong>."</p>
+<h3 id="45-sets-hold-hashable-values">4.5 Sets hold hashable values</h3>
+<p><strong>Say:</strong>
+"One more rule before we move on. Sets can only store values that Python considers <em>hashable</em> — which in practical terms means values that are immutable: strings, numbers, tuples of immutable values, booleans.</p>
+<p>Lists cannot go inside sets because lists can be changed (they are mutable). Dictionaries cannot go inside sets for the same reason. If you try, Python will raise a <code>TypeError</code> with the message 'unhashable type: list'.</p>
+<p>At the Basics level, this mostly means: sets of strings, sets of numbers, and sets of tuples are fine. Sets of lists are not. You do not need to understand <em>why</em> hashability works the way it does right now — just know the practical rule."</p>
+<pre><code class="language-python"># Fine — strings, ints, tuples are hashable
+valid_set: set = {&quot;hello&quot;, 42, (1, 2)}
+
+# This will raise TypeError
+try:
+    invalid_set = {[1, 2, 3]}  # list inside a set
+except TypeError as e:
+    print(f&quot;Error: {e}&quot;)  # Error: unhashable type: 'list'
+</code></pre>
+<hr>
+<h2 id="5-adding-and-removing-items">5) Adding and Removing Items</h2>
+<h3 id="51-the-add-method">5.1 The <code>add()</code> method</h3>
+<p><strong>Say:</strong>
+"Sets are mutable — you can add and remove items after creation. But the methods look a little different from list methods because the rules are different.</p>
+<p>To add a single item to an existing set, use <code>add()</code>:"</p>
+<pre><code class="language-python">visitors: set[str] = {&quot;Alice&quot;, &quot;Bob&quot;}
+print(visitors)  # {'Alice', 'Bob'}
+
+# Add a new name
+visitors.add(&quot;Carol&quot;)
+print(visitors)  # {'Alice', 'Bob', 'Carol'}
+
+# Try to add a name that already exists — nothing changes
+visitors.add(&quot;Alice&quot;)
+print(visitors)  # Still {'Alice', 'Bob', 'Carol'} — no duplicate
+print(len(visitors))  # 3
+</code></pre>
+<p><strong>Say:</strong>
+"Notice: adding a value that is already in the set does nothing. No error, no warning, no second copy. The set stays the same. This is the uniqueness guarantee working for you — you never need to check 'is this already in here?' before calling <code>add()</code>. The set checks for you."</p>
+<h3 id="52-the-remove-and-discard-methods">5.2 The <code>remove()</code> and <code>discard()</code> methods</h3>
+<p><strong>Say:</strong>
+"To remove an item, you have two options: <code>remove()</code> and <code>discard()</code>. They do the same thing when the item exists. They behave differently when the item does not."</p>
+<pre><code class="language-python">visitors: set[str] = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;, &quot;David&quot;}
+
+# remove() raises KeyError if the item is not found
+visitors.remove(&quot;Carol&quot;)
+print(visitors)  # {'Alice', 'Bob', 'David'}
+
+try:
+    visitors.remove(&quot;Zara&quot;)  # Zara is not in the set
+except KeyError as e:
+    print(f&quot;KeyError: {e}&quot;)  # KeyError: 'Zara'
+
+# discard() silently does nothing if the item is not found
+visitors.discard(&quot;Zara&quot;)   # No error
+visitors.discard(&quot;Bob&quot;)    # Bob IS here, so this works normally
+print(visitors)  # {'Alice', 'David'}
+</code></pre>
+<p><strong>Say:</strong>
+"The rule of thumb is easy: if you <em>know</em> the item is in the set, use <code>remove()</code>. If you are not sure and you do not want an error if it is missing, use <code>discard()</code>. In most beginner programs, <code>discard()</code> is the safer default."</p>
+<h3 id="53-the-pop-method">5.3 The <code>pop()</code> method</h3>
+<p><strong>Say:</strong>
+"<code>pop()</code> removes and returns <em>some</em> item from the set. The catch is that because sets are unordered, you have no control over which item gets removed. It is essentially random from your perspective."</p>
+<pre><code class="language-python">colours: set[str] = {&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;yellow&quot;}
+removed = colours.pop()  # Removes some item — we don't know which
+print(f&quot;Removed: {removed}&quot;)
+print(f&quot;Remaining: {colours}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"You will rarely use <code>pop()</code> on a set in everyday code. It exists for cases where you need to process items one by one and do not care about order. For now, just know it is there."</p>
+<h3 id="54-the-clear-method">5.4 The <code>clear()</code> method</h3>
+<p><strong>Say:</strong>
+"<code>clear()</code> removes every item from the set, leaving you with an empty set:"</p>
+<pre><code class="language-python">temp_set: set[str] = {&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}
+temp_set.clear()
+print(temp_set)   # set()
+print(len(temp_set))  # 0
+</code></pre>
+<p><strong>Say:</strong>
+"Notice that when Python prints an empty set, it shows <code>set()</code> rather than <code>{}</code>. That is consistent with what we said earlier — <code>{}</code> is always a dictionary in Python's display."</p>
+<hr>
+<h2 id="6-membership-checks">6) Membership Checks</h2>
+<h3 id="61-using-in-with-a-set">6.1 Using <code>in</code> with a set</h3>
+<p><strong>Say:</strong>
+"One of the most valuable things about sets — maybe the most valuable — is how fast they answer the question 'is this value in here?'</p>
+<p>The syntax is the same <code>in</code> keyword you already know from lists:"</p>
+<pre><code class="language-python">approved_users: set[str] = {&quot;alice&quot;, &quot;bob&quot;, &quot;carol&quot;, &quot;david&quot;, &quot;eva&quot;}
+
+username = &quot;carol&quot;
+if username in approved_users:
+    print(f&quot;Welcome, {username}!&quot;)
+else:
+    print(&quot;Access denied.&quot;)
+
+username = &quot;zara&quot;
+if username in approved_users:
+    print(f&quot;Welcome, {username}!&quot;)
+else:
+    print(&quot;Access denied.&quot;)  # This one prints
+</code></pre>
+<p><strong>Say:</strong>
+"Clean and readable. <code>username in approved_users</code> reads almost like English: 'is username in approved_users?' — yes or no."</p>
+<h3 id="62-sets-vs-lists-for-membership-conceptual-speed-difference">6.2 Sets vs lists for membership — conceptual speed difference</h3>
+<p><strong>Say:</strong>
+"Here is where sets have a real advantage over lists for this kind of check, and I want you to understand <em>why</em> even if we are not going to run benchmarks today.</p>
+<p>When you check <code>item in my_list</code>, Python starts at the beginning of the list and checks item one by one: 'Is it the first element? No. Is it the second? No...' and so on, until it either finds the item or reaches the end. If the item is at the end of a list with a million elements, Python checks a million elements.</p>
+<p>When you check <code>item in my_set</code>, Python uses a mathematical trick called <em>hashing</em>. It computes a numeric fingerprint of your item and uses that fingerprint to jump almost directly to where the item would be stored — like looking up a word in a dictionary that has an alphabetical index versus scanning every single page. The check takes roughly the same time whether the set has five items or five million items.</p>
+<p>The practical lesson: <strong>if you are going to check membership many times and you do not need order or duplicates, use a set instead of a list.</strong></p>
+<p>Let's see a side-by-side example that illustrates the idea:"</p>
+<pre><code class="language-python"># Same data — once as a list, once as a set
+blocked_words_list: list[str] = [&quot;spam&quot;, &quot;scam&quot;, &quot;fake&quot;, &quot;fraud&quot;, &quot;phishing&quot;]
+blocked_words_set: set[str] = {&quot;spam&quot;, &quot;scam&quot;, &quot;fake&quot;, &quot;fraud&quot;, &quot;phishing&quot;}
+
+message_word = &quot;fraud&quot;
+
+# Both work correctly — the difference is how Python searches internally
+if message_word in blocked_words_list:
+    print(&quot;List check: word is blocked.&quot;)
+
+if message_word in blocked_words_set:
+    print(&quot;Set check: word is blocked.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Both produce the same answer. The set check is conceptually faster for large collections — but for five items, you will never notice the difference. The point is to build the habit: when the collection is a lookup table and you do not care about order or duplicates, reach for a set."</p>
+<hr>
+<h2 id="7-set-operations-at-a-conceptual-level">7) Set Operations at a Conceptual Level</h2>
+<p><strong>Say:</strong>
+"Sets in mathematics have three fundamental operations that let you combine or compare two sets. Python implements all three with simple operators. You do not need to write any loops — Python does the work. Let me walk through each one."</p>
+<h3 id="71-setup-two-classroom-rosters">7.1 Setup — two classroom rosters</h3>
+<p><strong>Say:</strong>
+"To make these concrete, let's use two class rosters as our example. Imagine you are coordinating two optional workshops at the conference:"</p>
+<pre><code class="language-python"># Students in the Python workshop
+python_workshop: set[str] = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;, &quot;David&quot;, &quot;Eva&quot;}
+
+# Students in the Data workshop
+data_workshop: set[str] = {&quot;Carol&quot;, &quot;Eva&quot;, &quot;Frank&quot;, &quot;Grace&quot;, &quot;David&quot;}
+</code></pre>
+<h3 id="72-union-everyone-in-either-group">7.2 Union (<code>|</code>) — everyone in either group</h3>
+<p><strong>Say:</strong>
+"The <strong>union</strong> of two sets gives you every item that appears in <em>either</em> set — or in both. Think of it as 'everyone who attended at least one workshop.' In Python, the union operator is the pipe character <code>|</code>:"</p>
+<pre><code class="language-python"># Union: all students in either workshop
+all_students = python_workshop | data_workshop
+print(all_students)
+# {'Alice', 'Bob', 'Carol', 'David', 'Eva', 'Frank', 'Grace'}
+</code></pre>
+<p><strong>Say:</strong>
+"Notice Carol, Eva, and David attended both workshops, but they only appear once in the result — because it is a set. That is exactly right. We want a list of unique people who attended any workshop, not a count of attendances.</p>
+<p>The union answers the question: 'Give me everyone.'"</p>
+<h3 id="73-intersection-amp-only-those-in-both-groups">7.3 Intersection (<code>&amp;</code>) — only those in both groups</h3>
+<p><strong>Say:</strong>
+"The <strong>intersection</strong> of two sets gives you only the items that appear in <em>both</em> sets — the overlap. Think of it as 'students who attended both workshops.' In Python, the intersection operator is the ampersand <code>&amp;</code>:"</p>
+<pre><code class="language-python"># Intersection: students who attended BOTH workshops
+attended_both = python_workshop &amp; data_workshop
+print(attended_both)
+# {'Carol', 'Eva', 'David'}
+</code></pre>
+<p><strong>Say:</strong>
+"Only Carol, Eva, and David are in both sets. Alice, Bob, Frank, and Grace each attended only one. The intersection filters down to just the overlap.</p>
+<p>The intersection answers the question: 'Give me only those who are in all groups.'</p>
+<p>Real-world use: imagine running a survey about two products. Who completed both surveys? Intersection. Who bought both products? Intersection. Who is in both your email list and your social-media followers? Intersection."</p>
+<h3 id="74-difference-in-one-but-not-the-other">7.4 Difference (<code>-</code>) — in one but not the other</h3>
+<p><strong>Say:</strong>
+"The <strong>difference</strong> of two sets gives you the items that are in the first set but <em>not</em> in the second. Think of it as 'students who attended only the Python workshop, not the Data workshop.' In Python, the difference operator is the minus sign <code>-</code>:"</p>
+<pre><code class="language-python"># Difference: in Python workshop but NOT in data workshop
+python_only = python_workshop - data_workshop
+print(python_only)
+# {'Alice', 'Bob'}
+
+# You can flip it too: in data workshop but NOT in python workshop
+data_only = data_workshop - python_workshop
+print(data_only)
+# {'Frank', 'Grace'}
+</code></pre>
+<p><strong>Say:</strong>
+"The order matters for difference — <code>A - B</code> is not the same as <code>B - A</code>. <code>python_workshop - data_workshop</code> gives you people in the Python workshop who skipped the Data workshop. Flip it, and you get Data workshop attendees who skipped Python.</p>
+<p>Real-world use: you send a marketing email to list A. You also have list B of people who already unsubscribed. <code>A - B</code> is the safe list of people you can contact.</p>
+<p>Or: you have a list of tasks to do today (set A) and a list of tasks already completed (set B). <code>A - B</code> is your remaining to-do list."</p>
+<h3 id="75-quick-summary-table">7.5 Quick summary table</h3>
+<p><strong>Say:</strong>
+"Here is a summary you can refer back to:"</p>
+<pre><code>Operation  | Operator | Plain English question
+-----------|----------|-------------------------------------------
+Union      |    |     | Who is in either (or both) groups?
+Intersection|   &amp;     | Who is in ALL groups (the overlap)?
+Difference |    -     | Who is in the first group but NOT the second?
+</code></pre>
+<p><strong>Say:</strong>
+"You do not need to memorise these right now. Just know that they exist, that they use simple symbols, and that they let you compare collections without writing loops. We will practice them more in later sessions."</p>
+<hr>
+<h2 id="8-sets-are-unordered-what-that-means">8) Sets Are Unordered — What That Means</h2>
+<h3 id="81-demonstrating-the-lack-of-order">8.1 Demonstrating the lack of order</h3>
+<p><strong>Say:</strong>
+"I mentioned several times that sets are unordered. Let me be precise about what that means and why it matters.</p>
+<p>When you create a set, Python internally arranges the items using a hashing system that is optimised for fast lookups. That arrangement has nothing to do with the order you typed the items in, the order you added them, or alphabetical order. Every time you print a set, the items may appear in a completely different order.</p>
+<p>Let me show you:"</p>
+<pre><code class="language-python"># Create the same set three different ways — notice the print order
+tags: set[str] = {&quot;python&quot;, &quot;beginner&quot;, &quot;coding&quot;, &quot;tutorial&quot;, &quot;free&quot;}
+print(tags)
+# Output might be: {'free', 'beginner', 'coding', 'python', 'tutorial'}
+# ...but it could be different on your machine or in a different run
+</code></pre>
+<p><strong>Say:</strong>
+"If you run this multiple times, or run it on different computers, the order of the printed output may vary. This is not a bug. It is the expected behaviour of sets.</p>
+<p>The practical implication: <strong>never write code that relies on the order of items in a set.</strong> Do not assume the first item you added will be first when you iterate. Do not assume alphabetical order. Assume no order at all."</p>
+<h3 id="82-why-this-catches-beginners-off-guard">8.2 Why this catches beginners off guard</h3>
+<p><strong>Say:</strong>
+"Coming from lists, where the order is always preserved, this feels strange. Here are the two situations where it bites beginners most often:</p>
+<p><strong>Situation 1 — Displaying results:</strong> You convert a list to a set to remove duplicates, then print the set. The items come out in a random-looking order that confuses your users.</p>
+<p><strong>Situation 2 — Testing:</strong> You write a test that says 'the first element of my set should be X.' It passes on your machine, fails on someone else's. The test is wrong because it assumes order."</p>
+<h3 id="83-the-sorted-fix-for-display">8.3 The <code>sorted()</code> fix for display</h3>
+<p><strong>Say:</strong>
+"The solution is simple: when you need to display the contents of a set in a readable, predictable order, wrap it in <code>sorted()</code>. This does not modify your set — it creates a temporary sorted list just for display purposes:"</p>
+<pre><code class="language-python">unique_tags: set[str] = {&quot;python&quot;, &quot;beginner&quot;, &quot;coding&quot;, &quot;tutorial&quot;, &quot;free&quot;}
+
+# Do NOT do this for user-facing output:
+print(unique_tags)           # Order unpredictable
+
+# DO this instead:
+print(sorted(unique_tags))   # ['beginner', 'coding', 'free', 'python', 'tutorial']
+</code></pre>
+<p><strong>Say:</strong>
+"<code>sorted()</code> returns a <strong>list</strong> in ascending order (alphabetical for strings, numerical for numbers). Your set is unchanged — <code>unique_tags</code> still contains the same five items, still unordered. But your display is clean and consistent.</p>
+<p>This is the pattern you will use in the lab. Collect data into a set, do your set operations, then use <code>sorted()</code> whenever you need to show the results to a user."</p>
+<hr>
+<h2 id="9-live-demo-list-of-names-set">9) Live Demo: List of Names → Set</h2>
+<p><strong>Say:</strong>
+"Let's pull everything together in a live demo. I am going to type this in <code>hour18_sets_demo.py</code> in my editor. Follow along and type the same code."</p>
+<h3 id="91-set-up-the-demo-file">9.1 Set up the demo file</h3>
+<p><strong>Say:</strong>
+"Here is the scenario: we have a conference sign-in sheet. Multiple people signed in throughout the day, some more than once. We want to know how many unique attendees there were."</p>
+<pre><code class="language-python"># hour18_sets_demo.py
+# Demo: List of names → set, removing duplicates
+
+# Step 1: Raw sign-in data — names collected throughout the day
+# (Simulating input that has duplicates)
+sign_ins: list[str] = [
+    &quot;Alice&quot;,
+    &quot;Bob&quot;,
+    &quot;Alice&quot;,      # duplicate
+    &quot;Carol&quot;,
+    &quot;Bob&quot;,        # duplicate
+    &quot;David&quot;,
+    &quot;Bob&quot;,        # duplicate again
+    &quot;Alice&quot;,      # duplicate
+    &quot;Eva&quot;,
+    &quot;Carol&quot;,      # duplicate
+]
+
+print(&quot;--- Raw sign-in sheet ---&quot;)
+print(f&quot;Total sign-ins: {len(sign_ins)}&quot;)
+print(sign_ins)
+</code></pre>
+<p><strong>Say:</strong>
+"Run that. You should see 10 total sign-ins in the list, with obvious duplicates."</p>
+<h3 id="92-convert-to-a-set">9.2 Convert to a set</h3>
+<pre><code class="language-python"># Step 2: Convert the list to a set — duplicates are removed automatically
+unique_visitors: set[str] = set(sign_ins)
+
+print(&quot;\n--- After converting to a set ---&quot;)
+print(f&quot;Unique attendees: {len(unique_visitors)}&quot;)
+print(unique_visitors)
+</code></pre>
+<p><strong>Say:</strong>
+"Run this next section. You should see five unique attendees: Alice, Bob, Carol, David, Eva. The duplicates are gone. We went from 10 items in the list to 5 unique items in the set. And we did not write a single loop to check for duplicates — <code>set()</code> did all the work."</p>
+<h3 id="93-display-with-sorted-and-loop-over-the-results">9.3 Display with sorted() and loop over the results</h3>
+<pre><code class="language-python"># Step 3: Display neatly with sorted()
+print(&quot;\n--- Unique attendees (sorted) ---&quot;)
+for name in sorted(unique_visitors):
+    print(f&quot;  - {name}&quot;)
+
+print(f&quot;\nTotal unique attendees: {len(unique_visitors)}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Now we use <code>sorted()</code> to display the names in alphabetical order, and a loop to print each one with a dash. This looks professional and is easy to read.</p>
+<p>Notice that we are looping over <code>sorted(unique_visitors)</code>, not over <code>unique_visitors</code> directly. We still have the set; we are just sorting a copy of it for display."</p>
+<h3 id="94-bonus-membership-check-in-the-demo">9.4 Bonus: membership check in the demo</h3>
+<pre><code class="language-python"># Step 4: Check whether a specific person attended
+person_to_check = &quot;Alice&quot;
+if person_to_check in unique_visitors:
+    print(f&quot;\n{person_to_check} attended the conference.&quot;)
+else:
+    print(f&quot;\n{person_to_check} did NOT attend the conference.&quot;)
+
+# Check someone who didn't attend
+person_to_check = &quot;Zara&quot;
+if person_to_check in unique_visitors:
+    print(f&quot;{person_to_check} attended the conference.&quot;)
+else:
+    print(f&quot;{person_to_check} did NOT attend the conference.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Clean and fast. <code>in</code> does the work. No loop, no manual scanning.</p>
+<p>Here is the full picture of what we just built:</p>
+<ul>
+<li>We started with a raw list of 10 sign-ins, some duplicates.</li>
+<li>One call to <code>set()</code> gave us 5 unique visitors.</li>
+<li><code>sorted()</code> let us display them in alphabetical order.</li>
+<li><code>in</code> let us answer 'did this person attend?' instantly.</li>
+</ul>
+<p>That is the complete pattern for uniqueness and membership in Python. Now let's build it from scratch in the lab."</p>
+<hr>
+<h2 id="10-hands-on-lab-unique-visitors">10) Hands-on Lab: Unique Visitors</h2>
+<h3 id="101-lab-overview">10.1 Lab overview</h3>
+<p><strong>Say:</strong>
+"This lab takes the demo pattern and makes it interactive. Instead of hard-coding names, you are going to ask the user to type in 10 names — some of them repeated on purpose — and then your program will figure out the unique count automatically.</p>
+<p>Here are the requirements:</p>
+<ol>
+<li>Ask the user to enter 10 names, one at a time (encourage them to type some names more than once to test uniqueness).</li>
+<li>Store each name in a list as the user types it.</li>
+<li>After all 10 names are collected, convert the list to a set.</li>
+<li>Print the number of unique names.</li>
+<li>Print the unique names themselves in sorted alphabetical order.</li>
+<li>Explain in a comment <em>in your code</em> why duplicates disappear.</li>
+</ol>
+<p><strong>Completion criteria:</strong>
+- The unique count is correct.
+- The output shows sorted unique names.
+- There is at least one comment that explains the uniqueness property of sets."</p>
+<h3 id="102-starter-hints">10.2 Starter hints</h3>
+<p><strong>Say:</strong>
+"Before you start coding, here are a few hints to guide your thinking:</p>
+<p><strong>Hint 1:</strong> You already know how to collect user input in a loop. Think: <code>for i in range(10):</code> with <code>input()</code> inside.</p>
+<p><strong>Hint 2:</strong> Use <code>append()</code> to add each name to the list as you go.</p>
+<p><strong>Hint 3:</strong> After the loop ends, convert the whole list with one call: <code>unique = set(name_list)</code>.</p>
+<p><strong>Hint 4:</strong> Use <code>len(unique)</code> for the count and <code>sorted(unique)</code> for the display loop.</p>
+<p><strong>Stretch challenge:</strong> After showing unique names, ask the user if they want to check whether a specific name was entered. If yes, read a name and use <code>in</code> to answer."</p>
+<pre><code class="language-python"># hour18_lab_visitors.py — STARTER TEMPLATE (fill in the blanks)
+
+# Step 1: Create an empty list to hold all sign-ins
+# ...
+
+# Step 2: Collect 10 names from the user
+# for i in range(10):
+#     ...
+
+# Step 3: Convert the list to a set (duplicates removed automatically)
+# ...
+
+# Step 4: Print the unique count
+# ...
+
+# Step 5: Print unique names in sorted order
+# ...
+</code></pre>
+<p><strong>Say:</strong>
+"You have 15 minutes. Work at your own pace. If you finish early, attempt the stretch challenge. If you get stuck, raise your hand or re-read the hints — do not stare at a blank screen for more than two minutes."</p>
+<p><em>(Allow 15–18 minutes of lab time. Circulate and help. Look for: students who forgot to strip whitespace from <code>input()</code>, students who try to use <code>{}</code> for the empty container, students who loop over the set without <code>sorted()</code>.)</em></p>
+<h3 id="103-walkthrough-solution">10.3 Walkthrough solution</h3>
+<p><strong>Say:</strong>
+"Let's walk through the solution together. Even if you got it right, follow along — we will make sure the logic is tight and the code is clean."</p>
+<pre><code class="language-python"># hour18_lab_visitors.py — COMPLETE SOLUTION
+
+# Step 1: Empty list to accumulate all sign-ins (duplicates included)
+all_sign_ins: list[str] = []
+
+print(&quot;=== Conference Visitor Sign-In ===&quot;)
+print(&quot;Enter 10 names (repeats are fine — that is the point!):\n&quot;)
+
+# Step 2: Collect 10 names from the user
+for i in range(1, 11):
+    name = input(f&quot;  Visitor {i}: &quot;).strip()  # .strip() removes accidental spaces
+    all_sign_ins.append(name)
+
+# Step 3: Convert to a set.
+# Sets enforce uniqueness: if a name appears more than once in the list,
+# the set will only keep one copy of it automatically.
+unique_visitors: set[str] = set(all_sign_ins)
+
+# Step 4: Report the unique count
+print(f&quot;\nTotal sign-ins recorded : {len(all_sign_ins)}&quot;)
+print(f&quot;Unique visitors today   : {len(unique_visitors)}&quot;)
+
+# Step 5: Display unique names in sorted order
+# sorted() returns a list in ascending order — does NOT change the set.
+print(&quot;\nAttendee list (alphabetical):&quot;)
+for name in sorted(unique_visitors):
+    print(f&quot;  - {name}&quot;)
+
+# --- Stretch challenge ---
+check = input(&quot;\nCheck if someone attended? (yes/no): &quot;).strip().lower()
+if check == &quot;yes&quot;:
+    lookup = input(&quot;Enter name to look up: &quot;).strip()
+    if lookup in unique_visitors:
+        print(f&quot;Yes — {lookup} attended today.&quot;)
+    else:
+        print(f&quot;No — {lookup} was not recorded as a visitor.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Let's read through this together.</p>
+<p>The list <code>all_sign_ins</code> is our raw data — everything the user types, duplicates and all. We use <code>append()</code> in the loop to build it up.</p>
+<p>After the loop, <code>set(all_sign_ins)</code> does the uniqueness work in a single line. We store the result in <code>unique_visitors</code>.</p>
+<p>We print <code>len(all_sign_ins)</code> for the raw count and <code>len(unique_visitors)</code> for the unique count. The difference tells the user how many duplicates there were.</p>
+<p>Then we loop over <code>sorted(unique_visitors)</code> to display the names alphabetically — because sets are unordered and we want a predictable, readable output.</p>
+<p>The stretch challenge uses <code>in</code> to check a name against the set. Notice that this is the membership check we practised earlier, applied in a real interactive context.</p>
+<p>One detail worth noting: we call <code>.strip()</code> on every <code>input()</code>. This removes leading and trailing whitespace. Without it, a user who accidentally hits the spacebar before typing would create a string like <code>' Alice'</code>, which is different from <code>'Alice'</code>. The set would treat them as two different values. <code>.strip()</code> is a small habit that saves a lot of confusion."</p>
+<h3 id="104-design-discussion">10.4 Design discussion</h3>
+<p><strong>Say:</strong>
+"Let me ask a question to make sure you understand the design choices: why did we use a list first and then convert to a set, instead of adding directly to a set from the beginning?</p>
+<p>Take a moment to think about that."</p>
+<p><em>(Pause 20–30 seconds.)</em></p>
+<p><strong>Say:</strong>
+"The answer is: we could have added directly to a set. Here is what that would look like:"</p>
+<pre><code class="language-python"># Alternative: build the set directly (also valid)
+unique_visitors_v2: set[str] = set()
+for i in range(1, 11):
+    name = input(f&quot;  Visitor {i}: &quot;).strip()
+    unique_visitors_v2.add(name)  # add() instead of append()
+</code></pre>
+<p><strong>Say:</strong>
+"This is shorter and perfectly correct. The reason we used a list first is that in real programs, you often collect data in a list before you know you need to de-duplicate it. You might read from a file, receive data from an API, or accumulate entries over time — all of which naturally produce a list. Then you convert to a set as a processing step.</p>
+<p>Both patterns are valid. The list-then-convert pattern is more common and more general. The direct-to-set pattern is fine when you know from the start that uniqueness is all you care about."</p>
+<hr>
+<h2 id="11-common-pitfalls">11) Common Pitfalls</h2>
+<h3 id="111-expecting-order-to-be-preserved">11.1 Expecting order to be preserved</h3>
+<p><strong>Say:</strong>
+"This is the big one and it is worth repeating. A set does not preserve the order of insertion. If you need to display items in order, always use <code>sorted()</code>. If you need the original insertion order, keep the list alongside the set — use each for what it is good at."</p>
+<pre><code class="language-python"># PITFALL: Don't rely on set iteration order
+tags: set[str] = {&quot;z&quot;, &quot;a&quot;, &quot;m&quot;, &quot;b&quot;}
+for tag in tags:
+    print(tag)  # Could print in any order — don't assume
+
+# FIX: Use sorted() when order matters for output
+for tag in sorted(tags):
+    print(tag)  # 'a', 'b', 'm', 'z' — consistent alphabetical order
+</code></pre>
+<h3 id="112-using-to-create-an-empty-set">11.2 Using <code>{}</code> to create an empty set</h3>
+<p><strong>Say:</strong>
+"We covered this earlier but it is important enough to repeat as a named pitfall."</p>
+<pre><code class="language-python"># PITFALL: This creates an empty DICT, not an empty SET
+wrong = {}
+print(type(wrong))  # &lt;class 'dict'&gt;
+
+# FIX: Use set() explicitly
+correct = set()
+print(type(correct))  # &lt;class 'set'&gt;
+</code></pre>
+<p><strong>Say:</strong>
+"If you ever get a confusing error like <code>'set' object does not support item assignment</code> or <code>AttributeError: 'dict' object has no attribute 'add'</code>, the first thing to check is whether you accidentally created a dict with <code>{}</code> instead of a set with <code>set()</code>."</p>
+<h3 id="113-trying-to-modify-a-set-while-iterating-over-it">11.3 Trying to modify a set while iterating over it</h3>
+<p><strong>Say:</strong>
+"Just like lists, you should not add or remove items from a set while you are looping over it. Python may raise a <code>RuntimeError</code> or produce unpredictable behaviour."</p>
+<pre><code class="language-python">numbers: set[int] = {1, 2, 3, 4, 5}
+
+# PITFALL: Modifying a set during iteration
+# for n in numbers:
+#     if n % 2 == 0:
+#         numbers.discard(n)  # RuntimeError: Set changed size during iteration
+
+# FIX: Decide what to keep, then build a new set
+new_numbers: set[int] = set()
+for n in numbers:
+    if n % 2 != 0:
+        new_numbers.add(n)
+numbers = new_numbers
+print(numbers)  # {1, 3, 5}
+</code></pre>
+<p><strong>Say:</strong>
+"For beginners: the safe rule is to never modify a set inside the loop that is iterating over it. Instead, build a new set with the items you want to keep."</p>
+<h3 id="114-putting-unhashable-items-like-lists-into-a-set">11.4 Putting unhashable items (like lists) into a set</h3>
+<p><strong>Say:</strong>
+"If you ever see <code>TypeError: unhashable type: 'list'</code>, it means you tried to add a list (or another mutable object) into a set. Sets can only contain immutable values. Convert the inner list to a tuple if you need to store it in a set."</p>
+<pre><code class="language-python"># PITFALL
+# bad_set = {[1, 2], [3, 4]}  # TypeError: unhashable type: 'list'
+
+# FIX: Use tuples instead of lists
+good_set: set[tuple[int, int]] = {(1, 2), (3, 4)}
+print(good_set)  # {(1, 2), (3, 4)}
+</code></pre>
+<hr>
+<h2 id="12-optional-extension-sorted-display">12) Optional Extension: Sorted Display</h2>
+<p><strong>Say:</strong>
+"If you finished the lab early or want to extend your Unique Visitors program, here is a clean extension that demonstrates a useful pattern: keeping both the list and the set, and using them for different purposes."</p>
+<pre><code class="language-python"># Extension: work with both list and set simultaneously
+
+all_sign_ins: list[str] = []
+print(&quot;Enter 10 visitor names:&quot;)
+
+for i in range(1, 11):
+    name = input(f&quot;  Name {i}: &quot;).strip()
+    all_sign_ins.append(name)
+
+unique_visitors: set[str] = set(all_sign_ins)
+
+# --- Use the LIST to count total sign-ins per person ---
+print(&quot;\n=== Visitor Frequency ===&quot;)
+for name in sorted(unique_visitors):
+    count = all_sign_ins.count(name)  # list.count() counts occurrences
+    print(f&quot;  {name}: signed in {count} time(s)&quot;)
+
+# --- Use the SET for the unique summary ---
+print(f&quot;\n=== Summary ===&quot;)
+print(f&quot;Total sign-ins  : {len(all_sign_ins)}&quot;)
+print(f&quot;Unique visitors : {len(unique_visitors)}&quot;)
+print(f&quot;Repeat sign-ins : {len(all_sign_ins) - len(unique_visitors)}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"This extension shows something important about choosing the right data structure. The list is valuable for tasks that need the full record including duplicates — like counting how many times each person signed in. The set is valuable for tasks that need uniqueness — like reporting the unique headcount.</p>
+<p>Using both together is completely normal. In professional code you will often see a list and a set created from the same data, each serving a different purpose."</p>
+<p><strong>Say:</strong>
+"Notice <code>all_sign_ins.count(name)</code> — this is the list <code>count()</code> method, which counts how many times a value appears in the list. It loops through every element internally, so it is not fast for very large data, but for a lab program with 10 or even 100 names it is perfectly fine.</p>
+<p>A second extension, staying in Basics scope: demonstrate all three set operations (union, intersection, difference) using two separate groups. Imagine morning visitors and afternoon visitors — the union tells you total unique attendance for the day, the intersection tells you who attended both sessions, the difference tells you who only came in the morning."</p>
+<pre><code class="language-python"># Further extension: morning vs afternoon visitors
+morning: set[str] = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;, &quot;David&quot;}
+afternoon: set[str] = {&quot;Carol&quot;, &quot;David&quot;, &quot;Eva&quot;, &quot;Frank&quot;}
+
+all_day = morning | afternoon          # Union
+both_sessions = morning &amp; afternoon    # Intersection
+morning_only = morning - afternoon     # Difference
+
+print(f&quot;Attended either session : {sorted(all_day)}&quot;)
+print(f&quot;Attended both sessions  : {sorted(both_sessions)}&quot;)
+print(f&quot;Morning only            : {sorted(morning_only)}&quot;)
+</code></pre>
+<hr>
+<h2 id="13-debrief-recap-and-exit-ticket">13) Debrief, Recap, and Exit Ticket</h2>
+<h3 id="131-concept-recap">13.1 Concept recap</h3>
+<p><strong>Say:</strong>
+"Let's take two minutes to consolidate what we covered this hour. I will summarise the key ideas and then give you an exit-ticket question to answer before you close your laptop.</p>
+<p><strong>What is a set?</strong>
+A set is an unordered collection that automatically enforces uniqueness — every value can appear at most once. You create a set literal with curly braces containing values, or you convert an existing list with <code>set()</code>.</p>
+<p><strong>How do you add and remove items?</strong>
+Use <code>add()</code> to add a single item (silently does nothing if the item already exists), <code>discard()</code> to remove an item without raising an error if it is absent, and <code>remove()</code> when you want an error on a missing item. Use <code>clear()</code> to empty the set.</p>
+<p><strong>Why are sets good for membership checks?</strong>
+<code>value in my_set</code> is conceptually very fast regardless of how large the set is, because Python uses hashing to jump near-directly to the answer rather than scanning every element.</p>
+<p><strong>What are the three main set operations?</strong>
+Union (<code>|</code>) — everyone in either group. Intersection (<code>&amp;</code>) — only those in both groups. Difference (<code>-</code>) — in the first group but not the second.</p>
+<p><strong>What does 'unordered' mean in practice?</strong>
+Never rely on the order items come out of a set. When you need to display or process items in a consistent order, wrap the set in <code>sorted()</code>.</p>
+<p><strong>What is the empty-set trap?</strong>
+<code>{}</code> creates a dictionary, not a set. Always write <code>set()</code> for an empty set."</p>
+<h3 id="132-when-to-reach-for-a-set-vs-a-list-vs-a-tuple">13.2 When to reach for a set vs a list vs a tuple</h3>
+<p><strong>Say:</strong>
+"Here is a decision guide to close out our discussion of all three collection types so far:</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Best choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Do I need to maintain insertion order?</td>
+<td>List or Tuple</td>
+</tr>
+<tr>
+<td>Can duplicates exist?</td>
+<td>List or Tuple</td>
+</tr>
+<tr>
+<td>Do I frequently check 'is X in here?'</td>
+<td>Set</td>
+</tr>
+<tr>
+<td>Do I need to remove duplicates from a list?</td>
+<td>Convert to Set</td>
+</tr>
+<tr>
+<td>Is the collection fixed / should never change?</td>
+<td>Tuple</td>
+</tr>
+<tr>
+<td>Do I need to combine two groups and check overlap?</td>
+<td>Set operations</td>
+</tr>
+<tr>
+<td>Do I need to track how many times each item occurs?</td>
+<td>Keep the List</td>
+</tr>
+</tbody>
+</table>
+<p>You will not always get this perfect — that is fine. Learning to notice these trade-offs comes with practice."</p>
+<h3 id="133-looking-ahead">13.3 Looking ahead</h3>
+<p><strong>Say:</strong>
+"Next hour — Hour 19 — we are going to meet the last and arguably most powerful built-in data structure: the dictionary. Dictionaries let you associate a <em>key</em> with a <em>value</em>, like a real-world dictionary that associates a word with its definition. We will see how dictionaries extend what we can do with data well beyond lists, tuples, and sets.</p>
+<p>Before we get there, take 30 seconds to answer the exit ticket."</p>
+<h3 id="134-exit-ticket">13.4 Exit ticket</h3>
+<p><strong>Say:</strong>
+"Here is your exit ticket. Answer this in your own words — out loud, in a note, or just think it through:</p>
+<p><strong>When is a set better than a list?</strong></p>
+<p>Think about at least two distinct situations. If you have a partner nearby, tell them your answer. If you are working solo, write two bullet points in a comment at the bottom of your lab file.</p>
+<p><em>(Pause 30–60 seconds for reflection.)</em></p>
+<p>I will share what I am looking for: a good answer mentions (1) when you want to remove or prevent duplicates, and (2) when you need to check membership many times and the collection is large. Bonus points if you mention set operations — union, intersection, difference — as a third reason to choose a set over a list."</p>
+<h3 id="135-closing">13.5 Closing</h3>
+<p><strong>Say:</strong>
+"Great work today. You learned a new data structure — the set — and you saw how it solves the uniqueness problem elegantly with almost no code. You practised the most important patterns: creating a set from a list, checking membership with <code>in</code>, using union and intersection to combine groups, and displaying sorted output.</p>
+<p>Save your files. In the next hour we will open up dictionaries and your toolkit for working with data in Python will be complete at the Basics level.</p>
+<p>See you in a few minutes."</p>
+<hr>
+<h2 id="quick-reference-card">Quick Reference Card</h2>
+<blockquote>
+<p>Copy this to the top of your notes file, or keep it open as a reference during the lab.</p>
+</blockquote>
+<pre><code class="language-python"># ── CREATING SETS ──────────────────────────────────────────────
+literal:   s = {&quot;a&quot;, &quot;b&quot;, &quot;c&quot;}         # set literal (no duplicates)
+from list: s = set(my_list)             # convert list → set (removes duplicates)
+empty:     s = set()                    # NEVER use {} for empty set (that's a dict)
+
+# ── ADDING / REMOVING ──────────────────────────────────────────
+s.add(&quot;x&quot;)         # add one item (no-op if already present)
+s.discard(&quot;x&quot;)     # remove (silent if not found — safe default)
+s.remove(&quot;x&quot;)      # remove (KeyError if not found)
+s.pop()            # remove and return an arbitrary item
+s.clear()          # empty the set
+
+# ── MEMBERSHIP ─────────────────────────────────────────────────
+&quot;x&quot; in s           # True if &quot;x&quot; is in the set
+&quot;x&quot; not in s       # True if &quot;x&quot; is NOT in the set
+
+# ── SET OPERATIONS ─────────────────────────────────────────────
+a | b              # Union        — items in a OR b (or both)
+a &amp; b              # Intersection — items in BOTH a AND b
+a - b              # Difference   — items in a but NOT in b
+
+# ── DISPLAY IN ORDER ───────────────────────────────────────────
+sorted(s)          # returns a sorted LIST — does not change s
+for item in sorted(s):
+    print(item)
+
+# ── SIZE ───────────────────────────────────────────────────────
+len(s)             # number of unique items in the set
+</code></pre>
+<hr>
+<p><em>End of Day 5, Hour 2 — Course Hour 18: Sets — Uniqueness + Membership</em></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-reconnect-to-earlier-learning-5-minutes" class="depth-2">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</a></li>
+<li><a href="#31-quick-recap-from-hour-17" class="depth-3">3.1 Quick recap from Hour 17</a></li>
+<li><a href="#32-the-everyday-problem-of-duplicates" class="depth-3">3.2 The everyday problem of duplicates</a></li>
+<li><a href="#33-transition-and-roadmap" class="depth-3">3.3 Transition and roadmap</a></li>
+<li><a href="#4-concept-what-is-a-set" class="depth-2">4) Concept: What Is a Set?</a></li>
+<li><a href="#41-the-bag-of-unique-tags-analogy" class="depth-3">4.1 The bag-of-unique-tags analogy</a></li>
+<li><a href="#42-set-literal-syntax" class="depth-3">4.2 Set literal syntax</a></li>
+<li><a href="#43-the-set-constructor-converting-a-list-to-a-set" class="depth-3">4.3 The set() constructor — converting a list to a set</a></li>
+<li><a href="#44-important-distinction-is-not-an-empty-set" class="depth-3">4.4 Important distinction: {} is NOT an empty set</a></li>
+<li><a href="#45-sets-hold-hashable-values" class="depth-3">4.5 Sets hold hashable values</a></li>
+<li><a href="#5-adding-and-removing-items" class="depth-2">5) Adding and Removing Items</a></li>
+<li><a href="#51-the-add-method" class="depth-3">5.1 The add() method</a></li>
+<li><a href="#52-the-remove-and-discard-methods" class="depth-3">5.2 The remove() and discard() methods</a></li>
+<li><a href="#53-the-pop-method" class="depth-3">5.3 The pop() method</a></li>
+<li><a href="#54-the-clear-method" class="depth-3">5.4 The clear() method</a></li>
+<li><a href="#6-membership-checks" class="depth-2">6) Membership Checks</a></li>
+<li><a href="#61-using-in-with-a-set" class="depth-3">6.1 Using in with a set</a></li>
+<li><a href="#62-sets-vs-lists-for-membership-conceptual-speed-difference" class="depth-3">6.2 Sets vs lists for membership — conceptual speed difference</a></li>
+<li><a href="#7-set-operations-at-a-conceptual-level" class="depth-2">7) Set Operations at a Conceptual Level</a></li>
+<li><a href="#71-setup-two-classroom-rosters" class="depth-3">7.1 Setup — two classroom rosters</a></li>
+<li><a href="#72-union-everyone-in-either-group" class="depth-3">7.2 Union (|) — everyone in either group</a></li>
+<li><a href="#73-intersection-amp-only-those-in-both-groups" class="depth-3">7.3 Intersection (&amp;amp;) — only those in both groups</a></li>
+<li><a href="#74-difference-in-one-but-not-the-other" class="depth-3">7.4 Difference (-) — in one but not the other</a></li>
+<li><a href="#75-quick-summary-table" class="depth-3">7.5 Quick summary table</a></li>
+<li><a href="#8-sets-are-unordered-what-that-means" class="depth-2">8) Sets Are Unordered — What That Means</a></li>
+<li><a href="#81-demonstrating-the-lack-of-order" class="depth-3">8.1 Demonstrating the lack of order</a></li>
+<li><a href="#82-why-this-catches-beginners-off-guard" class="depth-3">8.2 Why this catches beginners off guard</a></li>
+<li><a href="#83-the-sorted-fix-for-display" class="depth-3">8.3 The sorted() fix for display</a></li>
+<li><a href="#9-live-demo-list-of-names-set" class="depth-2">9) Live Demo: List of Names → Set</a></li>
+<li><a href="#91-set-up-the-demo-file" class="depth-3">9.1 Set up the demo file</a></li>
+<li><a href="#92-convert-to-a-set" class="depth-3">9.2 Convert to a set</a></li>
+<li><a href="#93-display-with-sorted-and-loop-over-the-results" class="depth-3">9.3 Display with sorted() and loop over the results</a></li>
+<li><a href="#94-bonus-membership-check-in-the-demo" class="depth-3">9.4 Bonus: membership check in the demo</a></li>
+<li><a href="#10-hands-on-lab-unique-visitors" class="depth-2">10) Hands-on Lab: Unique Visitors</a></li>
+<li><a href="#101-lab-overview" class="depth-3">10.1 Lab overview</a></li>
+<li><a href="#102-starter-hints" class="depth-3">10.2 Starter hints</a></li>
+<li><a href="#103-walkthrough-solution" class="depth-3">10.3 Walkthrough solution</a></li>
+<li><a href="#104-design-discussion" class="depth-3">10.4 Design discussion</a></li>
+<li><a href="#11-common-pitfalls" class="depth-2">11) Common Pitfalls</a></li>
+<li><a href="#111-expecting-order-to-be-preserved" class="depth-3">11.1 Expecting order to be preserved</a></li>
+<li><a href="#112-using-to-create-an-empty-set" class="depth-3">11.2 Using {} to create an empty set</a></li>
+<li><a href="#113-trying-to-modify-a-set-while-iterating-over-it" class="depth-3">11.3 Trying to modify a set while iterating over it</a></li>
+<li><a href="#114-putting-unhashable-items-like-lists-into-a-set" class="depth-3">11.4 Putting unhashable items (like lists) into a set</a></li>
+<li><a href="#12-optional-extension-sorted-display" class="depth-2">12) Optional Extension: Sorted Display</a></li>
+<li><a href="#13-debrief-recap-and-exit-ticket" class="depth-2">13) Debrief, Recap, and Exit Ticket</a></li>
+<li><a href="#131-concept-recap" class="depth-3">13.1 Concept recap</a></li>
+<li><a href="#132-when-to-reach-for-a-set-vs-a-list-vs-a-tuple" class="depth-3">13.2 When to reach for a set vs a list vs a tuple</a></li>
+<li><a href="#133-looking-ahead" class="depth-3">13.3 Looking ahead</a></li>
+<li><a href="#134-exit-ticket" class="depth-3">13.4 Exit ticket</a></li>
+<li><a href="#135-closing" class="depth-3">13.5 Closing</a></li>
+<li><a href="#quick-reference-card" class="depth-2">Quick Reference Card</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day5_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

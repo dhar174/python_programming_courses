@@ -42,6 +42,9 @@ DOWNLOAD_SUFFIXES = {
     "pptx": ".pptx",
     "png": ".png",
 }
+LECTURE_FILENAME_RE = re.compile(
+    r"^Day(?P<day>\d+)_Hour(?P<hour>\d+)_(?P<module>Basics|Advanced)\.md$"
+)
 
 
 def run_command(repo_root: Path, *args: str) -> str | None:
@@ -152,6 +155,32 @@ def build_repo_artifact(
     return artifact
 
 
+def build_lecture_artifact(
+    *,
+    repo_paths: list[str],
+    site_root: Path | None,
+) -> dict[str, object]:
+    published_paths: list[str] = []
+    if site_root:
+        for repo_path in repo_paths:
+            published_path = str(Path(repo_path).with_suffix(".html").as_posix())
+            if (site_root / published_path).is_file():
+                published_paths.append(published_path)
+
+    artifact: dict[str, object] = {
+        "present": bool(repo_paths),
+        "delivery": "pages" if published_paths else ("repo" if repo_paths else "none"),
+        "repoPath": repo_paths[0] if repo_paths else None,
+        "href": published_paths[0] if published_paths else None,
+    }
+    if repo_paths:
+        artifact["repoPaths"] = repo_paths
+        artifact["count"] = len(repo_paths)
+    if published_paths:
+        artifact["publishedPaths"] = published_paths
+    return artifact
+
+
 def build_pages_artifact(
     *,
     published_href: str | None,
@@ -178,6 +207,13 @@ def build_pages_artifact(
     }
 
 
+def lecture_path_sort_key(repo_path: str) -> tuple[int, int, str]:
+    match = LECTURE_FILENAME_RE.match(Path(repo_path).name)
+    if match is None:
+        return (0, 0, repo_path)
+    return (int(match.group("day")), int(match.group("hour")), repo_path)
+
+
 def build_day(
     *,
     repo_root: Path,
@@ -197,8 +233,11 @@ def build_day(
     source_overview_href = overview_html.relative_to(repo_root).as_posix() if overview_html.is_file() else None
 
     lecture_paths = sorted(
-        path.relative_to(repo_root).as_posix()
-        for path in repo_root.glob(module["lecture_pattern"].format(day=day_number))
+        (
+            path.relative_to(repo_root).as_posix()
+            for path in repo_root.glob(module["lecture_pattern"].format(day=day_number))
+        ),
+        key=lecture_path_sort_key,
     )
     assignment_path = module["assignment_path"].format(day=day_number)
     quiz_path = module["quiz_path"].format(day=day_number)
@@ -227,10 +266,9 @@ def build_day(
                 source_path=source_primary_href,
                 site_root=site_root,
             ),
-            "lecture": build_repo_artifact(
-                present=bool(lecture_paths),
-                repo_path=lecture_paths[0] if lecture_paths else None,
-                repo_paths=lecture_paths or None,
+            "lecture": build_lecture_artifact(
+                repo_paths=lecture_paths,
+                site_root=site_root,
             ),
             "assignment": build_repo_artifact(
                 present=assignment_present,

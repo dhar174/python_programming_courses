@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 1, Hour 2: Designing Classes from Requirements | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="1">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day1_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day1_Hour1_Advanced.html">
+    <link rel="next" href="Day1_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="1" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-01/index.html">Day 1</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 1, Hour 2: Designing Classes from Requirements</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 1</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day1_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 1, Hour 2 of 48</li>
+<li><strong>Focus</strong>: Translating requirements into classes, responsibilities, and boundaries.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 1, Hour 2.</li>
+<li><strong>Prerequisites</strong>: Learners should be able to write functions, define simple classes, instantiate objects, use lists and dictionaries, read basic tracebacks, and run a Python file from the terminal.</li>
+<li><strong>Advanced trajectory</strong>: This hour moves learners from a PCAP-level "I can write a working script" mindset toward a PCPP1-style design mindset: objects have responsibilities, boundaries are intentional, business rules are testable, and user interface code is not mixed into the core model.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has sketched 3 to 5 tracker-domain classes, identified what each class knows and does, implemented at least one working class, and written a small separate service function that uses the model without putting <code>input()</code> or <code>print()</code> inside the model object.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Hour 1</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect setup and Git workflow to design work</td>
+</tr>
+<tr>
+<td>Outcomes and design vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Establish responsibilities, boundaries, and layers</td>
+</tr>
+<tr>
+<td>Concept briefing: from requirements to classes</td>
+<td style="text-align: right;">10 min</td>
+<td>Teach responsibility-driven design in plain language</td>
+</tr>
+<tr>
+<td>Live demo: tracker domain model and service function</td>
+<td style="text-align: right;">10 min</td>
+<td>Model class responsibilities and UI separation</td>
+</tr>
+<tr>
+<td>Guided lab: domain modeling for learner tracker</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners sketch 3 to 5 classes and implement one</td>
+</tr>
+<tr>
+<td>Debrief and troubleshooting review</td>
+<td style="text-align: right;">3 min</td>
+<td>Surface common design issues before they harden</td>
+</tr>
+<tr>
+<td>Quick check and wrap-up</td>
+<td style="text-align: right;">2 min</td>
+<td>Confirm the main boundary lesson and preview Hour 3</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. If the room needs more support, protect the 25-minute guided lab. Shorten the concept briefing before shortening learner practice. Do not allow the live demo to grow into a full application build; the target is design thinking, not feature completion.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Translate a short requirements list into candidate classes for a tracker-style application.</li>
+<li>Describe a class in terms of what it <strong>knows</strong> and what it <strong>does</strong>.</li>
+<li>Explain why user interface actions such as <code>input()</code> and <code>print()</code> should stay outside domain model classes.</li>
+<li>Identify reasonable boundaries between model objects, service functions, and presentation code.</li>
+<li>Implement a small Python class with type hints, an initializer, and at least one behavior method.</li>
+<li>Write a deterministic service function that uses model objects without mixing in terminal interaction.</li>
+<li>Recognize common early design pitfalls, including overcomplicated inheritance and oversized classes.</li>
+<li>State where validation and business rules should live in a small application.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Open the Hour 1 project workspace you used during the previous session, or prepare a clean <code>advanced_tracker</code> folder with a <code>src/</code> directory.</li>
+<li>Confirm the terminal command for the environment. Use <code>python day1_hour2_tracker_demo.py</code> if <code>python</code> works. If the lab requires <code>python3</code>, consistently say and show <code>python3 day1_hour2_tracker_demo.py</code>.</li>
+<li>Keep the runbook section for Session 1, Hour 2 visible for yourself. The required scope is class design from requirements, responsibilities and boundaries, a simple service layer function, and a domain modeling lab.</li>
+<li>Prepare a blank file named <code>day1_hour2_tracker_demo.py</code> for the live demo, or be ready to create it in front of the class.</li>
+<li>Prepare a whiteboard area or shared note with these three prompts:</li>
+</ul>
+<pre><code class="language-text">Requirement:
+Class:
+Knows:
+Does:
+Boundary:
+</code></pre>
+<ul>
+<li>Be ready to stop learners who place <code>input()</code> or <code>print()</code> inside their model classes. Correct this gently and early. This is the central habit for the hour.</li>
+<li>Decide whether your lab examples will use tasks, inventory, contacts, or expenses. This script uses a task tracker. Learners may choose any tracker domain for their lab.</li>
+</ul>
+<p>Suggested board note before the session starts:</p>
+<pre><code class="language-text">Day 1 Hour 2 goals:
+1. Turn requirements into classes
+2. Decide what each object knows and does
+3. Keep UI separate from core logic
+4. Implement one small testable model
+5. Use a service function to coordinate objects
+</code></pre>
+<hr>
+<h2 id="opening-bridge-from-hour-1-5-minutes">Opening Bridge from Hour 1 (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"In Hour 1, we focused on readiness. We launched the lab, confirmed that files persist when saved properly, created a project workspace, and used Git as a checkpoint system. That work may have felt like setup, but it matters because advanced programming is not only about writing more Python. It is about building a reliable workflow around Python."</p>
+<p>"Now we are going to shift from environment readiness to design readiness. In Basics, it was normal to write a script from top to bottom: ask the user a question, store an answer in a variable, put a few values in a dictionary, print a result, and move on. That is a good way to learn syntax. But as programs grow, that style becomes difficult to change."</p>
+<p>"Today we begin the core Advanced habit: before we write a lot of code, we ask what responsibilities exist in the problem. Who owns the data? Who owns the behavior? Who coordinates the work? Who talks to the user? When we answer those questions clearly, our code becomes easier to test, easier to extend, and easier to explain."</p>
+<p>Pause and ask:</p>
+<p>"Think about a simple tracker app. It could track tasks, contacts, expenses, workouts, books, inventory items, or support tickets. What are two things such an app usually needs to remember?"</p>
+<p>Take a few quick answers. Connect them to classes:</p>
+<p>"Good. You are naming data: title, due date, status, price, email address, quantity, priority. Now the next design question is: what object should own that data, and what behavior belongs with it?"</p>
+<p>"That question is the bridge from script writing to object-oriented design. We are not using classes just because classes look advanced. We use classes when they help us group related data and behavior behind a clear responsibility."</p>
+<p><strong>Transition</strong></p>
+<p>"The focus for this hour is not to build a complete app. The focus is to design the small core that a complete app could grow around."</p>
+<hr>
+<h2 id="outcomes-and-design-vocabulary-5-minutes">Outcomes and Design Vocabulary (5 minutes)</h2>
+<p>Use this section to make the vocabulary accessible before the demo.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"There are four terms I want us to use carefully today: requirement, responsibility, boundary, and service."</p>
+<p>"A <strong>requirement</strong> is something the program must do or support. For example: users can create a task, mark a task complete, list pending tasks, or calculate how many tasks are overdue. Requirements are written from the outside view of the program."</p>
+<p>"A <strong>responsibility</strong> is a job owned by a piece of code. In responsibility-driven design, we ask two questions about an object: what does it know, and what does it do?"</p>
+<p>Write:</p>
+<pre><code class="language-text">Object responsibility:
+- Knows: the data it owns
+- Does: the behavior it can perform
+</code></pre>
+<p>"For example, a <code>Task</code> object might know its title, priority, and status. It might know whether it is complete. It might do things like mark itself complete or change its priority. That is different from saying the <code>Task</code> should ask the user what to type. Asking the user is a user interface responsibility, not a task responsibility."</p>
+<p>"A <strong>boundary</strong> is a line between responsibilities. A healthy boundary lets one part of the program change without forcing every other part to change. If the model is separate from the terminal interface, then later we can add a web page, a desktop interface, or automated tests without rewriting the <code>Task</code> class."</p>
+<p>"A <strong>service function</strong> is a small coordinating function. It uses one or more model objects to complete a use case. It is not necessarily a class. Sometimes a plain function is the clearest tool. For example, a function named <code>complete_task_by_title(project, title)</code> might search a project for a task and mark it complete. That function coordinates objects. The <code>Task</code> still owns the behavior of becoming complete."</p>
+<p><strong>Instructor emphasis</strong></p>
+<p>"This distinction is important for your capstone. Model objects should represent the domain. Service functions can coordinate the domain. UI code can collect input and display output. If those three concerns are tangled together, the project becomes harder to test and harder to grow."</p>
+<p><strong>Short prediction prompt</strong></p>
+<p>"Suppose I write a <code>Contact</code> class, and inside its <code>__init__</code> method I call <code>input('Email: ')</code>. What problem does that create?"</p>
+<p>Expected learner answers:</p>
+<ul>
+<li>It is hard to create a contact in a test.</li>
+<li>It forces every contact to come from the terminal.</li>
+<li>It makes the model depend on the user interface.</li>
+<li>It makes the object less reusable.</li>
+</ul>
+<p>Affirm:</p>
+<p>"Exactly. The model should accept data. It should not be responsible for asking where the data came from."</p>
+<hr>
+<h2 id="concept-briefing-from-requirements-to-classes-10-minutes">Concept Briefing: From Requirements to Classes (10 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's practice the design process before writing code. We will use a task tracker because it is familiar, but the same process works for expenses, contacts, inventory, or any small capstone tracker."</p>
+<p>Display this requirements list:</p>
+<pre><code class="language-text">Task tracker requirements:
+1. A user can create tasks with a title and priority.
+2. A task starts as pending.
+3. A user can mark a task complete.
+4. A project can contain multiple tasks.
+5. The program can list pending tasks.
+6. The program can count completed tasks.
+7. The program can produce a simple summary for display.
+</code></pre>
+<p>"The first mistake many developers make is to turn every noun into a class immediately. Nouns are clues, not automatic classes. The words task, priority, project, user, program, and summary all appear here. Some may become classes; some may become attributes; some may just become functions."</p>
+<p>"The second mistake is to make one giant manager object that does everything. A <code>TaskManager</code> that creates tasks, stores tasks, prints menus, reads input, writes files, calculates reports, validates priorities, sends emails, and formats tables is not a design. It is a junk drawer. Advanced design is partly about resisting the junk drawer."</p>
+<p>"Here is a simple way to move from requirements to classes."</p>
+<p>Write:</p>
+<pre><code class="language-text">Step 1: Underline important nouns and verbs.
+Step 2: Group related data and behavior.
+Step 3: Name candidate classes.
+Step 4: For each class, list what it knows and does.
+Step 5: Decide what does NOT belong in the class.
+</code></pre>
+<p>"Step 5 matters. A good class definition is not only a list of what belongs. It is also a boundary against what does not belong."</p>
+<h3 id="sketching-candidate-classes">Sketching Candidate Classes</h3>
+<p>Walk through this sketch verbally.</p>
+<pre><code class="language-text">Candidate class: Task
+Knows:
+- title
+- priority
+- completed status
+Does:
+- mark itself complete
+- report whether it is pending
+- change priority, if allowed
+Does not:
+- ask the user for a title
+- print itself to the screen as the only way to access its data
+- save itself to a database during this hour
+</code></pre>
+<pre><code class="language-text">Candidate class: Project
+Knows:
+- project name
+- list of Task objects
+Does:
+- add a task
+- return pending tasks
+- count completed tasks
+Does not:
+- display a menu
+- read from input()
+</code></pre>
+<pre><code class="language-text">Candidate class: Tag
+Knows:
+- tag name
+Does:
+- normalize or compare tag names, if needed later
+Does not:
+- own the whole project
+</code></pre>
+<pre><code class="language-text">Candidate class: TaskReport
+Knows:
+- maybe summary values, if reporting becomes complex
+Does:
+- format or calculate report data, if needed later
+Does not:
+- mutate tasks unless that is clearly part of the requirement
+</code></pre>
+<pre><code class="language-text">Candidate class: TaskRepository
+Knows:
+- where tasks are stored, later
+Does:
+- save and load tasks, later
+Does not:
+- decide business rules such as what makes a valid priority
+</code></pre>
+<p>"Notice that we sketched five possible classes, but we do not have to implement all five today. Sketching is cheap. It helps us see the shape of the application. Implementation is more expensive, so we start with the smallest useful slice."</p>
+<p><strong>Responsibility-driven design question</strong></p>
+<p>"If you are unsure where a behavior belongs, ask: who has the information needed to do this job?"</p>
+<p>"Who can mark a task complete? The <code>Task</code> can, because the completion status belongs to the task."</p>
+<p>"Who can list all pending tasks in a project? The <code>Project</code> can, because it knows the list of tasks."</p>
+<p>"Who can ask a human which task to complete? The UI layer can, because that is interaction with the outside world."</p>
+<p>"Who can coordinate the use case 'complete the task named Write report'? A service function can, because it may need to search the project, find the correct task, and call the task's behavior."</p>
+<p><strong>Transition to code</strong></p>
+<p>"Now let's turn that sketch into a small deterministic Python demo. Deterministic means the output is predictable every time. There will be no <code>input()</code> in this demo. We want code that can be run in class, copied by learners, and later tested."</p>
+<hr>
+<h2 id="live-demo-tracker-domain-model-and-service-function-10-minutes">Live Demo: Tracker Domain Model and Service Function (10 minutes)</h2>
+<p><strong>Instructor action cue</strong></p>
+<p>Create a file named <code>day1_hour2_tracker_demo.py</code>. Use the same command later when running it:</p>
+<pre><code class="language-bash">python day1_hour2_tracker_demo.py
+</code></pre>
+<p>If the lab uses <code>python3</code>, say:</p>
+<pre><code class="language-bash">python3 day1_hour2_tracker_demo.py
+</code></pre>
+<p>Do not switch command names halfway through the demo. Consistency prevents avoidable learner errors.</p>
+<h3 id="demo-part-1-model-objects-only">Demo Part 1: Model Objects Only</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First, I am going to write the model. The model is the core logic. It should not know whether it is being used by a terminal program, a web app, a notebook, or a test."</p>
+<p>Type or paste:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+
+class Task:
+    &quot;&quot;&quot;A single task in a tracker project.&quot;&quot;&quot;
+
+    allowed_priorities = {&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;}
+
+    def __init__(self, title: str, priority: str = &quot;medium&quot;) -&gt; None:
+        cleaned_title = title.strip()
+        cleaned_priority = priority.strip().lower()
+
+        if not cleaned_title:
+            raise ValueError(&quot;Task title cannot be empty.&quot;)
+
+        if cleaned_priority not in self.allowed_priorities:
+            raise ValueError(
+                f&quot;Priority must be one of: {', '.join(sorted(self.allowed_priorities))}.&quot;
+            )
+
+        self.title = cleaned_title
+        self.priority = cleaned_priority
+        self.is_complete = False
+
+    def mark_complete(self) -&gt; None:
+        self.is_complete = True
+
+    def is_pending(self) -&gt; bool:
+        return not self.is_complete
+
+    def change_priority(self, new_priority: str) -&gt; None:
+        cleaned_priority = new_priority.strip().lower()
+
+        if cleaned_priority not in self.allowed_priorities:
+            raise ValueError(
+                f&quot;Priority must be one of: {', '.join(sorted(self.allowed_priorities))}.&quot;
+            )
+
+        self.priority = cleaned_priority
+
+    def __str__(self) -&gt; str:
+        status = &quot;done&quot; if self.is_complete else &quot;pending&quot;
+        return f&quot;{self.title} [{self.priority}, {status}]&quot;
+
+
+class Project:
+    &quot;&quot;&quot;A project that groups related tasks.&quot;&quot;&quot;
+
+    def __init__(self, name: str) -&gt; None:
+        cleaned_name = name.strip()
+
+        if not cleaned_name:
+            raise ValueError(&quot;Project name cannot be empty.&quot;)
+
+        self.name = cleaned_name
+        self.tasks: list[Task] = []
+
+    def add_task(self, task: Task) -&gt; None:
+        self.tasks.append(task)
+
+    def pending_tasks(self) -&gt; list[Task]:
+        return [task for task in self.tasks if task.is_pending()]
+
+    def completed_count(self) -&gt; int:
+        return sum(1 for task in self.tasks if task.is_complete)
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"Let's pause. We have two classes. <code>Task</code> knows its title, priority, and completion status. <code>Task</code> can mark itself complete, answer whether it is pending, change priority, and provide a friendly string representation."</p>
+<p>"<code>Project</code> knows its name and a list of <code>Task</code> objects. It can add a task, return pending tasks, and count completed tasks."</p>
+<p>"Notice what is missing. There is no <code>input()</code> here. There is no menu. There is no <code>print()</code> inside <code>mark_complete</code>. That is deliberate. These classes are usable from a terminal program, a test file, a web route, or a notebook because they are not tied to one interface."</p>
+<p>"Also notice that validation is close to the data it protects. A task title cannot be empty, so the <code>Task</code> initializer checks that. A project name cannot be empty, so the <code>Project</code> initializer checks that. Priority must be one of a small allowed set, so the <code>Task</code> class owns that rule."</p>
+<p><strong>Mini-prediction</strong></p>
+<p>"What do you think happens if I try <code>Task('', 'high')</code>?"</p>
+<p>Expected answer:</p>
+<p>"It raises a <code>ValueError</code> because the title is empty."</p>
+<p>Affirm:</p>
+<p>"Correct. The model protects its own core rules."</p>
+<h3 id="demo-part-2-a-service-function">Demo Part 2: A Service Function</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now we will add a service function. The service function coordinates a use case. It does not replace the model. It uses the model."</p>
+<p>Add below the classes:</p>
+<pre><code class="language-python">def complete_task_by_title(project: Project, title: str) -&gt; bool:
+    &quot;&quot;&quot;Mark the first pending task with this title complete.
+
+    Returns True if a task was found and completed.
+    Returns False if no matching pending task was found.
+    &quot;&quot;&quot;
+    target_title = title.strip().lower()
+
+    for task in project.pending_tasks():
+        if task.title.lower() == target_title:
+            task.mark_complete()
+            return True
+
+    return False
+
+
+def build_project_summary(project: Project) -&gt; str:
+    &quot;&quot;&quot;Format summary text without printing inside the model.&quot;&quot;&quot;
+    total_tasks = len(project.tasks)
+    completed_tasks = project.completed_count()
+    pending_tasks = total_tasks - completed_tasks
+
+    lines = [
+        f&quot;Project: {project.name}&quot;,
+        f&quot;Total tasks: {total_tasks}&quot;,
+        f&quot;Completed tasks: {completed_tasks}&quot;,
+        f&quot;Pending tasks: {pending_tasks}&quot;,
+        &quot;Pending task list:&quot;,
+    ]
+
+    for task in project.pending_tasks():
+        lines.append(f&quot;- {task}&quot;)
+
+    return &quot;\n&quot;.join(lines)
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"The function <code>complete_task_by_title</code> is a service function. It coordinates a use case: given a project and a title, find a pending task with that title and complete it. The function does not directly set <code>task.is_complete = True</code>. Instead, it calls <code>task.mark_complete()</code>. That keeps the task's behavior inside the task."</p>
+<p>"The function returns <code>True</code> or <code>False</code>. It does not print success or failure. Why? Because printing is a display decision. A terminal UI may print. A web app may return JSON. A test may assert the boolean value. Returning data gives the caller choices."</p>
+<p>"The function <code>build_project_summary</code> is a formatter/report helper, not the service layer. It prepares display text, but it still does not print by itself. This makes it easy to test. A test can compare the returned string or check that it contains expected lines."</p>
+<h3 id="demo-part-3-deterministic-demo-block">Demo Part 3: Deterministic Demo Block</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Finally, we need a small demo block. This is the only part that prints, and it lives outside the model. In a larger project, this might be in a separate <code>main.py</code> file. For today's demonstration, keeping it at the bottom is fine."</p>
+<p>Add:</p>
+<pre><code class="language-python">def main() -&gt; None:
+    project = Project(&quot;Day 1 Tracker&quot;)
+    project.add_task(Task(&quot;Sketch tracker classes&quot;, &quot;high&quot;))
+    project.add_task(Task(&quot;Implement one model&quot;, &quot;medium&quot;))
+    project.add_task(Task(&quot;Separate UI from logic&quot;, &quot;high&quot;))
+
+    was_completed = complete_task_by_title(project, &quot;Implement one model&quot;)
+
+    print(f&quot;Completed requested task: {was_completed}&quot;)
+    print()
+    print(build_project_summary(project))
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Run:</p>
+<pre><code class="language-bash">python day1_hour2_tracker_demo.py
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Completed requested task: True
+
+Project: Day 1 Tracker
+Total tasks: 3
+Completed tasks: 1
+Pending tasks: 2
+Pending task list:
+- Sketch tracker classes [high, pending]
+- Separate UI from logic [high, pending]
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"This output is deterministic. Everyone should see the same result. The task named <code>Implement one model</code> is completed, so it no longer appears in the pending task list."</p>
+<p>"Now let's inspect the boundary. Where is validation? The model validates titles, names, and priorities. Where is coordination? The service function searches the project and calls the task behavior. Where is output? The <code>main()</code> function prints. That gives us three layers, even in a small file."</p>
+<p>Write:</p>
+<pre><code class="language-text">Model: Task, Project
+Service/use case: complete_task_by_title()
+Report/formatter: build_project_summary()
+Presentation/demo: main() and print()
+</code></pre>
+<p>"Do not worry if those layer names feel formal. The habit is the important part: keep the core logic independent from the way humans interact with it."</p>
+<h3 id="demo-part-4-show-the-anti-pattern-briefly">Demo Part 4: Show the Anti-Pattern Briefly</h3>
+<p>Do not spend long here. Show only enough to make the pitfall visible.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"Here is what I do not want in the model."</p>
+<pre><code class="language-python"># Avoid this pattern inside a domain model:
+class BadTask:
+    def __init__(self) -&gt; None:
+        self.title = input(&quot;Task title: &quot;)
+
+    def mark_complete(self) -&gt; None:
+        self.is_complete = True
+        print(&quot;Task completed!&quot;)
+</code></pre>
+<p>"This looks convenient in a tiny script, but it creates hidden costs. I cannot create a <code>BadTask</code> in an automated test without pretending to type at the terminal. I cannot reuse it in a web app without rewriting it. I cannot mark it complete silently if another part of the program needs that. The model has become tangled with the UI."</p>
+<p>"The better pattern is: collect input elsewhere, pass clean values into the model, let the model enforce business rules, and let the caller decide how to display results."</p>
+<hr>
+<h2 id="guided-lab-domain-modeling-for-a-tracker-25-minutes">Guided Lab: Domain Modeling for a Tracker (25 minutes)</h2>
+<p><strong>Instructor setup</strong></p>
+<p>"Now you will design your own tracker domain. You do not need to build a complete application. Your goal is to practice the design process. By the end of the lab, you should have a short requirements list, 3 to 5 candidate classes, and at least one working class with a behavior method."</p>
+<p>Give learners this prompt:</p>
+<pre><code class="language-text">Choose one tracker domain:
+- Tasks
+- Inventory
+- Contacts
+- Expenses
+- Books or media
+- Workouts
+- Support tickets
+- Your own small tracker idea
+</code></pre>
+<h3 id="step-1-pick-a-theme-and-write-requirements">Step 1: Pick a Theme and Write Requirements</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First, choose a theme. Then write 5 to 8 requirements. Keep them small. A good requirement for today is not 'build a complete business platform.' A good requirement is something like 'an expense has an amount and category' or 'an inventory item can be restocked.'"</p>
+<p>Examples:</p>
+<pre><code class="language-text">Expense tracker requirements:
+1. An expense has a description, amount, and category.
+2. The amount must be greater than zero.
+3. An expense can be marked reimbursed.
+4. A report can calculate total unreimbursed expenses.
+5. A tracker can hold multiple expenses.
+</code></pre>
+<pre><code class="language-text">Inventory tracker requirements:
+1. An item has a name, quantity, and reorder level.
+2. Quantity cannot be negative.
+3. An item can be restocked.
+4. An item can be sold or used.
+5. The tracker can list items below reorder level.
+</code></pre>
+<p>"If you are stuck, use tasks. The goal is design practice, not having the most original idea."</p>
+<h3 id="step-2-sketch-3-to-5-classes">Step 2: Sketch 3 to 5 Classes</h3>
+<p>Ask learners to use this template:</p>
+<pre><code class="language-text">Class name:
+Knows:
+-
+-
+Does:
+-
+-
+Does not:
+-
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"For each class, use plain English first. Do not start with code. If you cannot explain the class in plain English, the code will probably become confusing."</p>
+<p>"Your class list should be small. Three to five classes is enough. If you have ten classes after five minutes, you are probably designing too far ahead. If you have only one class that does everything, look for responsibilities that can be separated."</p>
+<p>Suggested class patterns:</p>
+<pre><code class="language-text">Task tracker:
+- Task
+- Project
+- Tag
+- TaskReport
+- TaskRepository later
+</code></pre>
+<pre><code class="language-text">Inventory tracker:
+- InventoryItem
+- Inventory
+- Supplier
+- ReorderRule
+- InventoryReport
+</code></pre>
+<pre><code class="language-text">Expense tracker:
+- Expense
+- ExpenseCategory
+- ExpenseTracker
+- ReimbursementReport
+- ExpenseRepository later
+</code></pre>
+<pre><code class="language-text">Contact tracker:
+- Contact
+- AddressBook
+- ContactGroup
+- DuplicateContactPolicy
+- ContactReport
+</code></pre>
+<p>"The word 'later' is useful. It means you can name a future responsibility without implementing it today. Advanced design includes restraint."</p>
+<h3 id="step-3-choose-one-class-to-implement">Step 3: Choose One Class to Implement</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now choose one class to implement. Pick the class with the clearest data and behavior. Usually that is the central object: <code>Task</code>, <code>InventoryItem</code>, <code>Expense</code>, or <code>Contact</code>."</p>
+<p>Minimum implementation:</p>
+<pre><code class="language-text">Your class must include:
+1. __init__
+2. At least two attributes
+3. At least one behavior method
+4. At least one simple validation rule if it fits the domain
+5. A separate service function that uses the class
+</code></pre>
+<p>Provide a starter shape without solving every domain:</p>
+<pre><code class="language-python">class InventoryItem:
+    def __init__(self, name: str, quantity: int, reorder_level: int) -&gt; None:
+        if not name.strip():
+            raise ValueError(&quot;Name cannot be empty.&quot;)
+
+        if quantity &lt; 0:
+            raise ValueError(&quot;Quantity cannot be negative.&quot;)
+
+        if reorder_level &lt; 0:
+            raise ValueError(&quot;Reorder level cannot be negative.&quot;)
+
+        self.name = name.strip()
+        self.quantity = quantity
+        self.reorder_level = reorder_level
+
+    def restock(self, amount: int) -&gt; None:
+        if amount &lt;= 0:
+            raise ValueError(&quot;Restock amount must be positive.&quot;)
+
+        self.quantity += amount
+
+    def needs_reorder(self) -&gt; bool:
+        return self.quantity &lt;= self.reorder_level
+</code></pre>
+<p>"If you use this starter, write your own small service function. A demo block may call the service function, but it does not replace it. Do not put <code>print()</code> inside <code>restock()</code> or <code>needs_reorder()</code>."</p>
+<h3 id="step-4-add-a-small-service-function">Step 4: Add a Small Service Function</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"After one class works, write a small function outside the class that uses it. This helps you practice boundaries."</p>
+<p>Example:</p>
+<pre><code class="language-python">def restock_if_needed(item: InventoryItem, amount: int) -&gt; bool:
+    if item.needs_reorder():
+        item.restock(amount)
+        return True
+
+    return False
+</code></pre>
+<p>"This function coordinates a use case. It asks the item whether it needs reorder. If yes, it calls the item's behavior. It returns a boolean instead of printing. That means another caller can decide what to do with the result."</p>
+<h3 id="instructor-circulation-checklist">Instructor Circulation Checklist</h3>
+<p>As learners work, circulate with these questions:</p>
+<ul>
+<li>"What is the central object in your tracker?"</li>
+<li>"What does this object know?"</li>
+<li>"What does this object do?"</li>
+<li>"What does this object not do?"</li>
+<li>"Where would user input happen?"</li>
+<li>"Could you create this object in a test without typing at the terminal?"</li>
+<li>"Is this method small enough that you can explain it in one sentence?"</li>
+<li>"Are you using inheritance because you need it, or because it feels advanced?"</li>
+</ul>
+<p>Use these correction prompts:</p>
+<ul>
+<li>If a learner puts <code>input()</code> in a class: "Let's move the input outside. The class should receive values; it should not ask for them."</li>
+<li>If a learner puts <code>print()</code> in every method: "Let's return a value or update state here. Printing can happen in a demo block."</li>
+<li>If a learner creates too many classes: "Which one class do you need to implement today? Mark the others as future design notes."</li>
+<li>If a learner creates one giant class: "Can we separate the item being tracked from the collection that holds many items?"</li>
+<li>If a learner writes a method longer than the whole class sketch: "What is the one job of this method? Can part of it become a helper or service function?"</li>
+</ul>
+<hr>
+<h2 id="troubleshooting-during-the-lab">Troubleshooting During the Lab</h2>
+<p>Use this section when learners hit predictable issues.</p>
+<h3 id="issue-my-class-works-but-nothing-prints">Issue: "My class works, but nothing prints."</h3>
+<p>Response:</p>
+<p>"That may be correct. The model class should not necessarily print. Add a small demo block outside the class if you want to display the result."</p>
+<p>Example:</p>
+<pre><code class="language-python">item = InventoryItem(&quot;Notebook&quot;, 3, 5)
+was_restocked = restock_if_needed(item, 10)
+print(f&quot;Restocked: {was_restocked}&quot;)
+print(f&quot;Current quantity: {item.quantity}&quot;)
+</code></pre>
+<h3 id="issue-i-do-not-know-whether-this-should-be-a-class-or-a-function">Issue: "I do not know whether this should be a class or a function."</h3>
+<p>Response:</p>
+<p>"Ask whether you have related data and behavior that belong together. If yes, a class may help. If you are simply coordinating existing objects, a function may be clearer."</p>
+<p>Use this quick rule:</p>
+<pre><code class="language-text">Class: owns state plus behavior.
+Function: performs an action or coordinates objects.
+</code></pre>
+<h3 id="issue-i-want-to-use-inheritance">Issue: "I want to use inheritance."</h3>
+<p>Response:</p>
+<p>"Inheritance is useful later, but today we prefer simple composition. First design one clear object and one clear collection. If you cannot explain why a subclass is necessary, do not add it yet."</p>
+<h3 id="issue-where-should-validation-go">Issue: "Where should validation go?"</h3>
+<p>Response:</p>
+<p>"Validation that protects the truth of the object belongs in the model. For example, an expense amount should not be negative, so the <code>Expense</code> class should reject negative amounts. Formatting an error message for the user belongs in the UI. Coordinating a multi-object rule may belong in a service function."</p>
+<h3 id="issue-should-my-service-function-print">Issue: "Should my service function print?"</h3>
+<p>Response:</p>
+<p>"For today's design, prefer returning data. A service function can return <code>True</code>, <code>False</code>, a number, a list, or a string. The demo block can print that result."</p>
+<hr>
+<h2 id="completion-criteria">Completion Criteria</h2>
+<p>By the end of the lab, each learner should have:</p>
+<ol>
+<li>A selected tracker domain.</li>
+<li>A short requirements list with 5 to 8 bullets.</li>
+<li>A sketch of 3 to 5 classes.</li>
+<li>For each sketched class, notes for what it knows and what it does.</li>
+<li>At least one implemented class with <code>__init__</code> and one behavior method.</li>
+<li>No <code>input()</code> calls inside the model class.</li>
+<li>No required <code>print()</code> calls inside the model class behavior.</li>
+<li>A separate service function that uses the class. A demo block may call it, but it does not replace it.</li>
+<li>A successful run of the Python file with deterministic output.</li>
+</ol>
+<p>If learners finish only the sketch and one working class, that is enough for this hour. Do not push them into persistence, databases, APIs, or GUI work yet. Those topics have their own course moments.</p>
+<hr>
+<h2 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h2>
+<h3 id="pitfall-1-putting-io-inside-domain-objects">Pitfall 1: Putting I/O Inside Domain Objects</h3>
+<p>The most important correction for this hour is keeping I/O out of domain models.</p>
+<p>Avoid:</p>
+<pre><code class="language-python">class Expense:
+    def __init__(self) -&gt; None:
+        self.amount = float(input(&quot;Amount: &quot;))
+</code></pre>
+<p>Prefer:</p>
+<pre><code class="language-python">class Expense:
+    def __init__(self, amount: float) -&gt; None:
+        if amount &lt;= 0:
+            raise ValueError(&quot;Amount must be greater than zero.&quot;)
+
+        self.amount = amount
+</code></pre>
+<p>The UI can collect the amount. The model can validate it.</p>
+<h3 id="pitfall-2-overcomplicated-inheritance-early">Pitfall 2: Overcomplicated Inheritance Early</h3>
+<p>Learners may want <code>WorkTask</code>, <code>HomeTask</code>, <code>UrgentTask</code>, <code>OptionalTask</code>, and <code>RecurringTask</code> immediately. Encourage them to start with attributes before subclasses.</p>
+<p>Say:</p>
+<p>"Before creating five subclasses, ask whether one <code>Task</code> class with a priority, category, or recurrence field would be clearer for now."</p>
+<h3 id="pitfall-3-one-giant-manager-class">Pitfall 3: One Giant Manager Class</h3>
+<p>If a class knows everything and does everything, it becomes hard to test.</p>
+<p>Say:</p>
+<p>"Let's separate the object being tracked from the collection that holds many objects. An <code>Expense</code> is one record. An <code>ExpenseTracker</code> or <code>ExpenseBook</code> can hold many records."</p>
+<h3 id="pitfall-4-methods-that-do-not-belong-to-the-object">Pitfall 4: Methods That Do Not Belong to the Object</h3>
+<p>If an object does not have the information needed for a behavior, the behavior may belong elsewhere.</p>
+<p>Example:</p>
+<p>"A single <code>Task</code> should not calculate the completion rate for the whole project because it does not know all project tasks. The <code>Project</code> or a report function can do that."</p>
+<h3 id="pitfall-5-misleading-state-labels">Pitfall 5: Misleading State Labels</h3>
+<p>Be precise with state names. If a task has <code>is_complete = False</code>, call it pending. Do not label it "done" in one place and "open" in another unless those words are intentionally defined. Inconsistent state language creates bugs and confusion.</p>
+<hr>
+<h2 id="optional-extensions-for-fast-finishers">Optional Extensions for Fast Finishers</h2>
+<p>Offer these only after the required completion criteria are met:</p>
+<ol>
+<li>Add type hints to method parameters and return values.</li>
+<li>Add a <code>__str__</code> method for friendly display.</li>
+<li>Add one more validation rule that protects the model.</li>
+<li>Add a small collection class, such as <code>Inventory</code>, <code>Project</code>, <code>AddressBook</code>, or <code>ExpenseTracker</code>.</li>
+<li>Add a service function that returns a list of matching objects.</li>
+<li>Add a tiny set of <code>assert</code> statements in the same file to check expected behavior.</li>
+</ol>
+<p>Example optional assertions:</p>
+<pre><code class="language-python">item = InventoryItem(&quot;Pen&quot;, 2, 5)
+assert item.needs_reorder() is True
+item.restock(10)
+assert item.quantity == 12
+assert item.needs_reorder() is False
+</code></pre>
+<p>Make clear:</p>
+<p>"Assertions are not the full testing lesson yet. They are a lightweight way to check our thinking. We will do more formal testing later."</p>
+<hr>
+<h2 id="debrief-3-minutes">Debrief (3 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's hear two examples. Tell us your tracker domain, one class you sketched, and one responsibility that class owns."</p>
+<p>After each share, ask one boundary question:</p>
+<ul>
+<li>"Does that class collect user input, or does it receive data?"</li>
+<li>"Does that method change object state, return a value, or display output?"</li>
+<li>"What is one thing you intentionally kept out of that class?"</li>
+</ul>
+<p>Use the debrief to reinforce:</p>
+<p>"The design skill is not just naming classes. The design skill is assigning responsibility. When responsibility is clear, the code becomes easier to test and easier to change."</p>
+<hr>
+<h2 id="quick-checks-and-exit-ticket-2-minutes">Quick Checks and Exit Ticket (2 minutes)</h2>
+<p>Ask learners to answer verbally, in chat, or on a note card:</p>
+<ol>
+<li>
+<p>"In responsibility-driven design, what two questions do we ask about an object?"
+   - Expected answer: "What does it know? What does it do?"</p>
+</li>
+<li>
+<p>"Where should <code>input()</code> usually live: inside a domain model, or outside it?"
+   - Expected answer: "Outside it, in UI or application code."</p>
+</li>
+<li>
+<p>"Where should validation live: UI layer, service layer, or model?"
+   - Expected answer: "Business-rule validation should live in the model when it protects one object's valid state, or in a service layer when it coordinates multiple objects. The UI can display validation messages, but it should not be the only place that enforces core business rules."</p>
+</li>
+<li>
+<p>"Why might a service function return <code>True</code> or <code>False</code> instead of printing?"
+   - Expected answer: "Returning data keeps it testable and lets different callers decide how to display or use the result."</p>
+</li>
+</ol>
+<hr>
+<h2 id="wrap-up-and-bridge-to-hour-3">Wrap-Up and Bridge to Hour 3</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Today we practiced a design habit that will show up throughout the Advanced course. We started with requirements, identified candidate classes, described what each object knows and does, and kept user interaction separate from the model."</p>
+<p>"That separation is not academic. It is what lets us test core logic without clicking through screens or typing into prompts. It is what lets a terminal program become a web program later. It is what lets a small capstone grow without turning into one large script."</p>
+<p>"In the next hour, we will tighten the model further. We will look at properties, invariants, and custom exceptions. In plain language, that means we will learn how objects protect themselves from invalid state after they have already been created. Today we checked values in <code>__init__</code> and methods. Next, we will make those rules more robust and expressive."</p>
+<p>"Before we move on, make sure your file runs, your design notes are saved, and your current work is in a safe place. If you are using Git after this session, this is a good moment for a small checkpoint commit with a message such as <code>Add Day 1 Hour 2 domain model sketch</code>."</p>
+<p>Final reminder:</p>
+<p>"Advanced Python is not about making code look complicated. It is about making code easier to reason about. Clear responsibilities are the first step."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-hour-1-5-minutes" class="depth-2">Opening Bridge from Hour 1 (5 minutes)</a></li>
+<li><a href="#outcomes-and-design-vocabulary-5-minutes" class="depth-2">Outcomes and Design Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-from-requirements-to-classes-10-minutes" class="depth-2">Concept Briefing: From Requirements to Classes (10 minutes)</a></li>
+<li><a href="#sketching-candidate-classes" class="depth-3">Sketching Candidate Classes</a></li>
+<li><a href="#live-demo-tracker-domain-model-and-service-function-10-minutes" class="depth-2">Live Demo: Tracker Domain Model and Service Function (10 minutes)</a></li>
+<li><a href="#demo-part-1-model-objects-only" class="depth-3">Demo Part 1: Model Objects Only</a></li>
+<li><a href="#demo-part-2-a-service-function" class="depth-3">Demo Part 2: A Service Function</a></li>
+<li><a href="#demo-part-3-deterministic-demo-block" class="depth-3">Demo Part 3: Deterministic Demo Block</a></li>
+<li><a href="#demo-part-4-show-the-anti-pattern-briefly" class="depth-3">Demo Part 4: Show the Anti-Pattern Briefly</a></li>
+<li><a href="#guided-lab-domain-modeling-for-a-tracker-25-minutes" class="depth-2">Guided Lab: Domain Modeling for a Tracker (25 minutes)</a></li>
+<li><a href="#step-1-pick-a-theme-and-write-requirements" class="depth-3">Step 1: Pick a Theme and Write Requirements</a></li>
+<li><a href="#step-2-sketch-3-to-5-classes" class="depth-3">Step 2: Sketch 3 to 5 Classes</a></li>
+<li><a href="#step-3-choose-one-class-to-implement" class="depth-3">Step 3: Choose One Class to Implement</a></li>
+<li><a href="#step-4-add-a-small-service-function" class="depth-3">Step 4: Add a Small Service Function</a></li>
+<li><a href="#instructor-circulation-checklist" class="depth-3">Instructor Circulation Checklist</a></li>
+<li><a href="#troubleshooting-during-the-lab" class="depth-2">Troubleshooting During the Lab</a></li>
+<li><a href="#issue-my-class-works-but-nothing-prints" class="depth-3">Issue: &quot;My class works, but nothing prints.&quot;</a></li>
+<li><a href="#issue-i-do-not-know-whether-this-should-be-a-class-or-a-function" class="depth-3">Issue: &quot;I do not know whether this should be a class or a function.&quot;</a></li>
+<li><a href="#issue-i-want-to-use-inheritance" class="depth-3">Issue: &quot;I want to use inheritance.&quot;</a></li>
+<li><a href="#issue-where-should-validation-go" class="depth-3">Issue: &quot;Where should validation go?&quot;</a></li>
+<li><a href="#issue-should-my-service-function-print" class="depth-3">Issue: &quot;Should my service function print?&quot;</a></li>
+<li><a href="#completion-criteria" class="depth-2">Completion Criteria</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-2">Common Pitfalls to Watch For</a></li>
+<li><a href="#pitfall-1-putting-io-inside-domain-objects" class="depth-3">Pitfall 1: Putting I/O Inside Domain Objects</a></li>
+<li><a href="#pitfall-2-overcomplicated-inheritance-early" class="depth-3">Pitfall 2: Overcomplicated Inheritance Early</a></li>
+<li><a href="#pitfall-3-one-giant-manager-class" class="depth-3">Pitfall 3: One Giant Manager Class</a></li>
+<li><a href="#pitfall-4-methods-that-do-not-belong-to-the-object" class="depth-3">Pitfall 4: Methods That Do Not Belong to the Object</a></li>
+<li><a href="#pitfall-5-misleading-state-labels" class="depth-3">Pitfall 5: Misleading State Labels</a></li>
+<li><a href="#optional-extensions-for-fast-finishers" class="depth-2">Optional Extensions for Fast Finishers</a></li>
+<li><a href="#debrief-3-minutes" class="depth-2">Debrief (3 minutes)</a></li>
+<li><a href="#quick-checks-and-exit-ticket-2-minutes" class="depth-2">Quick Checks and Exit Ticket (2 minutes)</a></li>
+<li><a href="#wrap-up-and-bridge-to-hour-3" class="depth-2">Wrap-Up and Bridge to Hour 3</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day1_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day1_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

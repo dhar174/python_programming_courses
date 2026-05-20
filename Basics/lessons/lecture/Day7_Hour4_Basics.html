@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 7, Hour 4: Loop Patterns - Counters, Accumulators, Min/Max | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="7">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day7_Hour4_Basics.md">
+
+    <link rel="prev" href="Day7_Hour3_Basics.html">
+    <link rel="next" href="Day8_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="7" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-07/index.html">Day 7</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 7, Hour 4: Loop Patterns - Counters, Accumulators, Min/Max</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 7</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day7_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Instructor:</strong> Charles Niswander<br>
+<strong>Course:</strong> Python Programming (Basic) - PCEP Aligned<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Target:</strong> 25+ students, beginner level</p>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, students will be able to:</p>
+<ol>
+<li><strong>Implement counter patterns</strong> – Create variables that increment inside conditionals to count specific items in a loop.</li>
+<li><strong>Build accumulators</strong> – Initialize and update variables that collect values (sum, product, concatenation) across iterations.</li>
+<li><strong>Develop min/max tracking</strong> – Write code to find minimum and maximum values while iterating through data.</li>
+<li><strong>Calculate averages programmatically</strong> – Combine counters and accumulators to compute the average of a dataset.</li>
+<li><strong>Build a real number statistics program</strong> – Integrate all four patterns into a single, cohesive application.</li>
+</ol>
+<hr>
+<h2 id="1-instructor-prep-setup-checklist">1. Instructor Prep &amp; Setup Checklist</h2>
+<h3 id="preparation-15-minutes-before-class">Preparation (15 minutes before class)</h3>
+<p><strong>Setup Checklist:</strong></p>
+<ul>
+<li>[ ] <strong>IDE open and ready</strong> – Python interpreter running, VS Code with Markdown preview enabled</li>
+<li>[ ] <strong>Sample files prepared:</strong></li>
+<li><code>counter_demo.py</code> – Counter pattern walkthrough (no student intervention)</li>
+<li><code>accumulator_demo.py</code> – Accumulator pattern walkthrough</li>
+<li><code>minmax_demo.py</code> – Min/Max pattern walkthrough</li>
+<li><code>stats_program.py</code> – Complete number statistics program (result demo, not editable)</li>
+<li>[ ] <strong>Terminal clear</strong> – Previous commands hidden for clean demo</li>
+<li>[ ] <strong>Breakout rooms configured</strong> – 4-5 students per room for guided lab</li>
+<li>[ ] <strong>Timing plan visible</strong> – Instructor notes with checkpoint schedule</li>
+<li>[ ] <strong>Backup plan ready</strong> – Static code snippets in case IDE fails; printed runbook in hand</li>
+</ul>
+<h3 id="room-setup">Room Setup</h3>
+<ul>
+<li><strong>Projection</strong>: Live Python IDE visible to all students</li>
+<li><strong>Audio/Chat</strong>: Enabled; monitor for "I'm stuck" or hand-raise signals</li>
+<li><strong>Learner resources</strong>: Lab worksheet printed/shared in chat</li>
+</ul>
+<p><strong>Contingency</strong>: If live demo fails, paste pre-prepared code blocks from <code>counter_demo.py</code> into interpreter.</p>
+<hr>
+<h2 id="2-opening-script">2. Opening Script</h2>
+<h3 id="hook-2-minutes">Hook (2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Imagine you're a teacher grading 100 papers. You need to count how many pass, find the highest and lowest scores, and compute the class average. You can't do that with a single print statement—you need <em>patterns</em>. Today, you'll learn four loop patterns that professional programmers use every day to solve problems like this."</p>
+<h3 id="learning-objectives-recap-1-minute">Learning Objectives Recap (1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"In this hour, you'll master loop patterns: counters, accumulators, min/max tracking, and average calculations. By the end, you'll write a complete program that processes a list of numbers and reports statistics—the same logic used in data analysis, game development, and finance."</p>
+<h3 id="real-world-connection-1-minute">Real-World Connection (1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"Your stock portfolio app needs to track gains/losses (accumulator), your fitness app counts workouts (counter), your grade tracker finds your highest and lowest scores (min/max), and your banking app computes average monthly spending (average). All use loop patterns."</p>
+<hr>
+<h2 id="3-core-concepts-counter-accumulator-minmax-average">3. Core Concepts: Counter, Accumulator, Min/Max, Average</h2>
+<h3 id="31-counter-pattern">3.1 Counter Pattern</h3>
+<p><strong>Concept:</strong></p>
+<p>A counter is a variable that increments when a specific condition is met inside a loop. Use it to count how many items satisfy a condition.</p>
+<p><strong>Structure:</strong></p>
+<pre><code class="language-python">count = 0
+
+for item in items:
+    if condition:
+        count = count + 1
+
+print(f'Total matches: {count}')
+</code></pre>
+<p><strong>Example: Count even numbers</strong></p>
+<pre><code class="language-python">numbers = [10, 5, 20, 15, 30]
+even_count = 0
+
+for num in numbers:
+    if num % 2 == 0:  # Check if even
+        even_count = even_count + 1
+
+print(f'Even numbers: {even_count}')  # Output: 3
+</code></pre>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Initialize counter to 0 (or appropriate starting value).</li>
+<li>Increment <em>inside</em> the <code>if</code> block so it only counts when the condition is true.</li>
+<li>Increment <em>after</em> the loop is complete to get the final count.</li>
+</ul>
+<p><strong>Common Mistake:</strong></p>
+<pre><code class="language-python"># WRONG: increments every iteration, not just when condition is true
+count = 0
+for num in numbers:
+    count = count + 1
+    if num % 2 == 0:
+        # nothing here
+</code></pre>
+<h3 id="32-accumulator-pattern">3.2 Accumulator Pattern</h3>
+<p><strong>Concept:</strong></p>
+<p>An accumulator is a variable that starts at an initial value and grows by adding (or multiplying, or appending) each item. Use it to collect or combine values across iterations.</p>
+<p><strong>Structure:</strong></p>
+<pre><code class="language-python">total = 0
+
+for item in items:
+    total = total + item
+
+print(f'Total: {total}')
+</code></pre>
+<p><strong>Example: Sum a list</strong></p>
+<pre><code class="language-python">numbers = [10, 20, 30, 40, 50]
+total = 0
+
+for num in numbers:
+    total = total + num
+
+print(f'Sum: {total}')  # Output: 150
+</code></pre>
+<p><strong>Initialization Rules:</strong></p>
+<ul>
+<li><strong>For addition</strong>: Initialize to 0</li>
+<li><strong>For multiplication</strong>: Initialize to 1</li>
+<li><strong>For string concatenation</strong>: Initialize to empty string <code>""</code></li>
+<li><strong>For lists</strong>: Initialize to empty list <code>[]</code></li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Choose the correct initial value based on the operation.</li>
+<li>Update the accumulator inside the loop.</li>
+<li>The final result is ready after the loop completes.</li>
+</ul>
+<h3 id="33-minmax-pattern">3.3 Min/Max Pattern</h3>
+<p><strong>Concept:</strong></p>
+<p>Track the minimum and maximum values as you iterate. Initialize with the first item, then update only if a new extreme is found.</p>
+<p><strong>Structure:</strong></p>
+<pre><code class="language-python">minimum = numbers[0]
+maximum = numbers[0]
+
+for num in numbers[1:]:  # Skip first item (already assigned)
+    if num &lt; minimum:
+        minimum = num
+    if num &gt; maximum:
+        maximum = num
+
+print(f'Min: {minimum}, Max: {maximum}')
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">numbers = [10, 5, 20, 15, 30]
+minimum = numbers[0]  # Start with first value
+maximum = numbers[0]
+
+for num in numbers[1:]:  # Loop from second item onward
+    if num &lt; minimum:
+        minimum = num
+    if num &gt; maximum:
+        maximum = num
+
+print(f'Min: {minimum}, Max: {maximum}')  # Output: Min: 5, Max: 30
+</code></pre>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Initialize min and max with the first list item (not 0 or infinity).</li>
+<li>Iterate through the remaining items.</li>
+<li>Update min/max only when a new extreme is found.</li>
+<li>Works for any comparable data (numbers, strings, dates).</li>
+</ul>
+<h3 id="34-average-pattern">3.4 Average Pattern</h3>
+<p><strong>Concept:</strong></p>
+<p>Combine a counter and accumulator to compute the average: <code>average = total / count</code>.</p>
+<p><strong>Structure:</strong></p>
+<pre><code class="language-python">total = 0
+count = 0
+
+for item in items:
+    total = total + item
+    count = count + 1
+
+average = total / count
+print(f'Average: {average}')
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">numbers = [10, 5, 20, 15, 30]
+total = 0
+count = 0
+
+for num in numbers:
+    total = total + num
+    count = count + 1
+
+average = total / count
+print(f'Average: {average}')  # Output: 16.0
+</code></pre>
+<p><strong>Formatting the average:</strong></p>
+<pre><code class="language-python">average = total / count
+print(f'Average: {average:.2f}')  # Output: 16.00 (two decimal places)
+</code></pre>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Use accumulator for the sum, counter for the number of items.</li>
+<li>Divide only <em>after</em> the loop completes.</li>
+<li>Format to two decimal places for clarity: <code>{average:.2f}</code>.</li>
+<li>Watch for division by zero if the list is empty.</li>
+</ul>
+<hr>
+<h2 id="4-live-coding-demo">4. Live Coding Demo</h2>
+<h3 id="setup-1-minute">Setup (1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"I'm going to write a program that processes a list of numbers and computes statistics using all four patterns. Watch how I build it step by step, then you'll do the same in the lab."</p>
+<h3 id="demo-code-number-statistics-program">Demo Code: Number Statistics Program</h3>
+<p><strong>Say:</strong></p>
+<p>"Here's the program:"</p>
+<pre><code class="language-python"># Number Statistics Program
+# Demonstrates: counter, accumulator, min/max, average
+
+numbers = [10, 5, 20, 15, 30]
+
+# Initialize variables
+total = 0
+count = 0
+minimum = numbers[0]
+maximum = numbers[0]
+
+# Process the numbers
+for num in numbers[1:]:
+    total = total + num
+    count = count + 1
+    if num &lt; minimum:
+        minimum = num
+    if num &gt; maximum:
+        maximum = num
+
+# Don't forget the first number in calculations!
+total = total + numbers[0]
+count = count + 1
+
+# Compute average
+average = total / count
+
+# Display results
+print(f'Min: {minimum:.1f}')
+print(f'Max: {maximum:.1f}')
+print(f'Sum: {total:.1f}')
+print(f'Average: {average:.2f}')
+</code></pre>
+<p><strong>Expected Output:</strong></p>
+<pre><code>Min: 5.0
+Max: 30.0
+Sum: 80.0
+Average: 16.00
+</code></pre>
+<h3 id="demo-walkthrough-5-minutes">Demo Walkthrough (5 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Line by line:
+- We start with <code>numbers = [10, 5, 20, 15, 30]</code>.
+- We initialize: <code>total = 0</code> (accumulator), <code>count = 0</code> (counter), and min/max to the first value.
+- In the loop, we add each remaining number to the total, count it, and check for new min/max.
+- After the loop, we handle the first number (which we skipped in the loop).
+- We compute <code>average = total / count = 80 / 5 = 16.00</code>.
+- Finally, we print the results with proper formatting."</p>
+<p><strong>Interactive Question:</strong></p>
+<p>"Why do we start the loop at <code>numbers[1:]</code> instead of <code>numbers[0]</code>?"</p>
+<p><em>Pause for student input. Expected answer: "Because we already used <code>numbers[0]</code> for min/max initialization."</em></p>
+<hr>
+<h2 id="5-guided-lab-with-3-explicit-checkpoints">5. Guided Lab with 3 Explicit Checkpoints</h2>
+<h3 id="lab-instructions">Lab Instructions</h3>
+<p><strong>Activity:</strong> Build a number statistics program from scratch using counter, accumulator, and min/max patterns.</p>
+<p><strong>Starter Code:</strong></p>
+<pre><code class="language-python"># Student Lab: Number Statistics Program
+# Your task: Complete this program to process a list of numbers
+
+numbers = [12, 8, 25, 9, 18, 14, 22]
+
+# TODO: Initialize variables for total, count, minimum, maximum
+# Hint: Initialize minimum and maximum to the first number
+
+
+# TODO: Write a for loop to process the numbers
+# Hint: Update total and count for every number
+# Hint: Check if the current number is less than minimum or greater than maximum
+
+
+# TODO: Calculate average after the loop
+
+
+# TODO: Print results in this format:
+# Minimum: X.X
+# Maximum: X.X
+# Sum: X.X
+# Average: X.XX
+</code></pre>
+<h3 id="checkpoint-1-minute-5">Checkpoint 1 (Minute 5)</h3>
+<p><strong>Objective:</strong> Students initialize variables correctly.</p>
+<p><strong>Success Criteria:</strong>
+- [ ] <code>total</code>, <code>count</code>, <code>minimum</code>, <code>maximum</code> are declared and initialized
+- [ ] <code>minimum</code> and <code>maximum</code> are set to <code>numbers[0]</code>
+- [ ] Loop structure begins (for loop created)</p>
+<p><strong>Instructor Action:</strong>
+- Walk around and check student screens for correct initialization.
+- Say: "Show me your initialized variables. Do they match the hints?"
+- Stop and clarify common mistakes: forgetting <code>numbers[0]</code> for min/max, or initializing min to 0.</p>
+<h3 id="checkpoint-2-minute-20">Checkpoint 2 (Minute 20)</h3>
+<p><strong>Objective:</strong> Students complete the loop with all four patterns.</p>
+<p><strong>Success Criteria:</strong>
+- [ ] Loop iterates through all numbers
+- [ ] <code>total = total + num</code> and <code>count = count + 1</code> inside loop
+- [ ] Min/max comparisons implemented (<code>if num &lt; minimum</code> and <code>if num &gt; maximum</code>)
+- [ ] Loop completes without syntax errors</p>
+<p><strong>Instructor Action:</strong>
+- Check if loops are running without errors (run each student's code).
+- Say: "Run your code. Do you see any errors? If yes, read the error message and tell me what line has the problem."
+- Pause demo at 22 minutes for quick check-in.</p>
+<h3 id="checkpoint-3-minute-25">Checkpoint 3 (Minute 25)</h3>
+<p><strong>Objective:</strong> Students compute average and format output.</p>
+<p><strong>Success Criteria:</strong>
+- [ ] <code>average = total / count</code> calculated after loop
+- [ ] Print statements formatted with correct decimal places
+- [ ] Program produces expected output:
+  <code>Minimum: 8.0
+  Maximum: 25.0
+  Sum: 108.0
+  Average: 15.43</code></p>
+<p><strong>Instructor Action:</strong>
+- Run each student's program and verify output matches expected result.
+- Say: "Compare your output to the expected result. Do they match?"
+- Celebrate completion: "Excellent! You've built a complete statistics program using all four loop patterns."</p>
+<h3 id="troubleshooting-hints">Troubleshooting Hints</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NameError: name 'total' is not defined</code></td>
+<td>Variable not initialized</td>
+<td>Add <code>total = 0</code> before the loop</td>
+</tr>
+<tr>
+<td>Wrong min/max values</td>
+<td>Forgot to include first number or didn't initialize correctly</td>
+<td>Set <code>minimum = numbers[0]</code> before loop</td>
+</tr>
+<tr>
+<td>Average is wrong</td>
+<td>Forgot to count the first number</td>
+<td>Make sure <code>count</code> includes all numbers</td>
+</tr>
+<tr>
+<td>Syntax error in loop</td>
+<td>Missing colon or incorrect indentation</td>
+<td>Check <code>:</code> at end of <code>for</code> line; indent loop body</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="6-assessment-rubric">6. Assessment Rubric</h2>
+<p><strong>Total Points: 10</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Points</th>
+<th>Rubric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input/Storage</strong></td>
+<td>2</td>
+<td>Variables initialized correctly; data stored in list (2 pts). Missing initialization (1 pt). No initialization (0 pts).</td>
+</tr>
+<tr>
+<td><strong>Loop Patterns</strong></td>
+<td>4</td>
+<td>All four patterns implemented correctly—counter, accumulator, min/max, average (4 pts). Three patterns correct (3 pts). Two patterns correct (2 pts). One or fewer correct (0 pts).</td>
+</tr>
+<tr>
+<td><strong>Average Calculation</strong></td>
+<td>2</td>
+<td>Average computed correctly after loop; formatted to 2 decimal places (2 pts). Computed but wrong format (1 pt). Not computed or wrong result (0 pts).</td>
+</tr>
+<tr>
+<td><strong>Code Quality</strong></td>
+<td>2</td>
+<td>Clear variable names, proper indentation, readable output (2 pts). Minor issues (1 pt). Major issues or unrunnable code (0 pts).</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="7-troubleshooting-pitfalls">7. Troubleshooting Pitfalls</h2>
+<h3 id="common-student-errors-and-intervention-strategies">Common Student Errors and Intervention Strategies</h3>
+<p><strong>Error 1: Counter increments every iteration</strong></p>
+<p><strong>Student Code:</strong></p>
+<pre><code class="language-python">count = 0
+for num in numbers:
+    count = count + 1
+    if num % 2 == 0:
+        pass  # doesn't do anything
+</code></pre>
+<p><strong>Problem:</strong> Counter is outside the <code>if</code> block, so it counts all numbers, not just even ones.</p>
+<p><strong>Intervention:</strong> Say, "If the increment is outside the <code>if</code> block, it runs on every iteration. Where should it go?" Guide the student to move <code>count = count + 1</code> inside the <code>if</code> block.</p>
+<p><strong>Error 2: Min/Max initialized to 0 or a static value</strong></p>
+<p><strong>Student Code:</strong></p>
+<pre><code class="language-python">numbers = [10, 5, 20, 15, 30]
+minimum = 0
+maximum = 0
+</code></pre>
+<p><strong>Problem:</strong> If all numbers are positive and 0 is not in the list, minimum stays 0 (wrong). If a number is negative, maximum might be negative (also wrong).</p>
+<p><strong>Intervention:</strong> Say, "What's the minimum of [10, 5, 20, 15, 30]? It's 5, not 0. How do we start with the correct initial value?" Guide the student to use <code>numbers[0]</code>.</p>
+<p><strong>Error 3: Average calculated inside the loop</strong></p>
+<p><strong>Student Code:</strong></p>
+<pre><code class="language-python">total = 0
+count = 0
+for num in numbers:
+    total = total + num
+    count = count + 1
+    average = total / count  # Inside the loop!
+    print(f'Average so far: {average}')
+</code></pre>
+<p><strong>Problem:</strong> Average changes on every iteration and is computed prematurely. The final average is correct by chance, but the logic is wrong.</p>
+<p><strong>Intervention:</strong> Say, "When should we calculate the average? We need the final total and count. Where does that calculation belong?" Guide the student to move the average calculation outside the loop, <em>after</em> it completes.</p>
+<p><strong>Error 4: Forgetting the first number in calculations</strong></p>
+<p><strong>Student Code:</strong></p>
+<pre><code class="language-python">numbers = [10, 5, 20, 15, 30]
+minimum = numbers[0]
+maximum = numbers[0]
+total = 0
+count = 0
+
+for num in numbers[1:]:  # Skips numbers[0]!
+    total = total + num
+    count = count + 1
+    # min/max logic...
+
+average = total / count  # Doesn't include first number!
+</code></pre>
+<p><strong>Problem:</strong> The first number is used for min/max initialization but not added to the total or counted.</p>
+<p><strong>Intervention:</strong> Say, "Your min/max are correct, but the sum is 70 instead of 80. Why?" Guide the student to either:
+  - Add <code>total = total + numbers[0]</code> after the loop, <em>or</em>
+  - Start the loop at <code>numbers[0]</code> instead of <code>numbers[1:]</code></p>
+<hr>
+<h2 id="8-exit-ticket-quick-check-questions">8. Exit Ticket &amp; Quick-Check Questions</h2>
+<h3 id="individual-reflection-3-minutes">Individual Reflection (3 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Before we wrap up, answer these questions individually. You don't need to write code—just think about the logic."</p>
+<p><strong>Question 1:</strong> "In a counter pattern, where does the increment go: inside or outside the <code>if</code> block?"</p>
+<p><em>Expected answer:</em> Inside the <code>if</code> block.</p>
+<p><strong>Question 2:</strong> "You have a list of test scores. To find the lowest score, would you initialize <code>minimum</code> to 0, or to the first score in the list?"</p>
+<p><em>Expected answer:</em> To the first score (because 0 might not be a valid score, or a score could be negative).</p>
+<p><strong>Question 3:</strong> "Why do we compute the average after the loop, not inside it?"</p>
+<p><em>Expected answer:</em> Because we need the final total and count, which aren't complete until the loop is done.</p>
+<h3 id="spot-check-responses">Spot-Check Responses</h3>
+<ul>
+<li><strong>Strong:</strong> Student explains the "why" behind each pattern (e.g., "min/max start with the first item because that's a real value").</li>
+<li><strong>Developing:</strong> Student identifies the pattern but struggles to explain the reasoning.</li>
+<li><strong>Intervention:</strong> Student is confused; flag for one-on-one follow-up after this hour.</li>
+</ul>
+<hr>
+<h2 id="9-wrap-up-recap">9. Wrap-Up &amp; Recap</h2>
+<h3 id="debrief-2-minutes">Debrief (2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Excellent work! You've built a complete statistics program using four professional loop patterns. Let's recap:</p>
+<ul>
+<li><strong>Counter:</strong> Increments inside an <code>if</code> to count matches.</li>
+<li><strong>Accumulator:</strong> Updates to collect values (sum, product, concatenation).</li>
+<li><strong>Min/Max:</strong> Tracks extremes by comparing each new value.</li>
+<li><strong>Average:</strong> Combines counter and accumulator to compute the mean.</li>
+</ul>
+<p>These patterns are the foundation of data processing. Every time you filter data, aggregate results, or analyze a dataset, you're using one or more of these patterns."</p>
+<h3 id="connection-to-next-hour">Connection to Next Hour</h3>
+<p><strong>Say:</strong></p>
+<p>"In the next hour, we'll continue with more complex patterns and loops. But everything we do builds on these four patterns. Master them now, and everything else becomes easier."</p>
+<h3 id="celebration">Celebration</h3>
+<p><strong>Say:</strong></p>
+<p>"Give yourselves a round of applause. You've completed Day 7, Hour 4. You're now 28 hours into the Python Basics course—you're more than halfway through the first week!"</p>
+<hr>
+<h2 id="10-facilitation-notes-pacing-checkpoints">10. Facilitation Notes &amp; Pacing Checkpoints</h2>
+<h3 id="timing-plan-60-minutes-total">Timing Plan (60 minutes total)</h3>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Duration</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Opening Script</strong></td>
+<td>4 min</td>
+<td>Hook + objectives + real-world connection</td>
+</tr>
+<tr>
+<td><strong>Core Concepts</strong></td>
+<td>12 min</td>
+<td>Counter, Accumulator, Min/Max, Average (3 min each)</td>
+</tr>
+<tr>
+<td><strong>Live Coding Demo</strong></td>
+<td>6 min</td>
+<td>Demo code + walkthrough + interactive question</td>
+</tr>
+<tr>
+<td><strong>Guided Lab – Checkpoint 1</strong></td>
+<td>5 min</td>
+<td>Variable initialization check</td>
+</tr>
+<tr>
+<td><strong>Guided Lab – Checkpoint 2</strong></td>
+<td>15 min</td>
+<td>Loop + patterns check (run code at 22 min)</td>
+</tr>
+<tr>
+<td><strong>Guided Lab – Checkpoint 3</strong></td>
+<td>5 min</td>
+<td>Average + formatting check</td>
+</tr>
+<tr>
+<td><strong>Exit Ticket</strong></td>
+<td>3 min</td>
+<td>Quick-check questions</td>
+</tr>
+<tr>
+<td><strong>Wrap-Up &amp; Recap</strong></td>
+<td>5 min</td>
+<td>Debrief + celebration</td>
+</tr>
+<tr>
+<td><strong>Buffer</strong></td>
+<td>5 min</td>
+<td>Overflow time for struggling students</td>
+</tr>
+</tbody>
+</table>
+<h3 id="intervention-triggers">Intervention Triggers</h3>
+<ul>
+<li><strong>Minute 5:</strong> If a student hasn't initialized variables, pause and show an example on screen.</li>
+<li><strong>Minute 22:</strong> Run one volunteer's code live. If it fails, use it as a teaching moment: "Let's read the error together."</li>
+<li><strong>Minute 25:</strong> Any student without correct output gets a one-on-one walkthrough after class.</li>
+</ul>
+<h3 id="facilitation-strategies">Facilitation Strategies</h3>
+<ol>
+<li><strong>Normalize mistakes:</strong> "I deliberately put a bug in the demo code earlier—did you catch it? That's good debugging practice."</li>
+<li><strong>Celebrate progress:</strong> Use check-ins to praise specific behaviors: "I like how you tested your code after each change."</li>
+<li><strong>Peer teaching:</strong> "Can someone explain the counter pattern to the person next to you?"</li>
+<li><strong>Differentiation:</strong>
+   - <strong>Advanced students:</strong> "Try modifying the program to also count how many numbers are above the average."
+   - <strong>Struggling students:</strong> Provide the starter code with only one TODO at a time.</li>
+</ol>
+<hr>
+<h2 id="11-real-world-context-applications">11. Real-World Context &amp; Applications</h2>
+<h3 id="professional-use-cases">Professional Use Cases</h3>
+<p><strong>Data Analysis:</strong>
+"A data analyst uses accumulators to sum monthly sales, counters to count transactions by category, and min/max to find peak and valley prices."</p>
+<p><strong>Gaming:</strong>
+"A game developer uses accumulators for player score, counters for kill count or lives lost, min/max for high score and low health threshold, and averages for AI difficulty calibration."</p>
+<p><strong>Finance:</strong>
+"A financial system uses accumulators for portfolio value, counters for transaction count, min/max for largest gain/loss, and averages for daily trading volume."</p>
+<p><strong>Scientific Research:</strong>
+"A researcher uses these patterns to process sensor data: accumulate readings, count samples, track extremes, and compute mean values for statistical analysis."</p>
+<h3 id="bridging-to-advanced-topics">Bridging to Advanced Topics</h3>
+<p>These patterns scale to complex data structures and real-world scenarios:</p>
+<ul>
+<li><strong>With dictionaries:</strong> Track separate accumulators for each category. For example, a retailer might have a dictionary <code>sales_by_region</code> and accumulate totals separately for each region, then compute regional averages and find the region with the highest sales (min/max on dictionary values).</li>
+<li><strong>With nested loops:</strong> Apply patterns independently to each subset of data. For instance, a data scientist might process multiple datasets in a list, computing statistics for each one independently by using nested counters, accumulators, and min/max trackers.</li>
+<li><strong>With functions:</strong> Extract pattern logic into reusable functions for cleaner code. Instead of writing the entire statistics computation inline, you can create functions like <code>compute_average(numbers)</code>, <code>find_min_max(numbers)</code>, or <code>count_matches(items, condition)</code> and reuse them across your program.</li>
+<li><strong>With files:</strong> Read and process data from files using these same patterns. A data analyst might read a CSV file line by line, accumulating quarterly totals, counting valid records, and tracking highest and lowest values from the file data.</li>
+</ul>
+<hr>
+<h2 id="12-advanced-topics-summary">12. Advanced Topics &amp; Summary</h2>
+<h3 id="extension-challenges">Extension Challenges</h3>
+<p><strong>For students who finish early:</strong></p>
+<ol>
+<li><strong>Median calculation:</strong> "Can you modify the program to find the median (middle value)? Hint: You'll need to sort the list first, then check if the count is odd or even to find the middle element."</li>
+<li><strong>Variance and standard deviation:</strong> "Research how to calculate variance—it's the average of squared differences from the mean. Standard deviation is the square root of variance. These are used to measure how spread out your data is."</li>
+<li><strong>Filtering with counter:</strong> "Count how many numbers are above the average. This combines multiple patterns: first calculate the average, then loop through again with a conditional counter."</li>
+<li><strong>Multiple data types:</strong> "Adapt the program to work with user input instead of a hardcoded list. Use a loop to repeatedly ask for numbers until the user enters 'done', then process the collected data using your statistics program."</li>
+<li><strong>Range calculation:</strong> "Add a line that calculates the range (the difference between max and min). This tells you how spread out your data is."</li>
+<li><strong>Mode calculation:</strong> "Find the most frequent number in the list. This requires a counter pattern inside a nested loop—for each unique value, count how many times it appears, then track which count is highest."</li>
+</ol>
+<h3 id="summary-key-takeaways">Summary &amp; Key Takeaways</h3>
+<p><strong>Four Essential Loop Patterns:</strong></p>
+<ol>
+<li><strong>Counter</strong> – Counts occurrences; initialize to 0, increment inside conditional.</li>
+<li><strong>Accumulator</strong> – Collects values; initialize to appropriate base value, update inside loop.</li>
+<li><strong>Min/Max</strong> – Tracks extremes; initialize to first item, compare and update inside loop.</li>
+<li><strong>Average</strong> – Combines counter and accumulator; compute after loop completes.</li>
+</ol>
+<p><strong>Success Indicators:</strong></p>
+<ul>
+<li>Students can identify which pattern is needed for a given problem.</li>
+<li>Students can write code that implements all four patterns without syntax errors.</li>
+<li>Students understand why each pattern is structured the way it is (not just memorizing code).</li>
+</ul>
+<p><strong>Homework Reminder:</strong></p>
+<p>"Tonight's assignment (Day 7 homework) will give you more practice with these patterns. You'll build a program that processes real-world data—maybe grades, temperatures, or stock prices. The logic is identical to what you've learned today."</p>
+<hr>
+<p><strong>End of Instructor Notes – Day 7, Hour 4</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#1-instructor-prep-setup-checklist" class="depth-2">1. Instructor Prep &amp; Setup Checklist</a></li>
+<li><a href="#preparation-15-minutes-before-class" class="depth-3">Preparation (15 minutes before class)</a></li>
+<li><a href="#room-setup" class="depth-3">Room Setup</a></li>
+<li><a href="#2-opening-script" class="depth-2">2. Opening Script</a></li>
+<li><a href="#hook-2-minutes" class="depth-3">Hook (2 minutes)</a></li>
+<li><a href="#learning-objectives-recap-1-minute" class="depth-3">Learning Objectives Recap (1 minute)</a></li>
+<li><a href="#real-world-connection-1-minute" class="depth-3">Real-World Connection (1 minute)</a></li>
+<li><a href="#3-core-concepts-counter-accumulator-minmax-average" class="depth-2">3. Core Concepts: Counter, Accumulator, Min/Max, Average</a></li>
+<li><a href="#31-counter-pattern" class="depth-3">3.1 Counter Pattern</a></li>
+<li><a href="#32-accumulator-pattern" class="depth-3">3.2 Accumulator Pattern</a></li>
+<li><a href="#33-minmax-pattern" class="depth-3">3.3 Min/Max Pattern</a></li>
+<li><a href="#34-average-pattern" class="depth-3">3.4 Average Pattern</a></li>
+<li><a href="#4-live-coding-demo" class="depth-2">4. Live Coding Demo</a></li>
+<li><a href="#setup-1-minute" class="depth-3">Setup (1 minute)</a></li>
+<li><a href="#demo-code-number-statistics-program" class="depth-3">Demo Code: Number Statistics Program</a></li>
+<li><a href="#demo-walkthrough-5-minutes" class="depth-3">Demo Walkthrough (5 minutes)</a></li>
+<li><a href="#5-guided-lab-with-3-explicit-checkpoints" class="depth-2">5. Guided Lab with 3 Explicit Checkpoints</a></li>
+<li><a href="#lab-instructions" class="depth-3">Lab Instructions</a></li>
+<li><a href="#checkpoint-1-minute-5" class="depth-3">Checkpoint 1 (Minute 5)</a></li>
+<li><a href="#checkpoint-2-minute-20" class="depth-3">Checkpoint 2 (Minute 20)</a></li>
+<li><a href="#checkpoint-3-minute-25" class="depth-3">Checkpoint 3 (Minute 25)</a></li>
+<li><a href="#troubleshooting-hints" class="depth-3">Troubleshooting Hints</a></li>
+<li><a href="#6-assessment-rubric" class="depth-2">6. Assessment Rubric</a></li>
+<li><a href="#7-troubleshooting-pitfalls" class="depth-2">7. Troubleshooting Pitfalls</a></li>
+<li><a href="#common-student-errors-and-intervention-strategies" class="depth-3">Common Student Errors and Intervention Strategies</a></li>
+<li><a href="#8-exit-ticket-quick-check-questions" class="depth-2">8. Exit Ticket &amp; Quick-Check Questions</a></li>
+<li><a href="#individual-reflection-3-minutes" class="depth-3">Individual Reflection (3 minutes)</a></li>
+<li><a href="#spot-check-responses" class="depth-3">Spot-Check Responses</a></li>
+<li><a href="#9-wrap-up-recap" class="depth-2">9. Wrap-Up &amp; Recap</a></li>
+<li><a href="#debrief-2-minutes" class="depth-3">Debrief (2 minutes)</a></li>
+<li><a href="#connection-to-next-hour" class="depth-3">Connection to Next Hour</a></li>
+<li><a href="#celebration" class="depth-3">Celebration</a></li>
+<li><a href="#10-facilitation-notes-pacing-checkpoints" class="depth-2">10. Facilitation Notes &amp; Pacing Checkpoints</a></li>
+<li><a href="#timing-plan-60-minutes-total" class="depth-3">Timing Plan (60 minutes total)</a></li>
+<li><a href="#intervention-triggers" class="depth-3">Intervention Triggers</a></li>
+<li><a href="#facilitation-strategies" class="depth-3">Facilitation Strategies</a></li>
+<li><a href="#11-real-world-context-applications" class="depth-2">11. Real-World Context &amp; Applications</a></li>
+<li><a href="#professional-use-cases" class="depth-3">Professional Use Cases</a></li>
+<li><a href="#bridging-to-advanced-topics" class="depth-3">Bridging to Advanced Topics</a></li>
+<li><a href="#12-advanced-topics-summary" class="depth-2">12. Advanced Topics &amp; Summary</a></li>
+<li><a href="#extension-challenges" class="depth-3">Extension Challenges</a></li>
+<li><a href="#summary-key-takeaways" class="depth-3">Summary &amp; Key Takeaways</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day7_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day7_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

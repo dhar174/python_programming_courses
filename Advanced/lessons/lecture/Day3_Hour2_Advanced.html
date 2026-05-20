@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 3, Hour 2: Logging and Error Reporting (Practical) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="3">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day3_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day3_Hour1_Advanced.html">
+    <link rel="next" href="Day3_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="3" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-03/index.html">Day 3</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 3, Hour 2: Logging and Error Reporting (Practical)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 3</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day3_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 3, Hour 2 of 48, also Hour 10 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Using Python's built-in <code>logging</code> module to record useful diagnostics while keeping user-facing error messages friendly.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 3, Hour 10.</li>
+<li><strong>Prerequisites</strong>: Learners should have completed Day 3 Hour 1 or have an equivalent project shape: <code>project_root/src/tracker/</code> contains package code, <code>src/tracker/demo.py</code> is the runnable demo module, and the project runs from the project root with <code>python -m src.tracker.demo</code> or <code>py -m src.tracker.demo</code> on Windows.</li>
+<li><strong>Advanced trajectory</strong>: This hour stays on the PCAP-to-PCPP1 path. Learners are not adopting a logging framework, observability platform, JSON logging pipeline, or production security policy. The advanced step is learning to separate diagnostics from user communication and to place logging in the service layer without creating noise.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has configured logging to write to <code>logs/app.log</code>, added at least three useful service-layer log calls, triggered one expected error, confirmed the log file is created and populated, and kept user-facing messages clean.</li>
+</ul>
+<p>Important instructor positioning:</p>
+<ul>
+<li>Continue the Day 3 Hour 1 execution convention exactly. The package lives at <code>project_root/src/tracker/</code>. The demo lives at <code>src/tracker/demo.py</code>. Run from the project root with <code>python -m src.tracker.demo</code>; on Windows, <code>py -m src.tracker.demo</code> is also acceptable.</li>
+<li>Inside <code>src/tracker/</code>, use relative imports such as <code>from .exceptions import ValidationError, NotFoundError</code>, <code>from .models import Task</code>, <code>from .services import TaskService</code>, and <code>from .config import LOG_DIR, LOG_FILE</code>.</li>
+<li>Use consistent vocabulary: <code>Task</code>, <code>TaskService</code>, <code>ValidationError</code>, <code>NotFoundError</code>, <code>src/tracker/config.py</code>, <code>src/tracker/demo.py</code>, and <code>logs/app.log</code>. Tell learners to adapt names to their own checkpoint code while preserving responsibilities.</li>
+<li>Keep the distinction visible all hour: <strong>logs are for developers; user messages are for users</strong>.</li>
+<li>The live demo should show a log file being created, populated, and inspected. Do not only describe file logging; run it and show the file contents.</li>
+<li>Include stack details in logs when useful, but never dump raw tracebacks to end users. Demonstrate <code>logger.exception(...)</code> or <code>logger.error(..., exc_info=True)</code> as a developer diagnostic tool.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from project structure</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect Day 3 Hour 1 package structure to predictable log placement</td>
+</tr>
+<tr>
+<td>Outcomes, vocabulary, and mental model</td>
+<td style="text-align: right;">5 min</td>
+<td>Define diagnostics, user-facing messages, log records, logger names, and levels</td>
+</tr>
+<tr>
+<td>Concept briefing: levels, formatting, and file logging</td>
+<td style="text-align: right;">10 min</td>
+<td>Teach <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>, format strings, <code>logs/app.log</code>, and safe startup configuration</td>
+</tr>
+<tr>
+<td>Live demo: add logging to <code>TaskService</code></td>
+<td style="text-align: right;">10 min</td>
+<td>Configure <code>logs/app.log</code>, add service-layer logs, log <code>ValidationError</code> and <code>NotFoundError</code>, and show output</td>
+</tr>
+<tr>
+<td>Guided lab: add practical logging</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners configure logging, add at least three service-layer log calls, trigger one error, and confirm the log file</td>
+</tr>
+<tr>
+<td>Exit ticket, pitfalls, and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Check <code>WARNING</code> vs <code>ERROR</code>, review common pitfalls, and bridge to context managers</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten instructor narration in the concept briefing rather than shrinking student practice. The required outcome is practical: <code>logs/app.log</code> exists, contains useful entries, and users still see friendly messages instead of raw stack traces.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain why <code>logging</code> is better than scattered <code>print()</code> statements for diagnostics in a growing project.</li>
+<li>Use the built-in <code>logging</code> module to create module-level loggers with <code>logging.getLogger(__name__)</code>.</li>
+<li>Choose practical logging levels: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, and <code>ERROR</code>.</li>
+<li>Configure logging near program startup to write to <code>logs/app.log</code>.</li>
+<li>Create the <code>logs/</code> directory in code with <code>LOG_DIR.mkdir(parents=True, exist_ok=True)</code> before writing logs.</li>
+<li>Add at least three meaningful log calls in the service layer without logging inside noisy tight loops.</li>
+<li>Log expected application errors such as <code>ValidationError</code> and <code>NotFoundError</code>.</li>
+<li>Use <code>logger.exception(...)</code> or <code>logger.error(..., exc_info=True)</code> to record developer stack details without printing them to the user.</li>
+<li>Keep user-facing messages friendly, short, and actionable.</li>
+<li>Inspect <code>logs/app.log</code> and explain whether each entry is helpful.</li>
+<li>Recognize common pitfalls: forgotten <code>logs/</code> directory, vague log messages, logging everything as <code>ERROR</code>, and producing noisy logs.</li>
+<li>Prepare for the next hour, where context managers and safer file operations will make persistence logging more important.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 3, Hour 10 visible. The required scope is practical logging and error reporting: logging levels, formatting, file logging, friendly user messages, and a lab that writes to <code>logs/app.log</code>.</li>
+<li>Open or review the Day 3 Hour 1 lecture conventions. This hour must continue the same import and execution pattern:</li>
+</ul>
+<pre><code class="language-text">project_root/
+    src/
+        tracker/
+            __init__.py
+            config.py
+            exceptions.py
+            models.py
+            services.py
+            demo.py
+    logs/
+        app.log
+</code></pre>
+<ul>
+<li>Prepare a small working tracker core or be ready to type the code from the live demo. The demo assumes these responsibilities:</li>
+<li><code>Task</code> validates title data and can raise <code>ValidationError</code>.</li>
+<li><code>TaskService</code> stores tasks and raises <code>NotFoundError</code> when a requested task does not exist.</li>
+<li><code>src/tracker/demo.py</code> catches expected application errors and prints friendly messages.</li>
+<li>Decide how to handle learner naming differences. Use this sentence: "I will use <code>Task</code>, <code>TaskService</code>, <code>ValidationError</code>, and <code>NotFoundError</code>. If your checkpoint uses <code>TaskRecord</code>, <code>InventoryItem</code>, <code>ContactService</code>, or a different exception name, adapt the names while preserving the responsibilities."</li>
+<li>Prepare the board with the hour's central rule:</li>
+</ul>
+<pre><code class="language-text">Developer diagnostics go to logs/app.log.
+Friendly user messages go to the terminal or UI.
+Do not print raw stack traces to end users.
+</code></pre>
+<ul>
+<li>Prepare a second board note for log levels:</li>
+</ul>
+<pre><code class="language-text">DEBUG   - detailed developer-only information
+INFO    - normal important events
+WARNING - unexpected but recoverable event
+ERROR   - operation failed
+</code></pre>
+<ul>
+<li>Be ready to explain one subtle configuration issue: <code>logging.basicConfig(...)</code> can be a no-op if logging has already been configured in a long-running interpreter session, notebook, test runner, or larger application. For this course script, place it near program startup in <code>src/tracker/demo.py</code>, before other code emits logs.</li>
+<li>Avoid naming any file <code>logging.py</code>. If a learner creates <code>logging.py</code>, it can shadow the standard library <code>logging</code> module and cause confusing import errors.</li>
+</ul>
+<hr>
+<h2 id="opening-bridge-from-project-structure-5-minutes">Opening Bridge from Project Structure (5 minutes)</h2>
+<h3 id="instructor-talk-track">Instructor talk track</h3>
+<p>"Welcome back. In the previous hour, we gave our tracker code a predictable home. Instead of keeping everything loose in the project root, we moved toward a structure like this."</p>
+<p>Display:</p>
+<pre><code class="language-text">project_root/
+    src/
+        tracker/
+            __init__.py
+            exceptions.py
+            models.py
+            services.py
+            demo.py
+</code></pre>
+<p>"That structure was not just cleanup for cleanup's sake. It makes the next features easier. Today is the first payoff. Because our application code lives in <code>src/tracker/</code>, we can now decide where diagnostic output belongs. We are going to keep source code in <code>src/tracker/</code>, and we are going to write runtime logs to <code>logs/app.log</code>."</p>
+<p>Display:</p>
+<pre><code class="language-text">project_root/
+    src/tracker/      application code
+    logs/app.log      diagnostic output
+</code></pre>
+<p>"This gives us a stable mental model. Code lives in one place. Logs live in another. Users do not need to read log files, but developers do. That separation matters as soon as an application has more than one file, more than one user action, or more than one possible failure."</p>
+<p>"At the end of Day 2, your core tracker could already raise meaningful custom exceptions such as <code>ValidationError</code> and <code>NotFoundError</code>. That was good design. Today we add another layer: when those errors happen, how do we record enough detail for a developer without overwhelming the person using the program?"</p>
+<p>Write:</p>
+<pre><code class="language-text">Logs are for developers.
+Error messages are for users.
+</code></pre>
+<p>"Keep that sentence in mind. It is the whole hour in one line."</p>
+<p>Pause and ask:</p>
+<p>"Think about the last time you saw a giant error traceback. Did it help you as a user, or did it feel like the program was broken in a confusing way?"</p>
+<p>Take two or three quick answers. Expect learners to mention long red tracebacks, file paths, line numbers, or messages they did not understand.</p>
+<p>Affirm:</p>
+<p>"Exactly. A traceback can be incredibly useful to a developer. It is usually not the right user interface. Our goal today is not to hide problems. Our goal is to route information to the right audience."</p>
+<h3 id="transition">Transition</h3>
+<p>"Let's define the vocabulary, then we will configure logging in the same package structure we created last hour."</p>
+<hr>
+<h2 id="outcomes-vocabulary-and-mental-model-5-minutes">Outcomes, Vocabulary, and Mental Model (5 minutes)</h2>
+<h3 id="instructor-talk-track-2">Instructor talk track</h3>
+<p>"By the end of this hour, your project should do three things it probably does not do yet."</p>
+<p>Display:</p>
+<pre><code class="language-text">1. Create logs/app.log automatically.
+2. Record meaningful service-layer events.
+3. Keep user-facing errors friendly.
+</code></pre>
+<p>"Let's name a few terms."</p>
+<p>"A <strong>diagnostic</strong> is information that helps a developer understand what the program did. For example, 'created task_id=3' or 'missing task_id=999' is diagnostic information."</p>
+<p>"A <strong>user-facing message</strong> is what the person using the program sees. For example, 'Task 999 was not found.' That message should be clear, but it does not need a Python traceback, module path, or internal object representation."</p>
+<p>"A <strong>log record</strong> is one entry written by the logging system. A useful log record usually answers at least one of these questions:"</p>
+<ul>
+<li>"When did this happen?"</li>
+<li>"How severe was it?"</li>
+<li>"Which module produced it?"</li>
+<li>"What operation was attempted?"</li>
+<li>"Which task, file, or ID was involved?"</li>
+</ul>
+<p>"A <strong>logger</strong> is the object our code uses to emit log records. In a module, the standard pattern is:"</p>
+<pre><code class="language-python">import logging
+
+logger = logging.getLogger(__name__)
+</code></pre>
+<p>"The <code>__name__</code> part is useful because it lets the log entry identify where it came from. If the log came from <code>src.tracker.services</code>, we want to know that. When projects grow, knowing the source module saves time."</p>
+<p>"A <strong>logging level</strong> is the severity label. Today we will use four levels in practical ways: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, and <code>ERROR</code>."</p>
+<p>"One more important boundary: logging does not replace exceptions. If your service method cannot find a task, it can still raise <code>NotFoundError</code>. Logging records what happened. Exceptions still control program behavior."</p>
+<p>Display:</p>
+<pre><code class="language-text">Logging records the event.
+Exceptions control the flow.
+User messages explain the result.
+</code></pre>
+<p>"That is the mental model. Now let's make it concrete."</p>
+<hr>
+<h2 id="concept-briefing-levels-formatting-and-file-logging-10-minutes">Concept Briefing: Levels, Formatting, and File Logging (10 minutes)</h2>
+<h3 id="why-print-is-not-enough">Why <code>print()</code> is not enough</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Most of us start debugging with <code>print()</code>. That is normal. <code>print()</code> is simple, immediate, and useful while exploring. But as the application grows, <code>print()</code> starts to create problems."</p>
+<p>List:</p>
+<ul>
+<li>"<code>print()</code> has no built-in severity level."</li>
+<li>"<code>print()</code> does not include timestamps unless we manually add them."</li>
+<li>"<code>print()</code> mixes developer diagnostics with user output."</li>
+<li>"<code>print()</code> is easy to forget in the middle of service logic."</li>
+<li>"<code>print()</code> usually disappears when the terminal closes."</li>
+</ul>
+<p>"Imagine a service method prints this:"</p>
+<pre><code class="language-text">not found
+</code></pre>
+<p>"What was not found? Which ID? Which module printed it? Was the program able to continue? Was it a warning, or did an operation fail? The message might have helped for ten seconds while writing the code, but it is weak as a diagnostic."</p>
+<p>"Logging lets us write something like this instead:"</p>
+<pre><code class="language-text">2026-01-14 10:03:22,442 WARNING src.tracker.services Missing task lookup task_id=999
+</code></pre>
+<p>"Now a future developer has more context. There is a time, a level, a module name, and a useful message."</p>
+<h3 id="practical-logging-levels">Practical logging levels</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Do not treat logging levels as trivia. Treat them as communication signals."</p>
+<p>Display:</p>
+<pre><code class="language-text">DEBUG   - detailed developer-only information
+INFO    - normal important events
+WARNING - unexpected but recoverable event
+ERROR   - operation failed
+</code></pre>
+<p>"Here is how I want you to think about them in this project."</p>
+<p>"Use <code>DEBUG</code> for details that are useful while developing but too noisy for normal runs. For example, you might log which branch of a strategy was selected or how many candidate tasks were inspected. In today's default configuration, we will write <code>INFO</code> and above, so <code>DEBUG</code> messages will usually not appear unless we lower the threshold."</p>
+<p>"Use <code>INFO</code> for normal important events. A service starting, a task being added, or a task being updated can be <code>INFO</code>. Do not log every tiny line of code. Log meaningful transitions."</p>
+<p>"Use <code>WARNING</code> when something unexpected happened but the program can recover. A lookup for a missing task can often be a warning. It did not crash the whole program, but it is worth recording."</p>
+<p>"Use <code>ERROR</code> when an operation failed. If validation prevents a task from being created, or saving data fails because the path is not writable, that is an error. The application may continue, but the requested operation did not succeed."</p>
+<p>Use quick scenarios, but do not answer the exit-ticket question fully yet:</p>
+<p>"If a task is created successfully, I would probably use <code>INFO</code>. If a lookup asks for task 999 and that task does not exist, I would consider <code>WARNING</code> in many applications. If task creation fails because required data is invalid, I would use <code>ERROR</code> for the failed operation."</p>
+<p>"The exact level can depend on the application, but the reasoning should be clear."</p>
+<h3 id="formatting-and-file-logging">Formatting and file logging</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"For this hour, our log target is concrete: <code>logs/app.log</code>. We want a file so the terminal does not become the only record. We also want a format that includes the optional extension from the runbook: timestamp and module name."</p>
+<p>Show the target format:</p>
+<pre><code class="language-python">format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;
+</code></pre>
+<p>"This format says: include the time, the severity level, the logger name, and the message. It is short enough to read and useful enough to debug."</p>
+<p>"We also need to create the <code>logs/</code> directory before writing the file. Forgetting this is one of today's required pitfalls. The logging system will not magically create every missing parent directory for us. So in our <code>config.py</code>, we define paths, and in our startup code we create the directory."</p>
+<p>Show:</p>
+<pre><code class="language-python">LOG_DIR.mkdir(parents=True, exist_ok=True)
+</code></pre>
+<p>"That line is safe to run repeatedly. If the directory already exists, it does not fail."</p>
+<h3 id="configuration-near-startup">Configuration near startup</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The configuration step belongs near program startup. In this hour, that means <code>src/tracker/demo.py</code>, before we create services or run operations that might log."</p>
+<p>Show:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+)
+</code></pre>
+<p>"One instructor note and one real-world note: <code>logging.basicConfig(...)</code> configures the root logging setup only if logging has not already been configured. In a long-running session, a notebook, a test runner, or a larger app, calling it later may do nothing. For this course script, run it near startup before other logging happens. That keeps the behavior deterministic for today's project."</p>
+<p>"We are not going deeper into handlers, logger hierarchy, JSON logs, or observability platforms today. Those are real topics, but not today's target. Today we need practical, readable logs in a file and clean messages for users."</p>
+<h3 id="stack-traces-developer-detail-not-user-output">Stack traces: developer detail, not user output</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now let's talk about stack traces. A traceback is not bad. It is a developer tool. The mistake is showing raw tracebacks to end users as if they are normal messages."</p>
+<p>"When an unexpected exception happens, or when you are intentionally capturing developer details, logging can store stack information in the log file. Two common patterns are:"</p>
+<pre><code class="language-python">logger.exception(&quot;Failed to create task from demo input&quot;)
+</code></pre>
+<p>"Use <code>logger.exception(...)</code> inside an <code>except</code> block. It logs at <code>ERROR</code> level and automatically includes the traceback."</p>
+<pre><code class="language-python">logger.error(&quot;Failed to create task from demo input&quot;, exc_info=True)
+</code></pre>
+<p>"This is similar. <code>exc_info=True</code> tells logging to attach exception details. The point is not that users should see that traceback. The point is that developers can inspect <code>logs/app.log</code> later."</p>
+<p>"In a moment, we will trigger both a validation error and a missing-task error. The user will see friendly messages. The log file will contain the developer detail."</p>
+<hr>
+<h2 id="live-demo-add-logging-to-taskservice-10-minutes">Live Demo: Add Logging to <code>TaskService</code> (10 minutes)</h2>
+<h3 id="demo-framing">Demo framing</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"In this demo, we are going to add logging to the same package shape from last hour. Watch for three things."</p>
+<p>Display:</p>
+<pre><code class="language-text">1. Configure logging once near startup.
+2. Put useful log calls in the service layer.
+3. Catch expected errors in `src/tracker/demo.py` and print friendly messages.
+</code></pre>
+<p>"We are not going to build a new application. We are improving the diagnostic behavior of the project we already have."</p>
+<h3 id="step-1-add-logging-paths-in-srctrackerconfigpy">Step 1: Add logging paths in <code>src/tracker/config.py</code></h3>
+<p><strong>Instructor action</strong></p>
+<p>Open <code>src/tracker/config.py</code>. If it does not exist, create it. Type or adapt:</p>
+<pre><code class="language-python">from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+LOG_DIR = BASE_DIR / &quot;logs&quot;
+LOG_FILE = LOG_DIR / &quot;app.log&quot;
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"This file gives us named paths. <code>Path(__file__).resolve()</code> starts from the current file, which is <code>src/tracker/config.py</code>. <code>parents[2]</code> walks up to the project root in this course layout."</p>
+<p>Sketch:</p>
+<pre><code class="language-text">project_root/
+    src/
+        tracker/
+            config.py
+</code></pre>
+<p>"From <code>config.py</code>, parent 0 is <code>tracker</code>, parent 1 is <code>src</code>, and parent 2 is the project root. That is why <code>LOG_DIR</code> becomes <code>project_root/logs</code> and <code>LOG_FILE</code> becomes <code>project_root/logs/app.log</code>."</p>
+<p>"If your project structure is different, adapt this carefully. The responsibility is what matters: configuration should point to a predictable log path."</p>
+<h3 id="step-2-add-a-logger-and-service-layer-log-calls-in-srctrackerservicespy">Step 2: Add a logger and service-layer log calls in <code>src/tracker/services.py</code></h3>
+<p><strong>Instructor action</strong></p>
+<p>Open <code>src/tracker/services.py</code>. Use relative imports inside the package. Type or adapt:</p>
+<pre><code class="language-python">import logging
+
+from .exceptions import NotFoundError, ValidationError
+from .models import Task
+
+logger = logging.getLogger(__name__)
+
+
+class TaskService:
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+        logger.info(&quot;TaskService initialized&quot;)
+
+    def add(self, task: Task) -&gt; None:
+        if task.task_id in self._tasks:
+            logger.warning(&quot;Rejected duplicate task_id=%s&quot;, task.task_id)
+            raise ValidationError(f&quot;Task {task.task_id} already exists.&quot;)
+
+        self._tasks[task.task_id] = task
+        logger.info(&quot;Added task_id=%s title=%r&quot;, task.task_id, task.title)
+
+    def get(self, task_id: int) -&gt; Task:
+        try:
+            task = self._tasks[task_id]
+        except KeyError as exc:
+            logger.warning(&quot;Missing task lookup task_id=%s&quot;, task_id)
+            raise NotFoundError(f&quot;Task {task_id} was not found.&quot;) from exc
+
+        logger.debug(&quot;Retrieved task_id=%s&quot;, task_id)
+        return task
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"The first thing to notice is the import style. Inside <code>src/tracker/</code>, we use relative imports: <code>from .exceptions import NotFoundError, ValidationError</code> and <code>from .models import Task</code>. That continues the Day 3 Hour 1 convention."</p>
+<p>"The second thing to notice is the module-level logger:"</p>
+<pre><code class="language-python">logger = logging.getLogger(__name__)
+</code></pre>
+<p>"This does not configure the file. It creates a named logger for this module. Configuration happens once in the startup module."</p>
+<p>"Now look at the log calls. We have at least three useful service-layer log calls: service initialized, task added, duplicate rejected, missing lookup, and debug retrieval. We do not need all of these in every learner project, but this shows the pattern."</p>
+<p>"Notice that the service still raises exceptions. Logging did not replace <code>ValidationError</code> or <code>NotFoundError</code>. The service logs the event and raises the appropriate application exception."</p>
+<p>"Also notice that we are not logging inside a loop. If we had thousands of tasks and logged every comparison while searching, the log file would become noisy. We log the meaningful outcome."</p>
+<h3 id="step-3-configure-logging-and-keep-friendly-messages-in-srctrackerdemopy">Step 3: Configure logging and keep friendly messages in <code>src/tracker/demo.py</code></h3>
+<p><strong>Instructor action</strong></p>
+<p>Open <code>src/tracker/demo.py</code>. Type or adapt:</p>
+<pre><code class="language-python">import logging
+
+from .config import LOG_DIR, LOG_FILE
+from .exceptions import NotFoundError, ValidationError
+from .models import Task
+from .services import TaskService
+
+
+def configure_logging() -&gt; None:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )
+
+
+def main() -&gt; None:
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    logger.info(&quot;Starting tracker logging demo&quot;)
+
+    service = TaskService()
+
+    try:
+        service.add(Task(task_id=1, title=&quot;Write logging notes&quot;))
+        service.get(999)
+    except NotFoundError as exc:
+        logger.warning(&quot;Demo requested a missing task: %s&quot;, exc)
+        print(&quot;That task was not found. Please check the task ID and try again.&quot;)
+
+    try:
+        service.add(Task(task_id=1, title=&quot;Duplicate logging notes&quot;))
+    except ValidationError:
+        logger.exception(&quot;Demo could not add task because validation failed&quot;)
+        print(&quot;That task could not be saved. Please check the task details.&quot;)
+
+    print(f&quot;Demo complete. Developer log written to {LOG_FILE}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"This file is the startup point for today's demo. We create the logs directory in code with <code>LOG_DIR.mkdir(parents=True, exist_ok=True)</code>. That avoids the common failure where <code>logs/</code> does not exist."</p>
+<p>"We configure logging before creating the service. That matters because the service logs during initialization."</p>
+<p>"Look at the two <code>except</code> blocks. For <code>NotFoundError</code>, we use a warning-level log because the demo intentionally requested a missing task and then recovered with a friendly message."</p>
+<p>"For <code>ValidationError</code>, I used <code>logger.exception(...)</code>. This is a concrete example of storing developer stack details in the log. The user still sees only:"</p>
+<pre><code class="language-text">That task could not be saved. Please check the task details.
+</code></pre>
+<p>"The traceback belongs in <code>logs/app.log</code>, not in the user's face."</p>
+<p>"If you prefer the explicit style, this line would also record exception information inside an <code>except</code> block:"</p>
+<pre><code class="language-python">logger.error(&quot;Demo could not add task because validation failed&quot;, exc_info=True)
+</code></pre>
+<p>"Today, I am showing <code>logger.exception(...)</code> because it is concise and common inside <code>except</code> blocks."</p>
+<h3 id="step-4-run-from-the-project-root">Step 4: Run from the project root</h3>
+<p><strong>Instructor action</strong></p>
+<p>In the terminal, make sure the current directory is <code>project_root</code>, not <code>src/tracker</code>. Run:</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>If the room uses the Windows Python launcher, also show:</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"This command is not optional trivia. It is part of the import convention from last hour. We are running the demo as a module from the project root. We are not running the package file as a loose script, and we are not teaching a shortened installed-package module path in this hour."</p>
+<p>"If a learner gets an import error, first check the working directory and the command. Then check relative imports."</p>
+<p>Expected terminal output:</p>
+<pre><code class="language-text">That task was not found. Please check the task ID and try again.
+That task could not be saved. Please check the task details.
+Demo complete. Developer log written to C:\...\logs\app.log
+</code></pre>
+<p>"Your path will differ, but the important part is that the user sees friendly messages."</p>
+<h3 id="step-5-show-logsapplog">Step 5: Show <code>logs/app.log</code></h3>
+<p><strong>Instructor action</strong></p>
+<p>Open <code>logs/app.log</code> in the editor or display it in the terminal. The exact timestamps and paths will differ, but the log should resemble:</p>
+<pre><code class="language-text">2026-01-14 10:03:22,442 INFO __main__ Starting tracker logging demo
+2026-01-14 10:03:22,443 INFO src.tracker.services TaskService initialized
+2026-01-14 10:03:22,443 INFO src.tracker.services Added task_id=1 title='Write logging notes'
+2026-01-14 10:03:22,443 WARNING src.tracker.services Missing task lookup task_id=999
+2026-01-14 10:03:22,443 WARNING __main__ Demo requested a missing task: Task 999 was not found.
+2026-01-14 10:03:22,444 WARNING src.tracker.services Rejected duplicate task_id=1
+2026-01-14 10:03:22,444 ERROR __main__ Demo could not add task because validation failed
+Traceback (most recent call last):
+  ...
+ValidationError: Task 1 already exists.
+</code></pre>
+<p><strong>Instructor explanation</strong></p>
+<p>"This is the contrast I want everyone to see. The terminal output stayed friendly. The log file contains developer detail. The traceback is not gone; it is in the right place."</p>
+<p>"Also notice the logger names. We can tell which records came from <code>src.tracker.services</code>. The startup module appears as <code>__main__</code> here because we ran <code>src.tracker.demo</code> with <code>python -m</code>; that is normal for an entry module. This is why <code>logging.getLogger(__name__)</code> is helpful, and it is also why the exact name of the entry logger may differ from package modules."</p>
+<h3 id="demo-debrief">Demo debrief</h3>
+<p>Ask:</p>
+<p>"Which log entries would help you debug a learner project tomorrow?"</p>
+<p>Listen for:</p>
+<ul>
+<li>"The missing task ID is included."</li>
+<li>"The validation failure is recorded."</li>
+<li>"The module names show where the messages came from."</li>
+<li>"The traceback is available in the file, not printed to the user."</li>
+</ul>
+<p>Affirm:</p>
+<p>"Exactly. Useful logs are specific, readable, and placed where a developer can find them."</p>
+<hr>
+<h2 id="guided-lab-add-practical-logging-25-minutes">Guided Lab: Add Practical Logging (25 minutes)</h2>
+<h3 id="lab-framing">Lab framing</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now you will add the same idea to your own checkpoint project. Your goal is not to create as many log lines as possible. Your goal is to add a small number of useful log lines at meaningful points."</p>
+<p>"Work in your existing Day 3 package structure if you have it. If your project is still catching up, use the target structure from last hour and adapt your names."</p>
+<p>Display:</p>
+<pre><code class="language-text">Required lab result:
+1. Configure logging to write to logs/app.log.
+2. Add at least 3 log calls in the service layer.
+3. Trigger one error.
+4. Confirm the error appears in logs/app.log.
+5. Keep user-facing messages friendly.
+</code></pre>
+<h3 id="student-task-checklist">Student task checklist</h3>
+<p>Give learners this checklist:</p>
+<ol>
+<li>In <code>src/tracker/config.py</code>, define <code>LOG_DIR</code> and <code>LOG_FILE</code>.</li>
+</ol>
+<pre><code class="language-python">from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+LOG_DIR = BASE_DIR / &quot;logs&quot;
+LOG_FILE = LOG_DIR / &quot;app.log&quot;
+</code></pre>
+<ol start="2">
+<li>In <code>src/tracker/demo.py</code>, configure logging near startup.</li>
+</ol>
+<pre><code class="language-python">import logging
+
+from .config import LOG_DIR, LOG_FILE
+
+
+def configure_logging() -&gt; None:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )
+</code></pre>
+<ol start="3">
+<li>In <code>src/tracker/services.py</code>, create a module-level logger.</li>
+</ol>
+<pre><code class="language-python">import logging
+
+logger = logging.getLogger(__name__)
+</code></pre>
+<ol start="4">
+<li>Add at least three useful service-layer log calls. Good candidates:</li>
+</ol>
+<ul>
+<li><code>logger.info(...)</code> when the service initializes.</li>
+<li><code>logger.info(...)</code> when a task is created, updated, or deleted.</li>
+<li><code>logger.warning(...)</code> when a requested task is missing.</li>
+<li><code>logger.error(...)</code> when validation rejects an operation.</li>
+<li><code>logger.debug(...)</code> for a low-level detail that should usually stay hidden.</li>
+</ul>
+<ol start="5">
+<li>Trigger one expected error, such as:</li>
+</ol>
+<ul>
+<li>creating a <code>Task</code> with invalid data,</li>
+<li>adding a duplicate task ID,</li>
+<li>requesting a task ID that does not exist,</li>
+<li>updating or deleting a missing task.</li>
+</ul>
+<ol start="6">
+<li>Catch the expected exception in <code>src/tracker/demo.py</code> and print a friendly message.</li>
+</ol>
+<pre><code class="language-python">try:
+    service.get(999)
+except NotFoundError as exc:
+    logger.warning(&quot;User requested missing task during demo: %s&quot;, exc)
+    print(&quot;That task was not found. Please check the task ID and try again.&quot;)
+</code></pre>
+<ol start="7">
+<li>For at least one caught exception, record developer stack details without printing them to the user.</li>
+</ol>
+<pre><code class="language-python">try:
+    service.add(Task(task_id=1, title=&quot;Duplicate logging notes&quot;))
+except ValidationError:
+    logger.exception(&quot;Could not add task because validation failed&quot;)
+    print(&quot;That task could not be saved. Please check the task details.&quot;)
+</code></pre>
+<ol start="8">
+<li>Run from the project root.</li>
+</ol>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>Windows launcher option:</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+</code></pre>
+<ol start="9">
+<li>Open <code>logs/app.log</code> and confirm it contains useful entries.</li>
+</ol>
+<h3 id="lab-timing-guidance-for-instructor">Lab timing guidance for instructor</h3>
+<p>Use the 25 minutes intentionally:</p>
+<ul>
+<li><strong>Minutes 0-3</strong>: Learners copy or adapt <code>config.py</code> and logging configuration.</li>
+<li><strong>Minutes 3-8</strong>: Learners add <code>logger = logging.getLogger(__name__)</code> and the first two service-layer log calls.</li>
+<li><strong>Minutes 8-13</strong>: Learners add a missing-record or validation log call.</li>
+<li><strong>Minutes 13-18</strong>: Learners update <code>src/tracker/demo.py</code> to catch expected errors and print friendly messages.</li>
+<li><strong>Minutes 18-22</strong>: Learners run <code>python -m src.tracker.demo</code>, inspect <code>logs/app.log</code>, and fix import/path mistakes.</li>
+<li><strong>Minutes 22-25</strong>: Learners mark completion criteria and prepare one log line to explain during debrief.</li>
+</ul>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>Learners are done when:</p>
+<ul>
+<li><code>logs/app.log</code> is created under the project root.</li>
+<li><code>logs/app.log</code> is populated after running <code>python -m src.tracker.demo</code>.</li>
+<li>The service layer contains at least three meaningful log calls.</li>
+<li>At least one <code>ValidationError</code> or <code>NotFoundError</code> path is triggered and recorded.</li>
+<li>At least one log entry includes useful context such as a task ID, title, or operation name.</li>
+<li>User-facing terminal output remains friendly and does not print a raw traceback.</li>
+<li>The project still uses the Day 3 package convention: demo at <code>src/tracker/demo.py</code>, package-internal relative imports, and module execution from the project root.</li>
+</ul>
+<h3 id="instructor-circulation-prompts">Instructor circulation prompts</h3>
+<p>Use these questions while circulating:</p>
+<ul>
+<li>"What question will this log line help you answer later?"</li>
+<li>"Is this message for the user or for a developer?"</li>
+<li>"If this log line appeared 500 times, would it still be useful?"</li>
+<li>"Does the log include the task ID or operation that failed?"</li>
+<li>"Are you logging the event and still raising or handling the exception appropriately?"</li>
+<li>"Are you running from the project root with <code>python -m src.tracker.demo</code>?"</li>
+<li>"Did your code create <code>logs/</code> before logging to <code>logs/app.log</code>?"</li>
+</ul>
+<h3 id="common-learner-situations-and-coaching-moves">Common learner situations and coaching moves</h3>
+<h4 id="situation-the-log-file-is-not-created">Situation: The log file is not created</h4>
+<p>Check:</p>
+<ul>
+<li>Did they call <code>configure_logging()</code>?</li>
+<li>Did they create the directory with <code>LOG_DIR.mkdir(parents=True, exist_ok=True)</code>?</li>
+<li>Are they running the correct demo module?</li>
+<li>Did logging happen before <code>basicConfig(...)</code>?</li>
+<li>Are they looking in the project root <code>logs/</code> folder, not inside <code>src/tracker/</code>?</li>
+</ul>
+<p>Coaching line:</p>
+<p>"Let's verify the startup order. Logging configuration should happen before the service starts logging, and the directory should exist before the file handler opens."</p>
+<h4 id="situation-imports-fail">Situation: Imports fail</h4>
+<p>Check:</p>
+<ul>
+<li>Are they inside <code>src/tracker/</code> using relative imports?</li>
+<li>Are they running from the project root?</li>
+<li>Did they accidentally run <code>python src/tracker/demo.py</code>?</li>
+<li>Did they rename or omit <code>__init__.py</code>?</li>
+</ul>
+<p>Coaching line:</p>
+<p>"This is the same import rule from last hour. Inside the package, use relative imports. From the project root, run the module with <code>python -m src.tracker.demo</code>."</p>
+<h4 id="situation-user-sees-a-traceback">Situation: User sees a traceback</h4>
+<p>Check:</p>
+<ul>
+<li>Is the exception caught in <code>src/tracker/demo.py</code>?</li>
+<li>Are they using <code>logger.exception(...)</code> inside the <code>except</code> block instead of letting the exception escape?</li>
+<li>Are they printing <code>traceback.format_exc()</code> or using <code>raise</code> after printing a friendly message?</li>
+</ul>
+<p>Coaching line:</p>
+<p>"A traceback can go in the log file. The user message should be a sentence they can act on."</p>
+<h4 id="situation-every-event-is-logged-as-error">Situation: Every event is logged as <code>ERROR</code></h4>
+<p>Check:</p>
+<ul>
+<li>Is a successful operation being labeled as failure?</li>
+<li>Is a recoverable missing lookup being treated the same as a failed save?</li>
+</ul>
+<p>Coaching line:</p>
+<p>"Severity should describe what happened, not how important logging feels. A successful add is <code>INFO</code>; a recoverable missing lookup may be <code>WARNING</code>; a failed operation is <code>ERROR</code>."</p>
+<h4 id="situation-logs-are-noisy">Situation: Logs are noisy</h4>
+<p>Check:</p>
+<ul>
+<li>Are they logging inside a tight loop?</li>
+<li>Are they logging every field of every object repeatedly?</li>
+<li>Are they duplicating the same message in multiple layers?</li>
+</ul>
+<p>Coaching line:</p>
+<p>"The goal is signal, not volume. A useful log line should earn its place."</p>
+<h3 id="optional-extension">Optional extension</h3>
+<p>If learners finish early, ask them to improve formatting or inspect logger names.</p>
+<p>Required extension option from the runbook:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+)
+</code></pre>
+<p>Challenge questions:</p>
+<ul>
+<li>"Can you include a timestamp?"</li>
+<li>"Can you include the module name?"</li>
+<li>"Can you identify which log lines came from <code>src.tracker.services</code> and which came from the entry module (<code>__main__</code> when run with <code>python -m</code>)?"</li>
+</ul>
+<p>Keep the extension small. Do not expand into handler hierarchies, rotating files, JSON logs, multiprocessing logging, pytest <code>caplog</code>, or external logging services today.</p>
+<hr>
+<h2 id="exit-ticket-pitfalls-and-wrap-up-5-minutes">Exit Ticket, Pitfalls, and Wrap-Up (5 minutes)</h2>
+<h3 id="quick-debrief">Quick debrief</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's bring it back together. I want one volunteer to describe a log entry they created. Tell us the level, the message, and why it belongs in the log rather than as a user-facing print."</p>
+<p>Take one or two examples. Praise specificity:</p>
+<ul>
+<li>"Good: it includes the task ID."</li>
+<li>"Good: it distinguishes the developer log from the user message."</li>
+<li>"Good: it logs the failed operation without dumping the traceback to the terminal."</li>
+</ul>
+<h3 id="required-quick-check-exit-ticket">Required quick check / exit ticket</h3>
+<p>Ask learners to answer in one or two sentences:</p>
+<p><strong>When should you log at <code>WARNING</code> vs <code>ERROR</code>?</strong></p>
+<p>Expected answer:</p>
+<ul>
+<li>Use <code>WARNING</code> when something unexpected happened but the application can recover or continue, such as a missing optional record lookup that is handled cleanly.</li>
+<li>Use <code>ERROR</code> when an operation meaningfully failed, such as validation preventing a save, a file write failing, or a required operation not completing.</li>
+</ul>
+<p>Follow-up if needed:</p>
+<p>"The difference is not whether you personally care about the event. The difference is what happened to the operation."</p>
+<h3 id="pitfalls-to-name-explicitly">Pitfalls to name explicitly</h3>
+<p>Review:</p>
+<ol>
+<li>
+<p><strong>Logging inside tight loops/noise</strong>
+   - "If a loop runs 10,000 times, a log call inside that loop can bury the important event. Log the summary or the meaningful outcome unless you are deliberately debugging at <code>DEBUG</code> level."</p>
+</li>
+<li>
+<p><strong>Forgetting to create <code>logs/</code></strong>
+   - "Use <code>LOG_DIR.mkdir(parents=True, exist_ok=True)</code> before configuring file logging."</p>
+</li>
+<li>
+<p><strong>Printing stack traces to end users</strong>
+   - "Use <code>logger.exception(...)</code> or <code>logger.error(..., exc_info=True)</code> for developer detail. Print a friendly message for the user."</p>
+</li>
+<li>
+<p><strong>Configuring logging too late</strong>
+   - "For this course script, configure logging near startup before other modules emit logs. Remember that <code>basicConfig(...)</code> can be a no-op if logging is already configured in a long-running environment."</p>
+</li>
+<li>
+<p><strong>Breaking the import convention</strong>
+   - "Continue using <code>src/tracker/demo.py</code>, relative imports inside <code>src/tracker/</code>, and <code>python -m src.tracker.demo</code> from the project root."</p>
+</li>
+</ol>
+<h3 id="final-wrap-up">Final wrap-up</h3>
+<p><strong>Instructor closing line</strong></p>
+<p>"Today your tracker learned how to leave a useful trail. That trail is not for the user to read during normal use. It is for future debugging, future maintenance, and future you."</p>
+<p>"The most important pattern is this:"</p>
+<pre><code class="language-text">Raise or handle the exception so the program behaves correctly.
+Log enough detail so a developer can diagnose it.
+Show the user a friendly message they can understand.
+</code></pre>
+<p>"Next hour we move into context managers and safer file operations. That will connect directly to today's logging. When file reads and writes become more important, logs help us understand what was saved, what failed, and where to look when something goes wrong."</p>
+<hr>
+<h2 id="instructor-reference-minimal-demo-files">Instructor Reference: Minimal Demo Files</h2>
+<p>Use this reference only if you need a compact version during class. Adapt to learner code rather than forcing exact names when their responsibilities are correct.</p>
+<h3 id="srctrackerconfigpy"><code>src/tracker/config.py</code></h3>
+<pre><code class="language-python">from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+LOG_DIR = BASE_DIR / &quot;logs&quot;
+LOG_FILE = LOG_DIR / &quot;app.log&quot;
+</code></pre>
+<h3 id="srctrackerservicespy"><code>src/tracker/services.py</code></h3>
+<pre><code class="language-python">import logging
+
+from .exceptions import NotFoundError, ValidationError
+from .models import Task
+
+logger = logging.getLogger(__name__)
+
+
+class TaskService:
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+        logger.info(&quot;TaskService initialized&quot;)
+
+    def add(self, task: Task) -&gt; None:
+        if task.task_id in self._tasks:
+            logger.warning(&quot;Rejected duplicate task_id=%s&quot;, task.task_id)
+            raise ValidationError(f&quot;Task {task.task_id} already exists.&quot;)
+
+        self._tasks[task.task_id] = task
+        logger.info(&quot;Added task_id=%s title=%r&quot;, task.task_id, task.title)
+
+    def get(self, task_id: int) -&gt; Task:
+        try:
+            task = self._tasks[task_id]
+        except KeyError as exc:
+            logger.warning(&quot;Missing task lookup task_id=%s&quot;, task_id)
+            raise NotFoundError(f&quot;Task {task_id} was not found.&quot;) from exc
+
+        logger.debug(&quot;Retrieved task_id=%s&quot;, task_id)
+        return task
+</code></pre>
+<h3 id="srctrackerdemopy"><code>src/tracker/demo.py</code></h3>
+<pre><code class="language-python">import logging
+
+from .config import LOG_DIR, LOG_FILE
+from .exceptions import NotFoundError, ValidationError
+from .models import Task
+from .services import TaskService
+
+
+def configure_logging() -&gt; None:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )
+
+
+def main() -&gt; None:
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    logger.info(&quot;Starting tracker logging demo&quot;)
+
+    service = TaskService()
+
+    try:
+        service.add(Task(task_id=1, title=&quot;Write logging notes&quot;))
+        service.get(999)
+    except NotFoundError as exc:
+        logger.warning(&quot;Demo requested a missing task: %s&quot;, exc)
+        print(&quot;That task was not found. Please check the task ID and try again.&quot;)
+
+    try:
+        service.add(Task(task_id=1, title=&quot;Duplicate logging notes&quot;))
+    except ValidationError:
+        logger.exception(&quot;Demo could not add task because validation failed&quot;)
+        print(&quot;That task could not be saved. Please check the task details.&quot;)
+
+    print(f&quot;Demo complete. Developer log written to {LOG_FILE}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Run from the project root:</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+</code></pre>
+<p>Windows launcher option:</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+</code></pre>
+<p>Expected result:</p>
+<ul>
+<li>The terminal shows friendly messages.</li>
+<li><code>logs/app.log</code> is created and populated.</li>
+<li>The log file contains timestamped records with module names.</li>
+<li>The validation error records developer exception details without printing a raw traceback to the user.</li>
+</ul>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-project-structure-5-minutes" class="depth-2">Opening Bridge from Project Structure (5 minutes)</a></li>
+<li><a href="#instructor-talk-track" class="depth-3">Instructor talk track</a></li>
+<li><a href="#transition" class="depth-3">Transition</a></li>
+<li><a href="#outcomes-vocabulary-and-mental-model-5-minutes" class="depth-2">Outcomes, Vocabulary, and Mental Model (5 minutes)</a></li>
+<li><a href="#instructor-talk-track-2" class="depth-3">Instructor talk track</a></li>
+<li><a href="#concept-briefing-levels-formatting-and-file-logging-10-minutes" class="depth-2">Concept Briefing: Levels, Formatting, and File Logging (10 minutes)</a></li>
+<li><a href="#why-print-is-not-enough" class="depth-3">Why print() is not enough</a></li>
+<li><a href="#practical-logging-levels" class="depth-3">Practical logging levels</a></li>
+<li><a href="#formatting-and-file-logging" class="depth-3">Formatting and file logging</a></li>
+<li><a href="#configuration-near-startup" class="depth-3">Configuration near startup</a></li>
+<li><a href="#stack-traces-developer-detail-not-user-output" class="depth-3">Stack traces: developer detail, not user output</a></li>
+<li><a href="#live-demo-add-logging-to-taskservice-10-minutes" class="depth-2">Live Demo: Add Logging to TaskService (10 minutes)</a></li>
+<li><a href="#demo-framing" class="depth-3">Demo framing</a></li>
+<li><a href="#step-1-add-logging-paths-in-srctrackerconfigpy" class="depth-3">Step 1: Add logging paths in src/tracker/config.py</a></li>
+<li><a href="#step-2-add-a-logger-and-service-layer-log-calls-in-srctrackerservicespy" class="depth-3">Step 2: Add a logger and service-layer log calls in src/tracker/services.py</a></li>
+<li><a href="#step-3-configure-logging-and-keep-friendly-messages-in-srctrackerdemopy" class="depth-3">Step 3: Configure logging and keep friendly messages in src/tracker/demo.py</a></li>
+<li><a href="#step-4-run-from-the-project-root" class="depth-3">Step 4: Run from the project root</a></li>
+<li><a href="#step-5-show-logsapplog" class="depth-3">Step 5: Show logs/app.log</a></li>
+<li><a href="#demo-debrief" class="depth-3">Demo debrief</a></li>
+<li><a href="#guided-lab-add-practical-logging-25-minutes" class="depth-2">Guided Lab: Add Practical Logging (25 minutes)</a></li>
+<li><a href="#lab-framing" class="depth-3">Lab framing</a></li>
+<li><a href="#student-task-checklist" class="depth-3">Student task checklist</a></li>
+<li><a href="#lab-timing-guidance-for-instructor" class="depth-3">Lab timing guidance for instructor</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#instructor-circulation-prompts" class="depth-3">Instructor circulation prompts</a></li>
+<li><a href="#common-learner-situations-and-coaching-moves" class="depth-3">Common learner situations and coaching moves</a></li>
+<li><a href="#situation-the-log-file-is-not-created" class="depth-4">Situation: The log file is not created</a></li>
+<li><a href="#situation-imports-fail" class="depth-4">Situation: Imports fail</a></li>
+<li><a href="#situation-user-sees-a-traceback" class="depth-4">Situation: User sees a traceback</a></li>
+<li><a href="#situation-every-event-is-logged-as-error" class="depth-4">Situation: Every event is logged as ERROR</a></li>
+<li><a href="#situation-logs-are-noisy" class="depth-4">Situation: Logs are noisy</a></li>
+<li><a href="#optional-extension" class="depth-3">Optional extension</a></li>
+<li><a href="#exit-ticket-pitfalls-and-wrap-up-5-minutes" class="depth-2">Exit Ticket, Pitfalls, and Wrap-Up (5 minutes)</a></li>
+<li><a href="#quick-debrief" class="depth-3">Quick debrief</a></li>
+<li><a href="#required-quick-check-exit-ticket" class="depth-3">Required quick check / exit ticket</a></li>
+<li><a href="#pitfalls-to-name-explicitly" class="depth-3">Pitfalls to name explicitly</a></li>
+<li><a href="#final-wrap-up" class="depth-3">Final wrap-up</a></li>
+<li><a href="#instructor-reference-minimal-demo-files" class="depth-2">Instructor Reference: Minimal Demo Files</a></li>
+<li><a href="#srctrackerconfigpy" class="depth-3">src/tracker/config.py</a></li>
+<li><a href="#srctrackerservicespy" class="depth-3">src/tracker/services.py</a></li>
+<li><a href="#srctrackerdemopy" class="depth-3">src/tracker/demo.py</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day3_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

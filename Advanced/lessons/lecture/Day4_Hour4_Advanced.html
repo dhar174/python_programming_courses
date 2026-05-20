@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4, Hour 4: Checkpoint 2 – Persistence-Ready Core + JSON Save/Load | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="4">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day4_Hour4_Advanced.md">
+
+    <link rel="prev" href="Day4_Hour3_Advanced.html">
+    <link rel="next" href="Day5_Hour1_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="4" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-04/index.html">Day 4</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 4, Hour 4: Checkpoint 2 – Persistence-Ready Core + JSON Save/Load</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 4</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour1_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day4_Hour4_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Advanced – Session 4</strong></p>
+<hr>
+<h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 4, Hour 4 of 48, also Hour 16 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Framing and starting Checkpoint 2: a persistence-ready core that can save, restart, load, handle errors, and log meaningful events.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 4, Hour 16.</li>
+<li><strong>Prerequisites</strong>: Learners should understand the Day 3 package/logging/safe-save work and the Day 4 planning work around MVP scope, persistence, and tests.</li>
+<li><strong>Advanced trajectory</strong>: This hour turns earlier architecture habits into checkpoint evidence. Students are not adding flashy features; they are proving the core can persist state reliably and is ready for future database integration.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has either implemented or clearly advanced a persistence-ready core under <code>src/</code>, with JSON save/load, file logging, custom exceptions, and a demo path that proves save -&gt; restart -&gt; load.</li>
+</ul>
+<p>Important instructor positioning:</p>
+<ul>
+<li>The runbook describes Checkpoint 2 as a larger 45-60 minute checkpoint activity. This lecture contains a 26-minute in-class checkpoint build block that frames and starts the work; learners may finish or polish remaining checkpoint evidence after the hour depending on class logistics.</li>
+<li>Keep grading language concrete: correctness, structure, error handling, and logging.</li>
+<li>Require evidence, not claims. Students should show the saved JSON, restart the app or demo script, reload state, trigger one controlled failure, and point to a log entry.</li>
+<li>Do not let students skip serialization design by trying to dump arbitrary Python objects directly to JSON.</li>
+<li>If time permits after the required behavior works, mention a <code>version</code> or <code>schema_version</code> field as a future migration hook. Do not make migration the main checkpoint.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<p><strong>Total Time:</strong> 60 minutes<br>
+- Checkpoint framing and grading focus: 5 minutes
+- Persistence-ready architecture and package layout under <code>src/</code>: 10 minutes
+- Safe JSON save/load, logging, and exception strategy: 10 minutes
+- Live Demo (save -&gt; restart -&gt; load): 6 minutes
+- Hands-On Checkpoint Build: 26 minutes
+- Debrief &amp; Exit Ticket: 3 minutes</p>
+<p>This one-hour plan totals exactly 60 minutes: 5 + 10 + 10 + 6 + 26 + 3 = 60. The in-class checkpoint build is 26 minutes, which stays inside the runbook's 25-35 minute hands-on lab window while acknowledging that the broader Checkpoint 2 deliverable may take additional completion or review time. Protect the build block. If a concept explanation runs long, shorten the demo narration rather than cutting the evidence-building time.</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, you will be able to:
+1. Organize an application package under <code>src/</code> so the core domain and persistence logic are clearly separated
+2. Save application state to JSON using a safe-save pattern rather than a fragile direct overwrite
+3. Load JSON data back into application objects and restore useful state across runs
+4. Handle missing files, invalid JSON, and validation failures without crashing the entire application
+5. Use custom exceptions to communicate domain and persistence problems clearly
+6. Configure logging to a file so important events and failures are captured for debugging
+7. Demonstrate persistence with a simple save -&gt; restart -&gt; load workflow
+8. Explain why JSON persistence now prepares the codebase for future database integration later</p>
+<hr>
+<h2 id="section-1-checkpoint-framing-and-grading-focus-5-minutes">Section 1: Checkpoint Framing and Grading Focus (5 minutes)</h2>
+<h3 id="what-this-checkpoint-proves">What This Checkpoint Proves</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Checkpoint 2 is where you prove that your project has a real core and that the core can survive beyond a single run. This is a deceptively important transition.</p>
+<p>Before persistence, a project can look functional while still being fragile. It may perform a few actions in memory, print nice output, and then lose everything the moment the process ends. That is not yet a reliable application foundation.</p>
+<p>This checkpoint asks you to cross an architectural threshold:</p>
+<ul>
+<li>the code is organized as a package under <code>src/</code></li>
+<li>state can be serialized to JSON</li>
+<li>state can be loaded back in</li>
+<li>save/load failures are handled intentionally</li>
+<li>logging records meaningful events</li>
+<li>custom exceptions still communicate domain-specific problems</li>
+</ul>
+<h3 id="grading-lens">Grading Lens</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The runbook is very clear about the grading focus: correctness, structure, error handling, and logging. That means a small, clean, reliable solution should score better than a flashy, sprawling, fragile one.</p>
+<p>State this explicitly to students: if they are tempted to add more features right now, the safest move is usually to make the existing core more trustworthy.</p>
+<p><strong>[Ask students:]</strong> If your program can create great data but loses it after restart, what milestone is still incomplete?</p>
+<p>[Pause. Students should say persistence.]</p>
+<p>Exactly.</p>
+<hr>
+<h2 id="section-2-persistence-ready-architecture-and-package-layout-under-src-10-minutes">Section 2: Persistence-Ready Architecture and Package Layout under <code>src/</code> (10 minutes)</h2>
+<h3 id="why-src-layout-matters">Why <code>src/</code> Layout Matters</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Packaging under <code>src/</code> helps separate project code from top-level scripts and encourages clean imports. It also nudges students toward thinking of their application as a reusable package instead of a single giant file.</p>
+<p>A sample layout for this checkpoint might look like this:</p>
+<pre><code class="language-text">project_root/
+├── demo_persistence.py
+├── logs/
+│   └── app.log
+├── data/
+│   └── state.json
+└── src/
+    └── reading_tracker/
+        ├── __init__.py
+        ├── errors.py
+        ├── logging_config.py
+        ├── models.py
+        ├── persistence.py
+        └── services.py
+</code></pre>
+<p>This layout does several useful things:</p>
+<ul>
+<li><code>models.py</code> defines structured domain data</li>
+<li><code>services.py</code> handles business rules</li>
+<li><code>persistence.py</code> handles JSON save/load</li>
+<li><code>errors.py</code> centralizes custom exceptions</li>
+<li><code>logging_config.py</code> keeps logging setup tidy</li>
+<li><code>demo_persistence.py</code> becomes a clear demonstration script</li>
+</ul>
+<h3 id="protecting-separation-of-concerns">Protecting Separation of Concerns</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students should not dump JSON file code into every part of the application. Saving and loading should be handled in a persistence layer. The service layer should not care whether data is stored in JSON today or in a database tomorrow. That separation is what makes the system “persistence-ready” rather than “accidentally tied to one file format.”</p>
+<p>In other words:</p>
+<ul>
+<li>models represent the data</li>
+<li>services enforce the rules</li>
+<li>persistence translates between Python objects and storage</li>
+</ul>
+<p>That architecture makes future database integration possible because the rest of the app is not married to file I/O details.</p>
+<h3 id="example-domain-model">Example Domain Model</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Use a small, concrete domain for the demo. Here is a reading-tracker example using dataclasses and type hints.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+from dataclasses import asdict, dataclass, field
+
+
+@dataclass(slots=True)
+class Book:
+    title: str
+    author: str
+    pages_read: int = 0
+
+
+@dataclass(slots=True)
+class ReadingState:
+    books: list[Book] = field(default_factory=list)
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {&quot;books&quot;: [asdict(book) for book in self.books]}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; &quot;ReadingState&quot;:
+        raw_books = data.get(&quot;books&quot;, [])
+        books = [Book(**book_data) for book_data in raw_books]
+        return cls(books=books)
+</code></pre>
+<p>Point out that serialization works because the model gives us a clear path to and from dictionaries. JSON understands primitive structures like dicts, lists, strings, and numbers. It does not understand arbitrary Python objects by magic.</p>
+<hr>
+<h2 id="section-3-safe-json-saveload-logging-and-exception-strategy-10-minutes">Section 3: Safe JSON Save/Load, Logging, and Exception Strategy (10 minutes)</h2>
+<h3 id="why-not-just-jsondump-straight-to-the-final-file">Why Not Just <code>json.dump()</code> Straight to the Final File?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students often write the simplest possible save operation:</p>
+<pre><code class="language-python">with open(&quot;state.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    json.dump(data, file)
+</code></pre>
+<p>That can work, but it has a risk. If the process crashes halfway through writing, the final file may be left partially written or corrupted.</p>
+<p>A safer pattern is to write to a temporary file first and then replace the target file atomically. This is what we mean by a <strong>safe save pattern</strong>.</p>
+<h3 id="custom-exceptions">Custom Exceptions</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Keep custom exceptions in play. The checkpoint explicitly expects them.</p>
+<p>Example:</p>
+<pre><code class="language-python">class AppError(Exception):
+    &quot;&quot;&quot;Base application error.&quot;&quot;&quot;
+
+
+class ValidationError(AppError):
+    &quot;&quot;&quot;Raised when domain validation fails.&quot;&quot;&quot;
+
+
+class PersistenceError(AppError):
+    &quot;&quot;&quot;Raised when save/load operations fail.&quot;&quot;&quot;
+</code></pre>
+<p>These make code more communicative. A <code>PersistenceError</code> tells us much more than a vague crash somewhere in file-handling code.</p>
+<h3 id="logging-to-file">Logging to File</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Logging matters because persistence bugs are often easier to diagnose after the fact than during the exact moment they happen. A log file gives us a trace.</p>
+<p>Show a simple file-based configuration:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import logging
+from pathlib import Path
+
+
+def configure_logging() -&gt; None:
+    log_dir = Path(&quot;logs&quot;)
+    log_dir.mkdir(exist_ok=True)
+
+    logging.basicConfig(
+        filename=log_dir / &quot;app.log&quot;,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )
+</code></pre>
+<p>Reinforce that logs should contain useful events such as:</p>
+<ul>
+<li>save started</li>
+<li>save succeeded</li>
+<li>load started</li>
+<li>file missing, using default state</li>
+<li>invalid JSON encountered</li>
+<li>validation failed</li>
+</ul>
+<h3 id="safe-save-pattern-with-pathlib">Safe Save Pattern with <code>pathlib</code></h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is a strong example students can adapt:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+import logging
+from pathlib import Path
+
+from reading_tracker.errors import PersistenceError
+from reading_tracker.models import ReadingState
+
+logger = logging.getLogger(__name__)
+
+
+class JSONStateStore:
+    def __init__(self, path: Path) -&gt; None:
+        self.path = path
+
+    def save(self, state: ReadingState) -&gt; None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        temp_path = self.path.with_suffix(self.path.suffix + &quot;.tmp&quot;)
+
+        try:
+            with temp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+                json.dump(state.to_dict(), file, indent=2)
+            temp_path.replace(self.path)
+            logger.info(&quot;State saved to %s&quot;, self.path)
+        except OSError as error:
+            logger.exception(&quot;Failed to save state&quot;)
+            raise PersistenceError(&quot;Could not save application state&quot;) from error
+
+    def load(self) -&gt; ReadingState:
+        if not self.path.exists():
+            logger.info(&quot;State file missing at %s; starting with default state&quot;, self.path)
+            return ReadingState()
+
+        try:
+            with self.path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+                raw_data = json.load(file)
+        except json.JSONDecodeError as error:
+            logger.exception(&quot;State file contains invalid JSON&quot;)
+            raise PersistenceError(&quot;State file is corrupted or invalid JSON&quot;) from error
+        except OSError as error:
+            logger.exception(&quot;Failed to load state&quot;)
+            raise PersistenceError(&quot;Could not load application state&quot;) from error
+
+        if not isinstance(raw_data, dict):
+            raise PersistenceError(&quot;State file must contain a JSON object at the top level&quot;)
+
+        try:
+            state = ReadingState.from_dict(raw_data)
+        except (TypeError, KeyError, ValueError) as error:
+            logger.exception(&quot;State data failed validation&quot;)
+            raise PersistenceError(&quot;State data structure was invalid&quot;) from error
+
+        logger.info(&quot;State loaded from %s&quot;, self.path)
+        return state
+</code></pre>
+<p>This code captures the checkpoint priorities very well:</p>
+<ul>
+<li><code>src/</code>-friendly modular design</li>
+<li><code>pathlib</code> instead of raw string paths</li>
+<li>safe-save temp-file replacement</li>
+<li><code>JSONDecodeError</code> handling</li>
+<li>validation after loading</li>
+<li>logging to file</li>
+<li>custom exceptions on failure</li>
+</ul>
+<h3 id="teaching-note-on-json-limits">Teaching Note on JSON Limits</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>JSON is a great checkpoint storage format because it is human-readable and easy to inspect. It is not a magical database. Students should understand both its strengths and its limits.</p>
+<p>Strengths:</p>
+<ul>
+<li>simple</li>
+<li>readable</li>
+<li>portable</li>
+<li>easy to demo</li>
+</ul>
+<p>Limits:</p>
+<ul>
+<li>weak for concurrency</li>
+<li>not ideal for large-scale querying</li>
+<li>requires explicit serialization rules for custom objects</li>
+</ul>
+<p>That is exactly why this checkpoint is called persistence-ready, not persistence-finished.</p>
+<hr>
+<h2 id="section-4-live-demo-save-restart-load-6-minutes">Section 4: Live Demo – Save -&gt; Restart -&gt; Load (6 minutes)</h2>
+<h3 id="demo-goal">Demo Goal</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The runbook specifically asks for a demo procedure that includes save, restart, load, and validation-related behavior. I recommend narrating this as a fast grading workflow. If I can verify these steps quickly, I know the project is on solid ground.</p>
+<h3 id="demo-script">Demo Script</h3>
+<pre><code class="language-python">from __future__ import annotations
+
+import logging
+from pathlib import Path
+
+from reading_tracker.errors import PersistenceError, ValidationError
+from reading_tracker.logging_config import configure_logging
+from reading_tracker.models import Book, ReadingState
+from reading_tracker.persistence import JSONStateStore
+from reading_tracker.services import ReadingService
+
+
+def main() -&gt; None:
+    configure_logging()
+    store = JSONStateStore(Path(&quot;data/state.json&quot;))
+
+    try:
+        initial_state = store.load()
+    except PersistenceError as error:
+        print(f&quot;Could not load state: {error}&quot;)
+        initial_state = ReadingState()
+
+    service = ReadingService(initial_state)
+
+    try:
+        service.add_book(Book(title=&quot;Deep Work&quot;, author=&quot;Cal Newport&quot;, pages_read=25))
+        service.add_book(Book(title=&quot;Clean Code&quot;, author=&quot;Robert C. Martin&quot;, pages_read=10))
+        store.save(service.state)
+        print(&quot;State saved. Simulating restart...&quot;)
+    except (ValidationError, PersistenceError) as error:
+        print(f&quot;Operation failed: {error}&quot;)
+        return
+
+    # Simulated restart: create a new store-backed service instance.
+    restarted_store = JSONStateStore(Path(&quot;data/state.json&quot;))
+
+    try:
+        reloaded_state = restarted_store.load()
+    except PersistenceError as error:
+        print(f&quot;Reload failed: {error}&quot;)
+        return
+
+    restarted_service = ReadingService(reloaded_state)
+    print(&quot;Reloaded books:&quot;)
+    for book in restarted_service.list_books():
+        print(f&quot;- {book.title} by {book.author} ({book.pages_read} pages read)&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-narration">Demo Narration</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Call out the restart simulation explicitly. We are proving that the second service instance can reconstruct meaningful state from the saved JSON. That is the checkpoint.</p>
+<p>Then show the required fast-grade failure cases. Keep them brief, but do not skip them:</p>
+<ul>
+<li>missing file on first load → default state</li>
+<li>corrupted JSON → <code>PersistenceError</code> plus log entry</li>
+<li>invalid book data → validation-related failure path</li>
+</ul>
+<p><strong>[Prediction prompt:]</strong> If I manually break the JSON file by deleting a brace, what should happen in a good solution?</p>
+<p>[Pause.]</p>
+<p>The answer we want is: it should not crash with a cryptic traceback in front of the user. It should handle <code>JSONDecodeError</code>, log the details, and communicate a clear failure.</p>
+<p>For the validation trigger, narrate a concrete action instead of leaving it abstract:</p>
+<pre><code class="language-text">Fast-grade validation trigger:
+1. Save a valid state.
+2. Open the JSON file.
+3. Delete one book's required `title` field.
+4. Run the load path again.
+5. Confirm the loader rejects the data through the controlled validation/persistence path.
+6. Confirm the log contains a useful failure entry.
+</code></pre>
+<p>If editing the file live is too risky in class, use a prepared broken JSON sample. The important requirement is that students see validation failure as part of the checkpoint evidence, not as an optional extra.</p>
+<h3 id="fast-grade-checklist">Fast Grade Checklist</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Model a fast evaluator mindset:</p>
+<ul>
+<li>Can it run?</li>
+<li>Can it load with no file present?</li>
+<li>Can it save valid state?</li>
+<li>Can it restart and load the same state?</li>
+<li>Are failures handled?</li>
+<li>Is logging meaningful?</li>
+</ul>
+<p>This gives students a practical review process they can use on their own projects.</p>
+<hr>
+<h2 id="section-5-hands-on-checkpoint-build-26-minutes">Section 5: Hands-On Checkpoint Build (26 minutes)</h2>
+<h3 id="student-task">Student Task</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students now build or refine their own persistence-ready core.</p>
+<p><strong>Checkpoint 2: Persistence-ready Core</strong></p>
+<p>Required elements:</p>
+<ul>
+<li>package layout under <code>src/</code></li>
+<li>JSON save/load</li>
+<li>safe save pattern</li>
+<li>logging to file</li>
+<li>custom exceptions still used</li>
+<li>demo script showing save -&gt; restart -&gt; load</li>
+<li>handling of invalid JSON with <code>JSONDecodeError</code></li>
+</ul>
+<h3 id="checkpoint-build-mini-budget">Checkpoint Build Mini-Budget</h3>
+<p>Use this mini-budget to keep the 26-minute build concrete:</p>
+<ul>
+<li>4 minutes: confirm package layout under <code>src/</code> and identify the model, service, persistence, logging, and error modules.</li>
+<li>4 minutes: add or review <code>to_dict()</code> / <code>from_dict()</code> conversion so JSON receives plain dictionaries and lists rather than raw objects.</li>
+<li>5 minutes: implement or repair JSON save/load with a safe-save temp file and a missing-file path.</li>
+<li>4 minutes: add file logging and verify that save/load events produce meaningful log entries.</li>
+<li>4 minutes: add controlled error handling for invalid JSON and validation failures, using custom exceptions.</li>
+<li>3 minutes: run the demo script through save -&gt; restart -&gt; load and inspect the saved JSON.</li>
+<li>2 minutes: write one reflection note answering what design decision they would change if starting over.</li>
+</ul>
+<p>If a student cannot finish every item, prioritize evidence in this order: package layout, save/load round trip, invalid JSON handling, meaningful logs, then optional polish.</p>
+<h3 id="evidence-checklist">Evidence Checklist</h3>
+<p>Before students call the checkpoint complete, ask them to show evidence for each required outcome:</p>
+<ul>
+<li><strong>State persists across runs:</strong> run the app or demo, save state, restart or create a new service instance, and load the same state back.</li>
+<li><strong>Errors are handled without uncontrolled crashing:</strong> remove the file, corrupt the JSON, or introduce invalid loaded data and show a controlled message or custom exception path.</li>
+<li><strong>Logs contain meaningful entries:</strong> open the log file and point to save, load, missing-file, or failure entries.</li>
+<li><strong>Structure supports future storage changes:</strong> identify the module that would change most if JSON were replaced by a database.</li>
+</ul>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<p>A student solution is complete when:</p>
+<ul>
+<li>application state persists across runs</li>
+<li>missing or invalid storage is handled without uncontrolled crashing</li>
+<li>logs contain meaningful entries about save/load behavior</li>
+<li>the package layout is clear and not all in one file</li>
+<li>persistence code is separated from core service logic</li>
+<li>a demo path exists that proves save -&gt; restart -&gt; load</li>
+</ul>
+<h3 id="circulation-notes">Circulation Notes</h3>
+<p><strong>[Circulate:]</strong></p>
+<p>Prioritize these checks while moving through the room:</p>
+<ol>
+<li>Is there actually a <code>src/</code> package layout, or is everything still top-level?</li>
+<li>Are they trying to dump raw objects directly to JSON without converting them?</li>
+<li>Do they overwrite the final file directly instead of using a temp file?</li>
+<li>Do they catch <code>JSONDecodeError</code> specifically?</li>
+<li>Are logs written to a file, or only printed to screen?</li>
+<li>Are custom exceptions still used meaningfully?</li>
+<li>Can they explain how they would swap JSON storage for a database later?</li>
+</ol>
+<p>If a student is stuck, help them narrow the steps:</p>
+<ul>
+<li>first, define <code>to_dict()</code> and <code>from_dict()</code></li>
+<li>second, save clean JSON to disk</li>
+<li>third, load it back</li>
+<li>fourth, add safe-save behavior</li>
+<li>fifth, add logging</li>
+<li>sixth, add error handling</li>
+</ul>
+<p>That sequence keeps the checkpoint from feeling overwhelming.</p>
+<h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
+<ul>
+<li>Dumping Python objects directly to JSON without serialization.</li>
+<li>Corrupting the JSON file and not handling <code>JSONDecodeError</code>.</li>
+<li>Logging too little to diagnose failures.</li>
+<li>Letting persistence code leak all over the service layer.</li>
+<li>Building a beautiful demo without a real restart/load proof.</li>
+<li>Ignoring missing-file behavior.</li>
+<li>Using bare <code>except:</code> and hiding the root cause.</li>
+</ul>
+<h3 id="optional-extensions">Optional Extensions</h3>
+<p>If time remains and the foundation is solid, students may:</p>
+<ul>
+<li>add a <code>version</code> field to the JSON for future migration support</li>
+<li>call the field <code>schema_version</code> if they want to make future migrations easier to explain</li>
+<li>record save timestamps in logs</li>
+<li>add a backup file before replacement</li>
+<li>write a small test covering save/load round-trips</li>
+</ul>
+<p>These are worthwhile only after the required checkpoint behavior is dependable.</p>
+<hr>
+<h3 id="persistence-debugging-walkthrough">Persistence Debugging Walkthrough</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Persistence bugs can look scary because the symptom often appears long after the original mistake. A file gets saved incorrectly now, and the failure only becomes obvious when the app restarts later. That delay is why I want to explicitly teach a debugging sequence.</p>
+<p>When a student says, “My load function is broken,” I want to ask the following questions in order:</p>
+<ol>
+<li>What exactly was written to disk?</li>
+<li>Is the JSON file valid syntax?</li>
+<li>Does the top-level shape match what <code>from_dict()</code> expects?</li>
+<li>Are required fields present for each object?</li>
+<li>Did the load function handle missing files separately from invalid files?</li>
+<li>Did a domain validation rule fail after the file was parsed successfully?</li>
+</ol>
+<p>That sequence matters because “it failed on load” can hide several very different problems.</p>
+<h3 id="instructor-facing-recovery-scenarios">Instructor-Facing Recovery Scenarios</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here are the scenarios I would deliberately test, either in a demo or while circulating:</p>
+<p><strong>Scenario 1: First run, no file exists yet.</strong></p>
+<p>Desired behavior: the program recognizes the missing file, logs that a default state is being used, and continues without crashing.</p>
+<p><strong>Scenario 2: File exists and contains valid JSON, but the top-level type is wrong.</strong></p>
+<p>For example, the file contains a list when the loader expects a dictionary. Desired behavior: raise a controlled <code>PersistenceError</code>, log the mismatch, and communicate clearly.</p>
+<p><strong>Scenario 3: File exists but contains invalid JSON syntax.</strong></p>
+<p>Desired behavior: catch <code>JSONDecodeError</code>, log the exception, and surface a readable failure path.</p>
+<p><strong>Scenario 4: JSON parses successfully, but the contents violate domain assumptions.</strong></p>
+<p>Example: <code>pages_read</code> is a string instead of an integer, or a required <code>title</code> field is missing. Desired behavior: fail validation intentionally rather than letting strange bugs spread through the rest of the app.</p>
+<p><strong>Scenario 5: Save partially completes and is interrupted.</strong></p>
+<p>This is why the safe-save temp-file pattern matters. Even if students do not simulate a crash in class, they should understand the design reason for writing to a temporary file and replacing the final file only when the write succeeds.</p>
+<h3 id="instructor-mini-conference-questions-during-checkpoint-work">Instructor Mini-Conference Questions During Checkpoint Work</h3>
+<p><strong>[Circulate:]</strong></p>
+<p>Use short questions that reveal architecture quality quickly:</p>
+<ul>
+<li>“Where is your <code>to_dict()</code> logic?”</li>
+<li>“Where is your <code>from_dict()</code> logic?”</li>
+<li>“What happens if the state file is missing?”</li>
+<li>“What happens if the JSON is corrupt?”</li>
+<li>“Where is your log file configured?”</li>
+<li>“What does your custom persistence exception buy you over a generic crash?”</li>
+<li>“If you switched to a database later, what module would change the most?”</li>
+</ul>
+<p>The final question is especially useful because it reveals whether the student actually separated persistence from services.</p>
+<h3 id="strong-solution-characteristics-to-call-out-publicly">Strong Solution Characteristics to Call Out Publicly</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When highlighting good work, praise design decisions that create reliability:</p>
+<ul>
+<li>models know how to convert to and from serializable data</li>
+<li>persistence code is centralized</li>
+<li>logs tell a useful story of save/load behavior</li>
+<li>the demo script proves a restart path instead of merely printing in-memory data</li>
+<li>errors are translated into custom exceptions with understandable meaning</li>
+</ul>
+<p>This tells the room that clean architecture is a success criterion, not an optional extra.</p>
+<h3 id="common-student-misconceptions-and-response-scripts">Common Student Misconceptions and Response Scripts</h3>
+<p><strong>Misconception 1: “If <code>json.dump()</code> ran once, persistence is done.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>Saving once is only half the job. Persistence means the program can later reconstruct working application state from that saved representation.</p>
+<p><strong>Misconception 2: “If load fails, I should just ignore the error and continue.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>Sometimes a missing file is normal, but corrupted data is different. Good software distinguishes first-run conditions from broken-state conditions.</p>
+<p><strong>Misconception 3: “I can put file I/O directly inside service methods and that’s simpler.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>It is simpler in the very short term and more painful in the medium term. Separate persistence now so your service logic can be reused, tested, and swapped to another storage mechanism later.</p>
+<p><strong>Misconception 4: “Printing messages is enough; I do not need logging.”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>Console output helps in the moment. Logging helps after the moment, when you need to understand what happened across runs.</p>
+<h3 id="fast-evaluation-routine-students-can-reuse">Fast Evaluation Routine Students Can Reuse</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Give students a lightweight self-check they can run every time they touch persistence code:</p>
+<ol>
+<li>Delete or move the state file and run the app.</li>
+<li>Confirm the app handles the missing file sensibly.</li>
+<li>Create or update some state.</li>
+<li>Save and inspect the JSON file manually.</li>
+<li>Restart the app and verify the data returns.</li>
+<li>Deliberately break the JSON syntax.</li>
+<li>Verify the app handles the failure clearly and logs it.</li>
+</ol>
+<p>This routine is simple, but it turns persistence into something they can verify systematically instead of hoping it works.</p>
+<h3 id="reflection-prompt-if-time-remains">Reflection Prompt if Time Remains</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Ask students to write a short answer to this question:</p>
+<blockquote>
+<p>If your project had to move from JSON storage to a database next week, what parts of your codebase would stay the same, and what parts would change?</p>
+</blockquote>
+<p>A thoughtful answer usually sounds like this: the models and service rules should mostly stay the same, while the persistence module would change the most. That is exactly the architectural separation we want.</p>
+<h3 id="final-reinforcement-before-debrief">Final Reinforcement Before Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Checkpoint 2 is not glamorous, but it is foundational. A project with persistence, logging, and clean structure is a project that can grow. A project without those things may still look impressive for one demo, but it is much harder to trust.</p>
+<p>Before we close, I want students to connect today’s checkpoint to the bigger picture of software design. The persistence layer they built today is teaching them three durable ideas:</p>
+<ul>
+<li>state should be translated deliberately between memory and storage</li>
+<li>failures should be named and logged clearly</li>
+<li>architecture choices now determine how easily the project can evolve later</li>
+</ul>
+<p>That is why this checkpoint matters so much.</p>
+<h3 id="short-reflection-prompt-if-time-remains">Short Reflection Prompt if Time Remains</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Ask students to complete this sentence:</p>
+<blockquote>
+<p>The strongest part of my persistence design right now is <strong><em>_</em></strong><em>, and the part I most want to improve next is <strong><em>_</em></strong></em>.</p>
+</blockquote>
+<p>This gives them a constructive way to end the checkpoint with ownership and next steps.</p>
+<h3 id="serialization-design-notes-students-should-hear-explicitly">Serialization Design Notes Students Should Hear Explicitly</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A subtle but important lesson in this checkpoint is that persistence is not the same thing as “dumping memory to disk.” Students are designing a translation layer.</p>
+<p>Inside the running app, objects may have methods, invariants, and relationships. In JSON, we only get plain data structures. That means the persistence layer must answer questions like:</p>
+<ul>
+<li>Which fields are essential to reconstruct the object later?</li>
+<li>Which defaults should exist if older files are missing a field?</li>
+<li>Which values need validation before becoming trusted objects again?</li>
+<li>How can we keep storage format simple without losing important meaning?</li>
+</ul>
+<p>Saying this out loud helps students understand why <code>to_dict()</code> and <code>from_dict()</code> are not just boilerplate. They are the explicit bridge between runtime objects and stored representation.</p>
+<h3 id="suggested-manual-verification-checklist">Suggested Manual Verification Checklist</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If students ask, “How do I know my persistence layer is actually good enough?” give them this manual checklist:</p>
+<ul>
+<li>Open the saved JSON file and confirm it is readable.</li>
+<li>Verify the top-level shape matches the loader expectations.</li>
+<li>Restart the app and confirm the same entities come back.</li>
+<li>Check that the log file records save and load events.</li>
+<li>Corrupt the JSON deliberately and confirm the app responds clearly.</li>
+<li>Remove the JSON file and confirm first-run behavior still works.</li>
+</ul>
+<p>This checklist helps students think like testers and maintainers, not only authors.</p>
+<h3 id="instructor-note-on-future-database-migration">Instructor Note on Future Database Migration</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Finally, connect today’s work to future architecture growth. A student who keeps services independent from JSON storage is already preparing for a database, even if the database never appears in this course. That is the meaning of persistence-ready: the design can evolve because responsibilities were separated early.</p>
+<h3 id="final-instructor-checklist-for-checkpoint-review">Final Instructor Checklist for Checkpoint Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A rapid checkpoint review should let me answer these questions quickly:</p>
+<ul>
+<li>Is the code organized under <code>src/</code>?</li>
+<li>Can the app save valid JSON?</li>
+<li>Can it restart and reload state?</li>
+<li>Does it handle missing files cleanly?</li>
+<li>Does it handle invalid JSON through <code>JSONDecodeError</code> and a controlled error path?</li>
+<li>Are log entries meaningful?</li>
+<li>Are custom exceptions still visible in the design?</li>
+</ul>
+<p>If the answer is yes across that list, the project has crossed an important quality threshold.</p>
+<h3 id="instructor-summary-phrase-to-repeat-aloud">Instructor Summary Phrase to Repeat Aloud</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If students remember one sentence from this checkpoint, let it be this: <strong>persistence is not just writing data once; it is proving that state can be saved safely, loaded reliably, and understood clearly when something goes wrong.</strong></p>
+<p>Add one more reminder if time allows: good persistence design helps the next version of the project, not just the current demo. That is why package structure, logging, and deliberate serialization matter here.</p>
+<p>Add a final practical note for students: if a reviewer can follow the save path, inspect the JSON, restart the app, and see the same state restored, the checkpoint has real evidence behind it instead of optimistic assumptions.</p>
+<p>That is also a useful standard for students to reuse later: if persistence cannot survive a simple manual verification loop, it is probably not ready to support the rest of the application yet. Reliable software earns trust through repeatable checks.</p>
+<h2 id="section-6-debrief-exit-ticket-3-minutes">Section 6: Debrief &amp; Exit Ticket (3 minutes)</h2>
+<h3 id="group-debrief">Group Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This checkpoint is one of the most important architectural moments in the course. Students who succeed here have something far more valuable than “I wrote more code.” They have a core that can survive restart, surface failures clearly, and evolve later.</p>
+<p>Re-emphasize the engineering lessons:</p>
+<ul>
+<li>package your work under <code>src/</code></li>
+<li>separate models, services, persistence, and logging</li>
+<li>serialize deliberately</li>
+<li>save safely</li>
+<li>load carefully</li>
+<li>log what matters</li>
+<li>use exceptions to name failures clearly</li>
+</ul>
+<p><strong>[Ask students:]</strong> If you started your persistence layer again from scratch, what is one design choice you would keep and one you might change?</p>
+<p>This reflection helps them internalize architecture rather than treating it as a checklist only.</p>
+<h3 id="exit-ticket">Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<ol>
+<li>Why is a safe-save temp-file pattern better than writing directly to the final JSON file?</li>
+<li>What should happen if the JSON file is missing?</li>
+<li>What should happen if the JSON file exists but contains invalid JSON?</li>
+<li>Why is the code called persistence-ready rather than database-complete?</li>
+<li>What's one design decision you would change if you started over?</li>
+</ol>
+<p><strong>[Expected direction of answers:]</strong></p>
+<ul>
+<li>Safe save reduces the risk of leaving a partially written corrupted final file.</li>
+<li>Missing files should usually lead to a default state or a controlled first-run path.</li>
+<li>Invalid JSON should be caught, logged, and surfaced through a clear error path.</li>
+<li>JSON persistence prepares the architecture, but does not provide full database capabilities.</li>
+<li>The final answer should reveal thoughtful reflection on structure, validation, or logging. Strong answers might include "I would separate persistence earlier," "I would design <code>to_dict()</code> and <code>from_dict()</code> before writing the demo," or "I would add logging before debugging save/load failures."</li>
+</ul>
+<h3 id="instructor-closing-line">Instructor Closing Line</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Session 4 has now connected external services, basic security habits, capstone planning, and persistence architecture. That combination is powerful because it moves students from writing isolated Python code to designing maintainable applications.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour1_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#section-1-checkpoint-framing-and-grading-focus-5-minutes" class="depth-2">Section 1: Checkpoint Framing and Grading Focus (5 minutes)</a></li>
+<li><a href="#what-this-checkpoint-proves" class="depth-3">What This Checkpoint Proves</a></li>
+<li><a href="#grading-lens" class="depth-3">Grading Lens</a></li>
+<li><a href="#section-2-persistence-ready-architecture-and-package-layout-under-src-10-minutes" class="depth-2">Section 2: Persistence-Ready Architecture and Package Layout under src/ (10 minutes)</a></li>
+<li><a href="#why-src-layout-matters" class="depth-3">Why src/ Layout Matters</a></li>
+<li><a href="#protecting-separation-of-concerns" class="depth-3">Protecting Separation of Concerns</a></li>
+<li><a href="#example-domain-model" class="depth-3">Example Domain Model</a></li>
+<li><a href="#section-3-safe-json-saveload-logging-and-exception-strategy-10-minutes" class="depth-2">Section 3: Safe JSON Save/Load, Logging, and Exception Strategy (10 minutes)</a></li>
+<li><a href="#why-not-just-jsondump-straight-to-the-final-file" class="depth-3">Why Not Just json.dump() Straight to the Final File?</a></li>
+<li><a href="#custom-exceptions" class="depth-3">Custom Exceptions</a></li>
+<li><a href="#logging-to-file" class="depth-3">Logging to File</a></li>
+<li><a href="#safe-save-pattern-with-pathlib" class="depth-3">Safe Save Pattern with pathlib</a></li>
+<li><a href="#teaching-note-on-json-limits" class="depth-3">Teaching Note on JSON Limits</a></li>
+<li><a href="#section-4-live-demo-save-restart-load-6-minutes" class="depth-2">Section 4: Live Demo – Save -&gt; Restart -&gt; Load (6 minutes)</a></li>
+<li><a href="#demo-goal" class="depth-3">Demo Goal</a></li>
+<li><a href="#demo-script" class="depth-3">Demo Script</a></li>
+<li><a href="#demo-narration" class="depth-3">Demo Narration</a></li>
+<li><a href="#fast-grade-checklist" class="depth-3">Fast Grade Checklist</a></li>
+<li><a href="#section-5-hands-on-checkpoint-build-26-minutes" class="depth-2">Section 5: Hands-On Checkpoint Build (26 minutes)</a></li>
+<li><a href="#student-task" class="depth-3">Student Task</a></li>
+<li><a href="#checkpoint-build-mini-budget" class="depth-3">Checkpoint Build Mini-Budget</a></li>
+<li><a href="#evidence-checklist" class="depth-3">Evidence Checklist</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#circulation-notes" class="depth-3">Circulation Notes</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-3">Common Pitfalls to Watch For</a></li>
+<li><a href="#optional-extensions" class="depth-3">Optional Extensions</a></li>
+<li><a href="#persistence-debugging-walkthrough" class="depth-3">Persistence Debugging Walkthrough</a></li>
+<li><a href="#instructor-facing-recovery-scenarios" class="depth-3">Instructor-Facing Recovery Scenarios</a></li>
+<li><a href="#instructor-mini-conference-questions-during-checkpoint-work" class="depth-3">Instructor Mini-Conference Questions During Checkpoint Work</a></li>
+<li><a href="#strong-solution-characteristics-to-call-out-publicly" class="depth-3">Strong Solution Characteristics to Call Out Publicly</a></li>
+<li><a href="#common-student-misconceptions-and-response-scripts" class="depth-3">Common Student Misconceptions and Response Scripts</a></li>
+<li><a href="#fast-evaluation-routine-students-can-reuse" class="depth-3">Fast Evaluation Routine Students Can Reuse</a></li>
+<li><a href="#reflection-prompt-if-time-remains" class="depth-3">Reflection Prompt if Time Remains</a></li>
+<li><a href="#final-reinforcement-before-debrief" class="depth-3">Final Reinforcement Before Debrief</a></li>
+<li><a href="#short-reflection-prompt-if-time-remains" class="depth-3">Short Reflection Prompt if Time Remains</a></li>
+<li><a href="#serialization-design-notes-students-should-hear-explicitly" class="depth-3">Serialization Design Notes Students Should Hear Explicitly</a></li>
+<li><a href="#suggested-manual-verification-checklist" class="depth-3">Suggested Manual Verification Checklist</a></li>
+<li><a href="#instructor-note-on-future-database-migration" class="depth-3">Instructor Note on Future Database Migration</a></li>
+<li><a href="#final-instructor-checklist-for-checkpoint-review" class="depth-3">Final Instructor Checklist for Checkpoint Review</a></li>
+<li><a href="#instructor-summary-phrase-to-repeat-aloud" class="depth-3">Instructor Summary Phrase to Repeat Aloud</a></li>
+<li><a href="#section-6-debrief-exit-ticket-3-minutes" class="depth-2">Section 6: Debrief &amp; Exit Ticket (3 minutes)</a></li>
+<li><a href="#group-debrief" class="depth-3">Group Debrief</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit Ticket</a></li>
+<li><a href="#instructor-closing-line" class="depth-3">Instructor Closing Line</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day4_Hour4_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day4_Hour4_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour3_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour1_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 2: Pattern: Strategy (Swap Behaviors Cleanly) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day2_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day2_Hour1_Advanced.html">
+    <link rel="next" href="Day2_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="2" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 2, Hour 2: Pattern: Strategy (Swap Behaviors Cleanly)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 2, Hour 2 of 48, also Hour 6 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Using the Strategy Pattern to select an algorithm at runtime without rewriting the core workflow.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 2, Hour 6.</li>
+<li><strong>Prerequisites</strong>: Learners should be comfortable writing functions, passing functions as arguments, reading dictionaries and lists of dictionaries, using <code>sorted()</code>, writing simple validation functions, and understanding the Day 2 Hour 1 Factory idea.</li>
+<li><strong>Advanced trajectory</strong>: This hour continues the PCAP-to-PCPP1 design path. Learners already know how to write control flow. The advanced step is deciding where behavior choices belong so a program stays open to new behavior without repeated edits to the same central code.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has implemented two small strategies, selected one through a menu-like choice, passed the selected strategy into reusable core code, and verified that behavior changes while the core workflow remains stable.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Day 2 Hour 1 Factory</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect centralized creation choices to centralized behavior choices</td>
+</tr>
+<tr>
+<td>Outcomes, setup, and vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Define strategy, callable, algorithm, core workflow, and runtime selection</td>
+</tr>
+<tr>
+<td>Concept briefing: why Strategy</td>
+<td style="text-align: right;">10 min</td>
+<td>Explain selecting algorithms at runtime and why Python strategies can be lightweight functions</td>
+</tr>
+<tr>
+<td>Live demos: sort keys, validation strategies, and callable class</td>
+<td style="text-align: right;">10 min</td>
+<td>Show required demos with deterministic runnable examples</td>
+</tr>
+<tr>
+<td>Guided lab: menu-selected strategies</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners implement two strategies and wire a menu option to choose behavior</td>
+</tr>
+<tr>
+<td>Quick checks, completion criteria, and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Verify understanding, name pitfalls, and bridge to Pythonic class ergonomics</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the concept discussion runs long, shorten instructor narration before the live demo rather than shrinking the lab. The required outcome is practical: strategy changes behavior without rewriting the core code, and results are clearly different and correct.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Define the Strategy Pattern as selecting an algorithm at runtime.</li>
+<li>Explain that a Python strategy can be a function, lambda, method, or callable object, as long as it follows the expected input and output shape.</li>
+<li>Use a sort-key strategy selected from user input to change record ordering without rewriting the display function.</li>
+<li>Use validation strategies for different record types so one validation workflow can check tasks, contacts, or other records.</li>
+<li>Implement a short class-based strategy, such as a callable class with constructor state.</li>
+<li>Avoid duplicated sorting and filtering branches by extracting behavior into small named strategies.</li>
+<li>Store strategies in a dictionary for explicit lookup and learner-safe unknown-choice errors.</li>
+<li>Recognize when hard-coded branching still dominates and the code has not really benefited from Strategy.</li>
+<li>Identify why strategies should not depend on hidden global variables.</li>
+<li>Answer the quick check: how is a strategy different from an <code>if</code>/<code>elif</code> chain?</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 2, Hour 6 visible. The required scope is Strategy Pattern, swapping behaviors cleanly, strategies as callables or classes, sorting and filtering logic, sort-key selection by user choice, validation strategies for different record types, a lab with menu-selected behavior, pitfalls, and the quick check about Strategy versus <code>if</code>/<code>elif</code>.</li>
+<li>Open the Day 2 Hour 1 Factory lecture if you want the teaching style nearby. Use it as a bridge only. Hour 1 centralized object creation. This hour centralizes behavior choice.</li>
+<li>Prepare a clean file for the live demo, such as <code>day2_hour2_strategy_demo.py</code>, or use a notebook cell. The snippets below are self-contained and deterministic.</li>
+<li>Confirm that the room can run <code>python day2_hour2_strategy_demo.py</code> or <code>python3 day2_hour2_strategy_demo.py</code>.</li>
+<li>Prepare this board note before class:</li>
+</ul>
+<pre><code class="language-text">Factory centralizes: &quot;How do we create a valid object?&quot;
+Strategy centralizes: &quot;Which behavior should this workflow use?&quot;
+
+Strategy = algorithm selected at runtime.
+In Python, a strategy can be a function or any callable object.
+Core workflow receives the strategy and uses it.
+</code></pre>
+<ul>
+<li>Have a simple capstone connection ready. Examples: task tracker sort by name versus created date, inventory filter active versus all, contact validation versus task validation, report output ordered by priority versus owner.</li>
+<li>Be ready to correct two mistakes early. First, learners may keep a giant <code>if</code>/<code>elif</code> chain inside the core workflow and only move the branch names around. Second, learners may create strategies that secretly read global variables instead of receiving everything they need as arguments.</li>
+</ul>
+<p>Suggested board note for the lab:</p>
+<pre><code class="language-text">Lab success:
+1. Two strategies exist as separate functions or callable classes.
+2. A menu choice selects the strategy.
+3. Core code receives the strategy.
+4. Changing the selected strategy changes the result.
+5. Unknown choices raise or report a clear error.
+</code></pre>
+<hr>
+<h2 id="opening-bridge-from-day-2-hour-1-factory-5-minutes">Opening Bridge from Day 2 Hour 1 Factory (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Welcome back. In the previous hour we worked with the Factory Pattern. The factory gave us a place to centralize object creation. We said: raw data comes in, the factory validates and normalizes it, and either a valid object comes out or a clear validation error is raised. That was a responsibility decision. We did not want object creation rules scattered across every feature."</p>
+<p>"This hour uses a very similar design instinct, but the focus shifts from object creation to behavior choice. A factory asks, 'How do we build this object correctly?' A strategy asks, 'Which behavior should this workflow use right now?'"</p>
+<p>"Here is the bridge sentence for today: <strong>Factory centralizes object creation; Strategy centralizes behavior choice.</strong>"</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Factory: choose how to create the object.
+Strategy: choose how the object or workflow behaves.
+</code></pre>
+<p>"Imagine a tracker application. In one screen, users want records sorted by name. In another screen, they want records sorted by created date. Later, a stakeholder asks for sort by priority. A beginner implementation might put an <code>if</code>/<code>elif</code> chain in every display function. If the user selected <code>name</code>, sort one way. If the user selected <code>created_date</code>, sort another way. If the user selected <code>priority</code>, sort another way."</p>
+<p>"That works once. But then the same sorting idea appears in the command-line view, the GUI list, the API response, and the report export. Now we have four places to update when the sorting rule changes. The duplication is not only annoying. It is a bug risk. One place sorts names case-sensitively, another place sorts case-insensitively, and now the app behaves inconsistently."</p>
+<p>"The Strategy Pattern helps us pull the changing part out of the workflow. The core workflow says, 'I know how to display records once someone gives me a strategy.' The strategy says, 'I know how to choose the sort key,' or 'I know how to validate this kind of record,' or 'I know how to filter this list.'"</p>
+<p>Pause and ask:</p>
+<p>"Where have you already written code that chooses between two behaviors? Sorting? Filtering? Validation? Formatting? Calculating a fee?"</p>
+<p>Take two or three answers. Connect them back:</p>
+<p>"Those are all candidates. The pattern is not about making everything abstract. It is about noticing when the behavior varies and giving that variation a clean name."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's define the vocabulary, then we will build three small demos: sort-key selection, validation strategies for different record types, and a short class-based strategy so we can see that strategies can be functions or classes."</p>
+<hr>
+<h2 id="outcomes-setup-and-vocabulary-5-minutes">Outcomes, Setup, and Vocabulary (5 minutes)</h2>
+<p>Use this section to keep the pattern practical. Learners do not need a formal design-pattern diagram. They need a mental model they can apply in their capstone code.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"By the end of this hour, you should be able to say, 'This workflow is stable, but this behavior changes. I will pass in the behavior as a strategy.' That sentence is the practical value of the pattern."</p>
+<p>"First term: <strong>strategy</strong>. A strategy is a replaceable algorithm. In this course, algorithm simply means a repeatable way to solve a small problem. Sorting by name is an algorithm. Sorting by created date is another algorithm. Validating a task record is an algorithm. Validating a contact record is another algorithm."</p>
+<p>"Second term: <strong>runtime selection</strong>. Runtime means while the program is running. The strategy may be selected from a user menu, a configuration value, a button click, a command-line argument, or a route parameter. The important part is that the main workflow does not need to be rewritten every time the selected algorithm changes."</p>
+<p>"Third term: <strong>callable</strong>. In Python, a callable is something you can call with parentheses. A normal function is callable. A lambda is callable. A method is callable. An object can also be callable if its class defines <code>__call__</code>. That is why Strategy can stay lightweight in Python. We do not need a large interface hierarchy for today's scope. A function is enough when it has the right shape."</p>
+<p>"Fourth term: <strong>core workflow</strong>. The core workflow is the stable part of the code. For sorting, the core workflow might be: receive records, sort them using the selected key function, print the result. For validation, the core workflow might be: receive records, call the selected validator, collect errors, print pass or fail."</p>
+<p>"Fifth term: <strong>strategy registry</strong>. This is often just a dictionary that maps user choices to strategies. For example, <code>'1'</code> maps to <code>sort_by_name</code>, and <code>'2'</code> maps to <code>sort_by_created_date</code>. The dictionary is not magic. It is an explicit lookup table. It helps us avoid scattering hard-coded branches throughout the program."</p>
+<p>Point learners to the working pattern:</p>
+<pre><code class="language-text">choice -&gt; strategy lookup -&gt; core workflow receives strategy -&gt; result changes
+</code></pre>
+<p>"Notice the direction. The core workflow should not secretly decide everything. It should receive the selected strategy. That is what makes the behavior easy to swap."</p>
+<hr>
+<h2 id="concept-briefing-why-strategy-10-minutes">Concept Briefing: Why Strategy (10 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's start with the problem Strategy solves. Suppose we have a list of records. Each record has a name, created date, active flag, and record type. We need to display those records in different orders. The first version many of us would write looks like this:"</p>
+<pre><code class="language-python">def display_records(records, sort_choice):
+    if sort_choice == &quot;name&quot;:
+        ordered = sorted(records, key=lambda record: record[&quot;name&quot;].lower())
+    elif sort_choice == &quot;created&quot;:
+        ordered = sorted(records, key=lambda record: record[&quot;created_date&quot;])
+    elif sort_choice == &quot;priority&quot;:
+        ordered = sorted(records, key=lambda record: record[&quot;priority&quot;])
+    else:
+        raise ValueError(f&quot;Unknown sort choice: {sort_choice}&quot;)
+
+    for record in ordered:
+        print(record)
+</code></pre>
+<p>"This code is not evil. It is understandable. In fact, a small <code>if</code> statement is often perfectly fine. Strategy becomes useful when the choices grow, when the same choices are repeated in more than one place, or when the core workflow becomes hard to read because the branching dominates the business logic."</p>
+<p>"Look at the function name: <code>display_records</code>. What should this function mostly be about? Displaying records. But the first half of it is becoming a sorting-choice dispatcher. If every new sort rule requires editing this function, then the function is not closed against change. Again, we are not chasing theory for its own sake. We are trying to reduce repeated edits and inconsistent behavior."</p>
+<p>"The Strategy version separates the stable workflow from the variable behavior. We write small functions such as <code>sort_by_name(record)</code> and <code>sort_by_created_date(record)</code>. Those functions become our strategies. Then the display workflow accepts a strategy function. It does not care which sort key was selected. It simply calls <code>sorted(records, key=sort_key_strategy)</code>."</p>
+<p>Write:</p>
+<pre><code class="language-text">Variable part:
+    How do we compute the sort key?
+
+Stable part:
+    Sort records, then display them.
+</code></pre>
+<p>"That separation is the heart of Strategy."</p>
+<p>"Python makes this especially natural because functions are first-class values. That means we can store a function in a variable, pass a function as an argument, return a function from another function, and store functions in dictionaries. We have already used this idea indirectly with <code>key=</code> in <code>sorted()</code>. The <code>key</code> parameter is a strategy slot. It asks, 'What function should I call to decide each item's sort value?'"</p>
+<p>"The same idea applies to filtering. A filter strategy can be a function that receives a record and returns <code>True</code> or <code>False</code>. <code>is_active(record)</code> is one strategy. <code>include_all(record)</code> is another strategy. The display workflow can say: keep records where <code>filter_strategy(record)</code> is true. The workflow does not need to know whether the selected rule means active only, overdue only, high priority only, or all records."</p>
+<p>"Validation is another useful example. In Day 2 Hour 1, the factory validated raw data before creating an object. In a real app, different record types may have different rules. A task might require <code>title</code> and <code>status</code>. A contact might require <code>name</code> and a valid email. An inventory item might require <code>sku</code> and a non-negative quantity. We can write one validation runner that receives a validator strategy. The validator is the changing part."</p>
+<p>"Now, an important caution: Strategy does not mean 'no <code>if</code> statements anywhere.' We still need a boundary where a user choice is interpreted. A menu selection must become a strategy somehow. A dictionary lookup is a clean boundary. What we are avoiding is hard-coded branching dominating the core workflow. The selection can happen once near the edge of the program. After that, the selected strategy is passed into reusable code."</p>
+<p>"Another caution: we want explicit unknown-choice handling. You may see code that silently falls back to a default strategy when a choice is unknown. That can be convenient in a user interface, but it can also hide mistakes. For teaching and for many data workflows, prefer a clear error: <code>Unknown strategy choice: x</code>. If you intentionally choose a default, say so in the code and in the user message. Today we will teach the safer explicit error path."</p>
+<p>"Finally, strategies should not depend on hidden global variables. If <code>sort_by_name()</code> secretly reads a global setting called <code>CASE_SENSITIVE</code>, the strategy becomes harder to reason about and test. Give strategies the data they need through parameters or constructor state. Later in the demo, we will use a callable class with constructor state for a prefix rule. That is a clean way to carry configuration without relying on globals."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's code. I will start with sorting because Python's <code>sorted(..., key=...)</code> already uses a strategy-shaped parameter. Then we will do validation strategies, and then a tiny callable class."</p>
+<hr>
+<h2 id="live-demos-sort-keys-validation-strategies-and-callable-class-10-minutes">Live Demos: Sort Keys, Validation Strategies, and Callable Class (10 minutes)</h2>
+<p>The live demo should be typed or revealed in small chunks. Keep it deterministic. Do not use <code>input()</code> during the main demo unless your group is comfortable with interactive runs. The snippets simulate choices with variables so the output is repeatable.</p>
+<h3 id="demo-step-1-sort-key-selection-strategy-based-on-user-selection">Demo Step 1: Sort-key selection strategy based on user selection</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First we need some sample records. They are deliberately small dictionaries. In a larger project, these might be objects, but dictionaries keep the pattern visible."</p>
+<pre><code class="language-python">from typing import Callable
+
+Record = dict[str, object]
+SortKey = Callable[[Record], object]
+
+records: list[Record] = [
+    {
+        &quot;name&quot;: &quot;Charlie&quot;,
+        &quot;created_date&quot;: &quot;2026-01-02&quot;,
+        &quot;priority&quot;: 2,
+        &quot;active&quot;: True,
+        &quot;type&quot;: &quot;task&quot;,
+        &quot;title&quot;: &quot;Write tests&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
+    },
+    {
+        &quot;name&quot;: &quot;Alice&quot;,
+        &quot;created_date&quot;: &quot;2026-01-10&quot;,
+        &quot;priority&quot;: 1,
+        &quot;active&quot;: False,
+        &quot;type&quot;: &quot;task&quot;,
+        &quot;title&quot;: &quot;Archive notes&quot;,
+        &quot;status&quot;: &quot;done&quot;,
+    },
+    {
+        &quot;name&quot;: &quot;Bob&quot;,
+        &quot;created_date&quot;: &quot;2026-01-08&quot;,
+        &quot;priority&quot;: 3,
+        &quot;active&quot;: True,
+        &quot;type&quot;: &quot;contact&quot;,
+        &quot;email&quot;: &quot;bob@example.com&quot;,
+    },
+]
+
+
+def sort_by_name(record: Record) -&gt; str:
+    return str(record[&quot;name&quot;]).lower()
+
+
+def sort_by_created_date(record: Record) -&gt; str:
+    return str(record[&quot;created_date&quot;])
+
+
+def sort_by_priority(record: Record) -&gt; int:
+    return int(record.get(&quot;priority&quot;, 999))
+
+
+SORT_STRATEGIES: dict[str, SortKey] = {
+    &quot;1&quot;: sort_by_name,
+    &quot;2&quot;: sort_by_created_date,
+    &quot;3&quot;: sort_by_priority,
+}
+
+SORT_LABELS: dict[str, str] = {
+    &quot;1&quot;: &quot;name&quot;,
+    &quot;2&quot;: &quot;created date&quot;,
+    &quot;3&quot;: &quot;priority&quot;,
+}
+
+
+def choose_sort_strategy(choice: str) -&gt; SortKey:
+    try:
+        return SORT_STRATEGIES[choice]
+    except KeyError as error:
+        valid_choices = &quot;, &quot;.join(sorted(SORT_STRATEGIES))
+        raise ValueError(
+            f&quot;Unknown sort choice {choice!r}. Choose one of: {valid_choices}.&quot;
+        ) from error
+
+
+def display_records(records: list[Record], sort_key: SortKey, label: str) -&gt; None:
+    print(f&quot;\nSorted by {label}:&quot;)
+    for record in sorted(records, key=sort_key):
+        print(f&quot;- {record['name']} | {record['created_date']} | priority {record.get('priority', '-')}&quot;)
+
+
+for choice in [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;]:
+    strategy = choose_sort_strategy(choice)
+    display_records(records, strategy, SORT_LABELS[choice])
+</code></pre>
+<p><strong>Narration after running</strong></p>
+<p>"We ran the same <code>display_records()</code> function three times. The function did not change. What changed was the strategy passed into it. When the strategy is <code>sort_by_name</code>, Alice appears first. When the strategy is <code>sort_by_created_date</code>, the oldest created date appears first. When the strategy is <code>sort_by_priority</code>, the lowest priority number appears first."</p>
+<p>"Notice the explicit error in <code>choose_sort_strategy()</code>. We did not silently default to name. If the user enters an unknown option, the program says which choices are valid. That is safer for learners and safer for debugging."</p>
+<p>Ask:</p>
+<p>"Where is the behavior selected? Where is the behavior used?"</p>
+<p>Guide toward:</p>
+<ul>
+<li>Selected in <code>choose_sort_strategy()</code>.</li>
+<li>Used in <code>display_records()</code> through <code>sorted(records, key=sort_key)</code>.</li>
+</ul>
+<h3 id="demo-step-2-validation-strategies-for-different-record-types">Demo Step 2: Validation strategies for different record types</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now let's use the same idea for validation. A task record and a contact record have different required fields. I do not want to write three separate validation runners. I want one runner that receives a validation strategy."</p>
+<pre><code class="language-python">Validator = Callable[[Record], list[str]]
+
+
+def validate_task(record: Record) -&gt; list[str]:
+    errors: list[str] = []
+    if not str(record.get(&quot;title&quot;, &quot;&quot;)).strip():
+        errors.append(&quot;task requires a non-empty title&quot;)
+    if record.get(&quot;status&quot;) not in {&quot;pending&quot;, &quot;doing&quot;, &quot;done&quot;}:
+        errors.append(&quot;task status must be pending, doing, or done&quot;)
+    return errors
+
+
+def validate_contact(record: Record) -&gt; list[str]:
+    errors: list[str] = []
+    if not str(record.get(&quot;name&quot;, &quot;&quot;)).strip():
+        errors.append(&quot;contact requires a non-empty name&quot;)
+    email = str(record.get(&quot;email&quot;, &quot;&quot;)).strip()
+    if &quot;@&quot; not in email:
+        errors.append(&quot;contact requires an email containing @&quot;)
+    return errors
+
+
+VALIDATION_STRATEGIES: dict[str, Validator] = {
+    &quot;task&quot;: validate_task,
+    &quot;contact&quot;: validate_contact,
+}
+
+
+def choose_validator(record_type: str) -&gt; Validator:
+    try:
+        return VALIDATION_STRATEGIES[record_type]
+    except KeyError as error:
+        valid_types = &quot;, &quot;.join(sorted(VALIDATION_STRATEGIES))
+        raise ValueError(
+            f&quot;Unknown record type {record_type!r}. Choose one of: {valid_types}.&quot;
+        ) from error
+
+
+def report_validation(record: Record, validator: Validator) -&gt; None:
+    errors = validator(record)
+    if errors:
+        print(f&quot;\n{record.get('name', '&lt;unnamed&gt;')} failed validation:&quot;)
+        for error in errors:
+            print(f&quot;  - {error}&quot;)
+    else:
+        print(f&quot;\n{record.get('name', '&lt;unnamed&gt;')} passed validation.&quot;)
+
+
+for record in records:
+    record_type = str(record[&quot;type&quot;])
+    validator = choose_validator(record_type)
+    report_validation(record, validator)
+</code></pre>
+<p><strong>Narration after running</strong></p>
+<p>"Again, the runner is stable. <code>report_validation()</code> does not know the difference between task rules and contact rules. It only knows that it can call the validator and receive a list of error messages. That expected shape is the contract."</p>
+<p>"This is a good moment to use the word contract. A strategy contract answers: what inputs does the strategy receive, and what output does it return? For our validators, the contract is: receive one record dictionary and return a list of strings. Empty list means valid. One or more strings means invalid."</p>
+<h3 id="demo-step-3-short-class-based-strategy-with-constructor-state">Demo Step 3: Short class-based strategy with constructor state</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Functions are the simplest Python strategies, and we should prefer them when they are enough. Sometimes a strategy needs a little configuration. We could use a closure or a class. Here is a short callable class. It carries constructor state without relying on global variables."</p>
+<pre><code class="language-python">class NamePrefixFilter:
+    def __init__(self, prefix: str) -&gt; None:
+        self.prefix = prefix.lower()
+
+    def __call__(self, record: Record) -&gt; bool:
+        return str(record[&quot;name&quot;]).lower().startswith(self.prefix)
+
+
+def include_all(record: Record) -&gt; bool:
+    return True
+
+
+def filter_records(records: list[Record], keep: Callable[[Record], bool]) -&gt; list[Record]:
+    return [record for record in records if keep(record)]
+
+
+starts_with_a = NamePrefixFilter(&quot;A&quot;)
+print(&quot;\nAll records:&quot;)
+for record in filter_records(records, include_all):
+    print(f&quot;- {record['name']}&quot;)
+
+print(&quot;\nNames starting with A:&quot;)
+for record in filter_records(records, starts_with_a):
+    print(f&quot;- {record['name']}&quot;)
+</code></pre>
+<p><strong>Narration after running</strong></p>
+<p>"The object <code>starts_with_a</code> is callable because the class defines <code>__call__</code>. The strategy has state: the prefix. It does not read a global variable. It receives the record and uses its own configured prefix. This supports today's outcome that strategies can be callables or classes."</p>
+<p>"We do not need abstract base classes for this hour. Later, in larger codebases, teams may add protocols or abstract base classes to document strategy shape. For today, keep it lightweight: functions work, and callable classes work when you need state."</p>
+<p><strong>Transition</strong></p>
+<p>"Now it is your turn. The lab will use the same pattern: create two strategies, select one from a menu, pass it into stable core code, and show that the results are different and correct."</p>
+<hr>
+<h2 id="guided-lab-menu-selected-strategies-25-minutes">Guided Lab: Menu-Selected Strategies (25 minutes)</h2>
+<h3 id="lab-prompt-for-students">Lab prompt for students</h3>
+<p>"In your tracker-style project, or in a new practice file if your project is not ready, implement Strategy selection for sorting or filtering records. Your goal is not to build a large menu system. Your goal is to prove that the selected strategy changes behavior without rewriting the core display code."</p>
+<p>Learners may choose one of these paths:</p>
+<ol>
+<li><strong>Sorting path</strong>: implement <code>sort_by_name</code> and <code>sort_by_created_date</code>.</li>
+<li><strong>Filtering path</strong>: implement <code>filter_active</code> and <code>filter_all</code>.</li>
+<li><strong>Combined path for fast finishers</strong>: choose both one sort strategy and one filter strategy.</li>
+</ol>
+<h3 id="starter-code">Starter code</h3>
+<p>Offer this starter if learners need a common base:</p>
+<pre><code class="language-python">from typing import Callable
+
+Record = dict[str, object]
+SortKey = Callable[[Record], object]
+RecordFilter = Callable[[Record], bool]
+
+records: list[Record] = [
+    {&quot;name&quot;: &quot;Inventory cleanup&quot;, &quot;created_date&quot;: &quot;2026-01-01&quot;, &quot;active&quot;: True},
+    {&quot;name&quot;: &quot;Budget review&quot;, &quot;created_date&quot;: &quot;2026-01-12&quot;, &quot;active&quot;: False},
+    {&quot;name&quot;: &quot;Client follow-up&quot;, &quot;created_date&quot;: &quot;2026-01-09&quot;, &quot;active&quot;: True},
+]
+
+
+def sort_by_name(record: Record) -&gt; str:
+    return str(record[&quot;name&quot;]).lower()
+
+
+def sort_by_created_date(record: Record) -&gt; str:
+    return str(record[&quot;created_date&quot;])
+
+
+def filter_all(record: Record) -&gt; bool:
+    return True
+
+
+def filter_active(record: Record) -&gt; bool:
+    return bool(record[&quot;active&quot;])
+
+
+SORT_STRATEGIES: dict[str, SortKey] = {
+    &quot;1&quot;: sort_by_name,
+    &quot;2&quot;: sort_by_created_date,
+}
+
+FILTER_STRATEGIES: dict[str, RecordFilter] = {
+    &quot;1&quot;: filter_all,
+    &quot;2&quot;: filter_active,
+}
+
+
+def choose_strategy(choice: str, strategies: dict[str, Callable]) -&gt; Callable:
+    try:
+        return strategies[choice]
+    except KeyError as error:
+        valid_choices = &quot;, &quot;.join(sorted(strategies))
+        raise ValueError(
+            f&quot;Unknown strategy choice {choice!r}. Choose one of: {valid_choices}.&quot;
+        ) from error
+
+
+def display_records(
+    records: list[Record],
+    sort_key: SortKey,
+    keep_record: RecordFilter,
+) -&gt; None:
+    visible_records = [record for record in records if keep_record(record)]
+    ordered_records = sorted(visible_records, key=sort_key)
+
+    for record in ordered_records:
+        active_label = &quot;active&quot; if record[&quot;active&quot;] else &quot;inactive&quot;
+        print(f&quot;- {record['name']} | {record['created_date']} | {active_label}&quot;)
+
+
+sort_choice = &quot;1&quot;      # Replace with input(&quot;Sort by 1=name, 2=created date: &quot;)
+filter_choice = &quot;2&quot;    # Replace with input(&quot;Show 1=all, 2=active only: &quot;)
+
+selected_sort = choose_strategy(sort_choice, SORT_STRATEGIES)
+selected_filter = choose_strategy(filter_choice, FILTER_STRATEGIES)
+display_records(records, selected_sort, selected_filter)
+</code></pre>
+<h3 id="required-lab-tasks">Required lab tasks</h3>
+<p>Students should complete these steps:</p>
+<ol>
+<li>Create or reuse a list of at least three records. Each record should have fields that make the two strategies visibly different. For sorting, names and created dates should not already be in the same order. For filtering, at least one record should be inactive.</li>
+<li>Implement two strategies. Examples:
+   - <code>sort_by_name(record) -&gt; str</code>
+   - <code>sort_by_created_date(record) -&gt; str</code>
+   - <code>filter_active(record) -&gt; bool</code>
+   - <code>filter_all(record) -&gt; bool</code></li>
+<li>Store strategies in a dictionary for lookup, such as <code>{"1": sort_by_name, "2": sort_by_created_date}</code>.</li>
+<li>Wire a menu option or simulated choice to choose a strategy.</li>
+<li>Pass the selected strategy into a stable display or processing function.</li>
+<li>Run the program twice with different choices and confirm that the results are clearly different and correct.</li>
+<li>Handle unknown choices explicitly. A clear <code>ValueError</code> or a clear user-facing message is acceptable. Silent fallback is not the preferred teaching path today unless the learner explains the tradeoff.</li>
+</ol>
+<h3 id="instructor-circulation-script">Instructor circulation script</h3>
+<p>At minute 1 of lab:</p>
+<p>"Start by choosing sorting or filtering. Do not try to redesign your whole capstone. We need two strategies and one stable workflow."</p>
+<p>At minute 5:</p>
+<p>"Check your data. If both strategies produce the same output, the code may be correct but the demo will not prove the pattern. Adjust sample data so the difference is visible."</p>
+<p>At minute 10:</p>
+<p>"Find your core workflow. It might be called <code>display_records</code>, <code>list_tasks</code>, or <code>show_inventory</code>. Ask: does this function receive a strategy, or is it still deciding everything inside a long branch?"</p>
+<p>At minute 15:</p>
+<p>"Run one choice. Then run the other choice. You should not need to edit the body of the core workflow. You should only change the selected strategy or the menu input."</p>
+<p>At minute 20:</p>
+<p>"Add explicit unknown-choice handling. If the user enters <code>9</code>, what happens? A clear error is better than a surprising default."</p>
+<p>At minute 23:</p>
+<p>"Prepare to show your result to a neighbor. Explain which part is the strategy and which part is the stable workflow."</p>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>Use these checks before calling the lab complete:</p>
+<ul>
+<li>Strategy changes behavior without rewriting core code.</li>
+<li>Results are clearly different and correct.</li>
+<li>At least two strategies exist as separate functions or callable objects.</li>
+<li>A menu option, simulated choice, or dictionary lookup selects the strategy.</li>
+<li>The core display or processing function receives and uses the selected strategy.</li>
+<li>Unknown choices are handled explicitly.</li>
+</ul>
+<h3 id="optional-extension">Optional extension</h3>
+<p>For fast finishers:</p>
+<ul>
+<li>Add a third strategy and store or register strategies in a dictionary for lookup.</li>
+<li>Combine one filter strategy with one sort strategy.</li>
+<li>Convert one function strategy into a callable class with constructor state, such as <code>CreatedAfterFilter("2026-01-07")</code> or <code>NamePrefixFilter("B")</code>.</li>
+</ul>
+<p>Keep the extension small. Do not turn this into a plugin system, decorator exercise, dependency injection framework, or abstract base class lesson. Those are future growth topics, not the goal of this hour.</p>
+<hr>
+<h2 id="troubleshooting-and-common-pitfalls">Troubleshooting and Common Pitfalls</h2>
+<p>Use this section during lab support and the final debrief.</p>
+<h3 id="pitfall-1-strategies-that-depend-on-global-variables">Pitfall 1: Strategies that depend on global variables</h3>
+<p><strong>Symptom</strong></p>
+<p>A learner writes a strategy that works only because it reads a global variable:</p>
+<pre><code class="language-python">selected_prefix = &quot;A&quot;
+
+
+def filter_by_prefix(record):
+    return record[&quot;name&quot;].startswith(selected_prefix)
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"This works in a tiny script, but the strategy has a hidden dependency. If another part of the program changes <code>selected_prefix</code>, the strategy changes without anyone passing it new information. That makes tests harder and bugs more surprising."</p>
+<p>Prefer passing data through parameters or constructor state:</p>
+<pre><code class="language-python">class PrefixFilter:
+    def __init__(self, prefix: str) -&gt; None:
+        self.prefix = prefix.lower()
+
+    def __call__(self, record: dict[str, object]) -&gt; bool:
+        return str(record[&quot;name&quot;]).lower().startswith(self.prefix)
+</code></pre>
+<h3 id="pitfall-2-hard-coded-branching-still-dominates">Pitfall 2: Hard-coded branching still dominates</h3>
+<p><strong>Symptom</strong></p>
+<p>A learner creates strategy functions but still writes the full behavior branch inside the core workflow:</p>
+<pre><code class="language-python">def display_records(records, choice):
+    if choice == &quot;1&quot;:
+        ordered = sorted(records, key=sort_by_name)
+    elif choice == &quot;2&quot;:
+        ordered = sorted(records, key=sort_by_created_date)
+    else:
+        ordered = records
+    for record in ordered:
+        print(record)
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"You have named the strategies, which is a good first step. Now move the selection to the edge of the program. Let <code>display_records()</code> receive the selected strategy. That way the display function is stable."</p>
+<pre><code class="language-python">def display_records(records, sort_key):
+    for record in sorted(records, key=sort_key):
+        print(record)
+</code></pre>
+<h3 id="pitfall-3-accidentally-calling-the-function-during-registration">Pitfall 3: Accidentally calling the function during registration</h3>
+<p><strong>Symptom</strong></p>
+<p>The dictionary stores the result of calling a function instead of the function itself:</p>
+<pre><code class="language-python">SORT_STRATEGIES = {
+    &quot;1&quot;: sort_by_name(),  # incorrect
+}
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"In the strategy dictionary, store the callable itself. Do not add parentheses until the core workflow calls it with a record."</p>
+<pre><code class="language-python">SORT_STRATEGIES = {
+    &quot;1&quot;: sort_by_name,  # correct
+}
+</code></pre>
+<h3 id="pitfall-4-silent-invalid-strategy-fallback">Pitfall 4: Silent invalid strategy fallback</h3>
+<p><strong>Symptom</strong></p>
+<p>The program defaults to a strategy when the user typed something invalid:</p>
+<pre><code class="language-python">strategy = SORT_STRATEGIES.get(choice, sort_by_name)
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"A default can be a reasonable product decision, but it should be intentional and visible. Today we prefer learner-safe explicit errors because they reveal mistakes. If you choose to default, print or return a message that tells the user what happened."</p>
+<p>Preferred teaching version:</p>
+<pre><code class="language-python">if choice not in SORT_STRATEGIES:
+    raise ValueError(f&quot;Unknown sort choice: {choice}&quot;)
+strategy = SORT_STRATEGIES[choice]
+</code></pre>
+<h3 id="pitfall-5-strategies-with-different-shapes">Pitfall 5: Strategies with different shapes</h3>
+<p><strong>Symptom</strong></p>
+<p>One strategy expects a record, another expects a list, and the core workflow cannot call them consistently.</p>
+<p><strong>Instructor response</strong></p>
+<p>"Strategies in the same registry need the same shape. For sort keys, each strategy receives one record and returns a sortable value. For filters, each strategy receives one record and returns <code>True</code> or <code>False</code>. For validators, each strategy receives one record and returns a list of error messages."</p>
+<hr>
+<h2 id="quick-checks-completion-criteria-and-wrap-up-5-minutes">Quick Checks, Completion Criteria, and Wrap-up (5 minutes)</h2>
+<h3 id="quick-check-questions">Quick check questions</h3>
+<p>Ask these verbally or use them as an exit ticket:</p>
+<ol>
+<li>"What is the Strategy Pattern?"
+   - Expected answer: "Selecting an algorithm at runtime," or "Passing in the behavior the workflow should use."</li>
+<li>"In Python, does a strategy have to be a class?"
+   - Expected answer: "No. It can be a function or any callable. A class is useful when the strategy needs state."</li>
+<li>"How is a strategy different from an <code>if</code>/<code>elif</code> chain?"
+   - Expected answer: "An <code>if</code>/<code>elif</code> chain keeps the behavior choices embedded in one branching block. Strategy extracts each behavior into a named callable and lets the core workflow receive the selected behavior. Selection may still happen once at the edge, but the workflow is no longer dominated by hard-coded branches."</li>
+<li>"Why should strategies avoid hidden global variables?"
+   - Expected answer: "Hidden globals make the strategy harder to test and reason about because behavior can change without passing new input."</li>
+<li>"What should happen for an unknown strategy choice?"
+   - Expected answer: "Raise or report a clear error, unless the program intentionally teaches and documents a default fallback."</li>
+</ol>
+<h3 id="debrief-prompts">Debrief prompts</h3>
+<p>Ask two learners to show or describe:</p>
+<ul>
+<li>The two strategies they implemented.</li>
+<li>The menu choice or dictionary lookup that selected the strategy.</li>
+<li>The core function that stayed the same while behavior changed.</li>
+</ul>
+<p>As they answer, reinforce the pattern:</p>
+<p>"That is the important part: the workflow did not need to know every detail. It accepted a callable and used it."</p>
+<h3 id="wrap-up-talk-track">Wrap-up talk track</h3>
+<p>"Today we took another step toward professional Python design. We did not learn Strategy as a memorized diagram. We learned it as a practical move: when one workflow needs interchangeable behavior, extract each behavior into a strategy and pass the selected strategy into the workflow."</p>
+<p>"The required phrase from the runbook is: Strategy means selecting an algorithm at runtime. In Python, that can stay lightweight. Functions work. Callable classes work when you need state. A dictionary is often enough to map user choices to strategies."</p>
+<p>"The two big warnings are worth repeating. First, do not let hard-coded branching continue to dominate the core function. If the workflow still contains every branch, the strategy extraction is incomplete. Second, do not make strategies depend on hidden global variables. A strategy should be easy to call, test, and reason about."</p>
+<p>"You also practiced explicit unknown-choice handling. Silent fallback can hide mistakes. In user-facing software, a default might be appropriate if the product intentionally wants it, but the program should make that choice visible. For today's design habit, clear errors are safer."</p>
+<p>"In the next hour, we move from behavior selection to Pythonic class ergonomics. We will make our objects easier to inspect, print, compare, and type-read. That means <code>repr</code>, <code>str</code>, equality, and light type hints. Strategy helped us make behavior swappable. Next, Pythonic class methods will help our objects communicate clearly to developers, users, tests, and tools."</p>
+<hr>
+<h2 id="instructor-notes-for-adaptation">Instructor Notes for Adaptation</h2>
+<ul>
+<li>If learners are newer to first-class functions, slow down at the point where a function is stored in a dictionary. Ask them to predict whether <code>sort_by_name</code> or <code>sort_by_name()</code> belongs in the registry.</li>
+<li>If learners are comfortable, ask them to identify strategy-shaped parameters they already know. Good examples include <code>sorted(..., key=...)</code>, <code>list.sort(key=...)</code>, and callbacks in GUI programming.</li>
+<li>Keep examples within scope. Do not introduce plugin discovery, decorators, dependency injection containers, or abstract base classes as part of the main lesson. A brief future-growth mention is fine, but the lab must remain about functions, callable classes, dictionaries, and clean behavior selection.</li>
+<li>For capstone alignment, encourage learners to apply Strategy where a user chooses a view: active tasks versus all tasks, sort by owner versus due date, validate task versus contact, report by priority versus created date.</li>
+<li>If time is short, keep only two live demo runs for sorting and one validation run, then move to lab. The lab is the higher-value part of the hour.</li>
+<li>If time remains after lab, ask learners to refactor one existing <code>if</code>/<code>elif</code> chain in their capstone into a small strategy dictionary.</li>
+</ul>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-day-2-hour-1-factory-5-minutes" class="depth-2">Opening Bridge from Day 2 Hour 1 Factory (5 minutes)</a></li>
+<li><a href="#outcomes-setup-and-vocabulary-5-minutes" class="depth-2">Outcomes, Setup, and Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-why-strategy-10-minutes" class="depth-2">Concept Briefing: Why Strategy (10 minutes)</a></li>
+<li><a href="#live-demos-sort-keys-validation-strategies-and-callable-class-10-minutes" class="depth-2">Live Demos: Sort Keys, Validation Strategies, and Callable Class (10 minutes)</a></li>
+<li><a href="#demo-step-1-sort-key-selection-strategy-based-on-user-selection" class="depth-3">Demo Step 1: Sort-key selection strategy based on user selection</a></li>
+<li><a href="#demo-step-2-validation-strategies-for-different-record-types" class="depth-3">Demo Step 2: Validation strategies for different record types</a></li>
+<li><a href="#demo-step-3-short-class-based-strategy-with-constructor-state" class="depth-3">Demo Step 3: Short class-based strategy with constructor state</a></li>
+<li><a href="#guided-lab-menu-selected-strategies-25-minutes" class="depth-2">Guided Lab: Menu-Selected Strategies (25 minutes)</a></li>
+<li><a href="#lab-prompt-for-students" class="depth-3">Lab prompt for students</a></li>
+<li><a href="#starter-code" class="depth-3">Starter code</a></li>
+<li><a href="#required-lab-tasks" class="depth-3">Required lab tasks</a></li>
+<li><a href="#instructor-circulation-script" class="depth-3">Instructor circulation script</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#optional-extension" class="depth-3">Optional extension</a></li>
+<li><a href="#troubleshooting-and-common-pitfalls" class="depth-2">Troubleshooting and Common Pitfalls</a></li>
+<li><a href="#pitfall-1-strategies-that-depend-on-global-variables" class="depth-3">Pitfall 1: Strategies that depend on global variables</a></li>
+<li><a href="#pitfall-2-hard-coded-branching-still-dominates" class="depth-3">Pitfall 2: Hard-coded branching still dominates</a></li>
+<li><a href="#pitfall-3-accidentally-calling-the-function-during-registration" class="depth-3">Pitfall 3: Accidentally calling the function during registration</a></li>
+<li><a href="#pitfall-4-silent-invalid-strategy-fallback" class="depth-3">Pitfall 4: Silent invalid strategy fallback</a></li>
+<li><a href="#pitfall-5-strategies-with-different-shapes" class="depth-3">Pitfall 5: Strategies with different shapes</a></li>
+<li><a href="#quick-checks-completion-criteria-and-wrap-up-5-minutes" class="depth-2">Quick Checks, Completion Criteria, and Wrap-up (5 minutes)</a></li>
+<li><a href="#quick-check-questions" class="depth-3">Quick check questions</a></li>
+<li><a href="#debrief-prompts" class="depth-3">Debrief prompts</a></li>
+<li><a href="#wrap-up-talk-track" class="depth-3">Wrap-up talk track</a></li>
+<li><a href="#instructor-notes-for-adaptation" class="depth-2">Instructor Notes for Adaptation</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

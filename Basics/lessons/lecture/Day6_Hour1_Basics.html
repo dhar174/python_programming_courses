@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 6, Hour 1: Choosing the Right Structure (Course Hour 21) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="6">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day6_Hour1_Basics.md">
+
+    <link rel="prev" href="Day5_Hour4_Basics.html">
+    <link rel="next" href="Day6_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="6" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-06/index.html">Day 6</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 6, Hour 1: Choosing the Right Structure (Course Hour 21)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 6</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day6_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 6</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 6, Course Hour 21 – Choosing the right structure<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 21. This hour is about judgment, not memorizing a new method. Learners already know the core structures — list, tuple, set, and dictionary — from Session 5. Now they need help making good choices. Stay firmly within Basics scope. Do not drift into performance benchmarking, Big O notation, data modeling theory, custom classes, or advanced nested structures. The key instructional move is comparison: take a real task, show a possible solution, then show a clearer structure choice and explain why it fits better. Keep reinforcing a short decision checklist: <strong>Do I need order? Do I need duplicates? Do I need lookup by key? Is this a fixed record? Will the collection change?</strong> The guided lab is a refactor challenge, so learners must do more than produce working code — they must explain at least one tradeoff. Every <strong>Say:</strong> block is written to be read nearly verbatim. Adapt naturally, but keep the explanations intact because they do the heavy teaching work.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Explain in plain language what problem each core structure solves best: list, tuple, set, and dictionary.</li>
+<li>Choose between a list and a set based on whether order and duplicates matter.</li>
+<li>Choose between a list and a dictionary based on whether searching by a meaningful key matters.</li>
+<li>Explain when a tuple is a better fit than a list because the data is a small, fixed record.</li>
+<li>Refactor a small working solution from one structure to a better-fitting structure and explain at least one tradeoff in clarity, safety, or simplicity."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to Session 5 and frame the structure-choice problem</li>
+<li><strong>0:05–0:14</strong> Quick comparison review: list vs tuple vs set vs dictionary</li>
+<li><strong>0:14–0:24</strong> Decision checklist: order, duplicates, key lookup, fixed records, mutability</li>
+<li><strong>0:24–0:34</strong> Live demo 1: duplicate detection and membership — list first, then set</li>
+<li><strong>0:34–0:42</strong> Live demo 2: phone lookup — awkward list approach, then dictionary refactor</li>
+<li><strong>0:42–0:55</strong> Guided lab: Refactor Challenge</li>
+<li><strong>0:55–0:58</strong> Debrief and learner explanations</li>
+<li><strong>0:58–1:00</strong> Recap and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file named <code>hour21_structure_choice_demo.py</code>.</li>
+<li>Open a second file named <code>hour21_refactor_lab.py</code> with section headers only for learners who need a scaffold.</li>
+<li>Have a Python REPL ready for tiny comparison examples.</li>
+<li>Put these four labels somewhere visible before class begins: <strong>list</strong>, <strong>tuple</strong>, <strong>set</strong>, <strong>dict</strong>.</li>
+<li>Prepare one everyday example for each structure:</li>
+<li>shopping list → list</li>
+<li>coordinate <code>(x, y)</code> → tuple</li>
+<li>unique visitor names → set</li>
+<li>contact name → phone number → dictionary</li>
+<li>Be ready to ask learners to justify choices out loud. This hour is about reasoning, not just syntax.</li>
+<li>Prepare one deliberate “not wrong, but awkward” solution to show that code can work and still be a poor fit.</li>
+</ul>
+<p><strong>Say:</strong> "Please have your editor open and a blank file ready. This hour is less about learning a brand-new feature and more about learning how to think before you code. That is a real programming skill, and it is one of the things that separates guesswork from confidence."</p>
+<hr>
+<h2 id="3-opening-script-from-knowing-structures-to-choosing-structures-5-minutes">3) Opening Script: From Knowing Structures to Choosing Structures (~5 minutes)</h2>
+<h3 id="31-reconnect-to-session-5">3.1 Reconnect to Session 5</h3>
+<p><strong>Say:</strong>
+"Welcome to Session 6. Last session gave us a strong toolkit. We worked with tuples, sets, and dictionaries, and we reinforced list thinking. By the end of Session 5, you knew what each structure <em>is</em>, how to create it, and how to do the main operations with it.</p>
+<p>Today we shift to a more professional question: <strong>When should I choose this structure?</strong></p>
+<p>That question matters because many beginner programs technically run, but they are harder to read, harder to extend, or easier to break than they need to be. Often the issue is not a syntax mistake. Often the issue is that the data structure does not match the job."</p>
+<h3 id="32-why-this-matters-in-real-work">3.2 Why this matters in real work</h3>
+<p><strong>Say:</strong>
+"Imagine four tasks:</p>
+<ul>
+<li>You need to keep a sequence of songs in the order a user selected them.</li>
+<li>You need to store the coordinates of a point on a screen.</li>
+<li>You need to remove duplicate email addresses from a messy list.</li>
+<li>You need to look up a phone number by a person’s name.</li>
+</ul>
+<p>Could you force all four tasks into one structure type? In some messy way, yes. But that is not the standard we want.</p>
+<p>Good programmers do not just ask, ‘Can I make this work?’ They also ask, ‘What structure makes this simpler, clearer, and safer?’"</p>
+<h3 id="33-set-expectations-for-the-hour">3.3 Set expectations for the hour</h3>
+<p><strong>Say:</strong>
+"By the end of this hour, I want you to have a small mental checklist you can apply almost automatically:</p>
+<ul>
+<li>Does order matter?</li>
+<li>Can duplicates happen?</li>
+<li>Do I need to look something up by a key like a name?</li>
+<li>Is this really one fixed record with a small number of parts?</li>
+<li>Will the collection change over time?</li>
+</ul>
+<p>Those questions will not solve every design problem in programming, but they will solve a surprising number of Basics-level ones."</p>
+<hr>
+<h2 id="4-quick-comparison-review-the-four-core-structures">4) Quick Comparison Review: The Four Core Structures</h2>
+<h3 id="41-lists-ordered-and-flexible">4.1 Lists: ordered and flexible</h3>
+<p><strong>Say:</strong>
+"Let’s begin with the list. A list is an ordered, mutable collection. Ordered means position matters. Mutable means you can change it after creation.</p>
+<p>Use a list when:
+- order matters
+- duplicates are allowed
+- the collection may grow, shrink, or change</p>
+<p>Examples include a shopping list, a playlist, a list of temperatures, or a queue of tasks."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list: list[str] = [&quot;milk&quot;, &quot;bread&quot;, &quot;apples&quot;, &quot;bread&quot;]
+print(shopping_list)
+print(shopping_list[0])
+</code></pre>
+<p><strong>Say:</strong>
+"Notice that duplicates are fine here. The fact that <code>bread</code> appears twice is not an error. In some situations that is exactly what we want. The key idea is that lists preserve the sequence exactly as we entered it."</p>
+<h3 id="42-tuples-fixed-records-that-stay-together">4.2 Tuples: fixed records that stay together</h3>
+<p><strong>Say:</strong>
+"A tuple is also ordered, but unlike a list it is immutable. That means after creation, you do not change it.</p>
+<p>Use a tuple when:
+- you have a small, fixed record
+- the values belong together as one unit
+- you want to signal that the record should not be edited casually</p>
+<p>Examples include a coordinate, a date, an RGB color, or a measurement with a value and a unit."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point: tuple[int, int] = (4, 9)
+print(point)
+print(point[0], point[1])
+</code></pre>
+<p><strong>Say:</strong>
+"The tuple is not a general-purpose growing collection. It is best for a fixed grouping. A coordinate is a great example because the <code>x</code> and <code>y</code> belong together and usually should not be treated like an editable shopping list."</p>
+<h3 id="43-sets-uniqueness-built-in">4.3 Sets: uniqueness built in</h3>
+<p><strong>Say:</strong>
+"A set is an unordered collection of unique values.</p>
+<p>Use a set when:
+- duplicates should disappear
+- membership checking matters
+- order does not matter</p>
+<p>Examples include unique visitor names, unique email addresses, or a collection of tags."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">emails: set[str] = {&quot;a@example.com&quot;, &quot;b@example.com&quot;, &quot;a@example.com&quot;}
+print(emails)
+print(len(emails))
+</code></pre>
+<p><strong>Say:</strong>
+"This is a perfect example of a structure doing useful work for us automatically. We gave Python a duplicate email, and the set kept just one copy. If uniqueness is the rule, a set is often the simplest answer."</p>
+<h3 id="44-dictionaries-lookup-by-key">4.4 Dictionaries: lookup by key</h3>
+<p><strong>Say:</strong>
+"A dictionary stores key-value pairs. The key gives you a direct path to the value.</p>
+<p>Use a dictionary when:
+- each item has a meaningful key
+- you want to look up values by name, code, or label
+- you want the code to express relationships clearly</p>
+<p>Examples include contact name to phone number, item name to quantity, or country code to country name."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">contacts: dict[str, str] = {
+    &quot;Maya&quot;: &quot;555-0101&quot;,
+    &quot;Evan&quot;: &quot;555-0130&quot;,
+}
+
+print(contacts[&quot;Maya&quot;])
+print(contacts.get(&quot;Noah&quot;, &quot;Not found&quot;))
+</code></pre>
+<p><strong>Say:</strong>
+"The dictionary shines when the question is not ‘What is item number 3?’ but ‘What is the value for this key?’ That is a different kind of access, and it maps naturally to real problems."</p>
+<h3 id="45-a-one-minute-comparison-table">4.5 A one-minute comparison table</h3>
+<p><strong>Say:</strong>
+"Let me summarize these in one quick comparison table. Encourage learners to copy this into notes if it helps."</p>
+<table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Ordered?</th>
+<th>Mutable?</th>
+<th>Duplicates?</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Allowed</td>
+<td>sequences that change</td>
+</tr>
+<tr>
+<td>Tuple</td>
+<td>Yes</td>
+<td>No</td>
+<td>Allowed</td>
+<td>small fixed records</td>
+</tr>
+<tr>
+<td>Set</td>
+<td>No</td>
+<td>Yes</td>
+<td>Not allowed</td>
+<td>uniqueness and membership</td>
+</tr>
+<tr>
+<td>Dictionary</td>
+<td>In insertion order</td>
+<td>Yes</td>
+<td>Keys must be unique</td>
+<td>lookup by key</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Say:</strong>
+"Do not memorize this as a dead chart. Use it as a thinking tool. When you are unsure, come back to what the problem needs."</p>
+<hr>
+<h2 id="5-decision-checklist-how-to-choose-the-right-structure">5) Decision Checklist: How to Choose the Right Structure</h2>
+<h3 id="51-question-1-does-order-matter">5.1 Question 1: Does order matter?</h3>
+<p><strong>Say:</strong>
+"Here is the first question: <strong>Does order matter?</strong></p>
+<p>If the answer is yes, you are probably leaning toward a list or a tuple.</p>
+<p>If the answer is no, a set or a dictionary may be a better fit.</p>
+<p>For example, if you are storing the order students entered a room, a list makes sense because the first student and second student matter. If you only care who attended at all, not the order, a set might be better."</p>
+<p><strong>Ask learners:</strong>
+"If I am storing the top five songs in the exact order a user ranked them, which structure sounds more natural right away?"</p>
+<p>Pause for answers.</p>
+<p><strong>Say:</strong>
+"Yes — a list. Order is part of the meaning of the data."</p>
+<h3 id="52-question-2-are-duplicates-allowed-or-meaningful">5.2 Question 2: Are duplicates allowed or meaningful?</h3>
+<p><strong>Say:</strong>
+"Next question: <strong>Are duplicates allowed or meaningful?</strong></p>
+<p>A shopping list may contain <code>bread</code> twice if you truly want two loaves. A playlist may contain the same song twice if someone added it twice. A temperature list may repeat <code>72</code> many times and that is fine.</p>
+<p>But a set of unique employee IDs should never contain the same ID twice. A list of registered usernames probably should not contain duplicates either.</p>
+<p>If duplicates should not exist, a set deserves serious consideration."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">visitor_names: list[str] = [&quot;Ana&quot;, &quot;Ben&quot;, &quot;Ana&quot;, &quot;Chris&quot;, &quot;Ben&quot;]
+print(visitor_names)
+print(set(visitor_names))
+</code></pre>
+<p><strong>Say:</strong>
+"The list preserves every entry exactly. The set keeps the unique names only. Neither is universally better. The right one depends on the question you are trying to answer."</p>
+<h3 id="53-question-3-do-i-need-lookup-by-key">5.3 Question 3: Do I need lookup by key?</h3>
+<p><strong>Say:</strong>
+"Third question: <strong>Do I need to look something up by a meaningful key like a name, code, or label?</strong></p>
+<p>If the answer is yes, that is often a dictionary.</p>
+<p>Imagine storing student scores. A list of scores like <code>[90, 88, 95]</code> tells us almost nothing unless we separately know whose score is whose. A dictionary like <code>{'Ava': 90, 'Liam': 88, 'Zoe': 95}</code> immediately answers the question, ‘What is Zoe’s score?’"</p>
+<p><strong>Ask learners:</strong>
+"If I need to search a phone number by contact name, what sounds more natural: a list of names, a set of names, or a dictionary from name to phone number? Why?"</p>
+<p>Take one or two responses.</p>
+<p><strong>Say:</strong>
+"Exactly. A dictionary matches the shape of the problem."</p>
+<h3 id="54-question-4-is-this-a-small-fixed-record">5.4 Question 4: Is this a small fixed record?</h3>
+<p><strong>Say:</strong>
+"Fourth question: <strong>Is this one small fixed record?</strong></p>
+<p>If it is, think tuple.</p>
+<p>A coordinate <code>(x, y)</code> is not really a growing collection. A date <code>(year, month, day)</code> is not a bag of items to keep appending to. A measurement <code>(34.5, 'celsius')</code> is one record with pieces that belong together.</p>
+<p>That is where tuples are clearer than lists. A list would technically work, but it suggests ongoing change, which may not match the meaning."</p>
+<h3 id="55-question-5-will-this-collection-change-over-time">5.5 Question 5: Will this collection change over time?</h3>
+<p><strong>Say:</strong>
+"Fifth question: <strong>Will this collection change over time?</strong></p>
+<p>If you will add, remove, or update items regularly, that pushes you toward mutable structures like lists, sets, and dictionaries.</p>
+<p>If the data should stay fixed after creation, tuple may be a better signal.</p>
+<p>This is not about strict rules. It is about what message the structure sends to you and to anyone reading your code later."</p>
+<h3 id="56-the-decision-checklist-in-one-simple-script">5.6 The decision checklist in one simple script</h3>
+<p><strong>Say:</strong>
+"I want to say the full checklist out loud one more time. This is the heart of the hour:</p>
+<ol>
+<li>Do I need order?</li>
+<li>Do I need duplicates?</li>
+<li>Do I need lookup by key?</li>
+<li>Is this a fixed record?</li>
+<li>Will the collection change?</li>
+</ol>
+<p>If learners can ask those five questions automatically, they are making strong progress."</p>
+<hr>
+<h2 id="6-worked-comparison-the-same-problem-different-structures">6) Worked Comparison: The Same Problem, Different Structures</h2>
+<h3 id="61-problem-a-checking-whether-a-username-has-already-been-seen">6.1 Problem A: Checking whether a username has already been seen</h3>
+<p><strong>Say:</strong>
+"Let’s start with a practical problem: you are processing usernames one by one, and you want to know whether each name has already appeared.</p>
+<p>A beginner might start with a list because lists feel familiar. That is not wrong. Let’s do that first."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">seen_users_list: list[str] = []
+
+new_users: list[str] = [&quot;maya&quot;, &quot;evan&quot;, &quot;maya&quot;, &quot;zoe&quot;, &quot;evan&quot;]
+
+for username in new_users:
+    if username in seen_users_list:
+        print(f&quot;{username} is a duplicate&quot;)
+    else:
+        seen_users_list.append(username)
+        print(f&quot;Added {username}&quot;)
+
+print(seen_users_list)
+</code></pre>
+<p><strong>Say:</strong>
+"This works. That matters. We do not insult working code. But now let’s ask a design question: what are we really using <code>seen_users_list</code> for?</p>
+<p>We are not using positions.
+We are not using duplicates meaningfully.
+We are mainly asking, ‘Have I seen this value before?’</p>
+<p>That makes a set a better fit."</p>
+<p><strong>Type the refactor:</strong></p>
+<pre><code class="language-python">seen_users_set: set[str] = set()
+
+for username in new_users:
+    if username in seen_users_set:
+        print(f&quot;{username} is a duplicate&quot;)
+    else:
+        seen_users_set.add(username)
+        print(f&quot;Added {username}&quot;)
+
+print(seen_users_set)
+</code></pre>
+<p><strong>Say:</strong>
+"Same behavior, but the structure now matches the goal. We want uniqueness and membership checking, so the set expresses our intent more clearly.</p>
+<p>This is a key habit: sometimes the best sign that a structure is wrong is not that the code crashes. It is that you keep fighting the structure to do a job another structure naturally handles."</p>
+<h3 id="62-problem-b-storing-a-point-on-a-map">6.2 Problem B: Storing a point on a map</h3>
+<p><strong>Say:</strong>
+"Now let’s look at a different kind of problem: storing a point on a map.</p>
+<p>Could we use a list? Yes."</p>
+<pre><code class="language-python">point_list: list[int] = [12, 30]
+print(point_list[0], point_list[1])
+</code></pre>
+<p><strong>Say:</strong>
+"But if the point is conceptually one fixed pair — x and y — a tuple often communicates that more cleanly."</p>
+<pre><code class="language-python">point_tuple: tuple[int, int] = (12, 30)
+x, y = point_tuple
+print(f&quot;x = {x}, y = {y}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"This is a subtle choice. The list version is not a disaster. But the tuple says, ‘These two values belong together as one record.’ That is a better message."</p>
+<h3 id="63-problem-c-looking-up-a-phone-number-by-name">6.3 Problem C: Looking up a phone number by name</h3>
+<p><strong>Say:</strong>
+"Now let’s take a problem that really highlights the value of dictionaries.</p>
+<p>Suppose you start with paired data in a list of tuples."</p>
+<pre><code class="language-python">contacts_as_pairs: list[tuple[str, str]] = [
+    (&quot;Maya&quot;, &quot;555-0101&quot;),
+    (&quot;Evan&quot;, &quot;555-0130&quot;),
+    (&quot;Zoe&quot;, &quot;555-0165&quot;),
+]
+</code></pre>
+<p><strong>Say:</strong>
+"This is not terrible. In fact, it is perfectly readable for a tiny set of contacts. But what happens when I want the phone number for <code>Zoe</code>? I have to loop through the whole list and compare names one by one."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">search_name: str = &quot;Zoe&quot;
+found_phone: str | None = None
+
+for name, phone in contacts_as_pairs:
+    if name == search_name:
+        found_phone = phone
+        break
+
+print(found_phone)
+</code></pre>
+<p><strong>Say:</strong>
+"Again, this works. But the structure does not match the question. The question is ‘given a name, what is the phone number?’ That is a dictionary question."</p>
+<p><strong>Type the refactor:</strong></p>
+<pre><code class="language-python">contacts_dict: dict[str, str] = {
+    &quot;Maya&quot;: &quot;555-0101&quot;,
+    &quot;Evan&quot;: &quot;555-0130&quot;,
+    &quot;Zoe&quot;: &quot;555-0165&quot;,
+}
+
+print(contacts_dict.get(&quot;Zoe&quot;, &quot;Not found&quot;))
+</code></pre>
+<p><strong>Say:</strong>
+"One line, clear meaning, and safe missing-key handling with <code>get()</code>. That is the kind of clarity we want learners to notice."</p>
+<h3 id="64-best-depends-on-the-actual-need">6.4 “Best” depends on the actual need</h3>
+<p><strong>Say:</strong>
+"One thing I want to emphasize carefully: the correct structure depends on the <em>actual requirement</em>, not on what seems most sophisticated.</p>
+<p>If I need to keep contacts in the exact order they were entered and I want to allow duplicate names, maybe a list of records makes sense.
+If I need name-to-phone lookup, a dictionary makes sense.
+If I only care about unique names seen so far, a set makes sense.</p>
+<p>So the structure is chosen by the job, not by our personal favorite."</p>
+<hr>
+<h2 id="7-live-demo-1-duplicate-detection-and-membership-list-first-then-set-10-minutes">7) Live Demo 1: Duplicate Detection and Membership — List First, Then Set (~10 minutes)</h2>
+<h3 id="71-frame-the-demo">7.1 Frame the demo</h3>
+<p><strong>Say:</strong>
+"In this first live demo, I want to model a useful professional habit: start with a simple working idea, then improve the structure once the real need becomes clear."</p>
+<h3 id="72-step-1-solve-with-a-list">7.2 Step 1: Solve with a list</h3>
+<p><strong>Type from a blank file:</strong></p>
+<pre><code class="language-python">usernames: list[str] = [&quot;ava&quot;, &quot;liam&quot;, &quot;ava&quot;, &quot;mia&quot;, &quot;liam&quot;, &quot;noah&quot;]
+seen: list[str] = []
+
+for username in usernames:
+    if username in seen:
+        print(f&quot;Duplicate found: {username}&quot;)
+    else:
+        seen.append(username)
+        print(f&quot;New user: {username}&quot;)
+
+print(f&quot;Seen users: {seen}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Before I run this, predict the output. Which names will be marked as duplicates?"</p>
+<p>Take brief predictions, then run it.</p>
+<p><strong>Say:</strong>
+"Good. The code does what we asked. That is our baseline."</p>
+<h3 id="73-step-2-ask-whether-the-structure-fits">7.3 Step 2: Ask whether the structure fits</h3>
+<p><strong>Say:</strong>
+"Now let’s step back and inspect the role of <code>seen</code>.</p>
+<ul>
+<li>Are we using the order in <code>seen</code> for anything important? Not really.</li>
+<li>Do we want duplicates in <code>seen</code>? Definitely not.</li>
+<li>Are we mostly using <code>in</code> to check membership? Yes.</li>
+</ul>
+<p>That is the moment to recognize that <code>seen</code> wants to be a set, not a list."</p>
+<h3 id="74-step-3-refactor-to-a-set">7.4 Step 3: Refactor to a set</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">usernames: list[str] = [&quot;ava&quot;, &quot;liam&quot;, &quot;ava&quot;, &quot;mia&quot;, &quot;liam&quot;, &quot;noah&quot;]
+seen: set[str] = set()
+
+for username in usernames:
+    if username in seen:
+        print(f&quot;Duplicate found: {username}&quot;)
+    else:
+        seen.add(username)
+        print(f&quot;New user: {username}&quot;)
+
+print(f&quot;Seen users: {seen}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Notice how small the code changes are. The important change is conceptual: the structure now expresses the rule of the program more accurately."</p>
+<h3 id="75-pull-out-the-lesson-explicitly">7.5 Pull out the lesson explicitly</h3>
+<p><strong>Say:</strong>
+"Here is the design lesson: if your code is using a collection mostly for membership checks and uniqueness, that is a clue to consider a set.</p>
+<p>That does not mean lists are bad. It means the set better matches the purpose in this case."</p>
+<hr>
+<h2 id="8-live-demo-2-phone-lookup-awkward-list-approach-then-dictionary-refactor-8-minutes">8) Live Demo 2: Phone Lookup — Awkward List Approach, Then Dictionary Refactor (~8 minutes)</h2>
+<h3 id="81-start-with-the-awkward-but-working-version">8.1 Start with the awkward but working version</h3>
+<p><strong>Say:</strong>
+"For the second demo, we will deliberately start with a structure that works but feels awkward. That is a good exercise because beginners often stop at ‘it works.’ We want to take one more step and ask whether it is a good fit."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">contacts: list[tuple[str, str]] = [
+    (&quot;Ava&quot;, &quot;555-0111&quot;),
+    (&quot;Liam&quot;, &quot;555-0222&quot;),
+    (&quot;Mia&quot;, &quot;555-0333&quot;),
+]
+
+search_name: str = input(&quot;Enter a contact name: &quot;)
+found_phone: str | None = None
+
+for name, phone in contacts:
+    if name == search_name:
+        found_phone = phone
+        break
+
+if found_phone is None:
+    print(&quot;Contact not found&quot;)
+else:
+    print(f&quot;{search_name}: {found_phone}&quot;)
+</code></pre>
+<p>Run it once with an existing name and once with a missing name.</p>
+<h3 id="82-discuss-the-design">8.2 Discuss the design</h3>
+<p><strong>Say:</strong>
+"There is nothing illegal or broken here. But the moment the main task is lookup by name, the dictionary becomes the more natural tool. It lets the structure carry some of the logic for us."</p>
+<h3 id="83-refactor-to-a-dictionary">8.3 Refactor to a dictionary</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">contacts: dict[str, str] = {
+    &quot;Ava&quot;: &quot;555-0111&quot;,
+    &quot;Liam&quot;: &quot;555-0222&quot;,
+    &quot;Mia&quot;: &quot;555-0333&quot;,
+}
+
+search_name: str = input(&quot;Enter a contact name: &quot;)
+phone: str = contacts.get(search_name, &quot;Contact not found&quot;)
+print(f&quot;Result: {phone}&quot;)
+</code></pre>
+<h3 id="84-highlight-safe-missing-key-access">8.4 Highlight safe missing-key access</h3>
+<p><strong>Say:</strong>
+"Notice one important detail: I used <code>get()</code> rather than bare bracket access. If the key is missing, <code>get()</code> lets us handle that safely instead of crashing with a <code>KeyError</code>.</p>
+<p>That safety habit will matter again in Hour 24 when learners do their checkpoint assessment."</p>
+<hr>
+<h2 id="9-guided-lab-refactor-challenge-13-minutes">9) Guided Lab: Refactor Challenge (~13 minutes)</h2>
+<h3 id="91-lab-framing">9.1 Lab framing</h3>
+<p><strong>Say:</strong>
+"Now it is your turn. This lab is called the <strong>Refactor Challenge</strong>. The goal is not just to write fresh code. The goal is to improve a working solution by choosing a better-fitting structure and then explain why your refactor is better."</p>
+<h3 id="92-lab-prompt">9.2 Lab prompt</h3>
+<p>Give learners this prompt on screen or in the starter file:</p>
+<h3 id="refactor-challenge">Refactor Challenge</h3>
+<p>You will complete <strong>two short refactors</strong>.</p>
+<p><strong>Part A — Duplicate Checker</strong></p>
+<p>Start with this list-based program idea:</p>
+<pre><code class="language-python">raw_names = [&quot;Ana&quot;, &quot;Ben&quot;, &quot;Ana&quot;, &quot;Chris&quot;, &quot;Ben&quot;, &quot;Dana&quot;]
+</code></pre>
+<p>Tasks:
+1. Build a version that uses a list called <code>seen_names</code> to report duplicates.
+2. Refactor it to use a set instead.
+3. Print the final unique names.
+4. Add a short comment explaining why the set version is a better fit.</p>
+<p><strong>Part B — Score Lookup</strong></p>
+<p>Start with this paired data:</p>
+<pre><code class="language-python">score_pairs = [(&quot;Ava&quot;, 91), (&quot;Liam&quot;, 88), (&quot;Mia&quot;, 95)]
+</code></pre>
+<p>Tasks:
+1. Write a version that searches the list of tuples for one student name.
+2. Refactor it to use a dictionary.
+3. Search for one existing name and one missing name.
+4. Use safe access for the dictionary version.
+5. Add a short comment explaining the tradeoff.</p>
+<h3 id="93-completion-criteria">9.3 Completion criteria</h3>
+<pre><code class="language-text">Completion criteria
+</code></pre>
+<ul>
+<li>Both parts run without crashing.</li>
+<li>Part A includes a list version and a set version.</li>
+<li>Part B includes a list-of-tuples version and a dictionary version.</li>
+<li>The dictionary version handles a missing name safely.</li>
+<li>Learner explanation mentions at least one tradeoff such as order, duplicates, lookup by key, or readability.</li>
+</ul>
+<h3 id="94-hints-to-release-verbally-after-34-minutes">9.4 Hints to release verbally after 3–4 minutes</h3>
+<p><strong>Say:</strong>
+"A few hints if you need them:</p>
+<ul>
+<li>In Part A, ask yourself whether the final collection of seen names needs duplicates or order.</li>
+<li>In Part B, ask yourself whether the main job is scanning every item or looking up by key.</li>
+<li>For safe dictionary access, think back to <code>get()</code> from Session 5.</li>
+<li>If your first version works, that is good. Refactoring is the second step, not a sign that the first step was worthless."</li>
+</ul>
+<h3 id="95-common-pitfalls-to-circulate-for">9.5 Common pitfalls to circulate for</h3>
+<pre><code class="language-text">Common pitfalls to watch for
+</code></pre>
+<ul>
+<li>Forgetting that an empty set is <code>set()</code>, not <code>{}</code></li>
+<li>Writing the dictionary version with <code>scores[name]</code> when the key might not exist</li>
+<li>Refactoring the structure but forgetting to change methods, such as using <code>append()</code> on a set</li>
+<li>Assuming the set will print in the same order as the original list</li>
+<li>Explaining only that one version is “better” without saying <em>why</em></li>
+</ul>
+<h3 id="96-optional-extensions-for-early-finishers">9.6 Optional extensions for early finishers</h3>
+<pre><code class="language-text">Optional extensions (stay in Basics scope)
+</code></pre>
+<ul>
+<li>In Part A, print the duplicate names only once by storing duplicates in a second set.</li>
+<li>In Part B, print all scores in a neat table using <code>for name, score in scores.items()</code>.</li>
+<li>Add a small search loop that lets the user test several names one after another.</li>
+</ul>
+<h3 id="97-instructor-circulation-script">9.7 Instructor circulation script</h3>
+<p>As learners work, circulate with short coaching prompts:</p>
+<p><strong>Say:</strong>
+"Tell me what question your program is asking most often."</p>
+<p>If the learner says, "It keeps checking whether a name is already there," guide them toward the set idea.</p>
+<p><strong>Say:</strong>
+"What matters more here — the position of the data, or the ability to look it up by a meaningful key?"</p>
+<p>If the learner is stuck on the dictionary refactor, ask:</p>
+<p><strong>Say:</strong>
+"If you already know the student’s name, what structure lets you go directly to the score instead of looping?"</p>
+<hr>
+<h2 id="10-debrief-make-the-thinking-visible-3-minutes">10) Debrief: Make the Thinking Visible (~3 minutes)</h2>
+<h3 id="101-invite-explanation-not-just-answers">10.1 Invite explanation, not just answers</h3>
+<p><strong>Say:</strong>
+"Let’s come back together. I want to hear not only what you built, but why you made the structure choices you made."</p>
+<p>Invite two or three learners to share.</p>
+<p>Suggested prompts:
+- "In Part A, what changed when you moved from a list to a set?"
+- "In Part B, why is a dictionary a cleaner fit for score lookup?"
+- "What tradeoff did you notice?"</p>
+<h3 id="102-model-a-strong-explanation">10.2 Model a strong explanation</h3>
+<p><strong>Say:</strong>
+"A strong explanation sounds like this: ‘The list version worked, but the set was a better fit because I only cared whether a name had already been seen. I did not need order or duplicates. For the scores, the dictionary was better because I needed lookup by name, and <code>get()</code> let me handle missing names safely.’</p>
+<p>That kind of explanation shows real understanding."</p>
+<h3 id="103-reinforce-that-working-code-is-step-one-not-step-zero">10.3 Reinforce that working code is step one, not step zero</h3>
+<p><strong>Say:</strong>
+"One habit I want you to keep: do not be embarrassed if your first solution is not the cleanest one. In real programming, it is very common to write a working version first and then improve the structure once the problem becomes clearer. That is called progress, not failure."</p>
+<hr>
+<h2 id="11-recap-exit-ticket-2-minutes">11) Recap + Exit Ticket (~2 minutes)</h2>
+<h3 id="111-recap-the-hour-in-plain-language">11.1 Recap the hour in plain language</h3>
+<p><strong>Say:</strong>
+"Today’s big idea was simple but important: good programming is not only about writing valid syntax. It is also about choosing the data structure that naturally fits the problem.</p>
+<p>We reviewed the four core structures:
+- lists for ordered, changeable sequences
+- tuples for small fixed records
+- sets for uniqueness and membership
+- dictionaries for lookup by key</p>
+<p>And we practiced moving from ‘it works’ to ‘it fits.’"</p>
+<h3 id="112-exit-ticket">11.2 Exit ticket</h3>
+<pre><code class="language-text">Quick check / exit ticket
+</code></pre>
+<p>Ask learners to answer aloud, on paper, or in chat:</p>
+<ol>
+<li>If you need fast lookup by name, which structure usually fits best?</li>
+<li>If you need unique values and do not care about order, which structure usually fits best?</li>
+<li>If you are storing a coordinate <code>(x, y)</code>, why might a tuple be clearer than a list?</li>
+<li>Give one example of a task where a list is still the best choice.</li>
+</ol>
+<h3 id="113-closing-script">11.3 Closing script</h3>
+<p><strong>Say:</strong>
+"In the next hour, we are going to strengthen this judgment through repetition. You will move through a data-structure drill circuit and practice these patterns quickly. Today was about choosing well. Next hour is about using those choices fluently."</p>
+<hr>
+<h2 id="12-appendix-quick-reference-for-instructor-wrap-up-or-posting">12) Appendix: Quick Reference for Instructor Wrap-Up or Posting</h2>
+<h3 id="121-the-five-question-decision-guide">12.1 The five-question decision guide</h3>
+<p><strong>Say:</strong>
+"If you want one tiny reference to keep beside your keyboard, make it this:</p>
+<ul>
+<li>Need order? Think list or tuple.</li>
+<li>Need change over time? Think list, set, or dictionary.</li>
+<li>Need uniqueness only? Think set.</li>
+<li>Need lookup by name or code? Think dictionary.</li>
+<li>Need a small fixed record? Think tuple."</li>
+</ul>
+<h3 id="122-a-final-reminder-against-overengineering">12.2 A final reminder against overengineering</h3>
+<p><strong>Say:</strong>
+"One last teaching point: choosing the right structure does not mean choosing the fanciest structure. If a simple list solves the actual problem clearly, that is a good choice. Overengineering is not sophistication. The goal is fit."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-from-knowing-structures-to-choosing-structures-5-minutes" class="depth-2">3) Opening Script: From Knowing Structures to Choosing Structures (~5 minutes)</a></li>
+<li><a href="#31-reconnect-to-session-5" class="depth-3">3.1 Reconnect to Session 5</a></li>
+<li><a href="#32-why-this-matters-in-real-work" class="depth-3">3.2 Why this matters in real work</a></li>
+<li><a href="#33-set-expectations-for-the-hour" class="depth-3">3.3 Set expectations for the hour</a></li>
+<li><a href="#4-quick-comparison-review-the-four-core-structures" class="depth-2">4) Quick Comparison Review: The Four Core Structures</a></li>
+<li><a href="#41-lists-ordered-and-flexible" class="depth-3">4.1 Lists: ordered and flexible</a></li>
+<li><a href="#42-tuples-fixed-records-that-stay-together" class="depth-3">4.2 Tuples: fixed records that stay together</a></li>
+<li><a href="#43-sets-uniqueness-built-in" class="depth-3">4.3 Sets: uniqueness built in</a></li>
+<li><a href="#44-dictionaries-lookup-by-key" class="depth-3">4.4 Dictionaries: lookup by key</a></li>
+<li><a href="#45-a-one-minute-comparison-table" class="depth-3">4.5 A one-minute comparison table</a></li>
+<li><a href="#5-decision-checklist-how-to-choose-the-right-structure" class="depth-2">5) Decision Checklist: How to Choose the Right Structure</a></li>
+<li><a href="#51-question-1-does-order-matter" class="depth-3">5.1 Question 1: Does order matter?</a></li>
+<li><a href="#52-question-2-are-duplicates-allowed-or-meaningful" class="depth-3">5.2 Question 2: Are duplicates allowed or meaningful?</a></li>
+<li><a href="#53-question-3-do-i-need-lookup-by-key" class="depth-3">5.3 Question 3: Do I need lookup by key?</a></li>
+<li><a href="#54-question-4-is-this-a-small-fixed-record" class="depth-3">5.4 Question 4: Is this a small fixed record?</a></li>
+<li><a href="#55-question-5-will-this-collection-change-over-time" class="depth-3">5.5 Question 5: Will this collection change over time?</a></li>
+<li><a href="#56-the-decision-checklist-in-one-simple-script" class="depth-3">5.6 The decision checklist in one simple script</a></li>
+<li><a href="#6-worked-comparison-the-same-problem-different-structures" class="depth-2">6) Worked Comparison: The Same Problem, Different Structures</a></li>
+<li><a href="#61-problem-a-checking-whether-a-username-has-already-been-seen" class="depth-3">6.1 Problem A: Checking whether a username has already been seen</a></li>
+<li><a href="#62-problem-b-storing-a-point-on-a-map" class="depth-3">6.2 Problem B: Storing a point on a map</a></li>
+<li><a href="#63-problem-c-looking-up-a-phone-number-by-name" class="depth-3">6.3 Problem C: Looking up a phone number by name</a></li>
+<li><a href="#64-best-depends-on-the-actual-need" class="depth-3">6.4 “Best” depends on the actual need</a></li>
+<li><a href="#7-live-demo-1-duplicate-detection-and-membership-list-first-then-set-10-minutes" class="depth-2">7) Live Demo 1: Duplicate Detection and Membership — List First, Then Set (~10 minutes)</a></li>
+<li><a href="#71-frame-the-demo" class="depth-3">7.1 Frame the demo</a></li>
+<li><a href="#72-step-1-solve-with-a-list" class="depth-3">7.2 Step 1: Solve with a list</a></li>
+<li><a href="#73-step-2-ask-whether-the-structure-fits" class="depth-3">7.3 Step 2: Ask whether the structure fits</a></li>
+<li><a href="#74-step-3-refactor-to-a-set" class="depth-3">7.4 Step 3: Refactor to a set</a></li>
+<li><a href="#75-pull-out-the-lesson-explicitly" class="depth-3">7.5 Pull out the lesson explicitly</a></li>
+<li><a href="#8-live-demo-2-phone-lookup-awkward-list-approach-then-dictionary-refactor-8-minutes" class="depth-2">8) Live Demo 2: Phone Lookup — Awkward List Approach, Then Dictionary Refactor (~8 minutes)</a></li>
+<li><a href="#81-start-with-the-awkward-but-working-version" class="depth-3">8.1 Start with the awkward but working version</a></li>
+<li><a href="#82-discuss-the-design" class="depth-3">8.2 Discuss the design</a></li>
+<li><a href="#83-refactor-to-a-dictionary" class="depth-3">8.3 Refactor to a dictionary</a></li>
+<li><a href="#84-highlight-safe-missing-key-access" class="depth-3">8.4 Highlight safe missing-key access</a></li>
+<li><a href="#9-guided-lab-refactor-challenge-13-minutes" class="depth-2">9) Guided Lab: Refactor Challenge (~13 minutes)</a></li>
+<li><a href="#91-lab-framing" class="depth-3">9.1 Lab framing</a></li>
+<li><a href="#92-lab-prompt" class="depth-3">9.2 Lab prompt</a></li>
+<li><a href="#refactor-challenge" class="depth-3">Refactor Challenge</a></li>
+<li><a href="#93-completion-criteria" class="depth-3">9.3 Completion criteria</a></li>
+<li><a href="#94-hints-to-release-verbally-after-34-minutes" class="depth-3">9.4 Hints to release verbally after 3–4 minutes</a></li>
+<li><a href="#95-common-pitfalls-to-circulate-for" class="depth-3">9.5 Common pitfalls to circulate for</a></li>
+<li><a href="#96-optional-extensions-for-early-finishers" class="depth-3">9.6 Optional extensions for early finishers</a></li>
+<li><a href="#97-instructor-circulation-script" class="depth-3">9.7 Instructor circulation script</a></li>
+<li><a href="#10-debrief-make-the-thinking-visible-3-minutes" class="depth-2">10) Debrief: Make the Thinking Visible (~3 minutes)</a></li>
+<li><a href="#101-invite-explanation-not-just-answers" class="depth-3">10.1 Invite explanation, not just answers</a></li>
+<li><a href="#102-model-a-strong-explanation" class="depth-3">10.2 Model a strong explanation</a></li>
+<li><a href="#103-reinforce-that-working-code-is-step-one-not-step-zero" class="depth-3">10.3 Reinforce that working code is step one, not step zero</a></li>
+<li><a href="#11-recap-exit-ticket-2-minutes" class="depth-2">11) Recap + Exit Ticket (~2 minutes)</a></li>
+<li><a href="#111-recap-the-hour-in-plain-language" class="depth-3">11.1 Recap the hour in plain language</a></li>
+<li><a href="#112-exit-ticket" class="depth-3">11.2 Exit ticket</a></li>
+<li><a href="#113-closing-script" class="depth-3">11.3 Closing script</a></li>
+<li><a href="#12-appendix-quick-reference-for-instructor-wrap-up-or-posting" class="depth-2">12) Appendix: Quick Reference for Instructor Wrap-Up or Posting</a></li>
+<li><a href="#121-the-five-question-decision-guide" class="depth-3">12.1 The five-question decision guide</a></li>
+<li><a href="#122-a-final-reminder-against-overengineering" class="depth-3">12.2 A final reminder against overengineering</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day6_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day6_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

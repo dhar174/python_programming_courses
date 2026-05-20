@@ -178,6 +178,27 @@ jupyter nbconvert --to script submissions/<name>_Basics_Day1_homework.ipynb --ou
 python basics_day1.py
 ```
 
+### Lecture HTML Validation
+
+Use the lecture generator plus the lecture-specific validator for hourly lecture pages instead of `validate_slides.sh`:
+
+```bash
+# Install the generator's Markdown dependency
+python -m pip install Markdown==3.7
+
+# Generate published lecture HTML into a local _site mirror
+python scripts/generate_lecture_pages.py --repo-root . --output-root _site
+
+# Validate all generated lecture HTML pages
+python scripts/validate_lecture_html.py _site
+
+# Or validate a specific generated lecture directory / file while iterating locally
+python scripts/validate_lecture_html.py _site/Basics/lessons/lecture
+python scripts/validate_lecture_html.py _site/Basics/lessons/lecture/Day1_Hour1_Basics.html
+```
+
+The validator exits nonzero when a lecture page is missing accessibility, navigation, hash-target, or offline/static-hosting requirements.
+
 ---
 
 ## Repository Structure

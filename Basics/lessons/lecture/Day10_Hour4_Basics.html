@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 10 Hour 4 (Course Hour 40): Checkpoint 5 Instructor Script — Functions, Modules, and Intro OOP | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="10">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day10_Hour4_Basics.md">
+
+    <link rel="prev" href="Day10_Hour3_Basics.html">
+    <link rel="next" href="Day11_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="10" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-10/index.html">Day 10</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 10 Hour 4 (Course Hour 40): Checkpoint 5 Instructor Script — Functions, Modules, and Intro OOP</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 10</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day10_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 10</strong>
+<strong>Runbook alignment:</strong> Hour 40, Checkpoint 5
+<strong>Duration:</strong> 60 minutes
+<strong>Delivery mode:</strong> Instructor-led checkpoint with active lab
+<strong>Scope guardrails:</strong> Basics only, in-memory only, no file I/O, no package architecture</p>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this checkpoint, learners will demonstrate the ability to:</p>
+<ol>
+<li><strong>Design and build a menu-driven CLI application</strong> that runs in a loop and maintains state across multiple user interactions.</li>
+<li><strong>Organize code across multiple files</strong> using functions for behavior reuse and modules for separation of concerns.</li>
+<li><strong>Create and use a custom class</strong> to represent a domain entity (record, contact, or task) with state and behavior.</li>
+<li><strong>Implement core CRUD-like operations</strong> (Create via add, Read via list and search, with attention to error handling).</li>
+<li><strong>Write readable, self-documenting interfaces</strong> through clear prompts, meaningful variable names, and graceful error feedback.</li>
+<li><strong>Recognize and apply the principle of reduced duplication</strong> by extracting repeated logic into reusable functions.</li>
+<li><strong>Understand import mechanics</strong> in multi-file Python projects and troubleshoot common module resolution issues.</li>
+</ol>
+<h2 id="instructor-purpose-for-this-hour">Instructor purpose for this hour</h2>
+<p>This is a synthesis checkpoint. Learners now have enough building blocks to create a small but complete command-line application. Your teaching priority in this hour is not visual polish, advanced architecture, or extra features. Your priority is to validate that learners can combine fundamentals in a disciplined structure:</p>
+<ul>
+<li>functions for repeated logic</li>
+<li>modules for separation of concerns</li>
+<li>one class for structured records</li>
+<li>a loop-driven interface that behaves consistently</li>
+</ul>
+<p>The checkpoint project is intentionally small so learners can focus on organization, clarity, and correctness. This hour bridges Basics and Advanced because it requires learners to think about architectural decisions (where does this logic belong?) rather than just syntax. Strong performance here indicates readiness for file I/O, JSON, error handling at scale, and design patterns.</p>
+<h2 id="instructor-prep-notes">Instructor Prep Notes</h2>
+<h3 id="before-class-prepare-these-artifacts">Before class, prepare these artifacts:</h3>
+<ol>
+<li>
+<p><strong>A working reference implementation</strong> with all three files:
+   - <code>main.py</code> — the entry point and orchestrator
+   - <code>utils.py</code> — reusable helper functions
+   - <code>record.py</code> — class definition (optional but recommended to demo)</p>
+</li>
+<li>
+<p><strong>A terminal environment</strong> already positioned in the project directory, with imports verified to work cleanly.</p>
+</li>
+<li>
+<p><strong>A deterministic demo script</strong> with fixed test data (Ada, Grace) so output is 100% reproducible every time you run it. Reuse the same names and search terms every session.</p>
+</li>
+<li>
+<p><strong>A visible checklist</strong> posted on screen or written on whiteboard listing all completion criteria (Menu loop, 3+ functions, 1+ module, 1+ class, add/list/search, no file I/O, two files minimum).</p>
+</li>
+<li>
+<p><strong>One anchor sentence</strong> you will repeat often:</p>
+<blockquote>
+<p>"Keep it in memory. Keep it readable. Keep it organized."</p>
+</blockquote>
+</li>
+<li>
+<p><strong>Fallback support plan</strong> for the two most common failures: (a) import errors from wrong directory, (b) module name collision with standard library.</p>
+</li>
+<li>
+<p><strong>Stretch goals</strong> for faster learners (delete/update features, input validation examples, display formatting) that stay within Basics scope and do not require file I/O.</p>
+</li>
+</ol>
+<h3 id="conceptual-foundation-for-teaching-this-checkpoint">Conceptual foundation for teaching this checkpoint:</h3>
+<p>Frame the checkpoint as <strong>graduation from procedural scripts to structured applications</strong>. Learners have learned functions, loops, and basic OOP pieces independently. Now they integrate these into one coherent system. Success means:</p>
+<ul>
+<li>Code runs without crashes on typical inputs (robustness).</li>
+<li>Code is organized for readability and maintenance (structure).</li>
+<li>Features work as designed (correctness).</li>
+<li>Code demonstrates that duplication was consciously reduced (discipline).</li>
+</ul>
+<p>Do not grade on UI polish, performance, or advanced features. Grade on clarity, organization, and reliability.</p>
+<h2 id="read-aloud-outcomes-start-of-hour">Read-aloud outcomes (start of hour)</h2>
+<p>Say this clearly at the beginning:</p>
+<p>"By the end of this checkpoint, you will be able to:</p>
+<ol>
+<li>Build a CLI Organizer that runs in memory and stays active in a menu loop until the user quits.</li>
+<li>Organize code across multiple files, including <code>main.py</code> and <code>utils.py</code>, and optionally a separate class file.</li>
+<li>Use at least three functions outside class methods to reduce duplication.</li>
+<li>Create and use at least one class to represent a record in your organizer.</li>
+<li>Deliver core features: add, list, and search."</li>
+</ol>
+<p>Then add:</p>
+<p>"This checkpoint tests modular organization plus class usage. That is today's definition of success. Your grade is about structure and reliability, not visual polish."</p>
+<h2 id="required-talk-points-you-must-cover">Required talk points you must cover</h2>
+<p>Before coding starts, explicitly state all deliverables. Keep this list visible on screen.</p>
+<ol>
+<li>
+<p><strong>Deliverables</strong>
+   - <code>main.py</code> (required)
+   - <code>utils.py</code> (required)
+   - class file such as <code>record.py</code> (optional, but encouraged)</p>
+</li>
+<li>
+<p><strong>Usability</strong>
+   - prompts must be readable
+   - output must be readable
+   - users should understand what to type and what happened after each action</p>
+</li>
+<li>
+<p><strong>Core behavior</strong>
+   - menu loop continues until quit
+   - add record
+   - list records
+   - search records</p>
+</li>
+<li>
+<p><strong>Structural requirement</strong>
+   - at least three functions outside class methods
+   - at least one custom class
+   - at least one custom module</p>
+</li>
+<li>
+<p><strong>Scope boundary</strong>
+   - no file I/O
+   - no saving to JSON/text
+   - no advanced OOP or package setup</p>
+</li>
+</ol>
+<p>Use this line:</p>
+<p>"If your app is simple but organized and stable, you are succeeding."</p>
+<h2 id="minute-by-minute-run-plan">Minute-by-minute run plan</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Checkpoint framing, outcomes, requirements, scope boundaries</li>
+<li><strong>0:05–0:10</strong> Live demo checklist (required behavior only, deterministic inputs/outputs)</li>
+<li><strong>0:10–0:50</strong> Hands-on checkpoint lab with instructor circulation</li>
+<li><strong>0:50–0:57</strong> Debrief, quick share, quick check on duplication reduction</li>
+<li><strong>0:57–1:00</strong> Completion criteria review and close</li>
+</ul>
+<h2 id="opening-script-first-5-minutes-near-verbatim">Opening Script (first 5 minutes, near-verbatim)</h2>
+<p>Say:</p>
+<p>"Welcome to Checkpoint 5. In this hour, we are proving that we can build software that is not just working, but organized. You already know loops, lists, functions, imports, and basic classes. Now you will combine them into one complete application."</p>
+<p>"Your project is an in-memory CLI Organizer. Think of it as a tiny contacts or tasks app that lives in memory and disappears when you quit. Today, your grade is mostly about structure and reliability, not fancy features."</p>
+<p>"Your required files are <code>main.py</code> and <code>utils.py</code>. You may add a class file like <code>record.py</code> if you want cleaner separation. I recommend it, but it is optional."</p>
+<p>"Required features are add, list, and search. Your menu must run in a loop until the user chooses Quit. After any action, the menu reappears so the user can do something else."</p>
+<p>"You need at least three functions outside class methods and at least one custom class record. The class should have an <code>__init__</code> method and at least one other method."</p>
+<p>"No file I/O in this checkpoint. Do not read or write files yet. Data lives in memory and disappears when the program exits. That is expected and correct. We will add file I/O next session."</p>
+<p>"I care about readable prompts and readable output. If a user cannot tell what to do, or what just happened, the program is not ready."</p>
+<p>Pause and ask:</p>
+<p>"Any requirement unclear before I demo expected behavior? Any questions about scope or structure?"</p>
+<p>Take 1–2 clarifying questions, then transition:</p>
+<p>"Great. Watch the next 5–10 minutes carefully. I'm about to show required behavior in sequence. Notice that the menu loops, that we handle empty inputs gracefully, and that search gives clear feedback."</p>
+<h2 id="concept-briefing-key-architectural-decisions-1015-minutes">Concept Briefing: Key Architectural Decisions (10–15 minutes)</h2>
+<p>Before demoing, briefly explain the "why" behind the structure. This context helps learners design, not just copy.</p>
+<h3 id="why-split-mainpy-and-utilspy">Why split <code>main.py</code> and <code>utils.py</code>?</h3>
+<p>Say:</p>
+<p>"In a small script, everything can live in one file. But as code grows, one file becomes hard to read and maintain. We split by responsibility:</p>
+<ul>
+<li><code>main.py</code> is the <strong>orchestrator</strong>: it owns the menu loop and talks to the user.</li>
+<li><code>utils.py</code> holds <strong>reusable helpers</strong>: functions that could be called from multiple places or imported into other projects.</li>
+</ul>
+<p>This separation makes each file easier to understand and test. It also prepares you for larger projects where you might have <code>database.py</code>, <code>ui.py</code>, <code>models.py</code>, etc., all working together."</p>
+<p>Illustrate with a real-world analogy:</p>
+<p>"Think of a restaurant. The front-of-house person (server) is like <code>main.py</code>—they talk to customers and take orders. The kitchen is like <code>utils.py</code>—it has standard recipes and prep methods that the servers use. If you have ten servers, they all use the same kitchen. If you decided to open a food truck, you could use the same kitchen code in a different context. That is why we separate concerns."</p>
+<h3 id="why-use-a-class-to-represent-a-record">Why use a class to represent a record?</h3>
+<p>Say:</p>
+<p>"A record is a bundle of related data (name, note) plus behavior (display, search). We could store these as separate lists—names in one list, notes in another—but that's error-prone and creates a data cohesion problem. A class lets us group them together:</p>
+<pre><code class="language-python">record = Record(name=&quot;Ada&quot;, note=&quot;Pioneer&quot;)
+</code></pre>
+<p>Now <code>name</code> and <code>note</code> stay together as a logical unit. If we add a method like <code>matches(term)</code>, the record knows how to search itself. The class becomes a small, reusable object.</p>
+<p>Think of it this way: if I ask you 'find all records where the name contains Grace', you instinctively think of a record as one thing. With a class, your code matches that intuition. Each record is one object, and you ask the object 'do you match this term?' The object answers yes or no."</p>
+<h3 id="why-a-menu-loop">Why a menu loop?</h3>
+<p>Say:</p>
+<p>"A menu loop is a core CLI pattern used everywhere. The user sees the menu, makes a choice, the choice is executed, and the menu reappears. This cycle repeats until they quit. It's like:</p>
+<pre><code>while True:
+    show menu
+    get choice
+    do action
+    if quit, break
+</code></pre>
+<p>This pattern is used in many real applications: banking ATMs, online stores, system admin tools, video game pause menus. Once you master the pattern, you can apply it to any domain. The menu loop is durable because it is simple and predictable for users. They know they can always get back to the menu."</p>
+<h3 id="why-no-file-io-yet">Why no file I/O yet?</h3>
+<p>Say:</p>
+<p>"In-memory storage is simpler to debug and focus on. There are no file paths, no permissions, no format conversion—just a Python list in RAM. Once you master in-memory organization, adding file I/O is a natural next step. We will do that next session."</p>
+<h2 id="live-demo-checklist-510-minutes-required-feature-behavior">Live demo checklist (5–10 minutes) — required feature behavior</h2>
+<p>Use this exact checklist while you demo:</p>
+<ol>
+<li>Start program and show menu.</li>
+<li>Attempt invalid add (blank name) and show graceful message.</li>
+<li>Add one valid record.</li>
+<li>Add second valid record.</li>
+<li>List records.</li>
+<li>Search with term that has no match.</li>
+<li>Search with term that has a match.</li>
+<li>Enter invalid menu choice and show graceful handling.</li>
+<li>Quit cleanly.</li>
+</ol>
+<p>Keep the demo deterministic. Use the same values every time:</p>
+<ul>
+<li>Name 1: <code>Ada Lovelace</code></li>
+<li>Note 1: <code>First programmer</code></li>
+<li>Name 2: <code>Grace Hopper</code></li>
+<li>Note 2: <code>COBOL pioneer</code></li>
+<li>No-match search term: <code>Linus</code></li>
+<li>Match search term: <code>Grace</code></li>
+</ul>
+<h3 id="deterministic-demo-transcript-example">Deterministic demo transcript (example)</h3>
+<pre><code class="language-text">=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 1
+Enter name:
+Name cannot be empty.
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 1
+Enter name: Ada Lovelace
+Enter note: First programmer
+Record added.
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 1
+Enter name: Grace Hopper
+Enter note: COBOL pioneer
+Record added.
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 2
+1. Ada Lovelace — First programmer
+2. Grace Hopper — COBOL pioneer
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 3
+Search term: Linus
+No matches found.
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 3
+Search term: Grace
+1 match:
+1. Grace Hopper — COBOL pioneer
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 9
+Invalid option. Choose 1, 2, 3, or 4.
+
+=== CLI Organizer ===
+1) Add record
+2) List records
+3) Search records
+4) Quit
+Choose an option: 4
+Goodbye.
+</code></pre>
+<p>After the demo, say:</p>
+<p>"Your text does not need to match mine exactly, but your behavior must match this checklist. Every feature shown here—add, list, search, quit, invalid choice handling, blank input handling—must be in your code."</p>
+<h2 id="practice-exercise-510-minutes">Practice Exercise (5–10 minutes)</h2>
+<p>Before diving into the full lab, guide learners through a quick "skeleton build" as a group.</p>
+<h3 id="live-code-the-menu-loop-structure">Live-code the menu loop structure</h3>
+<p>Say:</p>
+<p>"Let me show you the simplest loop structure. You will build on this. Watch:"</p>
+<p>On screen, type:</p>
+<pre><code class="language-python">def main():
+    records = []
+
+    while True:
+        print(&quot;\n=== Menu ===&quot;)
+        print(&quot;1) Add&quot;)
+        print(&quot;2) List&quot;)
+        print(&quot;3) Quit&quot;)
+
+        choice = input(&quot;Choose: &quot;).strip()
+
+        if choice == &quot;1&quot;:
+            print(&quot;Add selected&quot;)
+        elif choice == &quot;2&quot;:
+            print(&quot;List selected&quot;)
+        elif choice == &quot;3&quot;:
+            print(&quot;Goodbye.&quot;)
+            break
+        else:
+            print(&quot;Invalid choice.&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Say:</p>
+<p>"This is the skeleton. It runs, the menu loops, and it quits. Notice: the loop only stops when we <code>break</code>. Everything else cycles. Now you will fill in the behavior for add and list. And you will move repeated logic (like printing the menu) into a function."</p>
+<p>Run it once, make a choice, quit, to show it works.</p>
+<p>Then ask:</p>
+<p>"Where would we put the menu printing code into a separate function? Raise your hand when you see it."</p>
+<p>Wait for hands, then say:</p>
+<p>"Exactly. The three <code>print</code> lines. We could move them to <code>def show_menu():</code> and call <code>show_menu()</code> here instead. That is what your <code>utils.py</code> will do."</p>
+<h2 id="hands-on-checkpoint-lab-40-minutes">Hands-on checkpoint lab (40 minutes)</h2>
+<p>This is the exact lab statement. Read aloud and leave it projected.</p>
+<h3 id="checkpoint-lab-requirements-must-include-these-exactly">Checkpoint lab requirements (must include these exactly)</h3>
+<p>Build an <strong>in-memory CLI Organizer</strong> with the following requirements:</p>
+<ol>
+<li><strong>Menu loop until quit:</strong> the app runs in a loop and exits only when the user selects quit.</li>
+<li><strong>At least 3 functions:</strong> outside class methods, for repeated logic.</li>
+<li><strong>At least 1 custom module:</strong> required <code>utils.py</code> imported into <code>main.py</code>.</li>
+<li><strong>At least 1 class record:</strong> custom class with <code>__init__</code> plus at least one additional method.</li>
+<li><strong>Features:</strong> add, list, search.</li>
+<li><strong>No file I/O:</strong> keep all records in memory only.</li>
+<li><strong>Deliverables:</strong> <code>main.py</code> + <code>utils.py</code> (class file optional).</li>
+</ol>
+<p>Say:</p>
+<p>"Focus on correctness and organization before extra features. A working, boring app that is well-organized is better than a fancy app that crashes or is hard to understand."</p>
+<h3 id="suggested-technical-shape-share-as-guidance-not-a-lock">Suggested technical shape (share as guidance, not a lock)</h3>
+<p>Explain that this is a recommended pattern:</p>
+<ul>
+<li><code>main.py</code></li>
+<li>owns the loop</li>
+<li>collects user choices</li>
+<li>calls helper functions</li>
+<li>
+<p>stores records list in memory</p>
+</li>
+<li>
+<p><code>utils.py</code></p>
+</li>
+<li>shared helper functions (menu printing, validation, search helper)</li>
+<li>
+<p>keeps <code>main.py</code> short</p>
+</li>
+<li>
+<p><code>record.py</code> (optional)</p>
+</li>
+<li>class definition for one organizer record</li>
+</ul>
+<p>Remind:</p>
+<p>"A different structure is acceptable if all requirements are met clearly."</p>
+<h2 id="reference-implementation-for-instructor-demonstration-and-rescue">Reference implementation (for instructor demonstration and rescue)</h2>
+<p>Use this only when needed. Do not force students to copy it.</p>
+<h3 id="recordpy-optional-class-file"><code>record.py</code> (optional class file)</h3>
+<pre><code class="language-python">class Record:
+    def __init__(self, name: str, note: str) -&gt; None:
+        self.name = name.strip()
+        self.note = note.strip()
+
+    def matches(self, term: str) -&gt; bool:
+        normalized_term = term.strip().lower()
+        return normalized_term in self.name.lower() or normalized_term in self.note.lower()
+
+    def display(self) -&gt; str:
+        return f&quot;{self.name} — {self.note}&quot;
+</code></pre>
+<h3 id="utilspy-required-custom-module"><code>utils.py</code> (required custom module)</h3>
+<pre><code class="language-python">from typing import Iterable
+
+from record import Record
+
+
+def show_menu() -&gt; None:
+    print(&quot;\n=== CLI Organizer ===&quot;)
+    print(&quot;1) Add record&quot;)
+    print(&quot;2) List records&quot;)
+    print(&quot;3) Search records&quot;)
+    print(&quot;4) Quit&quot;)
+
+
+def get_non_empty_input(prompt: str) -&gt; str:
+    value = input(prompt).strip()
+    return value
+
+
+def list_records(records: Iterable[Record]) -&gt; None:
+    records_list = list(records)
+    if not records_list:
+        print(&quot;No records yet.&quot;)
+        return
+
+    for index, record in enumerate(records_list, start=1):
+        print(f&quot;{index}. {record.display()}&quot;)
+
+
+def search_records(records: list[Record], term: str) -&gt; list[Record]:
+    cleaned_term = term.strip()
+    if cleaned_term == &quot;&quot;:
+        return []
+    return [record for record in records if record.matches(cleaned_term)]
+</code></pre>
+<h3 id="mainpy-required-entry-file"><code>main.py</code> (required entry file)</h3>
+<pre><code class="language-python">from record import Record
+from utils import get_non_empty_input, list_records, search_records, show_menu
+
+
+def add_record(records: list[Record]) -&gt; None:
+    name = get_non_empty_input(&quot;Enter name: &quot;)
+    if name == &quot;&quot;:
+        print(&quot;Name cannot be empty.&quot;)
+        return
+
+    note = get_non_empty_input(&quot;Enter note: &quot;)
+    new_record = Record(name=name, note=note)
+    records.append(new_record)
+    print(&quot;Record added.&quot;)
+
+
+def handle_search(records: list[Record]) -&gt; None:
+    term = input(&quot;Search term: &quot;)
+    matches = search_records(records, term)
+    if not matches:
+        print(&quot;No matches found.&quot;)
+        return
+
+    label = &quot;match&quot; if len(matches) == 1 else &quot;matches&quot;
+    print(f&quot;{len(matches)} {label}:&quot;)
+    for index, record in enumerate(matches, start=1):
+        print(f&quot;{index}. {record.display()}&quot;)
+
+
+def main() -&gt; None:
+    records: list[Record] = []
+
+    while True:
+        show_menu()
+        choice = input(&quot;Choose an option: &quot;).strip()
+
+        if choice == &quot;1&quot;:
+            add_record(records)
+        elif choice == &quot;2&quot;:
+            list_records(records)
+        elif choice == &quot;3&quot;:
+            handle_search(records)
+        elif choice == &quot;4&quot;:
+            print(&quot;Goodbye.&quot;)
+            break
+        else:
+            print(&quot;Invalid option. Choose 1, 2, 3, or 4.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h2 id="why-this-structure-is-checkpoint-appropriate">Why this structure is checkpoint-appropriate</h2>
+<p>As you circulate, explain the "why" behind the architecture:</p>
+<ol>
+<li>
+<p><strong>Function separation</strong>
+   - <code>add_record</code>, <code>handle_search</code>, <code>list_records</code>, and <code>show_menu</code> each have one clear job.
+   - This reduces duplication and makes bugs easier to isolate.
+   - Each function has a single reason to change, following the Single Responsibility Principle.</p>
+</li>
+<li>
+<p><strong>Module separation</strong>
+   - <code>utils.py</code> stores reusable helpers.
+   - <code>main.py</code> becomes an orchestrator, not a giant script.
+   - If you later need these helpers in another project (like a web version), you can reuse <code>utils.py</code>.</p>
+</li>
+<li>
+<p><strong>Class usage</strong>
+   - <code>Record</code> groups related fields and behavior (<code>matches</code>, <code>display</code>) in one object.
+   - This is a gentle intro to OOP without advanced inheritance or design patterns.
+   - The class encapsulates the concept of "a record" so main code does not have to reason about names and notes separately.</p>
+</li>
+<li>
+<p><strong>In-memory list</strong>
+   - easiest data store for this checkpoint
+   - no persistence complexity yet
+   - easy to add features without debugging file I/O issues</p>
+</li>
+<li>
+<p><strong>Menu loop</strong>
+   - core CLI interaction pattern
+   - easy to verify for stability
+   - familiar pattern from ATMs, online forms, many real applications</p>
+</li>
+</ol>
+<p>Keep repeating:</p>
+<p>"Simple and structured beats clever and tangled."</p>
+<h2 id="instructor-coaching-model-during-the-lab">Instructor coaching model during the lab</h2>
+<p>Use this support policy:</p>
+<ul>
+<li>provide conceptual hints</li>
+<li>avoid writing full solutions for learners</li>
+<li>ask probing questions first</li>
+<li>only unblock hard blockers (especially import/setup issues)</li>
+</ul>
+<h3 id="coaching-prompts-that-preserve-learner-ownership">Coaching prompts that preserve learner ownership</h3>
+<p>If learner is stuck on menu loop:</p>
+<p>"Where in your code does control return to the top of the menu? Point to that line. What keyword makes that happen?"</p>
+<p>If learner code repeats printing logic:</p>
+<p>"Can you move this repeated block into one function and call it from two places? What should the function be named?"</p>
+<p>If learner search fails:</p>
+<p>"What should happen when term is empty? Decide that rule and code exactly that rule."</p>
+<p>If learner has mixed concerns in one function:</p>
+<p>"Which lines are input/output, which lines are data logic? Can we split by responsibility?"</p>
+<p>If learner app crashes on invalid choice:</p>
+<p>"What does your <code>else</code> branch do when the menu choice is unknown? Does it handle all cases?"</p>
+<h2 id="circulation-checkpoints-time-based">Circulation checkpoints (time-based)</h2>
+<h3 id="at-10-minutes-into-lab">At 10 minutes into lab</h3>
+<p>Verify each learner has:</p>
+<ul>
+<li>project folder open</li>
+<li><code>main.py</code> created</li>
+<li><code>utils.py</code> created</li>
+<li>class plan identified</li>
+</ul>
+<p>Say:</p>
+<p>"Do not start polishing output yet. First get skeleton structure in place. I want to see the loop and the files talking to each other."</p>
+<h3 id="at-20-minutes-into-lab">At 20 minutes into lab</h3>
+<p>Verify:</p>
+<ul>
+<li>menu loop exists</li>
+<li>at least one function extracted</li>
+<li>import line between files is working</li>
+</ul>
+<p>Say:</p>
+<p>"If import is failing, stop and fix that now. Everything else depends on it. Check your working directory. Check that files are in the same folder."</p>
+<h3 id="at-30-minutes-into-lab">At 30 minutes into lab</h3>
+<p>Verify:</p>
+<ul>
+<li>add feature works</li>
+<li>list feature works</li>
+<li>class object is being instantiated</li>
+</ul>
+<p>Say:</p>
+<p>"Now is the time to handle invalid inputs so your app does not crash. Add an <code>else</code> clause to catch unknown menu choices. In <code>add_record</code>, check that the name is not empty."</p>
+<h3 id="at-40-minutes-into-lab">At 40 minutes into lab</h3>
+<p>Verify:</p>
+<ul>
+<li>search works for match/no-match</li>
+<li>invalid menu choices handled</li>
+<li>quit works cleanly</li>
+</ul>
+<p>Say:</p>
+<p>"Last pass: readability and completion criteria check. Does a user know what to type? Does the output make sense? Is your code organized across the files as required?"</p>
+<h2 id="troubleshooting-common-pitfalls">Troubleshooting &amp; Common Pitfalls</h2>
+<h3 id="pitfall-1-import-errors-from-wrong-working-directory">Pitfall 1: import errors from wrong working directory</h3>
+<p>Typical symptom:</p>
+<pre><code class="language-text">ModuleNotFoundError: No module named 'utils'
+</code></pre>
+<p>Explain in detail:</p>
+<ul>
+<li>Python resolves imports relative to the current execution context.</li>
+<li>If terminal is not in the folder containing <code>main.py</code> and <code>utils.py</code>, import may fail.</li>
+<li>This is one of the hardest-to-debug issues for new Python programmers because the code looks correct, but the environment is wrong.</li>
+<li>When Python sees <code>from utils import show_menu</code>, it looks in specific places, starting with the directory of the script being run.</li>
+<li>If you run <code>python ../other_folder/main.py</code>, Python looks for <code>utils.py</code> in <code>../other_folder/</code>, not the current directory.</li>
+</ul>
+<p>Fix pattern to teach:</p>
+<ol>
+<li>Open terminal in project root folder (where <code>main.py</code> and <code>utils.py</code> sit side by side).</li>
+<li>Confirm files are visible: <code>ls</code> (Mac/Linux) or <code>dir</code> (Windows). You should see both files.</li>
+<li>Run <code>python main.py</code> from that same folder.</li>
+<li>If still broken, run <code>python -c "import sys; print(sys.path)"</code> to see where Python is looking.</li>
+<li>You can also check: <code>python -c "import os; print(os.getcwd())"</code> to verify current directory.</li>
+</ol>
+<p>Say:</p>
+<p>"The code can be correct but still fail if you run it from the wrong directory. This is not a code bug; it is a setup issue. Make sure your terminal is in the right folder. A common mistake is to open the terminal in the parent folder and try to run <code>python main.py</code> when you should first <code>cd</code> into the project folder."</p>
+<h3 id="pitfall-2-module-name-collision-with-standard-library">Pitfall 2: module name collision with standard library</h3>
+<p>Explain in depth with concrete examples:</p>
+<ul>
+<li>naming file <code>json.py</code> can shadow Python's <code>json</code> module</li>
+<li>naming file <code>random.py</code> can shadow Python's <code>random</code> module</li>
+<li>naming file <code>typing.py</code> can shadow <code>typing</code></li>
+<li>naming file <code>os.py</code> can shadow the operating system module</li>
+</ul>
+<p>This creates a subtle bug: Python finds your file first and tries to use it instead of the standard library version. If your file does not have the expected functions, you get confusing errors like <code>AttributeError: module 'json' has no attribute 'loads'</code>.</p>
+<p>Checkpoint-safe naming guidance:</p>
+<ul>
+<li>keep required helper file as <code>utils.py</code></li>
+<li>optional class file as <code>record.py</code> or <code>models.py</code></li>
+<li>avoid stdlib names (search <code>import [name]</code> in Python docs to check)</li>
+<li>use descriptive names that reflect your domain (e.g., <code>organizer.py</code>, <code>contact.py</code> if appropriate)</li>
+</ul>
+<p>Say:</p>
+<p>"A file name can silently break imports. When you see <code>ModuleNotFoundError</code> or a weird import behavior, check your own files. Did you name a file <code>json.py</code> and then try to <code>import json</code>? Python found your file instead of the standard library version. To avoid this, choose distinctive names for your modules that are not in the standard library."</p>
+<h3 id="pitfall-3-class-not-being-instantiated">Pitfall 3: class not being instantiated</h3>
+<p>Symptom: Class is defined but <code>add_record</code> is not creating objects; records are stored as strings or dicts instead. When you try to call methods on records, you get <code>AttributeError: 'str' object has no attribute 'matches'</code>.</p>
+<p>Root cause: The learner defined the class but forgot to call it. They might be storing the name string directly or a dict instead of a Record object.</p>
+<p>Explain with clarity:</p>
+<p>"The class is a blueprint. To use it, you must call the blueprint to create an object: <code>new_record = Record(name, note)</code>. Then append that object to your list. If you append just the name string, you lose the structure."</p>
+<p>Teach this pattern with emphasis:</p>
+<pre><code class="language-python"># Define the class (blueprint)
+class Record:
+    def __init__(self, name, note):
+        self.name = name
+        self.note = note
+
+# Create an instance (actual object)
+my_record = Record(&quot;Ada&quot;, &quot;Pioneer&quot;)
+
+# Use the object
+print(my_record.name)
+</code></pre>
+<p>In <code>add_record</code>, the key line:</p>
+<pre><code class="language-python">new_record = Record(name=name, note=note)  # Create object here!
+records.append(new_record)  # Store the object, not the string
+</code></pre>
+<h3 id="pitfall-4-search-method-complexity">Pitfall 4: search method complexity</h3>
+<p>Learners sometimes write search inside <code>main.py</code> instead of as a method. Or they check for substring match but forget case-insensitivity, breaking the search when user types "grace" but the record has "Grace".</p>
+<p>Common mistake:</p>
+<pre><code class="language-python"># Bad: repeated in main, no case-insensitivity
+if search_term in record.name:
+    matches.append(record)
+</code></pre>
+<p>Better approach:</p>
+<p>Teach this principle with conviction:</p>
+<p>"Search logic belongs in the <code>Record</code> class as a method. The class knows its own data best. <code>main.py</code> should just call the method and display results. This keeps <code>main.py</code> focused on the UI and the <code>Record</code> class focused on data behavior."</p>
+<p>Example teaching moment:</p>
+<pre><code class="language-python"># Inside Record class
+def matches(self, term: str) -&gt; bool:
+    normalized_term = term.strip().lower()
+    return (normalized_term in self.name.lower() or
+            normalized_term in self.note.lower())
+
+# Inside main
+matches = [r for r in records if r.matches(search_term)]
+</code></pre>
+<p>Why this works:</p>
+<ol>
+<li>The <code>Record</code> class encapsulates the search behavior.</li>
+<li>If you later decide to add a phone number field, you only change the <code>matches</code> method in one place.</li>
+<li>The case-insensitive logic is centralized and tested once, not scattered throughout <code>main.py</code>.</li>
+<li>Main code is readable: "find records that match the term" instead of nested <code>if</code> conditions.</li>
+</ol>
+<h2 id="quick-check-questions-35-understanding-probes">Quick-Check Questions (3–5 understanding probes)</h2>
+<p>Use these during or after the lab to gauge understanding:</p>
+<ol>
+<li>
+<p><strong>On functions:</strong> "Show me one place where you extracted repeated code into a function. What did the repeated code look like, and what is the function called?"</p>
+</li>
+<li>
+<p><strong>On modules:</strong> "If you needed to use the same helper functions in a different Python project, where would they live? Which file can you copy?"</p>
+</li>
+<li>
+<p><strong>On classes:</strong> "Why did you use a class to represent a record? What would be harder to do if you stored names and notes in separate lists instead?"</p>
+</li>
+<li>
+<p><strong>On scope:</strong> "What data lives in memory? What happens to it when your program exits? Could you save it to a file next?"</p>
+</li>
+<li>
+<p><strong>On loops:</strong> "How does the menu loop know when to stop? What code makes it exit?"</p>
+</li>
+</ol>
+<h2 id="wrap-up-notes-summary-reflection-prompts">Wrap-Up Notes (summary + reflection prompts)</h2>
+<p>Say at the end:</p>
+<p>"Congratulations. You have just built a small but real application. It has multiple files, a class, repeated logic extracted into functions, and a user interface. That is the foundation of professional software development."</p>
+<p>Reflection prompts (ask 1–2):</p>
+<ul>
+<li>"What was the hardest part of organizing this code across files?"</li>
+<li>"If you added a delete feature, where would that code go? Would it be a function in utils, a method in Record, or part of main?"</li>
+<li>"How would saving this data to a file change your code? Where would that fit?"</li>
+</ul>
+<h2 id="facilitation-notes-instructor-tips-timing-guidance-extension-ideas">Facilitation Notes (instructor tips, timing guidance, extension ideas)</h2>
+<h3 id="timing-adjustments">Timing adjustments:</h3>
+<ul>
+<li>If learners finish early (by 35 min), offer extensions: delete/update features, input validation for phone numbers, or display formatting.</li>
+<li>If learners are struggling at 35 min, reduce scope: ask them to skip search and focus on add/list, which can still meet 3+ function requirement.</li>
+<li>If import is breaking everyone, pause the lab and do a 3-minute "import clinic" as a whole group. Show the directory structure, the files, the import line, and run it together.</li>
+</ul>
+<h3 id="extension-ideas-stay-within-basics">Extension ideas (stay within Basics):</h3>
+<ol>
+<li><strong>Delete feature:</strong> <code>def delete_record(records: list[Record], index: int)</code> — remove a record by position.</li>
+<li><strong>Update feature:</strong> <code>def update_record(records: list[Record], index: int, new_note: str)</code> — modify an existing note.</li>
+<li><strong>Validation:</strong> Ask for a phone number and validate format (e.g., must be 10 digits).</li>
+<li><strong>Display formatting:</strong> Color output with ANSI codes (even simple bold/underline), or add a separator line.</li>
+<li><strong>Data conversion:</strong> Accept name/note from a JSON string in the prompt and parse it (very light JSON use, no file I/O).</li>
+</ol>
+<h3 id="stretch-goal-rubric-if-differentiating">Stretch goal rubric (if differentiating):</h3>
+<ul>
+<li><strong>Base (meets checkpoint):</strong> All 4 requirements, add/list/search work, 3+ functions, 1+ class.</li>
+<li><strong>Extended:</strong> Base + one extension (delete, update, or validation).</li>
+<li><strong>Advanced:</strong> Extended + two extensions or a creative feature that still stays in-memory and organized.</li>
+</ul>
+<h3 id="post-checkpoint-plan">Post-checkpoint plan:</h3>
+<p>Mention that next session moves to file I/O. Ask:</p>
+<p>"How would you change this code to save records to a file? What new imports might you need? What if you wanted to load the file when the program starts?"</p>
+<p>These questions bridge the checkpoint to the next unit and prime learners for the upcoming design challenges.</p>
+<h3 id="support-for-struggling-learners">Support for struggling learners:</h3>
+<p>If a learner is very stuck on class usage, offer this scaffolding:</p>
+<pre><code class="language-python"># Simplified Record class
+class Record:
+    def __init__(self, name, note):
+        self.name = name
+        self.note = note
+</code></pre>
+<p>They can fill this in, use it, and add methods (like <code>matches</code>) gradually. The key is getting the loop and multi-file structure working first. The class can be simple.</p>
+<h3 id="celebration-and-community">Celebration and community:</h3>
+<p>At the end, ask 2–3 volunteers to share their solution briefly (screen share or describe). Highlight what is well-organized about each one. This normalizes different but correct approaches and reinforces that structure is a choice, not a formula.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-purpose-for-this-hour" class="depth-2">Instructor purpose for this hour</a></li>
+<li><a href="#instructor-prep-notes" class="depth-2">Instructor Prep Notes</a></li>
+<li><a href="#before-class-prepare-these-artifacts" class="depth-3">Before class, prepare these artifacts:</a></li>
+<li><a href="#conceptual-foundation-for-teaching-this-checkpoint" class="depth-3">Conceptual foundation for teaching this checkpoint:</a></li>
+<li><a href="#read-aloud-outcomes-start-of-hour" class="depth-2">Read-aloud outcomes (start of hour)</a></li>
+<li><a href="#required-talk-points-you-must-cover" class="depth-2">Required talk points you must cover</a></li>
+<li><a href="#minute-by-minute-run-plan" class="depth-2">Minute-by-minute run plan</a></li>
+<li><a href="#opening-script-first-5-minutes-near-verbatim" class="depth-2">Opening Script (first 5 minutes, near-verbatim)</a></li>
+<li><a href="#concept-briefing-key-architectural-decisions-1015-minutes" class="depth-2">Concept Briefing: Key Architectural Decisions (10–15 minutes)</a></li>
+<li><a href="#why-split-mainpy-and-utilspy" class="depth-3">Why split main.py and utils.py?</a></li>
+<li><a href="#why-use-a-class-to-represent-a-record" class="depth-3">Why use a class to represent a record?</a></li>
+<li><a href="#why-a-menu-loop" class="depth-3">Why a menu loop?</a></li>
+<li><a href="#why-no-file-io-yet" class="depth-3">Why no file I/O yet?</a></li>
+<li><a href="#live-demo-checklist-510-minutes-required-feature-behavior" class="depth-2">Live demo checklist (5–10 minutes) — required feature behavior</a></li>
+<li><a href="#deterministic-demo-transcript-example" class="depth-3">Deterministic demo transcript (example)</a></li>
+<li><a href="#practice-exercise-510-minutes" class="depth-2">Practice Exercise (5–10 minutes)</a></li>
+<li><a href="#live-code-the-menu-loop-structure" class="depth-3">Live-code the menu loop structure</a></li>
+<li><a href="#hands-on-checkpoint-lab-40-minutes" class="depth-2">Hands-on checkpoint lab (40 minutes)</a></li>
+<li><a href="#checkpoint-lab-requirements-must-include-these-exactly" class="depth-3">Checkpoint lab requirements (must include these exactly)</a></li>
+<li><a href="#suggested-technical-shape-share-as-guidance-not-a-lock" class="depth-3">Suggested technical shape (share as guidance, not a lock)</a></li>
+<li><a href="#reference-implementation-for-instructor-demonstration-and-rescue" class="depth-2">Reference implementation (for instructor demonstration and rescue)</a></li>
+<li><a href="#recordpy-optional-class-file" class="depth-3">record.py (optional class file)</a></li>
+<li><a href="#utilspy-required-custom-module" class="depth-3">utils.py (required custom module)</a></li>
+<li><a href="#mainpy-required-entry-file" class="depth-3">main.py (required entry file)</a></li>
+<li><a href="#why-this-structure-is-checkpoint-appropriate" class="depth-2">Why this structure is checkpoint-appropriate</a></li>
+<li><a href="#instructor-coaching-model-during-the-lab" class="depth-2">Instructor coaching model during the lab</a></li>
+<li><a href="#coaching-prompts-that-preserve-learner-ownership" class="depth-3">Coaching prompts that preserve learner ownership</a></li>
+<li><a href="#circulation-checkpoints-time-based" class="depth-2">Circulation checkpoints (time-based)</a></li>
+<li><a href="#at-10-minutes-into-lab" class="depth-3">At 10 minutes into lab</a></li>
+<li><a href="#at-20-minutes-into-lab" class="depth-3">At 20 minutes into lab</a></li>
+<li><a href="#at-30-minutes-into-lab" class="depth-3">At 30 minutes into lab</a></li>
+<li><a href="#at-40-minutes-into-lab" class="depth-3">At 40 minutes into lab</a></li>
+<li><a href="#troubleshooting-common-pitfalls" class="depth-2">Troubleshooting &amp; Common Pitfalls</a></li>
+<li><a href="#pitfall-1-import-errors-from-wrong-working-directory" class="depth-3">Pitfall 1: import errors from wrong working directory</a></li>
+<li><a href="#pitfall-2-module-name-collision-with-standard-library" class="depth-3">Pitfall 2: module name collision with standard library</a></li>
+<li><a href="#pitfall-3-class-not-being-instantiated" class="depth-3">Pitfall 3: class not being instantiated</a></li>
+<li><a href="#pitfall-4-search-method-complexity" class="depth-3">Pitfall 4: search method complexity</a></li>
+<li><a href="#quick-check-questions-35-understanding-probes" class="depth-2">Quick-Check Questions (3–5 understanding probes)</a></li>
+<li><a href="#wrap-up-notes-summary-reflection-prompts" class="depth-2">Wrap-Up Notes (summary + reflection prompts)</a></li>
+<li><a href="#facilitation-notes-instructor-tips-timing-guidance-extension-ideas" class="depth-2">Facilitation Notes (instructor tips, timing guidance, extension ideas)</a></li>
+<li><a href="#timing-adjustments" class="depth-3">Timing adjustments:</a></li>
+<li><a href="#extension-ideas-stay-within-basics" class="depth-3">Extension ideas (stay within Basics):</a></li>
+<li><a href="#stretch-goal-rubric-if-differentiating" class="depth-3">Stretch goal rubric (if differentiating):</a></li>
+<li><a href="#post-checkpoint-plan" class="depth-3">Post-checkpoint plan:</a></li>
+<li><a href="#support-for-struggling-learners" class="depth-3">Support for struggling learners:</a></li>
+<li><a href="#celebration-and-community" class="depth-3">Celebration and community:</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day10_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day10_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

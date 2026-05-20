@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 3, Hour 2: String Formatting with F-Strings | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="3">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day3_Hour2_Basics.md">
+
+    <link rel="prev" href="Day3_Hour1_Basics.html">
+    <link rel="next" href="Day3_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="3" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-03/index.html">Day 3</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 3, Hour 2: String Formatting with F-Strings</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 3</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day3_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 3</strong></p>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<p><strong>Total Time:</strong> 60 minutes<br>
+- Recap &amp; Transition from Hour 9: 3 minutes
+- Introduction to F-Strings: 10-12 minutes
+- Formatting Numbers (Decimals, Width, Alignment): 8-10 minutes
+- Why F-Strings Beat Concatenation: 3-5 minutes
+- Live Demo (Tip Calculator Upgrade): 5-10 minutes
+- Hands-On Lab (Upgrade Tip Calculator): 25-35 minutes
+- Debrief &amp; Exit Ticket: 5 minutes</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, you will be able to:
+1. Use f-strings to create formatted string output with variables
+2. Format floating-point numbers to a fixed number of decimal places
+3. Apply width and alignment specifiers for columnar output
+4. Explain why f-strings are more readable than string concatenation
+5. Upgrade existing code to use f-string formatting
+6. Create professional-looking program output with consistent formatting</p>
+<hr>
+<h2 id="section-1-recap-transition-from-hour-9-3-minutes">Section 1: Recap &amp; Transition from Hour 9 (3 minutes)</h2>
+<h3 id="quick-review">Quick Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome back! In Hour 9, we learned how to make decisions using comparison operators and boolean logic. You built an eligibility checker that combined multiple conditions with <code>and</code> and <code>or</code>.</p>
+<p>Quick check: <strong>Who successfully got their eligibility checker working with all the boundary values correct?</strong></p>
+<p>[Wait for responses]</p>
+<p>Great! Those comparison skills are going to show up in almost every program you write from now on.</p>
+<h3 id="the-output-problem">The Output Problem</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now, let me show you something. Here's output from a typical beginner program:</p>
+<pre><code class="language-python">bill = 87.5
+tip_percent = 18
+tip = bill * tip_percent / 100
+total = bill + tip
+
+print(&quot;Bill: $&quot; + str(bill))
+print(&quot;Tip (&quot; + str(tip_percent) + &quot;%): $&quot; + str(tip))
+print(&quot;Total: $&quot; + str(total))
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Bill: $87.5
+Tip (18%): $15.75
+Total: $103.25
+</code></pre>
+<p>This works, but look at the code. It's <strong>clunky</strong>:
+- We have to convert numbers to strings manually with <code>str()</code>
+- We have to remember where to put spaces and punctuation
+- It's hard to read and easy to make mistakes
+- The dollar amounts aren't consistently formatted (87.5 vs 15.75)</p>
+<p><strong>There's a better way.</strong> It's called <strong>f-strings</strong> (formatted string literals), and it's going to make your output beautiful and your code readable.</p>
+<p>Let's learn it!</p>
+<hr>
+<h2 id="section-2-introduction-to-f-strings-10-12-minutes">Section 2: Introduction to F-Strings (10-12 minutes)</h2>
+<h3 id="what-is-an-f-string">What Is an F-String?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>An <strong>f-string</strong> is a string literal that lets you <strong>embed expressions directly inside</strong> the string using curly braces <code>{}</code>. </p>
+<p>Here's the basic syntax:</p>
+<pre><code class="language-python">name = &quot;Alice&quot;
+age = 25
+
+# Old way (concatenation)
+print(&quot;My name is &quot; + name + &quot; and I am &quot; + str(age) + &quot; years old&quot;)
+
+# New way (f-string)
+print(f&quot;My name is {name} and I am {age} years old&quot;)
+</code></pre>
+<p><strong>Both produce the same output:</strong></p>
+<pre><code>My name is Alice and I am 25 years old
+</code></pre>
+<p><strong>Notice the <code>f</code> before the quote?</strong> That tells Python: "This is an f-string. Evaluate anything inside <code>{}</code>."</p>
+<h3 id="why-f-strings-are-better">Why F-Strings Are Better</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's break down the advantages:</p>
+<ol>
+<li><strong>No manual type conversion needed</strong>
+   ```python
+   age = 25</li>
+</ol>
+<p># Old way - must convert to string
+   print("Age: " + str(age))</p>
+<p># F-string - Python handles it
+   print(f"Age: {age}")
+   ```</p>
+<ol start="2">
+<li><strong>Variables go right where they belong in the sentence</strong>
+   ```python
+   name = "Bob"
+   score = 95</li>
+</ol>
+<p># Old way - hard to see the final sentence structure
+   print(name + " scored " + str(score) + " points")</p>
+<p># F-string - reads like the output
+   print(f"{name} scored {score} points")
+   ```</p>
+<ol start="3">
+<li><strong>You can put expressions inside the curly braces</strong>
+   ```python
+   width = 10
+   height = 5</li>
+</ol>
+<p># Calculate inside the f-string!
+   print(f"The area is {width * height} square meters")
+   ```</p>
+<p><strong>Output:</strong>
+   <code>The area is 50 square meters</code></p>
+<h3 id="f-string-basics-the-anatomy">F-String Basics: The Anatomy</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's look at the parts of an f-string:</p>
+<pre><code class="language-python">name = &quot;Charlie&quot;
+age = 30
+
+message = f&quot;Hello, {name}! You are {age} years old.&quot;
+</code></pre>
+<p>Breaking it down:
+- <strong><code>f</code></strong> before the opening quote: marks this as an f-string
+- <strong><code>"Hello, ..."</code></strong>: regular string content
+- <strong><code>{name}</code></strong>: placeholder that gets replaced with the value of <code>name</code>
+- <strong><code>{age}</code></strong>: placeholder that gets replaced with the value of <code>age</code></p>
+<p><strong>The curly braces are signals:</strong> "Insert this variable's value here."</p>
+<h3 id="quick-check-1">Quick Check #1</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre><code class="language-python">city = &quot;New York&quot;
+temperature = 72
+
+print(f&quot;The temperature in {city} is {temperature}°F&quot;)
+</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>The temperature in New York is 72°F
+</code></pre>
+<p>The variables <code>city</code> and <code>temperature</code> get inserted exactly where they appear in the curly braces.</p>
+<h3 id="f-strings-with-conditional-logic">F-Strings with Conditional Logic</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here's something powerful: f-strings work perfectly inside <code>if/elif/else</code> blocks. Remember the comparison operators and boolean logic we learned last hour? We can combine those decisions with f-strings to display <em>different</em> formatted messages depending on conditions.</p>
+<p>Let's say we have a student's score and want to display a grade classification:</p>
+<pre><code class="language-python">student_name = &quot;Marcus&quot;
+score = 82.7
+
+if score &gt;= 90:
+    print(f&quot;{student_name} earned an A with a score of {score:.1f}%  — Excellent!&quot;)
+elif score &gt;= 80:
+    print(f&quot;{student_name} earned a B with a score of {score:.1f}%  — Good job!&quot;)
+elif score &gt;= 70:
+    print(f&quot;{student_name} earned a C with a score of {score:.1f}%  — Satisfactory&quot;)
+elif score &gt;= 60:
+    print(f&quot;{student_name} earned a D with a score of {score:.1f}%  — Needs improvement&quot;)
+else:
+    print(f&quot;{student_name} earned an F with a score of {score:.1f}%  — See instructor&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Marcus earned a B with a score of 82.7%  — Good job!
+</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Notice a few things here:</p>
+<ul>
+<li>Each branch has its <strong>own</strong> f-string with a different message, but they all use the <em>same</em> variables (<code>student_name</code> and <code>score</code>).</li>
+<li>The <code>:.1f</code> format specifier keeps the score consistent across every branch — one decimal place, no matter which path runs.</li>
+<li>The logic decides <em>which</em> message to show; the f-string decides <em>how</em> it looks.</li>
+</ul>
+<p>Here's another quick example — imagine a simple temperature advisor:</p>
+<pre><code class="language-python">city = &quot;Denver&quot;
+temp = 28
+
+if temp &lt;= 32:
+    print(f&quot;Brrr! It is {temp}°F in {city}. Bundle up — it's freezing!&quot;)
+elif temp &lt;= 60:
+    print(f&quot;It is {temp}°F in {city}. A jacket would be smart.&quot;)
+else:
+    print(f&quot;It is {temp}°F in {city}. Enjoy the warm weather!&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Brrr! It is 28°F in Denver. Bundle up — it's freezing!
+</code></pre>
+<p><strong>[Key insight]:</strong> The <code>if/elif/else</code> chooses the message. The f-string makes the message look good. They're a natural pair — you'll use this pattern constantly in real programs.</p>
+<h3 id="using-expressions-in-f-strings">Using Expressions in F-Strings</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You're not limited to just variable names. You can put <strong>any valid Python expression</strong> inside the curly braces:</p>
+<pre><code class="language-python">price = 19.99
+quantity = 3
+
+print(f&quot;Total: ${price * quantity}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Total: $59.97
+</code></pre>
+<p>You can even call methods:</p>
+<pre><code class="language-python">name = &quot;alice&quot;
+
+print(f&quot;Hello, {name.upper()}!&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Hello, ALICE!
+</code></pre>
+<p><strong>[Key insight]:</strong> Python evaluates the expression inside <code>{}</code>, converts the result to a string, and inserts it.</p>
+<hr>
+<h2 id="section-3-formatting-numbers-decimals-width-alignment-8-10-minutes">Section 3: Formatting Numbers – Decimals, Width, Alignment (8-10 minutes)</h2>
+<h3 id="the-problem-ugly-number-output">The Problem: Ugly Number Output</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's say we're working with money:</p>
+<pre><code class="language-python">price = 19.5
+tax = 1.625
+total = price + tax
+
+print(f&quot;Price: ${price}&quot;)
+print(f&quot;Tax: ${tax}&quot;)
+print(f&quot;Total: ${total}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Price: $19.5
+Tax: $1.625
+Total: $21.125
+</code></pre>
+<p>This looks unprofessional:
+- Currency should always show 2 decimal places ($19.50, not $19.5)
+- We can't actually charge $21.125—that's not a valid amount
+- The numbers don't align nicely</p>
+<p><strong>F-strings have a solution:</strong> format specifiers.</p>
+<h3 id="format-specifier-syntax-valueformat" value:format>Format Specifier Syntax:</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Inside the curly braces, you can add a colon <code>:</code> followed by a format specifier:</p>
+<pre><code class="language-python">{variable:format_spec}
+</code></pre>
+<p>The most common format specs for numbers:</p>
+<p><strong>1. Fixed decimal places: <code>.Nf</code></strong></p>
+<pre><code class="language-python">price = 19.5
+
+print(f&quot;Price: ${price:.2f}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Price: $19.50
+</code></pre>
+<p><strong>Breaking down <code>.2f</code>:</strong>
+- <strong><code>.2</code></strong>: show exactly 2 digits after the decimal point
+- <strong><code>f</code></strong>: format as a floating-point number</p>
+<p><strong>More examples:</strong></p>
+<pre><code class="language-python">pi = 3.14159265
+
+print(f&quot;Pi to 2 decimals: {pi:.2f}&quot;)
+print(f&quot;Pi to 4 decimals: {pi:.4f}&quot;)
+print(f&quot;Pi to 0 decimals: {pi:.0f}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Pi to 2 decimals: 3.14
+Pi to 4 decimals: 3.1416
+Pi to 0 decimals: 3
+</code></pre>
+<p><strong>[Important note]:</strong> The <code>.2f</code> format rounds, it doesn't truncate:</p>
+<pre><code class="language-python">value = 1.625
+
+print(f&quot;{value:.2f}&quot;)    # 1.62 (rounds down)
+
+value = 1.626
+print(f&quot;{value:.2f}&quot;)    # 1.63 (rounds up)
+</code></pre>
+<h3 id="format-specifier-width-and-alignment">Format Specifier: Width and Alignment</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Sometimes you want to create columnar output—like a receipt where the dollar amounts line up on the right.</p>
+<p><strong>Width specifier: <code>N</code> (where N is the total width)</strong></p>
+<pre><code class="language-python">print(f'{&quot;Item&quot;:&lt;20} {&quot;Price&quot;:&gt;10}')
+print(f'{&quot;Coffee&quot;:&lt;20} {&quot;$3.50&quot;:&gt;10}')
+print(f'{&quot;Sandwich&quot;:&lt;20} {&quot;$8.75&quot;:&gt;10}')
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Item                      Price
+Coffee                    $3.50
+Sandwich                  $8.75
+</code></pre>
+<p><strong>Breaking down the format spec:</strong>
+- <strong><code>&lt;</code></strong>: left-align
+- <strong><code>&gt;</code></strong>: right-align
+- <strong><code>^</code></strong>: center-align
+- <strong>Number</strong>: total width in characters</p>
+<p><strong>Combined with decimal formatting:</strong></p>
+<pre><code class="language-python">item = &quot;Latte&quot;
+price = 4.5
+
+print(f&quot;{item:&lt;15} ${price:&gt;6.2f}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Latte           $  4.50
+</code></pre>
+<p><strong>Breaking this down:</strong>
+- <strong><code>{item:&lt;15}</code></strong>: left-align <code>item</code> in a 15-character field
+- <strong><code>{price:&gt;6.2f}</code></strong>: right-align <code>price</code> in a 6-character field, with 2 decimal places</p>
+<h3 id="quick-check-2">Quick Check #2</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>What will this code print?</p>
+<pre><code class="language-python">name = &quot;Alice&quot;
+score = 87.6789
+
+print(f&quot;{name} scored {score:.1f} points&quot;)
+</code></pre>
+<p>[Pause for student predictions]</p>
+<p><strong>Answer:</strong></p>
+<pre><code>Alice scored 87.7 points
+</code></pre>
+<p>The format spec <code>.1f</code> rounds the score to 1 decimal place.</p>
+<h3 id="common-format-specifiers-reference">Common Format Specifiers Reference</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here's a quick reference you'll want to bookmark:</p>
+<pre><code class="language-python">value = 1234.5678
+
+# Fixed decimals
+print(f&quot;{value:.2f}&quot;)        # 1234.57
+
+# Width and alignment
+print(f&quot;{value:&gt;10.2f}&quot;)     # &quot;   1234.57&quot; (right-aligned, 10 chars wide)
+print(f&quot;{value:&lt;10.2f}&quot;)     # &quot;1234.57   &quot; (left-aligned)
+
+# Thousands separator
+print(f&quot;{value:,.2f}&quot;)       # 1,234.57
+
+# Percentage
+percentage = 0.875
+print(f&quot;{percentage:.1%}&quot;)   # 87.5%
+</code></pre>
+<p><strong>For now, focus on <code>.2f</code> for money.</strong> That's the one you'll use most often.</p>
+<h3 id="formatting-patterns-for-common-scenarios">Formatting Patterns for Common Scenarios</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's look at a handful of real-world formatting patterns you'll reach for again and again. Each one solves a problem you're likely to hit in your own programs.</p>
+<p><strong>Pattern 1 — GPA Display (1 decimal place)</strong></p>
+<p>Grade-point averages are always shown with one decimal. You already know how to do this:</p>
+<pre><code class="language-python">gpa = 3.8667
+
+print(f&quot;Current GPA: {gpa:.1f}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Current GPA: 3.9
+</code></pre>
+<p>The <code>.1f</code> rounds to one decimal place — perfect for transcripts, report cards, or any metric where one decimal is the convention.</p>
+<p><strong>Pattern 2 — Percentage Formatting (manual approach)</strong></p>
+<p>Earlier you saw the <code>%</code> format specifier. But sometimes you want to calculate the percentage <em>yourself</em> and just display it with a <code>%</code> sign at the end. That's totally fine:</p>
+<pre><code class="language-python">correct = 17
+total = 20
+pct = correct / total * 100
+
+print(f&quot;You got {correct} out of {total} correct — {pct:.1f}%&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>You got 17 out of 20 correct — 85.0%
+</code></pre>
+<p>Here the <code>%</code> after <code>{pct:.1f}</code> is just a regular character in the string — Python doesn't treat it specially. We did the math ourselves (<code>correct / total * 100</code>) and formatted the result to one decimal.</p>
+<p><strong>Pattern 3 — Large Numbers with Comma Separators</strong></p>
+<p>When numbers get big, commas make them readable at a glance:</p>
+<pre><code class="language-python">population = 8336817
+
+print(f&quot;New York City population: {population:,}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>New York City population: 8,336,817
+</code></pre>
+<p>You can combine the comma with decimal formatting too:</p>
+<pre><code class="language-python">revenue = 2493817.439
+
+print(f&quot;Annual revenue: ${revenue:,.2f}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Annual revenue: $2,493,817.44
+</code></pre>
+<p>The <code>:,.2f</code> means: add commas for thousands <em>and</em> show exactly 2 decimal places. That's one handy format spec for financial numbers.</p>
+<p><strong>Pattern 4 — Padding Strings to Build a Simple Table Row</strong></p>
+<p>You don't need fancy alignment every time. Sometimes you just want labels and values to line up. Use a width specifier on the label string:</p>
+<pre><code class="language-python">label_1 = &quot;Name&quot;
+value_1 = &quot;Alice&quot;
+label_2 = &quot;Score&quot;
+value_2 = 92.5
+label_3 = &quot;Status&quot;
+value_3 = &quot;Pass&quot;
+
+print(f&quot;{label_1:&lt;10}: {value_1}&quot;)
+print(f&quot;{label_2:&lt;10}: {value_2:.1f}&quot;)
+print(f&quot;{label_3:&lt;10}: {value_3}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Name      : Alice
+Score     : 92.5
+Status    : Pass
+</code></pre>
+<p>The <code>:&lt;10</code> pads each label to 10 characters wide (left-aligned), so the colons all line up in a neat column. This tiny trick makes any program output look polished.</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>You don't need to memorize all of these right now. The big takeaway is: <strong>whatever formatting problem you run into — decimals, commas, padding — there's probably a format specifier for it.</strong> Start with <code>.2f</code> for money, and explore the rest as you need them.</p>
+<hr>
+<h2 id="section-4-why-f-strings-beat-concatenation-3-5-minutes">Section 4: Why F-Strings Beat Concatenation (3-5 minutes)</h2>
+<h3 id="the-concatenation-mess">The Concatenation Mess</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me show you the same output three different ways:</p>
+<p><strong>Method 1: Concatenation (the old way)</strong></p>
+<pre><code class="language-python">name = &quot;Alice&quot;
+age = 25
+balance = 1234.56
+
+print(&quot;Customer: &quot; + name + &quot;, Age: &quot; + str(age) + &quot;, Balance: $&quot; + str(balance))
+</code></pre>
+<p><strong>Problems:</strong>
+- You have to call <code>str()</code> on every non-string
+- Hard to see where spaces and punctuation go
+- Easy to make mistakes</p>
+<p><strong>Method 2: str.format() (also old)</strong></p>
+<pre><code class="language-python">print(&quot;Customer: {}, Age: {}, Balance: ${}&quot;.format(name, age, balance))
+</code></pre>
+<p><strong>Better, but:</strong>
+- Variables are separated from where they appear
+- Still hard to read for complex strings</p>
+<p><strong>Method 3: F-strings (the modern way)</strong></p>
+<pre><code class="language-python">print(f&quot;Customer: {name}, Age: {age}, Balance: ${balance:.2f}&quot;)
+</code></pre>
+<p><strong>Advantages:</strong>
+- Variables are right where they belong
+- No manual type conversion
+- Format specifiers inline
+- Reads like the output you'll see</p>
+<p><strong>[Key teaching moment]:</strong> F-strings were added in Python 3.6 (2016) because developers were so tired of concatenation and <code>.format()</code>. This is now the <strong>preferred way</strong> to format strings in Python.</p>
+<h3 id="when-not-to-use-f-strings">When NOT to Use F-Strings</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>F-strings are great, but there are times to avoid them:</p>
+<ol>
+<li>
+<p><strong>When the string is used multiple times with different values:</strong>
+   <code>python
+   # Use str.format() for templates
+   template = "Hello, {name}! Your score is {score}."
+   print(template.format(name="Alice", score=95))
+   print(template.format(name="Bob", score=87))</code></p>
+</li>
+<li>
+<p><strong>When treating user input as a format template:</strong>
+   ```python
+   # Dangerous: user input as a template
+   template = input("Enter a template (use {name}): ")  # User types: "Hello, {name}!"
+   print(template.format(name="Alice"))  # Works: "Hello, Alice!"</p>
+</li>
+</ol>
+<p># Pitfall: if user enters unknown placeholders
+   # template = "Hello {name} and {friend}"
+   # print(template.format(name="Alice"))  # KeyError: 'friend'
+   ```</p>
+<p><strong>For this course, use f-strings for output. They're simpler and more readable.</strong></p>
+<h3 id="common-beginner-mistakes-with-f-strings">Common Beginner Mistakes with F-Strings</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Before we move on, let me show you four mistakes that trip up almost every beginner. I'd rather you see them here than fight them on your own during the lab.</p>
+<p><strong>Mistake 1 — Putting a space between <code>f</code> and the quote</strong></p>
+<pre><code class="language-python">name = &quot;Priya&quot;
+
+# WRONG — Python sees a variable f followed by a regular string
+print(f &quot;Hello, {name}!&quot;)   # SyntaxError!
+
+# RIGHT — f must be glued to the opening quote
+print(f&quot;Hello, {name}!&quot;)
+</code></pre>
+<p>The <code>f</code> is a prefix, not a separate word. There must be <strong>no space</strong> between <code>f</code> and <code>"</code>.</p>
+<p><strong>Mistake 2 — Quote conflicts (single quotes inside single-quoted f-strings)</strong></p>
+<pre><code class="language-python">item = &quot;latte&quot;
+
+# WRONG — the apostrophe in &quot;it's&quot; ends the string early
+print(f'It's a {item}!')    # SyntaxError!
+
+# FIX 1 — use double quotes for the f-string
+print(f&quot;It's a {item}!&quot;)
+
+# FIX 2 — escape the inner quote
+print(f'It\'s a {item}!')
+</code></pre>
+<p><strong>Rule of thumb:</strong> if your text contains an apostrophe, wrap the f-string in <strong>double</strong> quotes. If your text contains double quotes, wrap it in <strong>single</strong> quotes. Pick whichever avoids the conflict.</p>
+<p><strong>Mistake 3 — Accidentally nesting curly braces</strong></p>
+<p>Curly braces <code>{}</code> are special inside f-strings — they mark placeholders. So what happens if you actually want to print a literal curly brace?</p>
+<pre><code class="language-python">name = &quot;Alice&quot;
+
+# WRONG — Python tries to evaluate the outer braces AND the inner ones
+# print(f&quot;Use {name} like this: {name}&quot;)   # confusing duplication
+
+# What if you want to SHOW the syntax itself?
+# WRONG (for showing literal braces) — this substitutes the value of name instead of showing {name}
+# print(f&quot;Syntax: {name}&quot;)   # prints: Syntax: Alice
+
+# RIGHT — double the braces to escape them
+print(f&quot;Syntax example: {{name}} becomes {name}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Syntax example: {name} becomes Alice
+</code></pre>
+<p><code>{{</code> prints a literal <code>{</code> and <code>}}</code> prints a literal <code>}</code>. You won't need this often, but when you do, now you'll know.</p>
+<p><strong>Mistake 4 — Forgetting the <code>f</code> prefix on one line in a series</strong></p>
+<p>This one is sneaky because it doesn't cause an error — it just gives wrong output:</p>
+<pre><code class="language-python">item = &quot;Coffee&quot;
+price = 4.5
+quantity = 2
+total = price * quantity
+
+print(f&quot;Item: {item}&quot;)
+print(f&quot;Price: ${price:.2f}&quot;)
+print(&quot;Quantity: {quantity}&quot;)     # Oops — forgot the f!
+print(f&quot;Total: ${total:.2f}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Item: Coffee
+Price: $4.50
+Quantity: {quantity}
+Total: $9.00
+</code></pre>
+<p>See the third line? It printed the literal text <code>{quantity}</code> instead of <code>2</code>. No error, no crash — just silently wrong output. <strong>Always double-check that every line with <code>{}</code> placeholders starts with <code>f</code>.</strong></p>
+<p>[Pause for student predictions]</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Quick summary of the four gotchas:
+1. No space between <code>f</code> and the quote
+2. Match your quote style to avoid apostrophe / quote conflicts
+3. Use <code>{{</code> and <code>}}</code> to print literal curly braces
+4. Every line that uses <code>{}</code> needs the <code>f</code> prefix — check them all!</p>
+<hr>
+<h2 id="section-5-live-demo-tip-calculator-upgrade-5-10-minutes">Section 5: Live Demo – Tip Calculator Upgrade (5-10 minutes)</h2>
+<h3 id="demo-script-making-output-professional">Demo Script: Making Output Professional</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Remember the Tip Calculator from yesterday? Let's take it and upgrade the output using f-strings.</p>
+<p><strong>[Open editor and create <code>tip_calculator_formatted.py</code>]</strong></p>
+<p><strong>[Instructor types and speaks:]</strong></p>
+<pre><code class="language-python"># tip_calculator_formatted.py
+# Purpose: Calculate tip and total, with professional formatting
+
+print(&quot;=== Tip Calculator ===\n&quot;)
+
+# Get user input
+bill_input = input(&quot;Enter the bill amount: $&quot;)
+tip_percent_input = input(&quot;Enter tip percentage (e.g., 18): &quot;)
+
+# Convert to numbers
+bill = float(bill_input)
+tip_percent = float(tip_percent_input)
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+# Display results with formatting
+print(&quot;\n--- Receipt ---&quot;)
+print(f&quot;Bill:        ${bill:.2f}&quot;)
+print(f&quot;Tip ({tip_percent:.0f}%):   ${tip_amount:.2f}&quot;)
+print(f&quot;-&quot; * 25)
+print(f&quot;Total:       ${total:.2f}&quot;)
+print(&quot;\nThank you!&quot;)
+</code></pre>
+<p><strong>[Run the program]</strong></p>
+<pre><code>=== Tip Calculator ===
+
+Enter the bill amount: $87.50
+Enter tip percentage (e.g., 18): 20
+
+--- Receipt ---
+Bill:        $87.50
+Tip (20%):   $17.50
+-------------------------
+Total:       $105.00
+
+Thank you!
+</code></pre>
+<p><strong>[Instructor explains the formatting:]</strong></p>
+<p>Let's look at what makes this output professional:</p>
+<ol>
+<li><strong>Line 19:</strong> <code>${bill:.2f}</code> ensures bill always shows 2 decimals</li>
+<li><strong>Line 20:</strong> <code>{tip_percent:.0f}</code> shows percentage without decimals (20, not 20.0)</li>
+<li><strong>Line 20:</strong> <code>${tip_amount:.2f}</code> formats tip amount as currency</li>
+<li><strong>Line 22:</strong> <code>${total:.2f}</code> formats total consistently</li>
+<li><strong>Line 21:</strong> <code>"-" * 25</code> creates a separator line (not f-string related, but nice!)</li>
+</ol>
+<p><strong>Notice how readable the code is?</strong> You can see exactly what the output will look like just by reading the f-strings.</p>
+<h3 id="adding-alignment">Adding Alignment</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now let's make it even better with alignment:</p>
+<pre><code class="language-python"># Display results with better alignment
+print(&quot;\n--- Receipt ---&quot;)
+print(f&quot;{'Bill:':&lt;15} ${bill:&gt;8.2f}&quot;)
+print(f&quot;{'Tip (' + str(int(tip_percent)) + '%):':&lt;15} ${tip_amount:&gt;8.2f}&quot;)
+print(&quot;-&quot; * 26)
+print(f&quot;{'Total:':&lt;15} ${total:&gt;8.2f}&quot;)
+print(&quot;\nThank you!&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>--- Receipt ---
+Bill:           $   87.50
+Tip (20%):      $   17.50
+--------------------------
+Total:          $  105.00
+
+Thank you!
+</code></pre>
+<p><strong>[Key points]:</strong>
+- <strong><code>:&lt;15</code></strong>: left-align labels in a 15-character field
+- <strong><code>:&gt;8.2f</code></strong>: right-align dollar amounts in an 8-character field with 2 decimals
+- The dollar amounts now line up beautifully</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The aligned version is more complex, so <strong>don't worry if you don't use alignment in your lab today</strong>. Just getting comfortable with <code>.2f</code> for money is the main goal.</p>
+<hr>
+<h2 id="section-6-hands-on-lab-upgrade-tip-calculator-25-35-minutes">Section 6: Hands-On Lab – Upgrade Tip Calculator (25-35 minutes)</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now it's your turn! You're going to take the Tip Calculator and upgrade it with f-string formatting.</p>
+<p><strong>Lab Goal:</strong> Rewrite output using f-strings with proper decimal formatting.</p>
+<h3 id="lab-instructions-upgrade-tip-calculator">Lab Instructions: Upgrade Tip Calculator</h3>
+<p><strong>Scenario:</strong> You have a working Tip Calculator, but the output looks unprofessional. Your job is to format it beautifully using f-strings.</p>
+<p><strong>Requirements:</strong></p>
+<p>Create a Python script called <code>tip_calculator_pro.py</code> that:</p>
+<ol>
+<li>
+<p><strong>Prompts the user for:</strong>
+   - Bill amount (as a float)
+   - Tip percentage (as a float)</p>
+</li>
+<li>
+<p><strong>Calculates:</strong>
+   - Tip amount (bill × tip percentage / 100)
+   - Total amount (bill + tip)</p>
+</li>
+<li>
+<p><strong>Displays a formatted receipt with:</strong>
+   - All dollar amounts showing exactly 2 decimal places
+   - Clear labels for each line
+   - A separator line between the calculations and the total
+   - A thank you message</p>
+</li>
+<li>
+<p><strong>Uses f-strings exclusively</strong> (no string concatenation with <code>+</code>)</p>
+</li>
+</ol>
+<h3 id="starter-template">Starter Template</h3>
+<pre><code class="language-python"># tip_calculator_pro.py
+# Purpose: Calculate tip with professional formatting
+
+print(&quot;=== Professional Tip Calculator ===\n&quot;)
+
+# Get user input
+bill_input = input(&quot;Enter the bill amount: $&quot;)
+tip_percent_input = input(&quot;Enter tip percentage (e.g., 15, 18, 20): &quot;)
+
+# Convert to numbers
+bill = float(bill_input)
+tip_percent = float(tip_percent_input)
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+# TODO: Display formatted receipt using f-strings
+print(&quot;\n--- Your Receipt ---&quot;)
+
+# Your formatted output goes here
+</code></pre>
+<h3 id="example-output">Example Output</h3>
+<p><strong>Test Case 1:</strong></p>
+<pre><code>=== Professional Tip Calculator ===
+
+Enter the bill amount: $45.50
+Enter tip percentage (e.g., 15, 18, 20): 18
+
+--- Your Receipt ---
+Bill:        $45.50
+Tip (18%):   $8.19
+-------------------------
+Total:       $53.69
+
+Thank you for dining with us!
+</code></pre>
+<p><strong>Test Case 2:</strong></p>
+<pre><code>=== Professional Tip Calculator ===
+
+Enter the bill amount: $123
+Enter tip percentage (e.g., 15, 18, 20): 20
+
+--- Your Receipt ---
+Bill:        $123.00
+Tip (20%):   $24.60
+-------------------------
+Total:       $147.60
+
+Thank you for dining with us!
+</code></pre>
+<p><strong>Notice:</strong>
+- Even though the input was <code>123</code> (no decimals), the output shows <code>$123.00</code>
+- All dollar amounts consistently show 2 decimal places
+- The percentage in the tip line matches what the user entered</p>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<p>Your solution must:
+- ✅ Use f-strings for all output (no <code>+</code> concatenation)
+- ✅ Format all dollar amounts with exactly 2 decimal places using <code>.2f</code>
+- ✅ Display the tip percentage in the output
+- ✅ Include a separator line (e.g., dashes)
+- ✅ Run without errors
+- ✅ Handle both integer and decimal inputs correctly</p>
+<h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you work, watch out for these common mistakes:</p>
+<ol>
+<li><strong>Forgetting the <code>f</code> before the string:</strong>
+   ```python
+   # WRONG - This is just a regular string
+   print("Total: {total:.2f}")</li>
+</ol>
+<p># RIGHT - The f makes it work
+   print(f"Total: {total:.2f}")
+   ```</p>
+<ol start="2">
+<li><strong>Using concatenation inside f-strings unnecessarily:</strong>
+   ```python
+   # AWKWARD - mixing styles
+   print(f"Bill: $" + str(bill))</li>
+</ol>
+<p># BETTER - pure f-string
+   print(f"Bill: ${bill:.2f}")
+   ```</p>
+<ol start="3">
+<li><strong>Wrong format specifier:</strong>
+   ```python
+   # WRONG - .2 without the f
+   print(f"${total:.2}")     # This won't work</li>
+</ol>
+<p># RIGHT
+   print(f"${total:.2f}")
+   ```</p>
+<ol start="4">
+<li><strong>Forgetting curly braces:</strong>
+   ```python
+   # WRONG - variable name appears literally
+   print(f"Total: $total")</li>
+</ol>
+<p># RIGHT
+   print(f"Total: ${total}")
+   ```</p>
+<h3 id="optional-extensions">Optional Extensions</h3>
+<p>If you finish early, try these:</p>
+<ol>
+<li>
+<p><strong>Split Bill Calculator:</strong> Add a third input asking how many people are splitting the bill, then show the per-person amount</p>
+</li>
+<li>
+<p><strong>Alignment:</strong> Use width and alignment specifiers to make labels and amounts line up in columns</p>
+</li>
+<li>
+<p><strong>Multiple Tip Options:</strong> Calculate and display three different tip amounts (15%, 18%, 20%) so the user can choose</p>
+</li>
+</ol>
+<p><strong>Example of Optional Extension #3:</strong></p>
+<pre><code>--- Tip Options ---
+15%:  $45.50 + $6.83 = $52.33
+18%:  $45.50 + $8.19 = $53.69
+20%:  $45.50 + $9.10 = $54.60
+</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Alright, you have 25-35 minutes. Remember:
+- The key pattern is <code>{variable:.2f}</code> for money
+- Test with different amounts to verify your formatting works
+- Read error messages—they'll tell you if you forgot the <code>f</code> or have a syntax error</p>
+<p>Let's make some beautiful output!</p>
+<hr>
+<h2 id="section-7-debrief-exit-ticket-5-minutes">Section 7: Debrief &amp; Exit Ticket (5 minutes)</h2>
+<h3 id="solution-walkthrough">Solution Walkthrough</h3>
+<p><strong>[Instructor shares solution:]</strong></p>
+<pre><code class="language-python"># tip_calculator_pro.py
+# Purpose: Calculate tip with professional formatting
+
+print(&quot;=== Professional Tip Calculator ===\n&quot;)
+
+# Get user input
+bill_input = input(&quot;Enter the bill amount: $&quot;)
+tip_percent_input = input(&quot;Enter tip percentage (e.g., 15, 18, 20): &quot;)
+
+# Convert to numbers
+bill = float(bill_input)
+tip_percent = float(tip_percent_input)
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+# Display formatted receipt
+print(&quot;\n--- Your Receipt ---&quot;)
+print(f&quot;Bill:        ${bill:.2f}&quot;)
+print(f&quot;Tip ({tip_percent:.0f}%):   ${tip_amount:.2f}&quot;)
+print(&quot;-&quot; * 25)
+print(f&quot;Total:       ${total:.2f}&quot;)
+print(&quot;\nThank you for dining with us!&quot;)
+</code></pre>
+<p><strong>[Key points to highlight:]</strong></p>
+<ol>
+<li><strong>Line 19:</strong> <code>.2f</code> ensures the bill always displays as currency</li>
+<li><strong>Line 20:</strong> <code>.0f</code> shows tip_percent as a whole number (18, not 18.0)</li>
+<li><strong>Line 20:</strong> <code>.2f</code> formats the tip amount with 2 decimals</li>
+<li><strong>Line 22:</strong> <code>.2f</code> formats the total consistently</li>
+<li><strong>No <code>str()</code> conversions needed</strong>—f-strings handle it automatically</li>
+</ol>
+<h3 id="common-issues-students-encountered">Common Issues Students Encountered</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me address a few things I saw as I walked around:</p>
+<p>[Adjust based on actual student work, but common issues include:]</p>
+<ol>
+<li><strong>Forgetting the leading <code>f</code>:</strong> Most common mistake—the string needs that <code>f</code> prefix</li>
+<li><strong>Using <code>.2</code> instead of <code>.2f</code>:</strong> You need the <code>f</code> at the end for floating-point format</li>
+<li><strong>Mixing concatenation and f-strings:</strong> Pick one style and stick with it—f-strings are cleaner</li>
+</ol>
+<h3 id="extensions-showcase">Extensions Showcase</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If anyone completed the extensions, let's see what you built!</p>
+<p>[Call on 1-2 students who finished extensions to share their screen briefly]</p>
+<p>Great creativity! The split-bill calculator is especially practical.</p>
+<h3 id="looking-ahead">Looking Ahead</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now that you can format output beautifully, in the next hour we'll learn to <em>process</em> text — breaking it apart and reassembling it. Specifically, you'll meet <code>.split()</code> and <code>.join()</code>, two string methods that let you chop a sentence into individual words and glue pieces back together with whatever separator you choose.</p>
+<p>Think about it this way: this hour taught you how to <strong>build polished output</strong>. Next hour teaches you how to <strong>take messy input apart and rebuild it</strong>. Together, those two skills cover most of what real programs do with text — accept it, clean it up, rearrange it, and present it nicely.</p>
+<p>So keep your f-string skills warmed up — you'll be using them in the very next lab to display the results of splitting and joining strings.</p>
+<h3 id="exit-ticket">Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<p>Before we wrap up Hour 10, answer this in your notes or in the chat:</p>
+<p><strong>Question:</strong> Why is f-string formatting usually better than <code>+</code> concatenation for building output strings?</p>
+<p><strong>Expected answer:</strong> F-strings are more readable (variables go where they appear in output), don't require manual <code>str()</code> conversions, allow inline formatting (like <code>.2f</code>), and are less error-prone.</p>
+<hr>
+<h2 id="recap-what-we-accomplished">Recap: What We Accomplished</h2>
+<p>In this hour, you:
+✅ Learned f-string syntax with the <code>f""</code> prefix and <code>{}</code> placeholders<br>
+✅ Used <code>.2f</code> format specifier to display numbers with 2 decimal places<br>
+✅ Applied f-strings to make program output clean and professional<br>
+✅ Understood why f-strings are better than concatenation<br>
+✅ Upgraded the Tip Calculator with proper currency formatting<br>
+✅ Explored width and alignment specifiers (optional)  </p>
+<p><strong>This is a game-changer for your code.</strong> From now on, every program you write can have clean, professional output. No more messy concatenation with <code>+</code> and <code>str()</code> everywhere.</p>
+<p>In Hour 11, we'll learn how to work with text data—splitting sentences into words and joining words back together.</p>
+<p><strong>Great work! Take a quick 5-minute break.</strong></p>
+<hr>
+<h2 id="quick-reference-card-for-students">Quick Reference Card (for students)</h2>
+<p><strong>F-String Basics:</strong></p>
+<pre><code class="language-python"># Basic syntax
+name = &quot;Alice&quot;
+print(f&quot;Hello, {name}!&quot;)
+
+# With expressions
+width = 5
+height = 3
+print(f&quot;Area: {width * height}&quot;)
+</code></pre>
+<p><strong>Number Formatting:</strong></p>
+<pre><code class="language-python">price = 19.5
+
+# Fixed decimals (most common for money)
+print(f&quot;${price:.2f}&quot;)          # $19.50
+
+# Different decimal places
+print(f&quot;{pi:.4f}&quot;)              # 3.1416
+
+# No decimals
+print(f&quot;{age:.0f}&quot;)             # 25
+</code></pre>
+<p><strong>Alignment (Optional):</strong></p>
+<pre><code class="language-python"># Left, right, center
+print(f&quot;{'Left':&lt;10}&quot;)          # 'Left      '
+print(f&quot;{'Right':&gt;10}&quot;)         # '     Right'
+print(f&quot;{'Center':^10}&quot;)        # '  Center  '
+
+# Combined with decimals
+print(f&quot;${price:&gt;8.2f}&quot;)        # '   19.50'
+</code></pre>
+<p><strong>Common Format Specifiers:</strong>
+- <code>.2f</code> — 2 decimal places (money)
+- <code>.0f</code> — no decimal places (whole numbers)
+- <code>:&gt;10</code> — right-align in 10-character field
+- <code>:&lt;10</code> — left-align in 10-character field
+- <code>:,</code> — thousands separator (1,234.56)</p>
+<p><strong>Remember:</strong>
+- Put <code>f</code> before the opening quote: <code>f"text {var}"</code>
+- Variables go in curly braces: <code>{variable}</code>
+- Format with colon: <code>{variable:.2f}</code>
+- No <code>str()</code> conversion needed!</p>
+<hr>
+<p><strong>End of Hour 10 Script</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#section-1-recap-transition-from-hour-9-3-minutes" class="depth-2">Section 1: Recap &amp; Transition from Hour 9 (3 minutes)</a></li>
+<li><a href="#quick-review" class="depth-3">Quick Review</a></li>
+<li><a href="#the-output-problem" class="depth-3">The Output Problem</a></li>
+<li><a href="#section-2-introduction-to-f-strings-10-12-minutes" class="depth-2">Section 2: Introduction to F-Strings (10-12 minutes)</a></li>
+<li><a href="#what-is-an-f-string" class="depth-3">What Is an F-String?</a></li>
+<li><a href="#why-f-strings-are-better" class="depth-3">Why F-Strings Are Better</a></li>
+<li><a href="#f-string-basics-the-anatomy" class="depth-3">F-String Basics: The Anatomy</a></li>
+<li><a href="#quick-check-1" class="depth-3">Quick Check #1</a></li>
+<li><a href="#f-strings-with-conditional-logic" class="depth-3">F-Strings with Conditional Logic</a></li>
+<li><a href="#using-expressions-in-f-strings" class="depth-3">Using Expressions in F-Strings</a></li>
+<li><a href="#section-3-formatting-numbers-decimals-width-alignment-8-10-minutes" class="depth-2">Section 3: Formatting Numbers – Decimals, Width, Alignment (8-10 minutes)</a></li>
+<li><a href="#the-problem-ugly-number-output" class="depth-3">The Problem: Ugly Number Output</a></li>
+<li><a href="#format-specifier-syntax-valueformat" class="depth-3">Format Specifier Syntax: {value:format}</a></li>
+<li><a href="#format-specifier-width-and-alignment" class="depth-3">Format Specifier: Width and Alignment</a></li>
+<li><a href="#quick-check-2" class="depth-3">Quick Check #2</a></li>
+<li><a href="#common-format-specifiers-reference" class="depth-3">Common Format Specifiers Reference</a></li>
+<li><a href="#formatting-patterns-for-common-scenarios" class="depth-3">Formatting Patterns for Common Scenarios</a></li>
+<li><a href="#section-4-why-f-strings-beat-concatenation-3-5-minutes" class="depth-2">Section 4: Why F-Strings Beat Concatenation (3-5 minutes)</a></li>
+<li><a href="#the-concatenation-mess" class="depth-3">The Concatenation Mess</a></li>
+<li><a href="#when-not-to-use-f-strings" class="depth-3">When NOT to Use F-Strings</a></li>
+<li><a href="#common-beginner-mistakes-with-f-strings" class="depth-3">Common Beginner Mistakes with F-Strings</a></li>
+<li><a href="#section-5-live-demo-tip-calculator-upgrade-5-10-minutes" class="depth-2">Section 5: Live Demo – Tip Calculator Upgrade (5-10 minutes)</a></li>
+<li><a href="#demo-script-making-output-professional" class="depth-3">Demo Script: Making Output Professional</a></li>
+<li><a href="#adding-alignment" class="depth-3">Adding Alignment</a></li>
+<li><a href="#section-6-hands-on-lab-upgrade-tip-calculator-25-35-minutes" class="depth-2">Section 6: Hands-On Lab – Upgrade Tip Calculator (25-35 minutes)</a></li>
+<li><a href="#lab-overview" class="depth-3">Lab Overview</a></li>
+<li><a href="#lab-instructions-upgrade-tip-calculator" class="depth-3">Lab Instructions: Upgrade Tip Calculator</a></li>
+<li><a href="#starter-template" class="depth-3">Starter Template</a></li>
+<li><a href="#example-output" class="depth-3">Example Output</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-3">Common Pitfalls to Watch For</a></li>
+<li><a href="#optional-extensions" class="depth-3">Optional Extensions</a></li>
+<li><a href="#section-7-debrief-exit-ticket-5-minutes" class="depth-2">Section 7: Debrief &amp; Exit Ticket (5 minutes)</a></li>
+<li><a href="#solution-walkthrough" class="depth-3">Solution Walkthrough</a></li>
+<li><a href="#common-issues-students-encountered" class="depth-3">Common Issues Students Encountered</a></li>
+<li><a href="#extensions-showcase" class="depth-3">Extensions Showcase</a></li>
+<li><a href="#looking-ahead" class="depth-3">Looking Ahead</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit Ticket</a></li>
+<li><a href="#recap-what-we-accomplished" class="depth-2">Recap: What We Accomplished</a></li>
+<li><a href="#quick-reference-card-for-students" class="depth-2">Quick Reference Card (for students)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day3_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day3_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

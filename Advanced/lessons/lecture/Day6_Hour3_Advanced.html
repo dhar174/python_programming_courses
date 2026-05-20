@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 6 Hour 3 Advanced — GUI Mini-Project Sprint: Persistence and Polish | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="6">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day6_Hour3_Advanced.md">
+
+    <link rel="prev" href="Day6_Hour2_Advanced.html">
+    <link rel="next" href="Day6_Hour4_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="6" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-06/index.html">Day 6</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 6 Hour 3 Advanced — GUI Mini-Project Sprint: Persistence and Polish</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 6</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour4_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day6_Hour3_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="session-context">Session context</h2>
+<p>This hour is the third block of <strong>Session 6</strong> in the Advanced Python full-stack tracker capstone. Learners now have a functional Tkinter GUI and, ideally, a cleaner <code>App</code> structure from Hour 2. The next milestone is to make the GUI feel like a real tool instead of a temporary demo.</p>
+<p>The runbook outcome for this hour is clear: <strong>add persistence and polish to the GUI milestone</strong>. For this course, the default and recommended persistence target at this stage is <strong>JSON save/load</strong>, not SQLite yet. SQLite arrives in Session 7. Today’s goal is GUI readiness, predictable behavior, and user trust.</p>
+<p>Emphasize this message repeatedly:</p>
+<ul>
+<li>JSON is not the final storage story of the capstone</li>
+<li>JSON is the right storage story for <strong>this milestone</strong> because it is transparent, portable, and quick to debug</li>
+<li>strong architecture today makes the future SQLite swap easier</li>
+</ul>
+<p>Keep the neutral tracker framing so the examples fit tasks, inventory, contacts, notes, expenses, or similar domains.</p>
+<hr>
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>By the end of this hour, learners should be able to:</p>
+<ol>
+<li>Load tracker data from JSON when the app starts.</li>
+<li>Save tracker data back to JSON after add, update, and delete operations.</li>
+<li>Handle missing files and malformed JSON gracefully without crashing the GUI.</li>
+<li>Add one or more small usability improvements such as a File menu, Help/About dialog, save shortcut, or status messages.</li>
+<li>Explain why JSON is an appropriate persistence step before SQLite in the capstone sequence.</li>
+<li>Prepare a GUI milestone that can be demonstrated confidently in the checkpoint hour.</li>
+</ol>
+<hr>
+<h2 id="prerequisites-and-starting-assumptions">Prerequisites and starting assumptions</h2>
+<p>Learners should already have:</p>
+<ul>
+<li>a Tkinter GUI with add/update/delete wired through a service layer</li>
+<li>a stable record ID system</li>
+<li>an <code>App</code> or equivalent structure that can reasonably absorb persistence hooks</li>
+<li>familiarity with JSON from earlier course work or Basics-level file handling</li>
+</ul>
+<p>If some learners still have a messier structure, that is okay. Persistence can still be added, but instructors should steer them toward clean boundaries:</p>
+<ul>
+<li>the UI should trigger save/load</li>
+<li>the service layer should define what item data looks like</li>
+<li>a dedicated storage function or class should manage JSON format details</li>
+</ul>
+<hr>
+<h2 id="materials-and-setup">Materials and setup</h2>
+<ul>
+<li>a working tracker project</li>
+<li>a writable project folder</li>
+<li>optional seed data in a JSON file</li>
+<li>sample malformed JSON file for error-path demonstration</li>
+<li>projector visible enough to show app restart and file contents side by side</li>
+</ul>
+<p>Recommended pre-class setup:</p>
+<ul>
+<li>have one valid JSON file ready</li>
+<li>have one invalid JSON file ready, such as a missing comma or truncated structure</li>
+<li>pre-populate a few tracker items for faster demos</li>
+</ul>
+<hr>
+<h2 id="section-navigation">Section navigation</h2>
+<ol>
+<li>Why persistence matters for user trust</li>
+<li>Why JSON is the right milestone now</li>
+<li>Designing a simple JSON storage layer</li>
+<li>Load on startup, save after CRUD</li>
+<li>Graceful file and JSON error handling</li>
+<li>Usability polish: menus, About, shortcuts, status messages</li>
+<li>Sprint lab with minimum and stretch goals</li>
+<li>Debrief and checkpoint preparation</li>
+</ol>
+<hr>
+<h2 id="suggested-timing">Suggested timing</h2>
+<ul>
+<li><strong>0–10 min:</strong> motivation and persistence architecture</li>
+<li><strong>10–25 min:</strong> live demo of load/save behavior and error handling</li>
+<li><strong>25–35 min:</strong> add polish features in demo</li>
+<li><strong>35–55 min:</strong> mini-project sprint</li>
+<li><strong>55–60 min:</strong> debrief and checkpoint prep for Hour 4</li>
+</ul>
+<hr>
+<h2 id="instructor-speaking-script">Instructor speaking script</h2>
+<h3 id="1-opening-why-persistence-changes-the-feel-of-an-app">1) Opening: why persistence changes the feel of an app</h3>
+<p><strong>Say:</strong> “Until now, if we close the tracker, the data disappears unless we have manually preserved it somewhere else. That is fine for learning widget wiring, but it is not fine for a usable tool. Persistence is the moment the app starts earning user trust.”</p>
+<p>Ask:</p>
+<ul>
+<li>“Would you use an expense tracker if every restart erased your data?”</li>
+<li>“Would you trust an inventory tool that forgot updates after closing?”</li>
+</ul>
+<p>Expected answer: no.</p>
+<p><strong>Say:</strong> “So today’s work is not cosmetic. Persistence is core behavior. But we are choosing a persistence approach that matches the current stage of the course.”</p>
+<h3 id="2-why-json-now-instead-of-sqlite-now">2) Why JSON now instead of SQLite now</h3>
+<p>The runbook and user instructions both emphasize JSON for this hour and SQLite later. Make that reasoning explicit.</p>
+<p><strong>Say:</strong> “Could we jump straight to SQLite? Yes, eventually. But that would overload this checkpoint. Today we want the GUI milestone to demonstrate reliable load/save behavior with a format learners can inspect directly. JSON is excellent for that.”</p>
+<p>Benefits to name aloud:</p>
+<ul>
+<li>human-readable</li>
+<li>easy to inspect in the editor</li>
+<li>portable between machines</li>
+<li>no separate database setup step</li>
+<li>good for demonstrating serialization and recovery from file errors</li>
+</ul>
+<p>Also name the limitation honestly:</p>
+<ul>
+<li>JSON is not ideal for concurrent editing, large datasets, or rich querying</li>
+<li>that is why SQLite comes next session</li>
+</ul>
+<p>This is a strong place to reinforce sequencing as a professional skill.</p>
+<p><strong>Say:</strong> “Good engineers do not always start with the most powerful solution. They start with the solution that best fits the milestone.”</p>
+<h3 id="3-storage-design-options">3) Storage design options</h3>
+<p>You have two reasonable teaching options here:</p>
+<ol>
+<li>simple service methods <code>load_from_json()</code> and <code>save_to_json()</code></li>
+<li>a separate <code>JsonTrackerStore</code> helper class</li>
+</ol>
+<p>Because the capstone architecture emphasizes a service layer, recommend either:</p>
+<ul>
+<li>UI calls <code>service.load_from_json(path)</code> / <code>service.save_to_json(path)</code></li>
+<li>or UI calls a store, and the service manages conversion</li>
+</ul>
+<p>For most classrooms, keeping JSON handling close to the service is the fastest path. If you want stronger separation, introduce a dedicated storage helper but keep it simple.</p>
+<h3 id="4-example-service-side-json-persistence">4) Example: service-side JSON persistence</h3>
+<p>Show a concrete implementation using modern Python patterns.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from dataclasses import asdict
+from pathlib import Path
+
+
+class StorageError(Exception):
+    pass
+
+
+class TrackerService:
+    def __init__(self) -&gt; None:
+        self._items: list[TrackerItem] = []
+
+    # ... existing CRUD methods ...
+
+    def save_to_json(self, file_path: Path) -&gt; None:
+        data = [asdict(item) for item in self._items]
+        try:
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.write_text(json.dumps(data, indent=2), encoding=&quot;utf-8&quot;)
+        except OSError as error:
+            raise StorageError(f&quot;Unable to save tracker data: {error}&quot;) from error
+
+    def load_from_json(self, file_path: Path) -&gt; None:
+        if not file_path.exists():
+            self._items = []
+            return
+
+        try:
+            raw_text = file_path.read_text(encoding=&quot;utf-8&quot;)
+            raw_items = json.loads(raw_text)
+        except json.JSONDecodeError as error:
+            raise StorageError(f&quot;The data file is not valid JSON: {error}&quot;) from error
+        except OSError as error:
+            raise StorageError(f&quot;Unable to read tracker data: {error}&quot;) from error
+
+        loaded_items: list[TrackerItem] = []
+        for raw_item in raw_items:
+            loaded_items.append(
+                TrackerItem(
+                    item_id=raw_item[&quot;item_id&quot;],
+                    name=raw_item[&quot;name&quot;],
+                    category=raw_item[&quot;category&quot;],
+                    status=raw_item[&quot;status&quot;],
+                    notes=raw_item.get(&quot;notes&quot;, &quot;&quot;),
+                )
+            )
+        self._items = loaded_items
+</code></pre>
+<p>Pause and point out the important ideas:</p>
+<ul>
+<li><code>Path</code> from <code>pathlib</code>, not raw string paths everywhere</li>
+<li>JSON serialization done from the service’s current source of truth</li>
+<li>file missing is not treated as a crash-worthy event</li>
+<li>invalid JSON raises a custom storage-focused error with a clear message</li>
+</ul>
+<h3 id="5-load-on-startup">5) Load on startup</h3>
+<p>Show where startup load belongs. If learners refactored to an <code>App</code> class, the constructor is the natural place.</p>
+<pre><code class="language-python">from pathlib import Path
+from tkinter import messagebox
+
+
+class TrackerApp:
+    def __init__(self, root: tk.Tk, service: TrackerService) -&gt; None:
+        self.root = root
+        self.service = service
+        self.data_file = Path(&quot;data/tracker_items.json&quot;)
+        self.selected_item_id: str | None = None
+        self.status_text = tk.StringVar(value=&quot;Ready&quot;)
+        self.name_var = tk.StringVar()
+        self.category_var = tk.StringVar()
+        self.status_var = tk.StringVar()
+
+        self.build_ui()
+        self.load_data_on_startup()
+        self.refresh_items()
+
+    def load_data_on_startup(self) -&gt; None:
+        try:
+            self.service.load_from_json(self.data_file)
+        except StorageError as error:
+            messagebox.showerror(&quot;Load Error&quot;, str(error))
+            self.set_status(&quot;Started with empty data due to load error&quot;)
+            return
+
+        self.set_status(f&quot;Loaded {len(self.service.list_items())} items&quot;)
+</code></pre>
+<p>Discuss the user experience choice here. If the JSON file is missing, that is normal for a first run. If it is corrupted, that deserves a clear message.</p>
+<h3 id="6-save-after-each-crud-operation">6) Save after each CRUD operation</h3>
+<p>This is a key runbook point. State it explicitly.</p>
+<p><strong>Say:</strong> “A common bug is saving only after add, but forgetting to save after update or delete. That creates a mismatch between what the user sees now and what will still exist after restart. Save-after-change must apply consistently across CRUD operations.”</p>
+<p>Show a helper method rather than repeating save logic in three callbacks.</p>
+<pre><code class="language-python">def persist_changes(self) -&gt; bool:
+    try:
+        self.service.save_to_json(self.data_file)
+    except StorageError as error:
+        messagebox.showerror(&quot;Save Error&quot;, str(error))
+        self.set_status(&quot;Save failed&quot;)
+        return False
+
+    self.set_status(&quot;Changes saved&quot;)
+    return True
+</code></pre>
+<p>Then show how callbacks use it.</p>
+<pre><code class="language-python">def on_add(self) -&gt; None:
+    try:
+        item = self.service.add_item(**self.get_form_data())
+    except ValidationError as error:
+        messagebox.showerror(&quot;Validation Error&quot;, str(error))
+        return
+
+    self.persist_changes()
+    self.refresh_items(selected_item_id=item.item_id)
+    self.clear_form(keep_status=True)
+
+
+def on_update(self) -&gt; None:
+    if self.selected_item_id is None:
+        messagebox.showwarning(&quot;No Selection&quot;, &quot;Select a record to update.&quot;)
+        return
+
+    try:
+        item = self.service.update_item(self.selected_item_id, **self.get_form_data())
+    except (ValidationError, NotFoundError) as error:
+        messagebox.showerror(&quot;Update Error&quot;, str(error))
+        return
+
+    self.persist_changes()
+    self.refresh_items(selected_item_id=item.item_id)
+
+
+def on_delete(self) -&gt; None:
+    if self.selected_item_id is None:
+        messagebox.showwarning(&quot;No Selection&quot;, &quot;Select a record to delete.&quot;)
+        return
+
+    try:
+        item = self.service.get_item(self.selected_item_id)
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Delete Error&quot;, str(error))
+        return
+
+    confirmed = messagebox.askyesno(&quot;Confirm Delete&quot;, f&quot;Delete '{item.name}'?&quot;)
+    if not confirmed:
+        return
+
+    self.service.delete_item(item.item_id)
+    self.persist_changes()
+    self.refresh_items()
+    self.clear_form(keep_status=True)
+    self.selected_item_id = None
+</code></pre>
+<p>Narrate the pattern repeatedly:</p>
+<ul>
+<li>do the domain action</li>
+<li>persist the current truth</li>
+<li>refresh the interface</li>
+<li>give feedback</li>
+</ul>
+<h3 id="7-graceful-handling-of-malformed-json">7) Graceful handling of malformed JSON</h3>
+<p>This part matters because the runbook explicitly calls out file/JSON problems.</p>
+<p><strong>Say:</strong> “What should happen if the data file is corrupted? The wrong answer is a traceback and a dead app. The better answer is: explain the problem, avoid crashing, and let the user recover.”</p>
+<p>You may choose one of these instructor-approved recovery strategies:</p>
+<ul>
+<li>start with empty data and show an error message</li>
+<li>offer to back up the bad file and continue</li>
+<li>block normal work until the file is fixed, if the class is ready for that discussion</li>
+</ul>
+<p>For this milestone, the simplest is:</p>
+<ul>
+<li>show an error dialog</li>
+<li>keep the app open</li>
+<li>continue with an empty list or previously loaded in-memory state</li>
+</ul>
+<h3 id="8-a-dedicated-json-store-helper-if-you-want-stronger-separation">8) A dedicated JSON store helper, if you want stronger separation</h3>
+<p>If your class is moving quickly, briefly show the storage-helper version.</p>
+<pre><code class="language-python">class JsonTrackerStore:
+    def __init__(self, file_path: Path) -&gt; None:
+        self.file_path = file_path
+
+    def save_items(self, items: list[TrackerItem]) -&gt; None:
+        payload = [asdict(item) for item in items]
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.file_path.write_text(json.dumps(payload, indent=2), encoding=&quot;utf-8&quot;)
+
+    def load_items(self) -&gt; list[TrackerItem]:
+        if not self.file_path.exists():
+            return []
+        raw_items = json.loads(self.file_path.read_text(encoding=&quot;utf-8&quot;))
+        return [TrackerItem(**raw_item) for raw_item in raw_items]
+</code></pre>
+<p>Then tell learners they do not need this extra class unless they are comfortable. The checkpoint does not require abstraction for its own sake.</p>
+<h3 id="9-usability-polish-turn-the-demo-into-a-tool">9) Usability polish: turn the demo into a tool</h3>
+<p>The runbook suggests menu items, a help dialog, or keyboard shortcuts. Present these as small but meaningful touches.</p>
+<p><strong>Say:</strong> “Polish is not decoration. Polish is what helps users understand and trust the application.”</p>
+<p>Suggested polish options:</p>
+<ul>
+<li><strong>File menu</strong> with Save, Export, Exit</li>
+<li><strong>Help menu</strong> with About</li>
+<li><strong>status bar</strong> showing last action</li>
+<li><strong>keyboard shortcut</strong> such as <code>Ctrl+S</code></li>
+<li><strong>clear form</strong> button</li>
+<li>more informative window title</li>
+<li>default focus placement on startup</li>
+</ul>
+<p>Show a small menu example.</p>
+<pre><code class="language-python">def build_menu(self) -&gt; None:
+    menubar = tk.Menu(self.root)
+
+    file_menu = tk.Menu(menubar, tearoff=False)
+    file_menu.add_command(label=&quot;Save&quot;, command=self.persist_changes, accelerator=&quot;Ctrl+S&quot;)
+    file_menu.add_separator()
+    file_menu.add_command(label=&quot;Exit&quot;, command=self.root.destroy)
+    menubar.add_cascade(label=&quot;File&quot;, menu=file_menu)
+
+    help_menu = tk.Menu(menubar, tearoff=False)
+    help_menu.add_command(label=&quot;About&quot;, command=self.show_about)
+    menubar.add_cascade(label=&quot;Help&quot;, menu=help_menu)
+
+    self.root.config(menu=menubar)
+    self.root.bind(&quot;&lt;Control-s&gt;&quot;, lambda event: self.persist_changes())
+
+
+def show_about(self) -&gt; None:
+    messagebox.showinfo(
+        &quot;About&quot;,
+        &quot;Full-Stack Tracker\nTkinter milestone with JSON persistence.&quot;
+    )
+</code></pre>
+<h3 id="10-optional-export-to-csv-teaser">10) Optional export-to-CSV teaser</h3>
+<p>The runbook lists export-to-CSV as an optional extension. Mention it as future-friendly and relevant for analytics.</p>
+<p><strong>Say:</strong> “If you have fast finishers, a small CSV export button is an excellent extension because it connects today’s GUI work to the later analytics session. But it is optional. Persistence comes first.”</p>
+<h3 id="11-live-demo-plan">11) Live demo plan</h3>
+<h4 id="demo-a-successful-loadsave-cycle">Demo A: successful load/save cycle</h4>
+<ol>
+<li>Start with the app closed.</li>
+<li>Show the JSON file contents in the editor if it already exists.</li>
+<li>Launch the app.</li>
+<li>Narrate startup load.</li>
+<li>Add a record.</li>
+<li>Update a record.</li>
+<li>Delete a record.</li>
+<li>Close the app.</li>
+<li>Re-open the JSON file and point out the saved structure.</li>
+<li>Restart the app and show the same data loaded.</li>
+</ol>
+<p>Narration prompt:</p>
+<p><strong>Say:</strong> “The app is now preserving state across runs. That is a major milestone in user trust.”</p>
+<h4 id="demo-b-malformed-json-path">Demo B: malformed JSON path</h4>
+<ol>
+<li>Intentionally break the JSON file.</li>
+<li>Launch the app.</li>
+<li>Show the error dialog.</li>
+<li>Explain why the app does not simply crash.</li>
+</ol>
+<p>Narration prompt:</p>
+<p><strong>Say:</strong> “Graceful failure is part of usability. Users remember whether software helped them recover.”</p>
+<h4 id="demo-c-polish-feature">Demo C: polish feature</h4>
+<p>Show one quick feature such as Ctrl+S, About dialog, or a status bar.</p>
+<p><strong>Say:</strong> “These details matter because they teach the user what the application is doing.”</p>
+<h3 id="12-sprint-instructions-for-learners">12) Sprint instructions for learners</h3>
+<p>Read or paste the following:</p>
+<h4 id="lab-gui-milestone-sprint-persistence-and-polish">Lab: GUI Milestone Sprint — Persistence and Polish</h4>
+<p>Bring your tracker to a checkpoint-ready state.</p>
+<h5 id="required-tasks">Required tasks</h5>
+<ul>
+<li>Load records from JSON on app startup.</li>
+<li>Save records to JSON after add, update, and delete.</li>
+<li>Handle a missing data file without crashing.</li>
+<li>Handle invalid JSON with a clear error message.</li>
+<li>Add at least one usability improvement.</li>
+</ul>
+<h5 id="choose-at-least-one-polish-feature">Choose at least one polish feature</h5>
+<ul>
+<li>File menu with Save and Exit</li>
+<li>Help/About dialog</li>
+<li>status bar message for last action</li>
+<li>Ctrl+S save shortcut</li>
+<li>Clear Form button</li>
+<li>better empty-state or no-selection messaging</li>
+</ul>
+<h5 id="minimum-definition-of-done">Minimum definition of done</h5>
+<ul>
+<li>data persists across app restarts</li>
+<li>user feedback is understandable</li>
+<li>no obvious crash during normal use</li>
+<li>code remains organized enough to explain during the checkpoint</li>
+</ul>
+<h5 id="stretch-goals">Stretch goals</h5>
+<ul>
+<li>export current records to CSV</li>
+<li>confirm on app close if there are unsaved changes</li>
+<li>hide the ID column visually while still using it internally</li>
+<li>add automatic backup file creation when JSON load fails</li>
+</ul>
+<h3 id="13-instructor-circulation-notes">13) Instructor circulation notes</h3>
+<p>While learners work, ask these questions:</p>
+<ul>
+<li>“When exactly does your app load data?”</li>
+<li>“When exactly does your app save data?”</li>
+<li>“What happens if the JSON file is missing?”</li>
+<li>“What happens if the JSON file is invalid?”</li>
+<li>“What polish feature did you choose, and why does it help the user?”</li>
+</ul>
+<p>If a learner’s data file keeps getting corrupted, check for common causes:</p>
+<ul>
+<li>writing partial JSON because of manual string building instead of <code>json.dumps</code></li>
+<li>writing unsupported objects directly instead of converting dataclasses to dictionaries</li>
+<li>not encoding/decoding consistently with UTF-8</li>
+<li>forgetting to strip trailing whitespace in notes fields only if their logic depends on exact comparisons</li>
+</ul>
+<h3 id="14-why-design-choices-matter">14) Why design choices matter</h3>
+<p>Use this hour to make a larger point about software design.</p>
+<p><strong>Say:</strong> “The architecture matters because persistence magnifies sloppy design. If your GUI is the only place that knows how records are structured, save/load becomes awkward. If your service layer already owns that model cleanly, persistence becomes an addition, not a rewrite.”</p>
+<p><strong>Say:</strong> “Also remember that JSON is transparent. If something goes wrong, you can inspect the file. That makes today’s milestone excellent for learning because the system state is visible.”</p>
+<hr>
+<h2 id="common-pitfalls-to-watch-for">Common pitfalls to watch for</h2>
+<h3 id="pitfall-1-saving-after-add-but-not-after-updatedelete">Pitfall 1: saving after add, but not after update/delete</h3>
+<p>This is the most common persistence bug for this hour. Tie it directly to user trust.</p>
+<h3 id="pitfall-2-crashing-on-malformed-json">Pitfall 2: crashing on malformed JSON</h3>
+<p>Some learners will call <code>json.loads</code> without exception handling. Use this as a teaching moment about graceful failure.</p>
+<h3 id="pitfall-3-saving-ui-only-state-instead-of-domain-state">Pitfall 3: saving UI-only state instead of domain state</h3>
+<p>Encourage learners to serialize the actual tracker items, not widget objects or temporary screen details.</p>
+<h3 id="pitfall-4-storing-records-without-stable-ids">Pitfall 4: storing records without stable IDs</h3>
+<p>If IDs are recreated on every load, updates later become unreliable. The saved JSON must preserve the existing <code>item_id</code>.</p>
+<h3 id="pitfall-5-adding-too-many-polish-features-before-persistence-is-solid">Pitfall 5: adding too many polish features before persistence is solid</h3>
+<p>Remind the room that a stylish app that loses data is still a failed milestone.</p>
+<hr>
+<h2 id="completion-criteria-for-this-hour">Completion criteria for this hour</h2>
+<p>Learners are ready for the checkpoint if they can demonstrate:</p>
+<ul>
+<li>load from JSON on startup</li>
+<li>save after add/update/delete</li>
+<li>restart the app and show data persists</li>
+<li>handle at least one error path without crashing</li>
+<li>describe at least one usability improvement they added</li>
+</ul>
+<p>If time is short, prioritize in this order:</p>
+<ol>
+<li>load on startup</li>
+<li>save after every CRUD change</li>
+<li>clear user-facing error handling</li>
+<li>one polish feature</li>
+</ol>
+<hr>
+<h2 id="quick-check-exit-ticket">Quick check / exit ticket</h2>
+<p>Ask learners:</p>
+<ol>
+<li>Why is JSON the preferred persistence target for this GUI milestone?</li>
+<li>What must happen after update and delete to keep persistence trustworthy?</li>
+<li>What should the app do if the JSON file exists but is malformed?</li>
+<li>What usability improvement did you add, and why does it matter?</li>
+</ol>
+<p>A strong answer to question 1 sounds like:</p>
+<blockquote>
+<p>“JSON is a good checkpoint choice because it is simple, readable, portable, and easy to debug while we focus on GUI readiness before moving to SQLite.”</p>
+</blockquote>
+<hr>
+<h2 id="preparing-learners-for-hour-4">Preparing learners for Hour 4</h2>
+<p>End this hour by giving learners a clear picture of the checkpoint.</p>
+<p><strong>Say:</strong> “In the next hour, you are not being asked for a perfect product. You are being asked to show a reliable milestone. That means your GUI launches, CRUD works through the UI, persistence survives restart, and you can explain your code organization. Use the last few minutes now to make sure your demo path is smooth: add, update, delete, restart, reload.”</p>
+<hr>
+<h2 id="extended-teaching-notes-persistence-design-usability-and-checkpoint-readiness">Extended teaching notes: persistence design, usability, and checkpoint readiness</h2>
+<p>This section gives instructors more depth for classes that need stronger explanation or additional guided practice.</p>
+<h3 id="a-simple-mental-model-for-persistence">A simple mental model for persistence</h3>
+<p>Use this sentence repeatedly:</p>
+<p><strong>Say:</strong> “Persistence means the app remembers the truth after the program stops running.”</p>
+<p>Then map that idea to the tracker.</p>
+<ul>
+<li>in memory, records exist only while the process runs</li>
+<li>in JSON, records survive process restarts</li>
+<li>later, in SQLite, records survive with stronger query and integrity capabilities</li>
+</ul>
+<p>This model helps learners see persistence as a behavior of the application rather than just a file-format trick.</p>
+<h3 id="why-stable-ids-must-survive-save-and-load">Why stable IDs must survive save and load</h3>
+<p>A subtle but important point for this hour is that the saved data must preserve record identity. Explain it directly.</p>
+<p><strong>Say:</strong> “If an item gets a new ID every time the app loads, then the app has lost continuity. Updates, selections, and future database mapping become much harder. Persistence is not only about saving field values. It is about saving identity.”</p>
+<p>Ask learners:</p>
+<ul>
+<li>“What would happen if you exported only name, category, and status but regenerated IDs on each load?”</li>
+</ul>
+<p>Good answers:</p>
+<ul>
+<li>previously selected references would no longer match</li>
+<li>future synchronization becomes confusing</li>
+<li>history or relationships become impossible to track reliably</li>
+</ul>
+<h3 id="suggested-json-shape-for-the-milestone">Suggested JSON shape for the milestone</h3>
+<p>Show learners that the JSON file should be plain and boring. Boring is good here.</p>
+<pre><code class="language-json">[
+  {
+    &quot;item_id&quot;: &quot;c09b1d33-f0b4-4d10-a12f-1cb8d4317bd1&quot;,
+    &quot;name&quot;: &quot;Prepare weekly report&quot;,
+    &quot;category&quot;: &quot;Work&quot;,
+    &quot;status&quot;: &quot;In Progress&quot;,
+    &quot;notes&quot;: &quot;Need updated totals before Friday&quot;
+  },
+  {
+    &quot;item_id&quot;: &quot;63dfa576-2cc1-4589-bf5d-fefde55ea53b&quot;,
+    &quot;name&quot;: &quot;Call supplier&quot;,
+    &quot;category&quot;: &quot;Operations&quot;,
+    &quot;status&quot;: &quot;Open&quot;,
+    &quot;notes&quot;: &quot;Confirm next shipment window&quot;
+  }
+]
+</code></pre>
+<p>Explain why this structure is useful:</p>
+<ul>
+<li>easy to inspect manually</li>
+<li>easy to iterate over when loading</li>
+<li>easy to convert from dataclasses using <code>asdict</code></li>
+<li>future-friendly for migration into tabular storage</li>
+</ul>
+<h3 id="autosave-versus-explicit-save">Autosave versus explicit save</h3>
+<p>Learners may ask whether auto-save or manual save is better. Use that as a design discussion.</p>
+<p><strong>Say:</strong> “For this checkpoint, either explicit save or save-after-change is acceptable if it is clear and reliable. Because the runbook emphasizes saving after CRUD, auto-save after add/update/delete is the most straightforward classroom pattern.”</p>
+<p>Name the trade-offs clearly.</p>
+<p><strong>Auto-save advantages</strong></p>
+<ul>
+<li>fewer forgotten saves</li>
+<li>simpler demo path</li>
+<li>closer to user expectations for many small tools</li>
+</ul>
+<p><strong>Explicit save advantages</strong></p>
+<ul>
+<li>easier to reason about when writes happen</li>
+<li>opens the door to unsaved-change prompts later</li>
+</ul>
+<p>For this milestone, recommend auto-save after CRUD unless learners have a strong reason to do otherwise.</p>
+<h3 id="error-handling-philosophy-for-file-based-apps">Error-handling philosophy for file-based apps</h3>
+<p>Teach a three-part recovery mindset:</p>
+<ol>
+<li>detect the problem</li>
+<li>explain the problem in user language</li>
+<li>move to a safe state</li>
+</ol>
+<p>That gives instructors a clean way to evaluate malformed JSON behavior. The student does not need a perfect recovery wizard. They need a reasonable recovery path.</p>
+<h3 id="usability-polish-that-supports-learning-goals">Usability polish that supports learning goals</h3>
+<p>If learners finish persistence early, guide them toward polish that teaches durable habits, not random decoration.</p>
+<p>Strong polish tasks:</p>
+<ul>
+<li>a status bar that reports “Loaded 6 items,” “Saved changes,” or “Deleted record”</li>
+<li>a disabled Update/Delete button when nothing is selected</li>
+<li>focus returning to the first form field after Add</li>
+<li>a help/about dialog with app purpose and version</li>
+<li>a File menu that mirrors visible actions</li>
+</ul>
+<p>Less valuable polish at this stage:</p>
+<ul>
+<li>visual themes that consume the whole hour</li>
+<li>deeply custom styling</li>
+<li>animation or unusual widget behavior unrelated to the checkpoint</li>
+</ul>
+<p><strong>Say:</strong> “Polish should clarify behavior, not distract from reliability.”</p>
+<hr>
+<h2 id="sprint-support-checkpoints-you-can-call-out-during-lab-time">Sprint support: checkpoints you can call out during lab time</h2>
+<p>If the room needs more structure, pause at these time markers.</p>
+<h3 id="sprint-checkpoint-1-load-works">Sprint checkpoint 1: load works</h3>
+<p>Ask learners to show you one of these:</p>
+<ul>
+<li>app starts with existing data visible</li>
+<li>app starts empty without crashing when the file does not exist</li>
+</ul>
+<h3 id="sprint-checkpoint-2-save-works-for-addupdatedelete">Sprint checkpoint 2: save works for add/update/delete</h3>
+<p>Ask learners:</p>
+<ul>
+<li>“Which method is responsible for persistence?”</li>
+<li>“How many callbacks call it?”</li>
+<li>“Did you remember update and delete?”</li>
+</ul>
+<h3 id="sprint-checkpoint-3-restart-proof">Sprint checkpoint 3: restart proof</h3>
+<p>Ask learners to close and relaunch the app, not just inspect the JSON file. The real user experience is restart, not a file viewer.</p>
+<h3 id="sprint-checkpoint-4-one-polish-feature">Sprint checkpoint 4: one polish feature</h3>
+<p>Ask learners to demo the feature and explain the benefit to the user in one sentence.</p>
+<p>This keeps the hour moving toward the checkpoint rather than toward endless “just one more feature” drift.</p>
+<hr>
+<h2 id="troubleshooting-guide-for-common-persistence-issues">Troubleshooting guide for common persistence issues</h2>
+<h3 id="symptom-json-file-writes-but-load-fails-later">Symptom: JSON file writes, but load fails later</h3>
+<p>Possible causes:</p>
+<ul>
+<li>malformed manual JSON string construction</li>
+<li>missing required keys</li>
+<li>notes or text values not encoded consistently</li>
+<li>partial file writes caused by experimental save logic</li>
+</ul>
+<p>Fix guidance:</p>
+<ul>
+<li>use <code>json.dumps</code> instead of building JSON strings by hand</li>
+<li>verify each saved item includes <code>item_id</code>, <code>name</code>, <code>category</code>, and <code>status</code></li>
+<li>inspect the file immediately after save</li>
+</ul>
+<h3 id="symptom-records-save-but-ids-change-after-restart">Symptom: records save, but IDs change after restart</h3>
+<p>Possible causes:</p>
+<ul>
+<li>learner recreates each item with a factory that always generates a new UUID</li>
+<li>load path ignores the stored <code>item_id</code></li>
+</ul>
+<p>Instructional language:</p>
+<p><strong>Say:</strong> “When loading existing data, we are reconstructing identity, not creating a fresh record. That means we must reuse the stored ID.”</p>
+<h3 id="symptom-app-crashes-if-the-data-folder-does-not-exist">Symptom: app crashes if the <code>data/</code> folder does not exist</h3>
+<p>Possible cause:</p>
+<ul>
+<li>save method writes directly without creating parent directories</li>
+</ul>
+<p>Fix guidance:</p>
+<ul>
+<li>use <code>file_path.parent.mkdir(parents=True, exist_ok=True)</code> before writing</li>
+</ul>
+<h3 id="symptom-save-appears-to-work-but-the-app-restarts-empty">Symptom: save appears to work, but the app restarts empty</h3>
+<p>Possible causes:</p>
+<ul>
+<li>save path and load path are different</li>
+<li>relative path confusion based on current working directory</li>
+<li>save only happens on explicit button press, but the learner forgot to press it</li>
+</ul>
+<p>What to ask:</p>
+<ul>
+<li>“Can you print the path used for save and the path used for load?”</li>
+<li>“Are they the same file?”</li>
+</ul>
+<h3 id="symptom-malformed-json-path-is-handled-but-the-app-silently-wipes-the-file">Symptom: malformed JSON path is handled, but the app silently wipes the file</h3>
+<p>Possible cause:</p>
+<ul>
+<li>learner responds to load error by immediately overwriting with empty data</li>
+</ul>
+<p>Teaching point:</p>
+<p><strong>Say:</strong> “Recovering from a bad file should not destroy evidence. At minimum, inform the user before replacing anything.”</p>
+<hr>
+<h2 id="checkpoint-prep-script-for-the-final-five-minutes">Checkpoint-prep script for the final five minutes</h2>
+<p>Use this script to help learners organize their Hour 4 demo.</p>
+<p><strong>Say:</strong> “Before we end this hour, I want you to rehearse your checkpoint path mentally. You should know exactly which record you will add, which one you will update, and how you will prove persistence.”</p>
+<p>Ask learners to prepare these items:</p>
+<ol>
+<li>one clean sample record to add</li>
+<li>one existing record to edit</li>
+<li>one record safe to delete</li>
+<li>a sentence explaining where the service layer lives</li>
+<li>a sentence explaining how the app tracks the correct record ID</li>
+</ol>
+<p>Then say:</p>
+<p><strong>Say:</strong> “If your demo depends on luck, it is not ready. If your demo depends on a predictable path you have practiced once or twice, you are in a strong position.”</p>
+<h3 id="suggested-learner-self-check-before-checkpoint">Suggested learner self-check before checkpoint</h3>
+<ul>
+<li>Can I launch the app without last-minute edits?</li>
+<li>Do add, update, and delete all trigger save behavior?</li>
+<li>Can I close and reopen the app without losing data?</li>
+<li>If no record is selected, does my app handle that calmly?</li>
+<li>Can I explain my architecture in 30 seconds?</li>
+</ul>
+<p>That self-check often prevents avoidable checkpoint stumbles.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour4_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#session-context" class="depth-2">Session context</a></li>
+<li><a href="#learning-objectives" class="depth-2">Learning objectives</a></li>
+<li><a href="#prerequisites-and-starting-assumptions" class="depth-2">Prerequisites and starting assumptions</a></li>
+<li><a href="#materials-and-setup" class="depth-2">Materials and setup</a></li>
+<li><a href="#section-navigation" class="depth-2">Section navigation</a></li>
+<li><a href="#suggested-timing" class="depth-2">Suggested timing</a></li>
+<li><a href="#instructor-speaking-script" class="depth-2">Instructor speaking script</a></li>
+<li><a href="#1-opening-why-persistence-changes-the-feel-of-an-app" class="depth-3">1) Opening: why persistence changes the feel of an app</a></li>
+<li><a href="#2-why-json-now-instead-of-sqlite-now" class="depth-3">2) Why JSON now instead of SQLite now</a></li>
+<li><a href="#3-storage-design-options" class="depth-3">3) Storage design options</a></li>
+<li><a href="#4-example-service-side-json-persistence" class="depth-3">4) Example: service-side JSON persistence</a></li>
+<li><a href="#5-load-on-startup" class="depth-3">5) Load on startup</a></li>
+<li><a href="#6-save-after-each-crud-operation" class="depth-3">6) Save after each CRUD operation</a></li>
+<li><a href="#7-graceful-handling-of-malformed-json" class="depth-3">7) Graceful handling of malformed JSON</a></li>
+<li><a href="#8-a-dedicated-json-store-helper-if-you-want-stronger-separation" class="depth-3">8) A dedicated JSON store helper, if you want stronger separation</a></li>
+<li><a href="#9-usability-polish-turn-the-demo-into-a-tool" class="depth-3">9) Usability polish: turn the demo into a tool</a></li>
+<li><a href="#10-optional-export-to-csv-teaser" class="depth-3">10) Optional export-to-CSV teaser</a></li>
+<li><a href="#11-live-demo-plan" class="depth-3">11) Live demo plan</a></li>
+<li><a href="#demo-a-successful-loadsave-cycle" class="depth-4">Demo A: successful load/save cycle</a></li>
+<li><a href="#demo-b-malformed-json-path" class="depth-4">Demo B: malformed JSON path</a></li>
+<li><a href="#demo-c-polish-feature" class="depth-4">Demo C: polish feature</a></li>
+<li><a href="#12-sprint-instructions-for-learners" class="depth-3">12) Sprint instructions for learners</a></li>
+<li><a href="#lab-gui-milestone-sprint-persistence-and-polish" class="depth-4">Lab: GUI Milestone Sprint — Persistence and Polish</a></li>
+<li><a href="#required-tasks" class="depth-5">Required tasks</a></li>
+<li><a href="#choose-at-least-one-polish-feature" class="depth-5">Choose at least one polish feature</a></li>
+<li><a href="#minimum-definition-of-done" class="depth-5">Minimum definition of done</a></li>
+<li><a href="#stretch-goals" class="depth-5">Stretch goals</a></li>
+<li><a href="#13-instructor-circulation-notes" class="depth-3">13) Instructor circulation notes</a></li>
+<li><a href="#14-why-design-choices-matter" class="depth-3">14) Why design choices matter</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-2">Common pitfalls to watch for</a></li>
+<li><a href="#pitfall-1-saving-after-add-but-not-after-updatedelete" class="depth-3">Pitfall 1: saving after add, but not after update/delete</a></li>
+<li><a href="#pitfall-2-crashing-on-malformed-json" class="depth-3">Pitfall 2: crashing on malformed JSON</a></li>
+<li><a href="#pitfall-3-saving-ui-only-state-instead-of-domain-state" class="depth-3">Pitfall 3: saving UI-only state instead of domain state</a></li>
+<li><a href="#pitfall-4-storing-records-without-stable-ids" class="depth-3">Pitfall 4: storing records without stable IDs</a></li>
+<li><a href="#pitfall-5-adding-too-many-polish-features-before-persistence-is-solid" class="depth-3">Pitfall 5: adding too many polish features before persistence is solid</a></li>
+<li><a href="#completion-criteria-for-this-hour" class="depth-2">Completion criteria for this hour</a></li>
+<li><a href="#quick-check-exit-ticket" class="depth-2">Quick check / exit ticket</a></li>
+<li><a href="#preparing-learners-for-hour-4" class="depth-2">Preparing learners for Hour 4</a></li>
+<li><a href="#extended-teaching-notes-persistence-design-usability-and-checkpoint-readiness" class="depth-2">Extended teaching notes: persistence design, usability, and checkpoint readiness</a></li>
+<li><a href="#a-simple-mental-model-for-persistence" class="depth-3">A simple mental model for persistence</a></li>
+<li><a href="#why-stable-ids-must-survive-save-and-load" class="depth-3">Why stable IDs must survive save and load</a></li>
+<li><a href="#suggested-json-shape-for-the-milestone" class="depth-3">Suggested JSON shape for the milestone</a></li>
+<li><a href="#autosave-versus-explicit-save" class="depth-3">Autosave versus explicit save</a></li>
+<li><a href="#error-handling-philosophy-for-file-based-apps" class="depth-3">Error-handling philosophy for file-based apps</a></li>
+<li><a href="#usability-polish-that-supports-learning-goals" class="depth-3">Usability polish that supports learning goals</a></li>
+<li><a href="#sprint-support-checkpoints-you-can-call-out-during-lab-time" class="depth-2">Sprint support: checkpoints you can call out during lab time</a></li>
+<li><a href="#sprint-checkpoint-1-load-works" class="depth-3">Sprint checkpoint 1: load works</a></li>
+<li><a href="#sprint-checkpoint-2-save-works-for-addupdatedelete" class="depth-3">Sprint checkpoint 2: save works for add/update/delete</a></li>
+<li><a href="#sprint-checkpoint-3-restart-proof" class="depth-3">Sprint checkpoint 3: restart proof</a></li>
+<li><a href="#sprint-checkpoint-4-one-polish-feature" class="depth-3">Sprint checkpoint 4: one polish feature</a></li>
+<li><a href="#troubleshooting-guide-for-common-persistence-issues" class="depth-2">Troubleshooting guide for common persistence issues</a></li>
+<li><a href="#symptom-json-file-writes-but-load-fails-later" class="depth-3">Symptom: JSON file writes, but load fails later</a></li>
+<li><a href="#symptom-records-save-but-ids-change-after-restart" class="depth-3">Symptom: records save, but IDs change after restart</a></li>
+<li><a href="#symptom-app-crashes-if-the-data-folder-does-not-exist" class="depth-3">Symptom: app crashes if the data/ folder does not exist</a></li>
+<li><a href="#symptom-save-appears-to-work-but-the-app-restarts-empty" class="depth-3">Symptom: save appears to work, but the app restarts empty</a></li>
+<li><a href="#symptom-malformed-json-path-is-handled-but-the-app-silently-wipes-the-file" class="depth-3">Symptom: malformed JSON path is handled, but the app silently wipes the file</a></li>
+<li><a href="#checkpoint-prep-script-for-the-final-five-minutes" class="depth-2">Checkpoint-prep script for the final five minutes</a></li>
+<li><a href="#suggested-learner-self-check-before-checkpoint" class="depth-3">Suggested learner self-check before checkpoint</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day6_Hour3_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour2_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour4_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

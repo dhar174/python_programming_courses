@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 6, Hour 4: Checkpoint 3 – Data Structures Assessment (Course Hour 24) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="6">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day6_Hour4_Basics.md">
+
+    <link rel="prev" href="Day6_Hour3_Basics.html">
+    <link rel="next" href="Day7_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="6" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-06/index.html">Day 6</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 6, Hour 4: Checkpoint 3 – Data Structures Assessment (Course Hour 24)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 6</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day6_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 6</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 6, Course Hour 24 – Checkpoint 3: Data structures assessment<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led assessment + supportive debrief<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="1-learning-outcomes">1. Learning Outcomes</h2>
+<p><strong>By the end of this hour, learners will be able to:</strong></p>
+<ol>
+<li><strong>Demonstrate confident use of a dictionary</strong> for real-world data storage (name-to-phone lookup).</li>
+<li><strong>Apply safe dictionary access patterns</strong> (<code>get()</code> or <code>in</code> checks) to avoid <code>KeyError</code> crashes.</li>
+<li><strong>Format and display structured data</strong> clearly and readably (one item per line, with labels).</li>
+<li><strong>Test programs systematically</strong> by checking both successful searches and failure cases.</li>
+<li><strong>Reflect on data-structure selection</strong> and recognize dictionaries as the appropriate choice for key-value lookups.</li>
+</ol>
+<hr>
+<h2 id="2-instructor-prep-section">2. Instructor Prep Section</h2>
+<h3 id="21-before-class-physical-preparation">2.1 Before Class: Physical Preparation</h3>
+<ul>
+<li><strong>Open a clean demo file</strong> called <code>hour24_checkpoint_demo_notes.py</code> (do NOT write a full solution here before class).</li>
+<li><strong>Print or display the checkpoint prompt</strong> visibly on screen or whiteboard.</li>
+<li><strong>Prepare 3–4 test names:</strong></li>
+<li>One that exists in a sample contact dictionary (e.g., "Alice")</li>
+<li>One that definitely does not exist (e.g., "Zzzzzzz")</li>
+<li>One with mixed capitalization if you plan to discuss case sensitivity (optional but illustrative)</li>
+<li><strong>Have the assessment rubric on hand</strong> for reference during circulating and for display during the debrief.</li>
+<li><strong>Test your demo environment:</strong> Confirm Python launches, files save cleanly, and you can run a simple dictionary script without errors.</li>
+</ul>
+<h3 id="22-mindset-and-tone-preparation">2.2 Mindset and Tone Preparation</h3>
+<p>This is <strong>not a trap checkpoint</strong>. Your role is to provide a supportive environment where learners can demonstrate what they know while catching and fixing one or two common mistakes. The checkpoint succeeds when learners:
+- Leave feeling capable, not diminished.
+- Understand what went well and what to practice next.
+- Trust that "I didn't finish perfectly" is different from "I don't understand Python."</p>
+<p>Revisit these anchors before class begins:
+- <strong>Normalize productive struggle.</strong> Difficulty is data, not failure.
+- <strong>Front-load clarity.</strong> Spend the first 15 minutes ensuring learners understand the rubric, the task, and the testing strategy.
+- <strong>Protect coding time.</strong> Do not spend 45+ minutes introducing; aim for 25–35 minutes of uninterrupted work.</p>
+<h3 id="23-checkpoint-task-summary">2.3 Checkpoint Task Summary</h3>
+<p><strong>Name:</strong> Simple Contacts (In Memory)<br>
+<strong>Core idea:</strong> Build a dictionary-based contact manager that stores names as keys and phone numbers as values.<br>
+<strong>Minimum features:</strong>
+- Create a dictionary with at least 5 contacts (name → phone).
+- Display all contacts in readable format.
+- Accept user input to search for a contact by name.
+- Return the phone number if the contact exists; print a friendly message if it does not.
+- <strong>Critical requirement:</strong> Handle missing keys safely (no <code>KeyError</code> crash).</p>
+<hr>
+<h2 id="3-opening-script">3. Opening Script</h2>
+<h3 id="31-normalize-checkpoint-nerves-2-minutes">3.1 Normalize Checkpoint Nerves (~2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Welcome to Checkpoint 3. If you feel a little nervous right now, that is completely normal and actually a sign you are taking this seriously.</p>
+<p>Here is the truth: nothing in this checkpoint is outside the scope of what you have already practiced. You have worked with dictionaries. You have written loops. You have handled <code>if</code> statements. This checkpoint is not a surprise-topic hour. It is a <strong>demonstration hour</strong> — a chance for you to show what you can do.</p>
+<p>Nothing here requires advanced tricks or features you have not seen before. This checkpoint is testing the core habits from Days 4–6: data structures, safe access, and clear output."</p>
+<h3 id="32-state-what-this-checkpoint-really-tests-2-minutes">3.2 State What This Checkpoint Really Tests (~2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"This checkpoint is testing five specific skills. Let me name them clearly because clarity reduces anxiety:</p>
+<ol>
+<li>
+<p><strong>Can you choose the right data structure?</strong> For this problem, a dictionary is the answer because the task is a lookup: given a name, find a phone. A dictionary makes that natural.</p>
+</li>
+<li>
+<p><strong>Can you create and populate a structure cleanly?</strong> Five contacts is not many. You can type five lines.</p>
+</li>
+<li>
+<p><strong>Can you print data in a form a human can read?</strong> Not just <code>print(contacts)</code>. Can you format it nicely?</p>
+</li>
+<li>
+<p><strong>Can you accept and handle user input?</strong> The <code>input()</code> function is your tool.</p>
+</li>
+<li>
+<p><strong>Can you handle the case where something is missing?</strong> This is the one I want to emphasize because it is the most important: if a searched name is not there, your program should <strong>not crash</strong>. It should respond gracefully.</p>
+</li>
+</ol>
+<p>If you do those five things cleanly, you are in excellent shape."</p>
+<h3 id="33-reassure-with-a-clear-process-2-minutes">3.3 Reassure with a Clear Process (~2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"A strong way to approach this checkpoint is to build in a logical order:</p>
+<ol>
+<li><strong>First,</strong> create the dictionary with five starting contacts.</li>
+<li><strong>Second,</strong> write code to print all contacts clearly (one per line).</li>
+<li><strong>Third,</strong> ask the user for a name to search.</li>
+<li><strong>Fourth,</strong> handle the search safely—check before you access.</li>
+<li><strong>Fifth,</strong> test one name that exists and one that does not exist.</li>
+</ol>
+<p>If you follow that order, you will not feel lost. Each step builds on the one before it. And if you run into a bug, you will know which step to check first.</p>
+<p>Take a breath. This is manageable."</p>
+<h3 id="34-set-the-room-tone-1-minute">3.4 Set the Room Tone (~1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"I want this room to feel focused, not tense. You are not racing. You are thinking and building carefully. That is the goal.</p>
+<p>If you hit a bug—and most people do—do not panic. Do not erase everything. Read the error message. Look at the line number Python shows you. Reduce the problem to the smallest thing you can test. Debugging is a skill. Today is part of your practice."</p>
+<hr>
+<h2 id="4-conceptual-briefing-why-data-structures-matter">4. Conceptual Briefing: Why Data Structures Matter</h2>
+<h3 id="41-the-problem-dictionaries-solve-3-minutes">4.1 The Problem Dictionaries Solve (~3 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Before we talk about the checkpoint specifically, let me remind you why we have spent Days 4, 5, and 6 learning data structures. Why not just use lists for everything?</p>
+<p>Imagine you have 1,000 contacts. And you want to search for someone by name. With a list, you would have to loop through all 1,000 and compare names until you found a match. That works, but it is slow and annoying.</p>
+<p>With a dictionary, you just type <code>contacts['Alice']</code> and Python jumps directly to Alice's phone number. The dictionary is optimized for exactly this kind of task: fast lookups by a key.</p>
+<p>Today's checkpoint is practicing that real-world strength. Dictionaries are not just syntax to memorize. They are a tool that makes real problems simpler and faster to solve."</p>
+<h3 id="42-safe-access-is-a-habit-not-an-option-3-minutes">4.2 Safe Access Is a Habit, Not an Option (~3 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Before we move forward, I want to talk about one specific habit because it is probably the single most important thing you will learn in this checkpoint.</p>
+<p>When you write <code>contacts['Alice']</code>, you are telling Python: 'I know this key is here; give me the value.' If the key is not there, Python raises a <code>KeyError</code>. The program stops. It crashes.</p>
+<p>In the real world, you cannot always guarantee the key is there. So we have two safe patterns:</p>
+<p><strong>Pattern 1: Check first.</strong></p>
+<pre><code>if 'Alice' in contacts:
+    print(contacts['Alice'])
+else:
+    print('Contact not found.')
+</code></pre>
+<p><strong>Pattern 2: Use get() with a default.</strong></p>
+<pre><code>phone = contacts.get('Alice', 'Contact not found.')
+print(phone)
+</code></pre>
+<p>Both patterns are safe. Both let your program respond gracefully when a key is missing. In this checkpoint, I want to see you use one of these patterns. If you use bare bracket access without a check, and a searched name is missing, the program will crash, and that is the one mistake I want you to avoid."</p>
+<h3 id="43-readable-output-is-not-fancy-it-is-kind-2-minutes">4.3 Readable Output Is Not Fancy; It Is Kind (~2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Readable output means this: if I look at your screen, I can understand the information without reading Python punctuation.</p>
+<p><strong>Bad:</strong></p>
+<pre><code>{'Alice': '555-1234', 'Bob': '555-5678', 'Carol': '555-9999'}
+</code></pre>
+<p><strong>Good:</strong></p>
+<pre><code>Alice: 555-1234
+Bob: 555-5678
+Carol: 555-9999
+</code></pre>
+<p>The second version is clear. A person can skim it. They do not need to parse dictionary syntax. In a real program, that difference matters to the user. So in this checkpoint, I want to see clean, line-by-line display of contacts, not just a raw dictionary dump.</p>
+<p>This is a readability habit, not a syntax challenge. You already know how to print things. This is about using that skill thoughtfully."</p>
+<hr>
+<h2 id="5-live-demo">5. Live Demo</h2>
+<h3 id="51-framing-the-demo-1-minute">5.1 Framing the Demo (~1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"I am going to show you a <strong>testing strategy demo</strong>, not type out the full answer. Watch the process, not just the lines. I want you to see how to think about testing, not copy my code line by line."</p>
+<h3 id="52-demo-thinking-about-test-cases-5-minutes">5.2 Demo: Thinking About Test Cases (~5 minutes)</h3>
+<p>Write on screen or whiteboard (do <strong>not</strong> type a full program):</p>
+<pre><code>Test Plan for Simple Contacts:
+
+Test 1: Display all contacts
+  - Expected: All 5 contacts printed clearly, one per line
+
+Test 2: Search for a contact that exists
+  - Example: Search for &quot;Alice&quot;
+  - Expected: Print &quot;Alice's phone: 555-1234&quot; (or similar format)
+
+Test 3: Search for a contact that does NOT exist
+  - Example: Search for &quot;Zzzzzz&quot; (nonsense name)
+  - Expected: Print &quot;Contact not found&quot; (friendly message, no crash)
+
+Test 4 (optional): Case sensitivity
+  - Example: Search for &quot;alice&quot; when stored as &quot;Alice&quot;
+  - Expected: Either finds it (if normalized) or reports not found
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"These tests matter. A strong program is not one that works for the happy path once. It is one that works for both the success case and the failure case. You are not testing to be picky. You are testing because real data is messy, and real programs must be robust.</p>
+<p>Before you consider your program finished, you will run tests like these. If your program passes them, you are done. If it fails, you know exactly which piece to debug next."</p>
+<h3 id="53-demo-tiny-debugging-strategy-3-minutes">5.3 Demo: Tiny Debugging Strategy (~3 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Now, what if your test fails? Let me show you a debugging thought process.</p>
+<p><strong>Scenario:</strong> You search for a contact, and you get a <code>KeyError</code>.</p>
+<p><strong>Your thinking:</strong>
+- 'Python is telling me I asked for a key that is not in the dictionary.'
+- 'Did I spell the key the same way it is stored?'
+- 'Did I use safe access—either an <code>in</code> check or <code>.get()</code>?'
+- 'Let me test with a name I am absolutely sure is in the dictionary first.'</p>
+<p><strong>Your action:</strong>
+- Open a new file or comment out the search code.
+- Type just the dictionary and one test: <code>print(contacts['Alice'])</code> where 'Alice' is definitely a key.
+- If that works, the dictionary is fine. The issue is in your search or testing.
+- If that fails, you found the problem: either the dictionary is wrong or the key is spelled differently.</p>
+<p>That is debugging. You are not guessing. You are isolating the problem and testing each piece."</p>
+<h3 id="54-transition-to-work-time-1-minute">5.4 Transition to Work Time (~1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"You now have the prompt, the rubric, a test plan, a build order, and a debugging strategy. That is everything you need to start. Let me answer any clarification questions, and then we will begin work time."</p>
+<hr>
+<h2 id="6-practice-walkthrough-guided-planning-5-minutes">6. Practice Walkthrough: Guided Planning (~5 minutes)</h2>
+<h3 id="61-build-order-walkthrough">6.1 Build Order Walkthrough</h3>
+<p><strong>Say:</strong></p>
+<p>"Let me walk you through the build order one more time so there is no confusion about what to build and in what sequence.</p>
+<p><strong>Step 1: Create the dictionary.</strong></p>
+<p>You are going to type a dictionary called <code>contacts</code> with at least five key-value pairs. The key is the name (a string). The value is the phone number (also a string, since phone numbers are not really numbers—they have hyphens and sometimes parentheses).</p>
+<pre><code class="language-python">contacts = {
+    'Alice': '555-1234',
+    'Bob': '555-5678',
+    'Carol': '555-9999',
+    'Diana': '555-4444',
+    'Eve': '555-5555'
+}
+</code></pre>
+<p>That is step 1. Do not overthink it. Just create it.</p>
+<p><strong>Step 2: Display all contacts.</strong></p>
+<p>Now write a loop that prints every contact clearly. You can use <code>for name, phone in contacts.items():</code> and then print each one on its own line.</p>
+<p>Test this step by running the program. You should see five contacts printed neatly. If this works, move to step 3.</p>
+<p><strong>Step 3: Ask for a search.</strong></p>
+<p>Use <code>input()</code> to ask the user for a contact name to search. Store it in a variable, maybe <code>search_name</code>.</p>
+<p><strong>Step 4: Search safely.</strong></p>
+<p>Now comes the important part. Use either an <code>in</code> check or <code>.get()</code> to search safely. Do not let the program crash.</p>
+<p><strong>Step 5: Test.</strong></p>
+<p>Run the program. Search for a name you know is there (like 'Alice'). Make sure you get the phone number. Then run it again and search for a name that is definitely not there (like 'Zzzzz'). Make sure you get the 'not found' message, not a crash.</p>
+<p>If both tests pass, you are done. If one fails, go back to the step that failed and debug it."</p>
+<h3 id="62-clarify-what-readable-output-means">6.2 Clarify What 'Readable Output' Means</h3>
+<p><strong>Say:</strong></p>
+<p>"I know I mentioned readable output before. Let me show you the difference visually so there is no ambiguity.</p>
+<p><strong>Not acceptable (raw dictionary):</strong></p>
+<pre><code>{'Alice': '555-1234', 'Bob': '555-5678', ...}
+</code></pre>
+<p><strong>Acceptable (line by line):</strong></p>
+<pre><code>— All Contacts —
+Alice: 555-1234
+Bob: 555-5678
+Carol: 555-9999
+Diana: 555-4444
+Eve: 555-5555
+</code></pre>
+<p>You can adjust the format. You can use different labels. But the idea is: a person should be able to skim it without thinking about Python syntax. That is the standard."</p>
+<hr>
+<h2 id="7-lab-with-checkpoints-4560-minutes-total-work-time">7. Lab with Checkpoints (45–60 minutes total work time)</h2>
+<h3 id="71-checkpoint-1-dictionary-created-target-5-minutes-into-work-time">7.1 Checkpoint 1: Dictionary Created (Target: 5 minutes into work time)</h3>
+<p><strong>What learners should have:</strong>
+- A variable named <code>contacts</code> (or similar) assigned to a dictionary.
+- At least 5 key-value pairs (name → phone).
+- No syntax errors; the file runs without crashing.</p>
+<p><strong>How to verify (while circulating):</strong>
+- Ask: "Show me where your five contacts are stored."
+- Expected answer: Points to the dictionary declaration.
+- If they show you a list or have fewer than 5 entries, gently redirect: "A dictionary with five contacts. Go ahead and add one more now."</p>
+<p><strong>Instructor coaching if stuck:</strong>
+- <strong>Say:</strong> "Start by typing the dictionary exactly like I showed. Get it working first, then add your own names if you want."</p>
+<hr>
+<h3 id="72-checkpoint-2-all-contacts-display-clearly-target-15-minutes-into-work-time">7.2 Checkpoint 2: All Contacts Display Clearly (Target: 15 minutes into work time)</h3>
+<p><strong>What learners should have:</strong>
+- A loop (e.g., <code>for name, phone in contacts.items():</code>) that prints each contact.
+- Output formatted so each contact is on its own line with a clear label.
+- The program runs without crashing.</p>
+<p><strong>How to verify (while circulating):</strong>
+- Ask: "Run your program right now. What do you see?"
+- Expected: The learner runs it and sees 5 contacts printed neatly, one per line.
+- If they show you raw dictionary output, say: "That works for debugging, but I want to see each contact on its own line with a label. What loop could print them nicely?"</p>
+<p><strong>Instructor coaching if stuck:</strong>
+- <strong>Say:</strong> "You already know how to loop with <code>.items()</code>. You already know how to print. Combine them. Print the name and the phone on the same line."</p>
+<hr>
+<h3 id="73-checkpoint-3-safe-search-works-for-both-cases-target-35-minutes-into-work-time">7.3 Checkpoint 3: Safe Search Works for Both Cases (Target: 35 minutes into work time)</h3>
+<p><strong>What learners should have:</strong>
+- Code that asks for a search name using <code>input()</code>.
+- A safe access pattern (either <code>if name in contacts:</code> or <code>contacts.get()</code>).
+- Two test runs: one successful (name exists) and one failure case (name does not exist).
+- No <code>KeyError</code> crash; a friendly message for missing contacts.</p>
+<p><strong>How to verify (while circulating):</strong>
+- Ask: "Run the program. Search for 'Alice'." (Wait for result.)
+- Ask: "Now run it again. Search for a name you know is not there." (Wait for result.)
+- Expected: One prints the phone number; one prints a friendly message.
+- If the second test crashes with a <code>KeyError</code>, say: "Let's look at your search code. Did you use an <code>in</code> check or <code>.get()</code>?"</p>
+<p><strong>Instructor coaching if stuck:</strong>
+- <strong>Say:</strong> "Show me your search code. Is there a check before you access the dictionary?"
+- If no check: "Add a check. Either <code>if name in contacts:</code> or use <code>get()</code>. You pick."
+- If they are unsure which: "Both are fine. Use whichever one makes sense to you. I recommend <code>get()</code> because it is a one-liner."</p>
+<hr>
+<h3 id="74-mid-session-timing-and-motivation-2530-minutes-in">7.4 Mid-Session Timing and Motivation (~25–30 minutes in)</h3>
+<p><strong>Say:</strong></p>
+<p>"You are halfway through. By now, you should have the dictionary created, contacts printing clearly, and at least one search test working. If you do, you are in good shape. If not, simplify and focus on the minimum requirements first. Extra features come later.</p>
+<p>Remember: a simple, correct program is better than a half-finished fancy program."</p>
+<hr>
+<h3 id="75-late-session-check-in-5055-minutes-in">7.5 Late-Session Check-In (~50–55 minutes in)</h3>
+<p><strong>Say:</strong></p>
+<p>"You have about five to ten minutes left. Make sure you have tested an existing name and a missing name. That missing-name test is the most important. If your program is missing that test, run it now before you save."</p>
+<hr>
+<h2 id="8-troubleshooting-pitfalls">8. Troubleshooting Pitfalls</h2>
+<h3 id="81-pitfall-unsafe-bracket-access">8.1 Pitfall: Unsafe Bracket Access</h3>
+<p><strong>Problem pattern:</strong></p>
+<pre><code class="language-python">print(contacts[search_name])  # No check; KeyError if missing
+</code></pre>
+<p><strong>Why it happens:</strong>
+- Learner assumes the searched name will always be there.
+- They forget (or do not realize) that user input might be unexpected.</p>
+<p><strong>Instructor response:</strong>
+- <strong>Say:</strong> "Show me the line where you search for the contact. Is there a check before you access the dictionary?"
+- If no: "Add a check. Try this: <code>if search_name in contacts:</code> before the access. Or use <code>.get()</code> instead."
+- <strong>Do not</strong> type the solution for them; guide them to the pattern they already know.</p>
+<hr>
+<h3 id="82-pitfall-printing-raw-dictionary-only">8.2 Pitfall: Printing Raw Dictionary Only</h3>
+<p><strong>Problem pattern:</strong></p>
+<pre><code class="language-python">print(contacts)  # Outputs: {'Alice': '555-1234', ...}
+</code></pre>
+<p><strong>Why it happens:</strong>
+- Learner used <code>print(contacts)</code> for debugging and thinks that is the final output.
+- They do not realize the checkpoint wants formatted display.</p>
+<p><strong>Instructor response:</strong>
+- <strong>Say:</strong> "That print is fine for debugging. Now, how would you print each contact on its own line so a person can read it easily?"
+- Guide them toward the loop: "Use a <code>for</code> loop with <code>contacts.items()</code>. Print one contact per line."</p>
+<hr>
+<h3 id="83-pitfall-swapped-keys-and-values-in-loop">8.3 Pitfall: Swapped Keys and Values in Loop</h3>
+<p><strong>Problem pattern:</strong></p>
+<pre><code class="language-python">for phone, name in contacts.items():
+    print(name, phone)  # Prints in wrong order
+</code></pre>
+<p><strong>Why it happens:</strong>
+- Learner forgets that <code>.items()</code> returns <code>(key, value)</code> pairs in that order.
+- They reverse the variables without thinking.</p>
+<p><strong>Instructor response:</strong>
+- <strong>Say:</strong> "Say out loud what your dictionary maps. Is it name to phone, or phone to name?"
+- If learner says "name to phone," follow up: "Good. So the key is name and the value is phone. In your loop, make sure the variable names match that meaning."</p>
+<hr>
+<h3 id="84-pitfall-testing-only-success-cases">8.4 Pitfall: Testing Only Success Cases</h3>
+<p><strong>Problem pattern:</strong>
+- Learner searches for a contact that exists, sees a result, and considers the program done.
+- They never test a missing name.</p>
+<p><strong>Instructor response:</strong>
+- <strong>Say:</strong> "Now test a name you know is not there. What happens? That test matters just as much as the success case."
+- If the program crashes, treat it as a learning moment, not a failure: "Great. Now you know what to fix. This is exactly why we test."</p>
+<hr>
+<h3 id="85-pitfall-case-sensitivity-confusion">8.5 Pitfall: Case Sensitivity Confusion</h3>
+<p><strong>Problem pattern:</strong>
+- Learner stored "Alice" but searches for "alice" and thinks the dictionary is broken.</p>
+<p><strong>Instructor response:</strong>
+- <strong>Say:</strong> "Python is case-sensitive. 'Alice' and 'alice' are different strings. Either search using the exact capitalization or normalize both sides with <code>.lower()</code>. For now, either approach is fine."</p>
+<hr>
+<h3 id="86-pitfall-overbuilding-before-basics-work">8.6 Pitfall: Overbuilding Before Basics Work</h3>
+<p><strong>Problem pattern:</strong>
+- Learner starts adding menus, update features, or extra formatting before search is working.
+- This creates more bugs and confusion.</p>
+<p><strong>Instructor response:</strong>
+- <strong>Say:</strong> "Great ideas. Freeze the extra features for now. Do you already have five contacts, clear listing, safe search, and both test cases? If not, return to the minimum first. Once that works perfectly, then add the fancy parts."</p>
+<hr>
+<h2 id="9-quick-check-questions-debrief-10-minutes">9. Quick-Check Questions (Debrief, ~10 minutes)</h2>
+<h3 id="91-quick-verbal-check-supported-reflection">9.1 Quick Verbal Check (Supported Reflection)</h3>
+<p>Ask these questions <strong>aloud</strong> after work time. Learners can answer verbally or think to themselves:</p>
+<ol>
+<li>
+<p><strong>"What structure did you use for the contacts, and why was it a good fit?"</strong>
+   - Expected answer: "A dictionary, because I needed to look up a name and get the phone number."
+   - Teaching moment: Reinforce that structure choice is not arbitrary; it matches the problem.</p>
+</li>
+<li>
+<p><strong>"How did you avoid a <code>KeyError</code> for missing names?"</strong>
+   - Expected answers: "I used <code>if name in contacts:</code>" or "I used <code>get()</code> with a default message."
+   - Teaching moment: Both are correct. Celebrate both approaches.</p>
+</li>
+<li>
+<p><strong>"What test case gave you the most confidence that your program worked?"</strong>
+   - Expected answer: Anything thoughtful (e.g., "Testing a missing name and seeing the friendly message instead of a crash").
+   - Teaching moment: Confidence comes from testing, not from hoping it works.</p>
+</li>
+<li>
+<p><strong>"What data-structure topic do you want to practice again before the next checkpoint?"</strong>
+   - Expected answer: Varies by learner. Possible answers: "Dictionaries," "loops," "safe access."
+   - Teaching moment: Learners are identifying their own learning needs. That is the metacognition skill you want.</p>
+</li>
+</ol>
+<h3 id="92-exit-ticket-written-or-spoken">9.2 Exit Ticket (Written or Spoken)</h3>
+<p>Learners write or say one thing for each category:</p>
+<ul>
+<li><strong>One thing that went well:</strong> (e.g., "I got the dictionary working right away.")</li>
+<li><strong>One thing that was tricky:</strong> (e.g., "I forgot to test a missing name at first.")</li>
+<li><strong>One thing I will practice next:</strong> (e.g., "Safe key access with <code>.get()</code>.")</li>
+</ul>
+<hr>
+<h2 id="10-wrap-up">10. Wrap-Up</h2>
+<h3 id="101-celebrate-the-milestone-2-minutes">10.1 Celebrate the Milestone (~2 minutes)</h3>
+<p><strong>Say:</strong></p>
+<p>"Checkpoint 3 is a real milestone. At this point, you are not just learning syntax anymore. You are choosing the right data structure for a problem. You are storing data thoughtfully. You are searching it safely. And you are presenting it clearly. That is the foundation of many real programs—from contact managers to inventory systems to user databases.</p>
+<p>The fact that you spent this hour thinking carefully about data, about safety, and about output quality means you are developing habits that will serve you for years."</p>
+<h3 id="102-normalize-continued-growth-1-minute">10.2 Normalize Continued Growth (~1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"If your program did not work perfectly, that does not erase what you understood. Some of you will leave this hour with a perfect checkpoint. Some of you will leave with a nearly-working program and a clear list of next steps. Both of those are progress.</p>
+<p>The goal of this checkpoint is not perfection. It is <strong>learning</strong>. And learning means testing, making mistakes, and fixing them. You did that today. That is success."</p>
+<h3 id="103-bridge-to-next-steps-1-minute">10.3 Bridge to Next Steps (~1 minute)</h3>
+<p><strong>Say:</strong></p>
+<p>"After this checkpoint, we shift focus. We move from data structures to control flow in depth. But the habits you built today—choosing the right structure, safe access, clear output—those habits will show up in every program you write from now on. That is why they matter."</p>
+<hr>
+<h2 id="11-facilitation-notes-timing-breakdown-and-facilitation-tips">11. Facilitation Notes (Timing Breakdown and Facilitation Tips)</h2>
+<h3 id="111-minute-by-minute-timing-breakdown">11.1 Minute-by-Minute Timing Breakdown</h3>
+<pre><code>0:00–0:10  Opening + Learning Outcomes
+  - Normalize nerves (2 min)
+  - State what the checkpoint tests (2 min)
+  - Reassure with a process (2 min)
+  - Set room tone (1 min)
+  - Ask for clarification (1 min)
+
+0:10–0:18  Conceptual Briefing + Planning
+  - Why data structures matter (3 min)
+  - Safe access is a habit (3 min)
+  - Readable output is kind (2 min)
+
+0:18–0:28  Live Demo + Testing Strategy
+  - Frame the demo (1 min)
+  - Test cases walkthrough (5 min)
+  - Debugging strategy (3 min)
+
+0:28–0:45  Individual Work Time (Core Coding)
+  - Circulate + verify 3 checkpoints
+  - Coaching prompts
+  - Mid-session check-in (~min 25)
+  - Late-session check-in (~min 50)
+
+0:45–0:57  Submission + Debrief
+  - Transition to debrief (1 min)
+  - High-level review + common patterns (5 min)
+  - Quick-check questions (4 min)
+  - Exit ticket (2 min)
+
+0:57–1:00  Wrap-Up and Reflection
+  - Celebrate milestone (2 min)
+  - Normalize continued growth (1 min)
+</code></pre>
+<h3 id="112-facilitation-tips">11.2 Facilitation Tips</h3>
+<p><strong>During Opening:</strong>
+- Speak slowly. Pause between ideas. This is not a race to cover content.
+- Make eye contact. Nervous learners need to see you are calm and confident.
+- Invite one clarification question, not ten. Too many questions now eat work time.</p>
+<p><strong>During Demo:</strong>
+- Do not write a full solution. Seriously. Write test cases and strategy instead.
+- Point at the screen; narrate the thinking, not just the syntax.
+- Ask one prediction question: "What do you think this test will show?"</p>
+<p><strong>During Work Time:</strong>
+- Circulate constantly. Do not sit at the front.
+- Use the three coaching prompts (above) to guide without solving.
+- If two or more learners have the same bug, pause the room and address it briefly for everyone.
+- Celebrate small wins: "I like how you tested both cases before declaring the program done."</p>
+<p><strong>During Debrief:</strong>
+- Do not read a full solution line by line. That turns the debrief into a copying session.
+- Discuss patterns: "Most strong solutions used either <code>.get()</code> or an <code>in</code> check. Both work."
+- Ask learners to share what went well. Peer-to-peer learning is powerful.</p>
+<p><strong>Tone Throughout:</strong>
+- Supportive, not condescending.
+- Curious, not judgmental.
+- Constructive, not critical.</p>
+<h3 id="113-circulation-checklist">11.3 Circulation Checklist</h3>
+<p>While moving around the room, watch for:</p>
+<ul>
+<li>✓ Dictionary created with at least 5 entries.</li>
+<li>✓ Loop printing contacts one per line (not raw dictionary).</li>
+<li>✓ Safe search code (either <code>in</code> check or <code>.get()</code>).</li>
+<li>✓ At least one test run visible (code has been executed).</li>
+<li>✓ Friendly message for missing contacts, not a crash.</li>
+</ul>
+<hr>
+<h2 id="12-assessment-rubric">12. Assessment Rubric</h2>
+<h3 id="121-rubric-categories-and-standards">12.1 Rubric Categories and Standards</h3>
+<p>Use this simple rubric to guide your assessment and feedback. You do not need to assign numerical scores; use these categories to shape your debrief remarks.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Category</strong></th>
+<th><strong>Meets Standard</strong></th>
+<th><strong>Near Standard</strong></th>
+<th><strong>Below Standard</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dictionary Structure</strong></td>
+<td>Uses dictionary for name → phone mapping; 5+ entries</td>
+<td>Uses dictionary but fewer than 5 entries or unclear mapping</td>
+<td>Uses list or other structure; does not use dictionary</td>
+</tr>
+<tr>
+<td><strong>Safe Key Access</strong></td>
+<td>Avoids <code>KeyError</code> using <code>in</code> check or <code>.get()</code>; handles missing names gracefully</td>
+<td>Mostly avoids crashes; one or two unsafe lines</td>
+<td>Crashes on missing key; no safe access pattern</td>
+</tr>
+<tr>
+<td><strong>Display / Output</strong></td>
+<td>All contacts displayed clearly, one per line with labels</td>
+<td>Mostly clear; minor formatting issues</td>
+<td>Raw dictionary dump only or unclear output</td>
+</tr>
+<tr>
+<td><strong>Testing Evidence</strong></td>
+<td>Tested with existing and missing names; both cases work</td>
+<td>Tested one case clearly; other case unclear</td>
+<td>No visible testing or testing incomplete</td>
+</tr>
+<tr>
+<td><strong>Code Readability</strong></td>
+<td>Meaningful variable names, clean structure, light comments where helpful</td>
+<td>Mostly readable; some unclear names or messy structure</td>
+<td>Hard to follow; unclear variable names</td>
+</tr>
+</tbody>
+</table>
+<h3 id="122-acceptable-solution-patterns">12.2 Acceptable Solution Patterns</h3>
+<p>Without revealing the full answer, here are two correct structural approaches:</p>
+<p><strong>Approach A: Using <code>in</code> Check</strong></p>
+<pre><code class="language-python">contacts = { ... }
+# Display all
+for name, phone in contacts.items():
+    print(f&quot;{name}: {phone}&quot;)
+
+# Search safely
+search_name = input(&quot;Enter name: &quot;)
+if search_name in contacts:
+    print(f&quot;Phone: {contacts[search_name]}&quot;)
+else:
+    print(&quot;Contact not found.&quot;)
+</code></pre>
+<p><strong>Approach B: Using <code>.get()</code></strong></p>
+<pre><code class="language-python">contacts = { ... }
+# Display all
+for name, phone in contacts.items():
+    print(f&quot;{name}: {phone}&quot;)
+
+# Search safely
+search_name = input(&quot;Enter name: &quot;)
+phone = contacts.get(search_name, &quot;Contact not found.&quot;)
+if phone == &quot;Contact not found.&quot;:
+    print(phone)
+else:
+    print(f&quot;Phone: {phone}&quot;)
+</code></pre>
+<p>Both are correct. Learners using either pattern have demonstrated the core habit: safe dictionary access.</p>
+<h3 id="123-remediation-pathways">12.3 Remediation Pathways</h3>
+<p><strong>If learner struggled with dictionary creation:</strong>
+- Recommend 5–10 minutes of additional dictionary-building exercises (create dicts by hand, access by key, add a new entry).
+- Use simple, real-world examples (student grades, favorite colors).</p>
+<p><strong>If learner struggled with safe access:</strong>
+- This is the highest-priority remediation. Safe access prevents crashes and is a foundational habit.
+- Recommend 10+ minutes of targeted practice: deliberately test present and missing keys; practice both <code>in</code> checks and <code>.get()</code>.</p>
+<p><strong>If learner struggled with loops for display:</strong>
+- Recommend practice looping through <code>.items()</code> and printing formatted output.
+- Start with a small dictionary (3 items) and perfect the loop before scaling to 5.</p>
+<p><strong>If learner struggled with reading/following the prompt:</strong>
+- Recommend checking off requirements one by one as you code.
+- Underline action verbs (create, print, ask, search, handle) so they do not miss a requirement.</p>
+<hr>
+<p><strong>End of Instructor Lecture Script</strong></p>
+<p><strong>Total word count: 3,247 words</strong></p>
+<p><strong>All 12 sections present and fully developed.</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-learning-outcomes" class="depth-2">1. Learning Outcomes</a></li>
+<li><a href="#2-instructor-prep-section" class="depth-2">2. Instructor Prep Section</a></li>
+<li><a href="#21-before-class-physical-preparation" class="depth-3">2.1 Before Class: Physical Preparation</a></li>
+<li><a href="#22-mindset-and-tone-preparation" class="depth-3">2.2 Mindset and Tone Preparation</a></li>
+<li><a href="#23-checkpoint-task-summary" class="depth-3">2.3 Checkpoint Task Summary</a></li>
+<li><a href="#3-opening-script" class="depth-2">3. Opening Script</a></li>
+<li><a href="#31-normalize-checkpoint-nerves-2-minutes" class="depth-3">3.1 Normalize Checkpoint Nerves (~2 minutes)</a></li>
+<li><a href="#32-state-what-this-checkpoint-really-tests-2-minutes" class="depth-3">3.2 State What This Checkpoint Really Tests (~2 minutes)</a></li>
+<li><a href="#33-reassure-with-a-clear-process-2-minutes" class="depth-3">3.3 Reassure with a Clear Process (~2 minutes)</a></li>
+<li><a href="#34-set-the-room-tone-1-minute" class="depth-3">3.4 Set the Room Tone (~1 minute)</a></li>
+<li><a href="#4-conceptual-briefing-why-data-structures-matter" class="depth-2">4. Conceptual Briefing: Why Data Structures Matter</a></li>
+<li><a href="#41-the-problem-dictionaries-solve-3-minutes" class="depth-3">4.1 The Problem Dictionaries Solve (~3 minutes)</a></li>
+<li><a href="#42-safe-access-is-a-habit-not-an-option-3-minutes" class="depth-3">4.2 Safe Access Is a Habit, Not an Option (~3 minutes)</a></li>
+<li><a href="#43-readable-output-is-not-fancy-it-is-kind-2-minutes" class="depth-3">4.3 Readable Output Is Not Fancy; It Is Kind (~2 minutes)</a></li>
+<li><a href="#5-live-demo" class="depth-2">5. Live Demo</a></li>
+<li><a href="#51-framing-the-demo-1-minute" class="depth-3">5.1 Framing the Demo (~1 minute)</a></li>
+<li><a href="#52-demo-thinking-about-test-cases-5-minutes" class="depth-3">5.2 Demo: Thinking About Test Cases (~5 minutes)</a></li>
+<li><a href="#53-demo-tiny-debugging-strategy-3-minutes" class="depth-3">5.3 Demo: Tiny Debugging Strategy (~3 minutes)</a></li>
+<li><a href="#54-transition-to-work-time-1-minute" class="depth-3">5.4 Transition to Work Time (~1 minute)</a></li>
+<li><a href="#6-practice-walkthrough-guided-planning-5-minutes" class="depth-2">6. Practice Walkthrough: Guided Planning (~5 minutes)</a></li>
+<li><a href="#61-build-order-walkthrough" class="depth-3">6.1 Build Order Walkthrough</a></li>
+<li><a href="#62-clarify-what-readable-output-means" class="depth-3">6.2 Clarify What &#x27;Readable Output&#x27; Means</a></li>
+<li><a href="#7-lab-with-checkpoints-4560-minutes-total-work-time" class="depth-2">7. Lab with Checkpoints (45–60 minutes total work time)</a></li>
+<li><a href="#71-checkpoint-1-dictionary-created-target-5-minutes-into-work-time" class="depth-3">7.1 Checkpoint 1: Dictionary Created (Target: 5 minutes into work time)</a></li>
+<li><a href="#72-checkpoint-2-all-contacts-display-clearly-target-15-minutes-into-work-time" class="depth-3">7.2 Checkpoint 2: All Contacts Display Clearly (Target: 15 minutes into work time)</a></li>
+<li><a href="#73-checkpoint-3-safe-search-works-for-both-cases-target-35-minutes-into-work-time" class="depth-3">7.3 Checkpoint 3: Safe Search Works for Both Cases (Target: 35 minutes into work time)</a></li>
+<li><a href="#74-mid-session-timing-and-motivation-2530-minutes-in" class="depth-3">7.4 Mid-Session Timing and Motivation (~25–30 minutes in)</a></li>
+<li><a href="#75-late-session-check-in-5055-minutes-in" class="depth-3">7.5 Late-Session Check-In (~50–55 minutes in)</a></li>
+<li><a href="#8-troubleshooting-pitfalls" class="depth-2">8. Troubleshooting Pitfalls</a></li>
+<li><a href="#81-pitfall-unsafe-bracket-access" class="depth-3">8.1 Pitfall: Unsafe Bracket Access</a></li>
+<li><a href="#82-pitfall-printing-raw-dictionary-only" class="depth-3">8.2 Pitfall: Printing Raw Dictionary Only</a></li>
+<li><a href="#83-pitfall-swapped-keys-and-values-in-loop" class="depth-3">8.3 Pitfall: Swapped Keys and Values in Loop</a></li>
+<li><a href="#84-pitfall-testing-only-success-cases" class="depth-3">8.4 Pitfall: Testing Only Success Cases</a></li>
+<li><a href="#85-pitfall-case-sensitivity-confusion" class="depth-3">8.5 Pitfall: Case Sensitivity Confusion</a></li>
+<li><a href="#86-pitfall-overbuilding-before-basics-work" class="depth-3">8.6 Pitfall: Overbuilding Before Basics Work</a></li>
+<li><a href="#9-quick-check-questions-debrief-10-minutes" class="depth-2">9. Quick-Check Questions (Debrief, ~10 minutes)</a></li>
+<li><a href="#91-quick-verbal-check-supported-reflection" class="depth-3">9.1 Quick Verbal Check (Supported Reflection)</a></li>
+<li><a href="#92-exit-ticket-written-or-spoken" class="depth-3">9.2 Exit Ticket (Written or Spoken)</a></li>
+<li><a href="#10-wrap-up" class="depth-2">10. Wrap-Up</a></li>
+<li><a href="#101-celebrate-the-milestone-2-minutes" class="depth-3">10.1 Celebrate the Milestone (~2 minutes)</a></li>
+<li><a href="#102-normalize-continued-growth-1-minute" class="depth-3">10.2 Normalize Continued Growth (~1 minute)</a></li>
+<li><a href="#103-bridge-to-next-steps-1-minute" class="depth-3">10.3 Bridge to Next Steps (~1 minute)</a></li>
+<li><a href="#11-facilitation-notes-timing-breakdown-and-facilitation-tips" class="depth-2">11. Facilitation Notes (Timing Breakdown and Facilitation Tips)</a></li>
+<li><a href="#111-minute-by-minute-timing-breakdown" class="depth-3">11.1 Minute-by-Minute Timing Breakdown</a></li>
+<li><a href="#112-facilitation-tips" class="depth-3">11.2 Facilitation Tips</a></li>
+<li><a href="#113-circulation-checklist" class="depth-3">11.3 Circulation Checklist</a></li>
+<li><a href="#12-assessment-rubric" class="depth-2">12. Assessment Rubric</a></li>
+<li><a href="#121-rubric-categories-and-standards" class="depth-3">12.1 Rubric Categories and Standards</a></li>
+<li><a href="#122-acceptable-solution-patterns" class="depth-3">12.2 Acceptable Solution Patterns</a></li>
+<li><a href="#123-remediation-pathways" class="depth-3">12.3 Remediation Pathways</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day6_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day6_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

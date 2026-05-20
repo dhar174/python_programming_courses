@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 8, Hour 3: Search, Filter, and Pagination Patterns | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="8">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day8_Hour3_Advanced.md">
+
+    <link rel="prev" href="Day8_Hour2_Advanced.html">
+    <link rel="next" href="Day8_Hour4_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="8" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-08/index.html">Day 8</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 8, Hour 3: Search, Filter, and Pagination Patterns</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 8</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour4_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day8_Hour3_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Advanced - Session 8</strong></p>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<p><strong>Total Time:</strong> 60 minutes<br>
+- Problem framing and user need: 5 minutes<br>
+- Direct instruction on search and paging patterns: 15 minutes<br>
+- Live demo with safe SQL: 10 minutes<br>
+- Guided implementation sprint: 25 minutes<br>
+- Debrief and exit ticket: 5 minutes</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, learners will be able to:
+1. Add a practical search feature to a SQLite-backed application
+2. Use parameterized <code>LIKE</code> queries safely
+3. Explain the purpose of <code>LIMIT</code> and <code>OFFSET</code> in basic pagination
+4. Keep search and pagination logic in the repository layer instead of scattering it across the app
+5. Recognize common usability and correctness issues that appear when data sets grow</p>
+<hr>
+<h2 id="instructor-prep-notes">Instructor Prep Notes</h2>
+<ul>
+<li>Seed the database with enough records to make search meaningful</li>
+<li>Prepare examples with multiple categories and statuses so filters return noticeably different results</li>
+<li>Decide whether learners will expose search through the GUI, a small script, or both</li>
+<li>Keep pagination simple; learners do not need fully polished page controls to meet the hour goal</li>
+</ul>
+<hr>
+<h2 id="section-1-why-search-matters-5-minutes">Section 1: Why Search Matters (5 minutes)</h2>
+<h3 id="opening-script">Opening Script</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>An application stops feeling like a toy when users can actually find what they need. Up until now, many of our demos have involved tiny lists where we can just show all records. That works for ten rows. It stops working when the data grows. Search, filtering, and pagination are not glamorous features, but they are exactly the features that make users trust an application.</p>
+<h3 id="the-real-user-story">The Real User Story</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Imagine a task tracker with 300 records. A user wants all items in the "billing" category that are still "open." They do not want to scroll forever. They do not want to visually inspect every row. They want the app to answer a question quickly and safely.</p>
+<p>That is our design lens today. We are not adding search because it is on a feature checklist. We are adding search because it reduces friction for the user and creates better access patterns for larger data sets.</p>
+<hr>
+<h2 id="section-2-core-search-and-pagination-concepts-15-minutes">Section 2: Core Search and Pagination Concepts (15 minutes)</h2>
+<h3 id="safe-search-with-like">Safe Search with <code>LIKE</code></h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The first pattern we need is a parameterized <code>LIKE</code> query. In SQLite, <code>LIKE</code> lets us match partial strings. The mistake beginners often make is building SQL like this:</p>
+<pre><code class="language-python">query = f&quot;SELECT * FROM records WHERE title LIKE '%{term}%'&quot;
+</code></pre>
+<p>That is exactly what we do not want. Even in a course project, get learners in the habit of separating SQL structure from user-provided values.</p>
+<p>Instead, do this:</p>
+<pre><code class="language-python">term = f&quot;%{search_term.strip().lower()}%&quot;
+query = &quot;&quot;&quot;
+    SELECT id, title, category, status, priority, created_at
+    FROM records
+    WHERE lower(title) LIKE ?
+       OR lower(category) LIKE ?
+    ORDER BY id ASC
+&quot;&quot;&quot;
+rows = connection.execute(query, (term, term)).fetchall()
+</code></pre>
+<p>Point out two things:</p>
+<ol>
+<li>The wildcard characters are added to the parameter value, not concatenated into the SQL string structure</li>
+<li>We normalize case so the search feels more forgiving</li>
+</ol>
+<h3 id="filtering-vs-searching">Filtering vs Searching</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>It is helpful to distinguish these terms:</p>
+<ul>
+<li>Search usually means partial text matching</li>
+<li>Filter usually means narrow by an exact field or a constrained set of values</li>
+</ul>
+<p>For example:</p>
+<ul>
+<li>Search: title contains "invoice"</li>
+<li>Filter: status equals "open"</li>
+<li>Filter: category equals "finance"</li>
+</ul>
+<p>Combining them is normal. A clean repository method might accept both:</p>
+<pre><code class="language-python">def search(
+    self,
+    term: str = &quot;&quot;,
+    status: str | None = None,
+    category: str | None = None,
+    limit: int = 20,
+    offset: int = 0,
+) -&gt; list[Record]:
+    ...
+</code></pre>
+<h3 id="why-pagination-exists">Why Pagination Exists</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Pagination exists because returning everything all the time is inefficient and unpleasant. When the data set grows, users should not have to render every row just to see the first screen of results. Pagination also gives the UI or API a predictable chunk size.</p>
+<p>The simplest version uses:</p>
+<ul>
+<li><code>LIMIT</code> for how many rows you want</li>
+<li><code>OFFSET</code> for how many rows to skip</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-sql">SELECT id, title, category, status, priority, created_at
+FROM records
+ORDER BY id ASC
+LIMIT 20 OFFSET 40;
+</code></pre>
+<p>That means: give me 20 rows starting after the first 40.</p>
+<h3 id="what-practical-means-in-this-course">What "Practical" Means in This Course</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>We are not building infinite scroll, cursor-based pagination, or a dynamic search ranking engine. We are keeping this practical:</p>
+<ul>
+<li>one search box</li>
+<li>maybe one status filter</li>
+<li>a small page size such as 10 or 20</li>
+<li>optional next and previous controls</li>
+</ul>
+<p>That is enough to teach the pattern and improve the app.</p>
+<hr>
+<h2 id="section-3-live-demo-10-minutes">Section 3: Live Demo (10 minutes)</h2>
+<h3 id="repository-search-method">Repository Search Method</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let me show a repository method that stays readable and safe.</p>
+<pre><code class="language-python">import sqlite3
+from contextlib import closing
+
+
+class SQLiteRecordRepository:
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+
+    def search(
+        self,
+        term: str = &quot;&quot;,
+        status: str | None = None,
+        category: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -&gt; list[Record]:
+        conditions = []
+        parameters: list[object] = []
+
+        if term.strip():
+            wildcard = f&quot;%{term.strip().lower()}%&quot;
+            conditions.append(&quot;(lower(title) LIKE ? OR lower(category) LIKE ?)&quot;)
+            parameters.extend([wildcard, wildcard])
+
+        if status:
+            conditions.append(&quot;status = ?&quot;)
+            parameters.append(status)
+
+        if category:
+            conditions.append(&quot;category = ?&quot;)
+            parameters.append(category)
+
+        where_clause = &quot;&quot;
+        if conditions:
+            where_clause = &quot;WHERE &quot; + &quot; AND &quot;.join(conditions)
+
+        query = f&quot;&quot;&quot;
+            SELECT id, title, category, status, priority, created_at
+            FROM records
+            {where_clause}
+            ORDER BY id ASC
+            LIMIT ? OFFSET ?
+        &quot;&quot;&quot;
+        parameters.extend([limit, offset])
+
+        with closing(sqlite3.connect(self.db_path)) as connection:
+            connection.row_factory = sqlite3.Row
+            rows = connection.execute(query, tuple(parameters)).fetchall()
+
+        return [Record.from_row(row) for row in rows]
+</code></pre>
+<p>Narrate what matters:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The SQL structure is still visible. The values remain parameterized. We only add conditions that are needed. The method returns model objects so the service and UI stay consistent.</p>
+<h3 id="optional-ui-hook">Optional UI Hook</h3>
+<p>Then show a tiny GUI or script hook:</p>
+<pre><code class="language-python">def on_search(self):
+    term = self.search_var.get()
+    status = self.status_var.get() or None
+    category = self.category_var.get() or None
+    self.current_offset = 0
+    records = self.service.search_records(
+        term=term, status=status, category=category, limit=20, offset=0
+    )
+    self.populate_table(records)
+
+
+def on_next_page(self):
+    self.current_offset += 20
+    records = self.service.search_records(
+        term=self.search_var.get(),
+        status=self.status_var.get() or None,
+        category=self.category_var.get() or None,
+        limit=20,
+        offset=self.current_offset,
+    )
+    self.populate_table(records)
+</code></pre>
+<p>Then caution learners:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Notice that page state belongs in the UI layer, but query logic belongs in the service and repository layers. That separation keeps the design understandable.</p>
+<h3 id="demo-debrief">Demo Debrief</h3>
+<p>Ask:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>What would break if I moved the SQL into the button callback? The answer is not just "it would look messy." The deeper answer is that the logic would be harder to test, harder to reuse, and harder to expose later through an API.</p>
+<hr>
+<h2 id="section-4-guided-implementation-sprint-25-minutes">Section 4: Guided Implementation Sprint (25 minutes)</h2>
+<h3 id="lab-brief">Lab Brief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Your mission is to make your app easier to use when the number of records grows. At minimum, add a search capability backed by the repository. If you have time, add a simple filter and next/previous paging.</p>
+<h3 id="minimum-success-criteria">Minimum Success Criteria</h3>
+<p>Learners must:</p>
+<ol>
+<li>Add a repository search method</li>
+<li>Use parameterized SQL</li>
+<li>Return correct results for at least one search scenario</li>
+<li>Keep the logic outside the GUI callback or route handler</li>
+</ol>
+<h3 id="stronger-submission-criteria">Stronger Submission Criteria</h3>
+<p>If time allows, learners should also:</p>
+<ol>
+<li>Add an exact-match status filter</li>
+<li>Add <code>LIMIT</code> and <code>OFFSET</code></li>
+<li>Add a next/previous page pattern</li>
+<li>Show a "no results" state clearly</li>
+</ol>
+<h3 id="suggested-lab-sequence">Suggested Lab Sequence</h3>
+<ol>
+<li>Start in the repository with a fixed search term hard-coded in a tiny script</li>
+<li>Confirm the query returns the expected rows</li>
+<li>Move the method into the service layer if needed</li>
+<li>Connect the search term from the GUI or script input</li>
+<li>Add pagination only after search works</li>
+</ol>
+<p>This sequence reduces cognitive overload. Learners who attempt search, filter, paging, sorting, and UI polish all at once usually lose the thread.</p>
+<h3 id="coaching-prompts-during-circulation">Coaching Prompts During Circulation</h3>
+<p>Ask questions like:</p>
+<ul>
+<li>What does this query return if the term is empty?</li>
+<li>Where are you adding the wildcard characters?</li>
+<li>What happens if there are zero matching results?</li>
+<li>How will the user know what page they are on?</li>
+<li>Are you ordering the results deterministically?</li>
+</ul>
+<p>That last question is important. Pagination without deterministic ordering creates strange behavior. If page one and page two are based on an unstable order, users may see duplicates or missing rows.</p>
+<h3 id="common-bugs-to-catch-early">Common Bugs to Catch Early</h3>
+<ul>
+<li>String-concatenated SQL with user input</li>
+<li>Search only checks one field when the learner intended multiple</li>
+<li>Offset increases forever without reset when a new search starts</li>
+<li>Previous page can go negative</li>
+<li>Empty term returns no rows when the learner expected "show all"</li>
+<li>UI does not clear stale rows before displaying new results</li>
+</ul>
+<h3 id="instructor-recovery-script-for-overwhelmed-learners">Instructor Recovery Script for Overwhelmed Learners</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's reduce scope. First, search only by title. Then confirm it works. After that, search by title or category. Then, and only then, consider adding a filter. Pagination is optional until the core search path is correct.</p>
+<h3 id="stretch-extension">Stretch Extension</h3>
+<p>Advanced learners can add sorting:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If you add sorting, do it carefully. Do not pass arbitrary column names directly from user input into SQL. Use a controlled mapping of allowed choices such as <code>"title"</code>, <code>"category"</code>, <code>"status"</code>, <code>"priority"</code>, or <code>"created_at"</code>.</p>
+<hr>
+<h2 id="section-5-debrief-and-exit-ticket-5-minutes">Section 5: Debrief and Exit Ticket (5 minutes)</h2>
+<h3 id="debrief-script">Debrief Script</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Search and pagination are great examples of features that look small on the surface but reveal the quality of your architecture. If your repository is clean, these features are straightforward. If your data access is tangled with the UI, these features become frustrating very quickly.</p>
+<h3 id="share-out-questions">Share-Out Questions</h3>
+<p>Invite learners to respond:</p>
+<ul>
+<li>What field did you search by?</li>
+<li>Did you add a filter, pagination, or both?</li>
+<li>Where did you keep your query logic?</li>
+<li>What bug did you hit that taught you something useful?</li>
+</ul>
+<h3 id="exit-ticket">Exit Ticket</h3>
+<ol>
+<li>Where should the <code>%</code> wildcard be added: the SQL string or the parameter value?</li>
+<li>Why should paginated queries have a stable <code>ORDER BY</code>?</li>
+<li>What should happen in the interface when a search returns zero rows?</li>
+</ol>
+<h3 id="transition-to-the-next-hour">Transition to the Next Hour</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Next hour is Checkpoint 4. You will use everything from today and yesterday to demonstrate a genuine data-driven app: SQLite-backed CRUD, initialization, search, and architecture that still makes sense under pressure.</p>
+<hr>
+<h2 id="instructor-ready-deep-dive-search-filters-and-paging-without-losing-the-architecture">Instructor-Ready Deep Dive: Search, Filters, and Paging Without Losing the Architecture</h2>
+<p>This section expands the hour into a near-verbatim instructor script. Use it when learners need a full demonstration of how search belongs in the repository while page state belongs in the interface or controller.</p>
+<h3 id="learning-outcomes-reinforcement">Learning Outcomes Reinforcement</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>By the end of this hour, you should be able to add search without smuggling SQL into the button callback. You should be able to add a filter without trusting user input as SQL structure. You should be able to explain <code>LIMIT</code> and <code>OFFSET</code> in plain language. Most importantly, you should be able to separate two different responsibilities: the repository knows how to query data, and the UI knows what page the user is currently viewing.</p>
+<p>That last distinction is subtle but important. A repository method can accept <code>limit</code> and <code>offset</code>, but it should not know about a "Next" button or a text entry widget. The UI can remember that the current page is page 3, but it should not build the SQL string. When we keep those responsibilities separate, the same search can later be reused from a command-line script, a GUI, or a Flask route.</p>
+<h3 id="repository-owned-safe-search">Repository-Owned Safe Search</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let's look at a complete, safe repository method. The user provides values: a text term, a status filter, and page information. The repository owns the query. The wildcard is part of the parameter value, not something we paste into the SQL structure with user text.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from contextlib import closing
+from dataclasses import dataclass
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class Record:
+    record_id: int
+    title: str
+    category: str
+    status: str
+    priority: int = 3
+    created_at: str | None = None
+
+    @classmethod
+    def from_row(cls, row: sqlite3.Row) -&gt; &quot;Record&quot;:
+        return cls(
+            record_id=row[&quot;id&quot;],
+            title=row[&quot;title&quot;],
+            category=row[&quot;category&quot;],
+            status=row[&quot;status&quot;],
+            priority=row[&quot;priority&quot;],
+            created_at=row[&quot;created_at&quot;],
+        )
+
+
+class SQLiteRecordRepository:
+    def __init__(self, db_path: Path) -&gt; None:
+        self.db_path = db_path
+
+    def _connect(self) -&gt; sqlite3.Connection:
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        connection = sqlite3.connect(self.db_path)
+        connection.row_factory = sqlite3.Row
+        return connection
+
+    def search(
+        self,
+        term: str = &quot;&quot;,
+        status: str | None = None,
+        category: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -&gt; list[Record]:
+        if limit &lt; 1 or limit &gt; 100:
+            raise ValueError(&quot;limit must be between 1 and 100&quot;)
+        if offset &lt; 0:
+            raise ValueError(&quot;offset cannot be negative&quot;)
+
+        conditions: list[str] = []
+        parameters: list[object] = []
+
+        clean_term = term.strip().lower()
+        if clean_term:
+            wildcard = f&quot;%{clean_term}%&quot;
+            conditions.append(
+                &quot;(lower(title) LIKE ? OR lower(category) LIKE ?)&quot;
+            )
+            parameters.extend([wildcard, wildcard])
+
+        if status:
+            conditions.append(&quot;status = ?&quot;)
+            parameters.append(status)
+
+        if category:
+            conditions.append(&quot;category = ?&quot;)
+            parameters.append(category)
+
+        where_clause = &quot;&quot;
+        if conditions:
+            where_clause = &quot;WHERE &quot; + &quot; AND &quot;.join(conditions)
+
+        query = f&quot;&quot;&quot;
+            SELECT id, title, category, status, priority, created_at
+            FROM records
+            {where_clause}
+            ORDER BY id ASC
+            LIMIT ? OFFSET ?
+        &quot;&quot;&quot;
+        parameters.extend([limit, offset])
+
+        with closing(self._connect()) as connection:
+            rows = connection.execute(query, tuple(parameters)).fetchall()
+
+        return [Record.from_row(row) for row in rows]
+</code></pre>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>There is a small dynamic part here: we build a <code>WHERE</code> clause from known internal fragments. We are not inserting raw user input into the SQL structure. User-provided values still travel through placeholders. That is the rule I want you to remember: values are parameters. SQL structure is controlled by our code.</p>
+<p>Also notice the deterministic <code>ORDER BY id ASC</code>. Pagination without a stable order is a bug waiting to happen. The database is allowed to return rows in different physical orders unless we tell it exactly how to order them. If page one and page two are not ordered consistently, users may see duplicates or miss records.</p>
+<h3 id="demo-steps">Demo steps</h3>
+<p>Use these steps for the live demonstration:</p>
+<ol>
+<li>Seed the database with at least 30 records. Include repeated statuses that match the Day 8 schema, such as <code>open</code> and <code>done</code>.</li>
+<li>Show a plain list view first so learners understand the starting point.</li>
+<li>Add a repository <code>search()</code> method that accepts <code>term</code>, optional <code>status</code> and <code>category</code> filters, <code>limit</code>, and <code>offset</code>.</li>
+<li>Demonstrate a text search for a term that appears in several titles.</li>
+<li>Demonstrate an exact status filter, such as <code>status="open"</code>.</li>
+<li>Demonstrate search plus filter together.</li>
+<li>Set <code>limit=5</code> and <code>offset=0</code>; show the first five matching rows.</li>
+<li>Set <code>limit=5</code> and <code>offset=5</code>; show the next five matching rows.</li>
+<li>Point to <code>ORDER BY id ASC</code> and explain why it is not optional for predictable pages.</li>
+<li>Connect the method through the service layer.</li>
+<li>Connect the service to the UI or script input.</li>
+<li>Reset the UI offset to zero whenever the search term or filter changes.</li>
+<li>Show a no-results state with a term that does not match anything.</li>
+<li>Ask learners to identify which code owns query logic and which code owns current page state.</li>
+</ol>
+<h3 id="instructor-narration-for-the-safe-sql-moment">Instructor narration for the safe SQL moment</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is the sentence I want burned into your brain: do not put the user's text directly into the SQL string. If the user searches for <code>invoice</code>, <code>invoice</code> is a value. It belongs in the parameters. If we want partial matching, we build the wildcard parameter value in Python: <code>"%invoice%"</code>. The SQL still says <code>LIKE ?</code>.</p>
+<p>Now compare that to this unsafe habit:</p>
+<pre><code class="language-python">query = f&quot;SELECT * FROM records WHERE title LIKE '%{term}%'&quot;
+</code></pre>
+<p>The danger is not only malicious input. The danger is also ordinary input that contains quotes or other characters that can break hand-built SQL. Parameterized queries give the database driver the job of treating the value as data. In a <code>LIKE</code> search, <code>%</code> and <code>_</code> still act as wildcards unless you explicitly escape them; for this course example, that wildcard behavior is acceptable and should be explained to learners.</p>
+<h3 id="keeping-page-state-separate">Keeping Page State Separate</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is a small service and UI-style controller example. The repository does the query. The controller remembers the current term, filters, and offset.</p>
+<pre><code class="language-python">class RecordService:
+    def __init__(self, repo: SQLiteRecordRepository) -&gt; None:
+        self.repo = repo
+
+    def search_records(
+        self,
+        term: str = &quot;&quot;,
+        status: str | None = None,
+        category: str | None = None,
+        limit: int = 20,
+        offset: int = 0,
+    ) -&gt; list[Record]:
+        return self.repo.search(
+            term=term,
+            status=status,
+            category=category,
+            limit=limit,
+            offset=offset,
+        )
+
+
+class RecordSearchController:
+    def __init__(self, service: RecordService) -&gt; None:
+        self.service = service
+        self.term = &quot;&quot;
+        self.status: str | None = None
+        self.category: str | None = None
+        self.page_size = 20
+        self.offset = 0
+
+    def new_search(
+        self, term: str, status: str | None, category: str | None
+    ) -&gt; list[Record]:
+        self.term = term
+        self.status = status
+        self.category = category
+        self.offset = 0
+        return self._load_current_page()
+
+    def next_page(self) -&gt; list[Record]:
+        self.offset += self.page_size
+        return self._load_current_page()
+
+    def previous_page(self) -&gt; list[Record]:
+        self.offset = max(0, self.offset - self.page_size)
+        return self._load_current_page()
+
+    def _load_current_page(self) -&gt; list[Record]:
+        return self.service.search_records(
+            term=self.term,
+            status=self.status,
+            category=self.category,
+            limit=self.page_size,
+            offset=self.offset,
+        )
+</code></pre>
+<p>Point out that this controller could be a GUI class, a CLI helper, or a route helper. The principle is the same: page state is interface state; query execution is repository behavior.</p>
+<h2 id="lab-prompt">Lab prompt</h2>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Your lab is to add practical search to your SQLite-backed app. Start with a repository method. Do not start with the button layout. The query must work before the interface can make it useful.</p>
+<p>Minimum required work:</p>
+<ol>
+<li>Add a repository search method that accepts a text term.</li>
+<li>Use <code>LIKE ?</code> with the wildcard inside the parameter value.</li>
+<li>Return model objects, not raw database rows, unless the rest of your app already uses dictionaries consistently.</li>
+<li>Call the repository method through the service layer.</li>
+<li>Connect the search to a GUI input, CLI prompt, or small script.</li>
+<li>Show correct behavior when there are no matches.</li>
+</ol>
+<p>Recommended additional work:</p>
+<ol>
+<li>Add one exact-match filter such as status, then add category if your interface has a category selector.</li>
+<li>Add <code>LIMIT</code> and <code>OFFSET</code>.</li>
+<li>Reset the offset to zero when the search term or filter changes.</li>
+<li>Add Previous and Next actions, keeping the previous page from going below offset zero.</li>
+<li>Keep <code>ORDER BY</code> deterministic.</li>
+</ol>
+<h2 id="completion-criteria">Completion criteria</h2>
+<p>Learners meet the target for this hour when they can demonstrate:</p>
+<ul>
+<li>A search term returns the expected matching records.</li>
+<li>A filter narrows the result set when implemented.</li>
+<li>SQL uses placeholders for user-provided values.</li>
+<li>The wildcard for <code>LIKE</code> is added to the parameter value, such as <code>f"%{term}%"</code>.</li>
+<li>Paginated results use <code>LIMIT</code>, <code>OFFSET</code>, and a deterministic <code>ORDER BY</code>.</li>
+<li>The service or repository owns search behavior; the UI does not contain SQL.</li>
+<li>Page state such as current offset is reset when the user starts a new search.</li>
+<li>The app handles zero matching rows without showing stale results.</li>
+</ul>
+<h2 id="common-pitfalls">Common pitfalls</h2>
+<p>Use these as active coaching checkpoints:</p>
+<ul>
+<li><strong>Unsafe SQL construction:</strong> Learners build a query with an f-string containing user text. Redirect them to placeholders.</li>
+<li><strong>Wildcard in the wrong place:</strong> Learners write <code>LIKE '%?%'</code>, which does not work as intended. The placeholder should represent the whole value, including <code>%</code>.</li>
+<li><strong>No stable ordering:</strong> Learners paginate without <code>ORDER BY</code>, causing duplicate or missing rows between pages.</li>
+<li><strong>Offset not reset:</strong> A learner searches on page 4, enters a new term, and sees no results because the old offset is still high.</li>
+<li><strong>Negative previous page:</strong> Previous subtracts from offset without <code>max(0, ...)</code>.</li>
+<li><strong>UI owns SQL:</strong> The button callback builds the database query. Move that logic into the repository.</li>
+<li><strong>Stale table rows:</strong> The UI appends new results under old results instead of clearing first.</li>
+<li><strong>Over-building filters:</strong> Learners try to build a full query builder. Keep the scope to one or two filters.</li>
+</ul>
+<h3 id="debugging-script-for-search-bugs">Debugging Script for Search Bugs</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When search behaves strangely, isolate it. First call the repository directly with known values. If that fails, the problem is the query or data. If that works, call the service. If that works, the problem is probably in the UI state or display refresh. Debug from the data layer outward.</p>
+<p>Here is a tiny manual check:</p>
+<pre><code class="language-python">repo = SQLiteRecordRepository(Path(&quot;data/tracker.db&quot;))
+results = repo.search(term=&quot;invoice&quot;, status=&quot;open&quot;, limit=5, offset=0)
+for record in results:
+    print(f&quot;{record.record_id}: {record.title} [{record.status}]&quot;)
+</code></pre>
+<p>If this produces the correct rows, the SQL is not the first suspect anymore. Now look at the service call, selected status value, page offset, and table refresh code.</p>
+<h2 id="optional-extensions">Optional Extensions</h2>
+<p>Offer these only after the core search works:</p>
+<ul>
+<li>Add a controlled sort option using a dictionary of allowed columns already present in the Day 8 schema, such as <code>{"title": "title ASC", "category": "category ASC", "priority": "priority DESC, id ASC", "created_at": "created_at DESC, id ASC"}</code>.</li>
+<li>Add a total-count method so the UI can display "Page 2 of 5."</li>
+<li>Add a "clear search" action that resets term, filter, and offset.</li>
+<li>Add an index on a commonly filtered column such as <code>status</code> after explaining that indexing is a performance topic, not a requirement for today's milestone.</li>
+</ul>
+<p>If learners implement sorting, emphasize that values can be parameterized but column names cannot be passed as placeholders. Therefore, column names must come from a safe allow-list controlled by the program.</p>
+<h2 id="quick-check">Quick Check</h2>
+<p>Ask:</p>
+<ol>
+<li>Where should the <code>%</code> wildcard be added: inside the SQL string or inside the parameter value?</li>
+<li>Why should a paginated query include <code>ORDER BY</code>?</li>
+<li>What should happen to <code>offset</code> when the user enters a new search term?</li>
+<li>Why should SQL stay out of the UI callback?</li>
+<li>What is the difference between a search term and an exact-match filter?</li>
+</ol>
+<p>Expected answer themes: wildcard belongs in the parameter value; <code>ORDER BY</code> makes pages deterministic; offset resets to zero; SQL belongs in the repository for safety and reuse; search is partial text matching while filters narrow by specific fields.</p>
+<h2 id="facilitation-notes-for-a-60-minute-delivery">Facilitation Notes for a 60-Minute Delivery</h2>
+<p>This hour has a predictable trap: learners want to start with widgets. Redirect them to the repository. A search box that calls a broken query only creates a more confusing bug. The fastest path is repository first, service second, UI third.</p>
+<p>For learners who move quickly, challenge them to explain the boundary rather than merely add features. Ask, <strong>"Could your search work from a Flask route next week without rewriting the SQL?"</strong> If the answer is yes, they are on the right path.</p>
+<p>Close with this reminder:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Search and pagination make the app feel useful, but the deeper lesson is ownership. The repository owns safe data access. The service owns application behavior. The interface owns user state. When those boundaries stay clear, new features are less frightening.</p>
+<h2 id="additional-instructor-script-building-search-one-layer-at-a-time">Additional Instructor Script: Building Search One Layer at a Time</h2>
+<p>Use this block when learners are tempted to implement the whole feature at once.</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Search feels like a UI feature because the user experiences it through a search box. But implementation-wise, search is a data access feature first. If the repository cannot return the right records for a known term, a prettier search box will not help. So our build order is deliberate: repository, service, interface.</p>
+<p>Let's rehearse that order.</p>
+<p>First, in the repository, we prove the query:</p>
+<pre><code class="language-python">records = repo.search(term=&quot;invoice&quot;, status=&quot;open&quot;, limit=10, offset=0)
+</code></pre>
+<p>Second, in the service, we preserve the app's language:</p>
+<pre><code class="language-python">records = service.search_records(term=&quot;invoice&quot;, status=&quot;open&quot;, limit=10, offset=0)
+</code></pre>
+<p>Third, in the UI or CLI, we collect user state:</p>
+<pre><code class="language-python">term = search_box_value.strip()
+status = selected_status or None
+category = selected_category or None
+records = service.search_records(
+    term=term, status=status, category=category, limit=20, offset=0
+)
+</code></pre>
+<p>Notice that only the last layer knows about the search box. Only the first layer knows SQL. The service connects the user intent to the data operation without becoming a database dumping ground.</p>
+<h3 id="a-safe-sorting-aside">A Safe Sorting Aside</h3>
+<p>If learners ask about sorting, teach it as a controlled extension. Values can be parameters, but SQL identifiers such as column names cannot be parameterized with <code>?</code>. That means we never trust arbitrary user text as a column name.</p>
+<p>Show this pattern:</p>
+<pre><code class="language-python">ALLOWED_SORTS = {
+    &quot;title&quot;: &quot;title ASC, id ASC&quot;,
+    &quot;category&quot;: &quot;category ASC, id ASC&quot;,
+    &quot;status&quot;: &quot;status ASC, id ASC&quot;,
+    &quot;priority&quot;: &quot;priority DESC, id ASC&quot;,
+    &quot;created_at&quot;: &quot;created_at DESC, id ASC&quot;,
+}
+
+sort_clause = ALLOWED_SORTS.get(sort_choice, &quot;id ASC&quot;)
+query = f&quot;&quot;&quot;
+    SELECT id, title, category, status, priority, created_at
+    FROM records
+    ORDER BY {sort_clause}
+    LIMIT ? OFFSET ?
+&quot;&quot;&quot;
+</code></pre>
+<p>Then say:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This f-string is acceptable only because <code>sort_clause</code> comes from our own allow-list, not directly from the user. If <code>sort_choice</code> is invalid, we fall back to a safe default. That is the same design idea we used with filters: user choices are translated into program-controlled SQL fragments.</p>
+<h3 id="pagination-mental-model">Pagination Mental Model</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is a simple way to think about offset. If the page size is 20, then:</p>
+<ul>
+<li>page 1 starts at offset 0</li>
+<li>page 2 starts at offset 20</li>
+<li>page 3 starts at offset 40</li>
+</ul>
+<p>The formula is:</p>
+<pre><code class="language-python">offset = (page_number - 1) * page_size
+</code></pre>
+<p>However, many beginner apps do not need to store a page number at all. They can store the current offset and add or subtract the page size. The important thing is to reset the offset when the search conditions change. A new term means a new result set. Page 4 of the old result set has no meaningful relationship to page 4 of the new result set.</p>
+<h3 id="no-results-state-script">No-Results State Script</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Do not treat zero results as an error. Zero results is a valid answer to a search question. The interface should communicate it clearly. In a CLI, print "No matching records." In a GUI, clear the table and show a small label. What we must not do is leave the old rows visible, because then the user thinks the old rows are the search result.</p>
+<p>Ask learners to test these four cases:</p>
+<ol>
+<li>Empty term with no filter.</li>
+<li>Term that matches several records.</li>
+<li>Term plus status filter.</li>
+<li>Term that matches nothing.</li>
+</ol>
+<p>If all four behave predictably, the feature is much more trustworthy.</p>
+<h3 id="mini-whiteboard-check">Mini Whiteboard Check</h3>
+<p>Draw three boxes labeled UI State, Service Call, Repository Query. Ask the class where each item belongs:</p>
+<ul>
+<li>current offset</li>
+<li>selected status</li>
+<li><code>LIKE ?</code></li>
+<li>wildcard parameter</li>
+<li>table refresh</li>
+<li>row-to-object mapping</li>
+<li>no-results message</li>
+<li>deterministic <code>ORDER BY</code></li>
+</ul>
+<p>Expected placement: current offset, selected status, table refresh, and no-results message live in UI state or interface logic; the service call coordinates the request; <code>LIKE ?</code>, wildcard parameter creation, row mapping, and <code>ORDER BY</code> live in or near the repository query. If learners debate selected status, clarify that the selected value originates in the UI, but the repository receives it as a filter value.</p>
+<h3 id="final-reinforcement">Final Reinforcement</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>A search feature is successful when it is safe, predictable, and reusable. Safe means parameterized values. Predictable means deterministic order and clear page behavior. Reusable means the query is not trapped inside one button callback. That is the professional version of this feature.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour4_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#instructor-prep-notes" class="depth-2">Instructor Prep Notes</a></li>
+<li><a href="#section-1-why-search-matters-5-minutes" class="depth-2">Section 1: Why Search Matters (5 minutes)</a></li>
+<li><a href="#opening-script" class="depth-3">Opening Script</a></li>
+<li><a href="#the-real-user-story" class="depth-3">The Real User Story</a></li>
+<li><a href="#section-2-core-search-and-pagination-concepts-15-minutes" class="depth-2">Section 2: Core Search and Pagination Concepts (15 minutes)</a></li>
+<li><a href="#safe-search-with-like" class="depth-3">Safe Search with LIKE</a></li>
+<li><a href="#filtering-vs-searching" class="depth-3">Filtering vs Searching</a></li>
+<li><a href="#why-pagination-exists" class="depth-3">Why Pagination Exists</a></li>
+<li><a href="#what-practical-means-in-this-course" class="depth-3">What &quot;Practical&quot; Means in This Course</a></li>
+<li><a href="#section-3-live-demo-10-minutes" class="depth-2">Section 3: Live Demo (10 minutes)</a></li>
+<li><a href="#repository-search-method" class="depth-3">Repository Search Method</a></li>
+<li><a href="#optional-ui-hook" class="depth-3">Optional UI Hook</a></li>
+<li><a href="#demo-debrief" class="depth-3">Demo Debrief</a></li>
+<li><a href="#section-4-guided-implementation-sprint-25-minutes" class="depth-2">Section 4: Guided Implementation Sprint (25 minutes)</a></li>
+<li><a href="#lab-brief" class="depth-3">Lab Brief</a></li>
+<li><a href="#minimum-success-criteria" class="depth-3">Minimum Success Criteria</a></li>
+<li><a href="#stronger-submission-criteria" class="depth-3">Stronger Submission Criteria</a></li>
+<li><a href="#suggested-lab-sequence" class="depth-3">Suggested Lab Sequence</a></li>
+<li><a href="#coaching-prompts-during-circulation" class="depth-3">Coaching Prompts During Circulation</a></li>
+<li><a href="#common-bugs-to-catch-early" class="depth-3">Common Bugs to Catch Early</a></li>
+<li><a href="#instructor-recovery-script-for-overwhelmed-learners" class="depth-3">Instructor Recovery Script for Overwhelmed Learners</a></li>
+<li><a href="#stretch-extension" class="depth-3">Stretch Extension</a></li>
+<li><a href="#section-5-debrief-and-exit-ticket-5-minutes" class="depth-2">Section 5: Debrief and Exit Ticket (5 minutes)</a></li>
+<li><a href="#debrief-script" class="depth-3">Debrief Script</a></li>
+<li><a href="#share-out-questions" class="depth-3">Share-Out Questions</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit Ticket</a></li>
+<li><a href="#transition-to-the-next-hour" class="depth-3">Transition to the Next Hour</a></li>
+<li><a href="#instructor-ready-deep-dive-search-filters-and-paging-without-losing-the-architecture" class="depth-2">Instructor-Ready Deep Dive: Search, Filters, and Paging Without Losing the Architecture</a></li>
+<li><a href="#learning-outcomes-reinforcement" class="depth-3">Learning Outcomes Reinforcement</a></li>
+<li><a href="#repository-owned-safe-search" class="depth-3">Repository-Owned Safe Search</a></li>
+<li><a href="#demo-steps" class="depth-3">Demo steps</a></li>
+<li><a href="#instructor-narration-for-the-safe-sql-moment" class="depth-3">Instructor narration for the safe SQL moment</a></li>
+<li><a href="#keeping-page-state-separate" class="depth-3">Keeping Page State Separate</a></li>
+<li><a href="#lab-prompt" class="depth-2">Lab prompt</a></li>
+<li><a href="#completion-criteria" class="depth-2">Completion criteria</a></li>
+<li><a href="#common-pitfalls" class="depth-2">Common pitfalls</a></li>
+<li><a href="#debugging-script-for-search-bugs" class="depth-3">Debugging Script for Search Bugs</a></li>
+<li><a href="#optional-extensions" class="depth-2">Optional Extensions</a></li>
+<li><a href="#quick-check" class="depth-2">Quick Check</a></li>
+<li><a href="#facilitation-notes-for-a-60-minute-delivery" class="depth-2">Facilitation Notes for a 60-Minute Delivery</a></li>
+<li><a href="#additional-instructor-script-building-search-one-layer-at-a-time" class="depth-2">Additional Instructor Script: Building Search One Layer at a Time</a></li>
+<li><a href="#a-safe-sorting-aside" class="depth-3">A Safe Sorting Aside</a></li>
+<li><a href="#pagination-mental-model" class="depth-3">Pagination Mental Model</a></li>
+<li><a href="#no-results-state-script" class="depth-3">No-Results State Script</a></li>
+<li><a href="#mini-whiteboard-check" class="depth-3">Mini Whiteboard Check</a></li>
+<li><a href="#final-reinforcement" class="depth-3">Final Reinforcement</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day8_Hour3_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day8_Hour3_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour2_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour4_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

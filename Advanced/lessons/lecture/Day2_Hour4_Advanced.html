@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 4: Checkpoint 1: Domain + Service Layer Milestone | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day2_Hour4_Advanced.md">
+
+    <link rel="prev" href="Day2_Hour3_Advanced.html">
+    <link rel="next" href="Day3_Hour1_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="2" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 2, Hour 4: Checkpoint 1: Domain + Service Layer Milestone</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour1_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour4_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 2, Hour 4 of 48, also Hour 8 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Checkpoint 1 assessment for a reusable core tracker package: domain model, service layer, custom exceptions, serialization helper, and runnable demo.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 2, Hour 8.</li>
+<li><strong>Prerequisites</strong>: Learners should have a tracker-style domain model from Day 2 Hour 1, callable or strategy-style thinking from Day 2 Hour 2, and readable class ergonomics from Day 2 Hour 3, including <code>__repr__</code>, <code>__str__</code>, light type hints, and <code>to_dict()</code>.</li>
+<li><strong>Advanced trajectory</strong>: This hour stays in the PCAP-to-PCPP1 path. Learners are not building a GUI, API, database, or packaging workflow yet. They are proving that their domain and service code can stand on its own before later layers attach.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has either passed Checkpoint 1 or has a precise next-step path for completing it. The target deliverable is a stable <code>src/</code> core library that runs through a small demo script and handles expected errors clearly.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge and checkpoint framing</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect Day 2 Hour 3 ergonomics to checkpoint grading and future reuse</td>
+</tr>
+<tr>
+<td>Rubric walkthrough and expectations</td>
+<td style="text-align: right;">5 min</td>
+<td>Make requirements concrete before learners code</td>
+</tr>
+<tr>
+<td>Fast grading demo</td>
+<td style="text-align: right;">5 min</td>
+<td>Show exactly how the instructor will run a demo, try invalid input, and try a missing record</td>
+</tr>
+<tr>
+<td>Checkpoint build and grade lab</td>
+<td style="text-align: right;">40 min</td>
+<td>Students finish the Core Tracker Library while the instructor circulates, checks, grades, and routes fast finishers</td>
+</tr>
+<tr>
+<td>Exit ticket and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Capture design reflection and bridge to Day 3 project structure</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour checkpoint plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 5 + 40 + 5. The runbook notes that Checkpoint 1 work is 45-60 minutes; this hour protects 40 minutes for active checkpoint build and grading after 15 minutes of framing and demonstration. Keep the demo short. The checkpoint is the main event.</p>
+<p>Recommended grading cadence:</p>
+<ol>
+<li>Demonstrate briefly so everyone knows what "done" looks like.</li>
+<li>Students work while you circulate with the checklist.</li>
+<li>Grade stable submissions while students continue polishing.</li>
+<li>Fast finishers attempt the tiny CLI wrapper extension only after passing the core checklist.</li>
+<li>Incomplete students leave with a clear next-step path instead of a vague "keep working."</li>
+</ol>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain what "core tracker library" means: domain models plus service logic without UI, database, web routes, or interactive prompts inside the service layer.</li>
+<li>Identify the minimum Checkpoint 1 requirements: two or more model classes, or one model plus one helper class; add/list/search/update/delete service functions; custom exceptions; <code>to_dict()</code> serialization; and a runnable demo.</li>
+<li>Demonstrate a valid happy path using a small script that creates records, stores them through a service, lists them, searches them, updates them, deletes them, and serializes at least one record.</li>
+<li>Demonstrate expected sad paths using invalid input and a missing record.</li>
+<li>Use <code>ValidationError</code> for invalid data and <code>NotFoundError</code> for lookup/update/delete operations that target a record that does not exist.</li>
+<li>Keep domain and service responsibilities separate from UI responsibilities.</li>
+<li>Avoid global state by keeping record storage inside a service object or passing state explicitly.</li>
+<li>Explain why stable core code makes later GUI, API, persistence, logging, and packaging work easier.</li>
+<li>Reflect on one design decision they are proud of and explain why it helps the code.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 2, Hour 8 visible. The required outcome is a stable core package reusable by GUI/API layers. Required talk points are checkpoint expectations, rubric, and testing approach. Required demo is quick grading: run a script, try invalid input, and try a missing record.</li>
+<li>Keep the Day 2 Hour 1, Hour 2, and Hour 3 continuity in mind. Hour 1 used tracker vocabulary such as <code>TaskRecord</code>, <code>TrackerRecord</code>, <code>RecordFactory.from_dict()</code>, <code>ValidationError</code>, <code>title</code>, <code>owner</code>, <code>status</code>, <code>priority</code>, <code>estimate_minutes</code>, and <code>to_dict()</code>. Hour 2 used strategies over record dictionaries and callable behavior selection. Hour 3 used a simpler <code>Task</code> model and emphasized <code>__repr__</code>, <code>__str__</code>, type hints, and <code>to_dict()</code> as checkpoint preparation.</li>
+<li>Decide how learners should adapt names. The recommended message is: "You do not have to use my exact class names. If your project already uses <code>TaskRecord</code> instead of <code>Task</code>, keep that name. If you already have <code>TrackerRecord</code>, keep it. What matters is that the required responsibilities are present and easy to grade."</li>
+<li>Prepare the board with the rubric categories: models/helpers, service CRUD, custom exceptions, serialization, runnable demo, meaningful error handling.</li>
+<li>Open a terminal and be ready to run a copied demo script. The demo in this lecture is self-contained and deterministic.</li>
+<li>Decide whether you will grade live at each learner station or ask learners to call you over after their demo script passes. The suggested pattern is station grading: run their demo, ask one short design question, mark the checklist, and move on.</li>
+<li>Set expectations that partial progress is normal but must be precise. A learner who has a working model and add/list/search but no update/delete should know exactly what remains.</li>
+</ul>
+<p>Recommended board note:</p>
+<pre><code class="language-text">Checkpoint 1 target:
+Stable core first.
+No GUI yet.
+No database yet.
+No API yet.
+No service methods that call input().
+
+Required:
+models/helper + service CRUD + exceptions + to_dict() + runnable demo.
+</code></pre>
+<hr>
+<h2 id="opening-bridge-and-checkpoint-framing-5-minutes">Opening Bridge and Checkpoint Framing (5 minutes)</h2>
+<h3 id="instructor-talk-track">Instructor talk track</h3>
+<p>"Welcome back. In the previous hour we made our classes easier to work with. We added readable <code>repr</code> output so developers can inspect objects. We talked about friendly <code>str</code> output for users. We added light type hints so a future reader can understand what each function expects and returns. We also treated <code>to_dict()</code> as checkpoint preparation, not as decoration."</p>
+<p>"Today is where those choices start paying off."</p>
+<p>"Checkpoint 1 is not a surprise feature request. It is a milestone. The goal is to prove that your core tracker code can stand on its own. When I say core tracker code, I mean the domain and service layer: the objects that represent the problem and the functions or methods that manage those objects."</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Domain model: What thing does the app manage?
+Service layer: What operations can the app perform on those things?
+UI/API/database: Later layers that should attach to the core, not live inside it.
+</code></pre>
+<p>"If you are building a task tracker, your domain object might be called <code>Task</code>, <code>TaskRecord</code>, or <code>TrackerRecord</code>. If you are building an inventory tracker, it might be <code>InventoryItem</code>. If you are building a contact tracker, it might be <code>Contact</code>. I will use <code>Task</code> and <code>TaskService</code> today because those names are easy to read, but you should adapt the names to your existing code. Do not rename a working project just to match my demo. Preserve the responsibilities."</p>
+<p>"The stable core matters because later in the course we will add layers. Day 3 moves toward project structure, imports, logging, safer files, and decorators. Later sessions attach GUI and API layers. If your core logic already knows how to add, list, search, update, delete, validate, and serialize, those later layers mostly become adapters. If your core logic is tangled with <code>input()</code>, <code>print()</code>, global lists, GUI widgets, or web request objects, every later layer becomes harder."</p>
+<p>Pause and ask:</p>
+<p>"What did <code>to_dict()</code> prepare us for?"</p>
+<p>Expected answers:</p>
+<ul>
+<li>Saving data later.</li>
+<li>Turning an object into a dictionary.</li>
+<li>JSON or API responses later.</li>
+<li>Easier checkpoint grading.</li>
+</ul>
+<p>Affirm:</p>
+<p>"Exactly. Today, <code>to_dict()</code> helps me grade quickly. Later, it helps you save to JSON, return API responses, and inspect data consistently."</p>
+<p>Transition:</p>
+<p>"Let's make the rubric explicit. Then I will show the exact style of fast demo I will use when grading."</p>
+<hr>
+<h2 id="rubric-walkthrough-and-expectations-5-minutes">Rubric Walkthrough and Expectations (5 minutes)</h2>
+<h3 id="instructor-talk-track-2">Instructor talk track</h3>
+<p>"Checkpoint grading should not feel mysterious. You should know what I am looking for before I look at your code. I am going to grade responsibilities, not fancy architecture."</p>
+<p>"Here is the checklist. Use yes, partial, or not-yet. Points are optional; the important thing is that each row has evidence."</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Yes evidence</th>
+<th>Partial evidence</th>
+<th>Not-yet evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Models/helpers</td>
+<td>Has 2 or more model classes, or 1 model plus 1 helper class; constructors validate key fields; names match the learner's domain</td>
+<td>Has a model but helper or second class is unclear; validation exists but is incomplete</td>
+<td>Only raw dictionaries or disconnected variables; no clear model/helper responsibility</td>
+</tr>
+<tr>
+<td>Service CRUD</td>
+<td>Service layer supports add, list, search, update, and delete; operations are callable from a demo script</td>
+<td>Some operations exist, but one or two are missing or only work through UI prompts</td>
+<td>No service layer, or operations are scattered through global script code</td>
+</tr>
+<tr>
+<td>Custom exceptions</td>
+<td>Uses meaningful custom exceptions such as <code>ValidationError</code> and <code>NotFoundError</code>; expected errors are caught in the demo</td>
+<td>Defines exceptions but uses them inconsistently, or catches broad <code>Exception</code> everywhere</td>
+<td>Relies on generic crashes such as <code>KeyError</code>, <code>IndexError</code>, or unhandled <code>ValueError</code></td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td>Model has <code>to_dict()</code> at minimum; output includes enough fields to save or inspect the record later</td>
+<td><code>to_dict()</code> exists but omits important fields or returns inconsistent types</td>
+<td>No serialization helper</td>
+</tr>
+<tr>
+<td>Runnable demo</td>
+<td>A small demo script runs end-to-end and proves happy path plus at least two sad paths</td>
+<td>Demo runs partway or requires manual setup not explained</td>
+<td>No runnable demo, or demo only works interactively</td>
+</tr>
+<tr>
+<td>Meaningful error handling</td>
+<td>Invalid input and missing records produce clear messages and do not crash the whole demo</td>
+<td>Some errors are caught but messages are vague or one sad path crashes</td>
+<td>Errors are not handled, or missing records are ignored silently</td>
+</tr>
+<tr>
+<td>Separation of concerns</td>
+<td>Model and service do not call <code>input()</code>; service returns values or raises exceptions; UI/printing stays in demo or optional wrapper</td>
+<td>Some printing is mixed into service methods, but core operations can still be called</td>
+<td>Service and UI are inseparable; grading requires typing through prompts</td>
+</tr>
+</tbody>
+</table>
+<p>"Notice what is not on this rubric. I am not grading a database. I am not grading a GUI. I am not grading Flask routes. I am not grading package publishing. Those are later. Today is core-domain readiness."</p>
+<p>"Your testing approach is simple and practical: first run small examples, then run edge cases. A small example proves the happy path: create a valid task, add it, list it, search it, update it, delete it. Edge cases prove the sad path: missing title, invalid status, update a missing record, delete a missing record."</p>
+<p>Use this short phrase:</p>
+<pre><code class="language-text">Small examples first. Edge cases second. Clear errors always.
+</code></pre>
+<p>"If you are unsure whether you are done, ask yourself: Could someone attach a GUI button to this service method later without rewriting the model? Could someone attach an API endpoint to this service method later without using <code>input()</code>? If yes, you are moving in the right direction."</p>
+<p>Transition:</p>
+<p>"Now I will show the grading demo. I will keep it short because your work time is the priority."</p>
+<hr>
+<h2 id="fast-grading-demo-5-minutes">Fast Grading Demo (5 minutes)</h2>
+<h3 id="instructor-setup">Instructor setup</h3>
+<p>Tell learners:</p>
+<p>"This is not the only acceptable design. It is a compact example of the responsibilities I am looking for. Your names may differ. You might use <code>TaskRecord</code> instead of <code>Task</code>, or <code>TrackerRecord</code> with a <code>RecordFactory.from_dict()</code>. That is fine. Preserve the responsibilities: model validation, service operations, custom exceptions, serialization, and a demo that proves both success and failure."</p>
+<p>If using a file, call it something like <code>checkpoint_demo.py</code>. If showing it in a notebook or editor cell, explain that the same code can be placed in a plain Python script.</p>
+<h3 id="deterministic-demo-code">Deterministic demo code</h3>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when task data does not satisfy the domain rules.&quot;&quot;&quot;
+
+
+class NotFoundError(Exception):
+    &quot;&quot;&quot;Raised when a requested task id does not exist.&quot;&quot;&quot;
+
+
+@dataclass
+class Task:
+    task_id: int
+    title: str
+    owner: str
+    status: str = &quot;todo&quot;
+    priority: int = 3
+    estimate_minutes: int = 30
+
+    VALID_STATUSES = {&quot;todo&quot;, &quot;doing&quot;, &quot;done&quot;, &quot;blocked&quot;}
+
+    def __post_init__(self) -&gt; None:
+        if self.task_id &lt;= 0:
+            raise ValidationError(&quot;task_id must be a positive integer&quot;)
+        if not self.title.strip():
+            raise ValidationError(&quot;title is required&quot;)
+        if not self.owner.strip():
+            raise ValidationError(&quot;owner is required&quot;)
+        if self.status not in self.VALID_STATUSES:
+            raise ValidationError(f&quot;status must be one of {sorted(self.VALID_STATUSES)}&quot;)
+        if not 1 &lt;= self.priority &lt;= 5:
+            raise ValidationError(&quot;priority must be between 1 and 5&quot;)
+        if self.estimate_minutes &lt;= 0:
+            raise ValidationError(&quot;estimate_minutes must be positive&quot;)
+
+    def __str__(self) -&gt; str:
+        return f&quot;{self.task_id}: {self.title} [{self.status}]&quot;
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {
+            &quot;task_id&quot;: self.task_id,
+            &quot;title&quot;: self.title,
+            &quot;owner&quot;: self.owner,
+            &quot;status&quot;: self.status,
+            &quot;priority&quot;: self.priority,
+            &quot;estimate_minutes&quot;: self.estimate_minutes,
+        }
+
+
+class TaskFactory:
+    &quot;&quot;&quot;Helper class that creates validated Task objects from dictionaries.&quot;&quot;&quot;
+
+    @staticmethod
+    def from_dict(data: dict[str, object]) -&gt; Task:
+        try:
+            return Task(
+                task_id=int(data[&quot;task_id&quot;]),
+                title=str(data[&quot;title&quot;]),
+                owner=str(data[&quot;owner&quot;]),
+                status=str(data.get(&quot;status&quot;, &quot;todo&quot;)),
+                priority=int(data.get(&quot;priority&quot;, 3)),
+                estimate_minutes=int(data.get(&quot;estimate_minutes&quot;, 30)),
+            )
+        except KeyError as exc:
+            raise ValidationError(f&quot;missing required field: {exc.args[0]}&quot;) from exc
+        except ValueError as exc:
+            raise ValidationError(&quot;task_id, priority, and estimate_minutes must be integers&quot;) from exc
+
+
+class TaskService:
+    &quot;&quot;&quot;Service layer for managing Task objects without UI or database code.&quot;&quot;&quot;
+
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+
+    def add(self, task: Task) -&gt; Task:
+        if task.task_id in self._tasks:
+            raise ValidationError(f&quot;task id {task.task_id} already exists&quot;)
+        self._tasks[task.task_id] = task
+        return task
+
+    def list_all(self) -&gt; list[Task]:
+        return list(self._tasks.values())
+
+    def search(self, text: str) -&gt; list[Task]:
+        text = text.casefold()
+        return [
+            task
+            for task in self._tasks.values()
+            if text in task.title.casefold() or text in task.owner.casefold()
+        ]
+
+    def get(self, task_id: int) -&gt; Task:
+        try:
+            return self._tasks[task_id]
+        except KeyError as exc:
+            raise NotFoundError(f&quot;task id {task_id} was not found&quot;) from exc
+
+    def update(self, task_id: int, **changes: object) -&gt; Task:
+        current = self.get(task_id)
+        updated_data = current.to_dict()
+        updated_data.update(changes)
+        updated = TaskFactory.from_dict(updated_data)
+        self._tasks[task_id] = updated
+        return updated
+
+    def delete(self, task_id: int) -&gt; Task:
+        task = self.get(task_id)
+        del self._tasks[task_id]
+        return task
+
+
+def run_checkpoint_demo() -&gt; None:
+    print(&quot;--- Checkpoint 1 Demo ---&quot;)
+    service = TaskService()
+
+    print(&quot;\n1. Happy path: add, list, search, update, delete&quot;)
+    first_task = TaskFactory.from_dict(
+        {
+            &quot;task_id&quot;: 1,
+            &quot;title&quot;: &quot;Write checkpoint demo&quot;,
+            &quot;owner&quot;: &quot;Ari&quot;,
+            &quot;status&quot;: &quot;todo&quot;,
+            &quot;priority&quot;: 2,
+            &quot;estimate_minutes&quot;: 45,
+        }
+    )
+    second_task = TaskFactory.from_dict(
+        {
+            &quot;task_id&quot;: 2,
+            &quot;title&quot;: &quot;Review service layer&quot;,
+            &quot;owner&quot;: &quot;Mina&quot;,
+            &quot;status&quot;: &quot;doing&quot;,
+            &quot;priority&quot;: 1,
+            &quot;estimate_minutes&quot;: 30,
+        }
+    )
+
+    service.add(first_task)
+    service.add(second_task)
+    print(&quot;All tasks:&quot;, [str(task) for task in service.list_all()])
+    print(&quot;Search for 'review':&quot;, [task.to_dict() for task in service.search(&quot;review&quot;)])
+    print(&quot;Updated:&quot;, service.update(1, status=&quot;done&quot;, estimate_minutes=50).to_dict())
+    print(&quot;Deleted:&quot;, service.delete(2))
+    print(&quot;Remaining:&quot;, [task.to_dict() for task in service.list_all()])
+
+    print(&quot;\n2. Sad path: invalid input&quot;)
+    try:
+        TaskFactory.from_dict(
+            {
+                &quot;task_id&quot;: 3,
+                &quot;title&quot;: &quot;   &quot;,
+                &quot;owner&quot;: &quot;Ari&quot;,
+                &quot;status&quot;: &quot;todo&quot;,
+            }
+        )
+    except ValidationError as exc:
+        print(&quot;Caught expected ValidationError:&quot;, exc)
+
+    print(&quot;\n3. Sad path: missing record&quot;)
+    try:
+        service.update(999, status=&quot;done&quot;)
+    except NotFoundError as exc:
+        print(&quot;Caught expected NotFoundError:&quot;, exc)
+
+    print(&quot;\nDemo completed.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    run_checkpoint_demo()
+</code></pre>
+<h3 id="instructor-narration-while-running-the-demo">Instructor narration while running the demo</h3>
+<p>"When I grade quickly, I do not need a huge script. I need evidence. First I run the script. It should finish. Second I look for happy-path operations: add, list, search, update, delete. Third I look for invalid input. Here, a blank title raises <code>ValidationError</code> with a useful message. Fourth I look for a missing record. Here, updating task id 999 raises <code>NotFoundError</code> and the demo catches it."</p>
+<p>"Also notice where the printing happens. The service does not print menu prompts. The service returns tasks or raises exceptions. The demo prints because the demo is the outer layer. Later a GUI could call <code>service.update(...)</code> and show the result in a label. Later an API endpoint could call <code>service.update(...)</code> and turn the result into JSON. The service itself stays reusable."</p>
+<p>"Again, adapt names. If your existing code has <code>RecordFactory.from_dict()</code> instead of <code>TaskFactory.from_dict()</code>, keep it. If your model is <code>TaskRecord</code>, keep it. If your helper class is <code>TaskValidator</code>, that can also satisfy the model/helper requirement. The grading question is not 'Did you copy my names?' The grading question is 'Does your design have the required responsibilities?'"</p>
+<p>Transition:</p>
+<p>"Now you will build or finish your own Core Tracker Library. I will circulate with the checklist. When your demo passes, call me over."</p>
+<hr>
+<h2 id="checkpoint-build-and-grade-lab-40-minutes">Checkpoint Build and Grade Lab (40 minutes)</h2>
+<h3 id="student-facing-lab-prompt">Student-facing lab prompt</h3>
+<p>"It is time to deliver Checkpoint 1: Build your Core Tracker Library."</p>
+<p>"Your deliverable is a <code>src/</code> core that runs through a small demo script. It does not need a GUI. It does not need a database. It does not need a web API. It needs a stable domain and service layer that can be reused by those layers later."</p>
+<p>Minimum requirements:</p>
+<ol>
+<li><strong>Models/helpers</strong>
+   - Either two or more model classes, such as <code>Task</code> and <code>Project</code>, <code>TaskRecord</code> and <code>Owner</code>, or <code>InventoryItem</code> and <code>Category</code>.
+   - Or one model plus one helper class, such as <code>Task</code> plus <code>TaskFactory</code>, <code>TrackerRecord</code> plus <code>RecordFactory</code>, or <code>TaskRecord</code> plus <code>TaskValidator</code>.</li>
+<li><strong>Service layer</strong>
+   - Add a record.
+   - List records.
+   - Search records.
+   - Update a record.
+   - Delete a record.</li>
+<li><strong>Custom exceptions</strong>
+   - At minimum, use a validation-style exception such as <code>ValidationError</code>.
+   - Use a missing-record exception such as <code>NotFoundError</code> for lookups, updates, or deletes that cannot find a record.</li>
+<li><strong>Serialization helper</strong>
+   - Implement <code>to_dict()</code> at minimum on the main model.
+   - Include enough fields that a later JSON save or API response would be meaningful.</li>
+<li><strong>Runnable demo</strong>
+   - Run your core from a small demo script.
+   - Show a valid operation.
+   - Show invalid input.
+   - Show a missing record.
+   - Catch expected errors and print clear messages.</li>
+</ol>
+<h3 id="suggested-file-organization">Suggested file organization</h3>
+<p>This checkpoint is not primarily about package structure yet. Day 3 will go deeper on packages, imports, and config. For today, choose a simple organization that your environment can run:</p>
+<pre><code class="language-text">src/
+  models.py
+  services.py
+  exceptions.py
+demo.py
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">src/
+  tracker/
+    __init__.py
+    models.py
+    services.py
+    exceptions.py
+demo.py
+</code></pre>
+<p>"If imports are slowing you down, keep the structure simple and ask for help. Do not spend the whole checkpoint fighting package imports. The core responsibilities matter most today."</p>
+<h3 id="practical-lab-timeline-inside-the-40-minute-block">Practical lab timeline inside the 40-minute block</h3>
+<table>
+<thead>
+<tr>
+<th>Lab minute</th>
+<th>Instructor action</th>
+<th>Student action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-5</td>
+<td>Ask students to run their current demo or smallest example immediately</td>
+<td>Run what exists; write down the first failure</td>
+</tr>
+<tr>
+<td>5-15</td>
+<td>Circulate for architecture checks: model/service separation, no global state everywhere, no UI inside service</td>
+<td>Fill missing model/helper, exception, or <code>to_dict()</code> pieces</td>
+</tr>
+<tr>
+<td>15-25</td>
+<td>Start grading early finishers; ask incomplete students to prioritize missing CRUD and error handling</td>
+<td>Complete add/list/search/update/delete and rerun demo</td>
+</tr>
+<tr>
+<td>25-35</td>
+<td>Continue grading; route fast finishers to optional tiny CLI wrapper</td>
+<td>Polish demo, fix invalid input and missing record cases</td>
+</tr>
+<tr>
+<td>35-40</td>
+<td>Final pass: mark yes/partial/not-yet and assign next steps</td>
+<td>Save work, note what passed and what remains</td>
+</tr>
+</tbody>
+</table>
+<h3 id="instructor-circulation-script">Instructor circulation script</h3>
+<p>Use short, repeatable questions:</p>
+<ol>
+<li>"Show me your main model. What fields define a valid record?"</li>
+<li>"Where does validation happen?"</li>
+<li>"Show me the service method that updates a record."</li>
+<li>"What happens if I update an id that does not exist?"</li>
+<li>"Show me <code>to_dict()</code>."</li>
+<li>"Can I call your service without typing into <code>input()</code>?"</li>
+<li>"Run your demo from a clean terminal."</li>
+</ol>
+<p>If a learner is stuck, diagnose by responsibility:</p>
+<ul>
+<li>If there is no model, say: "First create the object that represents one record. Do not start with menus."</li>
+<li>If there is no service, say: "Now create the object or functions that manage a collection of records."</li>
+<li>If errors crash mysteriously, say: "Convert expected failures into custom exceptions with clear messages."</li>
+<li>If the demo is too large, say: "Shrink it. One valid record, one invalid record, one missing id."</li>
+<li>If they are building a UI, say: "Pause the UI. The UI is later. Prove the service first."</li>
+</ul>
+<h3 id="grading-checklist-for-live-use">Grading checklist for live use</h3>
+<p>Use this checklist while circulating. You can mark each row as Yes, Partial, or Not Yet.</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Yes</th>
+<th>Partial</th>
+<th>Not Yet</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Has required model/helper structure</td>
+<td></td>
+<td></td>
+<td></td>
+<td>2+ models or 1 model + 1 helper</td>
+</tr>
+<tr>
+<td>Main model validates important fields</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Title/owner/status/priority/estimate or domain equivalents</td>
+</tr>
+<tr>
+<td>Main model has useful <code>__repr__</code> or <code>__str__</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td>From Hour 3; not the main checkpoint item, but helpful</td>
+</tr>
+<tr>
+<td>Main model has <code>to_dict()</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Must return a dictionary</td>
+</tr>
+<tr>
+<td>Service adds records</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Should reject duplicate ids if ids are used</td>
+</tr>
+<tr>
+<td>Service lists records</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Should return data, not only print</td>
+</tr>
+<tr>
+<td>Service searches records</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Search can be by title, owner, status, category, etc.</td>
+</tr>
+<tr>
+<td>Service updates records</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Should validate updated result</td>
+</tr>
+<tr>
+<td>Service deletes records</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Should handle missing ids</td>
+</tr>
+<tr>
+<td>Uses <code>ValidationError</code> or equivalent</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Expected invalid input should not become a mystery crash</td>
+</tr>
+<tr>
+<td>Uses <code>NotFoundError</code> or equivalent</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Missing record should be explicit</td>
+</tr>
+<tr>
+<td>Demo runs end-to-end</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Start from command line or equivalent run button</td>
+</tr>
+<tr>
+<td>Demo shows invalid input</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Must catch and display meaningful error</td>
+</tr>
+<tr>
+<td>Demo shows missing record</td>
+<td></td>
+<td></td>
+<td></td>
+<td>Must catch and display meaningful error</td>
+</tr>
+<tr>
+<td>Core is separate from UI</td>
+<td></td>
+<td></td>
+<td></td>
+<td>No required <code>input()</code> inside service methods</td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-to-say-when-grading-a-complete-submission">What to say when grading a complete submission</h3>
+<p>"Good. Your demo runs end-to-end. I can see a model/helper structure, a service with add/list/search/update/delete, custom exceptions, <code>to_dict()</code>, and clear error handling. You have passed the core checkpoint. If you want a stretch task, add a tiny CLI wrapper that calls your service, but do not move business logic into the wrapper."</p>
+<h3 id="what-to-say-when-grading-a-partial-submission">What to say when grading a partial submission</h3>
+<p>"You are close, and here is the exact next step. You have the model and add/list/search. The missing checkpoint items are update/delete and missing-record handling. Finish those before adding any UI or persistence. Your next demo should show <code>service.update(missing_id, ...)</code> raising and catching <code>NotFoundError</code>."</p>
+<p>or:</p>
+<p>"You have working operations, but they are all inside a menu loop. Extract the core logic into a service method that I can call directly. The menu can call the service, but the service should not depend on the menu."</p>
+<p>or:</p>
+<p>"Your model can serialize with <code>to_dict()</code>, but invalid data still crashes as a generic <code>KeyError</code>. Add a custom <code>ValidationError</code> and catch it in the demo."</p>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>A learner is complete when:</p>
+<ul>
+<li>The core runs end-to-end through a small demo.</li>
+<li>The required model/helper structure is present.</li>
+<li>The service layer can add, list, search, update, and delete.</li>
+<li>Invalid input raises a meaningful validation-style custom exception.</li>
+<li>Missing records raise a meaningful not-found custom exception.</li>
+<li>The demo catches expected errors appropriately.</li>
+<li>The main model can serialize through <code>to_dict()</code>.</li>
+<li>Service logic is not trapped inside UI prompts or global script flow.</li>
+</ul>
+<p>If a learner has only 5 minutes remaining and is incomplete, choose the shortest path to a valid partial:</p>
+<ol>
+<li>Stop adding features.</li>
+<li>Make the demo run the pieces that exist.</li>
+<li>Add one clear custom exception.</li>
+<li>Add a note in their own comments or README-style notes listing the missing checkpoint rows.</li>
+<li>Ask them to finish the missing rows before the next session begins.</li>
+</ol>
+<hr>
+<h2 id="troubleshooting-and-pitfalls">Troubleshooting and Pitfalls</h2>
+<h3 id="pitfall-1-global-state-everywhere">Pitfall 1: Global state everywhere</h3>
+<p>Symptom:</p>
+<pre><code class="language-python">tasks = []
+
+def add_task(task):
+    global tasks
+    tasks.append(task)
+</code></pre>
+<p>Instructor response:</p>
+<p>"A tiny global list can work in a tiny script, but it becomes painful when a GUI, API, or test wants its own clean state. Prefer a service object that owns its records."</p>
+<p>Better direction:</p>
+<pre><code class="language-python">class TaskService:
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+</code></pre>
+<p>"This gives each <code>TaskService</code> instance its own storage. A demo can create a fresh service. A future test can create a fresh service. A future GUI can own one service instance. That is more reusable."</p>
+<h3 id="pitfall-2-no-separation-between-model-and-ui">Pitfall 2: No separation between model and UI</h3>
+<p>Symptom:</p>
+<pre><code class="language-python">class TaskService:
+    def add_task(self):
+        title = input(&quot;Title: &quot;)
+        print(&quot;Added task&quot;)
+</code></pre>
+<p>Instructor response:</p>
+<p>"This method is hard to grade quickly because I cannot pass values directly. It is also hard to reuse from a GUI or API because it requires terminal input. Move <code>input()</code> and <code>print()</code> to the outer layer. Let the service accept arguments, return values, and raise exceptions."</p>
+<p>Better direction:</p>
+<pre><code class="language-python">class TaskService:
+    def add(self, task: Task) -&gt; Task:
+        self._tasks[task.task_id] = task
+        return task
+</code></pre>
+<p>"A CLI can still exist later. It will call <code>service.add(task)</code>. The service should not become the CLI."</p>
+<h3 id="pitfall-3-no-handling-for-missing-records">Pitfall 3: No handling for missing records</h3>
+<p>Symptom:</p>
+<pre><code class="language-python">def delete(task_id):
+    del tasks[task_id]
+</code></pre>
+<p>or:</p>
+<pre><code class="language-python">def update(task_id, title):
+    task = tasks[task_id]
+    task.title = title
+</code></pre>
+<p>Instructor response:</p>
+<p>"A missing record is not a weird technical accident. It is an expected business case. Users type the wrong id. Records get deleted. Search results go stale. Your core should report that clearly."</p>
+<p>Better direction:</p>
+<pre><code class="language-python">class NotFoundError(Exception):
+    pass
+
+
+def get(self, task_id: int) -&gt; Task:
+    try:
+        return self._tasks[task_id]
+    except KeyError as exc:
+        raise NotFoundError(f&quot;task id {task_id} was not found&quot;) from exc
+</code></pre>
+<p>"Now a GUI could show a friendly message, an API could return a 404-style response later, and a demo can prove the behavior."</p>
+<h3 id="pitfall-4-updating-without-validation">Pitfall 4: Updating without validation</h3>
+<p>Symptom:</p>
+<pre><code class="language-python">def update(self, task_id, changes):
+    task = self._tasks[task_id]
+    task.status = changes[&quot;status&quot;]
+</code></pre>
+<p>Instructor response:</p>
+<p>"If creation validates status but update does not, invalid records can sneak in after creation. A common pattern is to convert the current task to a dictionary, apply changes, and rebuild through the same factory or model validation."</p>
+<p>Better direction:</p>
+<pre><code class="language-python">def update(self, task_id: int, **changes: object) -&gt; Task:
+    current = self.get(task_id)
+    updated_data = current.to_dict()
+    updated_data.update(changes)
+    updated = TaskFactory.from_dict(updated_data)
+    self._tasks[task_id] = updated
+    return updated
+</code></pre>
+<p>"That pattern keeps creation and update rules aligned."</p>
+<h3 id="pitfall-5-demo-proves-only-the-happy-path">Pitfall 5: Demo proves only the happy path</h3>
+<p>Symptom:</p>
+<p>"The demo adds one valid record and prints it, but never tries invalid input or a missing id."</p>
+<p>Instructor response:</p>
+<p>"Happy path is necessary, but not enough. The runbook specifically calls for trying invalid input and a missing record. Add two small try/except blocks. Keep them deterministic."</p>
+<p>Minimum sad-path demo shape:</p>
+<pre><code class="language-python">try:
+    TaskFactory.from_dict({&quot;task_id&quot;: 3, &quot;title&quot;: &quot;&quot;, &quot;owner&quot;: &quot;Sam&quot;})
+except ValidationError as exc:
+    print(&quot;Caught expected validation error:&quot;, exc)
+
+try:
+    service.delete(999)
+except NotFoundError as exc:
+    print(&quot;Caught expected missing record:&quot;, exc)
+</code></pre>
+<hr>
+<h2 id="optional-extension-tiny-cli-wrapper">Optional Extension: Tiny CLI Wrapper</h2>
+<p>This extension is explicitly optional. Offer it only to learners who have passed the core checklist.</p>
+<p>Instructor wording:</p>
+<p>"If your core is done and graded, you may add a tiny CLI wrapper. Keep it tiny. The CLI is allowed to call <code>input()</code> and <code>print()</code>. The service layer should still not call <code>input()</code>."</p>
+<p>Acceptable tiny wrapper shape:</p>
+<pre><code class="language-python">def print_tasks(service: TaskService) -&gt; None:
+    for task in service.list_all():
+        print(task)
+
+
+def main() -&gt; None:
+    service = TaskService()
+    while True:
+        command = input(&quot;Command (list/quit): &quot;).strip().casefold()
+        if command == &quot;quit&quot;:
+            break
+        if command == &quot;list&quot;:
+            print_tasks(service)
+        else:
+            print(&quot;Unknown command&quot;)
+</code></pre>
+<p>"This wrapper is intentionally small. It is not a replacement for the checkpoint demo, and it is not permission to move validation or CRUD logic into the menu. It is just a thin layer around the service."</p>
+<hr>
+<h2 id="quick-checks-during-lab">Quick Checks During Lab</h2>
+<p>Use these questions when students ask whether they are done:</p>
+<ol>
+<li>"Can your demo run from top to bottom without manual typing?"</li>
+<li>"Where is your <code>ValidationError</code> raised?"</li>
+<li>"Where is your <code>NotFoundError</code> raised?"</li>
+<li>"Can I call your service methods from a GUI later?"</li>
+<li>"What does <code>to_dict()</code> return?"</li>
+<li>"If I update a task to an invalid status, what happens?"</li>
+<li>"If I delete id 999, what happens?"</li>
+</ol>
+<p>For a whole-class check at the 30-minute mark, ask:</p>
+<p>"Raise your hand if your demo currently proves invalid input. Keep it up if it also proves a missing record."</p>
+<p>Then say:</p>
+<p>"If your hand went down, that tells you exactly what to add next. Do not add new features until those expected errors are covered."</p>
+<hr>
+<h2 id="exit-ticket-and-wrap-up-5-minutes">Exit Ticket and Wrap-up (5 minutes)</h2>
+<h3 id="quick-check-question">Quick check question</h3>
+<p>Ask every learner to answer in a sentence, either aloud, in chat, or in their notes:</p>
+<p>"What part of your design are you happiest with, and why?"</p>
+<p>If time allows, have two learners share. Listen for answers like:</p>
+<ul>
+<li>"I am happy that update reuses the same validation as create."</li>
+<li>"I am happy that the service has no <code>input()</code> calls."</li>
+<li>"I am happy that <code>to_dict()</code> makes the demo and future saving easier."</li>
+<li>"I am happy that missing ids raise <code>NotFoundError</code> instead of crashing."</li>
+<li>"I am happy that my model names match my domain."</li>
+</ul>
+<p>Affirm design reasoning, not just completion:</p>
+<p>"That is the right kind of answer because it connects a code choice to a maintenance benefit."</p>
+<h3 id="closing-bridge-to-day-3">Closing bridge to Day 3</h3>
+<p>"Today you proved the foundation. A stable core comes first. Once the core can create, validate, manage, serialize, and report expected errors, the next layers have something reliable to call."</p>
+<p>"In the next session we move into project structure, packages, imports, and config. That means we will take code like this and organize it more professionally. After that, logging and safer file operations become much easier because the core responsibilities are already clear. Later still, GUI and API layers can attach to the same service layer instead of duplicating business rules."</p>
+<p>"If you passed today, your next job is to preserve this separation as the project grows. If you are partial, your next job is not to add a GUI or database. Your next job is to finish the missing checkpoint rows: service CRUD, custom exceptions, <code>to_dict()</code>, runnable demo, and meaningful error handling."</p>
+<p>Final sentence:</p>
+<p>"Stable core first. Fancy layers later."</p>
+<hr>
+<h2 id="instructor-notes-after-class">Instructor Notes After Class</h2>
+<p>After the hour, record common patterns you saw:</p>
+<ul>
+<li>Which requirement most learners missed?</li>
+<li>Did learners understand the difference between service methods and UI prompts?</li>
+<li>Did missing-record handling appear consistently?</li>
+<li>Did learners reuse validation during update, or only during creation?</li>
+<li>Did <code>to_dict()</code> include enough fields for later persistence?</li>
+<li>Did imports or folder layout consume too much checkpoint time?</li>
+</ul>
+<p>Use those notes to tune Day 3. If many learners struggled with imports, keep Day 3 Hour 1 very practical. If many learners mixed UI and service code, keep returning to the rule: outer layers handle interaction; core layers handle domain rules.</p>
+<p>Suggested instructor summary to post after class:</p>
+<pre><code class="language-text">Checkpoint 1 recap:
+- Core tracker library first.
+- Model/helper responsibilities must be clear.
+- Service supports add/list/search/update/delete.
+- ValidationError handles invalid data.
+- NotFoundError handles missing records.
+- to_dict() prepares us for persistence and APIs.
+- Demo proves happy path plus edge cases.
+</code></pre>
+<p>This checkpoint is an assessment, but it is also scaffolding. The better the core is now, the less rewriting learners will do when the course adds structure, logging, files, GUI, APIs, testing, and packaging.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour1_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-and-checkpoint-framing-5-minutes" class="depth-2">Opening Bridge and Checkpoint Framing (5 minutes)</a></li>
+<li><a href="#instructor-talk-track" class="depth-3">Instructor talk track</a></li>
+<li><a href="#rubric-walkthrough-and-expectations-5-minutes" class="depth-2">Rubric Walkthrough and Expectations (5 minutes)</a></li>
+<li><a href="#instructor-talk-track-2" class="depth-3">Instructor talk track</a></li>
+<li><a href="#fast-grading-demo-5-minutes" class="depth-2">Fast Grading Demo (5 minutes)</a></li>
+<li><a href="#instructor-setup" class="depth-3">Instructor setup</a></li>
+<li><a href="#deterministic-demo-code" class="depth-3">Deterministic demo code</a></li>
+<li><a href="#instructor-narration-while-running-the-demo" class="depth-3">Instructor narration while running the demo</a></li>
+<li><a href="#checkpoint-build-and-grade-lab-40-minutes" class="depth-2">Checkpoint Build and Grade Lab (40 minutes)</a></li>
+<li><a href="#student-facing-lab-prompt" class="depth-3">Student-facing lab prompt</a></li>
+<li><a href="#suggested-file-organization" class="depth-3">Suggested file organization</a></li>
+<li><a href="#practical-lab-timeline-inside-the-40-minute-block" class="depth-3">Practical lab timeline inside the 40-minute block</a></li>
+<li><a href="#instructor-circulation-script" class="depth-3">Instructor circulation script</a></li>
+<li><a href="#grading-checklist-for-live-use" class="depth-3">Grading checklist for live use</a></li>
+<li><a href="#what-to-say-when-grading-a-complete-submission" class="depth-3">What to say when grading a complete submission</a></li>
+<li><a href="#what-to-say-when-grading-a-partial-submission" class="depth-3">What to say when grading a partial submission</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#troubleshooting-and-pitfalls" class="depth-2">Troubleshooting and Pitfalls</a></li>
+<li><a href="#pitfall-1-global-state-everywhere" class="depth-3">Pitfall 1: Global state everywhere</a></li>
+<li><a href="#pitfall-2-no-separation-between-model-and-ui" class="depth-3">Pitfall 2: No separation between model and UI</a></li>
+<li><a href="#pitfall-3-no-handling-for-missing-records" class="depth-3">Pitfall 3: No handling for missing records</a></li>
+<li><a href="#pitfall-4-updating-without-validation" class="depth-3">Pitfall 4: Updating without validation</a></li>
+<li><a href="#pitfall-5-demo-proves-only-the-happy-path" class="depth-3">Pitfall 5: Demo proves only the happy path</a></li>
+<li><a href="#optional-extension-tiny-cli-wrapper" class="depth-2">Optional Extension: Tiny CLI Wrapper</a></li>
+<li><a href="#quick-checks-during-lab" class="depth-2">Quick Checks During Lab</a></li>
+<li><a href="#exit-ticket-and-wrap-up-5-minutes" class="depth-2">Exit Ticket and Wrap-up (5 minutes)</a></li>
+<li><a href="#quick-check-question" class="depth-3">Quick check question</a></li>
+<li><a href="#closing-bridge-to-day-3" class="depth-3">Closing bridge to Day 3</a></li>
+<li><a href="#instructor-notes-after-class" class="depth-2">Instructor Notes After Class</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour4_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day2_Hour3_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour1_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

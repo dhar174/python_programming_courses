@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 6 Hour 2 Advanced — GUI Architecture: Controller Separation and Avoiding Callback Spaghetti | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="6">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day6_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day6_Hour1_Advanced.html">
+    <link rel="next" href="Day6_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="6" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-06/index.html">Day 6</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 6 Hour 2 Advanced — GUI Architecture: Controller Separation and Avoiding Callback Spaghetti</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 6</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day6_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="session-context">Session context</h2>
+<p>This hour continues <strong>Session 6</strong> of the Advanced Python full-stack tracker capstone. In Hour 1, learners wired update and delete into a functioning GUI. That is excellent progress, but working code is not automatically maintainable code. Once an application has a form, a list, add/update/delete actions, status messages, and save/load hooks, the GUI can become tangled fast.</p>
+<p>This hour is about architecture. The practical goal is to help learners refactor their Tkinter application so the code still makes sense one week from now, not just five minutes after it first ran.</p>
+<p>The architectural stance for this course remains consistent:</p>
+<ul>
+<li><strong>widgets and event hooks belong to the UI layer</strong></li>
+<li><strong>business rules belong to the service layer</strong></li>
+<li><strong>the App/controller coordinates user actions</strong></li>
+<li><strong>stable IDs remain the bridge between UI selection and domain operations</strong></li>
+</ul>
+<p>Keep the full-stack tracker framing neutral so it applies to tasks, inventory, contacts, notes, expenses, or similar domains.</p>
+<hr>
+<h2 id="learning-objectives">Learning objectives</h2>
+<p>By the end of this hour, learners should be able to:</p>
+<ol>
+<li>Recognize the signs of “callback spaghetti” in a growing GUI codebase.</li>
+<li>Explain the responsibilities of a Tkinter <code>App</code> or controller class.</li>
+<li>Refactor a GUI so widget construction, event handling, and service calls are organized cleanly.</li>
+<li>Keep callbacks thin by passing validated input to a service layer rather than embedding business logic in the UI.</li>
+<li>Manage basic app state clearly, especially current selection and status messaging.</li>
+<li>Avoid common refactor hazards such as circular imports and “change everything at once.”</li>
+</ol>
+<hr>
+<h2 id="prerequisites-and-starting-assumptions">Prerequisites and starting assumptions</h2>
+<p>Learners should already have:</p>
+<ul>
+<li>a working Tkinter tracker GUI</li>
+<li>add/update/delete functionality connected to a service layer or at least to in-memory logic</li>
+<li>a stable record ID system</li>
+<li>enough confidence with classes and modules to move code between files</li>
+</ul>
+<p>If some learners are still finishing Hour 1, tell them the minimum goal for Hour 2 is not perfection. It is to move from a pile of widget references and loose functions toward a clearer program structure.</p>
+<hr>
+<h2 id="materials-and-setup">Materials and setup</h2>
+<ul>
+<li>current tracker project open in the IDE</li>
+<li>a version of the GUI that still uses several top-level functions or global widget references</li>
+<li>projector view wide enough to show two files side by side if possible</li>
+<li>optional whiteboard diagram of layers: <code>ui -&gt; service -&gt; model</code></li>
+</ul>
+<hr>
+<h2 id="section-navigation">Section navigation</h2>
+<ol>
+<li>Why working GUIs become messy</li>
+<li>What “callback spaghetti” looks like</li>
+<li>The target architecture for this capstone</li>
+<li>Refactoring into an <code>App</code> controller class</li>
+<li>Keeping state and selection clean</li>
+<li>Module boundaries and imports</li>
+<li>Lab: refactor without breaking behavior</li>
+<li>Debrief and quality checks</li>
+</ol>
+<hr>
+<h2 id="suggested-timing">Suggested timing</h2>
+<ul>
+<li><strong>0–8 min:</strong> recap and why maintainability matters</li>
+<li><strong>8–20 min:</strong> identify callback spaghetti symptoms</li>
+<li><strong>20–35 min:</strong> live refactor into an <code>App</code> class</li>
+<li><strong>35–50 min:</strong> guided lab</li>
+<li><strong>50–60 min:</strong> debrief, quick check, and transition to persistence in Hour 3</li>
+</ul>
+<hr>
+<h2 id="instructor-speaking-script">Instructor speaking script</h2>
+<h3 id="1-opening-working-is-not-the-finish-line">1) Opening: working is not the finish line</h3>
+<p><strong>Say:</strong> “A lot of students reach a moment in GUI work where the program technically works, but they are afraid to touch it. If adding one button means editing six scattered functions, the problem is no longer Tkinter. The problem is structure.”</p>
+<p><strong>Say:</strong> “Today’s theme is maintainability. The question is not just ‘Can the app update and delete?’ The question is ‘Can we still understand the app when we add persistence, menus, keyboard shortcuts, and later a database?’”</p>
+<p>Invite reflection:</p>
+<ul>
+<li>“Has anyone ever had code that worked yesterday and felt impossible to safely change today?”</li>
+<li>“What signs made it feel fragile?”</li>
+</ul>
+<p>Use learner responses to introduce the phrase <strong>callback spaghetti</strong>.</p>
+<h3 id="2-what-callback-spaghetti-looks-like">2) What callback spaghetti looks like</h3>
+<p>Define it in plain language.</p>
+<p><strong>Say:</strong> “Callback spaghetti is what happens when GUI behavior is spread across too many disconnected functions, often with shared globals, repeated widget access, duplicated validation, and hidden state. You can still make progress for a while, but each new feature gets harder.”</p>
+<p>List common symptoms on screen or board:</p>
+<ul>
+<li>many top-level functions with unclear ownership</li>
+<li>globals for widgets such as <code>name_entry</code>, <code>tree</code>, <code>status_label</code></li>
+<li>duplicate code to gather form values in several handlers</li>
+<li>duplicate code to refresh the list after each action</li>
+<li>business rules embedded directly in callbacks</li>
+<li>mysterious bugs caused by stale selection state</li>
+<li>hard-to-test code because logic is fused to UI objects</li>
+</ul>
+<p>Now contrast that with a healthy small GUI architecture.</p>
+<h3 id="3-the-target-structure-for-this-capstone">3) The target structure for this capstone</h3>
+<p>Show a simple conceptual diagram:</p>
+<ul>
+<li><strong>model/domain</strong>: <code>TrackerItem</code>, exceptions, possibly validators</li>
+<li><strong>service</strong>: add, update, delete, list, get by ID, later save/load or repository use</li>
+<li><strong>UI/App class</strong>: builds widgets, reads input, calls service methods, refreshes display, shows messages</li>
+</ul>
+<p><strong>Say:</strong> “The App or controller class is not the business brain of the program. It is the coordinator of user interaction. When a user clicks a button, the App collects input, calls the service, and updates the screen. That is enough responsibility for one class.”</p>
+<p>Explain why this matters for future sessions:</p>
+<ul>
+<li>when JSON persistence arrives, the service can grow without turning the UI into a storage engine</li>
+<li>when SQLite arrives, the service can swap storage details while the UI mostly stays stable</li>
+<li>when testing arrives, core logic in the service is easier to test than button callbacks</li>
+</ul>
+<h3 id="4-a-quick-before-example">4) A quick ‘before’ example</h3>
+<p>Show a small intentionally messy example. Read it with humor, not shame.</p>
+<pre><code class="language-python">service = TrackerService()
+selected_item_id = None
+
+
+def add_item():
+    name = name_entry.get()
+    category = category_entry.get()
+    status = status_combo.get()
+    notes = notes_text.get(&quot;1.0&quot;, &quot;end&quot;).strip()
+    item = service.add_item(name, category, status, notes)
+    refresh_tree()
+    status_label.config(text=f&quot;Added {item.name}&quot;)
+
+
+def update_item():
+    global selected_item_id
+    name = name_entry.get()
+    category = category_entry.get()
+    status = status_combo.get()
+    notes = notes_text.get(&quot;1.0&quot;, &quot;end&quot;).strip()
+    service.update_item(selected_item_id, name, category, status, notes)
+    refresh_tree()
+    status_label.config(text=&quot;Updated item&quot;)
+
+
+def delete_item():
+    global selected_item_id
+    service.delete_item(selected_item_id)
+    refresh_tree()
+    clear_form()
+</code></pre>
+<p>Ask learners what feels risky.</p>
+<p>Expected observations:</p>
+<ul>
+<li>lots of global state</li>
+<li>repeated form extraction logic</li>
+<li>unclear error handling</li>
+<li>callbacks know too much</li>
+<li>no clear owner of widgets or app state</li>
+</ul>
+<h3 id="5-refactoring-goal-a-single-app-class-owns-the-gui">5) Refactoring goal: a single <code>App</code> class owns the GUI</h3>
+<p><strong>Say:</strong> “We are not refactoring for elegance points. We are refactoring to reduce confusion. A practical step is to create one <code>TrackerApp</code> class that owns widget references, current selection, and event handlers.”</p>
+<p>A helpful definition:</p>
+<ul>
+<li>the <code>App</code> class <strong>builds the UI</strong></li>
+<li>the <code>App</code> class <strong>responds to events</strong></li>
+<li>the <code>App</code> class <strong>asks the service layer to perform operations</strong></li>
+<li>the <code>App</code> class <strong>refreshes the display</strong></li>
+<li>the <code>App</code> class <strong>does not become the database, validator, or domain model</strong></li>
+</ul>
+<h3 id="6-suggested-file-structure">6) Suggested file structure</h3>
+<p>You can keep everything in one file for a small demo, but show the class-ready direction.</p>
+<pre><code class="language-text">advanced_tracker/
+    main.py
+    core/
+        models.py
+        service.py
+        exceptions.py
+    ui/
+        app.py
+</code></pre>
+<p>If learners are not ready for multiple modules, keep the same conceptual separation inside one file and tell them the split can come later.</p>
+<h3 id="7-live-refactor-build-the-trackerapp-shell-first">7) Live refactor: build the <code>TrackerApp</code> shell first</h3>
+<p>Narrate this slowly.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+from core.exceptions import NotFoundError, ValidationError
+from core.service import TrackerService
+
+
+class TrackerApp:
+    def __init__(self, root: tk.Tk, service: TrackerService) -&gt; None:
+        self.root = root
+        self.service = service
+        self.selected_item_id: str | None = None
+        self.status_text = tk.StringVar(value=&quot;Ready&quot;)
+        self.name_var = tk.StringVar()
+        self.category_var = tk.StringVar()
+        self.status_var = tk.StringVar()
+
+        self.root.title(&quot;Full-Stack Tracker&quot;)
+        self.build_ui()
+        self.refresh_items()
+
+    def build_ui(self) -&gt; None:
+        # widget creation lives here
+        pass
+</code></pre>
+<p><strong>Say:</strong> “This constructor creates application-level state and then hands off UI construction to a dedicated method. That gives us a clean entry point and a clean place to look when we need to change the screen.”</p>
+<h3 id="8-refactor-widget-creation-into-buildui">8) Refactor widget creation into <code>build_ui()</code></h3>
+<p>Explain the principle while coding: put widget creation in one place and behavior in named methods.</p>
+<pre><code class="language-python">def build_ui(self) -&gt; None:
+    main_frame = ttk.Frame(self.root, padding=12)
+    main_frame.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+    self.root.columnconfigure(0, weight=1)
+    self.root.rowconfigure(0, weight=1)
+    main_frame.columnconfigure(1, weight=1)
+    main_frame.rowconfigure(5, weight=1)
+
+    ttk.Label(main_frame, text=&quot;Name&quot;).grid(row=0, column=0, sticky=&quot;w&quot;)
+    ttk.Entry(main_frame, textvariable=self.name_var, width=30).grid(row=0, column=1, sticky=&quot;ew&quot;)
+
+    ttk.Label(main_frame, text=&quot;Category&quot;).grid(row=1, column=0, sticky=&quot;w&quot;)
+    ttk.Entry(main_frame, textvariable=self.category_var, width=30).grid(row=1, column=1, sticky=&quot;ew&quot;)
+
+    ttk.Label(main_frame, text=&quot;Status&quot;).grid(row=2, column=0, sticky=&quot;w&quot;)
+    self.status_combo = ttk.Combobox(
+        main_frame,
+        textvariable=self.status_var,
+        values=[&quot;Open&quot;, &quot;In Progress&quot;, &quot;Done&quot;],
+        state=&quot;readonly&quot;,
+    )
+    self.status_combo.grid(row=2, column=1, sticky=&quot;ew&quot;)
+
+    ttk.Label(main_frame, text=&quot;Notes&quot;).grid(row=3, column=0, sticky=&quot;nw&quot;)
+    self.notes_text = tk.Text(main_frame, width=40, height=5)
+    self.notes_text.grid(row=3, column=1, sticky=&quot;ew&quot;)
+
+    button_frame = ttk.Frame(main_frame)
+    button_frame.grid(row=4, column=0, columnspan=2, sticky=&quot;ew&quot;, pady=(8, 8))
+
+    ttk.Button(button_frame, text=&quot;Add&quot;, command=self.on_add).grid(row=0, column=0, padx=(0, 8))
+    ttk.Button(button_frame, text=&quot;Update&quot;, command=self.on_update).grid(row=0, column=1, padx=(0, 8))
+    ttk.Button(button_frame, text=&quot;Delete&quot;, command=self.on_delete).grid(row=0, column=2, padx=(0, 8))
+    ttk.Button(button_frame, text=&quot;Clear Form&quot;, command=self.clear_form).grid(row=0, column=3)
+
+    self.tree = ttk.Treeview(
+        main_frame,
+        columns=(&quot;id&quot;, &quot;name&quot;, &quot;category&quot;, &quot;status&quot;),
+        show=&quot;headings&quot;,
+        height=10,
+    )
+    self.tree.grid(row=5, column=0, columnspan=2, sticky=&quot;nsew&quot;)
+    self.tree.heading(&quot;id&quot;, text=&quot;ID&quot;)
+    self.tree.heading(&quot;name&quot;, text=&quot;Name&quot;)
+    self.tree.heading(&quot;category&quot;, text=&quot;Category&quot;)
+    self.tree.heading(&quot;status&quot;, text=&quot;Status&quot;)
+    self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_item_selected)
+
+    ttk.Label(main_frame, textvariable=self.status_text).grid(row=6, column=0, columnspan=2, sticky=&quot;ew&quot;, pady=(8, 0))
+</code></pre>
+<p>Point out the benefit: every widget reference owned by the GUI now lives on <code>self</code>, making behavior methods easier to read.</p>
+<h3 id="9-thin-callbacks-as-methods">9) Thin callbacks as methods</h3>
+<p>Refactor one callback at a time. Stress behavior preservation.</p>
+<p><strong>Say:</strong> “A refactor should not change what the user can do. It should change how understandable the code is.”</p>
+<p>Example <code>on_add</code> method:</p>
+<pre><code class="language-python">def on_add(self) -&gt; None:
+    try:
+        item = self.service.add_item(**self.get_form_data())
+    except ValidationError as error:
+        messagebox.showerror(&quot;Validation Error&quot;, str(error))
+        return
+
+    self.refresh_items(selected_item_id=item.item_id)
+    self.set_status(f&quot;Added: {item.name}&quot;)
+    self.clear_form(keep_status=True)
+</code></pre>
+<p>Example helper used by several callbacks:</p>
+<pre><code class="language-python">def get_form_data(self) -&gt; dict[str, str]:
+    return {
+        &quot;name&quot;: self.name_var.get(),
+        &quot;category&quot;: self.category_var.get(),
+        &quot;status&quot;: self.status_var.get(),
+        &quot;notes&quot;: self.notes_text.get(&quot;1.0&quot;, tk.END).strip(),
+    }
+</code></pre>
+<p><strong>Say:</strong> “Notice what just happened. We removed duplicated form-reading logic from multiple callbacks. That is one of the quickest ways to reduce GUI mess.”</p>
+<h3 id="10-state-management-selection-and-status">10) State management: selection and status</h3>
+<p>Explain that not all state is bad. Hidden, unmanaged state is bad. Cleanly named app state is useful.</p>
+<p>Recommended app state examples:</p>
+<ul>
+<li><code>self.selected_item_id</code></li>
+<li><code>self.status_text</code></li>
+<li>form variables such as <code>self.name_var</code></li>
+</ul>
+<p>Bad hidden state examples:</p>
+<ul>
+<li>relying on whatever tree row happens to still exist after refresh</li>
+<li>using global variables changed from multiple functions</li>
+<li>leaving form fields populated without knowing which record they map to</li>
+</ul>
+<p>Show a clear selection handler:</p>
+<pre><code class="language-python">def on_item_selected(self, event: tk.Event | None = None) -&gt; None:
+    selection = self.tree.selection()
+    if not selection:
+        self.selected_item_id = None
+        return
+
+    values = self.tree.item(selection[0], &quot;values&quot;)
+    item_id = values[0]
+
+    try:
+        item = self.service.get_item(item_id)
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Selection Error&quot;, str(error))
+        self.refresh_items()
+        self.clear_form()
+        self.selected_item_id = None
+        return
+
+    self.selected_item_id = item.item_id
+    self.name_var.set(item.name)
+    self.category_var.set(item.category)
+    self.status_var.set(item.status)
+    self.notes_text.delete(&quot;1.0&quot;, tk.END)
+    self.notes_text.insert(&quot;1.0&quot;, item.notes)
+    self.set_status(f&quot;Editing: {item.name}&quot;)
+</code></pre>
+<h3 id="11-a-healthy-refreshitems-method">11) A healthy <code>refresh_items()</code> method</h3>
+<p>Refactor list rebuilding into one place. This is the kind of method that pays off repeatedly.</p>
+<pre><code class="language-python">def refresh_items(self, selected_item_id: str | None = None) -&gt; None:
+    for row_id in self.tree.get_children():
+        self.tree.delete(row_id)
+
+    for item in self.service.list_items():
+        row_id = self.tree.insert(
+            &quot;&quot;,
+            tk.END,
+            values=(item.item_id, item.name, item.category, item.status),
+        )
+        if selected_item_id == item.item_id:
+            self.tree.selection_set(row_id)
+            self.tree.focus(row_id)
+</code></pre>
+<p><strong>Say:</strong> “Any code path that changes the underlying data can now call one refresh method. That centralizes list logic and reduces bugs.”</p>
+<h3 id="12-circular-imports-and-module-boundaries">12) Circular imports and module boundaries</h3>
+<p>The runbook warns about circular imports. Explain what that means in a friendly way.</p>
+<p><strong>Say:</strong> “A circular import happens when module A imports module B and module B also imports module A. GUI projects are especially vulnerable when UI code starts reaching deeply into the core, and the core also tries to import the UI.”</p>
+<p>Practical rule for this course:</p>
+<ul>
+<li><code>main.py</code> can assemble the app</li>
+<li><code>ui/app.py</code> can import the service and exceptions</li>
+<li><code>core/service.py</code> should <strong>not</strong> import the UI</li>
+</ul>
+<p>That direction of dependency keeps the architecture cleaner.</p>
+<h3 id="13-refactor-strategy-do-not-rebuild-the-plane-midair">13) Refactor strategy: do not rebuild the plane midair</h3>
+<p>Students often over-refactor. Give them a concrete safe method.</p>
+<p><strong>Say:</strong> “Move one piece, run the app, then move the next piece. Don’t rewrite the whole GUI from scratch because you ‘see the better version in your head.’ That is how working features disappear.”</p>
+<p>Recommended sequence:</p>
+<ol>
+<li>create the <code>App</code> class shell</li>
+<li>move widget references into <code>build_ui()</code></li>
+<li>move one callback, such as add</li>
+<li>test</li>
+<li>move refresh helper</li>
+<li>test</li>
+<li>move update/delete/selection handlers</li>
+<li>test</li>
+<li>only then split modules if desired</li>
+</ol>
+<h3 id="14-live-demo-plan">14) Live demo plan</h3>
+<h4 id="demo-a-identify-code-smells">Demo A: identify code smells</h4>
+<p>Open a messy version and narrate what feels hard to trust.</p>
+<p><strong>Say:</strong> “I can make this work, but I cannot answer simple questions quickly, like ‘Who owns the current selection?’ or ‘Where do all service calls happen?’ That is a structural problem.”</p>
+<h4 id="demo-b-create-trackerapp">Demo B: create <code>TrackerApp</code></h4>
+<p>Move just enough to get the app launching. Show that the window still opens. Celebrate the small checkpoint.</p>
+<h4 id="demo-c-move-one-callback-and-test-immediately">Demo C: move one callback and test immediately</h4>
+<p>Use Add first because it is usually the simplest. Then show Update and Delete still pending. This models safe refactoring.</p>
+<h4 id="demo-d-finish-the-refactor-and-compare-readability">Demo D: finish the refactor and compare readability</h4>
+<p>At the end, scroll through the new class and point out that the code now reads like a table of contents:</p>
+<ul>
+<li><code>build_ui</code></li>
+<li><code>get_form_data</code></li>
+<li><code>clear_form</code></li>
+<li><code>refresh_items</code></li>
+<li><code>on_add</code></li>
+<li><code>on_update</code></li>
+<li><code>on_delete</code></li>
+<li><code>on_item_selected</code></li>
+<li><code>set_status</code></li>
+</ul>
+<p><strong>Say:</strong> “That list of methods tells the story of the app. Good structure often looks like clear storytelling.”</p>
+<h3 id="15-practice-lab-script">15) Practice lab script</h3>
+<p>Read or paste this to learners:</p>
+<h4 id="lab-refactor-the-gui-without-breaking-behavior">Lab: Refactor the GUI Without Breaking Behavior</h4>
+<p>Refactor your tracker so the GUI has a clear owner and the callbacks remain thin.</p>
+<h5 id="required-tasks">Required tasks</h5>
+<ul>
+<li>Create an <code>App</code> or <code>TrackerApp</code> class that builds the interface.</li>
+<li>Move widget references into the class.</li>
+<li>Move event handlers into methods on the class.</li>
+<li>Keep add/update/delete/select behavior working.</li>
+<li>Keep business rules in the service layer.</li>
+<li>Verify that the UI still refreshes correctly after each change.</li>
+</ul>
+<h5 id="minimum-definition-of-done">Minimum definition of done</h5>
+<ul>
+<li>a new teammate can locate widget creation and callback logic quickly</li>
+<li>the app still launches and performs CRUD correctly</li>
+<li>selection state is managed in one clear place</li>
+<li>no new circular import problems are introduced</li>
+</ul>
+<h5 id="stretch-goals">Stretch goals</h5>
+<ul>
+<li>add a status bar showing the last action</li>
+<li>split the GUI into <code>build_form()</code>, <code>build_buttons()</code>, and <code>build_list()</code> helper methods</li>
+<li>add a dedicated <code>load_selected_item()</code> helper for readability</li>
+</ul>
+<h3 id="16-instructor-coaching-moves-during-lab">16) Instructor coaching moves during lab</h3>
+<p>When a learner says “I know it should be cleaner, but I don’t know where to start,” use this sequence:</p>
+<ol>
+<li>“Show me where the widgets are created.”</li>
+<li>“Show me where the current selection is stored.”</li>
+<li>“Show me one callback that repeats code from another callback.”</li>
+<li>“Can we extract that repeated behavior into a helper?”</li>
+</ol>
+<p>When a learner breaks the app during refactor, model calm debugging:</p>
+<ul>
+<li>read the traceback aloud</li>
+<li>identify the first line in their code that matters</li>
+<li>ask whether a widget attribute was created before use</li>
+<li>ask whether a method name changed but a button command did not</li>
+<li>ask whether an import path is now wrong after moving files</li>
+</ul>
+<h3 id="17-why-this-matters-in-real-projects">17) Why this matters in real projects</h3>
+<p>Connect the lesson to professional habits.</p>
+<p><strong>Say:</strong> “In a real application, the first version of the GUI is rarely the last. Features accumulate. If the codebase has no structure, progress slows down because every change risks surprising side effects. The point of architecture is not ceremony. The point is making future work cheaper and safer.”</p>
+<p>Relate to the next session:</p>
+<ul>
+<li>JSON save/load is easier to add when the UI has one place for app startup and one place for post-CRUD hooks</li>
+<li>SQLite integration later will be easier if the service layer is already the gateway for operations</li>
+<li>testing will be easier if core logic is not hidden inside widget callbacks</li>
+</ul>
+<hr>
+<h2 id="worked-example-a-clean-small-tkinter-entry-point">Worked example: a clean small Tkinter entry point</h2>
+<p>Use this as a reference pattern, not necessarily as a file learners must copy exactly.</p>
+<pre><code class="language-python">import tkinter as tk
+
+from core.service import TrackerService
+from ui.app import TrackerApp
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    service = TrackerService()
+    app = TrackerApp(root=root, service=service)
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Explain why <code>main()</code> is useful:</p>
+<ul>
+<li>it is an obvious application entry point</li>
+<li>it wires dependencies together cleanly</li>
+<li>it keeps setup code out of the middle of the UI class</li>
+</ul>
+<hr>
+<h2 id="common-pitfalls-to-watch-for">Common pitfalls to watch for</h2>
+<h3 id="pitfall-1-over-refactoring-midstream">Pitfall 1: over-refactoring midstream</h3>
+<p>Learners may try to split into four files, rename everything, add menus, and change validation rules all at once. Remind them that a refactor is successful when behavior is preserved.</p>
+<h3 id="pitfall-2-circular-imports">Pitfall 2: circular imports</h3>
+<p>If <code>service.py</code> imports <code>app.py</code> and <code>app.py</code> imports <code>service.py</code>, step back and re-establish one-way dependencies.</p>
+<h3 id="pitfall-3-leaving-business-logic-in-the-ui">Pitfall 3: leaving business logic in the UI</h3>
+<p>Examples include directly modifying the service’s internal list or duplicating validation rules in callbacks only.</p>
+<h3 id="pitfall-4-storing-too-much-state">Pitfall 4: storing too much state</h3>
+<p>The app needs some state, but not every little detail. Encourage learners to store only what they need, like the selected ID and status message, rather than shadow copies of the full dataset unless there is a clear reason.</p>
+<h3 id="pitfall-5-giant-methods">Pitfall 5: giant methods</h3>
+<p>An <code>App</code> class is not automatically good if <code>build_ui()</code> is 250 lines with no helpers. Encourage extraction by region: form, buttons, list, menus, status bar.</p>
+<hr>
+<h2 id="completion-criteria-for-this-hour">Completion criteria for this hour</h2>
+<p>Learners are in a strong position if they can show:</p>
+<ul>
+<li>a clear <code>App</code> or controller class</li>
+<li>widget construction separated from event logic</li>
+<li>thin callbacks that call the service layer</li>
+<li>centralized helpers for repeated behavior such as <code>refresh_items()</code> and <code>get_form_data()</code></li>
+<li>behavior preserved after refactor</li>
+</ul>
+<p>If learners are not fully done, prioritize in this order:</p>
+<ol>
+<li>establish the <code>App</code> class</li>
+<li>move one working callback into the class</li>
+<li>centralize refresh and form extraction helpers</li>
+<li>clean up remaining duplication</li>
+</ol>
+<hr>
+<h2 id="quick-check-exit-ticket">Quick check / exit ticket</h2>
+<p>Ask one or more of the following:</p>
+<ol>
+<li>What is one sign that GUI code needs refactoring?</li>
+<li>What responsibilities belong in an <code>App</code> class?</li>
+<li>Why should the service layer not import the UI layer?</li>
+<li>What is one helper method that reduced duplication in your refactor?</li>
+</ol>
+<p>A strong response to question 1 sounds like:</p>
+<blockquote>
+<p>“If I have to edit multiple unrelated functions or globals to add one behavior, my GUI probably needs refactoring.”</p>
+</blockquote>
+<hr>
+<h2 id="preview-of-the-next-hour">Preview of the next hour</h2>
+<p>Hour 3 turns the GUI into a more realistic milestone by adding JSON persistence and user-facing polish. Because we refactored now, we have clean places to add startup load, save-after-change behavior, menus, shortcuts, and error handling without turning the application into a tangle again.</p>
+<hr>
+<h2 id="extended-architecture-notes-for-instructors">Extended architecture notes for instructors</h2>
+<p>This section gives you more language and examples for learners who need stronger mental models around structure, not just syntax.</p>
+<h3 id="a-practical-definition-of-controller-separation">A practical definition of controller separation</h3>
+<p>When learners hear “controller,” some imagine a huge framework concept. Keep it simple.</p>
+<p><strong>Say:</strong> “In this course, a controller is just the part of the program that coordinates what happens when the user does something. It is not magical. It gathers input, calls the right service method, and updates the visible interface.”</p>
+<p>The controller or <code>App</code> class is a traffic director, not the whole city. That metaphor helps learners keep the role modest and understandable.</p>
+<h3 id="what-belongs-where">What belongs where</h3>
+<p>A common source of confusion is responsibility drift. Use this simple chart verbally or on the board.</p>
+<p><strong>UI/App layer</strong></p>
+<ul>
+<li>create widgets</li>
+<li>bind events</li>
+<li>read form values</li>
+<li>show dialogs and status text</li>
+<li>refresh the visual list</li>
+</ul>
+<p><strong>Service layer</strong></p>
+<ul>
+<li>validate business rules</li>
+<li>create/update/delete records</li>
+<li>look up records by ID</li>
+<li>raise domain-specific errors</li>
+<li>later coordinate with storage/repository logic</li>
+</ul>
+<p><strong>Model layer</strong></p>
+<ul>
+<li>represent the data shape</li>
+<li>preserve stable identity</li>
+<li>support conversion to and from dictionaries if useful</li>
+</ul>
+<p>Then ask learners to classify a few actions:</p>
+<ul>
+<li>“Checking whether name is blank—UI or service?”</li>
+<li>“Showing an error dialog—UI or service?”</li>
+<li>“Finding a record by ID—UI or service?”</li>
+<li>“Deciding what field labels look like—UI or service?”</li>
+</ul>
+<p>This turns abstraction into a classification exercise they can reason through.</p>
+<h3 id="signs-that-a-callback-is-doing-too-much">Signs that a callback is doing too much</h3>
+<p>Teach learners to diagnose overload using questions:</p>
+<ul>
+<li>Does this callback directly manipulate the raw list of records?</li>
+<li>Does it repeat validation rules that already exist elsewhere?</li>
+<li>Does it contain 20–30 lines of mixed UI, domain, and storage logic?</li>
+<li>Would changing the record model force edits in many callbacks?</li>
+</ul>
+<p>If the answer is yes, the callback is probably too large or too responsible.</p>
+<h3 id="why-thin-callbacks-matter-beyond-style">Why thin callbacks matter beyond style</h3>
+<p>Learners sometimes hear “thin callbacks” as a preference rather than an engineering advantage. Name the concrete benefits.</p>
+<ul>
+<li>easier to read during debugging</li>
+<li>easier to test service logic without launching the GUI</li>
+<li>easier to reuse service methods when the course later adds different interfaces</li>
+<li>easier to switch persistence from JSON to SQLite</li>
+<li>fewer accidental differences between add/update/delete behavior</li>
+</ul>
+<p><strong>Say:</strong> “When the interface stays thin, the app becomes more adaptable. That flexibility is a practical advantage, not a style trophy.”</p>
+<hr>
+<h2 id="step-by-step-refactor-checklist-for-classroom-use">Step-by-step refactor checklist for classroom use</h2>
+<p>If your learners need a more mechanical process, use this checklist on screen.</p>
+<h3 id="stage-1-freeze-behavior-before-moving-code">Stage 1: freeze behavior before moving code</h3>
+<ul>
+<li>run the app once</li>
+<li>perform add, update, and delete once each</li>
+<li>identify what currently works</li>
+<li>commit or save a backup copy if learners are using Git</li>
+</ul>
+<h3 id="stage-2-create-the-class-shell">Stage 2: create the class shell</h3>
+<ul>
+<li>define <code>TrackerApp</code></li>
+<li>move shared state into <code>self</code></li>
+<li>keep <code>main()</code> small and clear</li>
+<li>verify the app still opens</li>
+</ul>
+<h3 id="stage-3-move-widget-creation">Stage 3: move widget creation</h3>
+<ul>
+<li>put form widgets in <code>build_ui()</code></li>
+<li>store widgets or <code>StringVar</code> instances on <code>self</code></li>
+<li>wire one button command at a time</li>
+<li>verify widget names match callback references</li>
+</ul>
+<h3 id="stage-4-extract-helpers">Stage 4: extract helpers</h3>
+<ul>
+<li><code>get_form_data()</code></li>
+<li><code>clear_form()</code></li>
+<li><code>set_status()</code></li>
+<li><code>refresh_items()</code></li>
+</ul>
+<p>Explain that helpers are often the fastest improvement because they reduce duplication immediately.</p>
+<h3 id="stage-5-migrate-callbacks-safely">Stage 5: migrate callbacks safely</h3>
+<ul>
+<li>move <code>on_add()</code> first</li>
+<li>test</li>
+<li>move selection handler</li>
+<li>test</li>
+<li>move <code>on_update()</code> and <code>on_delete()</code></li>
+<li>test again</li>
+</ul>
+<h3 id="stage-6-optional-module-split">Stage 6: optional module split</h3>
+<p>Only after the refactor is working:</p>
+<ul>
+<li>move service/core code into <code>core/</code></li>
+<li>move GUI code into <code>ui/</code></li>
+<li>fix imports carefully</li>
+<li>test once more</li>
+</ul>
+<h3 id="stage-7-stop-and-explain-the-code-aloud">Stage 7: stop and explain the code aloud</h3>
+<p>A useful test for architecture is whether the learner can narrate it:</p>
+<ul>
+<li>“Here is where widgets are created.”</li>
+<li>“Here is where selection state lives.”</li>
+<li>“Here is the one method that refreshes the list.”</li>
+<li>“Here is where the service layer handles record operations.”</li>
+</ul>
+<p>If learners can explain the structure calmly, the refactor is probably doing its job.</p>
+<hr>
+<h2 id="debugging-after-refactor-instructor-coaching-script">Debugging after refactor: instructor coaching script</h2>
+<p>Refactoring introduces a specific class of bugs. The key teaching move is to normalize them and debug systematically.</p>
+<h3 id="common-post-refactor-bug-attribute-does-not-exist">Common post-refactor bug: attribute does not exist</h3>
+<p>Typical cause:</p>
+<ul>
+<li>a widget used to be a local name and now should be <code>self.widget_name</code></li>
+<li><code>build_ui()</code> creates it conditionally or after a method tries to use it</li>
+</ul>
+<p>Debugging prompt:</p>
+<p><strong>Ask:</strong> “Where is that attribute supposed to be created, and does that happen before this method runs?”</p>
+<h3 id="common-post-refactor-bug-button-command-points-to-an-old-function-name">Common post-refactor bug: button command points to an old function name</h3>
+<p>Typical cause:</p>
+<ul>
+<li>command still references <code>update_item</code> instead of <code>self.on_update</code></li>
+</ul>
+<p>Debugging prompt:</p>
+<p><strong>Ask:</strong> “If I click the button, which exact callable is Tkinter trying to invoke?”</p>
+<h3 id="common-post-refactor-bug-selection-state-is-lost">Common post-refactor bug: selection state is lost</h3>
+<p>Typical cause:</p>
+<ul>
+<li><code>selected_item_id</code> is now on <code>self</code>, but one method still uses a global or local version</li>
+</ul>
+<p>Debugging prompt:</p>
+<p><strong>Ask:</strong> “Do all methods agree on one source of truth for the current selection?”</p>
+<h3 id="common-post-refactor-bug-import-errors-after-splitting-modules">Common post-refactor bug: import errors after splitting modules</h3>
+<p>Typical cause:</p>
+<ul>
+<li>file moved, import path not updated</li>
+<li>circular dependency created</li>
+</ul>
+<p>Debugging prompt:</p>
+<p><strong>Ask:</strong> “Which module is responsible for assembly, and which direction should imports flow?”</p>
+<p>Model calm problem-solving in front of the class. That is as valuable as the final refactor itself.</p>
+<hr>
+<h2 id="instructor-language-for-code-review-and-feedback">Instructor language for code review and feedback</h2>
+<p>Use supportive but specific language. Here are sample phrases.</p>
+<h3 id="when-the-structure-is-improving">When the structure is improving</h3>
+<ul>
+<li>“This is easier to navigate because widget creation now has one home.”</li>
+<li>“I like that your callbacks mostly delegate to the service layer.”</li>
+<li>“Your <code>refresh_items()</code> helper is carrying a lot of weight in a good way.”</li>
+</ul>
+<h3 id="when-the-code-still-needs-separation">When the code still needs separation</h3>
+<ul>
+<li>“Your GUI works, but I still see business rules leaking into multiple callbacks.”</li>
+<li>“You have the right idea; now let’s make one method responsible for gathering form data so the handlers don’t repeat it.”</li>
+<li>“This is a good time to move from ‘it works’ to ‘it is safe to extend.’”</li>
+</ul>
+<h3 id="when-a-learner-over-refactored-and-broke-things">When a learner over-refactored and broke things</h3>
+<ul>
+<li>“Let’s reduce scope. Which smallest working version can we get back first?”</li>
+<li>“Refactoring is most effective when we change one layer at a time.”</li>
+<li>“Your instinct to organize is correct. Now let’s recover a stable base and continue in smaller steps.”</li>
+</ul>
+<p>These phrases keep the focus on engineering decisions rather than personal judgment.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#session-context" class="depth-2">Session context</a></li>
+<li><a href="#learning-objectives" class="depth-2">Learning objectives</a></li>
+<li><a href="#prerequisites-and-starting-assumptions" class="depth-2">Prerequisites and starting assumptions</a></li>
+<li><a href="#materials-and-setup" class="depth-2">Materials and setup</a></li>
+<li><a href="#section-navigation" class="depth-2">Section navigation</a></li>
+<li><a href="#suggested-timing" class="depth-2">Suggested timing</a></li>
+<li><a href="#instructor-speaking-script" class="depth-2">Instructor speaking script</a></li>
+<li><a href="#1-opening-working-is-not-the-finish-line" class="depth-3">1) Opening: working is not the finish line</a></li>
+<li><a href="#2-what-callback-spaghetti-looks-like" class="depth-3">2) What callback spaghetti looks like</a></li>
+<li><a href="#3-the-target-structure-for-this-capstone" class="depth-3">3) The target structure for this capstone</a></li>
+<li><a href="#4-a-quick-before-example" class="depth-3">4) A quick ‘before’ example</a></li>
+<li><a href="#5-refactoring-goal-a-single-app-class-owns-the-gui" class="depth-3">5) Refactoring goal: a single App class owns the GUI</a></li>
+<li><a href="#6-suggested-file-structure" class="depth-3">6) Suggested file structure</a></li>
+<li><a href="#7-live-refactor-build-the-trackerapp-shell-first" class="depth-3">7) Live refactor: build the TrackerApp shell first</a></li>
+<li><a href="#8-refactor-widget-creation-into-buildui" class="depth-3">8) Refactor widget creation into build_ui()</a></li>
+<li><a href="#9-thin-callbacks-as-methods" class="depth-3">9) Thin callbacks as methods</a></li>
+<li><a href="#10-state-management-selection-and-status" class="depth-3">10) State management: selection and status</a></li>
+<li><a href="#11-a-healthy-refreshitems-method" class="depth-3">11) A healthy refresh_items() method</a></li>
+<li><a href="#12-circular-imports-and-module-boundaries" class="depth-3">12) Circular imports and module boundaries</a></li>
+<li><a href="#13-refactor-strategy-do-not-rebuild-the-plane-midair" class="depth-3">13) Refactor strategy: do not rebuild the plane midair</a></li>
+<li><a href="#14-live-demo-plan" class="depth-3">14) Live demo plan</a></li>
+<li><a href="#demo-a-identify-code-smells" class="depth-4">Demo A: identify code smells</a></li>
+<li><a href="#demo-b-create-trackerapp" class="depth-4">Demo B: create TrackerApp</a></li>
+<li><a href="#demo-c-move-one-callback-and-test-immediately" class="depth-4">Demo C: move one callback and test immediately</a></li>
+<li><a href="#demo-d-finish-the-refactor-and-compare-readability" class="depth-4">Demo D: finish the refactor and compare readability</a></li>
+<li><a href="#15-practice-lab-script" class="depth-3">15) Practice lab script</a></li>
+<li><a href="#lab-refactor-the-gui-without-breaking-behavior" class="depth-4">Lab: Refactor the GUI Without Breaking Behavior</a></li>
+<li><a href="#required-tasks" class="depth-5">Required tasks</a></li>
+<li><a href="#minimum-definition-of-done" class="depth-5">Minimum definition of done</a></li>
+<li><a href="#stretch-goals" class="depth-5">Stretch goals</a></li>
+<li><a href="#16-instructor-coaching-moves-during-lab" class="depth-3">16) Instructor coaching moves during lab</a></li>
+<li><a href="#17-why-this-matters-in-real-projects" class="depth-3">17) Why this matters in real projects</a></li>
+<li><a href="#worked-example-a-clean-small-tkinter-entry-point" class="depth-2">Worked example: a clean small Tkinter entry point</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-2">Common pitfalls to watch for</a></li>
+<li><a href="#pitfall-1-over-refactoring-midstream" class="depth-3">Pitfall 1: over-refactoring midstream</a></li>
+<li><a href="#pitfall-2-circular-imports" class="depth-3">Pitfall 2: circular imports</a></li>
+<li><a href="#pitfall-3-leaving-business-logic-in-the-ui" class="depth-3">Pitfall 3: leaving business logic in the UI</a></li>
+<li><a href="#pitfall-4-storing-too-much-state" class="depth-3">Pitfall 4: storing too much state</a></li>
+<li><a href="#pitfall-5-giant-methods" class="depth-3">Pitfall 5: giant methods</a></li>
+<li><a href="#completion-criteria-for-this-hour" class="depth-2">Completion criteria for this hour</a></li>
+<li><a href="#quick-check-exit-ticket" class="depth-2">Quick check / exit ticket</a></li>
+<li><a href="#preview-of-the-next-hour" class="depth-2">Preview of the next hour</a></li>
+<li><a href="#extended-architecture-notes-for-instructors" class="depth-2">Extended architecture notes for instructors</a></li>
+<li><a href="#a-practical-definition-of-controller-separation" class="depth-3">A practical definition of controller separation</a></li>
+<li><a href="#what-belongs-where" class="depth-3">What belongs where</a></li>
+<li><a href="#signs-that-a-callback-is-doing-too-much" class="depth-3">Signs that a callback is doing too much</a></li>
+<li><a href="#why-thin-callbacks-matter-beyond-style" class="depth-3">Why thin callbacks matter beyond style</a></li>
+<li><a href="#step-by-step-refactor-checklist-for-classroom-use" class="depth-2">Step-by-step refactor checklist for classroom use</a></li>
+<li><a href="#stage-1-freeze-behavior-before-moving-code" class="depth-3">Stage 1: freeze behavior before moving code</a></li>
+<li><a href="#stage-2-create-the-class-shell" class="depth-3">Stage 2: create the class shell</a></li>
+<li><a href="#stage-3-move-widget-creation" class="depth-3">Stage 3: move widget creation</a></li>
+<li><a href="#stage-4-extract-helpers" class="depth-3">Stage 4: extract helpers</a></li>
+<li><a href="#stage-5-migrate-callbacks-safely" class="depth-3">Stage 5: migrate callbacks safely</a></li>
+<li><a href="#stage-6-optional-module-split" class="depth-3">Stage 6: optional module split</a></li>
+<li><a href="#stage-7-stop-and-explain-the-code-aloud" class="depth-3">Stage 7: stop and explain the code aloud</a></li>
+<li><a href="#debugging-after-refactor-instructor-coaching-script" class="depth-2">Debugging after refactor: instructor coaching script</a></li>
+<li><a href="#common-post-refactor-bug-attribute-does-not-exist" class="depth-3">Common post-refactor bug: attribute does not exist</a></li>
+<li><a href="#common-post-refactor-bug-button-command-points-to-an-old-function-name" class="depth-3">Common post-refactor bug: button command points to an old function name</a></li>
+<li><a href="#common-post-refactor-bug-selection-state-is-lost" class="depth-3">Common post-refactor bug: selection state is lost</a></li>
+<li><a href="#common-post-refactor-bug-import-errors-after-splitting-modules" class="depth-3">Common post-refactor bug: import errors after splitting modules</a></li>
+<li><a href="#instructor-language-for-code-review-and-feedback" class="depth-2">Instructor language for code review and feedback</a></li>
+<li><a href="#when-the-structure-is-improving" class="depth-3">When the structure is improving</a></li>
+<li><a href="#when-the-code-still-needs-separation" class="depth-3">When the code still needs separation</a></li>
+<li><a href="#when-a-learner-over-refactored-and-broke-things" class="depth-3">When a learner over-refactored and broke things</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day6_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>
