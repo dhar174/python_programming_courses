@@ -4,10 +4,10 @@
 # Active Context
 
 ## Current objective
-No active implementation objective is currently in flight. Epic #419's portal rollout merged in PR #426, and generated day overview index pages are now part of the portal baseline.
+Issue #458's hourly lecture HTML rollout is implemented locally: all 96 lecture Markdown files now have generated HTML companions plus a shared generator, validator, and publish pipeline. The remaining follow-through is issue/PR closeout rather than additional platform work.
 
 ## Why it matters now
-Future portal work should preserve the module portal → day overview → slide deck navigation path while keeping root featured links and the printable index as direct deck shortcuts.
+Lecture Markdown is now a first-class published surface alongside slide decks. The new pipeline needs to preserve content fidelity while making lecture pages reachable from the existing portal/day-overview flow and safe for GitHub Pages hosting.
 
 ## Current status
 - Done:
@@ -27,6 +27,12 @@ Future portal work should preserve the module portal → day overview → slide 
     - root featured links now route to day overview pages; the printable index remains a direct deck shortcut
   - GitHub Pages base-path normalization updated across portal entrypoints and generated day overviews so directory-style published URLs keep the `/python_programming_courses/` project prefix when loading shared portal assets
   - `.github/workflows/copilot-setup-steps.yml` now satisfies the Copilot setup-steps contract and performs a real lightweight bootstrap by setting up Python, installing `nbconvert`, and smoke-checking the dependency for Copilot agents
+  - Issue #458 foundation platform:
+    - `scripts/generate_lecture_pages.py` now generates hourly lecture HTML in natural day/hour order and can mirror pages into `_site`
+    - `scripts/validate_lecture_html.py` now validates lecture-page structure, navigation hooks, hash targets, and offline-safe asset/runtime rules
+    - `slides/shared/lecture/lecture.css` and `slides/shared/lecture/lecture.js` now provide the shared lecture-page UX layer
+    - `.github/workflows/marp-action.yml` now installs pinned `Markdown`, generates lecture HTML into `_site`, and runs lecture validation before publish checks
+    - `scripts/generate_portal_manifest.py`, `scripts/check_portal_publish.py`, and `slides/shared/portal/portal.js` now recognize published lecture HTML in the Pages artifact
 - In progress:
   - none
 - Blocked:
@@ -47,8 +53,14 @@ Future portal work should preserve the module portal → day overview → slide 
 - `slides/shared/portal/course-manifest.json`
 - `slides/shared/portal/day-overviews.json`
 - `scripts/generate_day_overviews.py`
+- `scripts/generate_lecture_pages.py`
 - `scripts/generate_portal_manifest.py`
 - `scripts/check_portal_publish.py`
+- `scripts/validate_lecture_html.py`
+- `slides/shared/lecture/lecture.css`
+- `slides/shared/lecture/lecture.js`
+- `Basics/lessons/lecture/Day*_Hour*_Basics.html`
+- `Advanced/lessons/lecture/Day*_Hour*_Advanced.html`
 - `Basics/lessons/slides/day-*/day-*-session-*.html`
 - `Advanced/lessons/slides/day-*/day-*-session-*.html`
 - `Basics/lessons/slides/day-*/index.html`
@@ -60,8 +72,8 @@ Future portal work should preserve the module portal → day overview → slide 
 3. `_site/` — staged Pages artifact produced by CI, including `_site/index.html`, `_site/slides/basics/`, `_site/slides/advanced/`, and `_site/slides/shared/portal/`
 
 ## Next recommended steps
-1. No portal follow-up is currently required from Epic #419.
-2. If root routing, shared portal assets, or publish validation change later, update `docs/portal-architecture.md`, `.github/workflows/marp-action.yml`, and the affected portal pages together.
+1. Open or update the implementation PR for the #458 rollout and link the generator, validator, workflow, shared assets, and generated lecture HTML outputs.
+2. Close the #458 pilot/tranche issues with the validated generator-first rollout evidence.
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal baseline

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 9, Hour 1: Functions: def, parameters, return (Course Hour 33) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="9">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day9_Hour1_Basics.md">
+
+    <link rel="prev" href="Day8_Hour4_Basics.html">
+    <link rel="next" href="Day9_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="9" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-09/index.html">Day 9</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 9, Hour 1: Functions: def, parameters, return (Course Hour 33)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 9</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day9_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day9_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 9</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 9, Course Hour 33 – Functions: <code>def</code>, parameters, <code>return</code><br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="0-instructor-note-context-and-approach">0. Instructor Note: Context and Approach</h2>
+<blockquote>
+<p>This document is written as a read-aloud teaching guide. Emphasize why we need functions (code reuse and clarity), how we pass data into them, and crucially, how we get data back out using <code>return</code>. Differentiate strongly between <code>return</code> and <code>print()</code>. By the end of this hour, learners should understand that functions are the bridge between procedural scripts and organized, testable code. Functions represent a paradigm shift: from thinking "write a script that does X" to thinking "break X into reusable pieces, test each piece, and assemble them into a whole program."</p>
+</blockquote>
+<hr>
+<h2 id="1-learning-outcomes">1. Learning Outcomes</h2>
+<p>By the end of this hour, students will be able to:</p>
+<ol>
+<li>
+<p><strong>Write a simple function using the <code>def</code> keyword with parameters and body.</strong> Students will create functions that accept input, execute logic, and organize code into reusable blocks.</p>
+</li>
+<li>
+<p><strong>Distinguish between parameters (definition) and arguments (call).</strong> Students will understand that parameters are placeholders defined in the function signature, while arguments are the actual values passed at call time.</p>
+</li>
+<li>
+<p><strong>Use the <code>return</code> statement to output a value and assign it.</strong> Students will grasp that <code>return</code> sends data back to the caller and that the returned value can be captured in a variable and used in later computations.</p>
+</li>
+<li>
+<p><strong>Compare and contrast <code>print()</code> vs. <code>return</code> for appropriate output.</strong> Students will recognize that <code>print()</code> displays to the human user, while <code>return</code> provides data to the program itself, and they will choose the right tool for each context.</p>
+</li>
+<li>
+<p><strong>Refactor existing procedural code into functions to reduce repetition.</strong> Students will take linear scripts with duplicated logic and extract functions, making the code modular, testable, and maintainable.</p>
+</li>
+</ol>
+<hr>
+<h2 id="2-agenda-and-realistic-timing">2. Agenda and Realistic Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Opening narrative: Why functions matter (5 min)</li>
+<li><strong>0:05–0:17</strong> Concept briefing: <code>def</code>, parameters, arguments, and the anatomy of a function call (12 min)</li>
+<li><strong>0:17–0:30</strong> Live demo 1: Building a basic greeter function, then a function with parameters (13 min)</li>
+<li><strong>0:30–0:42</strong> Live demo 2: Refactoring a calculator app to show <code>return</code> in action (12 min)</li>
+<li><strong>0:42–0:55</strong> Guided lab: Refactor Contact Manager with explicit functions (13 min)</li>
+<li><strong>0:55–1:00</strong> Wrap-up narrative and exit ticket (5 min)</li>
+</ul>
+<p><strong>Total:</strong> 60 minutes</p>
+<hr>
+<h2 id="3-instructor-setup-checklist">3. Instructor Setup Checklist</h2>
+<p>Before class:
+- [ ] Open your code editor and create a blank file named <code>hour33_functions_demo.py</code>.
+- [ ] Have a copy of the Contact Manager code from earlier sessions available (or a simple menu-loop script that adds, lists, and searches a list).
+- [ ] Test the demo code locally to ensure no typos.
+- [ ] Set up your screen so students can see both your terminal and editor clearly.</p>
+<p>During class:
+- [ ] Ask students to open a new file named <code>functions_practice.py</code> in their editor.
+- [ ] Encourage them to type along as you write—live coding is a teaching tool, not a showcase.
+- [ ] Pause frequently for questions.</p>
+<hr>
+<h2 id="4-opening-script-why-functions-5-minutes-verbatim">4. Opening Script: Why Functions? (~5 minutes, verbatim)</h2>
+<p><strong>Say:</strong></p>
+<p>"Good morning, everyone. I want to start by asking you a question: How many times this week have you found yourself copying and pasting code? Maybe you wrote a menu system, and then you needed to write a nearly identical menu in another part of your program. Or you wrote a validation check for one input, and then had to write almost the same check for another input somewhere else.</p>
+<p>Copying and pasting code feels fast in the moment. But it's a trap. Think about what happens when you find a bug in that code. If you've pasted it five times, you have to fix it in five places. You'll probably miss one. That bug will come back to bite you later.</p>
+<p>The solution to this problem is called a <strong>function</strong>. A function is a reusable, self-contained block of code that does one specific thing and can be called over and over again. Functions are how we stop repeating ourselves.</p>
+<p>Now, you've already been using functions. Every time you call <code>print()</code> or <code>input()</code> or <code>len()</code>, you're using a function that someone else wrote. Python comes with hundreds of built-in functions. Today, you learn how to write your own.</p>
+<p>Why is this important? Because once you can write your own functions, you can break large, messy programs into smaller, testable pieces. You can organize your code so that someone else can understand it. And you can build software that actually works and that you can maintain six months from now.</p>
+<p>Today, we're going to focus on three core ideas: how to define a function with the <code>def</code> keyword, how to pass data into a function using parameters, and how to get data back out using the <code>return</code> keyword. Let's get started."</p>
+<hr>
+<h2 id="5-concept-briefing-the-anatomy-of-a-function-12-minutes-narrated">5. Concept Briefing: The Anatomy of a Function (~12 minutes, narrated)</h2>
+<h3 id="51-what-is-a-function">5.1 What is a Function?</h3>
+<p><strong>Say:</strong></p>
+<p>"In Python, a function is defined using the <code>def</code> keyword, which is short for 'define.' Here's the basic structure:</p>
+<pre><code class="language-python">def function_name():
+    # code inside the function
+    pass  # 'pass' is a placeholder that does nothing
+</code></pre>
+<p>When you define a function, nothing runs yet. The code is just stored in memory. To actually run the code inside, you <strong>call</strong> the function by writing its name followed by parentheses."</p>
+<h3 id="52-function-definition-vs-function-call">5.2 Function Definition vs. Function Call</h3>
+<p><strong>Say:</strong></p>
+<p>"This is a crucial distinction. Let me show you:</p>
+<pre><code class="language-python"># This is DEFINING the function
+def say_hello():
+    print(&quot;Hello!&quot;)
+
+# This is CALLING the function (making it run)
+say_hello()
+
+# You can call it as many times as you want
+say_hello()
+say_hello()
+</code></pre>
+<p>When Python reads this file:
+1. It reads <code>def say_hello():</code> and stores that code block in memory.
+2. It does NOT run <code>print("Hello!")</code> yet.
+3. When it reaches <code>say_hello()</code>, it looks up that stored function and runs it.
+4. Each time you write <code>say_hello()</code>, it runs again.</p>
+<p>This is why you can see the output 'Hello!' printed three times."</p>
+<h3 id="53-parameters-passing-data-into-a-function">5.3 Parameters: Passing Data Into a Function</h3>
+<p><strong>Say:</strong></p>
+<p>"Now, a function that does exactly the same thing every time is limited. What if we want to change the function's behavior based on input? We do this with <strong>parameters</strong>.</p>
+<p>A parameter is a placeholder variable that exists only inside the function. When you define a function with a parameter, you're saying: 'I expect someone to give me data when they call this function. I'll use that data inside my function.'</p>
+<pre><code class="language-python"># This function takes one parameter: name
+def greet_user(name):
+    print(f&quot;Hello, {name}!&quot;)
+
+# When we CALL the function, we provide an ARGUMENT
+greet_user(&quot;Alice&quot;)
+greet_user(&quot;Bob&quot;)
+greet_user(&quot;Charlie&quot;)
+</code></pre>
+<p>Notice:
+- <code>name</code> is the <strong>parameter</strong> (the placeholder in the function definition).
+- 'Alice', 'Bob', and 'Charlie' are the <strong>arguments</strong> (the actual values we provide when calling the function).</p>
+<p>Inside the function, <code>name</code> takes on whatever value was passed. So the first call sets <code>name</code> to 'Alice', the second call sets it to 'Bob', and so on."</p>
+<h3 id="54-multiple-parameters">5.4 Multiple Parameters</h3>
+<p><strong>Say:</strong></p>
+<p>"A function can take more than one parameter. You just separate them with commas:</p>
+<pre><code class="language-python">def add_two_numbers(a, b):
+    sum_value = a + b
+    print(f&quot;The sum of {a} and {b} is {sum_value}&quot;)
+
+add_two_numbers(5, 3)
+add_two_numbers(10, 20)
+</code></pre>
+<p>When you call <code>add_two_numbers(5, 3)</code>, Python matches the arguments to the parameters in order: <code>a</code> gets 5, and <code>b</code> gets 3. Then the function body runs with those values."</p>
+<h3 id="55-the-return-statement-getting-data-out">5.5 The Return Statement: Getting Data Out</h3>
+<p><strong>Say:</strong></p>
+<p>"Here's the critical insight: <code>print()</code> displays data to the human. But what if the function needs to compute a value that the rest of your program uses? That's where <code>return</code> comes in.</p>
+<p>When a function hits a <code>return</code> statement, it stops immediately and sends that value back to wherever the function was called. The caller can then capture that value in a variable and use it:</p>
+<pre><code class="language-python">def multiply(a, b):
+    result = a * b
+    return result
+
+# The function call is REPLACED by the return value
+answer = multiply(5, 4)
+print(answer)  # Prints 20
+
+# We can use the returned value in another calculation
+bigger_answer = answer + 10
+print(bigger_answer)  # Prints 30
+</code></pre>
+<p>This is different from <code>print()</code>. If I had written <code>print(result)</code> instead of <code>return result</code>, the human would see '20' on the screen, but the program itself couldn't use that value. The variable <code>answer</code> would be undefined. But with <code>return</code>, the program gets the value, and we can use it anywhere."</p>
+<hr>
+<h2 id="6-live-demo-1-building-a-basic-greeter-13-minutes">6. Live Demo 1: Building a Basic Greeter (~13 minutes)</h2>
+<p><strong>Instructor narration and live coding:</strong></p>
+<p><strong>Say:</strong></p>
+<p>"Let me show you this in action. I'm going to create a few simple functions step by step. I'll start with the most basic one, then add parameters, then show you how <code>return</code> works.</p>
+<p>Open your editor and create a file called <code>functions_practice.py</code>. Follow along."</p>
+<p><strong>Type this on screen, narrating as you go:</strong></p>
+<pre><code class="language-python"># Step 1: A function with no parameters
+def say_hello():
+    print(&quot;Hello there!&quot;)
+
+say_hello()
+say_hello()
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"When I run this, you see 'Hello there!' printed twice. The function does the same thing every time. Let's make it more flexible."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># Step 2: A function with one parameter
+def greet_person(name):
+    print(f&quot;Hello, {name}!&quot;)
+
+greet_person(&quot;Alice&quot;)
+greet_person(&quot;Bob&quot;)
+greet_person(&quot;World&quot;)
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"Now the function adapts. Each call produces different output based on the argument I provide. But notice: I'm using <code>print()</code> inside the function. This means the output goes to the screen, but the program doesn't 'have' the data. Let me show you what I mean."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># Step 3: Trying to use a function's output
+def greet_person_v2(name):
+    greeting = f&quot;Hello, {name}!&quot;
+    print(greeting)
+
+result = greet_person_v2(&quot;Charlie&quot;)
+print(f&quot;The result is: {result}&quot;)
+</code></pre>
+<p><strong>Run this and show the output.</strong></p>
+<p><strong>Say:</strong></p>
+<p>"See how 'result' is <code>None</code>? The function printed the greeting, but it didn't give the value back to the program. So <code>result</code> has nothing stored in it. Now watch what happens if we use <code>return</code>."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># Step 4: Using return to send data back
+def greet_person_v3(name):
+    greeting = f&quot;Hello, {name}!&quot;
+    return greeting
+
+result = greet_person_v3(&quot;Charlie&quot;)
+print(f&quot;The result is: {result}&quot;)
+</code></pre>
+<p><strong>Run this.</strong></p>
+<p><strong>Say:</strong></p>
+<p>"Now <code>result</code> actually contains the string. The <code>return</code> statement sent it back to the caller. This is the difference: <code>print()</code> is for displaying. <code>return</code> is for sending data back to the program itself. And once the program has the data, it can use it in further calculations, or pass it to another function, or store it in a list—anything."</p>
+<hr>
+<h2 id="7-live-demo-2-refactoring-a-calculator-with-return-12-minutes">7. Live Demo 2: Refactoring a Calculator with Return (~12 minutes)</h2>
+<p><strong>Say:</strong></p>
+<p>"Let's look at a slightly more realistic example. Imagine I have a simple calculator program. Originally, all the logic is in one big loop. I'll refactor it by extracting the math operations into functions."</p>
+<p><strong>First, show a non-refactored version:</strong></p>
+<pre><code class="language-python"># Old style: everything in a big loop
+
+print(&quot;=== Simple Calculator ===&quot;)
+while True:
+    print(&quot;\n1. Add&quot;)
+    print(&quot;2. Subtract&quot;)
+    print(&quot;3. Quit&quot;)
+    choice = input(&quot;&gt; &quot;).strip()
+
+    if choice == '3':
+        print(&quot;Goodbye!&quot;)
+        break
+
+    if choice in ['1', '2']:
+        try:
+            num1 = float(input(&quot;First number: &quot;))
+            num2 = float(input(&quot;Second number: &quot;))
+        except ValueError:
+            print(&quot;Invalid input. Try again.&quot;)
+            continue
+
+        if choice == '1':
+            result = num1 + num2
+            print(f&quot;Result: {result}&quot;)
+        elif choice == '2':
+            result = num1 - num2
+            print(f&quot;Result: {result}&quot;)
+    else:
+        print(&quot;Invalid choice.&quot;)
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"This works, but it's hard to test. If I want to verify that adding two numbers works correctly, I have to run the whole program and navigate the menu. And if I need to add numbers in another part of my program, I'd have to copy and paste this code. Let's refactor it using functions."</p>
+<p><strong>Now show the refactored version:</strong></p>
+<pre><code class="language-python"># Refactored: functions encapsulate the logic
+
+def add(x, y):
+    return x + y
+
+def subtract(x, y):
+    return x - y
+
+def get_float_input(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print(&quot;Please enter a valid number.&quot;)
+
+def main():
+    print(&quot;=== Simple Calculator ===&quot;)
+    while True:
+        print(&quot;\n1. Add&quot;)
+        print(&quot;2. Subtract&quot;)
+        print(&quot;3. Quit&quot;)
+        choice = input(&quot;&gt; &quot;).strip()
+
+        if choice == '3':
+            print(&quot;Goodbye!&quot;)
+            break
+
+        if choice in ['1', '2']:
+            num1 = get_float_input(&quot;First number: &quot;)
+            num2 = get_float_input(&quot;Second number: &quot;)
+
+            if choice == '1':
+                result = add(num1, num2)
+            elif choice == '2':
+                result = subtract(num1, num2)
+
+            print(f&quot;Result: {result}&quot;)
+        else:
+            print(&quot;Invalid choice.&quot;)
+
+# Run the program
+main()
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"Notice what changed:</p>
+<ol>
+<li>
+<p>We extracted <code>add()</code> and <code>subtract()</code> into their own functions. Now, if we want to test that adding works, we can just write <code>print(add(5, 3))</code> at the top of our file and run it. No menu needed.</p>
+</li>
+<li>
+<p>We extracted the input validation into <code>get_float_input()</code>, so we don't repeat it.</p>
+</li>
+<li>
+<p>The main menu loop is now inside a <code>main()</code> function. This makes the code organization clearer: 'The main program is this one function.'</p>
+</li>
+<li>
+<p>Each function <code>return</code>s a value, so the caller gets data back and can use it. The functions don't just print and hope—they return actual values.</p>
+</li>
+</ol>
+<p>This is how professional code is structured. Functions are your building blocks. You test each block, then assemble them into a working program."</p>
+<hr>
+<h2 id="8-guided-lab-refactor-contact-manager-13-minutes">8. Guided Lab: Refactor Contact Manager (~13 minutes)</h2>
+<h3 id="81-lab-overview">8.1 Lab Overview</h3>
+<p><strong>Say:</strong></p>
+<p>"Now it's your turn. We're going to take a simple contact manager—a menu-driven program that stores names in a list—and refactor it by extracting the logic into functions.</p>
+<p>You have 13 minutes to complete this. Here's the specification."</p>
+<h3 id="82-lab-specification">8.2 Lab Specification</h3>
+<p><strong>Display or read aloud:</strong></p>
+<hr>
+<p><strong>Lab Task: Refactor Contact Manager</strong></p>
+<p><strong>Objective:</strong> Refactor a menu-driven contact manager to use functions.</p>
+<p><strong>Requirements:</strong></p>
+<ol>
+<li>
+<p>Start with a simple in-memory contact manager. This is a <code>while True</code> loop that:
+   - Displays a menu: Add a contact, List all contacts, Search for a contact, Quit.
+   - Stores contacts in a list (e.g., <code>contacts = []</code>).
+   - Handles each menu choice.</p>
+</li>
+<li>
+<p>Extract the logic for each action into separate functions:
+   - <code>add_contact(contact_list, name)</code>: Takes the list and a name. Appends the name to the list. (No return needed; you're mutating the list.)
+   - <code>list_contacts(contact_list)</code>: Takes the list. Prints all contacts, one per line. (No return needed; just display.)
+   - <code>search_contact(contact_list, query)</code>: Takes the list and a search term. <strong>Return <code>True</code> if the query is found, <code>False</code> otherwise.</strong> (Don't print inside this function.)</p>
+</li>
+<li>
+<p>In your <code>while True</code> loop:
+   - Call <code>add_contact()</code> when the user chooses 'Add'.
+   - Call <code>list_contacts()</code> when the user chooses 'List'.
+   - Call <code>search_contact()</code> when the user chooses 'Search', and print the result in the main loop (not inside the function).
+   - Break when the user chooses 'Quit'.</p>
+</li>
+</ol>
+<p><strong>Checkpoint 1 (5 minutes):</strong> Have the menu loop and the <code>add_contact()</code> and <code>list_contacts()</code> functions working.</p>
+<p><strong>Checkpoint 2 (8 minutes):</strong> Implement <code>search_contact()</code> with a <code>return</code> statement, and call it from the main loop.</p>
+<p><strong>Checkpoint 3 (13 minutes):</strong> Test the full program. Add a few contacts, list them, search for one, and verify the search result.</p>
+<hr>
+<h3 id="83-walkthrough-solution">8.3 Walkthrough Solution</h3>
+<p><strong>After students have worked for 10–13 minutes, display or narrate this solution:</strong></p>
+<pre><code class="language-python"># Contact Manager Refactored
+
+def add_contact(contact_list, name):
+    &quot;&quot;&quot;Add a single contact to the list.&quot;&quot;&quot;
+    contact_list.append(name)
+    print(f&quot;Added {name}.&quot;)
+
+def list_contacts(contact_list):
+    &quot;&quot;&quot;Display all contacts in the list.&quot;&quot;&quot;
+    if not contact_list:
+        print(&quot;No contacts yet.&quot;)
+        return
+
+    print(&quot;\n--- Contacts ---&quot;)
+    for contact in contact_list:
+        print(f&quot;  {contact}&quot;)
+
+def search_contact(contact_list, query):
+    &quot;&quot;&quot;Search for a contact. Return True if found, False otherwise.&quot;&quot;&quot;
+    return query in contact_list
+
+def main():
+    &quot;&quot;&quot;Main program loop.&quot;&quot;&quot;
+    contacts = []
+
+    while True:
+        print(&quot;\n[1] Add  [2] List  [3] Search  [4] Quit&quot;)
+        choice = input(&quot;&gt; &quot;).strip()
+
+        if choice == '1':
+            name = input(&quot;Contact name: &quot;).strip()
+            if name:  # Only add if name is not empty
+                add_contact(contacts, name)
+            else:
+                print(&quot;Name cannot be empty.&quot;)
+
+        elif choice == '2':
+            list_contacts(contacts)
+
+        elif choice == '3':
+            query = input(&quot;Search for: &quot;).strip()
+            if search_contact(contacts, query):
+                print(f&quot;Found: {query}&quot;)
+            else:
+                print(f&quot;{query} not found.&quot;)
+
+        elif choice == '4':
+            print(&quot;Goodbye!&quot;)
+            break
+
+        else:
+            print(&quot;Invalid choice. Try again.&quot;)
+
+# Start the program
+main()
+</code></pre>
+<p><strong>Key teaching points to highlight:</strong></p>
+<p><strong>Say:</strong></p>
+<p>"Notice a few things:</p>
+<ol>
+<li>
+<p>Each function does one thing. <code>add_contact()</code> adds. <code>list_contacts()</code> displays. <code>search_contact()</code> searches. That's it.</p>
+</li>
+<li>
+<p>The functions take parameters explicitly. They don't reach into global space and grab the list by accident. We're being intentional: 'Here's the list I want you to work with.'</p>
+</li>
+<li>
+<p><code>search_contact()</code> returns a boolean (<code>True</code> or <code>False</code>). In the main loop, we use that return value in an <code>if</code> statement. The function doesn't print the result. It returns the data, and the caller (the main loop) decides what to do with it.</p>
+</li>
+<li>
+<p>The main loop is now super clear. It's a traffic director: it reads the user's choice and dispatches to the appropriate function. The functions do the heavy lifting.</p>
+</li>
+</ol>
+<p>This structure is much more testable, readable, and maintainable. If you need to debug the search logic, you know exactly where to look: the <code>search_contact()</code> function."</p>
+<hr>
+<h2 id="9-troubleshooting-pitfalls-and-instructor-cues">9. Troubleshooting Pitfalls and Instructor Cues</h2>
+<h3 id="pitfall-1-forgetting-to-call-the-function">Pitfall 1: Forgetting to Call the Function</h3>
+<p><strong>Scenario:</strong> A student defines a function but doesn't call it.</p>
+<pre><code class="language-python">def say_hello():
+    print(&quot;Hello!&quot;)
+
+# They define it but never write say_hello()
+</code></pre>
+<p><strong>Symptom:</strong> Nothing prints.</p>
+<p><strong>Cue:</strong> "Defining the function isn't enough. You have to <strong>call</strong> it. Write the name followed by parentheses."</p>
+<hr>
+<h3 id="pitfall-2-forgetting-the-colon-at-the-end-of-def">Pitfall 2: Forgetting the Colon at the End of <code>def</code></h3>
+<p><strong>Scenario:</strong></p>
+<pre><code class="language-python">def greet_user(name)   # Missing colon!
+    print(f&quot;Hello, {name}!&quot;)
+</code></pre>
+<p><strong>Symptom:</strong> <code>SyntaxError: expected ':'</code></p>
+<p><strong>Cue:</strong> "Remember: <code>def</code> needs a colon at the end, just like <code>if</code>, <code>for</code>, and <code>while</code>. The colon tells Python, 'Here comes an indented block.'"</p>
+<hr>
+<h3 id="pitfall-3-using-print-when-return-is-needed">Pitfall 3: Using <code>print()</code> When <code>return</code> Is Needed</h3>
+<p><strong>Scenario:</strong></p>
+<pre><code class="language-python">def get_sum(a, b):
+    print(a + b)  # Using print instead of return
+
+result = get_sum(5, 3)
+# result is None, not 8
+</code></pre>
+<p><strong>Symptom:</strong> The function looks like it works (you see output), but the program can't use the result.</p>
+<p><strong>Cue:</strong> "Ask yourself: Does the rest of my program need to use this value? If yes, use <code>return</code>. If I just want to show something to the human, use <code>print()</code>."</p>
+<hr>
+<h3 id="pitfall-4-confusing-parameters-and-arguments">Pitfall 4: Confusing Parameters and Arguments</h3>
+<p><strong>Scenario:</strong> A student thinks parameters are the same as arguments.</p>
+<p><strong>Cue:</strong> "Parameters are the placeholders you define. Arguments are the values you pass. When I write <code>def greet(name):</code>, <code>name</code> is the parameter. When I call <code>greet('Alice')</code>, 'Alice' is the argument."</p>
+<hr>
+<h3 id="pitfall-5-not-passing-the-list-as-a-parameter">Pitfall 5: Not Passing the List as a Parameter</h3>
+<p><strong>Scenario:</strong></p>
+<pre><code class="language-python">contacts = []
+
+def add_contact(name):  # Forgot the contact_list parameter!
+    contacts.append(name)  # Reaches into global scope
+
+add_contact(&quot;Alice&quot;)
+</code></pre>
+<p><strong>Symptom:</strong> It works, but it's bad practice. The function is hidden-dependent on a global variable.</p>
+<p><strong>Cue:</strong> "Pass the list explicitly as a parameter. This makes the function self-contained and testable. Don't rely on global variables. Be explicit."</p>
+<hr>
+<h3 id="pitfall-6-indentation-issues">Pitfall 6: Indentation Issues</h3>
+<p><strong>Scenario:</strong></p>
+<pre><code class="language-python">def multiply(a, b):
+return a * b  # Not indented!
+</code></pre>
+<p><strong>Symptom:</strong> <code>IndentationError: expected an indented block</code></p>
+<p><strong>Cue:</strong> "Everything inside a function must be indented. Python uses indentation to know what's inside the function and what's outside."</p>
+<hr>
+<h3 id="pitfall-7-misunderstanding-return-as-break">Pitfall 7: Misunderstanding <code>return</code> as <code>break</code></h3>
+<p><strong>Scenario:</strong> A student thinks <code>return</code> only exits a loop, not the function.</p>
+<p><strong>Cue:</strong> "<code>return</code> exits the entire function, not just a loop. It immediately sends the value back to the caller. If there's a loop inside the function, <code>return</code> breaks out of both the loop and the function."</p>
+<hr>
+<h2 id="10-quick-check-questions-formative-assessment">10. Quick-Check Questions (Formative Assessment)</h2>
+<p>Ask these throughout the hour and at the end. These are not for grading—they're to check understanding and clarify confusion.</p>
+<h3 id="question-1-define-vs-call">Question 1: Define vs. Call</h3>
+<p><strong>Ask:</strong> "What's the difference between writing <code>def my_function():</code> and writing <code>my_function()</code>?"</p>
+<p><strong>Expected answer:</strong> "The first is defining (creating) the function. The second is calling (running) it."</p>
+<hr>
+<h3 id="question-2-parameter-vs-argument">Question 2: Parameter vs. Argument</h3>
+<p><strong>Ask:</strong> "In the line <code>def greet(name):</code>, what's the parameter? And when I call <code>greet('Alice')</code>, what's the argument?"</p>
+<p><strong>Expected answer:</strong> "<code>name</code> is the parameter. 'Alice' is the argument."</p>
+<hr>
+<h3 id="question-3-return-vs-print">Question 3: Return vs. Print</h3>
+<p><strong>Ask:</strong> "I want to write a function that computes the average of three numbers. Should I use <code>print()</code> or <code>return</code>?"</p>
+<p><strong>Expected answer:</strong> "<code>return</code>. Because I want the program to use that average in further calculations. <code>print()</code> would only show it to the human."</p>
+<hr>
+<h3 id="question-4-return-value-assignment">Question 4: Return Value Assignment</h3>
+<p><strong>Ask:</strong> "If I write <code>result = add(5, 3)</code> and the <code>add()</code> function returns 8, what does <code>result</code> now contain?"</p>
+<p><strong>Expected answer:</strong> "8. The <code>return</code> value replaces the function call, and <code>result</code> gets that value."</p>
+<hr>
+<h3 id="question-5-multiple-parameters">Question 5: Multiple Parameters</h3>
+<p><strong>Ask:</strong> "I'm writing a function that takes two numbers and computes their product. How do I define it?"</p>
+<p><strong>Expected answer:</strong> "Something like <code>def multiply(a, b):</code> with two parameters separated by a comma."</p>
+<hr>
+<h2 id="11-wrap-up-narrative-5-minutes-verbatim">11. Wrap-Up Narrative (~5 minutes, verbatim)</h2>
+<p><strong>Say:</strong></p>
+<p>"We've covered a lot in the last hour. Let me recap the key points.</p>
+<p>First: <strong>Functions are reusable blocks of code.</strong> Instead of copying and pasting logic, you put it in a function and call that function as many times as you need. This means fewer bugs and easier maintenance.</p>
+<p>Second: <strong>Functions are defined with <code>def</code> and called by name.</strong> When you define a function, Python stores it. When you call it, Python runs it.</p>
+<p>Third: <strong>Parameters let you customize a function's behavior.</strong> You pass arguments when you call the function, and those arguments fill in the parameters inside the function. This is how a function can do different things based on different inputs.</p>
+<p>Fourth: <strong><code>return</code> is how a function gives data back to the program.</strong> <code>print()</code> shows data to the human. <code>return</code> gives data to the program. If you need the result of a function in another calculation or in an <code>if</code> statement, you MUST use <code>return</code>.</p>
+<p>Fifth: <strong>Refactoring with functions makes code cleaner and more testable.</strong> When you break a big script into smaller functions, you can test each function independently. You can read the main program flow more easily. And you can reuse those functions in other programs.</p>
+<p>These ideas—functions, parameters, return—are the foundation of programming. Everything you build from here on will use these concepts. And we'll keep building on them. Next, we'll look at scope—what variables can 'see' inside and outside a function—and we'll talk about best practices for writing functions.</p>
+<p>For now, make sure you practice writing a few functions on your own. The best way to learn is to write code, break it, and figure out what went wrong. That's where real learning happens."</p>
+<hr>
+<h2 id="12-facilitation-notes-and-differentiation-strategies">12. Facilitation Notes and Differentiation Strategies</h2>
+<h3 id="for-students-who-finish-early">For Students Who Finish Early</h3>
+<ol>
+<li>
+<p><strong>Extend the lab:</strong> Ask them to add a fourth function, <code>update_contact(contact_list, old_name, new_name)</code>, which searches for a contact and updates their name. Use <code>return</code> to send back a success/failure boolean.</p>
+</li>
+<li>
+<p><strong>Combine functions:</strong> Ask them to write a function <code>validate_name(name)</code> that returns <code>True</code> if a name is valid (e.g., not empty, at least 2 characters). Use this function inside <code>add_contact()</code> to prevent invalid entries.</p>
+</li>
+<li>
+<p><strong>Explore default parameters:</strong> Show them how to write <code>def greet(name="Friend"):</code> and call it with or without an argument.</p>
+</li>
+</ol>
+<h3 id="for-students-who-are-struggling">For Students Who Are Struggling</h3>
+<ol>
+<li>
+<p><strong>Pair programming:</strong> Pair them with a student who's progressing well. Shared keyboard and active listening help reinforce concepts.</p>
+</li>
+<li>
+<p><strong>Template code:</strong> Provide a skeleton:
+   <code>python
+   def add_contact(contact_list, name):
+       # Your code here
+       pass</code>
+   They fill in the body.</p>
+</li>
+<li>
+<p><strong>Verbal walkthrough:</strong> Before they code, ask them to describe in plain English what the function should do. Then ask them to translate that into Python.</p>
+</li>
+<li>
+<p><strong>Focus on one concept at a time:</strong> Don't overwhelm them with parameters AND <code>return</code> in the same moment. Master <code>def</code> and calling, then add parameters, then add <code>return</code>.</p>
+</li>
+</ol>
+<h3 id="scaffolding-strategy">Scaffolding Strategy</h3>
+<ol>
+<li><strong>Start with no parameters:</strong> Define <code>def say_hello(): print("Hello!")</code> and call it.</li>
+<li><strong>Add one parameter:</strong> <code>def greet(name): print(f"Hello, {name}!")</code> and call it with different arguments.</li>
+<li><strong>Add <code>return</code>:</strong> <code>def add(a, b): return a + b</code> and assign the result to a variable.</li>
+<li><strong>Combine:</strong> <code>def search(contact_list, query): return query in contact_list</code> and use the returned boolean in an <code>if</code> statement.</li>
+<li><strong>Refactor existing code:</strong> Take their Contact Manager from earlier and break it into functions.</li>
+</ol>
+<h3 id="exit-ticket-formative-assessment">Exit Ticket / Formative Assessment</h3>
+<p><strong>Ask each student as they leave (or pose to the group):</strong></p>
+<p>"Give me one sentence: Why would I use <code>return</code> instead of <code>print()</code>?"</p>
+<p><strong>Acceptable answers include:</strong>
+- "Because I want the program to use the value later."
+- "If I need the result in another calculation."
+- "If I need to check the result in an <code>if</code> statement."
+- "Because <code>print()</code> doesn't give the value back to the program."</p>
+<p><strong>Red flags (if you hear these, follow up):</strong>
+- "I don't know."
+- "<code>return</code> is the same as <code>print()</code>."
+- "I use <code>return</code> to end the function." (They're confusing it with <code>break</code>.)</p>
+<hr>
+<p><strong>End of Lecture Script</strong></p>
+<p><strong>Word count:</strong> ~5,100 words | <strong>Code blocks:</strong> 15 balanced code fences | <strong>Learning outcomes:</strong> 5 explicit | <strong>Troubleshooting pitfalls:</strong> 7 | <strong>Quick-check questions:</strong> 5 | <strong>Timing:</strong> 60 minutes total</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day9_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#0-instructor-note-context-and-approach" class="depth-2">0. Instructor Note: Context and Approach</a></li>
+<li><a href="#1-learning-outcomes" class="depth-2">1. Learning Outcomes</a></li>
+<li><a href="#2-agenda-and-realistic-timing" class="depth-2">2. Agenda and Realistic Timing</a></li>
+<li><a href="#3-instructor-setup-checklist" class="depth-2">3. Instructor Setup Checklist</a></li>
+<li><a href="#4-opening-script-why-functions-5-minutes-verbatim" class="depth-2">4. Opening Script: Why Functions? (~5 minutes, verbatim)</a></li>
+<li><a href="#5-concept-briefing-the-anatomy-of-a-function-12-minutes-narrated" class="depth-2">5. Concept Briefing: The Anatomy of a Function (~12 minutes, narrated)</a></li>
+<li><a href="#51-what-is-a-function" class="depth-3">5.1 What is a Function?</a></li>
+<li><a href="#52-function-definition-vs-function-call" class="depth-3">5.2 Function Definition vs. Function Call</a></li>
+<li><a href="#53-parameters-passing-data-into-a-function" class="depth-3">5.3 Parameters: Passing Data Into a Function</a></li>
+<li><a href="#54-multiple-parameters" class="depth-3">5.4 Multiple Parameters</a></li>
+<li><a href="#55-the-return-statement-getting-data-out" class="depth-3">5.5 The Return Statement: Getting Data Out</a></li>
+<li><a href="#6-live-demo-1-building-a-basic-greeter-13-minutes" class="depth-2">6. Live Demo 1: Building a Basic Greeter (~13 minutes)</a></li>
+<li><a href="#7-live-demo-2-refactoring-a-calculator-with-return-12-minutes" class="depth-2">7. Live Demo 2: Refactoring a Calculator with Return (~12 minutes)</a></li>
+<li><a href="#8-guided-lab-refactor-contact-manager-13-minutes" class="depth-2">8. Guided Lab: Refactor Contact Manager (~13 minutes)</a></li>
+<li><a href="#81-lab-overview" class="depth-3">8.1 Lab Overview</a></li>
+<li><a href="#82-lab-specification" class="depth-3">8.2 Lab Specification</a></li>
+<li><a href="#83-walkthrough-solution" class="depth-3">8.3 Walkthrough Solution</a></li>
+<li><a href="#9-troubleshooting-pitfalls-and-instructor-cues" class="depth-2">9. Troubleshooting Pitfalls and Instructor Cues</a></li>
+<li><a href="#pitfall-1-forgetting-to-call-the-function" class="depth-3">Pitfall 1: Forgetting to Call the Function</a></li>
+<li><a href="#pitfall-2-forgetting-the-colon-at-the-end-of-def" class="depth-3">Pitfall 2: Forgetting the Colon at the End of def</a></li>
+<li><a href="#pitfall-3-using-print-when-return-is-needed" class="depth-3">Pitfall 3: Using print() When return Is Needed</a></li>
+<li><a href="#pitfall-4-confusing-parameters-and-arguments" class="depth-3">Pitfall 4: Confusing Parameters and Arguments</a></li>
+<li><a href="#pitfall-5-not-passing-the-list-as-a-parameter" class="depth-3">Pitfall 5: Not Passing the List as a Parameter</a></li>
+<li><a href="#pitfall-6-indentation-issues" class="depth-3">Pitfall 6: Indentation Issues</a></li>
+<li><a href="#pitfall-7-misunderstanding-return-as-break" class="depth-3">Pitfall 7: Misunderstanding return as break</a></li>
+<li><a href="#10-quick-check-questions-formative-assessment" class="depth-2">10. Quick-Check Questions (Formative Assessment)</a></li>
+<li><a href="#question-1-define-vs-call" class="depth-3">Question 1: Define vs. Call</a></li>
+<li><a href="#question-2-parameter-vs-argument" class="depth-3">Question 2: Parameter vs. Argument</a></li>
+<li><a href="#question-3-return-vs-print" class="depth-3">Question 3: Return vs. Print</a></li>
+<li><a href="#question-4-return-value-assignment" class="depth-3">Question 4: Return Value Assignment</a></li>
+<li><a href="#question-5-multiple-parameters" class="depth-3">Question 5: Multiple Parameters</a></li>
+<li><a href="#11-wrap-up-narrative-5-minutes-verbatim" class="depth-2">11. Wrap-Up Narrative (~5 minutes, verbatim)</a></li>
+<li><a href="#12-facilitation-notes-and-differentiation-strategies" class="depth-2">12. Facilitation Notes and Differentiation Strategies</a></li>
+<li><a href="#for-students-who-finish-early" class="depth-3">For Students Who Finish Early</a></li>
+<li><a href="#for-students-who-are-struggling" class="depth-3">For Students Who Are Struggling</a></li>
+<li><a href="#scaffolding-strategy" class="depth-3">Scaffolding Strategy</a></li>
+<li><a href="#exit-ticket-formative-assessment" class="depth-3">Exit Ticket / Formative Assessment</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day9_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day9_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day8_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day9_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

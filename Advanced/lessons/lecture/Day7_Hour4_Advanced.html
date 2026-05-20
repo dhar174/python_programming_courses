@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 7, Hour 4: Transactions, Integrity, and Initialization Patterns (Course Hour 28) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="7">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day7_Hour4_Advanced.md">
+
+    <link rel="prev" href="Day7_Hour3_Advanced.html">
+    <link rel="next" href="Day8_Hour1_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="7" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-07/index.html">Day 7</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 7, Hour 4: Transactions, Integrity, and Initialization Patterns (Course Hour 28)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 7</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour1_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day7_Hour4_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course:</strong> Python Programming (Advanced)</li>
+<li><strong>Session:</strong> 7</li>
+<li><strong>Hour:</strong> 4 (Course Hour 28)</li>
+<li><strong>Runbook reference:</strong> Session 7, Course Hour 28 – Transactions + integrity + initialization patterns</li>
+</ul>
+<blockquote>
+<p><strong>Instructor note:</strong> This hour hardens the database layer. Keep it practical: grouped writes should succeed together or fail together, initialization should be safe to run every startup, and the database should enforce a small set of meaningful integrity rules. Do not let the session drift into heavy relational theory. Mention foreign keys lightly and accurately: SQLite supports them, but they require <code>PRAGMA foreign_keys = ON</code> per connection. The high-value outcomes are idempotent <code>init_db()</code>, sensible constraints, and a clear transaction example using a connection context manager. Learners should leave feeling that their persistence layer is no longer a fragile demo but the beginning of a dependable application component.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Explain what a transaction is in practical terms and why grouped changes should be committed together.</li>
+<li>Use a connection context manager so successful operations commit and failed operations roll back.</li>
+<li>Write an <code>init_db()</code> function that safely creates schema on startup and can be run repeatedly.</li>
+<li>Add a small number of useful integrity constraints such as <code>NOT NULL</code> and <code>CHECK</code>.</li>
+<li>Explain the SQLite foreign-key reminder: support exists, but it must be enabled with <code>PRAGMA foreign_keys = ON</code>.</li>
+<li>Describe a clean initialization pattern for an application that depends on a database file."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Recap: what we can do now, and why it is still fragile</li>
+<li><strong>0:05–0:15</strong> Transactions in plain language</li>
+<li><strong>0:15–0:25</strong> Integrity constraints and why the database should help protect data</li>
+<li><strong>0:25–0:40</strong> Live demo: idempotent <code>init_db()</code> and transaction-based batch insert</li>
+<li><strong>0:40–0:50</strong> Live demo: startup initialization pattern with <code>pathlib</code> and repository wiring</li>
+<li><strong>0:50–0:57</strong> Guided practice: harden your own DB layer</li>
+<li><strong>0:57–1:00</strong> Checkpoint and recap</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file named <code>hour28_transactions_demo.py</code>.</li>
+<li>Be ready with the repository example from Hour 27.</li>
+<li>Be ready to show a deliberate failure inside a multi-step write so learners can observe rollback behavior.</li>
+<li>Be ready to explain the difference between application validation and database integrity constraints.</li>
+<li>Be ready to mention foreign keys lightly without turning the session into a normalization lecture.</li>
+<li>Be ready to show an <code>init_db()</code> call happening at startup before the repository is used.</li>
+</ul>
+<p><strong>Say:</strong> "The first version of database code often works in demos but breaks under repetition, failure, or startup edge cases. This hour is about making the database layer calmer, safer, and more repeatable."</p>
+<hr>
+<h2 id="3-opening-script-from-working-to-reliable-5-minutes">3) Opening Script: From Working to Reliable (~5 minutes)</h2>
+<p><strong>Say:</strong>
+"At this point, we can create records, read them back, update them, delete them, and map rows into domain objects. That is already a real milestone.</p>
+<p>But working once is not the same as being reliable.</p>
+<p>A persistence layer becomes trustworthy when three things are true:</p>
+<ol>
+<li>Startup is predictable — the schema exists when the app needs it.</li>
+<li>Bad data is blocked — required fields and business-critical rules are enforced consistently.</li>
+<li>Multi-step writes behave atomically — either the whole operation succeeds or none of it does.</li>
+</ol>
+<p>That is where initialization patterns, integrity constraints, and transactions come in.</p>
+<p>Today is not about cleverness. It is about removing fragility."</p>
+<hr>
+<h2 id="4-transactions-in-plain-english">4) Transactions in Plain English</h2>
+<h3 id="41-give-a-non-jargon-definition">4.1 Give a non-jargon definition</h3>
+<p><strong>Say:</strong>
+"A transaction is a group of database operations that should be treated as one unit.</p>
+<p>In plain language: either all of them happen, or none of them happen.</p>
+<p>That is incredibly important anytime you have multiple related writes. If the first write succeeds and the second fails, you do not want the database left in a half-updated state unless partial success is truly acceptable."</p>
+<h3 id="42-use-a-relatable-example">4.2 Use a relatable example</h3>
+<p><strong>Say:</strong>
+"Imagine importing three expenses from a CSV file. If the first two insert successfully and the third one violates a rule, what should happen?</p>
+<p>For many applications, the safest answer is: roll the whole batch back so the import can be fixed and retried cleanly.</p>
+<p>That is the practical value of a transaction."</p>
+<h3 id="43-explain-connection-context-manager-behavior">4.3 Explain connection context manager behavior</h3>
+<p><strong>Say:</strong>
+"In <code>sqlite3</code>, a connection used as a context manager already helps us here.</p>
+<ul>
+<li>If the block exits successfully, changes are committed.</li>
+<li>If an exception escapes the block, changes are rolled back.</li>
+</ul>
+<p>That means the <code>with sqlite3.connect(...) as connection:</code> pattern is not just tidy syntax. It is part of our reliability story."</p>
+<hr>
+<h2 id="5-integrity-let-the-database-enforce-structural-rules">5) Integrity: Let the Database Enforce Structural Rules</h2>
+<h3 id="51-differentiate-validation-layers">5.1 Differentiate validation layers</h3>
+<p><strong>Say:</strong>
+"We already know how to validate data in Python. For example, a service layer might reject negative amounts or blank titles before trying to save.</p>
+<p>That is good and necessary.</p>
+<p>But the database should also enforce a small set of structural truths. Why? Because bugs happen. Future code changes happen. A script may bypass part of your service layer. The database is the final guardrail for stored data.</p>
+<p>Think of it this way:</p>
+<ul>
+<li>application validation improves user experience and gives friendly feedback</li>
+<li>database constraints protect storage integrity even if a bug slips through</li>
+</ul>
+<p>Those two layers complement each other."</p>
+<h3 id="52-show-useful-constraints-for-this-level">5.2 Show useful constraints for this level</h3>
+<p><strong>Say:</strong>
+"For this course, practical integrity constraints include:</p>
+<ul>
+<li><code>NOT NULL</code> for required fields</li>
+<li><code>CHECK(amount &gt;= 0)</code> or <code>CHECK(amount &gt; 0)</code> depending on the business rule</li>
+<li>a primary key for stable identity</li>
+</ul>
+<p>We are keeping it small and understandable."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-sql">CREATE TABLE IF NOT EXISTS expenses (
+    expense_id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    amount REAL NOT NULL CHECK(amount &gt;= 0),
+    category TEXT NOT NULL,
+    spent_on TEXT NOT NULL,
+    notes TEXT
+)
+</code></pre>
+<p><strong>Say:</strong>
+"If your Python code accidentally tries to insert a negative amount, the database now has a chance to object. That is valuable."</p>
+<h3 id="53-mention-foreign-keys-lightly-and-accurately">5.3 Mention foreign keys lightly and accurately</h3>
+<p><strong>Say:</strong>
+"Foreign keys let one table reference another safely. For example, an <code>expense</code> row might reference a <code>category</code> row by ID.</p>
+<p>We are not building a multi-table design in depth today, but I want you to know one SQLite-specific fact: foreign-key enforcement is not automatically on in every connection. If you use foreign keys, remember to enable them with:</p>
+<pre><code class="language-sql">PRAGMA foreign_keys = ON
+</code></pre>
+<p>That reminder saves a lot of confusion later."</p>
+<hr>
+<h2 id="6-live-demo-part-1-an-idempotent-initdb-function-15-minutes">6) Live Demo Part 1: An Idempotent init_db() Function (~15 minutes)</h2>
+<p><strong>Say:</strong>
+"Let's start by making startup safe and boring. 'Boring' is a compliment in infrastructure code."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class AppPaths:
+    project_root: Path
+
+    @property
+    def data_dir(self) -&gt; Path:
+        return self.project_root / &quot;data&quot;
+
+    @property
+    def db_path(self) -&gt; Path:
+        return self.data_dir / &quot;expenses.db&quot;
+
+
+def connect(db_path: Path) -&gt; sqlite3.Connection:
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    connection.execute(&quot;PRAGMA foreign_keys = ON&quot;)
+    return connection
+
+
+def init_db(db_path: Path) -&gt; None:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    create_expenses_sql = &quot;&quot;&quot;
+    CREATE TABLE IF NOT EXISTS expenses (
+        expense_id INTEGER PRIMARY KEY,
+        title TEXT NOT NULL,
+        amount REAL NOT NULL CHECK(amount &gt;= 0),
+        category TEXT NOT NULL,
+        spent_on TEXT NOT NULL,
+        notes TEXT
+    )
+    &quot;&quot;&quot;
+
+    with connect(db_path) as connection:
+        connection.execute(create_expenses_sql)
+
+    print(f&quot;Database initialized at {db_path.resolve()}&quot;)
+</code></pre>
+<h3 id="61-narration-points">6.1 Narration points</h3>
+<p><strong>Say:</strong>
+"There are a few important patterns here.</p>
+<ul>
+<li><code>init_db()</code> creates the parent directory if needed.</li>
+<li>It uses <code>CREATE TABLE IF NOT EXISTS</code>, so calling it multiple times is safe.</li>
+<li>The connection helper enables foreign keys every time a connection is opened.</li>
+<li>Startup code now has one explicit place to ensure the schema exists.</li>
+</ul>
+<p>This is what the runbook means by idempotent initialization."</p>
+<h3 id="62-explain-why-repeatable-initialization-matters">6.2 Explain why repeatable initialization matters</h3>
+<p><strong>Say:</strong>
+"If <code>init_db()</code> is safe to run repeatedly, your application startup becomes simpler. You do not need a complicated 'does it exist?' dance in five places. You just run initialization during startup and move on."</p>
+<hr>
+<h2 id="7-live-demo-part-2-transaction-for-grouped-inserts-15-minutes">7) Live Demo Part 2: Transaction for Grouped Inserts (~15 minutes)</h2>
+<p><strong>Say:</strong>
+"Now let's look at transactions with a batch operation. We will insert several expenses together. Then we will trigger a failure to see what rollback looks like."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+def add_many(db_path: Path, expenses: list[NewExpense]) -&gt; None:
+    insert_sql = &quot;&quot;&quot;
+    INSERT INTO expenses (title, amount, category, spent_on, notes)
+    VALUES (?, ?, ?, ?, ?)
+    &quot;&quot;&quot;
+
+    with connect(db_path) as connection:
+        for expense in expenses:
+            print(f&quot;Inserting: {expense.title}&quot;)
+            connection.execute(
+                insert_sql,
+                (
+                    expense.title,
+                    expense.amount,
+                    expense.category,
+                    expense.spent_on.isoformat(),
+                    expense.notes,
+                ),
+            )
+</code></pre>
+<p><strong>Say:</strong>
+"At first glance, this just looks like a loop. But the transaction story comes from the connection context manager. All of these inserts are happening within one <code>with</code> block. If an exception escapes the block, the whole set of changes is rolled back."</p>
+<h3 id="71-demonstrate-success-case">7.1 Demonstrate success case</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">paths = AppPaths(Path.cwd())
+init_db(paths.db_path)
+
+seed_expenses = [
+    NewExpense(&quot;Coffee&quot;, 4.75, &quot;Food&quot;, date(2026, 1, 13)),
+    NewExpense(&quot;Parking&quot;, 12.00, &quot;Transport&quot;, date(2026, 1, 13)),
+    NewExpense(&quot;Notebook&quot;, 8.99, &quot;Office&quot;, date(2026, 1, 14), &quot;Ideas&quot;),
+]
+
+add_many(paths.db_path, seed_expenses)
+</code></pre>
+<p><strong>Say:</strong>
+"That should succeed and commit all three rows together. Now let's intentionally create a failure."</p>
+<h3 id="72-demonstrate-rollback-case">7.2 Demonstrate rollback case</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">def count_rows(db_path: Path) -&gt; int:
+    with connect(db_path) as connection:
+        row = connection.execute(&quot;SELECT COUNT(*) AS total FROM expenses&quot;).fetchone()
+    return int(row[&quot;total&quot;])
+
+
+before_count = count_rows(paths.db_path)
+print(f&quot;Rows before failed batch: {before_count}&quot;)
+
+broken_batch = [
+    NewExpense(&quot;Office chair&quot;, 120.00, &quot;Office&quot;, date(2026, 1, 15)),
+    NewExpense(&quot;Impossible refund&quot;, -15.00, &quot;Office&quot;, date(2026, 1, 15)),
+]
+
+try:
+    add_many(paths.db_path, broken_batch)
+except sqlite3.IntegrityError as error:
+    print(f&quot;Integrity error: {error}&quot;)
+
+after_count = count_rows(paths.db_path)
+print(f&quot;Rows after failed batch: {after_count}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Because the second insert violates <code>CHECK(amount &gt;= 0)</code>, SQLite raises an integrity error. Since that exception escapes the <code>with</code> block, the transaction is rolled back. The new chair row does not remain half-committed. That is exactly the safety property we wanted."</p>
+<h3 id="73-name-the-habit-explicitly">7.3 Name the habit explicitly</h3>
+<p><strong>Say:</strong>
+"The habit is this: when multiple writes belong together, put them in one transaction. Do not commit halfway unless partial success is truly part of the business rule."</p>
+<hr>
+<h2 id="8-live-demo-part-3-clean-startup-wiring-pattern-10-minutes">8) Live Demo Part 3: Clean Startup Wiring Pattern (~10 minutes)</h2>
+<p><strong>Say:</strong>
+"Let's finish with a simple initialization pattern that you can reuse in many projects."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">class SQLiteExpenseRepository:
+    def __init__(self, db_path: Path) -&gt; None:
+        self.db_path = db_path
+
+    def _connect(self) -&gt; sqlite3.Connection:
+        return connect(self.db_path)
+
+    def list_titles(self) -&gt; list[str]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                &quot;SELECT title FROM expenses ORDER BY expense_id&quot;
+            ).fetchall()
+        return [str(row[&quot;title&quot;]) for row in rows]
+
+
+def build_repository(project_root: Path) -&gt; SQLiteExpenseRepository:
+    paths = AppPaths(project_root)
+    init_db(paths.db_path)
+    return SQLiteExpenseRepository(paths.db_path)
+
+
+repository = build_repository(Path.cwd())
+print(repository.list_titles())
+</code></pre>
+<p><strong>Say:</strong>
+"This pattern is small but powerful.</p>
+<ul>
+<li><code>build_repository()</code> becomes the startup composition function.</li>
+<li>It ensures the schema exists before the repository is used.</li>
+<li>The rest of the application can ask for a ready-to-use repository.</li>
+</ul>
+<p>This is the beginning of dependency wiring. It is simple, explicit, and testable."</p>
+<hr>
+<h2 id="9-common-pitfalls-to-surface-explicitly">9) Common Pitfalls to Surface Explicitly</h2>
+<h3 id="91-schema-drift-and-manual-edits">9.1 Schema drift and manual edits</h3>
+<p><strong>Say:</strong>
+"One danger in small projects is ad hoc manual edits to the database file or schema. If the schema changes but the code does not, confusion follows quickly. Keep initialization logic in code so the expected structure is visible and repeatable."</p>
+<h3 id="92-assuming-foreign-keys-are-on-automatically">9.2 Assuming foreign keys are on automatically</h3>
+<p><strong>Say:</strong>
+"In SQLite, foreign-key support exists, but enforcement must be enabled per connection with <code>PRAGMA foreign_keys = ON</code>. If you forget that, your schema may look correct while constraints silently do less than you expect."</p>
+<h3 id="93-too-many-constraints-too-early">9.3 Too many constraints too early</h3>
+<p><strong>Say:</strong>
+"Constraints are good, but there is a balance. Add meaningful rules that reflect real invariants. Do not turn the schema into a puzzle box on day one."</p>
+<h3 id="94-not-testing-failure-paths">9.4 Not testing failure paths</h3>
+<p><strong>Say:</strong>
+"A transaction strategy is not real until you have seen the failure path. Deliberately trigger one safe error during development and confirm the rollback behavior."</p>
+<hr>
+<h2 id="10-guided-practice-harden-your-database-layer-7-minutes">10) Guided Practice: Harden Your Database Layer (~7 minutes)</h2>
+<p><strong>Say:</strong>
+"Now you will harden your own repository. The focus is initialization, constraints, and one grouped write."</p>
+<h3 id="101-practice-prompt">10.1 Practice prompt</h3>
+<p>Update your project so that it includes:</p>
+<ol>
+<li>An <code>init_db(db_path)</code> function that creates the parent directory and ensures the main table exists.</li>
+<li>At least one useful integrity constraint beyond the primary key, such as <code>NOT NULL</code> or <code>CHECK</code>.</li>
+<li>A connection helper or repository helper that uses a context manager consistently.</li>
+<li>One grouped-write function that inserts or updates more than one row inside a single transaction.</li>
+<li>A short test or manual demonstration showing what happens when one operation in the group fails.</li>
+</ol>
+<h3 id="102-coaching-prompts-while-learners-work">10.2 Coaching prompts while learners work</h3>
+<ul>
+<li>"If your app starts twice, does initialization still succeed?"</li>
+<li>"Which rule belongs in Python validation, and which also belongs in the schema?"</li>
+<li>"If one of three inserts fails, what should happen to the other two?"</li>
+<li>"If you add foreign keys later, where will you enable them?"</li>
+</ul>
+<h3 id="103-stretch-extension">10.3 Stretch extension</h3>
+<p>Add a <code>seed_demo_data()</code> function that populates the database only if the main table is empty. Emphasize that this is optional and for learners who finish early.</p>
+<hr>
+<h2 id="11-checkpoint-discussion-3-minutes">11) Checkpoint Discussion (~3 minutes)</h2>
+<p><strong>Ask:</strong></p>
+<ol>
+<li>"Why should <code>init_db()</code> be safe to run multiple times?"</li>
+<li>"In practical terms, what does a transaction protect you from?"</li>
+<li>"Why is it useful for the database to enforce a rule like <code>amount &gt;= 0</code> even if your Python code already validates it?"</li>
+<li>"What SQLite-specific reminder should you remember if you start using foreign keys?"</li>
+</ol>
+<h3 id="111-reinforcement-answers">11.1 Reinforcement answers</h3>
+<p><strong>Say:</strong>
+"A strong answer to the first question is: safe repeated initialization simplifies startup and avoids fragile existence checks spread throughout the codebase.</p>
+<p>A strong answer to the third question is: database constraints protect stored data even if a bug bypasses the application validation layer."</p>
+<hr>
+<h2 id="12-recap-script-3-minutes">12) Recap Script (~3 minutes)</h2>
+<p><strong>Say:</strong>
+"This hour moved our database layer from merely functional to meaningfully safer. We learned that transactions group related writes so they succeed or fail together. We used an idempotent <code>init_db()</code> function to make startup predictable. We added integrity constraints so the database helps enforce structural truth. And we introduced a small but effective startup wiring pattern that ensures the repository is ready before the rest of the application uses it.</p>
+<p>At this point, learners should have a persistence layer that is not just a demo but a solid foundation for the next phase of the course, where the service layer and user-facing application features rely on it more heavily."</p>
+<hr>
+<h2 id="13-exit-ticket">13) Exit Ticket</h2>
+<p>Ask learners to answer these in one or two sentences:</p>
+<ol>
+<li>Why is <code>init_db()</code> designed to be safe to run repeatedly?</li>
+<li>What does a transaction guarantee when an exception occurs halfway through a multi-step write?</li>
+<li>What is one integrity rule you added to your schema, and why does it matter?</li>
+</ol>
+<hr>
+<h2 id="14-optional-instructor-reference-runnable-end-of-hour-example">14) Optional Instructor Reference: Runnable End-of-Hour Example</h2>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class AppPaths:
+    project_root: Path
+
+    @property
+    def data_dir(self) -&gt; Path:
+        return self.project_root / &quot;data&quot;
+
+    @property
+    def db_path(self) -&gt; Path:
+        return self.data_dir / &quot;expenses.db&quot;
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+def connect(db_path: Path) -&gt; sqlite3.Connection:
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    connection.execute(&quot;PRAGMA foreign_keys = ON&quot;)
+    return connection
+
+
+def init_db(db_path: Path) -&gt; None:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    with connect(db_path) as connection:
+        connection.execute(
+            &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS expenses (
+                expense_id INTEGER PRIMARY KEY,
+                title TEXT NOT NULL,
+                amount REAL NOT NULL CHECK(amount &gt;= 0),
+                category TEXT NOT NULL,
+                spent_on TEXT NOT NULL,
+                notes TEXT
+            )
+            &quot;&quot;&quot;
+        )
+
+
+def add_many(db_path: Path, expenses: list[NewExpense]) -&gt; None:
+    with connect(db_path) as connection:
+        for expense in expenses:
+            connection.execute(
+                &quot;&quot;&quot;
+                INSERT INTO expenses (title, amount, category, spent_on, notes)
+                VALUES (?, ?, ?, ?, ?)
+                &quot;&quot;&quot;,
+                (
+                    expense.title,
+                    expense.amount,
+                    expense.category,
+                    expense.spent_on.isoformat(),
+                    expense.notes,
+                ),
+            )
+
+
+def count_rows(db_path: Path) -&gt; int:
+    with connect(db_path) as connection:
+        row = connection.execute(&quot;SELECT COUNT(*) AS total FROM expenses&quot;).fetchone()
+    return int(row[&quot;total&quot;])
+
+
+paths = AppPaths(Path.cwd())
+init_db(paths.db_path)
+add_many(
+    paths.db_path,
+    [
+        NewExpense(&quot;Coffee&quot;, 4.75, &quot;Food&quot;, date(2026, 1, 13)),
+        NewExpense(&quot;Notebook&quot;, 8.99, &quot;Office&quot;, date(2026, 1, 14), &quot;Ideas&quot;),
+    ],
+)
+print(count_rows(paths.db_path))
+</code></pre>
+<hr>
+<h2 id="15-instructor-expansion-making-transactions-feel-concrete">15) Instructor Expansion: Making Transactions Feel Concrete</h2>
+<p><strong>Say:</strong>
+"Transactions can sound abstract until learners connect them to consequences. So I like to frame the conversation in terms of damage prevention.</p>
+<p>Ask learners to imagine these situations:</p>
+<ul>
+<li>a batch import of ten records where record seven is invalid</li>
+<li>a transfer of inventory from one location to another that requires two updates</li>
+<li>a create-and-log workflow where a main record and an audit entry should either both exist or both fail</li>
+</ul>
+<p>In each case, partial success can leave the application in a confusing state. Transactions are how we prevent that confusion."</p>
+<h3 id="151-short-phrase-to-repeat">15.1 Short phrase to repeat</h3>
+<p><strong>Say:</strong>
+"A transaction answers the question: what belongs together?"</p>
+<p>That sentence is simple, and learners remember it.</p>
+<hr>
+<h2 id="16-worked-example-create-and-log-in-one-transaction">16) Worked Example: Create-and-Log in One Transaction</h2>
+<p><strong>Say:</strong>
+"To make grouped writes feel more realistic, let's extend our example slightly. We will create an <code>expense_audit</code> table and write both the main expense and an audit message in one transaction. This is still advanced-scope appropriate because the code stays small and the idea is valuable."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import date, datetime
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+def connect(db_path: Path) -&gt; sqlite3.Connection:
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    connection.execute(&quot;PRAGMA foreign_keys = ON&quot;)
+    return connection
+
+
+def init_db(db_path: Path) -&gt; None:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    with connect(db_path) as connection:
+        connection.execute(
+            &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS expenses (
+                expense_id INTEGER PRIMARY KEY,
+                title TEXT NOT NULL,
+                amount REAL NOT NULL CHECK(amount &gt;= 0),
+                category TEXT NOT NULL,
+                spent_on TEXT NOT NULL,
+                notes TEXT
+            )
+            &quot;&quot;&quot;
+        )
+        connection.execute(
+            &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS expense_audit (
+                audit_id INTEGER PRIMARY KEY,
+                expense_id INTEGER NOT NULL,
+                message TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (expense_id) REFERENCES expenses(expense_id)
+            )
+            &quot;&quot;&quot;
+        )
+
+
+def add_expense_with_audit(db_path: Path, expense: NewExpense) -&gt; int:
+    with connect(db_path) as connection:
+        expense_cursor = connection.execute(
+            &quot;&quot;&quot;
+            INSERT INTO expenses (title, amount, category, spent_on, notes)
+            VALUES (?, ?, ?, ?, ?)
+            &quot;&quot;&quot;,
+            (
+                expense.title,
+                expense.amount,
+                expense.category,
+                expense.spent_on.isoformat(),
+                expense.notes,
+            ),
+        )
+        expense_id = int(expense_cursor.lastrowid)
+
+        connection.execute(
+            &quot;&quot;&quot;
+            INSERT INTO expense_audit (expense_id, message, created_at)
+            VALUES (?, ?, ?)
+            &quot;&quot;&quot;,
+            (
+                expense_id,
+                f&quot;Created expense {expense.title}&quot;,
+                datetime.now().isoformat(timespec=&quot;seconds&quot;),
+            ),
+        )
+
+        return expense_id
+</code></pre>
+<h3 id="161-narration-points">16.1 Narration points</h3>
+<p><strong>Say:</strong>
+"This is a nice teaching example because two related writes now belong together:</p>
+<ul>
+<li>the main expense insert</li>
+<li>the audit insert</li>
+</ul>
+<p>If the second insert fails for some reason, we do not want a main expense row without its audit row if the business expects both. The transaction makes that all-or-nothing behavior possible."</p>
+<h3 id="162-link-back-to-foreign-keys-accurately">16.2 Link back to foreign keys accurately</h3>
+<p><strong>Say:</strong>
+"Notice the foreign key in <code>expense_audit</code>. Because our connection helper enables <code>PRAGMA foreign_keys = ON</code>, SQLite will enforce that the audit row references a real expense row."</p>
+<hr>
+<h2 id="17-initialization-patterns-beyond-one-function">17) Initialization Patterns Beyond One Function</h2>
+<h3 id="171-minimal-startup-pattern">17.1 Minimal startup pattern</h3>
+<p><strong>Say:</strong>
+"The smallest useful startup pattern is:</p>
+<ol>
+<li>compute paths</li>
+<li>run <code>init_db()</code></li>
+<li>build the repository</li>
+<li>start the rest of the app</li>
+</ol>
+<p>That pattern is often enough for class projects and many internal tools."</p>
+<h3 id="172-example-startup-function">17.2 Example startup function</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">def bootstrap_application(project_root: Path) -&gt; SQLiteExpenseRepository:
+    paths = AppPaths(project_root)
+    init_db(paths.db_path)
+    return SQLiteExpenseRepository(paths.db_path)
+</code></pre>
+<p><strong>Say:</strong>
+"This function is tiny, but it communicates a lot. It gives the application one obvious place to begin."</p>
+<h3 id="173-why-explicit-startup-is-better-than-hidden-side-effects">17.3 Why explicit startup is better than hidden side effects</h3>
+<p><strong>Say:</strong>
+"One anti-pattern to avoid is hiding schema creation inside random repository methods. If <code>list_all()</code> secretly creates the table the first time it runs, debugging becomes harder because initialization is no longer explicit.</p>
+<p>Initialization belongs at startup. Hidden side effects make code surprising."</p>
+<hr>
+<h2 id="18-debugging-transactions-and-integrity-errors">18) Debugging Transactions and Integrity Errors</h2>
+<h3 id="181-teach-learners-to-read-the-exception-name-first">18.1 Teach learners to read the exception name first</h3>
+<p><strong>Say:</strong>
+"When a grouped write fails, the first thing to read is the exception type. If you see <code>sqlite3.IntegrityError</code>, that usually points toward a constraint issue, such as a <code>NOT NULL</code>, <code>CHECK</code>, or foreign-key violation."</p>
+<h3 id="182-suggested-debugging-order">18.2 Suggested debugging order</h3>
+<p><strong>Say:</strong>
+"Here is a disciplined debugging order for transaction problems:</p>
+<ol>
+<li>Read the exception class and message.</li>
+<li>Identify which statement in the transaction failed.</li>
+<li>Check the schema constraint that was violated.</li>
+<li>Re-run with a smaller batch if needed.</li>
+<li>Confirm the rollback by querying row counts after the failure.</li>
+</ol>
+<p>That process is much more effective than deleting the database file immediately every time something goes wrong."</p>
+<h3 id="183-remind-learners-that-failure-demos-are-healthy">18.3 Remind learners that failure demos are healthy</h3>
+<p><strong>Say:</strong>
+"Do not be afraid to create one intentional failure while developing. If you have never seen your rollback behavior work, you are trusting code you have not really verified yet."</p>
+<hr>
+<h2 id="19-additional-guided-practice-option-seed-data-safely">19) Additional Guided Practice Option: Seed Data Safely</h2>
+<p>If learners finish early, give them a seed-data extension.</p>
+<h3 id="191-prompt">19.1 Prompt</h3>
+<p>Write a function <code>seed_demo_data(db_path: Path) -&gt; None</code> that:</p>
+<ol>
+<li>checks whether the main table is empty</li>
+<li>if it is empty, inserts two or three demo records in one transaction</li>
+<li>if it is not empty, does nothing</li>
+<li>prints a short message explaining what happened</li>
+</ol>
+<h3 id="192-debrief-note">19.2 Debrief note</h3>
+<p><strong>Say:</strong>
+"This extension reinforces idempotent thinking. Good startup helpers can be run multiple times without causing duplicate chaos."</p>
+<hr>
+<h2 id="20-discussion-prompts-for-a-stronger-debrief">20) Discussion Prompts for a Stronger Debrief</h2>
+<p>Use these if you have an engaged group and an extra few minutes.</p>
+<ol>
+<li>"What rule belongs only in the Python service layer, and what rule also belongs in the schema?"</li>
+<li>"What operations in your own capstone clearly belong in one transaction?"</li>
+<li>"What would be risky about relying only on UI validation and not adding database constraints?"</li>
+<li>"Why is explicit startup wiring easier to reason about than hidden initialization side effects?"</li>
+</ol>
+<p><strong>Instructor note:</strong> These questions help learners connect the database layer to the rest of the application architecture rather than treating it as an isolated technical trick.</p>
+<hr>
+<h2 id="21-optional-closing-story-why-this-matters-in-real-projects">21) Optional Closing Story: Why This Matters in Real Projects</h2>
+<p><strong>Say:</strong>
+"In real projects, bugs around persistence are rarely exciting algorithm bugs. They are usually reliability bugs.</p>
+<p>A row gets partly updated. A startup script assumes a table already exists. A negative number sneaks into the database because one code path skipped validation. A foreign key was declared but never enforced because the pragma was forgotten.</p>
+<p>Those bugs are frustrating because they make systems feel untrustworthy.</p>
+<p>The good news is that the practices from this hour are not glamorous, but they are powerful. Safe initialization, transactions, and integrity constraints are exactly the kinds of habits that make software feel solid."</p>
+<hr>
+<h2 id="22-final-reinforcement-script-before-the-break-or-dismissal">22) Final Reinforcement Script Before the Break or Dismissal</h2>
+<p><strong>Say:</strong>
+"The reliable version of a database layer is not the one with the most features. It is the one that starts predictably, rejects structurally bad data, and behaves sensibly when something fails halfway through.</p>
+<p>That is what transactions, integrity constraints, and initialization patterns give us. They turn persistence from 'it usually works on my machine' into something the rest of the application can trust."</p>
+<h2 id="23-optional-reflection-prompt-for-learners">23) Optional Reflection Prompt for Learners</h2>
+<p>Have learners answer these quickly:</p>
+<ol>
+<li>Name one operation in your own project that clearly belongs inside a transaction.</li>
+<li>Name one integrity rule your database should enforce even if your UI already validates it.</li>
+<li>Why is explicit initialization at startup easier to maintain than hidden side effects inside repository methods?</li>
+</ol>
+<p><strong>Instructor note:</strong> These reflection questions help learners connect the technical mechanics to maintainability and long-term application health.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour1_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-from-working-to-reliable-5-minutes" class="depth-2">3) Opening Script: From Working to Reliable (~5 minutes)</a></li>
+<li><a href="#4-transactions-in-plain-english" class="depth-2">4) Transactions in Plain English</a></li>
+<li><a href="#41-give-a-non-jargon-definition" class="depth-3">4.1 Give a non-jargon definition</a></li>
+<li><a href="#42-use-a-relatable-example" class="depth-3">4.2 Use a relatable example</a></li>
+<li><a href="#43-explain-connection-context-manager-behavior" class="depth-3">4.3 Explain connection context manager behavior</a></li>
+<li><a href="#5-integrity-let-the-database-enforce-structural-rules" class="depth-2">5) Integrity: Let the Database Enforce Structural Rules</a></li>
+<li><a href="#51-differentiate-validation-layers" class="depth-3">5.1 Differentiate validation layers</a></li>
+<li><a href="#52-show-useful-constraints-for-this-level" class="depth-3">5.2 Show useful constraints for this level</a></li>
+<li><a href="#53-mention-foreign-keys-lightly-and-accurately" class="depth-3">5.3 Mention foreign keys lightly and accurately</a></li>
+<li><a href="#6-live-demo-part-1-an-idempotent-initdb-function-15-minutes" class="depth-2">6) Live Demo Part 1: An Idempotent init_db() Function (~15 minutes)</a></li>
+<li><a href="#61-narration-points" class="depth-3">6.1 Narration points</a></li>
+<li><a href="#62-explain-why-repeatable-initialization-matters" class="depth-3">6.2 Explain why repeatable initialization matters</a></li>
+<li><a href="#7-live-demo-part-2-transaction-for-grouped-inserts-15-minutes" class="depth-2">7) Live Demo Part 2: Transaction for Grouped Inserts (~15 minutes)</a></li>
+<li><a href="#71-demonstrate-success-case" class="depth-3">7.1 Demonstrate success case</a></li>
+<li><a href="#72-demonstrate-rollback-case" class="depth-3">7.2 Demonstrate rollback case</a></li>
+<li><a href="#73-name-the-habit-explicitly" class="depth-3">7.3 Name the habit explicitly</a></li>
+<li><a href="#8-live-demo-part-3-clean-startup-wiring-pattern-10-minutes" class="depth-2">8) Live Demo Part 3: Clean Startup Wiring Pattern (~10 minutes)</a></li>
+<li><a href="#9-common-pitfalls-to-surface-explicitly" class="depth-2">9) Common Pitfalls to Surface Explicitly</a></li>
+<li><a href="#91-schema-drift-and-manual-edits" class="depth-3">9.1 Schema drift and manual edits</a></li>
+<li><a href="#92-assuming-foreign-keys-are-on-automatically" class="depth-3">9.2 Assuming foreign keys are on automatically</a></li>
+<li><a href="#93-too-many-constraints-too-early" class="depth-3">9.3 Too many constraints too early</a></li>
+<li><a href="#94-not-testing-failure-paths" class="depth-3">9.4 Not testing failure paths</a></li>
+<li><a href="#10-guided-practice-harden-your-database-layer-7-minutes" class="depth-2">10) Guided Practice: Harden Your Database Layer (~7 minutes)</a></li>
+<li><a href="#101-practice-prompt" class="depth-3">10.1 Practice prompt</a></li>
+<li><a href="#102-coaching-prompts-while-learners-work" class="depth-3">10.2 Coaching prompts while learners work</a></li>
+<li><a href="#103-stretch-extension" class="depth-3">10.3 Stretch extension</a></li>
+<li><a href="#11-checkpoint-discussion-3-minutes" class="depth-2">11) Checkpoint Discussion (~3 minutes)</a></li>
+<li><a href="#111-reinforcement-answers" class="depth-3">11.1 Reinforcement answers</a></li>
+<li><a href="#12-recap-script-3-minutes" class="depth-2">12) Recap Script (~3 minutes)</a></li>
+<li><a href="#13-exit-ticket" class="depth-2">13) Exit Ticket</a></li>
+<li><a href="#14-optional-instructor-reference-runnable-end-of-hour-example" class="depth-2">14) Optional Instructor Reference: Runnable End-of-Hour Example</a></li>
+<li><a href="#15-instructor-expansion-making-transactions-feel-concrete" class="depth-2">15) Instructor Expansion: Making Transactions Feel Concrete</a></li>
+<li><a href="#151-short-phrase-to-repeat" class="depth-3">15.1 Short phrase to repeat</a></li>
+<li><a href="#16-worked-example-create-and-log-in-one-transaction" class="depth-2">16) Worked Example: Create-and-Log in One Transaction</a></li>
+<li><a href="#161-narration-points" class="depth-3">16.1 Narration points</a></li>
+<li><a href="#162-link-back-to-foreign-keys-accurately" class="depth-3">16.2 Link back to foreign keys accurately</a></li>
+<li><a href="#17-initialization-patterns-beyond-one-function" class="depth-2">17) Initialization Patterns Beyond One Function</a></li>
+<li><a href="#171-minimal-startup-pattern" class="depth-3">17.1 Minimal startup pattern</a></li>
+<li><a href="#172-example-startup-function" class="depth-3">17.2 Example startup function</a></li>
+<li><a href="#173-why-explicit-startup-is-better-than-hidden-side-effects" class="depth-3">17.3 Why explicit startup is better than hidden side effects</a></li>
+<li><a href="#18-debugging-transactions-and-integrity-errors" class="depth-2">18) Debugging Transactions and Integrity Errors</a></li>
+<li><a href="#181-teach-learners-to-read-the-exception-name-first" class="depth-3">18.1 Teach learners to read the exception name first</a></li>
+<li><a href="#182-suggested-debugging-order" class="depth-3">18.2 Suggested debugging order</a></li>
+<li><a href="#183-remind-learners-that-failure-demos-are-healthy" class="depth-3">18.3 Remind learners that failure demos are healthy</a></li>
+<li><a href="#19-additional-guided-practice-option-seed-data-safely" class="depth-2">19) Additional Guided Practice Option: Seed Data Safely</a></li>
+<li><a href="#191-prompt" class="depth-3">19.1 Prompt</a></li>
+<li><a href="#192-debrief-note" class="depth-3">19.2 Debrief note</a></li>
+<li><a href="#20-discussion-prompts-for-a-stronger-debrief" class="depth-2">20) Discussion Prompts for a Stronger Debrief</a></li>
+<li><a href="#21-optional-closing-story-why-this-matters-in-real-projects" class="depth-2">21) Optional Closing Story: Why This Matters in Real Projects</a></li>
+<li><a href="#22-final-reinforcement-script-before-the-break-or-dismissal" class="depth-2">22) Final Reinforcement Script Before the Break or Dismissal</a></li>
+<li><a href="#23-optional-reflection-prompt-for-learners" class="depth-2">23) Optional Reflection Prompt for Learners</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day7_Hour4_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day7_Hour4_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour3_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day8_Hour1_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

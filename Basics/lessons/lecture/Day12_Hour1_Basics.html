@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Session 12, Hour 1: Capstone Kickoff — Requirements &amp; Scaffolding | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="12">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day12_Hour1_Basics.md">
+
+    <link rel="prev" href="Day11_Hour4_Basics.html">
+    <link rel="next" href="Day12_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="12" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-12/index.html">Day 12</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Session 12, Hour 1: Capstone Kickoff — Requirements &amp; Scaffolding</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 12</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day12_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="hour-intent-and-instructor-framing">Hour intent and instructor framing</h2>
+<p>This hour is the launchpad for the capstone. Keep students focused on one goal: <strong>a working MVP skeleton</strong> that runs, loads data, performs one useful action, and saves reliably.
+Do not let the class drift into full-feature implementation yet. That belongs to later hours.</p>
+<p>Use this script as a near-verbatim speaking guide. You can adapt your tone, but keep the sequence and constraints intact so all students leave Hour 45 with the same foundation.</p>
+<hr>
+<h2 id="outcomes-align-to-runbook-hour-45">Outcomes (align to runbook Hour 45)</h2>
+<p>By the end of this hour, students will:</p>
+<ol>
+<li><strong>Define capstone requirements and plan implementation steps.</strong></li>
+<li><strong>Build a project skeleton and first working flow.</strong></li>
+</ol>
+<hr>
+<h2 id="suggested-pacing-map-60-minutes">Suggested pacing map (60 minutes)</h2>
+<ul>
+<li><strong>0:00-0:05</strong> Welcome + hour objective</li>
+<li><strong>0:05-0:20</strong> Talk points (10–15 min)</li>
+<li>Capstone spec review</li>
+<li>MVP-first principle</li>
+<li>File layout: <code>main.py</code> + modules</li>
+<li><strong>0:20-0:30</strong> Live demo (5–10 min)</li>
+<li>Scaffold menu + load data + one action + save</li>
+<li><strong>0:30-0:58</strong> Hands-on lab (25–35 min)</li>
+<li>CLI Personal Organizer MVP</li>
+<li><strong>0:58-1:00</strong> Quick check / exit ticket</li>
+</ul>
+<hr>
+<h2 id="instructor-opening-script-first-5-minutes">Instructor opening script (first 5 minutes)</h2>
+<blockquote>
+<p>“Welcome to Day 12, Hour 1. Today we begin the capstone.
+The goal of this hour is not to finish a perfect app.
+The goal is to build a stable starting point we can trust.”</p>
+<p>“Your capstone app is a <strong>CLI Personal Organizer</strong>.
+You’ll choose one theme: <strong>Tasks</strong>, <strong>Contacts</strong>, or <strong>Notes</strong>.
+The theme can change the wording, but not the core structure.”</p>
+<p>“The structure is non-negotiable for this hour:
+- menu loop
+- functions split into modules
+- at least one class
+- JSON persistence in a <code>data/</code> folder
+- exception handling for input and file errors”</p>
+<p>“Today we ship the MVP skeleton:
+project setup + load/save + one CRUD action working end to end.”</p>
+</blockquote>
+<p>Pause and ask:</p>
+<blockquote>
+<p>“Quick pulse check: who has ever tried to build too much too early and then got stuck?”</p>
+</blockquote>
+<p>Most hands will go up. Use that moment:</p>
+<blockquote>
+<p>“Exactly. Today is how we avoid that trap.”</p>
+</blockquote>
+<hr>
+<h2 id="talk-points-block-1015-minutes">Talk points block (10–15 minutes)</h2>
+<h3 id="1-capstone-spec-review-clear-concrete-non-negotiable">1) Capstone spec review (clear, concrete, non-negotiable)</h3>
+<p>Use this section to make requirements explicit and visible. Keep it concrete, not abstract.</p>
+<p>Say:</p>
+<blockquote>
+<p>“Let’s translate the spec into engineering checks.
+If I can’t point to it in code, it doesn’t count.”</p>
+</blockquote>
+<p>Write this on board or shared screen:</p>
+<h3 id="required-for-hour-45">Required for Hour 45</h3>
+<ul>
+<li>A project/repo folder exists and is organized.</li>
+<li>Program runs from <code>main.py</code>.</li>
+<li>Menu appears in a loop until user exits.</li>
+<li>Logic is split into modules (not everything in one file).</li>
+<li>At least one class is present and used.</li>
+<li>Data persists to JSON in <code>data/</code>.</li>
+<li>Program handles:</li>
+<li>bad menu input</li>
+<li>missing or malformed JSON file</li>
+<li>One CRUD action works end-to-end.</li>
+</ul>
+<p>Then emphasize:</p>
+<blockquote>
+<p>“One working flow beats five broken features.
+Our bar is reliability, not breadth.”</p>
+</blockquote>
+<h3 id="2-mvp-first-principle-the-mindset-for-successful-capstones">2) MVP-first principle (the mindset for successful capstones)</h3>
+<p>Define MVP in student-friendly language:</p>
+<blockquote>
+<p>“MVP means the <strong>smallest useful version</strong> that proves your architecture works.”</p>
+</blockquote>
+<p>Then clarify what MVP is <strong>not</strong>:</p>
+<ul>
+<li>Not “minimum effort”</li>
+<li>Not sloppy code</li>
+<li>Not skipping structure</li>
+</ul>
+<p>What MVP <strong>is</strong>:</p>
+<ul>
+<li>Small feature scope</li>
+<li>Good skeleton</li>
+<li>Reliable load/save path</li>
+<li>Clear extension points</li>
+</ul>
+<p>Use an analogy:</p>
+<blockquote>
+<p>“Think of building a house.
+MVP is foundation + framing + one working door.
+It is not wallpaper, landscaping, and a second floor.”</p>
+</blockquote>
+<h3 id="3-file-layout-mainpy-modules">3) File layout: <code>main.py</code> + modules</h3>
+<p>Introduce the mental model:</p>
+<blockquote>
+<p>“<code>main.py</code> should read like a control tower, not a warehouse.
+It orchestrates. Modules do the work.”</p>
+</blockquote>
+<p>Recommended starter layout (for all themes):</p>
+<pre><code class="language-text">personal_organizer/
+├─ main.py
+├─ organizer/
+│  ├─ __init__.py
+│  ├─ models.py
+│  ├─ storage.py
+│  └─ actions.py
+└─ data/
+   └─ items.json
+</code></pre>
+<p>Explain each file:</p>
+<ul>
+<li><code>main.py</code>: menu loop + high-level flow</li>
+<li><code>models.py</code>: class definitions (<code>Task</code>, <code>Contact</code>, or <code>Note</code>)</li>
+<li><code>storage.py</code>: load/save JSON</li>
+<li><code>actions.py</code>: CRUD action functions</li>
+</ul>
+<p>Then set a boundary for this hour:</p>
+<blockquote>
+<p>“Today, your architecture must be extendable, but your features stay small.”</p>
+</blockquote>
+<h3 id="4-what-one-crud-action-means-in-this-hour">4) What “one CRUD action” means in this hour</h3>
+<p>Remind students of CRUD:</p>
+<ul>
+<li>Create</li>
+<li>Read</li>
+<li>Update</li>
+<li>Delete</li>
+</ul>
+<p>For Hour 45, they need <strong>at least one</strong> action fully wired.
+Best default is <strong>Create</strong> (<code>add item</code>) because it exercises class creation, validation, and persistence.</p>
+<blockquote>
+<p>“If your app can add one item and that item is still there after restart, you have a real product foundation.”</p>
+</blockquote>
+<h3 id="5-common-pitfalls-preemptive-coaching">5) Common pitfalls (preemptive coaching)</h3>
+<p>Call these out before coding starts:</p>
+<ol>
+<li><strong>Overbuilding before MVP works</strong>
+   - Students add tags, priorities, deadlines, categories before save path works.</li>
+<li><strong>Complex data model too early</strong>
+   - Deep nesting and relationships too soon.</li>
+</ol>
+<p>Say:</p>
+<blockquote>
+<p>“Your first version should feel almost boring.
+Boring is good. Boring means stable.”</p>
+</blockquote>
+<hr>
+<h2 id="live-demo-script-510-minutes-scaffold-menu-load-data-one-action-save">Live demo script (5–10 minutes): scaffold menu + load data + one action + save</h2>
+<h3 id="demo-objective">Demo objective</h3>
+<p>Build a small but real CLI organizer (Task theme in demo) that:</p>
+<ul>
+<li>starts cleanly even if <code>data/items.json</code> is missing</li>
+<li>shows menu loop</li>
+<li>adds one task (Create)</li>
+<li>saves and reloads from JSON</li>
+</ul>
+<h3 id="step-0-show-expected-folder-structure">Step 0: show expected folder structure</h3>
+<p>Speak while creating folders:</p>
+<blockquote>
+<p>“I’m creating structure first, before feature code, because structure reduces chaos.”</p>
+</blockquote>
+<pre><code class="language-text">personal_organizer/
+├─ main.py
+├─ organizer/
+│  ├─ __init__.py
+│  ├─ models.py
+│  ├─ storage.py
+│  └─ actions.py
+└─ data/
+</code></pre>
+<h3 id="step-1-organizermodelspy-at-least-one-class">Step 1: <code>organizer/models.py</code> (at least one class)</h3>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class Task:
+    id: int
+    title: str
+    done: bool = False
+
+    def to_dict(self) -&gt; dict:
+        return {&quot;id&quot;: self.id, &quot;title&quot;: self.title, &quot;done&quot;: self.done}
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;Task&quot;:
+        return cls(
+            id=int(data[&quot;id&quot;]),
+            title=str(data[&quot;title&quot;]),
+            done=bool(data.get(&quot;done&quot;, False)),
+        )
+</code></pre>
+<p>Narration:</p>
+<blockquote>
+<p>“This class gives us structure and consistency.
+<code>to_dict()</code> and <code>from_dict()</code> make JSON conversion explicit.”</p>
+</blockquote>
+<h3 id="step-2-organizerstoragepy-json-persistence-file-error-handling">Step 2: <code>organizer/storage.py</code> (JSON persistence + file error handling)</h3>
+<pre><code class="language-python">import json
+from pathlib import Path
+
+from organizer.models import Task
+
+
+DATA_DIR = Path(&quot;data&quot;)
+DATA_FILE = DATA_DIR / &quot;items.json&quot;
+
+
+def load_tasks() -&gt; list[Task]:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    try:
+        with DATA_FILE.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+            raw_items: list[dict] = json.load(file)
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        print(&quot;Warning: data/items.json is invalid JSON. Starting with empty data.&quot;)
+        return []
+    except OSError as error:
+        print(f&quot;Warning: could not read data file ({error}). Starting with empty data.&quot;)
+        return []
+
+    tasks: list[Task] = []
+    for item in raw_items:
+        try:
+            tasks.append(Task.from_dict(item))
+        except (KeyError, TypeError, ValueError):
+            print(f&quot;Warning: skipped invalid item: {item}&quot;)
+    return tasks
+
+
+def save_tasks(tasks: list[Task]) -&gt; bool:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    try:
+        payload = [task.to_dict() for task in tasks]
+        with DATA_FILE.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+            json.dump(payload, file, indent=2)
+        return True
+    except OSError as error:
+        print(f&quot;Error: could not save data ({error}).&quot;)
+        return False
+</code></pre>
+<p>Narration:</p>
+<blockquote>
+<p>“Notice the missing-file path: if file does not exist, we return an empty list.
+That is exactly one of our completion criteria.”</p>
+</blockquote>
+<h3 id="step-3-organizeractionspy-one-crud-action-create">Step 3: <code>organizer/actions.py</code> (one CRUD action: Create)</h3>
+<pre><code class="language-python">from organizer.models import Task
+
+
+def next_task_id(tasks: list[Task]) -&gt; int:
+    if not tasks:
+        return 1
+    return max(task.id for task in tasks) + 1
+
+
+def add_task(tasks: list[Task], title: str) -&gt; Task:
+    cleaned_title = title.strip()
+    if not cleaned_title:
+        raise ValueError(&quot;Task title cannot be empty.&quot;)
+
+    task = Task(id=next_task_id(tasks), title=cleaned_title)
+    tasks.append(task)
+    return task
+
+
+def display_tasks(tasks: list[Task]) -&gt; None:
+    if not tasks:
+        print(&quot;No tasks saved yet.&quot;)
+        return
+
+    print(&quot;\nSaved Tasks:&quot;)
+    for task in tasks:
+        status = &quot;done&quot; if task.done else &quot;open&quot;
+        print(f&quot;- [{status}] #{task.id}: {task.title}&quot;)
+</code></pre>
+<p>Narration:</p>
+<blockquote>
+<p>“This file is intentionally tiny.
+We only implement what we need for today’s flow.”</p>
+</blockquote>
+<h3 id="step-4-mainpy-menu-loop-input-handling-save">Step 4: <code>main.py</code> (menu loop + input handling + save)</h3>
+<pre><code class="language-python">from organizer.actions import add_task, display_tasks
+from organizer.storage import load_tasks, save_tasks
+
+
+def print_menu() -&gt; None:
+    print(&quot;\n=== Personal Organizer MVP ===&quot;)
+    print(&quot;1) Add task&quot;)
+    print(&quot;2) List tasks&quot;)
+    print(&quot;3) Save and exit&quot;)
+
+
+def read_menu_choice() -&gt; int:
+    raw_choice = input(&quot;Choose an option (1-3): &quot;).strip()
+    return int(raw_choice)
+
+
+def main() -&gt; None:
+    tasks = load_tasks()
+    print(f&quot;Loaded {len(tasks)} task(s).&quot;)
+
+    while True:
+        print_menu()
+
+        try:
+            choice = read_menu_choice()
+        except ValueError:
+            print(&quot;Please enter a number: 1, 2, or 3.&quot;)
+            continue
+
+        if choice == 1:
+            title = input(&quot;Enter task title: &quot;)
+            try:
+                task = add_task(tasks, title)
+                print(f&quot;Added task #{task.id}: {task.title}&quot;)
+            except ValueError as error:
+                print(f&quot;Input error: {error}&quot;)
+        elif choice == 2:
+            display_tasks(tasks)
+        elif choice == 3:
+            if save_tasks(tasks):
+                print(&quot;Data saved. Goodbye.&quot;)
+            else:
+                print(&quot;Exiting without confirmed save.&quot;)
+            break
+        else:
+            print(&quot;Invalid option. Choose 1, 2, or 3.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Narration:</p>
+<blockquote>
+<p>“This is our complete Hour 45 target: menu, load, one action, save, and error handling.”</p>
+</blockquote>
+<h3 id="step-5-quick-deterministic-run-show-evidence">Step 5: quick deterministic run (show evidence)</h3>
+<p>Use this exact flow in terminal:</p>
+<ol>
+<li>Start app when no JSON exists.</li>
+<li>Add task: <code>Buy groceries</code></li>
+<li>List tasks.</li>
+<li>Save and exit.</li>
+<li>Restart app and list again.</li>
+</ol>
+<p>Expected behavior:</p>
+<ul>
+<li>First run starts with <code>Loaded 0 task(s).</code></li>
+<li>After add + save, <code>data/items.json</code> is created.</li>
+<li>Restart shows <code>Loaded 1 task(s).</code></li>
+</ul>
+<p>Possible resulting JSON:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;title&quot;: &quot;Buy groceries&quot;,
+    &quot;done&quot;: false
+  }
+]
+</code></pre>
+<p>Close demo with:</p>
+<blockquote>
+<p>“Not fancy. But solid. This is exactly what we want before scaling features.”</p>
+</blockquote>
+<hr>
+<h2 id="hands-on-lab-2535-minutes-cli-personal-organizer-mvp">Hands-on lab (25–35 minutes): CLI Personal Organizer MVP</h2>
+<h3 id="student-prompt-say-this-clearly">Student prompt (say this clearly)</h3>
+<blockquote>
+<p>“Now you will build your own organizer MVP.
+Choose <strong>one theme</strong>: Tasks, Contacts, or Notes.
+Keep scope tight and ship a working skeleton.”</p>
+</blockquote>
+<h3 id="theme-choice-options">Theme choice options</h3>
+<ul>
+<li><strong>Tasks</strong>: track short task titles and completion state</li>
+<li><strong>Contacts</strong>: store name + phone/email</li>
+<li><strong>Notes</strong>: save short text notes with titles</li>
+</ul>
+<h3 id="non-negotiable-constraints">Non-negotiable constraints</h3>
+<p>Students must include all of the following:</p>
+<ol>
+<li><strong>Menu loop</strong></li>
+<li><strong>Functions split into modules</strong></li>
+<li><strong>At least one class</strong></li>
+<li><strong>JSON persistence in <code>data/</code> folder</strong></li>
+<li><strong>Exception handling for input and file errors</strong></li>
+</ol>
+<h3 id="deliverable-this-hour">Deliverable this hour</h3>
+<p><strong>Skeleton + load/save + one CRUD action working</strong></p>
+<h3 id="completion-criteria">Completion criteria</h3>
+<ul>
+<li>Repo/folder created.</li>
+<li>Program runs and shows menu.</li>
+<li>Load/save works even if file missing.</li>
+</ul>
+<hr>
+<h2 id="lab-facilitation-guide-what-to-say-while-students-work">Lab facilitation guide (what to say while students work)</h2>
+<p>Use this progression to keep students moving:</p>
+<h3 id="minute-05-of-lab-lock-in-scope">Minute 0–5 of lab: lock in scope</h3>
+<p>Ask every student/team:</p>
+<ul>
+<li>“Which theme did you choose?”</li>
+<li>“What is your one CRUD action for today?”</li>
+<li>“What is your data file name in <code>data/</code>?”</li>
+</ul>
+<p>If they cannot answer in 30 seconds, they are not scoped yet.</p>
+<p>Recommended one-action defaults:</p>
+<ul>
+<li>Tasks: Add task</li>
+<li>Contacts: Add contact</li>
+<li>Notes: Add note</li>
+</ul>
+<h3 id="minute-512-scaffold-folders-and-files">Minute 5–12: scaffold folders and files</h3>
+<p>Require this minimal structure:</p>
+<pre><code class="language-text">student_project/
+├─ main.py
+├─ organizer/
+│  ├─ __init__.py
+│  ├─ models.py
+│  ├─ storage.py
+│  └─ actions.py
+└─ data/
+</code></pre>
+<p>Coach line:</p>
+<blockquote>
+<p>“If your folders are unclear, your code will be unclear.”</p>
+</blockquote>
+<h3 id="minute-1220-implement-class-storage">Minute 12–20: implement class + storage</h3>
+<p>Students should complete:</p>
+<ul>
+<li>one class in <code>models.py</code></li>
+<li><code>load_*()</code> and <code>save_*()</code> in <code>storage.py</code></li>
+<li>missing-file handling</li>
+</ul>
+<p>Checkpoint question to each student:</p>
+<blockquote>
+<p>“If I delete your JSON file and run again, does your app still start?”</p>
+</blockquote>
+<p>If no, help them first before any additional feature.</p>
+<h3 id="minute-2028-menu-loop-one-action">Minute 20–28: menu loop + one action</h3>
+<p>Students wire:</p>
+<ul>
+<li>menu loop in <code>main.py</code></li>
+<li>one action function in <code>actions.py</code></li>
+<li>save on exit (or immediately after add)</li>
+</ul>
+<p>Checkpoint:</p>
+<blockquote>
+<p>“Can you add one item, exit, restart, and still see it?”</p>
+</blockquote>
+<h3 id="minute-2835-stabilize-and-verify">Minute 28–35: stabilize and verify</h3>
+<p>Students test:</p>
+<ul>
+<li>invalid menu input</li>
+<li>empty text input for add</li>
+<li>malformed JSON file scenario (if possible, quickly simulate)</li>
+</ul>
+<p>End state should meet completion criteria, not extra features.</p>
+<hr>
+<h2 id="guidance-you-can-give-without-taking-over-student-code">Guidance you can give without taking over student code</h2>
+<p>Use these coaching prompts instead of solving everything for them:</p>
+<ul>
+<li>“Where should this logic live: <code>main.py</code> or a module?”</li>
+<li>“What does this function return on error?”</li>
+<li>“How will you prove load/save works?”</li>
+<li>“What happens if input is blank?”</li>
+<li>“Is this today’s MVP or tomorrow’s enhancement?”</li>
+</ul>
+<p>When students are stuck, ask them to verbalize flow:</p>
+<ol>
+<li>load data</li>
+<li>show menu</li>
+<li>receive choice</li>
+<li>run one action</li>
+<li>save data</li>
+<li>exit safely</li>
+</ol>
+<p>If they can explain it, they can implement it.</p>
+<hr>
+<h2 id="theme-specific-starter-schemas-keep-simple">Theme-specific starter schemas (keep simple)</h2>
+<p>Use these examples to keep students from overmodeling too early.</p>
+<h3 id="tasks-schema">Tasks schema</h3>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;title&quot;: &quot;Buy groceries&quot;,
+    &quot;done&quot;: false
+  }
+]
+</code></pre>
+<h3 id="contacts-schema">Contacts schema</h3>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;Ari Patel&quot;,
+    &quot;phone&quot;: &quot;555-0101&quot;
+  }
+]
+</code></pre>
+<h3 id="notes-schema">Notes schema</h3>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 1,
+    &quot;title&quot;: &quot;Ideas&quot;,
+    &quot;body&quot;: &quot;Build a study plan.&quot;
+  }
+]
+</code></pre>
+<p>Important reminder to students:</p>
+<blockquote>
+<p>“Flat, simple fields now.
+No nested subtasks, no tags list, no extra metadata unless your MVP is already done.”</p>
+</blockquote>
+<hr>
+<h2 id="reference-implementation-pattern-students-can-adapt-by-theme">Reference implementation pattern (students can adapt by theme)</h2>
+<p>If learners need a clearer template, share this generic pattern.</p>
+<h3 id="organizermodelspy"><code>organizer/models.py</code></h3>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class Item:
+    id: int
+    title: str
+
+    def to_dict(self) -&gt; dict:
+        return {&quot;id&quot;: self.id, &quot;title&quot;: self.title}
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;Item&quot;:
+        return cls(id=int(data[&quot;id&quot;]), title=str(data[&quot;title&quot;]))
+</code></pre>
+<h3 id="organizerstoragepy"><code>organizer/storage.py</code></h3>
+<pre><code class="language-python">import json
+from pathlib import Path
+
+from organizer.models import Item
+
+
+DATA_DIR = Path(&quot;data&quot;)
+DATA_FILE = DATA_DIR / &quot;items.json&quot;
+
+
+def load_items() -&gt; list[Item]:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        with DATA_FILE.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+            payload: list[dict] = json.load(file)
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        print(&quot;Warning: invalid JSON. Starting with empty list.&quot;)
+        return []
+    except OSError as error:
+        print(f&quot;Warning: file read error: {error}&quot;)
+        return []
+
+    items: list[Item] = []
+    for raw in payload:
+        try:
+            items.append(Item.from_dict(raw))
+        except (KeyError, TypeError, ValueError):
+            print(f&quot;Warning: skipped invalid item: {raw}&quot;)
+    return items
+
+
+def save_items(items: list[Item]) -&gt; bool:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        with DATA_FILE.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+            json.dump([item.to_dict() for item in items], file, indent=2)
+        return True
+    except OSError as error:
+        print(f&quot;Error: save failed: {error}&quot;)
+        return False
+</code></pre>
+<h3 id="organizeractionspy"><code>organizer/actions.py</code></h3>
+<pre><code class="language-python">from organizer.models import Item
+
+
+def _next_id(items: list[Item]) -&gt; int:
+    if not items:
+        return 1
+    return max(item.id for item in items) + 1
+
+
+def add_item(items: list[Item], title: str) -&gt; Item:
+    cleaned = title.strip()
+    if not cleaned:
+        raise ValueError(&quot;Title cannot be empty.&quot;)
+    item = Item(id=_next_id(items), title=cleaned)
+    items.append(item)
+    return item
+</code></pre>
+<h3 id="mainpy"><code>main.py</code></h3>
+<pre><code class="language-python">from organizer.actions import add_item
+from organizer.storage import load_items, save_items
+
+
+def show_menu() -&gt; None:
+    print(&quot;\n=== Organizer ===&quot;)
+    print(&quot;1) Add item&quot;)
+    print(&quot;2) Save and exit&quot;)
+
+
+def main() -&gt; None:
+    items = load_items()
+    print(f&quot;Loaded {len(items)} item(s).&quot;)
+
+    while True:
+        show_menu()
+        try:
+            choice = int(input(&quot;Choose (1-2): &quot;).strip())
+        except ValueError:
+            print(&quot;Enter a number.&quot;)
+            continue
+
+        if choice == 1:
+            title = input(&quot;Title: &quot;)
+            try:
+                item = add_item(items, title)
+                print(f&quot;Added #{item.id}: {item.title}&quot;)
+            except ValueError as error:
+                print(f&quot;Input error: {error}&quot;)
+        elif choice == 2:
+            if save_items(items):
+                print(&quot;Saved. Bye.&quot;)
+            else:
+                print(&quot;Could not confirm save.&quot;)
+            break
+        else:
+            print(&quot;Invalid menu choice.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>This pattern satisfies Hour 45 requirements and leaves room for later expansion.</p>
+<hr>
+<h2 id="instructor-qa-checklist-during-lab">Instructor QA checklist during lab</h2>
+<p>Walk around and verify each student against this checklist:</p>
+<h3 id="structure-checks">Structure checks</h3>
+<ul>
+<li>[ ] <code>main.py</code> exists</li>
+<li>[ ] modules exist (<code>models.py</code>, <code>storage.py</code>, plus action module)</li>
+<li>[ ] <code>data/</code> folder used for JSON</li>
+</ul>
+<h3 id="behavior-checks">Behavior checks</h3>
+<ul>
+<li>[ ] app runs and shows menu</li>
+<li>[ ] bad menu input handled</li>
+<li>[ ] app starts when JSON file is missing</li>
+<li>[ ] one CRUD action works</li>
+<li>[ ] data persists after restart</li>
+</ul>
+<h3 id="code-quality-checks-hour-45-level">Code quality checks (Hour 45 level)</h3>
+<ul>
+<li>[ ] class is actually used, not just defined</li>
+<li>[ ] functions are small and named clearly</li>
+<li>[ ] <code>with</code> used for file operations</li>
+<li>[ ] no giant “everything” function</li>
+</ul>
+<p>If a student is missing one constraint, coach to repair that first before adding features.</p>
+<hr>
+<h2 id="common-pitfalls-and-intervention-scripts">Common pitfalls and intervention scripts</h2>
+<h3 id="pitfall-1-overbuilding-before-mvp-works">Pitfall 1: Overbuilding before MVP works</h3>
+<p>Symptoms:</p>
+<ul>
+<li>Student starts building update/delete/search before create/save works</li>
+<li>Student starts UI polish before persistence works</li>
+</ul>
+<p>Intervention script:</p>
+<blockquote>
+<p>“Pause feature expansion.
+Show me one successful add + save + restart cycle first.”</p>
+</blockquote>
+<h3 id="pitfall-2-complex-data-model-too-early">Pitfall 2: Complex data model too early</h3>
+<p>Symptoms:</p>
+<ul>
+<li>deeply nested dictionaries</li>
+<li>multiple classes with unclear relationships</li>
+<li>confusion about serialization</li>
+</ul>
+<p>Intervention script:</p>
+<blockquote>
+<p>“Flatten the model for now.
+One class, 2–4 fields, deterministic ID, save/load stable.
+Complexity comes after reliability.”</p>
+</blockquote>
+<h3 id="pitfall-3-everything-in-mainpy">Pitfall 3: Everything in <code>main.py</code></h3>
+<p>Symptoms:</p>
+<ul>
+<li>100+ lines in one file quickly</li>
+<li>repeated code</li>
+</ul>
+<p>Intervention script:</p>
+<blockquote>
+<p>“<code>main.py</code> should orchestrate only.
+Move storage and action logic to modules.”</p>
+</blockquote>
+<h3 id="pitfall-4-input-assumptions">Pitfall 4: Input assumptions</h3>
+<p>Symptoms:</p>
+<ul>
+<li>direct <code>int(input())</code> with no exception handling</li>
+<li>blank titles accepted silently</li>
+</ul>
+<p>Intervention script:</p>
+<blockquote>
+<p>“Assume users type unexpected values.
+Handle <code>ValueError</code> and validate blank input.”</p>
+</blockquote>
+<h3 id="pitfall-5-save-path-not-tested">Pitfall 5: Save path not tested</h3>
+<p>Symptoms:</p>
+<ul>
+<li>student says “it should save” but never reopened app</li>
+</ul>
+<p>Intervention script:</p>
+<blockquote>
+<p>“Don’t trust assumptions.
+Run the restart test now.”</p>
+</blockquote>
+<hr>
+<h2 id="optional-extension-basics-scope-add-a-basic-search-feature-early">Optional extension (Basics scope): add a basic search feature early</h2>
+<p>If a team stabilizes menu, load/save, and one action quickly, allow an early basic-search extension during this hour.</p>
+<p>Keep search minimal:</p>
+<ul>
+<li>one prompt term</li>
+<li>case-insensitive substring match</li>
+<li>print matched items</li>
+</ul>
+<p>Example (tasks/items):</p>
+<pre><code class="language-python">def search_items(items: list[Item], term: str) -&gt; list[Item]:
+    query = term.strip().lower()
+    if not query:
+        return []
+    return [item for item in items if query in item.title.lower()]
+</code></pre>
+<p>Coach boundary:</p>
+<blockquote>
+<p>“Search is optional polish.
+If load/save isn’t stable yet, search waits.”</p>
+</blockquote>
+<hr>
+<h2 id="full-speaking-script-expanded-near-verbatim-delivery">Full speaking script (expanded, near-verbatim delivery)</h2>
+<p>Use this if you want a continuous narrative for the hour without improvising transitions.</p>
+<h3 id="segment-a-transition-into-capstone-mindset">Segment A: transition into capstone mindset</h3>
+<blockquote>
+<p>“Team, today is the first capstone build hour.
+I want you to hear one sentence clearly: <strong>we are building for reliability first</strong>.”</p>
+<p>“When beginners struggle in final projects, it is rarely because they can’t write Python syntax.
+It is usually because scope grows faster than structure.
+So in this hour, we reverse that pattern.”</p>
+<p>“You are not being graded on how many features you list in a plan.
+You are being graded on whether your current build can run, load, process one action, and save safely.”</p>
+<p>“That means you will probably write less code than you expect—and that is exactly right.”</p>
+</blockquote>
+<h3 id="segment-b-spec-to-code-translation">Segment B: spec-to-code translation</h3>
+<blockquote>
+<p>“Let’s map each requirement to concrete code evidence.”</p>
+<p>“Requirement one: menu loop.
+Evidence: I can run the app and it keeps prompting until I choose exit.”</p>
+<p>“Requirement two: functions split into modules.
+Evidence: storage logic is not buried in <code>main.py</code>; action logic is not duplicated in the menu block.”</p>
+<p>“Requirement three: at least one class.
+Evidence: a class exists and is actually used to create objects that get persisted.”</p>
+<p>“Requirement four: JSON persistence in <code>data/</code>.
+Evidence: after running one add action and saving, we can see a JSON file in <code>data/</code> and it reloads next run.”</p>
+<p>“Requirement five: exception handling for input and file errors.
+Evidence: invalid menu input does not crash; missing JSON file does not crash.”</p>
+<p>“If you can show all five evidences, you are on track.”</p>
+</blockquote>
+<h3 id="segment-c-mvp-first-boundary-setting">Segment C: MVP-first boundary setting</h3>
+<blockquote>
+<p>“Now let’s define what we are intentionally not doing this hour.”</p>
+<p>“We are not implementing complete CRUD suites for every theme.
+We are not designing perfect domain models.
+We are not polishing UX text for ten edge cases.”</p>
+<p>“We are doing one stable flow.
+I want your future self to inherit clean, testable code—not an unfinished pile of features.”</p>
+<p>“When you feel the urge to add ‘just one more thing,’ stop and ask:
+does this improve today’s MVP checklist?
+If not, park it.”</p>
+</blockquote>
+<h3 id="segment-d-module-architecture-explanation">Segment D: module architecture explanation</h3>
+<blockquote>
+<p>“Modularity is not ceremony. It reduces cognitive load.”</p>
+<p>“When your app grows, every file should answer one question:
+- <code>main.py</code>: What is the control flow?
+- <code>models.py</code>: What does one data object look like?
+- <code>storage.py</code>: How does data move to and from disk?
+- <code>actions.py</code>: What behavior can users trigger?”</p>
+<p>“This separation makes bugs easier to isolate.
+If save fails, check storage.
+If IDs break, check actions.
+If menu loops wrong, check main.
+That is maintainability.”</p>
+</blockquote>
+<h3 id="segment-e-pre-lab-confidence-reset">Segment E: pre-lab confidence reset</h3>
+<blockquote>
+<p>“Some of you may think, ‘my app is too simple.’
+Simplicity is a strength right now.”</p>
+<p>“A stable simple app can become a strong complex app.
+An unstable complex app usually collapses.”</p>
+<p>“Your target at end of this hour is not impressive complexity.
+Your target is dependable behavior.”</p>
+</blockquote>
+<hr>
+<h2 id="planning-worksheet-you-can-run-live-5-minutes-before-coding">Planning worksheet you can run live (5 minutes before coding)</h2>
+<p>Have students fill this quickly in notes before they touch code:</p>
+<ol>
+<li><strong>Theme chosen:</strong> Tasks / Contacts / Notes</li>
+<li><strong>One CRUD action today:</strong> Create / Read / Update / Delete</li>
+<li><strong>Class name:</strong> <code>Task</code>, <code>Contact</code>, or <code>Note</code></li>
+<li><strong>JSON file path:</strong> <code>data/items.json</code> (or theme-specific equivalent)</li>
+<li><strong>Menu options today (max 3):</strong>
+   - option 1: action
+   - option 2: optional list/preview
+   - option 3: save and exit</li>
+<li><strong>Input validation rule:</strong> one sentence</li>
+<li><strong>File error handling rule:</strong> one sentence</li>
+<li><strong>Proof test they will run:</strong> add → save → restart → verify</li>
+</ol>
+<p>Say:</p>
+<blockquote>
+<p>“If you cannot complete this worksheet, coding now will be guesswork.”</p>
+</blockquote>
+<p>Collect quick verbal confirmations:</p>
+<ul>
+<li>“What is your action?”</li>
+<li>“What is your JSON path?”</li>
+<li>“How do you handle missing file?”</li>
+</ul>
+<p>This prevents 20 minutes of preventable drift.</p>
+<hr>
+<h2 id="additional-deterministic-demo-variants-if-students-use-different-themes">Additional deterministic demo variants (if students use different themes)</h2>
+<p>If many students choose Contacts or Notes, use these tiny substitutions so they can map from your demo quickly.</p>
+<h3 id="contacts-class-variant">Contacts class variant</h3>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class Contact:
+    id: int
+    name: str
+    phone: str
+
+    def to_dict(self) -&gt; dict:
+        return {&quot;id&quot;: self.id, &quot;name&quot;: self.name, &quot;phone&quot;: self.phone}
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;Contact&quot;:
+        return cls(
+            id=int(data[&quot;id&quot;]),
+            name=str(data[&quot;name&quot;]),
+            phone=str(data[&quot;phone&quot;]),
+        )
+</code></pre>
+<h3 id="notes-class-variant">Notes class variant</h3>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class Note:
+    id: int
+    title: str
+    body: str
+
+    def to_dict(self) -&gt; dict:
+        return {&quot;id&quot;: self.id, &quot;title&quot;: self.title, &quot;body&quot;: self.body}
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;Note&quot;:
+        return cls(
+            id=int(data[&quot;id&quot;]),
+            title=str(data[&quot;title&quot;]),
+            body=str(data[&quot;body&quot;]),
+        )
+</code></pre>
+<h3 id="menu-wording-adaptation-examples">Menu wording adaptation examples</h3>
+<p>Tasks:</p>
+<pre><code class="language-text">1) Add task
+2) List tasks
+3) Save and exit
+</code></pre>
+<p>Contacts:</p>
+<pre><code class="language-text">1) Add contact
+2) List contacts
+3) Save and exit
+</code></pre>
+<p>Notes:</p>
+<pre><code class="language-text">1) Add note
+2) List notes
+3) Save and exit
+</code></pre>
+<p>Reinforce:</p>
+<blockquote>
+<p>“Theme changes labels, not architecture.”</p>
+</blockquote>
+<hr>
+<h2 id="error-handling-mini-lesson-embedded-during-lab-support">Error-handling mini-lesson (embedded during lab support)</h2>
+<p>When you see repeated crashes, pause the room for a 2-minute micro-teach:</p>
+<h3 id="input-error-pattern">Input error pattern</h3>
+<pre><code class="language-python">try:
+    choice = int(input(&quot;Choose: &quot;).strip())
+except ValueError:
+    print(&quot;Please enter a valid number.&quot;)
+    continue
+</code></pre>
+<p>Explain:</p>
+<ul>
+<li><code>input()</code> always returns a string.</li>
+<li><code>int(...)</code> raises <code>ValueError</code> if conversion fails.</li>
+<li>handle and continue loop; do not crash.</li>
+</ul>
+<h3 id="file-error-pattern">File error pattern</h3>
+<pre><code class="language-python">try:
+    with DATA_FILE.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as file:
+        raw = json.load(file)
+except FileNotFoundError:
+    raw = []
+except json.JSONDecodeError:
+    print(&quot;Invalid JSON. Starting empty.&quot;)
+    raw = []
+</code></pre>
+<p>Explain:</p>
+<ul>
+<li>missing file is normal on first run</li>
+<li>malformed JSON should not end program</li>
+<li>safe fallback is empty list</li>
+</ul>
+<h3 id="why-this-matters-in-real-software">Why this matters in real software</h3>
+<p>Say:</p>
+<blockquote>
+<p>“Your user doesn’t care that Python threw a traceback.
+Your user cares whether the app recovers gracefully.”</p>
+</blockquote>
+<p>This helps students see exceptions as UX design, not only technical requirement.</p>
+<hr>
+<h2 id="instructor-triage-guide-for-different-student-profiles">Instructor triage guide for different student profiles</h2>
+<h3 id="profile-1-fast-coder-unstable-architecture">Profile 1: fast coder, unstable architecture</h3>
+<p>Pattern:</p>
+<ul>
+<li>many functions, little testing</li>
+<li>no restart verification</li>
+</ul>
+<p>Coaching:</p>
+<blockquote>
+<p>“Freeze feature work.
+Run a clean proof: add, save, restart, verify.
+If this fails, features are irrelevant.”</p>
+</blockquote>
+<h3 id="profile-2-cautious-coder-slow-but-clean">Profile 2: cautious coder, slow but clean</h3>
+<p>Pattern:</p>
+<ul>
+<li>good structure</li>
+<li>hesitant confidence</li>
+</ul>
+<p>Coaching:</p>
+<blockquote>
+<p>“You are exactly on track.
+Finish one action, then run the completion checklist out loud.”</p>
+</blockquote>
+<h3 id="profile-3-overwhelmed-beginner">Profile 3: overwhelmed beginner</h3>
+<p>Pattern:</p>
+<ul>
+<li>uncertain where to start</li>
+<li>large blank file syndrome</li>
+</ul>
+<p>Coaching:</p>
+<p>Give explicit sequence:</p>
+<ol>
+<li>create folders/files</li>
+<li>write class with two fields</li>
+<li>write load function with missing-file fallback</li>
+<li>write save function</li>
+<li>write menu with add + exit</li>
+</ol>
+<p>Then:</p>
+<blockquote>
+<p>“Do not jump steps. Show me each step passing.”</p>
+</blockquote>
+<h3 id="profile-4-perfectionist-overmodeler">Profile 4: perfectionist overmodeler</h3>
+<p>Pattern:</p>
+<ul>
+<li>asks about enums, inheritance, complex indexing</li>
+</ul>
+<p>Coaching:</p>
+<blockquote>
+<p>“Great instincts for future refactor.
+For Hour 45, keep one class and simple JSON objects.
+We optimize only after baseline works.”</p>
+</blockquote>
+<hr>
+<h2 id="verification-script-you-can-perform-at-each-desk">Verification script you can perform at each desk</h2>
+<p>Use this exact script to ensure consistent grading and feedback:</p>
+<ol>
+<li>“Please run your app from terminal.”</li>
+<li>“Show me the menu.”</li>
+<li>“Enter invalid menu input once.”</li>
+<li>“Now perform your one CRUD action.”</li>
+<li>“Save and exit.”</li>
+<li>“Run again and prove the new item persists.”</li>
+<li>“Now tell me where class, storage, and action code live.”</li>
+</ol>
+<p>If all seven steps pass, student has met Hour 45 intent.</p>
+<hr>
+<h2 id="language-for-keeping-scope-tight-without-discouraging-ambition">Language for keeping scope tight without discouraging ambition</h2>
+<p>Students often have excellent ideas and want to implement all of them immediately.
+Use language that protects momentum while honoring their creativity:</p>
+<blockquote>
+<p>“That is a strong feature idea. Let’s log it in a ‘Next’ list so it is not lost.
+For this hour, finish your foundation first.”</p>
+<p>“Your idea is not being rejected; it is being scheduled.”</p>
+<p>“Stable core first, then expand.”</p>
+</blockquote>
+<p>This framing reduces resistance and improves execution quality.</p>
+<hr>
+<h2 id="rubric-aligned-feedback-phrases-fast-grading-comments">Rubric-aligned feedback phrases (fast grading comments)</h2>
+<p>Use these short comments in live feedback:</p>
+<ul>
+<li>“Meets structure requirement: modules are clearly separated.”</li>
+<li>“Class exists and is serialized correctly.”</li>
+<li>“Good recovery path when JSON is missing.”</li>
+<li>“Menu loop is robust against non-numeric input.”</li>
+<li>“One CRUD action works end to end.”</li>
+<li>“Scope is controlled; MVP achieved.”</li>
+</ul>
+<p>If not yet complete:</p>
+<ul>
+<li>“Feature ambition is high, but MVP evidence is incomplete.”</li>
+<li>“Need restart proof for persistence.”</li>
+<li>“Need explicit file-error handling.”</li>
+<li>“Need class usage, not only dictionary objects.”</li>
+</ul>
+<hr>
+<h2 id="reinforcement-what-success-looks-like-at-end-of-hour-45">Reinforcement: what success looks like at end of Hour 45</h2>
+<p>At the end of this hour, a successful student project should feel like this:</p>
+<ul>
+<li>small codebase</li>
+<li>clear file boundaries</li>
+<li>predictable terminal behavior</li>
+<li>recoverable error paths</li>
+<li>persistent data that survives restart</li>
+</ul>
+<p>It may still feel basic. That is expected and correct.</p>
+<p>Say explicitly:</p>
+<blockquote>
+<p>“If your app is simple and reliable, you won this hour.”</p>
+</blockquote>
+<hr>
+<h2 id="end-of-hour-wrap-script-last-23-minutes">End-of-hour wrap script (last 2–3 minutes)</h2>
+<p>Bring class attention back. Ask for quick demos from 1–2 volunteers:</p>
+<ul>
+<li>run menu</li>
+<li>add one item</li>
+<li>save and exit</li>
+<li>restart and confirm persistence</li>
+</ul>
+<p>Then summarize:</p>
+<blockquote>
+<p>“Today was about architecture discipline.
+You now have a working capstone core: structure, persistence, one action.
+That foundation is what makes next hour productive.”</p>
+</blockquote>
+<p>Reinforce confidence:</p>
+<blockquote>
+<p>“If your app starts cleanly, handles errors, and saves data, you are doing real software engineering.”</p>
+</blockquote>
+<hr>
+<h2 id="instructor-pacing-recovery-plan-if-timing-drifts">Instructor pacing recovery plan (if timing drifts)</h2>
+<p>Use this when the room falls behind so you still finish Hour 45 objectives without scope drift.</p>
+<p>If talk points overrun:</p>
+<ul>
+<li>compress examples to one concrete theme (tasks)</li>
+<li>keep only one module-boundary explanation</li>
+<li>move deeper design discussion to Hour 46</li>
+</ul>
+<p>If demo overrun happens:</p>
+<ul>
+<li>show one shortest happy path only: launch -&gt; add -&gt; save -&gt; restart -&gt; verify</li>
+<li>skip extra commentary and narrate only required checks</li>
+<li>publish the remaining demo notes in chat or LMS for later reading</li>
+</ul>
+<p>If lab support load is high:</p>
+<ul>
+<li>run a 2-minute stop-and-fix pulse every 8-10 minutes</li>
+<li>ask students to show menu loop and file path first before debugging features</li>
+<li>require each team to prove one completed gate before asking for optional help</li>
+</ul>
+<p>Use this closing line when recovering:</p>
+<blockquote>
+<p>"We are protecting the MVP milestone first. A stable base today gives you speed tomorrow."</p>
+</blockquote>
+<hr>
+<h2 id="quick-check-exit-ticket">Quick check / exit ticket</h2>
+<p>Ask every student:</p>
+<p><strong>“What’s your MVP feature set?”</strong></p>
+<p>Expected strong answers sound like:</p>
+<ul>
+<li>“My app can load data, show a menu, add one item, and save to JSON.”</li>
+<li>“If the JSON file is missing, it starts with empty data.”</li>
+<li>“I split logic across modules and use one class for data objects.”</li>
+</ul>
+<p>If a student answers with broad future plans (“I’ll build reminders, tags, and export”), redirect:</p>
+<blockquote>
+<p>“Good future ideas. Now restate your Hour 45 MVP only.”</p>
+</blockquote>
+<hr>
+<h2 id="instructor-note-for-scope-control">Instructor note for scope control</h2>
+<p>Stay strictly inside Hour 45 objectives:</p>
+<ul>
+<li>requirements clarity</li>
+<li>skeleton architecture</li>
+<li>first working flow</li>
+</ul>
+<p>Do <strong>not</strong> let this hour become a full feature sprint or polish session.
+Students should leave with reliable groundwork, not feature overload.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#hour-intent-and-instructor-framing" class="depth-2">Hour intent and instructor framing</a></li>
+<li><a href="#outcomes-align-to-runbook-hour-45" class="depth-2">Outcomes (align to runbook Hour 45)</a></li>
+<li><a href="#suggested-pacing-map-60-minutes" class="depth-2">Suggested pacing map (60 minutes)</a></li>
+<li><a href="#instructor-opening-script-first-5-minutes" class="depth-2">Instructor opening script (first 5 minutes)</a></li>
+<li><a href="#talk-points-block-1015-minutes" class="depth-2">Talk points block (10–15 minutes)</a></li>
+<li><a href="#1-capstone-spec-review-clear-concrete-non-negotiable" class="depth-3">1) Capstone spec review (clear, concrete, non-negotiable)</a></li>
+<li><a href="#required-for-hour-45" class="depth-3">Required for Hour 45</a></li>
+<li><a href="#2-mvp-first-principle-the-mindset-for-successful-capstones" class="depth-3">2) MVP-first principle (the mindset for successful capstones)</a></li>
+<li><a href="#3-file-layout-mainpy-modules" class="depth-3">3) File layout: main.py + modules</a></li>
+<li><a href="#4-what-one-crud-action-means-in-this-hour" class="depth-3">4) What “one CRUD action” means in this hour</a></li>
+<li><a href="#5-common-pitfalls-preemptive-coaching" class="depth-3">5) Common pitfalls (preemptive coaching)</a></li>
+<li><a href="#live-demo-script-510-minutes-scaffold-menu-load-data-one-action-save" class="depth-2">Live demo script (5–10 minutes): scaffold menu + load data + one action + save</a></li>
+<li><a href="#demo-objective" class="depth-3">Demo objective</a></li>
+<li><a href="#step-0-show-expected-folder-structure" class="depth-3">Step 0: show expected folder structure</a></li>
+<li><a href="#step-1-organizermodelspy-at-least-one-class" class="depth-3">Step 1: organizer/models.py (at least one class)</a></li>
+<li><a href="#step-2-organizerstoragepy-json-persistence-file-error-handling" class="depth-3">Step 2: organizer/storage.py (JSON persistence + file error handling)</a></li>
+<li><a href="#step-3-organizeractionspy-one-crud-action-create" class="depth-3">Step 3: organizer/actions.py (one CRUD action: Create)</a></li>
+<li><a href="#step-4-mainpy-menu-loop-input-handling-save" class="depth-3">Step 4: main.py (menu loop + input handling + save)</a></li>
+<li><a href="#step-5-quick-deterministic-run-show-evidence" class="depth-3">Step 5: quick deterministic run (show evidence)</a></li>
+<li><a href="#hands-on-lab-2535-minutes-cli-personal-organizer-mvp" class="depth-2">Hands-on lab (25–35 minutes): CLI Personal Organizer MVP</a></li>
+<li><a href="#student-prompt-say-this-clearly" class="depth-3">Student prompt (say this clearly)</a></li>
+<li><a href="#theme-choice-options" class="depth-3">Theme choice options</a></li>
+<li><a href="#non-negotiable-constraints" class="depth-3">Non-negotiable constraints</a></li>
+<li><a href="#deliverable-this-hour" class="depth-3">Deliverable this hour</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#lab-facilitation-guide-what-to-say-while-students-work" class="depth-2">Lab facilitation guide (what to say while students work)</a></li>
+<li><a href="#minute-05-of-lab-lock-in-scope" class="depth-3">Minute 0–5 of lab: lock in scope</a></li>
+<li><a href="#minute-512-scaffold-folders-and-files" class="depth-3">Minute 5–12: scaffold folders and files</a></li>
+<li><a href="#minute-1220-implement-class-storage" class="depth-3">Minute 12–20: implement class + storage</a></li>
+<li><a href="#minute-2028-menu-loop-one-action" class="depth-3">Minute 20–28: menu loop + one action</a></li>
+<li><a href="#minute-2835-stabilize-and-verify" class="depth-3">Minute 28–35: stabilize and verify</a></li>
+<li><a href="#guidance-you-can-give-without-taking-over-student-code" class="depth-2">Guidance you can give without taking over student code</a></li>
+<li><a href="#theme-specific-starter-schemas-keep-simple" class="depth-2">Theme-specific starter schemas (keep simple)</a></li>
+<li><a href="#tasks-schema" class="depth-3">Tasks schema</a></li>
+<li><a href="#contacts-schema" class="depth-3">Contacts schema</a></li>
+<li><a href="#notes-schema" class="depth-3">Notes schema</a></li>
+<li><a href="#reference-implementation-pattern-students-can-adapt-by-theme" class="depth-2">Reference implementation pattern (students can adapt by theme)</a></li>
+<li><a href="#organizermodelspy" class="depth-3">organizer/models.py</a></li>
+<li><a href="#organizerstoragepy" class="depth-3">organizer/storage.py</a></li>
+<li><a href="#organizeractionspy" class="depth-3">organizer/actions.py</a></li>
+<li><a href="#mainpy" class="depth-3">main.py</a></li>
+<li><a href="#instructor-qa-checklist-during-lab" class="depth-2">Instructor QA checklist during lab</a></li>
+<li><a href="#structure-checks" class="depth-3">Structure checks</a></li>
+<li><a href="#behavior-checks" class="depth-3">Behavior checks</a></li>
+<li><a href="#code-quality-checks-hour-45-level" class="depth-3">Code quality checks (Hour 45 level)</a></li>
+<li><a href="#common-pitfalls-and-intervention-scripts" class="depth-2">Common pitfalls and intervention scripts</a></li>
+<li><a href="#pitfall-1-overbuilding-before-mvp-works" class="depth-3">Pitfall 1: Overbuilding before MVP works</a></li>
+<li><a href="#pitfall-2-complex-data-model-too-early" class="depth-3">Pitfall 2: Complex data model too early</a></li>
+<li><a href="#pitfall-3-everything-in-mainpy" class="depth-3">Pitfall 3: Everything in main.py</a></li>
+<li><a href="#pitfall-4-input-assumptions" class="depth-3">Pitfall 4: Input assumptions</a></li>
+<li><a href="#pitfall-5-save-path-not-tested" class="depth-3">Pitfall 5: Save path not tested</a></li>
+<li><a href="#optional-extension-basics-scope-add-a-basic-search-feature-early" class="depth-2">Optional extension (Basics scope): add a basic search feature early</a></li>
+<li><a href="#full-speaking-script-expanded-near-verbatim-delivery" class="depth-2">Full speaking script (expanded, near-verbatim delivery)</a></li>
+<li><a href="#segment-a-transition-into-capstone-mindset" class="depth-3">Segment A: transition into capstone mindset</a></li>
+<li><a href="#segment-b-spec-to-code-translation" class="depth-3">Segment B: spec-to-code translation</a></li>
+<li><a href="#segment-c-mvp-first-boundary-setting" class="depth-3">Segment C: MVP-first boundary setting</a></li>
+<li><a href="#segment-d-module-architecture-explanation" class="depth-3">Segment D: module architecture explanation</a></li>
+<li><a href="#segment-e-pre-lab-confidence-reset" class="depth-3">Segment E: pre-lab confidence reset</a></li>
+<li><a href="#planning-worksheet-you-can-run-live-5-minutes-before-coding" class="depth-2">Planning worksheet you can run live (5 minutes before coding)</a></li>
+<li><a href="#additional-deterministic-demo-variants-if-students-use-different-themes" class="depth-2">Additional deterministic demo variants (if students use different themes)</a></li>
+<li><a href="#contacts-class-variant" class="depth-3">Contacts class variant</a></li>
+<li><a href="#notes-class-variant" class="depth-3">Notes class variant</a></li>
+<li><a href="#menu-wording-adaptation-examples" class="depth-3">Menu wording adaptation examples</a></li>
+<li><a href="#error-handling-mini-lesson-embedded-during-lab-support" class="depth-2">Error-handling mini-lesson (embedded during lab support)</a></li>
+<li><a href="#input-error-pattern" class="depth-3">Input error pattern</a></li>
+<li><a href="#file-error-pattern" class="depth-3">File error pattern</a></li>
+<li><a href="#why-this-matters-in-real-software" class="depth-3">Why this matters in real software</a></li>
+<li><a href="#instructor-triage-guide-for-different-student-profiles" class="depth-2">Instructor triage guide for different student profiles</a></li>
+<li><a href="#profile-1-fast-coder-unstable-architecture" class="depth-3">Profile 1: fast coder, unstable architecture</a></li>
+<li><a href="#profile-2-cautious-coder-slow-but-clean" class="depth-3">Profile 2: cautious coder, slow but clean</a></li>
+<li><a href="#profile-3-overwhelmed-beginner" class="depth-3">Profile 3: overwhelmed beginner</a></li>
+<li><a href="#profile-4-perfectionist-overmodeler" class="depth-3">Profile 4: perfectionist overmodeler</a></li>
+<li><a href="#verification-script-you-can-perform-at-each-desk" class="depth-2">Verification script you can perform at each desk</a></li>
+<li><a href="#language-for-keeping-scope-tight-without-discouraging-ambition" class="depth-2">Language for keeping scope tight without discouraging ambition</a></li>
+<li><a href="#rubric-aligned-feedback-phrases-fast-grading-comments" class="depth-2">Rubric-aligned feedback phrases (fast grading comments)</a></li>
+<li><a href="#reinforcement-what-success-looks-like-at-end-of-hour-45" class="depth-2">Reinforcement: what success looks like at end of Hour 45</a></li>
+<li><a href="#end-of-hour-wrap-script-last-23-minutes" class="depth-2">End-of-hour wrap script (last 2–3 minutes)</a></li>
+<li><a href="#instructor-pacing-recovery-plan-if-timing-drifts" class="depth-2">Instructor pacing recovery plan (if timing drifts)</a></li>
+<li><a href="#quick-check-exit-ticket" class="depth-2">Quick check / exit ticket</a></li>
+<li><a href="#instructor-note-for-scope-control" class="depth-2">Instructor note for scope control</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day12_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day12_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

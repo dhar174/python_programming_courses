@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 1, Hour 1: Advanced Kickoff, Baseline Diagnostic, and Git Workflow | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="1">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day1_Hour1_Advanced.md">
+
+    <link rel="next" href="Day1_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="1" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-01/index.html">Day 1</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 1, Hour 1: Advanced Kickoff, Baseline Diagnostic, and Git Workflow</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 1</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button is-disabled" data-lecture-prev data-variant="secondary" rel="prev" aria-disabled="true">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day1_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 1, Hour 1 of 48</li>
+<li><strong>Focus</strong>: Advanced kickoff, baseline diagnostic, LogicalLabs/CHOICE launch, project folder setup, and first Git workflow.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 1, Hour 1.</li>
+<li><strong>Prerequisites</strong>: Students should be comfortable with basic Python syntax, variables, conditionals, loops, functions, dictionaries, simple classes, basic exception handling, and basic file I/O.</li>
+<li><strong>Advanced trajectory</strong>: This course moves learners from a PCAP-level foundation toward PCPP1-style habits: readable design, object-oriented structure, persistence, testing, maintainability, and professional workflow.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has launched the lab, confirmed file persistence, created a project workspace, initialized Git, run a diagnostic script, and made an initial commit or saved the repository locally.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Welcome and advanced framing</td>
+<td style="text-align: right;">5 min</td>
+<td>Set expectations and connect Basics to Advanced</td>
+</tr>
+<tr>
+<td>LogicalLabs/CHOICE launch and persistence briefing</td>
+<td style="text-align: right;">7 min</td>
+<td>Prevent lab loss and confusion before work begins</td>
+</tr>
+<tr>
+<td>Git workflow concept briefing</td>
+<td style="text-align: right;">6 min</td>
+<td>Establish the course workflow: clone or init, pull, change, stage, commit, optionally push</td>
+</tr>
+<tr>
+<td>Live demo: workspace, diagnostic, first commit</td>
+<td style="text-align: right;">12 min</td>
+<td>Model the exact steps learners will repeat</td>
+</tr>
+<tr>
+<td>Guided lab: setup and baseline diagnostic</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners create their environment and prove readiness</td>
+</tr>
+<tr>
+<td>Debrief, completion criteria, quick check</td>
+<td style="text-align: right;">5 min</td>
+<td>Confirm outcomes and prepare for Hour 2</td>
+</tr>
+</tbody>
+</table>
+<p>Adjust the timing based on the room, but keep this as a one-hour delivery plan. If login or browser pop-up issues take longer than expected, protect the 25-minute guided lab by trimming the opening discussion, not by skipping the Save and Suspend explanation.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain how the Advanced course will use lectures, labs, and capstone milestones.</li>
+<li>Describe the difference between saving a file and saving the full lab session state.</li>
+<li>Launch the LogicalLabs/CHOICE lab environment and identify the Save and Suspend control.</li>
+<li>Create a project folder with the standard course subfolders: <code>src/</code>, <code>tests/</code>, <code>data/</code>, and <code>reports/</code>.</li>
+<li>Initialize a Git repository and explain the difference between the working tree, staging area, and commit history.</li>
+<li>Run a deterministic <code>diagnostic.py</code> script that exercises a class, a dictionary, file write/read, and exception handling.</li>
+<li>Make an initial Git commit using a clear commit message.</li>
+<li>State one personal learning goal for the first week of Advanced Python.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Confirm the LogicalLabs/CHOICE course lab is available and opens in a new browser tab.</li>
+<li>Confirm pop-ups are allowed in your instructor browser, so you can demonstrate the expected behavior.</li>
+<li>Confirm the lab workspace includes a working terminal, editor, Python 3, and Git.</li>
+<li>Run the instructor preflight commands before class:</li>
+</ul>
+<pre><code class="language-bash">python --version
+pip --version
+git --version
+python -c &quot;import sqlite3&quot;
+</code></pre>
+<ul>
+<li>If the lab image is expected to include course packages, also verify the imports that later sessions will rely on:</li>
+</ul>
+<pre><code class="language-bash">python -c &quot;import requests, flask, pytest, pandas, matplotlib&quot;
+</code></pre>
+<ul>
+<li>If one or more course packages are not installed yet, note that for learners. Do not troubleshoot all future package installs during Hour 1 unless the lab policy says those packages must already be available.</li>
+<li>Prepare to show the Save and Suspend button. Do not assume learners have seen it before.</li>
+<li>Keep this script open in a separate instructor window, not inside the learner demo workspace if possible.</li>
+<li>Decide whether the local terminal command should be <code>python diagnostic.py</code> or <code>python3 diagnostic.py</code> in the lab. Use the one that works in the environment. If both work, use <code>python diagnostic.py</code> for consistency with the course files.</li>
+<li>Be ready to support path confusion. Many early issues in remote labs are not Python issues; they are "I am in the wrong folder" issues.</li>
+</ul>
+<p>Suggested board note before the session starts:</p>
+<pre><code class="language-text">Day 1 Hour 1 goals:
+1. Launch lab
+2. Save file vs Save and Suspend
+3. Create project folder
+4. Run diagnostic.py
+5. Make first Git commit
+</code></pre>
+<hr>
+<h2 id="opening-script-welcome-to-advanced-python-5-minutes">Opening Script: Welcome to Advanced Python (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Welcome to Advanced Python. I am glad you are here. If you completed the Basics course or already have equivalent experience, you have the tools to write Python programs that run. In this course, we are going to focus on writing Python programs that are easier to understand, easier to change, easier to test, and easier to grow."</p>
+<p>"That is the main difference between beginner Python and advanced Python. Beginner Python often asks, 'Can I make this work?' Advanced Python also asks, 'Can another developer understand this? Can I test it? Can I extend it next week without breaking it? Can I explain why this design is reasonable?'"</p>
+<p>"This course is not about memorizing every corner of the language. It is about building professional habits. We will still write a lot of code, but we will also talk about structure, naming, responsibility, validation, testing, persistence, and workflow. Those are the habits that move you from a PCAP-level foundation toward the style of thinking expected in PCPP1-level work."</p>
+<p>"Our course rhythm is simple: we will use short lecture segments, live demos, guided labs, and capstone milestones. You will repeatedly build small pieces of a larger tracker-style application. Over time, that application will include object-oriented design, file and database persistence, a user interface, APIs or service boundaries where appropriate, testing, and packaging. Today is not about building all of that. Today is about making sure our environment works and our workflow is reliable."</p>
+<p>Pause and ask:</p>
+<p>"Before we do anything technical, what makes code feel 'advanced' to you? Is it more syntax, larger programs, cleaner design, better tests, or something else?"</p>
+<p>Take two or three short answers. Then connect them:</p>
+<p>"Those are all useful answers. In this course, advanced does not mean 'clever.' Advanced means intentional. We want code that communicates clearly."</p>
+<p><strong>Set expectations</strong></p>
+<p>"You will make mistakes in this course. That is expected. A traceback is not a personal failure. A Git mistake is not a disaster. A file path issue is not a sign that you are behind. These are normal parts of software development. Our job is to slow down, read the evidence, and fix the smallest thing that is actually broken."</p>
+<p>"The first hour is a setup and baseline diagnostic hour. I am not grading you on whether you remember every detail from Basics. I am looking for signals. Can your environment run Python? Can you create folders and files? Can you use a class, a dictionary, a file, and a try/except block? Can you make a Git commit? If yes, you are ready for the next hour. If not, we will find the issue now, before the work gets larger."</p>
+<hr>
+<h2 id="concept-briefing-course-workflow-and-advanced-expectations-5-minutes">Concept Briefing: Course Workflow and Advanced Expectations (5 minutes)</h2>
+<p>Use this section to establish the mental model for the course.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"Here is the workflow we will repeat across Advanced Python."</p>
+<ol>
+<li>"First, we clarify the problem. What are we trying to build or improve?"</li>
+<li>"Second, we choose a small design. What data do we need? What class or function owns which responsibility?"</li>
+<li>"Third, we implement a small piece. Not the whole app at once. A small piece."</li>
+<li>"Fourth, we run it. We read errors carefully."</li>
+<li>"Fifth, we save our progress with Git."</li>
+<li>"Sixth, when appropriate, we test it and improve it."</li>
+</ol>
+<p>"If you only take one habit from today, take this: work in small steps and commit working checkpoints. Do not wait until you have three hours of changes before you commit. A commit is a safe checkpoint in your project history."</p>
+<p><strong>Bridge from Basics</strong></p>
+<p>"In Basics, you probably wrote scripts where everything lived in one file. That is fine for learning syntax. In Advanced, we will start separating responsibilities. A file may contain a class. Another file may contain tests. Another file may contain data. Another file may contain application startup logic. That separation is why our project folder matters."</p>
+<p>"Today's folder structure is intentionally simple:"</p>
+<pre><code class="language-text">advanced_tracker/
+    src/
+    tests/
+    data/
+    reports/
+</code></pre>
+<p>"The <code>src</code> folder is where application code will eventually go. The <code>tests</code> folder is where tests will eventually go. The <code>data</code> folder is where small local data files can live during labs. The <code>reports</code> folder is where generated outputs can live. We are not using all of these deeply in Hour 1, but we are creating the habit now."</p>
+<hr>
+<h2 id="logicallabschoice-launch-and-persistence-briefing-7-minutes">LogicalLabs/CHOICE Launch and Persistence Briefing (7 minutes)</h2>
+<p>This is one of the most important parts of the hour. Learners can lose time and confidence if they misunderstand how the remote lab persists work.</p>
+<p><strong>Instructor action cue</strong></p>
+<p>Share your screen. Open the CHOICE/LogicalLabs launcher. Start the assigned lab. Narrate slowly.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"We are using the LogicalLabs environment through CHOICE. When you launch a lab, it may open in a new browser tab. If nothing appears to happen, do not immediately click ten more times. First, check whether your browser blocked a pop-up. Look near the address bar for a pop-up warning. Allow pop-ups for the lab site if needed."</p>
+<p>"Once the lab opens, you are working in a remote environment. It may look like a normal desktop or browser-based IDE, but it is a lab session. That means there are two kinds of saving we must understand."</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Ctrl+S or File Save = saves the current file
+Save and Suspend = saves the full lab session state
+</code></pre>
+<p>"Saving a file means the contents of that file are written to disk inside the lab. For example, if I type a line into <code>diagnostic.py</code> and press Ctrl+S, the file is saved."</p>
+<p>"Saving the lab session state is different. If you are ending for the day, or stepping away for more than about 15 minutes, you must use Save and Suspend. Save and Suspend preserves the whole lab state so you can return later."</p>
+<p><strong>Instructor action cue</strong></p>
+<p>Create a quick file in the editor named <code>course_preflight_demo.txt</code>, type one line, save it, close the editor tab, reopen the file, and show that the file contents are still present.</p>
+<p>Use this exact simple content:</p>
+<pre><code class="language-text">Instructor preflight demo
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"This demonstrates file saving. The file is still here after closing and reopening the editor pane. But this is not the same as suspending the lab. If I am finished for the day or taking a long break, I also need Save and Suspend."</p>
+<p><strong>Instructor action cue</strong></p>
+<p>Point to the Save and Suspend control in the lab launcher or lab interface. Do not click it if clicking would end your demo unless you know it is safe. Just show where it is.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"Please remember this phrase: file save protects the file; Save and Suspend protects the session. If you ask me later, 'I saved my file, why is my lab gone?' this distinction is usually where we start."</p>
+<p><strong>Ask for confirmation</strong></p>
+<p>"Everyone, before we continue, please locate the Save and Suspend control in your own lab. You do not need to click it right now. Just point to it or give me a thumbs-up when you know where it is."</p>
+<p>Wait long enough for learners to actually locate it. This may feel slow, but it prevents bigger issues later.</p>
+<hr>
+<h2 id="concept-briefing-git-workflow-for-this-course-6-minutes">Concept Briefing: Git Workflow for This Course (6 minutes)</h2>
+<p>Keep this beginner-friendly. This hour is not a full Git course.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now we are going to use Git. Git is version control. It records snapshots of your project over time. In this course, Git gives us a reliable way to save checkpoints and recover from experiments."</p>
+<p>"There are six Git words I want you to understand today. We will use only a few deeply today, but you should recognize all six because they appear in the course workflow."</p>
+<pre><code class="language-text">Clone: copy a remote repository to your lab workspace
+Pull: bring remote changes into your local repository before you work
+Working tree: the files you are editing right now
+Staging area: the list of changes you plan to include in the next commit
+Commit: a saved checkpoint in local Git history
+Push: sending local commits to a remote repository such as GitHub
+</code></pre>
+<p>"A common beginner misunderstanding is that <code>git add</code> saves the project permanently. It does not. <code>git add</code> stages changes. The commit is the local checkpoint. If a remote repository is configured, <code>git push</code> sends that checkpoint to the remote."</p>
+<p>"If your instructor gives you a repository URL, the first command is usually <code>git clone URL</code>, then <code>git pull</code> before you start new work. If the lab starts from an empty folder, as this demo does, the first command is <code>git init</code>. Both flows are valid; the key is to know whether you are starting from a provided repository or creating a new local one."</p>
+<pre><code class="language-bash"># Provided repository flow
+git clone REPOSITORY_URL
+cd REPOSITORY_FOLDER
+git pull
+
+# Empty-folder flow for today's demo
+git init
+</code></pre>
+<p>"For Hour 1, the required workflow is simple:"</p>
+<pre><code class="language-bash">git status
+git add diagnostic.py data/diagnostic_report.txt src/.gitkeep tests/.gitkeep reports/.gitkeep
+git commit -m &quot;chore: initial setup&quot;
+git status
+</code></pre>
+<p>"If your environment already has a remote repository configured, you may also push. If it does not, do not panic. The runbook allows the first commit to be pushed or saved locally. The important thing today is that the repository exists and has at least one commit."</p>
+<p>"We may use branches later. Branching is a powerful professional habit, but it is optional today. Today we are focusing on the first reliable local checkpoint."</p>
+<p><strong>Mini-check</strong></p>
+<p>Ask:</p>
+<p>"What is the difference between <code>git add</code> and <code>git commit</code>?"</p>
+<p>Expected answer:</p>
+<p>"<code>git add</code> stages changes for the next checkpoint. <code>git commit</code> creates the checkpoint in local history."</p>
+<p>If students answer "add saves it," gently correct:</p>
+<p>"That is a very common first guess. <code>git add</code> prepares the snapshot. <code>git commit</code> records it."</p>
+<hr>
+<h2 id="live-demo-project-folder-diagnostic-script-and-first-commit-12-minutes">Live Demo: Project Folder, Diagnostic Script, and First Commit (12 minutes)</h2>
+<p>This demo should be direct and reproducible. Type the commands rather than pasting everything instantly if time allows. The purpose is to model pace and habits.</p>
+<h3 id="demo-step-1-create-the-project-folder">Demo Step 1: Create the project folder</h3>
+<p><strong>Instructor action cue</strong></p>
+<p>Open a terminal in the lab workspace. Run:</p>
+<pre><code class="language-bash">pwd
+mkdir advanced_tracker
+cd advanced_tracker
+mkdir src tests data reports
+touch src/.gitkeep tests/.gitkeep reports/.gitkeep
+</code></pre>
+<p>If <code>pwd</code> is not available in the lab shell, use the environment's equivalent command. In many terminals used for these labs, <code>pwd</code> will work.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"I start with <code>pwd</code> because I want to know where I am. Many setup errors are path errors. If you create files in the wrong folder, Python and Git may appear broken even though they are fine."</p>
+<p>"Now I create a project folder called <code>advanced_tracker</code>. You can use this name, or if your instructor has given a specific naming convention, follow that convention. Inside it, I create four folders: <code>src</code>, <code>tests</code>, <code>data</code>, and <code>reports</code>. I also create small <code>.gitkeep</code> placeholder files in the folders that would otherwise be empty, because Git tracks files, not empty folders."</p>
+<p>Run:</p>
+<pre><code class="language-bash">ls
+</code></pre>
+<p>If <code>ls</code> is not available, use the file explorer or the environment's equivalent. Do not spend much time on shell differences. The key is that learners can see the folders.</p>
+<h3 id="demo-step-2-initialize-git">Demo Step 2: Initialize Git</h3>
+<p>Run:</p>
+<pre><code class="language-bash">git init
+git status
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"<code>git init</code> turns this folder into a Git repository. It creates the hidden Git metadata that stores history. Then I immediately run <code>git status</code>. <code>git status</code> is your friend. When you are unsure, run <code>git status</code> before guessing."</p>
+<p>"Right now, Git sees our placeholder files and any files we create during the demo. Git does not track empty folders by themselves, so the <code>.gitkeep</code> files are a simple way to preserve the intended project structure in the first commit."</p>
+<h3 id="demo-step-3-create-the-diagnostic-script">Demo Step 3: Create the diagnostic script</h3>
+<p><strong>Instructor action cue</strong></p>
+<p>Create a file named <code>diagnostic.py</code> in the project root, not inside <code>src</code> for this first diagnostic. Explain that later code may move into <code>src</code>, but today's diagnostic belongs at the root so learners can run it easily.</p>
+<p>Use this complete code:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+class LearnerProfile:
+    &quot;&quot;&quot;Small class used to confirm object creation and method calls.&quot;&quot;&quot;
+
+    def __init__(self, name: str, goal: str) -&gt; None:
+        self.name = name
+        self.goal = goal
+
+    def summary(self) -&gt; str:
+        return f&quot;{self.name} is practicing: {self.goal}&quot;
+
+
+def write_status_report(path: Path, profile: LearnerProfile, status: dict[str, str]) -&gt; None:
+    lines = [
+        &quot;Advanced Python Diagnostic&quot;,
+        profile.summary(),
+        f&quot;Python status: {status['python']}&quot;,
+        f&quot;Git status: {status['git']}&quot;,
+    ]
+    path.write_text(&quot;\n&quot;.join(lines) + &quot;\n&quot;, encoding=&quot;utf-8&quot;)
+
+
+def read_status_report(path: Path) -&gt; str:
+    return path.read_text(encoding=&quot;utf-8&quot;)
+
+
+def main() -&gt; None:
+    profile = LearnerProfile(
+        name=&quot;Advanced Learner&quot;,
+        goal=&quot;build readable, testable Python programs&quot;,
+    )
+    status = {
+        &quot;python&quot;: &quot;ready&quot;,
+        &quot;git&quot;: &quot;ready for first commit&quot;,
+    }
+    report_path = Path(&quot;data&quot;) / &quot;diagnostic_report.txt&quot;
+
+    try:
+        write_status_report(report_path, profile, status)
+        report_text = read_status_report(report_path)
+        print(report_text)
+        print(&quot;Diagnostic complete.&quot;)
+    except OSError as error:
+        print(f&quot;File operation failed: {error}&quot;)
+    except KeyError as error:
+        print(f&quot;Missing diagnostic status key: {error}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Instructor talk track while typing or reviewing</strong></p>
+<p>"This script is intentionally small, but it checks several important baseline skills."</p>
+<p>"First, it defines a class called <code>LearnerProfile</code>. The class has an initializer, stores attributes, and has a method named <code>summary</code>. That confirms we remember the basic shape of a Python class."</p>
+<p>"Second, it uses a dictionary named <code>status</code>. The dictionary has two string keys: <code>python</code> and <code>git</code>. We access those keys when building the report."</p>
+<p>"Third, it writes to a file and reads from a file using <code>pathlib</code>. We are using <code>Path('data') / 'diagnostic_report.txt'</code> so the output file lands inside the <code>data</code> folder we created."</p>
+<p>"Fourth, it handles possible errors. If the file operation fails, we catch <code>OSError</code>. If a dictionary key is missing, we catch <code>KeyError</code>. We are not using a broad <code>except Exception</code> here because one advanced habit is to catch the errors we actually expect when we can."</p>
+<p>"Fifth, the script is deterministic. It does not ask for input. It does not depend on the current date or a random value. If the environment is working, it should produce the same kind of output every time."</p>
+<h3 id="demo-step-4-run-the-diagnostic">Demo Step 4: Run the diagnostic</h3>
+<p>Run:</p>
+<pre><code class="language-bash">python diagnostic.py
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Advanced Python Diagnostic
+Advanced Learner is practicing: build readable, testable Python programs
+Python status: ready
+Git status: ready for first commit
+
+Diagnostic complete.
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"The exact blank line before 'Diagnostic complete' is okay. The report text ends with a newline, and then we print another line. The important part is that the script ran, wrote a file, read the file, printed the contents, and finished without a traceback."</p>
+<p>Run:</p>
+<pre><code class="language-bash">ls data
+</code></pre>
+<p>Point out <code>diagnostic_report.txt</code>.</p>
+<h3 id="demo-step-5-make-the-first-commit">Demo Step 5: Make the first commit</h3>
+<p>Run:</p>
+<pre><code class="language-bash">git status
+git add diagnostic.py data/diagnostic_report.txt src/.gitkeep tests/.gitkeep reports/.gitkeep
+git status
+git commit -m &quot;chore: initial setup&quot;
+git status
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"Notice the order. I check status before staging. I stage the files I want. I check status again. Then I commit with a short message. The message <code>chore: initial setup</code> is not magic. It is just clear. It says this commit is setup work, not a feature."</p>
+<p>"For today's lab, it is also acceptable to use <code>git add .</code> if you are sure you are in the project folder and only have relevant files. I am showing explicit file names to reinforce awareness."</p>
+<p>"After the commit, <code>git status</code> should say that there is nothing to commit or that the working tree is clean. If it does not, read the message. Git usually tells you what it sees."</p>
+<h3 id="demo-step-6-optional-push-explanation">Demo Step 6: Optional push explanation</h3>
+<p>Only do this if a remote is configured and appropriate in your environment. Otherwise explain verbally.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"If a remote repository is configured, pushing would look like this:"</p>
+<pre><code class="language-bash">git push
+</code></pre>
+<p>"If Git says there is no remote, that is not a Python problem and it is not a failure for this hour. The completion standard for today is at least one commit pushed or saved locally, depending on the lab setup."</p>
+<hr>
+<h2 id="guided-practice-lab-setup-and-diagnostic-25-minutes">Guided Practice Lab: Setup and Diagnostic (25 minutes)</h2>
+<p>Read the lab prompt aloud, then keep it visible. Learners should work in their own lab environment while you circulate.</p>
+<h3 id="lab-prompt-for-learners">Lab Prompt for Learners</h3>
+<p>"Your task is to create a reliable starting point for Advanced Python. You will prove that you can use the lab environment, create files, organize a project folder, run a baseline Python script, and save your work with Git."</p>
+<p>Complete these steps:</p>
+<ol>
+<li>Launch the assigned LogicalLabs/CHOICE lab. If it does not open, check for a blocked pop-up.</li>
+<li>Locate the Save and Suspend control. Do not use it yet unless you are stepping away.</li>
+<li>Create a file named <code>course_preflight.txt</code>.</li>
+<li>In <code>course_preflight.txt</code>, write:
+   - your name
+   - today's date
+   - the current time
+   - one sentence describing what you want to improve in Advanced Python</li>
+<li>Save the file. Close and reopen the editor pane to confirm the file is still visible.</li>
+<li>Create a project folder. Recommended name: <code>advanced_tracker</code>.</li>
+<li>Inside the project folder, create these subfolders:
+   - <code>src/</code>
+   - <code>tests/</code>
+   - <code>data/</code>
+   - <code>reports/</code></li>
+<li>Add <code>.gitkeep</code> placeholder files in <code>src/</code>, <code>tests/</code>, and <code>reports/</code> so Git can preserve the standard folder structure in the first commit.</li>
+<li>Initialize Git in the project folder.</li>
+<li>Create <code>diagnostic.py</code> in the project root.</li>
+<li>Write a diagnostic script that exercises:<ul>
+<li>a class</li>
+<li>a dictionary</li>
+<li>file write and read</li>
+<li>exception handling</li>
+</ul>
+</li>
+<li>Run the script successfully.</li>
+<li>Make a first commit with the message:</li>
+</ol>
+<pre><code class="language-bash">git commit -m &quot;chore: initial setup&quot;
+</code></pre>
+<ol start="14">
+<li>If your lab repository has a remote configured and your instructor asks you to push, push the commit. Otherwise, a local commit is enough for Hour 1.</li>
+</ol>
+<h3 id="student-starter-commands">Student Starter Commands</h3>
+<p>Learners may use these commands if the lab terminal supports them:</p>
+<pre><code class="language-bash">mkdir advanced_tracker
+cd advanced_tracker
+mkdir src tests data reports
+touch src/.gitkeep tests/.gitkeep reports/.gitkeep
+git init
+</code></pre>
+<p>Then after creating and running <code>diagnostic.py</code>:</p>
+<pre><code class="language-bash">python diagnostic.py
+git status
+git add diagnostic.py data/diagnostic_report.txt src/.gitkeep tests/.gitkeep reports/.gitkeep
+git commit -m &quot;chore: initial setup&quot;
+git status
+</code></pre>
+<h3 id="student-diagnostic-script-option">Student Diagnostic Script Option</h3>
+<p>Students may write their own diagnostic script, or use this version and personalize the <code>name</code> and <code>goal</code> fields:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+class LearnerProfile:
+    def __init__(self, name: str, goal: str) -&gt; None:
+        self.name = name
+        self.goal = goal
+
+    def summary(self) -&gt; str:
+        return f&quot;{self.name} is practicing: {self.goal}&quot;
+
+
+def main() -&gt; None:
+    profile = LearnerProfile(&quot;Your Name&quot;, &quot;your Advanced Python goal&quot;)
+    status = {&quot;python&quot;: &quot;ready&quot;, &quot;files&quot;: &quot;ready&quot;, &quot;git&quot;: &quot;ready for first commit&quot;}
+    report_path = Path(&quot;data&quot;) / &quot;diagnostic_report.txt&quot;
+
+    try:
+        report_path.write_text(
+            f&quot;{profile.summary()}\nStatus: {status['python']}\n&quot;,
+            encoding=&quot;utf-8&quot;,
+        )
+        print(report_path.read_text(encoding=&quot;utf-8&quot;))
+        print(f&quot;Dictionary check: {status['git']}&quot;)
+        print(&quot;Diagnostic complete.&quot;)
+    except OSError as error:
+        print(f&quot;Could not write or read the diagnostic file: {error}&quot;)
+    except KeyError as error:
+        print(f&quot;Missing expected key: {error}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Expected output will vary by learner name and goal, but it should include:</p>
+<pre><code class="language-text">Diagnostic complete.
+</code></pre>
+<p>The script should also create:</p>
+<pre><code class="language-text">data/diagnostic_report.txt
+</code></pre>
+<hr>
+<h2 id="instructor-circulation-guide">Instructor Circulation Guide</h2>
+<p>As learners work, circulate with a consistent pattern: environment, folder, Python, Git, reflection.</p>
+<h3 id="questions-to-ask-at-each-station">Questions to ask at each station</h3>
+<p>Ask one or two questions per learner. Avoid turning every check-in into a long private lecture.</p>
+<ol>
+<li>"Show me where your Save and Suspend control is."</li>
+<li>"What folder are you currently in?"</li>
+<li>"Where did you create <code>diagnostic.py</code>?"</li>
+<li>"What command did you use to run the script?"</li>
+<li>"What file did the script create?"</li>
+<li>"What does <code>git status</code> say right now?"</li>
+<li>"Did you commit yet, or only stage?"</li>
+<li>"What is your personal learning goal for this week?"</li>
+</ol>
+<h3 id="fast-diagnosis-flow">Fast diagnosis flow</h3>
+<p>If a learner is stuck, use this sequence:</p>
+<ol>
+<li>"Read the exact message on the screen."</li>
+<li>"What command did you just run?"</li>
+<li>"What folder are you in?"</li>
+<li>"What did you expect to happen?"</li>
+<li>"What is the smallest thing we can test next?"</li>
+</ol>
+<p>This models professional debugging. It also keeps you from immediately taking the keyboard and fixing everything for them.</p>
+<h3 id="what-to-praise">What to praise</h3>
+<p>Praise process, not just correct output:</p>
+<ul>
+<li>"Good job checking <code>git status</code> before guessing."</li>
+<li>"Nice, you read the traceback instead of deleting random code."</li>
+<li>"Good folder organization. That will help later."</li>
+<li>"I like that your commit message explains the checkpoint."</li>
+<li>"You used a specific exception type. That is an advanced habit."</li>
+</ul>
+<hr>
+<h2 id="common-pitfalls-and-how-to-respond">Common Pitfalls and How to Respond</h2>
+<h3 id="pitfall-1-pop-up-blocked-during-lab-launch">Pitfall 1: Pop-up blocked during lab launch</h3>
+<p><strong>Symptom</strong>: Student clicks launch, but no lab appears.</p>
+<p><strong>Instructor response</strong></p>
+<p>"Check the browser address bar for a pop-up blocked icon. The lab often opens in a new tab. Allow pop-ups for this site, then launch once more."</p>
+<p>Avoid letting the learner repeatedly click launch without checking the browser.</p>
+<h3 id="pitfall-2-confusing-file-save-with-save-and-suspend">Pitfall 2: Confusing file save with Save and Suspend</h3>
+<p><strong>Symptom</strong>: Student says, "I saved it, so I can close the lab, right?"</p>
+<p><strong>Instructor response</strong></p>
+<p>"You saved the file. That protects the file inside the current lab session. If you are ending for the day or stepping away for more than about 15 minutes, use Save and Suspend to preserve the session."</p>
+<p>Ask them to point to the Save and Suspend control again.</p>
+<h3 id="pitfall-3-wrong-working-directory">Pitfall 3: Wrong working directory</h3>
+<p><strong>Symptom</strong>: <code>python diagnostic.py</code> fails with a message like "No such file or directory."</p>
+<p><strong>Instructor response</strong></p>
+<p>"This is likely a folder location issue, not a Python issue. Run <code>pwd</code> and list the files in the current folder. We need to either move into the folder that contains <code>diagnostic.py</code> or run Python with the correct path."</p>
+<p>Useful commands:</p>
+<pre><code class="language-bash">pwd
+ls
+cd advanced_tracker
+python diagnostic.py
+</code></pre>
+<h3 id="pitfall-4-missing-data-folder">Pitfall 4: Missing <code>data</code> folder</h3>
+<p><strong>Symptom</strong>: The script fails when trying to write <code>data/diagnostic_report.txt</code>.</p>
+<p><strong>Instructor response</strong></p>
+<p>"The script expects a folder named <code>data</code>. Create that folder, then run the script again."</p>
+<p>Useful command:</p>
+<pre><code class="language-bash">mkdir data
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-bash">python diagnostic.py
+</code></pre>
+<h3 id="pitfall-5-wrong-python-command">Pitfall 5: Wrong Python command</h3>
+<p><strong>Symptom</strong>: <code>python diagnostic.py</code> is not recognized, or it runs the wrong version.</p>
+<p><strong>Instructor response</strong></p>
+<p>"Some environments use <code>python</code>, and some use <code>python3</code>. Try checking the version."</p>
+<p>Useful commands:</p>
+<pre><code class="language-bash">python --version
+python3 --version
+</code></pre>
+<p>Use whichever command reports Python 3 in the lab. Do not spend this hour teaching virtual environments in depth unless it is necessary.</p>
+<h3 id="pitfall-6-git-commit-fails-because-identity-is-not-configured">Pitfall 6: <code>git commit</code> fails because identity is not configured</h3>
+<p><strong>Symptom</strong>: Git asks for <code>user.name</code> and <code>user.email</code>.</p>
+<p><strong>Instructor response</strong></p>
+<p>"Git needs a name and email to label the commit. Use the identity format required by your course or lab. If no specific identity is required, use your training name and training email."</p>
+<p>Example:</p>
+<pre><code class="language-bash">git config user.name &quot;Your Name&quot;
+git config user.email &quot;your.name@example.com&quot;
+git commit -m &quot;chore: initial setup&quot;
+</code></pre>
+<p>If the course requires global configuration and the environment allows it, the commands may use <code>--global</code>, but local repository configuration is enough for this lab.</p>
+<h3 id="pitfall-7-student-runs-git-add-but-not-git-commit">Pitfall 7: Student runs <code>git add</code> but not <code>git commit</code></h3>
+<p><strong>Symptom</strong>: <code>git status</code> says changes are staged for commit.</p>
+<p><strong>Instructor response</strong></p>
+<p>"You have prepared the snapshot, but you have not recorded it yet. The next step is the commit."</p>
+<p>Command:</p>
+<pre><code class="language-bash">git commit -m &quot;chore: initial setup&quot;
+</code></pre>
+<h3 id="pitfall-8-broad-exception-handling-hides-useful-details">Pitfall 8: Broad exception handling hides useful details</h3>
+<p><strong>Symptom</strong>: Student uses <code>except Exception:</code> and prints only "error."</p>
+<p><strong>Instructor response</strong></p>
+<p>"That works as a rough safety net, but it hides the reason. In Advanced, we prefer specific exceptions when we know what might fail. For this script, <code>OSError</code> is useful for file problems, and <code>KeyError</code> is useful for missing dictionary keys."</p>
+<p>Encourage them to print the error object:</p>
+<pre><code class="language-python">except OSError as error:
+    print(f&quot;File operation failed: {error}&quot;)
+</code></pre>
+<hr>
+<h2 id="completion-criteria">Completion Criteria</h2>
+<p>Use these criteria to determine whether a learner has successfully completed Hour 1.</p>
+<p>Required:</p>
+<ul>
+<li>The learner can launch the LogicalLabs/CHOICE lab.</li>
+<li>The learner can identify the Save and Suspend control.</li>
+<li><code>course_preflight.txt</code> exists and contains name, date/time, and a personal goal or improvement statement.</li>
+<li>The project folder exists.</li>
+<li>The project folder contains <code>src/</code>, <code>tests/</code>, <code>data/</code>, and <code>reports/</code>.</li>
+<li>Git has been initialized in the project folder.</li>
+<li><code>diagnostic.py</code> exists in the project root.</li>
+<li>The diagnostic script runs successfully.</li>
+<li>The diagnostic script exercises:</li>
+<li>a class</li>
+<li>a dictionary</li>
+<li>file write/read</li>
+<li>exception handling</li>
+<li>At least one Git commit exists locally, or the commit has been pushed if the lab requires a remote.</li>
+</ul>
+<p>Recommended verification commands:</p>
+<pre><code class="language-bash">git status
+git log --oneline -1
+python diagnostic.py
+</code></pre>
+<p>Expected Git result:</p>
+<pre><code class="language-text">abc1234 chore: initial setup
+</code></pre>
+<p>The exact commit hash will differ for every learner.</p>
+<hr>
+<h2 id="optional-extensions-for-fast-finishers">Optional Extensions for Fast Finishers</h2>
+<p>Keep optional work inside the scope of Hour 1. Do not move ahead into Hour 2 class design yet unless the whole room is ready.</p>
+<h3 id="extension-1-add-a-gitignore">Extension 1: Add a <code>.gitignore</code></h3>
+<p>Create a <code>.gitignore</code> file in the project root:</p>
+<pre><code class="language-text">__pycache__/
+.venv/
+venv/
+*.db
+reports/
+</code></pre>
+<p>Then commit it:</p>
+<pre><code class="language-bash">git add .gitignore
+git commit -m &quot;chore: add gitignore&quot;
+</code></pre>
+<p>Instructor note: If the course expects generated reports to be submitted later, discuss whether <code>reports/</code> should be ignored. For Hour 1, this is optional and should not block completion.</p>
+<h3 id="extension-2-create-a-virtual-environment-if-allowed">Extension 2: Create a virtual environment if allowed</h3>
+<p>Only use this if the lab environment allows virtual environments and learners are not struggling with the main setup.</p>
+<pre><code class="language-bash">python -m venv .venv
+</code></pre>
+<p>Activation differs by shell and operating system. Do not make activation troubleshooting the center of this hour. If activation creates confusion, pause the extension and return to the required criteria.</p>
+<h3 id="extension-3-add-a-second-diagnostic-key">Extension 3: Add a second diagnostic key</h3>
+<p>Ask fast finishers to add one new key to the <code>status</code> dictionary, such as:</p>
+<pre><code class="language-python">&quot;course&quot;: &quot;Advanced Python&quot;
+</code></pre>
+<p>Then print it in the report and rerun the script.</p>
+<p>This reinforces dictionary access without introducing new tooling.</p>
+<hr>
+<h2 id="quick-checks-and-exit-ticket">Quick Checks and Exit Ticket</h2>
+<p>Use these during the final five minutes. You can ask verbally, use chat, or have learners write answers in their notes.</p>
+<h3 id="quick-check-1">Quick check 1</h3>
+<p><strong>Question</strong>: What is the difference between saving a file and using Save and Suspend?</p>
+<p><strong>Expected answer</strong>: Saving a file writes that file's contents to disk inside the lab. Save and Suspend preserves the full lab session state for returning later, especially at the end of the day or before breaks longer than about 15 minutes.</p>
+<h3 id="quick-check-2">Quick check 2</h3>
+<p><strong>Question</strong>: What is the difference between <code>git commit</code> and <code>git push</code>?</p>
+<p><strong>Expected answer</strong>: <code>git commit</code> saves a checkpoint in the local repository history. <code>git push</code> sends local commits to a remote repository such as GitHub.</p>
+<h3 id="quick-check-3">Quick check 3</h3>
+<p><strong>Question</strong>: In today's diagnostic script, why did we use a dictionary?</p>
+<p><strong>Expected answer</strong>: To confirm that we can store and retrieve values by key, which is a core Python skill used in configuration, JSON-like data, API responses, and many application structures.</p>
+<h3 id="quick-check-4">Quick check 4</h3>
+<p><strong>Question</strong>: Why is it useful for the diagnostic script to be deterministic?</p>
+<p><strong>Expected answer</strong>: A deterministic script gives predictable output, which makes environment problems easier to spot and debug.</p>
+<h3 id="exit-ticket-prompt">Exit ticket prompt</h3>
+<p>"Before you leave Hour 1, write one sentence answering this: What is one habit you want to practice in Advanced Python that will make your code more professional?"</p>
+<p>Examples:</p>
+<ul>
+<li>"I want to commit smaller working checkpoints."</li>
+<li>"I want to write clearer class responsibilities."</li>
+<li>"I want to read tracebacks more carefully."</li>
+<li>"I want to separate application logic from display code."</li>
+</ul>
+<hr>
+<h2 id="wrap-up-script">Wrap-Up Script</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's bring it back together. Today we did not try to build a full application. We did something more foundational: we created a reliable starting point. You launched the lab, confirmed how saving works, located Save and Suspend, created a project folder, initialized Git, ran a Python diagnostic, and made a first commit."</p>
+<p>"That may sound simple, but it is the base of the whole course. If your environment is unreliable, every later lesson feels harder. If your Git workflow is unclear, every experiment feels risky. If your baseline Python skills are rusty, larger object-oriented design will feel confusing. Today gives us a clean starting line."</p>
+<p>"Remember the three habits from this hour."</p>
+<pre><code class="language-text">Know where you are.
+Run small checks.
+Commit working checkpoints.
+</code></pre>
+<p>"Know where you are means check your folder. Run small checks means run the script before changing five more things. Commit working checkpoints means preserve progress when the project is in a known good state."</p>
+<p>"In the next hour, we will start moving from script thinking to design thinking. We will look at requirements and decide which classes should exist, what each object should know, and what each object should do. That is where Advanced Python begins to feel different from Basics: not just more code, but better organized code."</p>
+<p>"Before the break, if you are stepping away for more than about 15 minutes, use Save and Suspend. If you are staying in the lab for the next hour, keep your project open and be ready to build on it."</p>
+<hr>
+<h2 id="instructor-after-class-notes">Instructor After-Class Notes</h2>
+<p>After the hour, record any patterns you noticed:</p>
+<ul>
+<li>How many learners had lab launch or pop-up issues?</li>
+<li>How many learners confused file save with Save and Suspend?</li>
+<li>How many learners could commit without Git identity configuration?</li>
+<li>Which Python baseline skill seemed weakest: class syntax, dictionaries, file I/O, or exception handling?</li>
+<li>Should Hour 2 start with a brief review of any setup issue before class design begins?</li>
+</ul>
+<p>Use these observations to adjust the first five minutes of Hour 2. Keep the focus narrow: resolve only the setup blockers needed for class design, then move forward.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button is-disabled" data-lecture-prev data-variant="secondary" rel="prev" aria-disabled="true">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-script-welcome-to-advanced-python-5-minutes" class="depth-2">Opening Script: Welcome to Advanced Python (5 minutes)</a></li>
+<li><a href="#concept-briefing-course-workflow-and-advanced-expectations-5-minutes" class="depth-2">Concept Briefing: Course Workflow and Advanced Expectations (5 minutes)</a></li>
+<li><a href="#logicallabschoice-launch-and-persistence-briefing-7-minutes" class="depth-2">LogicalLabs/CHOICE Launch and Persistence Briefing (7 minutes)</a></li>
+<li><a href="#concept-briefing-git-workflow-for-this-course-6-minutes" class="depth-2">Concept Briefing: Git Workflow for This Course (6 minutes)</a></li>
+<li><a href="#live-demo-project-folder-diagnostic-script-and-first-commit-12-minutes" class="depth-2">Live Demo: Project Folder, Diagnostic Script, and First Commit (12 minutes)</a></li>
+<li><a href="#demo-step-1-create-the-project-folder" class="depth-3">Demo Step 1: Create the project folder</a></li>
+<li><a href="#demo-step-2-initialize-git" class="depth-3">Demo Step 2: Initialize Git</a></li>
+<li><a href="#demo-step-3-create-the-diagnostic-script" class="depth-3">Demo Step 3: Create the diagnostic script</a></li>
+<li><a href="#demo-step-4-run-the-diagnostic" class="depth-3">Demo Step 4: Run the diagnostic</a></li>
+<li><a href="#demo-step-5-make-the-first-commit" class="depth-3">Demo Step 5: Make the first commit</a></li>
+<li><a href="#demo-step-6-optional-push-explanation" class="depth-3">Demo Step 6: Optional push explanation</a></li>
+<li><a href="#guided-practice-lab-setup-and-diagnostic-25-minutes" class="depth-2">Guided Practice Lab: Setup and Diagnostic (25 minutes)</a></li>
+<li><a href="#lab-prompt-for-learners" class="depth-3">Lab Prompt for Learners</a></li>
+<li><a href="#student-starter-commands" class="depth-3">Student Starter Commands</a></li>
+<li><a href="#student-diagnostic-script-option" class="depth-3">Student Diagnostic Script Option</a></li>
+<li><a href="#instructor-circulation-guide" class="depth-2">Instructor Circulation Guide</a></li>
+<li><a href="#questions-to-ask-at-each-station" class="depth-3">Questions to ask at each station</a></li>
+<li><a href="#fast-diagnosis-flow" class="depth-3">Fast diagnosis flow</a></li>
+<li><a href="#what-to-praise" class="depth-3">What to praise</a></li>
+<li><a href="#common-pitfalls-and-how-to-respond" class="depth-2">Common Pitfalls and How to Respond</a></li>
+<li><a href="#pitfall-1-pop-up-blocked-during-lab-launch" class="depth-3">Pitfall 1: Pop-up blocked during lab launch</a></li>
+<li><a href="#pitfall-2-confusing-file-save-with-save-and-suspend" class="depth-3">Pitfall 2: Confusing file save with Save and Suspend</a></li>
+<li><a href="#pitfall-3-wrong-working-directory" class="depth-3">Pitfall 3: Wrong working directory</a></li>
+<li><a href="#pitfall-4-missing-data-folder" class="depth-3">Pitfall 4: Missing data folder</a></li>
+<li><a href="#pitfall-5-wrong-python-command" class="depth-3">Pitfall 5: Wrong Python command</a></li>
+<li><a href="#pitfall-6-git-commit-fails-because-identity-is-not-configured" class="depth-3">Pitfall 6: git commit fails because identity is not configured</a></li>
+<li><a href="#pitfall-7-student-runs-git-add-but-not-git-commit" class="depth-3">Pitfall 7: Student runs git add but not git commit</a></li>
+<li><a href="#pitfall-8-broad-exception-handling-hides-useful-details" class="depth-3">Pitfall 8: Broad exception handling hides useful details</a></li>
+<li><a href="#completion-criteria" class="depth-2">Completion Criteria</a></li>
+<li><a href="#optional-extensions-for-fast-finishers" class="depth-2">Optional Extensions for Fast Finishers</a></li>
+<li><a href="#extension-1-add-a-gitignore" class="depth-3">Extension 1: Add a .gitignore</a></li>
+<li><a href="#extension-2-create-a-virtual-environment-if-allowed" class="depth-3">Extension 2: Create a virtual environment if allowed</a></li>
+<li><a href="#extension-3-add-a-second-diagnostic-key" class="depth-3">Extension 3: Add a second diagnostic key</a></li>
+<li><a href="#quick-checks-and-exit-ticket" class="depth-2">Quick Checks and Exit Ticket</a></li>
+<li><a href="#quick-check-1" class="depth-3">Quick check 1</a></li>
+<li><a href="#quick-check-2" class="depth-3">Quick check 2</a></li>
+<li><a href="#quick-check-3" class="depth-3">Quick check 3</a></li>
+<li><a href="#quick-check-4" class="depth-3">Quick check 4</a></li>
+<li><a href="#exit-ticket-prompt" class="depth-3">Exit ticket prompt</a></li>
+<li><a href="#wrap-up-script" class="depth-2">Wrap-Up Script</a></li>
+<li><a href="#instructor-after-class-notes" class="depth-2">Instructor After-Class Notes</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day1_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button is-disabled" data-lecture-prev data-variant="secondary" rel="prev" aria-disabled="true">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day1_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

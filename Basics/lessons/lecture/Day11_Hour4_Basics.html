@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 11 Hour 4 (Hour 44): Exception Handling — Full Basics Treatment Instructor Script | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="11">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day11_Hour4_Basics.md">
+
+    <link rel="prev" href="Day11_Hour3_Basics.html">
+    <link rel="next" href="Day12_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="11" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-11/index.html">Day 11</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 11 Hour 4 (Hour 44): Exception Handling — Full Basics Treatment Instructor Script</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 11</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day11_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-intent-and-alignment">Instructor intent and alignment</h2>
+<p>This hour is the capstone of Session 11. In Hours 41–43, learners built file and JSON workflow confidence. In Hour 44, we harden that workflow so student programs can survive bad input and bad files without crashing. This script is designed to be read nearly verbatim while you teach.</p>
+<p>Runbook alignment for Hour 44 is fully covered in this lesson:</p>
+<ul>
+<li>Outcomes: use <code>try/except</code> for runtime errors; catch specific exceptions when practical.</li>
+<li>Talk points (10–15 min): <code>try/except/else/finally</code>; <code>ValueError</code>; <code>FileNotFoundError</code> + <code>json.JSONDecodeError</code>.</li>
+<li>Live demo (5–10 min): numeric input + file loading wrapped with friendly error messages.</li>
+<li>Lab (25–35 min): add specific <code>try/except</code> around numeric conversion and JSON load; on error show friendly message and continue.</li>
+<li>Completion criteria: continue after bad input; handle missing/corrupt file gracefully.</li>
+<li>Common pitfalls: broad <code>Exception</code> everywhere; swallowing errors silently.</li>
+<li>Optional extension: simple error logging to a text file.</li>
+<li>Quick check: explain why specific catches are better than catch-all.</li>
+</ul>
+<h2 id="hour-flow-at-a-glance">Hour flow at a glance</h2>
+<p>Use this pacing guide to keep the hour tight:</p>
+<ol>
+<li><strong>Warm open + objective framing (2–3 min)</strong></li>
+<li><strong>Instructor talk points (10–15 min)</strong></li>
+<li><strong>Live demo with deterministic scenarios (5–10 min)</strong></li>
+<li><strong>Hands-on hardening lab (25–35 min)</strong></li>
+<li><strong>Debrief + quick check exit ticket (3–5 min)</strong></li>
+</ol>
+<p>If learners are stuck during lab, shorten independent time by 5 minutes and run a guided fix pass.</p>
+<h2 id="outcomes-to-state-out-loud">Outcomes to state out loud</h2>
+<p>Say this near the beginning:</p>
+<p>“By the end of this hour, you can do two professional things. First, you can wrap risky code in <code>try/except</code> so your program handles runtime errors instead of crashing. Second, you can catch specific exceptions—like <code>ValueError</code>, <code>FileNotFoundError</code>, and <code>json.JSONDecodeError</code>—so users get clear feedback and you still keep bugs visible during development.”</p>
+<p>Then add:</p>
+<p>“Today is not about hiding errors. Today is about handling expected errors gracefully and leaving unexpected errors visible so we can debug them.”</p>
+<h2 id="prerequisites-and-setup-check">Prerequisites and setup check</h2>
+<p>Learners should already be comfortable with:</p>
+<ul>
+<li><code>input()</code>, <code>int()</code>, <code>float()</code></li>
+<li>loops (<code>while</code>, <code>for</code>)</li>
+<li>function basics</li>
+<li>reading JSON via <code>json.load()</code></li>
+<li>file paths with <code>pathlib.Path</code></li>
+</ul>
+<p>Before teaching, confirm these files and folders:</p>
+<ul>
+<li>Working folder: <code>day11_hour4_exception_lab/</code></li>
+<li>Data folder: <code>day11_hour4_exception_lab/data/</code></li>
+<li>File 1 (valid): <code>day11_hour4_exception_lab/data/class_settings_valid.json</code></li>
+<li>File 2 (corrupt): <code>day11_hour4_exception_lab/data/class_settings_corrupt.json</code></li>
+</ul>
+<p>Create deterministic file contents exactly as shown:</p>
+<p><code>class_settings_valid.json</code></p>
+<pre><code class="language-json">{
+  &quot;course_name&quot;: &quot;Python Basics&quot;,
+  &quot;max_students&quot;: 24,
+  &quot;lab_mode&quot;: true
+}
+</code></pre>
+<p><code>class_settings_corrupt.json</code></p>
+<pre><code class="language-json">{
+  &quot;course_name&quot;: &quot;Python Basics&quot;,
+  &quot;max_students&quot;: 24,
+  &quot;lab_mode&quot;: true
+</code></pre>
+<p>The corrupt file is intentionally missing the closing <code>}</code>.</p>
+<h2 id="vocabulary-and-concept-framing-speak-these-explicitly">Vocabulary and concept framing (speak these explicitly)</h2>
+<ul>
+<li><strong>Syntax error</strong>: Python cannot parse the code at all. The program does not start.</li>
+<li><strong>Runtime error (exception)</strong>: code is syntactically valid but fails during execution.</li>
+<li><strong>Exception handling</strong>: controlled response to a runtime error.</li>
+<li><strong>Specific exception</strong>: a narrow, expected error type, like <code>ValueError</code>.</li>
+<li><strong>Friendly error message</strong>: clear language for users, not raw traceback dumps.</li>
+</ul>
+<p>Say:</p>
+<p>“Syntax errors are like a broken key that does not fit the lock. Runtime errors are like a key that fits, but the door is blocked. Exception handling is how we react safely when we find the door blocked.”</p>
+<h2 id="instructor-talk-points-1015-minutes">Instructor talk points (10–15 minutes)</h2>
+<h3 id="1-exceptions-vs-syntax-errors-23-minutes">1) Exceptions vs syntax errors (2–3 minutes)</h3>
+<p>Script:</p>
+<p>“If I type <code>print('hello'</code> with a missing parenthesis, Python throws a syntax error before running anything. That is not what <code>try/except</code> is for. <code>try/except</code> is for errors that happen while running valid code—like converting <code>abc</code> to an integer or opening a file that is not there.”</p>
+<p>Optional micro-demo:</p>
+<pre><code class="language-python">print(&quot;This line is valid&quot;)
+broken_example = &quot;print('Missing quote)&quot;  # syntax error example captured as text
+</code></pre>
+<p>Then:</p>
+<p>“We do not catch syntax errors with <code>try/except</code>. We fix syntax errors in code.”</p>
+<h3 id="2-tryexcept-as-a-control-pattern-3-minutes">2) <code>try/except</code> as a control pattern (3 minutes)</h3>
+<p>Teach the mental model:</p>
+<ol>
+<li>Put risky code in <code>try</code>.</li>
+<li>Put recovery code in <code>except</code>.</li>
+<li>Keep the exception type specific.</li>
+<li>Continue the program where reasonable.</li>
+</ol>
+<p>Minimal example:</p>
+<pre><code class="language-python">user_text = input(&quot;Enter a whole number: &quot;)
+
+try:
+    count = int(user_text)
+except ValueError:
+    print(&quot;Please enter digits only, such as 12.&quot;)
+else:
+    print(f&quot;Thanks. You entered {count}.&quot;)
+</code></pre>
+<p>Narration:</p>
+<ul>
+<li>“If conversion fails, <code>except ValueError</code> runs.”</li>
+<li>“If conversion succeeds, <code>else</code> runs.”</li>
+<li>“The <code>else</code> block helps us separate success logic from error logic.”</li>
+</ul>
+<h3 id="3-why-specific-exceptions-matter-23-minutes">3) Why specific exceptions matter (2–3 minutes)</h3>
+<p>Say:</p>
+<p>“Specific catches are better because they document intent and reduce accidental bug hiding. If I only expect conversion failures, I should catch <code>ValueError</code>, not every possible exception.”</p>
+<p>Compare good vs bad quickly:</p>
+<pre><code class="language-python">try:
+    value = int(&quot;abc&quot;)
+except ValueError:
+    print(&quot;Not a valid integer.&quot;)
+</code></pre>
+<pre><code class="language-python">try:
+    value = int(&quot;abc&quot;)
+except Exception:
+    print(&quot;Something went wrong.&quot;)
+</code></pre>
+<p>Instructor note: be explicit that broad catch-all is discouraged in this course. Do not normalize it as standard practice.</p>
+<h3 id="4-tryexceptelsefinally-pattern-34-minutes">4) <code>try/except/else/finally</code> pattern (3–4 minutes)</h3>
+<p>Explain each block:</p>
+<ul>
+<li><code>try</code>: risky operation.</li>
+<li><code>except SomeError</code>: specific response when that error occurs.</li>
+<li><code>else</code>: run only if no exception occurred.</li>
+<li><code>finally</code>: always run (cleanup/logging marker).</li>
+</ul>
+<p>Demonstration snippet:</p>
+<pre><code class="language-python">from pathlib import Path
+
+target = Path(&quot;data/class_settings_valid.json&quot;)
+
+try:
+    text = target.read_text(encoding=&quot;utf-8&quot;)
+except FileNotFoundError:
+    print(f&quot;Could not find file: {target}&quot;)
+else:
+    print(f&quot;Loaded {len(text)} characters.&quot;)
+finally:
+    print(&quot;Load attempt finished.&quot;)
+</code></pre>
+<p>Key line to say:</p>
+<p>“<code>finally</code> runs no matter what, so it is perfect for ‘always do this’ actions. In real systems that can be cleanup, metrics, or a closing status message.”</p>
+<h3 id="5-core-expected-exceptions-for-this-hour-2-minutes">5) Core expected exceptions for this hour (2 minutes)</h3>
+<p>You must explicitly name and define:</p>
+<ul>
+<li><code>ValueError</code>: wrong value shape/type for conversion, e.g., <code>int("five")</code>.</li>
+<li><code>FileNotFoundError</code>: target file path does not exist.</li>
+<li><code>json.JSONDecodeError</code>: file exists, but JSON syntax is invalid.</li>
+</ul>
+<p>Say:</p>
+<p>“Notice these are all predictable in user-facing CLI apps. That is why they are first-class catches for today.”</p>
+<h3 id="6-common-pitfalls-to-call-out-before-demo-1-minute">6) Common pitfalls to call out before demo (1 minute)</h3>
+<p>Say this directly:</p>
+<ul>
+<li>“Pitfall one: <code>except Exception</code> everywhere. That masks bugs.”</li>
+<li>“Pitfall two: silent failure with <code>pass</code>. If the user sees no message, they do not know what to fix.”</li>
+</ul>
+<h2 id="transition-line-into-demo">Transition line into demo</h2>
+<p>Use:</p>
+<p>“Now let’s harden a tiny script with two fragile points: numeric input and JSON file loading. We will make it resilient while keeping exception handling specific.”</p>
+<h2 id="live-demo-510-minutes-numeric-input-json-loading-with-friendly-errors">Live demo (5–10 minutes): numeric input + JSON loading with friendly errors</h2>
+<h3 id="demo-objective">Demo objective</h3>
+<p>Students should see that:</p>
+<ul>
+<li>bad numeric input does not crash the program,</li>
+<li>missing or corrupt JSON is handled gracefully,</li>
+<li>the script prints clear, friendly messages,</li>
+<li>program flow continues after recoverable errors.</li>
+</ul>
+<h3 id="demo-script-file">Demo script file</h3>
+<p>Create <code>day11_hour4_exception_lab/demo_hour44.py</code> with this exact code:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+DATA_DIR = Path(&quot;data&quot;)
+VALID_FILE = DATA_DIR / &quot;class_settings_valid.json&quot;
+CORRUPT_FILE = DATA_DIR / &quot;class_settings_corrupt.json&quot;
+MISSING_FILE = DATA_DIR / &quot;class_settings_missing.json&quot;
+
+
+def prompt_positive_int(prompt: str) -&gt; int:
+    &quot;&quot;&quot;Prompt until user enters a positive integer.&quot;&quot;&quot;
+    while True:
+        raw_value = input(prompt).strip()
+        try:
+            number = int(raw_value)
+        except ValueError:
+            print(&quot;Friendly error: please type digits only, such as 3 or 15.&quot;)
+            continue
+
+        if number &lt;= 0:
+            print(&quot;Friendly reminder: the number must be greater than zero.&quot;)
+            continue
+
+        return number
+
+
+def load_settings(file_path: Path) -&gt; dict[str, object] | None:
+    &quot;&quot;&quot;Load JSON settings file with specific exception handling.&quot;&quot;&quot;
+    print(f&quot;\nLoading settings from: {file_path}&quot;)
+    try:
+        with file_path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as handle:
+            settings = json.load(handle)
+    except FileNotFoundError:
+        print(&quot;Friendly error: settings file was not found. Continuing with defaults.&quot;)
+        return None
+    except json.JSONDecodeError:
+        print(&quot;Friendly error: settings file is not valid JSON. Continuing with defaults.&quot;)
+        return None
+    else:
+        print(&quot;Settings loaded successfully.&quot;)
+        return settings
+    finally:
+        print(&quot;File load attempt completed.&quot;)
+
+
+def main() -&gt; None:
+    print(&quot;=== Hour 44 Exception Handling Demo ===&quot;)
+
+    student_count = prompt_positive_int(&quot;Enter the number of students attending today: &quot;)
+    print(f&quot;Thanks. You entered: {student_count}&quot;)
+
+    settings_valid = load_settings(VALID_FILE)
+    settings_missing = load_settings(MISSING_FILE)
+    settings_corrupt = load_settings(CORRUPT_FILE)
+
+    print(&quot;\nSummary:&quot;)
+    print(f&quot;- valid file loaded: {settings_valid is not None}&quot;)
+    print(f&quot;- missing file loaded: {settings_missing is not None}&quot;)
+    print(f&quot;- corrupt file loaded: {settings_corrupt is not None}&quot;)
+    print(&quot;\nProgram completed without crashing.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-run-sequence">Demo run sequence</h3>
+<p>Run 1 input sequence:</p>
+<ol>
+<li>At prompt, enter <code>five</code>.</li>
+<li>Then enter <code>-2</code>.</li>
+<li>Then enter <code>12</code>.</li>
+</ol>
+<p>Expected console output pattern (allow path differences but keep message content):</p>
+<pre><code class="language-text">=== Hour 44 Exception Handling Demo ===
+Enter the number of students attending today: five
+Friendly error: please type digits only, such as 3 or 15.
+Enter the number of students attending today: -2
+Friendly reminder: the number must be greater than zero.
+Enter the number of students attending today: 12
+Thanks. You entered: 12
+
+Loading settings from: data\class_settings_valid.json
+Settings loaded successfully.
+File load attempt completed.
+
+Loading settings from: data\class_settings_missing.json
+Friendly error: settings file was not found. Continuing with defaults.
+File load attempt completed.
+
+Loading settings from: data\class_settings_corrupt.json
+Friendly error: settings file is not valid JSON. Continuing with defaults.
+File load attempt completed.
+
+Summary:
+- valid file loaded: True
+- missing file loaded: False
+- corrupt file loaded: False
+
+Program completed without crashing.
+</code></pre>
+<h3 id="narration-script-during-demo">Narration script during demo</h3>
+<p>Use this flow:</p>
+<ol>
+<li>“I typed <code>five</code> and got a friendly message. The program did not crash.”</li>
+<li>“I typed <code>-2</code>. This is not a conversion error, but still invalid for our rule, so we handle it with normal <code>if</code> logic.”</li>
+<li>“Now valid input passes and we continue.”</li>
+<li>“Valid JSON loads through <code>else</code>.”</li>
+<li>“Missing file triggers <code>FileNotFoundError</code> catch.”</li>
+<li>“Corrupt JSON triggers <code>json.JSONDecodeError</code> catch.”</li>
+<li>“<code>finally</code> prints every time, so we can clearly see each load attempt ended.”</li>
+</ol>
+<p>Ask prediction questions:</p>
+<ul>
+<li>“What do you think happens first, <code>else</code> or <code>finally</code> on success?”</li>
+<li>“If the file is missing, does <code>else</code> run?”</li>
+</ul>
+<p>Answers:</p>
+<ul>
+<li>On success: <code>else</code>, then <code>finally</code>.</li>
+<li>On failure: matching <code>except</code>, then <code>finally</code>; <code>else</code> is skipped.</li>
+</ul>
+<h2 id="structured-debrief-after-demo-2-minutes">Structured debrief after demo (2 minutes)</h2>
+<p>Say:</p>
+<p>“Two places were hardened: conversion and file read. We used specific catches and user-friendly messages. The program kept running and reported what happened. That is the exact professional behavior we want in basic CLI tools.”</p>
+<p>Then connect to lab:</p>
+<p>“Now you will take a fragile starter program and add this same resilience.”</p>
+<h2 id="hands-on-lab-2535-minutes-harden-your-program">Hands-on lab (25–35 minutes): Harden your program</h2>
+<h3 id="lab-prompt-student-facing">Lab prompt (student-facing)</h3>
+<p>“You are given a small script with two fragile operations:</p>
+<ol>
+<li>numeric conversion from user input,</li>
+<li>JSON loading from a path.</li>
+</ol>
+<p>Your job is to add specific exception handling so the program does not crash on common errors. On failure, show a friendly message and continue running.”</p>
+<h3 id="starter-file-intentionally-fragile">Starter file (intentionally fragile)</h3>
+<p>Create <code>day11_hour4_exception_lab/lab_start.py</code> with this code:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def main() -&gt; None:
+    print(&quot;=== Enrollment Tool (Starter) ===&quot;)
+
+    raw_count = input(&quot;How many students are registering? &quot;)
+    student_count = int(raw_count)
+
+    raw_fee = input(&quot;What is the lab fee per student? &quot;)
+    fee = float(raw_fee)
+
+    file_name = input(&quot;Enter JSON settings file name (example: class_settings_valid.json): &quot;).strip()
+    path = Path(&quot;data&quot;) / file_name
+
+    with path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as handle:
+        settings = json.load(handle)
+
+    total = student_count * fee
+    print(f&quot;Course: {settings['course_name']}&quot;)
+    print(f&quot;Total estimated fees: ${total:.2f}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="required-lab-tasks">Required lab tasks</h3>
+<p>Students must complete all:</p>
+<ol>
+<li>Add <code>try/except</code> around <code>int()</code> and <code>float()</code> conversion points.</li>
+<li>Keep catches specific:
+   - <code>ValueError</code> for conversion.
+   - <code>FileNotFoundError</code> and <code>json.JSONDecodeError</code> for JSON load.</li>
+<li>On invalid numeric input, display a friendly message and keep prompting.</li>
+<li>On missing/corrupt JSON file, display a friendly message and continue program (for example, by using default settings dictionary).</li>
+<li>Ensure the program reaches a final summary print even after recoverable errors.</li>
+</ol>
+<h3 id="instructor-constraints-to-repeat-out-loud">Instructor constraints to repeat out loud</h3>
+<ul>
+<li>“Do not use bare <code>except:</code>.”</li>
+<li>“Do not wrap your entire program in one giant catch-all.”</li>
+<li>“Do not hide errors with <code>pass</code>.”</li>
+</ul>
+<h3 id="suggested-scaffold-hints-release-progressively">Suggested scaffold hints (release progressively)</h3>
+<p>Hint 1 (early):</p>
+<p>“Use a <code>while True</code> loop for each conversion prompt. <code>continue</code> on <code>ValueError</code>, <code>return</code> after valid conversion.”</p>
+<p>Hint 2 (mid):</p>
+<p>“Create a helper like <code>load_settings(path: Path) -&gt; dict[str, object]</code> that returns defaults when file load fails.”</p>
+<p>Hint 3 (late):</p>
+<p>“<code>else</code> is a clean place to print success messages after <code>json.load()</code> succeeds.”</p>
+<h3 id="reference-lab-solution-for-instructor-walkthroughdebrief">Reference lab solution (for instructor walkthrough/debrief)</h3>
+<p>Use this solution after most students have attempted independently:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+DEFAULT_SETTINGS: dict[str, object] = {
+    &quot;course_name&quot;: &quot;Python Basics (Default)&quot;,
+    &quot;max_students&quot;: 20,
+    &quot;lab_mode&quot;: False,
+}
+
+
+def prompt_int(message: str) -&gt; int:
+    while True:
+        raw_value = input(message).strip()
+        try:
+            value = int(raw_value)
+        except ValueError:
+            print(&quot;Friendly error: please enter a whole number (example: 10).&quot;)
+            continue
+        else:
+            return value
+
+
+def prompt_float(message: str) -&gt; float:
+    while True:
+        raw_value = input(message).strip()
+        try:
+            value = float(raw_value)
+        except ValueError:
+            print(&quot;Friendly error: please enter a number (example: 49.99).&quot;)
+            continue
+        else:
+            return value
+
+
+def load_settings(file_path: Path) -&gt; dict[str, object]:
+    try:
+        with file_path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as handle:
+            settings = json.load(handle)
+    except FileNotFoundError:
+        print(f&quot;Friendly error: '{file_path.name}' was not found. Using default settings.&quot;)
+        return DEFAULT_SETTINGS.copy()
+    except json.JSONDecodeError:
+        print(f&quot;Friendly error: '{file_path.name}' has invalid JSON. Using default settings.&quot;)
+        return DEFAULT_SETTINGS.copy()
+    else:
+        print(f&quot;Loaded settings from '{file_path.name}'.&quot;)
+        return settings
+
+
+def main() -&gt; None:
+    print(&quot;=== Enrollment Tool (Hardened) ===&quot;)
+
+    student_count = prompt_int(&quot;How many students are registering? &quot;)
+    while student_count &lt;= 0:
+        print(&quot;Friendly reminder: student count must be greater than zero.&quot;)
+        student_count = prompt_int(&quot;How many students are registering? &quot;)
+
+    fee = prompt_float(&quot;What is the lab fee per student? &quot;)
+    while fee &lt; 0:
+        print(&quot;Friendly reminder: fee cannot be negative.&quot;)
+        fee = prompt_float(&quot;What is the lab fee per student? &quot;)
+
+    file_name = input(
+        &quot;Enter JSON settings file name (class_settings_valid.json / &quot;
+        &quot;class_settings_corrupt.json / class_settings_missing.json): &quot;
+    ).strip()
+    settings_path = Path(&quot;data&quot;) / file_name
+
+    settings = load_settings(settings_path)
+
+    total = student_count * fee
+    course_name = str(settings.get(&quot;course_name&quot;, &quot;Unknown Course&quot;))
+
+    print(&quot;\nSummary:&quot;)
+    print(f&quot;- Course: {course_name}&quot;)
+    print(f&quot;- Student count: {student_count}&quot;)
+    print(f&quot;- Fee per student: ${fee:.2f}&quot;)
+    print(f&quot;- Total estimated fees: ${total:.2f}&quot;)
+    print(&quot;Program completed successfully.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="deterministic-test-cases-for-completion-check">Deterministic test cases for completion check</h3>
+<p>Run these three tests in class:</p>
+<h4 id="test-a-bad-numeric-input-then-recovery">Test A: bad numeric input then recovery</h4>
+<p>Inputs:</p>
+<ul>
+<li><code>ten</code></li>
+<li><code>12</code></li>
+<li><code>free</code></li>
+<li><code>15.5</code></li>
+<li><code>class_settings_valid.json</code></li>
+</ul>
+<p>Expected behavior:</p>
+<ul>
+<li>Shows friendly <code>ValueError</code> messages for <code>ten</code> and <code>free</code>.</li>
+<li>Re-prompts without crashing.</li>
+<li>Loads valid JSON and prints summary.</li>
+</ul>
+<h4 id="test-b-missing-settings-file">Test B: missing settings file</h4>
+<p>Inputs:</p>
+<ul>
+<li><code>10</code></li>
+<li><code>20</code></li>
+<li><code>class_settings_missing.json</code></li>
+</ul>
+<p>Expected behavior:</p>
+<ul>
+<li>Friendly file-not-found message.</li>
+<li>Uses defaults.</li>
+<li>Still prints summary and completes.</li>
+</ul>
+<h4 id="test-c-corrupt-json-settings-file">Test C: corrupt JSON settings file</h4>
+<p>Inputs:</p>
+<ul>
+<li><code>8</code></li>
+<li><code>30</code></li>
+<li><code>class_settings_corrupt.json</code></li>
+</ul>
+<p>Expected behavior:</p>
+<ul>
+<li>Friendly JSON-corrupt message.</li>
+<li>Uses defaults.</li>
+<li>Still prints summary and completes.</li>
+</ul>
+<h3 id="lab-completion-criteria-must-all-be-true">Lab completion criteria (must all be true)</h3>
+<p>Check each learner/group against these:</p>
+<ol>
+<li>Program continues after bad numeric input.</li>
+<li>Program handles missing file gracefully (<code>FileNotFoundError</code> path).</li>
+<li>Program handles corrupt JSON gracefully (<code>json.JSONDecodeError</code> path).</li>
+<li>Friendly messages are displayed; no silent failure.</li>
+<li>Exception handling remains specific, not broad catch-all everywhere.</li>
+</ol>
+<p>If a student solution uses <code>except Exception</code> for everything, mark as incomplete until revised.</p>
+<h2 id="instructor-coaching-guide-during-lab">Instructor coaching guide during lab</h2>
+<h3 id="common-student-issue-1-giant-catch-all-block">Common student issue 1: giant catch-all block</h3>
+<p>Student pattern:</p>
+<pre><code class="language-python">try:
+    # entire program
+except Exception:
+    print(&quot;Error&quot;)
+</code></pre>
+<p>Coach response:</p>
+<p>“This hides too much. Narrow your <code>try</code> block to one risky operation, then catch only the expected exception type. Keep debugging visibility.”</p>
+<h3 id="common-student-issue-2-silent-swallow-with-pass">Common student issue 2: silent swallow with <code>pass</code></h3>
+<p>Student pattern:</p>
+<pre><code class="language-python">except ValueError:
+    pass
+</code></pre>
+<p>Coach response:</p>
+<p>“Users need feedback. Replace <code>pass</code> with a clear instruction: what failed and what input format is expected.”</p>
+<h3 id="common-student-issue-3-confusing-validation-with-exceptions">Common student issue 3: confusing validation with exceptions</h3>
+<p>Clarify:</p>
+<ul>
+<li><code>ValueError</code> catch handles conversion failure.</li>
+<li>Business rule checks (like <code>number &lt;= 0</code>) are regular <code>if</code> logic.</li>
+</ul>
+<p>Say:</p>
+<p>“Not every invalid case is an exception. Exceptions are for runtime failures in operations like conversion and file parsing.”</p>
+<h3 id="common-student-issue-4-forgetting-to-continue-flow">Common student issue 4: forgetting to continue flow</h3>
+<p>If program exits too early after an error:</p>
+<p>“The runbook goal says continue after bad input and handle missing/corrupt files gracefully. Use loops for input retries and defaults for file fallback.”</p>
+<h2 id="deepening-understanding-specific-vs-broad-exception-handling">Deepening understanding: specific vs broad exception handling</h2>
+<p>Use this mini-teaching segment if time allows:</p>
+<p>Imagine this bug inside load code:</p>
+<pre><code class="language-python">print(course_nam)  # typo: should be course_name
+</code></pre>
+<p>If code uses broad <code>except Exception</code>, the typo may be hidden under a generic “something went wrong,” and debugging takes longer. If code catches only <code>FileNotFoundError</code> and <code>json.JSONDecodeError</code>, then a typo like <code>NameError</code> remains visible, which is exactly what we want during development.</p>
+<p>Teaching phrase:</p>
+<p>“Catch expected errors. Expose unexpected errors.”</p>
+<h2 id="optional-extension-stay-in-basics-scope-simple-error-logging-to-text-file">Optional extension (stay in Basics scope): simple error logging to text file</h2>
+<p>This extension is optional and should only start after core criteria are complete.</p>
+<h3 id="why-this-extension-matters">Why this extension matters</h3>
+<p>Friendly console messages help users now, but logs help developers later. A simple append-only text log is enough at Basics level.</p>
+<h3 id="extension-implementation-pattern">Extension implementation pattern</h3>
+<p>Add this helper:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+def log_error(message: str) -&gt; None:
+    log_path = Path(&quot;error_log.txt&quot;)
+    with log_path.open(&quot;a&quot;, encoding=&quot;utf-8&quot;) as log_file:
+        log_file.write(f&quot;{message}\n&quot;)
+</code></pre>
+<p>Integrate into specific handlers:</p>
+<pre><code class="language-python">except FileNotFoundError:
+    friendly = f&quot;Friendly error: '{file_path.name}' was not found. Using defaults.&quot;
+    print(friendly)
+    log_error(f&quot;FileNotFoundError on {file_path}&quot;)
+    return DEFAULT_SETTINGS.copy()
+except json.JSONDecodeError:
+    friendly = f&quot;Friendly error: '{file_path.name}' has invalid JSON. Using defaults.&quot;
+    print(friendly)
+    log_error(f&quot;JSONDecodeError on {file_path}&quot;)
+    return DEFAULT_SETTINGS.copy()
+</code></pre>
+<h3 id="expected-log-file-sample">Expected log file sample</h3>
+<p><code>error_log.txt</code></p>
+<pre><code class="language-text">FileNotFoundError on data\class_settings_missing.json
+JSONDecodeError on data\class_settings_corrupt.json
+</code></pre>
+<p>Instructor note: keep logging simple and deterministic. Do not add advanced logging frameworks in Basics hour.</p>
+<h2 id="discussion-prompts-to-reinforce-reasoning">Discussion prompts to reinforce reasoning</h2>
+<p>Ask these during debrief:</p>
+<ol>
+<li>“Why do we retry numeric input but not retry file parsing forever?”</li>
+<li>“When should we use defaults versus stopping the program?”</li>
+<li>“What is one risk of using <code>except Exception</code> everywhere?”</li>
+<li>“Where did <code>else</code> help readability in your code?”</li>
+<li>“What did <code>finally</code> guarantee in the demo?”</li>
+</ol>
+<p>Suggested target answers:</p>
+<ol>
+<li>Numeric input can be corrected immediately by the user; repeated prompt is natural.</li>
+<li>Defaults are useful when safe fallback exists; stop when critical data is truly required.</li>
+<li>It can mask unrelated bugs and slow debugging.</li>
+<li>It cleanly separated success path from error path.</li>
+<li>It always ran to mark completion of each load attempt.</li>
+</ol>
+<h2 id="expanded-facilitation-guide-minute-by-minute-lab-support">Expanded facilitation guide: minute-by-minute lab support</h2>
+<p>Use this section when you want a more detailed live teaching rhythm during the 25–35 minute lab block. The goal is to keep students coding independently while still giving structured checkpoints that reduce panic and improve completion rates.</p>
+<h3 id="minute-03-launch-with-confidence-and-constraints">Minute 0–3: launch with confidence and constraints</h3>
+<p>Say:</p>
+<p>“Open your starter file. Read the code once without editing. Put your cursor on each fragile line: <code>int(raw_count)</code>, <code>float(raw_fee)</code>, and <code>json.load(handle)</code>. Those are our hardening targets.”</p>
+<p>Then add:</p>
+<p>“You are not rewriting the whole app. You are adding resilience exactly where failure is expected. Keep your code simple and specific.”</p>
+<p>This framing prevents over-engineering and keeps novice learners from feeling lost.</p>
+<h3 id="minute-38-first-hardening-target-integer-conversion">Minute 3–8: first hardening target (integer conversion)</h3>
+<p>Prompt learners:</p>
+<p>“Wrap only the integer conversion in <code>try/except ValueError</code>. If conversion fails, print a clear correction message and ask again.”</p>
+<p>What to watch for:</p>
+<ul>
+<li>Students placing <code>input()</code> outside the loop.</li>
+<li>Students forgetting <code>continue</code>.</li>
+<li>Students converting once, then never re-prompting.</li>
+</ul>
+<p>Helpful coaching sentence:</p>
+<p>“A retry loop is your safety net. If input is wrong, stay in loop. If input is valid, exit loop by returning the value.”</p>
+<h3 id="minute-812-second-hardening-target-float-conversion">Minute 8–12: second hardening target (float conversion)</h3>
+<p>Prompt:</p>
+<p>“Now repeat the same pattern for <code>float()</code>. Keep this separate from integer handling so the user gets precise feedback.”</p>
+<p>If students try one combined mega-function too early, steer them back:</p>
+<p>“You can generalize later. For now, duplicate the pattern intentionally so the logic stays readable.”</p>
+<p>This matters for beginners: repetition builds pattern recognition.</p>
+<h3 id="minute-1218-file-loading-hardening-with-two-specific-exceptions">Minute 12–18: file loading hardening with two specific exceptions</h3>
+<p>Prompt:</p>
+<p>“Move file loading into a helper function and catch only these two errors: <code>FileNotFoundError</code> and <code>json.JSONDecodeError</code>.”</p>
+<p>Guide learners toward safe fallback:</p>
+<p>“Return a default dictionary so the program can still print a summary.”</p>
+<p>Watch for this mistake:</p>
+<pre><code class="language-python">except FileNotFoundError:
+    print(&quot;error&quot;)
+</code></pre>
+<p>If they print and then forget <code>return</code>, the function may return <code>None</code> and fail later. Coaching line:</p>
+<p>“In every error branch, return a known fallback object so downstream code stays predictable.”</p>
+<h3 id="minute-1823-preserve-business-rule-validation">Minute 18–23: preserve business-rule validation</h3>
+<p>Many students confuse exception handling with all validation. Remind them:</p>
+<p>“<code>ValueError</code> catches conversion problems. But if someone enters <code>-5</code>, that is valid numeric text with invalid business meaning. Use <code>if</code> checks after conversion.”</p>
+<p>Quick board example:</p>
+<pre><code class="language-python">value = prompt_int(&quot;Enter quantity: &quot;)
+if value &lt;= 0:
+    print(&quot;Quantity must be greater than zero.&quot;)
+</code></pre>
+<p>Then tie it back:</p>
+<p>“Exceptions protect operations. Conditionals enforce rules.”</p>
+<h3 id="minute-2328-run-deterministic-tests-a-b-c">Minute 23–28: run deterministic tests A, B, C</h3>
+<p>Require each learner to execute all three scenario tests. Ask them to read outputs out loud in pairs:</p>
+<ul>
+<li>A: invalid numbers recover.</li>
+<li>B: missing file falls back.</li>
+<li>C: corrupt file falls back.</li>
+</ul>
+<p>Partner-reading improves attention to exact behavior and catches silent failures quickly.</p>
+<h3 id="minute-2832-polish-messages-and-flow">Minute 28–32: polish messages and flow</h3>
+<p>Ask students to improve message clarity:</p>
+<ul>
+<li>State what went wrong.</li>
+<li>State what to do next.</li>
+<li>Avoid blame language.</li>
+</ul>
+<p>Good message:</p>
+<p>“Friendly error: please enter a whole number (example: 10).”</p>
+<p>Weak message:</p>
+<p>“Invalid.”</p>
+<p>Why this matters:</p>
+<p>User-facing quality is not just avoiding crashes; it is helping recovery.</p>
+<h3 id="minute-3235-final-verification-and-share-outs">Minute 32–35: final verification and share-outs</h3>
+<p>End lab with two volunteer demos:</p>
+<ol>
+<li>one run with invalid numeric input recovery,</li>
+<li>one run with missing or corrupt JSON fallback.</li>
+</ol>
+<p>Ask classmates:</p>
+<p>“Which specific exceptions were caught? Did the app still complete?”</p>
+<p>This reinforces both required outcomes in public and helps anchor good habits.</p>
+<h2 id="expanded-misconception-clinic-for-real-time-correction">Expanded misconception clinic (for real-time correction)</h2>
+<p>Use these targeted corrections when you hear common misconceptions.</p>
+<h3 id="misconception-if-i-catch-exception-i-am-safer">Misconception: “If I catch <code>Exception</code>, I am safer.”</h3>
+<p>Correction script:</p>
+<p>“It feels safer, but it often makes debugging less safe. Catch-all blocks can hide bugs you did not intend to handle. Specific catches are safer because they match known failure modes.”</p>
+<h3 id="misconception-finally-is-required-in-every-try">Misconception: “<code>finally</code> is required in every <code>try</code>.”</h3>
+<p>Correction:</p>
+<p>“<code>finally</code> is optional. Use it when you truly need an always-run action. In this hour, we use it to demonstrate guaranteed completion messages.”</p>
+<h3 id="misconception-if-i-have-else-i-do-not-need-except">Misconception: “If I have <code>else</code>, I do not need <code>except</code>.”</h3>
+<p>Correction:</p>
+<p>“<code>else</code> runs only when no exception happened. It does not replace error handling. Think of <code>else</code> as success-only space.”</p>
+<h3 id="misconception-validation-should-be-done-inside-except">Misconception: “Validation should be done inside <code>except</code>.”</h3>
+<p>Correction:</p>
+<p>“Use <code>except</code> for exceptions from operations like <code>int()</code>, file open, or JSON parse. Use regular <code>if</code> statements for business constraints like positive ranges.”</p>
+<h3 id="misconception-silent-pass-is-cleaner">Misconception: “Silent <code>pass</code> is cleaner.”</h3>
+<p>Correction:</p>
+<p>“Silent failure is confusing for users and harmful for support. At minimum, print a friendly message. Better yet, also log the event in the optional extension.”</p>
+<h2 id="instructor-language-bank-for-supportive-coaching">Instructor language bank for supportive coaching</h2>
+<p>When students struggle, phrasing matters. Use these lines:</p>
+<ul>
+<li>“Great, you found the failure point. Now let’s make it recoverable.”</li>
+<li>“Your logic is close; you just need a loop so users can correct input.”</li>
+<li>“Nice catch on the exception type. That specificity is exactly the professional habit.”</li>
+<li>“You fixed the crash. Now improve the message so a real user knows what to do.”</li>
+<li>“Let’s shrink the <code>try</code> block to only risky lines. Smaller <code>try</code> blocks are easier to reason about.”</li>
+</ul>
+<p>These prompts keep tone encouraging while still holding technical standards.</p>
+<h2 id="optional-challenge-prompts-for-fast-finishers-still-basics-safe">Optional challenge prompts for fast finishers (still Basics-safe)</h2>
+<p>Only offer after required criteria are met.</p>
+<ol>
+<li>
+<p>Add a simple menu:
+   - <code>1</code> Load valid file
+   - <code>2</code> Load missing file
+   - <code>3</code> Load corrupt file
+   - <code>4</code> Quit</p>
+</li>
+<li>
+<p>Add retry limit for numeric input (for example, max 3 attempts), then exit politely.</p>
+</li>
+<li>
+<p>Add one extra specific catch for <code>PermissionError</code> if platform allows simulation (do not require in grading).</p>
+</li>
+<li>
+<p>Expand summary to show whether defaults were used.</p>
+</li>
+<li>
+<p>Add timestamp text to <code>error_log.txt</code> using plain strings (no advanced libraries required).</p>
+</li>
+</ol>
+<p>Reinforce:</p>
+<p>“These are enhancements, not substitutes for specific exception handling.”</p>
+<h2 id="classroom-safe-boundaries-and-technical-guardrails">Classroom-safe boundaries and technical guardrails</h2>
+<p>Keep this hour classroom-safe and deterministic:</p>
+<ul>
+<li>Use local files only; no external network calls.</li>
+<li>Use fixed filenames from this script so all learners can reproduce outputs.</li>
+<li>Avoid destructive file operations.</li>
+<li>Avoid advanced frameworks or dependency installs.</li>
+<li>Keep all demonstrations in plain Python standard library (<code>json</code>, <code>pathlib</code>).</li>
+</ul>
+<p>If learners ask for broad architecture:</p>
+<p>“Great question for Advanced track. For Basics, we focus on reliable and readable local exception handling patterns.”</p>
+<h2 id="quick-formative-checks-during-instruction">Quick formative checks during instruction</h2>
+<h3 id="checkpoint-a-after-talk-points">Checkpoint A (after talk points)</h3>
+<p>Prompt:</p>
+<p>“Which exception type is expected when <code>int('abc')</code> runs?”</p>
+<p>Expected response: <code>ValueError</code>.</p>
+<h3 id="checkpoint-b-after-demo">Checkpoint B (after demo)</h3>
+<p>Prompt:</p>
+<p>“If a JSON file exists but has broken syntax, which exception should we catch?”</p>
+<p>Expected response: <code>json.JSONDecodeError</code>.</p>
+<h3 id="checkpoint-c-end-of-lab">Checkpoint C (end of lab)</h3>
+<p>Prompt:</p>
+<p>“If your code handles only <code>FileNotFoundError</code> and <code>JSONDecodeError</code>, what happens to a typo bug?”</p>
+<p>Expected response: It still surfaces, which helps debugging.</p>
+<h2 id="quick-check-exit-ticket-required-by-runbook">Quick check / exit ticket (required by runbook)</h2>
+<p>Ask exactly:</p>
+<p><strong>Why is catching a specific exception better than catching all exceptions?</strong></p>
+<p>Model answer to accept:</p>
+<p>“Specific catches handle expected errors clearly and avoid hiding unrelated bugs. Catch-all blocks can swallow important issues, making debugging harder and behavior less reliable.”</p>
+<h2 id="instructor-debrief-script-final-23-minutes">Instructor debrief script (final 2–3 minutes)</h2>
+<p>Use this close:</p>
+<p>“Today we moved from scripts that crash to scripts that recover. You used specific exception handling for the two most common failure points in beginner CLI apps: conversion and file parsing. You also practiced friendly feedback, continued execution, and safe defaults. That is practical software quality work.”</p>
+<p>Then preview Session 12:</p>
+<p>“In capstone hours, this same resilience pattern will make your project demos stable under real user mistakes.”</p>
+<h2 id="assessment-rubric-for-this-hour-lightweight">Assessment rubric for this hour (lightweight)</h2>
+<p>Use this quick rubric while circulating:</p>
+<ul>
+<li><strong>Meets</strong>: specific exceptions, friendly messages, program continues, valid summary output.</li>
+<li><strong>Approaching</strong>: partial handling (only conversion or only file), some crashes remain.</li>
+<li><strong>Not yet</strong>: broad catch-all everywhere, silent pass, or crash on first bad input.</li>
+</ul>
+<p>If needed, require one final successful run with:</p>
+<ul>
+<li>one invalid numeric input,</li>
+<li>one missing or corrupt file,</li>
+<li>visible final summary output.</li>
+</ul>
+<h2 id="instructor-troubleshooting-appendix">Instructor troubleshooting appendix</h2>
+<h3 id="issue-student-cannot-trigger-jsondecodeerror">Issue: student cannot trigger <code>JSONDecodeError</code></h3>
+<p>Cause: corrupt file is accidentally valid.</p>
+<p>Fix: verify <code>class_settings_corrupt.json</code> is missing a closing brace exactly as provided.</p>
+<h3 id="issue-filenotfounderror-not-triggered">Issue: <code>FileNotFoundError</code> not triggered</h3>
+<p>Cause: student created the supposed missing file by accident.</p>
+<p>Fix: delete <code>data/class_settings_missing.json</code> and rerun.</p>
+<h3 id="issue-key-lookup-causes-crash-keyerror">Issue: key lookup causes crash (<code>KeyError</code>)</h3>
+<p>Cause: defaults or loaded JSON missing expected key.</p>
+<p>Fix: use <code>settings.get("course_name", "Unknown Course")</code> in summary.</p>
+<p>Note: <code>KeyError</code> is outside required catches for today, but this is a good defensive improvement.</p>
+<h3 id="issue-learners-ask-if-except-exception-as-e-is-ever-allowed">Issue: learners ask if <code>except Exception as e</code> is ever allowed</h3>
+<p>Suggested answer:</p>
+<p>“In advanced production contexts, there are controlled cases for broader catches at system boundaries with strong logging and re-raising strategies. In Basics, we prioritize specific catches to build correct habits first.”</p>
+<h2 id="full-speaking-script-block-optional-near-verbatim-delivery">Full speaking script block (optional near-verbatim delivery)</h2>
+<p>You can read this section directly if you want a smooth continuous lecture delivery.</p>
+<p>“Team, this hour is about exception handling. Up to now, your programs worked mostly when input and files were perfect. Real users are not perfect, and files are not always perfect. Professional code must keep working when expected runtime errors happen.</p>
+<p>First, a distinction: syntax errors versus exceptions. Syntax errors happen before your program starts. Missing colon, missing quote—Python refuses to run. <code>try/except</code> is not for that. Exceptions happen while running valid code. For example, converting text like <code>five</code> to an integer throws <code>ValueError</code>. Opening a file that does not exist throws <code>FileNotFoundError</code>. Parsing broken JSON throws <code>JSONDecodeError</code>.</p>
+<p>Now the pattern. <code>try</code> contains risky code. <code>except</code> handles expected failures. <code>else</code> runs only when no exception occurred. <code>finally</code> always runs, success or failure.</p>
+<p>Why do we care about specific exceptions? Because they keep intent clear and bugs visible. If I expect a conversion problem, I catch <code>ValueError</code>. If I catch everything, I can hide mistakes that I should fix, like typo bugs.</p>
+<p>Watch this first function. We prompt for a positive integer. If conversion fails, we show a friendly message and ask again. If the number is negative or zero, that is not an exception—it is a business rule check—so we use <code>if</code> logic and continue.</p>
+<p>Now file loading. We try opening and parsing a JSON file. If file is missing, we show a user-friendly message and continue with defaults. If JSON is corrupt, same: message plus defaults. On success, we print success in the <code>else</code> block. And in <code>finally</code>, we always print a completion line so we can see every attempt ended.</p>
+<p>Notice what I did not do: I did not wrap the whole script in <code>except Exception</code>. I kept the risky operations local and specific.</p>
+<p>Your lab now is to harden a starter script with the same strategy. There are two required hardening points: numeric conversion and JSON load. On error, friendly message, continue running. Specific exception catches only. At the end, your program must still print a summary.</p>
+<p>During lab, if your program crashes on <code>ten</code> or on a missing file, you are not done yet. If your program says nothing after an error, you are not done yet. If your program catches everything broadly, you are not done yet.</p>
+<p>Optional extension after you meet the core goal: append errors to <code>error_log.txt</code>.</p>
+<p>Final quick check before we close: why is specific catch better than catch-all? Because it handles expected failures without masking unexpected bugs. That is how we build programs that are both user-friendly and debuggable.”</p>
+<h2 id="end-of-hour-checklist-for-instructor">End-of-hour checklist for instructor</h2>
+<p>Before ending, confirm:</p>
+<ul>
+<li>You explicitly taught <code>try/except/else/finally</code>.</li>
+<li>You explicitly covered <code>ValueError</code>, <code>FileNotFoundError</code>, <code>json.JSONDecodeError</code>.</li>
+<li>Live demo showed numeric input hardening + JSON file load hardening.</li>
+<li>Lab required specific exception handling and continue-on-error behavior.</li>
+<li>Students were warned against broad <code>Exception</code> and silent <code>pass</code>.</li>
+<li>Quick check question was asked and answered.</li>
+</ul>
+<p>If all are true, Hour 44 goals are complete.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-intent-and-alignment" class="depth-2">Instructor intent and alignment</a></li>
+<li><a href="#hour-flow-at-a-glance" class="depth-2">Hour flow at a glance</a></li>
+<li><a href="#outcomes-to-state-out-loud" class="depth-2">Outcomes to state out loud</a></li>
+<li><a href="#prerequisites-and-setup-check" class="depth-2">Prerequisites and setup check</a></li>
+<li><a href="#vocabulary-and-concept-framing-speak-these-explicitly" class="depth-2">Vocabulary and concept framing (speak these explicitly)</a></li>
+<li><a href="#instructor-talk-points-1015-minutes" class="depth-2">Instructor talk points (10–15 minutes)</a></li>
+<li><a href="#1-exceptions-vs-syntax-errors-23-minutes" class="depth-3">1) Exceptions vs syntax errors (2–3 minutes)</a></li>
+<li><a href="#2-tryexcept-as-a-control-pattern-3-minutes" class="depth-3">2) try/except as a control pattern (3 minutes)</a></li>
+<li><a href="#3-why-specific-exceptions-matter-23-minutes" class="depth-3">3) Why specific exceptions matter (2–3 minutes)</a></li>
+<li><a href="#4-tryexceptelsefinally-pattern-34-minutes" class="depth-3">4) try/except/else/finally pattern (3–4 minutes)</a></li>
+<li><a href="#5-core-expected-exceptions-for-this-hour-2-minutes" class="depth-3">5) Core expected exceptions for this hour (2 minutes)</a></li>
+<li><a href="#6-common-pitfalls-to-call-out-before-demo-1-minute" class="depth-3">6) Common pitfalls to call out before demo (1 minute)</a></li>
+<li><a href="#transition-line-into-demo" class="depth-2">Transition line into demo</a></li>
+<li><a href="#live-demo-510-minutes-numeric-input-json-loading-with-friendly-errors" class="depth-2">Live demo (5–10 minutes): numeric input + JSON loading with friendly errors</a></li>
+<li><a href="#demo-objective" class="depth-3">Demo objective</a></li>
+<li><a href="#demo-script-file" class="depth-3">Demo script file</a></li>
+<li><a href="#demo-run-sequence" class="depth-3">Demo run sequence</a></li>
+<li><a href="#narration-script-during-demo" class="depth-3">Narration script during demo</a></li>
+<li><a href="#structured-debrief-after-demo-2-minutes" class="depth-2">Structured debrief after demo (2 minutes)</a></li>
+<li><a href="#hands-on-lab-2535-minutes-harden-your-program" class="depth-2">Hands-on lab (25–35 minutes): Harden your program</a></li>
+<li><a href="#lab-prompt-student-facing" class="depth-3">Lab prompt (student-facing)</a></li>
+<li><a href="#starter-file-intentionally-fragile" class="depth-3">Starter file (intentionally fragile)</a></li>
+<li><a href="#required-lab-tasks" class="depth-3">Required lab tasks</a></li>
+<li><a href="#instructor-constraints-to-repeat-out-loud" class="depth-3">Instructor constraints to repeat out loud</a></li>
+<li><a href="#suggested-scaffold-hints-release-progressively" class="depth-3">Suggested scaffold hints (release progressively)</a></li>
+<li><a href="#reference-lab-solution-for-instructor-walkthroughdebrief" class="depth-3">Reference lab solution (for instructor walkthrough/debrief)</a></li>
+<li><a href="#deterministic-test-cases-for-completion-check" class="depth-3">Deterministic test cases for completion check</a></li>
+<li><a href="#test-a-bad-numeric-input-then-recovery" class="depth-4">Test A: bad numeric input then recovery</a></li>
+<li><a href="#test-b-missing-settings-file" class="depth-4">Test B: missing settings file</a></li>
+<li><a href="#test-c-corrupt-json-settings-file" class="depth-4">Test C: corrupt JSON settings file</a></li>
+<li><a href="#lab-completion-criteria-must-all-be-true" class="depth-3">Lab completion criteria (must all be true)</a></li>
+<li><a href="#instructor-coaching-guide-during-lab" class="depth-2">Instructor coaching guide during lab</a></li>
+<li><a href="#common-student-issue-1-giant-catch-all-block" class="depth-3">Common student issue 1: giant catch-all block</a></li>
+<li><a href="#common-student-issue-2-silent-swallow-with-pass" class="depth-3">Common student issue 2: silent swallow with pass</a></li>
+<li><a href="#common-student-issue-3-confusing-validation-with-exceptions" class="depth-3">Common student issue 3: confusing validation with exceptions</a></li>
+<li><a href="#common-student-issue-4-forgetting-to-continue-flow" class="depth-3">Common student issue 4: forgetting to continue flow</a></li>
+<li><a href="#deepening-understanding-specific-vs-broad-exception-handling" class="depth-2">Deepening understanding: specific vs broad exception handling</a></li>
+<li><a href="#optional-extension-stay-in-basics-scope-simple-error-logging-to-text-file" class="depth-2">Optional extension (stay in Basics scope): simple error logging to text file</a></li>
+<li><a href="#why-this-extension-matters" class="depth-3">Why this extension matters</a></li>
+<li><a href="#extension-implementation-pattern" class="depth-3">Extension implementation pattern</a></li>
+<li><a href="#expected-log-file-sample" class="depth-3">Expected log file sample</a></li>
+<li><a href="#discussion-prompts-to-reinforce-reasoning" class="depth-2">Discussion prompts to reinforce reasoning</a></li>
+<li><a href="#expanded-facilitation-guide-minute-by-minute-lab-support" class="depth-2">Expanded facilitation guide: minute-by-minute lab support</a></li>
+<li><a href="#minute-03-launch-with-confidence-and-constraints" class="depth-3">Minute 0–3: launch with confidence and constraints</a></li>
+<li><a href="#minute-38-first-hardening-target-integer-conversion" class="depth-3">Minute 3–8: first hardening target (integer conversion)</a></li>
+<li><a href="#minute-812-second-hardening-target-float-conversion" class="depth-3">Minute 8–12: second hardening target (float conversion)</a></li>
+<li><a href="#minute-1218-file-loading-hardening-with-two-specific-exceptions" class="depth-3">Minute 12–18: file loading hardening with two specific exceptions</a></li>
+<li><a href="#minute-1823-preserve-business-rule-validation" class="depth-3">Minute 18–23: preserve business-rule validation</a></li>
+<li><a href="#minute-2328-run-deterministic-tests-a-b-c" class="depth-3">Minute 23–28: run deterministic tests A, B, C</a></li>
+<li><a href="#minute-2832-polish-messages-and-flow" class="depth-3">Minute 28–32: polish messages and flow</a></li>
+<li><a href="#minute-3235-final-verification-and-share-outs" class="depth-3">Minute 32–35: final verification and share-outs</a></li>
+<li><a href="#expanded-misconception-clinic-for-real-time-correction" class="depth-2">Expanded misconception clinic (for real-time correction)</a></li>
+<li><a href="#misconception-if-i-catch-exception-i-am-safer" class="depth-3">Misconception: “If I catch Exception, I am safer.”</a></li>
+<li><a href="#misconception-finally-is-required-in-every-try" class="depth-3">Misconception: “finally is required in every try.”</a></li>
+<li><a href="#misconception-if-i-have-else-i-do-not-need-except" class="depth-3">Misconception: “If I have else, I do not need except.”</a></li>
+<li><a href="#misconception-validation-should-be-done-inside-except" class="depth-3">Misconception: “Validation should be done inside except.”</a></li>
+<li><a href="#misconception-silent-pass-is-cleaner" class="depth-3">Misconception: “Silent pass is cleaner.”</a></li>
+<li><a href="#instructor-language-bank-for-supportive-coaching" class="depth-2">Instructor language bank for supportive coaching</a></li>
+<li><a href="#optional-challenge-prompts-for-fast-finishers-still-basics-safe" class="depth-2">Optional challenge prompts for fast finishers (still Basics-safe)</a></li>
+<li><a href="#classroom-safe-boundaries-and-technical-guardrails" class="depth-2">Classroom-safe boundaries and technical guardrails</a></li>
+<li><a href="#quick-formative-checks-during-instruction" class="depth-2">Quick formative checks during instruction</a></li>
+<li><a href="#checkpoint-a-after-talk-points" class="depth-3">Checkpoint A (after talk points)</a></li>
+<li><a href="#checkpoint-b-after-demo" class="depth-3">Checkpoint B (after demo)</a></li>
+<li><a href="#checkpoint-c-end-of-lab" class="depth-3">Checkpoint C (end of lab)</a></li>
+<li><a href="#quick-check-exit-ticket-required-by-runbook" class="depth-2">Quick check / exit ticket (required by runbook)</a></li>
+<li><a href="#instructor-debrief-script-final-23-minutes" class="depth-2">Instructor debrief script (final 2–3 minutes)</a></li>
+<li><a href="#assessment-rubric-for-this-hour-lightweight" class="depth-2">Assessment rubric for this hour (lightweight)</a></li>
+<li><a href="#instructor-troubleshooting-appendix" class="depth-2">Instructor troubleshooting appendix</a></li>
+<li><a href="#issue-student-cannot-trigger-jsondecodeerror" class="depth-3">Issue: student cannot trigger JSONDecodeError</a></li>
+<li><a href="#issue-filenotfounderror-not-triggered" class="depth-3">Issue: FileNotFoundError not triggered</a></li>
+<li><a href="#issue-key-lookup-causes-crash-keyerror" class="depth-3">Issue: key lookup causes crash (KeyError)</a></li>
+<li><a href="#issue-learners-ask-if-except-exception-as-e-is-ever-allowed" class="depth-3">Issue: learners ask if except Exception as e is ever allowed</a></li>
+<li><a href="#full-speaking-script-block-optional-near-verbatim-delivery" class="depth-2">Full speaking script block (optional near-verbatim delivery)</a></li>
+<li><a href="#end-of-hour-checklist-for-instructor" class="depth-2">End-of-hour checklist for instructor</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day11_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day11_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day11_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day12_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

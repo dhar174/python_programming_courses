@@ -28,8 +28,6 @@ def require_file(path: Path, label: str, errors: list[str]) -> None:
 
 
 def validate_repo_artifact(repo_root: Path, artifact: dict[str, object], label: str, errors: list[str]) -> None:
-    if artifact.get("delivery") != "repo":
-        return
     repo_path = artifact.get("repoPath")
     if repo_path and not (repo_root / str(repo_path)).is_file():
         add_error(errors, f"Missing repo artifact for {label}: {repo_root / str(repo_path)}")
@@ -45,6 +43,10 @@ def validate_pages_artifact(site_root: Path, artifact: dict[str, object], label:
     href = artifact.get("href")
     if href and not (site_root / str(href)).is_file():
         add_error(errors, f"Missing published artifact for {label}: {site_root / str(href)}")
+    published_paths = artifact.get("publishedPaths") or []
+    for relative_path in published_paths:
+        if relative_path and not (site_root / str(relative_path)).is_file():
+            add_error(errors, f"Missing published artifact for {label}: {site_root / str(relative_path)}")
     downloads = artifact.get("downloads") or {}
     for format_name, relative_path in downloads.items():
         if relative_path and not (site_root / str(relative_path)).is_file():
@@ -57,6 +59,19 @@ def validate_day_overview(site_root: Path, day: dict[str, object], label: str, e
         add_error(errors, f"Missing overviewHref for {label}")
         return
     require_file(site_root / str(overview_href), f"published day overview for {label}", errors)
+
+
+def validate_mirrored_publish_tree(repo_root: Path, site_root: Path, source_root: str, pattern: str, label: str, errors: list[str]) -> None:
+    source_dir = repo_root / source_root
+    if not source_dir.is_dir():
+        return
+
+    for source_path in source_dir.rglob(pattern):
+        if not source_path.is_file():
+            continue
+        mirrored_path = site_root / source_path.relative_to(repo_root)
+        if not mirrored_path.is_file():
+            add_error(errors, f"Missing mirrored published {label}: {mirrored_path}")
 
 
 def validate_manifest(repo_root: Path, site_root: Path, errors: list[str]) -> None:
@@ -94,6 +109,7 @@ def validate_manifest(repo_root: Path, site_root: Path, errors: list[str]) -> No
         for day in module.get("days", []):
             validate_day_overview(site_root, day, f"{module['id']} {day['id']}", errors)
             validate_pages_artifact(site_root, day["artifacts"]["slides"], f"{module['id']} {day['id']} slides", errors)
+            validate_pages_artifact(site_root, day["artifacts"]["lecture"], f"{module['id']} {day['id']} lecture", errors)
             validate_repo_artifact(repo_root, day["artifacts"]["lecture"], f"{module['id']} {day['id']} lecture", errors)
             validate_repo_artifact(repo_root, day["artifacts"]["assignment"], f"{module['id']} {day['id']} assignment", errors)
             validate_repo_artifact(repo_root, day["artifacts"]["quiz"], f"{module['id']} {day['id']} quiz", errors)
@@ -125,6 +141,9 @@ def main() -> int:
     errors: list[str] = []
     require_file(site_root / "slides" / "shared" / "portal" / "portal.css", "published portal CSS", errors)
     require_file(site_root / "slides" / "shared" / "portal" / "portal.js", "published portal JS", errors)
+    validate_mirrored_publish_tree(repo_root, site_root, "Basics/lessons/lecture", "*.html", "Basics lecture HTML", errors)
+    validate_mirrored_publish_tree(repo_root, site_root, "Advanced/lessons/lecture", "*.html", "Advanced lecture HTML", errors)
+    validate_mirrored_publish_tree(repo_root, site_root, "slides/shared/lecture", "*", "shared lecture asset", errors)
     validate_manifest(repo_root, site_root, errors)
     validate_root_decoupling(repo_root, site_root, errors)
 

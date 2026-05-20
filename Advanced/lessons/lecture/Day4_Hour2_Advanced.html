@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4, Hour 2: Security Basics – Environment Variables, Safe Secrets Habits, and Hashing Concepts | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="4">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day4_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day4_Hour1_Advanced.html">
+    <link rel="next" href="Day4_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="4" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-04/index.html">Day 4</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 4, Hour 2: Security Basics – Environment Variables, Safe Secrets Habits, and Hashing Concepts</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 4</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day4_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Advanced – Session 4</strong></p>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<p><strong>Total Time:</strong> 60 minutes<br>
+- Recap &amp; Security Mindset Reset: 5 minutes
+- Core Concepts (secrets, env vars, hard-coded risk): 12 minutes
+- Hashing vs encryption at a high level: 10 minutes
+- Live Demo (env var loading + gated admin action): 10 minutes
+- Hands-On Lab (secure-ish configuration): 18 minutes
+- Debrief &amp; Exit Ticket: 5 minutes</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, you will be able to:
+1. Explain why secrets should not be hard-coded into source files or committed to version control
+2. Load configuration such as an API key or admin key from environment variables
+3. Create a <code>.env.example</code> template with placeholders rather than real secrets
+4. Describe the difference between hashing and encryption at a conceptual level
+5. Use <code>hashlib.sha256</code> in a classroom-safe comparison demo while understanding its limited scope here
+6. Update <code>.gitignore</code> guidance so local secret files are not committed
+7. Add a README note telling users to set environment variables before running admin actions
+8. Build an admin-only action that is gated by configuration rather than a hard-coded value</p>
+<hr>
+<h2 id="section-1-recap-security-mindset-reset-5-minutes">Section 1: Recap &amp; Security Mindset Reset (5 minutes)</h2>
+<h3 id="connecting-to-the-previous-hour">Connecting to the Previous Hour</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Last hour we talked about consuming data from outside our program. That forced us to think carefully about reliability: timeouts, status codes, JSON parsing, and response validation. This hour introduces a similar mindset, but from a security angle.</p>
+<p>Security basics are not about turning everyone into a security engineer in sixty minutes. Security basics are about developing habits that prevent very common, very avoidable mistakes. In other words, today is less about advanced cryptography and more about refusing to do the unsafe obvious thing.</p>
+<p>The unsafe obvious thing might be:</p>
+<ul>
+<li>putting a secret directly in code</li>
+<li>copying a real key into a demo file</li>
+<li>committing a local <code>.env</code> file by accident</li>
+<li>confusing hashing with encryption</li>
+<li>promising a level of security a classroom demo does not really provide</li>
+</ul>
+<p>So I want to set the tone very clearly: <strong>we are staying in appropriate scope</strong>. We are covering good configuration habits, basic terminology, and a small comparison-only hashing demonstration. We are <strong>not</strong> implementing OAuth. We are <strong>not</strong> implementing JWT flows. We are <strong>not</strong> building a production authentication system.</p>
+<p>That boundary is important. Good engineers know what they know, what they do not know yet, and what is out of scope.</p>
+<h3 id="framing-question">Framing Question</h3>
+<p><strong>[Ask students:]</strong> If you find a secret key directly inside a source file in a repository, what risks come to mind?</p>
+<p>[Pause. Collect 3–4 answers.]</p>
+<p>Good answers usually include accidental leaks, hard-to-rotate credentials, insecure sharing, and secrets ending up in commit history forever.</p>
+<hr>
+<h2 id="section-2-core-concepts-secrets-configuration-and-hard-coded-risk-12-minutes">Section 2: Core Concepts – Secrets, Configuration, and Hard-Coded Risk (12 minutes)</h2>
+<h3 id="what-counts-as-a-secret">What Counts as a Secret?</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>In this context, a secret is any value that should not be exposed publicly or casually shared. That might include:</p>
+<ul>
+<li>API keys</li>
+<li>database passwords</li>
+<li>admin tokens</li>
+<li>service credentials</li>
+<li>signing keys</li>
+</ul>
+<p>Not every configuration value is secret. A port number might be configuration but not secret. A feature flag might be configuration but not secret. Students need to distinguish “settings” from “sensitive settings,” while also understanding that both are often loaded from the environment for flexibility.</p>
+<h3 id="why-hard-coding-secrets-is-a-problem">Why Hard-Coding Secrets Is a Problem</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Hard-coding means we literally write the secret into the source code:</p>
+<pre><code class="language-python">ADMIN_KEY = &quot;super-secret-real-key&quot;
+</code></pre>
+<p>It is easy. It is fast. It is also a bad idea.</p>
+<p>Problems with hard-coded secrets include:</p>
+<ol>
+<li><strong>They get committed to version control.</strong> Even if you remove the line later, the secret may still exist in commit history.</li>
+<li><strong>They spread through screenshots, code reviews, examples, and copy/paste.</strong></li>
+<li><strong>They are difficult to rotate.</strong> If the key changes, you now need a code change and redeploy instead of a configuration change.</li>
+<li><strong>They encourage unsafe team habits.</strong> Students start to treat secrets like normal text.</li>
+</ol>
+<p>The safe habit is to load secrets from environment variables or another approved configuration mechanism.</p>
+<h3 id="environment-variables-as-a-simple-practical-pattern">Environment Variables as a Simple, Practical Pattern</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Environment variables let the operating environment provide values at runtime. The code asks for a value by name; the value is not stored in the source file itself.</p>
+<p>In Python, the basic access pattern uses <code>os.environ</code>:</p>
+<pre><code class="language-python">import os
+
+api_key = os.environ.get(&quot;APP_API_KEY&quot;)
+</code></pre>
+<p>This gives us a much healthier separation:</p>
+<ul>
+<li>code defines <strong>what configuration is needed</strong></li>
+<li>the environment supplies <strong>the actual value</strong></li>
+</ul>
+<p>We should still validate the value exists. Quietly getting <code>None</code> and stumbling later is not friendly. A helper function makes that better.</p>
+<pre><code class="language-python">import os
+
+
+def get_required_env(name: str) -&gt; str:
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f&quot;Missing required environment variable: {name}&quot;)
+    return value
+</code></pre>
+<h3 id="a-envexample-file-is-a-template-not-a-secret-store">A <code>.env.example</code> File Is a Template, Not a Secret Store</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>In many projects, developers use a local <code>.env</code> file during development. In this course, teach the pattern carefully:</p>
+<ul>
+<li><code>.env.example</code> may be committed</li>
+<li><code>.env</code> should usually be ignored</li>
+<li><code>.env.example</code> contains placeholders, never real secrets</li>
+</ul>
+<p>A good example template looks like this:</p>
+<pre><code class="language-env">APP_API_KEY=your-api-key-here
+APP_ADMIN_KEY=replace-with-local-admin-key
+APP_ENV=development
+</code></pre>
+<p>This tells collaborators what variables they need without exposing actual values.</p>
+<h3 id="gitignore-and-readme-guidance"><code>.gitignore</code> and README Guidance</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Good secret hygiene is not just code. It includes project scaffolding.</p>
+<p>In <code>.gitignore</code>, exclude local secret files such as:</p>
+<pre><code class="language-gitignore">.env
+.env.local
+.env.development
+.env.production
+!.env.example
+secrets.json
+local_settings.json
+</code></pre>
+<p>In the README, they should add a note such as:</p>
+<blockquote>
+<p>Set the required environment variables before running admin actions or API-enabled scripts.</p>
+</blockquote>
+<p>That is simple, but it prevents confusion and encodes the right operational habit.</p>
+<hr>
+<h2 id="section-3-hashing-vs-encryption-high-level-only-10-minutes">Section 3: Hashing vs Encryption – High-Level Only (10 minutes)</h2>
+<h3 id="the-big-conceptual-difference">The Big Conceptual Difference</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students often hear words like hashing and encryption as if they are interchangeable. They are not.</p>
+<ul>
+<li><strong>Encryption</strong> is designed to be reversible when you have the right key.</li>
+<li><strong>Hashing</strong> is designed to be one-way.</li>
+</ul>
+<p>A hash function takes input and produces a digest. The key idea for this lesson is that you do not “decrypt” a hash back into the original value. Instead, one common pattern is to hash a new input and compare the digest to a stored digest.</p>
+<p>Because this is an introductory security hour, keep this conceptual. We are not building a production password system today. We are using hashing to teach the one-way idea and to reinforce the difference from plain-text comparison.</p>
+<h3 id="why-scope-discipline-matters">Why Scope Discipline Matters</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>I want to model careful language here. If we demo <code>hashlib.sha256</code>, that does <strong>not</strong> mean we have taught full password security. It means we have demonstrated the concept of one-way hashing and digest comparison.</p>
+<p>If students ask about production password storage, the accurate answer is that real systems use stronger, purpose-built password hashing approaches and broader security design practices. But those are beyond this lesson.</p>
+<h3 id="sha256-demo-for-comparison-only-use"><code>sha256</code> Demo for Comparison-Only Use</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is the classroom-safe pattern we will show:</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import hashlib
+import secrets
+
+
+def sha256_digest(value: str) -&gt; str:
+    return hashlib.sha256(value.encode(&quot;utf-8&quot;)).hexdigest()
+
+
+admin_key = &quot;demo-admin-key&quot;
+provided_key = &quot;demo-admin-key&quot;
+
+expected_digest = sha256_digest(admin_key)
+provided_digest = sha256_digest(provided_key)
+
+print(secrets.compare_digest(expected_digest, provided_digest))
+</code></pre>
+<p>The point of this demo is not that we now have “security solved.” The point is that a hash digest can be compared without printing or storing the original value directly in application logic. Using <code>secrets.compare_digest(...)</code> also models a safer constant-time comparison habit.</p>
+<p><strong>[Prediction prompt:]</strong> If I change one character in the input, do you expect a small change in the digest or a completely different digest-looking string?</p>
+<p>[Pause.]</p>
+<p>Right. The digest changes dramatically. That property helps students understand why hashes are used as fingerprints of input.</p>
+<h3 id="important-scope-reminder">Important Scope Reminder</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Say this plainly: in this course hour, <code>sha256</code> is a <strong>concept demo for comparison-only use</strong>. We are not implementing OAuth. We are not implementing JWT. We are not designing a secure identity system. If students bring those up, welcome the curiosity and then protect the scope.</p>
+<hr>
+<h2 id="section-4-live-demo-environment-variables-gated-admin-action-10-minutes">Section 4: Live Demo – Environment Variables + Gated Admin Action (10 minutes)</h2>
+<h3 id="demo-goal">Demo Goal</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>I am going to show a tiny script that:</p>
+<ul>
+<li>loads an admin key from an environment variable</li>
+<li>accepts a provided key value</li>
+<li>compares digests for demonstration purposes</li>
+<li>logs the attempt</li>
+<li>denies the admin action if the key is wrong</li>
+</ul>
+<p>Again, this is a habits demo, not a production auth system.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+import hashlib
+import logging
+import os
+import secrets
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=&quot;%(asctime)s %(levelname)s %(message)s&quot;,
+)
+logger = logging.getLogger(__name__)
+
+
+def get_required_env(name: str) -&gt; str:
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f&quot;Missing required environment variable: {name}&quot;)
+    return value
+
+
+def sha256_digest(value: str) -&gt; str:
+    return hashlib.sha256(value.encode(&quot;utf-8&quot;)).hexdigest()
+
+
+def run_admin_action(provided_key: str) -&gt; None:
+    expected_key = get_required_env(&quot;APP_ADMIN_KEY&quot;)
+
+    if not secrets.compare_digest(
+        sha256_digest(provided_key),
+        sha256_digest(expected_key),
+    ):
+        logger.warning(&quot;Admin action denied due to invalid key.&quot;)
+        print(&quot;Admin action denied.&quot;)
+        return
+
+    logger.info(&quot;Admin action approved.&quot;)
+    print(&quot;Admin action completed.&quot;)
+
+
+def main() -&gt; None:
+    provided_key = input(&quot;Enter admin key: &quot;)
+    run_admin_action(provided_key)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-narration">Demo Narration</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Walk students through the helper function first. Explain why failing early on a missing environment variable is better than silently continuing with bad configuration.</p>
+<p>Then highlight the logging. The user sees “Admin action denied,” while the log captures the event for later review. This is a nice bridge between security and observability.</p>
+<p>Then talk about the digest comparison. Be explicit that we are demonstrating the concept of comparing one-way digests rather than storing or reusing a plain-text value directly in business logic, and point out that <code>secrets.compare_digest(...)</code> is the safer comparison helper to model.</p>
+<p><strong>[Instructor action:]</strong> Show, but do not commit, example setup guidance:</p>
+<pre><code class="language-bash">export APP_ADMIN_KEY=&quot;replace-with-local-value&quot;
+python admin_demo.py
+</code></pre>
+<p>Show an accompanying <code>.env.example</code> file content on screen:</p>
+<pre><code class="language-env">APP_ADMIN_KEY=replace-with-local-admin-key
+APP_API_KEY=replace-with-local-api-key
+</code></pre>
+<p>Show <code>.gitignore</code> guidance:</p>
+<pre><code class="language-gitignore">.env
+.env.local
+.env.development
+.env.production
+!.env.example
+</code></pre>
+<p>Show the README note:</p>
+<pre><code class="language-markdown">## Configuration
+Set the required environment variables before running admin actions.
+</code></pre>
+<h3 id="questions-to-ask-during-the-demo">Questions to Ask During the Demo</h3>
+<p><strong>[Ask students:]</strong></p>
+<ul>
+<li>What would be wrong with placing <code>APP_ADMIN_KEY = "real-secret"</code> in the Python file?</li>
+<li>Why is <code>.env.example</code> safe to commit when it contains placeholders only?</li>
+<li>Why is logging an admin-denied event useful even if the program already printed a message?</li>
+</ul>
+<p>These questions make the demo about reasoning, not imitation.</p>
+<hr>
+<h2 id="section-5-hands-on-lab-secure-ish-configuration-18-minutes">Section 5: Hands-On Lab – Secure-ish Configuration (18 minutes)</h2>
+<h3 id="lab-framing">Lab Framing</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students now apply the pattern in their own project context. The scope is intentionally modest and realistic.</p>
+<p>They are not building login systems. They are making their code stop depending on hard-coded secrets.</p>
+<h3 id="student-task">Student Task</h3>
+<p><strong>Lab: Secure-ish Configuration</strong></p>
+<p>Students should:</p>
+<ul>
+<li>add support for an API key or admin key read from an environment variable</li>
+<li>implement a simple admin-only action gated by that key</li>
+<li>avoid hard-coding the secret in code or commits</li>
+<li>create <code>.env.example</code> with placeholder values only</li>
+<li>update <code>.gitignore</code> to exclude <code>.env</code> and similar local secret files</li>
+<li>add a README note telling users to set environment variables before running admin actions</li>
+<li>log whether the admin action was approved or denied</li>
+</ul>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<p>A student solution is complete when:</p>
+<ul>
+<li>the key is loaded from environment or config rather than source code</li>
+<li>the admin action is gated correctly</li>
+<li><code>.env.example</code> exists with placeholders only</li>
+<li><code>.gitignore</code> guidance prevents local secret files from being committed</li>
+<li>the README includes a configuration note</li>
+<li>an allow or deny event is logged</li>
+</ul>
+<h3 id="circulation-notes">Circulation Notes</h3>
+<p><strong>[Circulate:]</strong></p>
+<p>Look for these common issues first:</p>
+<ol>
+<li>A real-looking key still appears in code.</li>
+<li>The student created <code>.env.example</code> but accidentally put an actual value in it.</li>
+<li>The code uses <code>os.environ["NAME"]</code> without a friendly failure message if the variable is missing.</li>
+<li>The student logs the actual secret value. Stop that immediately; logs should record the event, not the secret.</li>
+<li>The student begins drifting toward JWT or OAuth discussion and loses the assignment scope.</li>
+</ol>
+<p>If a student is stuck, give them a checklist:</p>
+<ul>
+<li>first, write <code>get_required_env()</code></li>
+<li>second, use it in one admin function</li>
+<li>third, create <code>.env.example</code></li>
+<li>fourth, update <code>.gitignore</code></li>
+<li>fifth, add one README note</li>
+</ul>
+<p>That sequence keeps the lab manageable.</p>
+<h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
+<ul>
+<li>Accidentally committing secrets.</li>
+<li>Printing secret values during debugging.</li>
+<li>Confusing hashing with encryption.</li>
+<li>Assuming a hash demo equals a production password system.</li>
+<li>Forgetting to document required variables for future users.</li>
+<li>Using local configuration files without adding ignore rules.</li>
+</ul>
+<h3 id="optional-extensions">Optional Extensions</h3>
+<p>If a student finishes early, allow one of these safe extensions:</p>
+<ul>
+<li>add a second required environment variable such as <code>APP_ENV</code></li>
+<li>create a small configuration module that loads multiple values</li>
+<li>add a “configuration check” command that reports missing variables without revealing their values</li>
+<li>add more structured logging messages</li>
+</ul>
+<p>Do <strong>not</strong> turn extensions into a full authentication project. Protect the lesson boundary.</p>
+<hr>
+<h3 id="security-habit-checklist-for-everyday-development">Security Habit Checklist for Everyday Development</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Before we wrap this lab, I want to give students a checklist they can reuse long after this session. Security can feel abstract until it becomes a small set of repeatable questions.</p>
+<p>When you are about to add configuration or a privileged action, ask:</p>
+<ol>
+<li>Is this value sensitive, or is it just configuration?</li>
+<li>If it is sensitive, does it appear anywhere in source code, screenshots, or commit history?</li>
+<li>If I rotate the value tomorrow, can I do it without changing code?</li>
+<li>Have I documented what variable names are required?</li>
+<li>Did I add local secret files to <code>.gitignore</code>?</li>
+<li>Did I accidentally log or print the secret value?</li>
+<li>Does the README tell another developer how to configure the project safely?</li>
+</ol>
+<p>This checklist is intentionally simple. The point is not exhaustive security review. The point is to stop predictable mistakes before they happen.</p>
+<h3 id="environment-variables-are-better-not-magical">Environment Variables Are Better, Not Magical</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Students sometimes hear “use environment variables” and conclude that the problem is fully solved. This is a good place to teach nuance.</p>
+<p>Environment variables are better than hard-coded secrets because they separate code from sensitive values and make rotation easier. But they are not magic. You still need to:</p>
+<ul>
+<li>avoid printing them</li>
+<li>avoid checking local secret files into version control</li>
+<li>document required names clearly</li>
+<li>avoid pasting real values into examples or chat threads</li>
+</ul>
+<p>The mental model I want students to keep is this: environment variables are a safer delivery mechanism, not a substitute for judgment.</p>
+<h3 id="what-to-do-if-a-secret-is-accidentally-committed">What to Do If a Secret Is Accidentally Committed</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is an excellent short discussion prompt because it moves security from theory to incident response.</p>
+<p>If a secret is accidentally committed, the fix is not “delete the line and move on.” The correct mindset is:</p>
+<ul>
+<li>assume the secret is exposed</li>
+<li>rotate or replace it</li>
+<li>remove it from the current codebase</li>
+<li>update <code>.gitignore</code> or workflow habits so it does not happen again</li>
+<li>inform the right people if the repository is shared</li>
+</ul>
+<p>Students do not need a full incident response playbook, but they do need the instinct that exposed secrets should be treated as compromised.</p>
+<h3 id="instructor-response-guide-for-common-questions">Instructor Response Guide for Common Questions</h3>
+<p><strong>Question: “Can I just keep the key in a Python constant for now because this is only local?”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>For a throwaway scratch file, students may be tempted to do that, but this course is teaching habits that transfer to real projects. If the project is important enough to save, it is important enough to configure safely.</p>
+<p><strong>Question: “Why do we commit <code>.env.example</code> if <code>.env</code> is ignored?”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>Because collaborators need to know what variables exist. The example file is documentation. The real file is local configuration.</p>
+<p><strong>Question: “Why not just print the loaded key to prove it worked?”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>Because debugging should not normalize exposing secrets. Prove it worked by confirming the variable exists or by showing downstream behavior, not by displaying the secret value.</p>
+<p><strong>Question: “Should we implement JWT or OAuth for our capstone now?”</strong></p>
+<p><strong>[Instructor response:]</strong></p>
+<p>No. That is intentionally out of scope for this hour. Your job right now is to demonstrate sound foundational habits: environment-based configuration, secret hygiene, and a clear boundary around admin actions.</p>
+<h3 id="instructor-mini-scenario-discussion">Instructor Mini-Scenario Discussion</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Use these quick scenarios to test student judgment:</p>
+<p><strong>Scenario 1:</strong> A teammate adds <code>API_KEY = "12345"</code> directly in <code>services.py</code> so the demo works faster.</p>
+<p>Ask: What should happen next?</p>
+<p>Expected direction: remove it, rotate if real, move configuration to environment, update docs.</p>
+<p><strong>Scenario 2:</strong> A student adds <code>.env.example</code> with an actual working secret copied from their machine.</p>
+<p>Ask: Why is that still a problem even though the file name says “example”?</p>
+<p>Expected direction: the filename does not make the value safe; the content matters.</p>
+<p><strong>Scenario 3:</strong> The app logs “Admin action denied for key abc123.”</p>
+<p>Ask: What is wrong with that log entry?</p>
+<p>Expected direction: the event is worth logging; the secret value is not.</p>
+<p><strong>Scenario 4:</strong> The student says, “We hashed the key with sha256, so now we have secure authentication.”</p>
+<p>Ask: What is too broad or inaccurate about that claim?</p>
+<p>Expected direction: the lesson demonstrates one-way hashing concepts, not a complete authentication system.</p>
+<h3 id="suggested-instructor-language-for-scope-control">Suggested Instructor Language for Scope Control</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Security conversations can expand quickly. Here are phrases that help keep the lesson on track without shutting down curiosity:</p>
+<ul>
+<li>“That is a great advanced topic, and we are intentionally keeping today’s scope smaller.”</li>
+<li>“For this checkpoint, I care more that your secret is not hard-coded than that you design a full auth workflow.”</li>
+<li>“Let’s separate foundation from extension. Foundation is env-based config and secret hygiene. Extension is advanced auth.”</li>
+<li>“I want you to leave with safe defaults, not a false sense that we solved security in one hour.”</li>
+</ul>
+<p>These lines help students feel respected while staying focused.</p>
+<h3 id="strong-solution-characteristics-to-highlight-publicly">Strong Solution Characteristics to Highlight Publicly</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>When you debrief the room, call out solutions that demonstrate maturity in small ways:</p>
+<ul>
+<li>missing env vars produce clear setup guidance</li>
+<li><code>.env.example</code> contains placeholders only</li>
+<li><code>.gitignore</code> protects local files</li>
+<li>README notes tell another person how to run the project safely</li>
+<li>logs record security-relevant events without exposing secrets</li>
+</ul>
+<p>Those are the habits we want to normalize.</p>
+<h3 id="final-reinforcement-before-debrief">Final Reinforcement Before Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>One more idea I want to anchor before we close: security basics are often invisible when they are done well. No one applauds a missing hard-coded key the way they might applaud a flashy dashboard, but professional projects depend on these quiet decisions.</p>
+<p>Students should leave this hour understanding that project quality includes operational habits:</p>
+<ul>
+<li>the codebase does not teach unsafe examples</li>
+<li>the repository does not invite accidental leaks</li>
+<li>the README helps the next person configure the project safely</li>
+<li>admin behavior is protected by configuration rather than trust or luck</li>
+</ul>
+<p>If they internalize that security is partly about avoiding preventable mistakes, then this hour has accomplished exactly what it should.</p>
+<h3 id="short-reflection-prompt-if-time-remains">Short Reflection Prompt if Time Remains</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Ask students to write one sentence completing each prompt:</p>
+<ul>
+<li>“The most important secret-handling habit I learned today is <strong><em>_</em></strong>_.”</li>
+<li>“The easiest mistake to make in a small project is <strong><em>_</em></strong>_.”</li>
+<li>“One thing I will change in my own workflow is <strong><em>_</em></strong>_.”</li>
+</ul>
+<p>This gives the lesson a personal action step instead of leaving it as abstract advice.</p>
+<h3 id="safe-demo-practices-in-the-classroom">Safe Demo Practices in the Classroom</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Because this is a security-flavored hour, I also want to model safe demonstration habits, not just safe application code. Students notice what instructors normalize.</p>
+<p>If I am projecting code or terminal commands, I should avoid using anything that looks like a real secret. Use placeholder values that are obviously fake. Use names like <code>replace-with-local-value</code> or <code>demo-only-key</code>. That matters because students often copy examples literally, and a casual-looking “temporary” real key can become part of their workflow much faster than expected.</p>
+<p>When demonstrating environment variables, narrate the process explicitly:</p>
+<ul>
+<li>“I am setting a local value for demonstration.”</li>
+<li>“This is not a real credential.”</li>
+<li>“In a team project, each developer would use their own local configuration.”</li>
+</ul>
+<p>That narration teaches operational context, not just syntax.</p>
+<p>Another helpful classroom move is to avoid reward language around shortcuts. If a student says, “I just hard-coded it because it was faster,” do not reinforce that with “That’s fine for now.” Instead say, “I understand why that felt faster, and this is exactly the point where we practice the safer habit instead.”</p>
+<p>This keeps the classroom from accidentally teaching that security only matters when a project becomes “serious enough.” Habits are formed much earlier than that.</p>
+<h3 id="mini-debrief-questions-for-stronger-discussion">Mini Debrief Questions for Stronger Discussion</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If the room is engaged and you want a stronger whole-group discussion before the exit ticket, ask one or two of these:</p>
+<ul>
+<li>What is the difference between a project that is easy to run and a project that is easy to run safely?</li>
+<li>Why is configuration documentation part of security hygiene?</li>
+<li>What kinds of mistakes happen when teams treat secrets like normal strings?</li>
+<li>Why is “just for local testing” often the beginning of long-lived bad habits?</li>
+</ul>
+<p>These questions help students connect security habits to teamwork, maintenance, and professionalism rather than seeing them as isolated technical trivia.</p>
+<h3 id="final-instructor-checklist-for-review">Final Instructor Checklist for Review</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As a final pass during circulation, I can review a student solution in under a minute with this checklist:</p>
+<ul>
+<li>Can I point to the environment variable name in code?</li>
+<li>Can I point to a helpful error message when it is missing?</li>
+<li>Can I point to <code>.env.example</code> with placeholder values only?</li>
+<li>Can I point to <code>.gitignore</code> coverage for local secret files?</li>
+<li>Can I point to the README note about configuration?</li>
+<li>Can I point to an admin action that is gated and logged?</li>
+</ul>
+<p>This quick review keeps assessment aligned to the runbook rather than drifting into unrelated security topics.</p>
+<h3 id="one-sentence-takeaway-to-repeat-aloud">One-Sentence Takeaway to Repeat Aloud</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>If students remember one sentence from this hour, let it be this: <strong>keep secrets out of code, document configuration clearly, and never confuse a classroom demo with a complete security system.</strong></p>
+<p>Add one final reminder: placeholders belong in shared examples, while real values belong only in local runtime configuration. That distinction is simple, practical, and worth repeating.</p>
+<h2 id="section-6-debrief-exit-ticket-5-minutes">Section 6: Debrief &amp; Exit Ticket (5 minutes)</h2>
+<h3 id="group-debrief">Group Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Today’s lesson was about disciplined security habits. The goal was not to make students experts in cryptography. The goal was to eliminate easy mistakes and replace them with healthier defaults.</p>
+<p>The habits to reinforce are:</p>
+<ul>
+<li>keep secrets out of source code</li>
+<li>use environment variables for sensitive configuration</li>
+<li>commit <code>.env.example</code>, not <code>.env</code></li>
+<li>update <code>.gitignore</code> intentionally</li>
+<li>document configuration in the README</li>
+<li>understand hashing as a one-way concept</li>
+<li>avoid claiming more security than the code actually provides</li>
+</ul>
+<p><strong>[Ask students:]</strong> Which one of those habits feels easiest to adopt immediately in your own work? Which one feels easiest to forget?</p>
+<p>Let them answer briefly. This helps move the lesson from abstract advice into future behavior.</p>
+<h3 id="exit-ticket">Exit Ticket</h3>
+<p><strong>[Instructor asks:]</strong></p>
+<ol>
+<li>Why is hashing not reversible, and why is that useful?</li>
+<li>Why is a <code>.env.example</code> file safe to commit when it contains placeholders only?</li>
+<li>What is one risk of hard-coding a secret into a Python file?</li>
+<li>Why are OAuth and JWT intentionally out of scope for this hour?</li>
+</ol>
+<p><strong>[Expected direction of answers:]</strong></p>
+<ul>
+<li>Hashing is designed as a one-way transformation, which makes it useful for comparison-style checks without recovering the original value.</li>
+<li><code>.env.example</code> teaches required variable names without exposing real secrets.</li>
+<li>Hard-coded secrets can leak into version control, history, screenshots, and shared code.</li>
+<li>OAuth and JWT are larger topics; this hour focuses on basic, practical secret-handling habits.</li>
+</ul>
+<h3 id="instructor-closing-line">Instructor Closing Line</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>In the next hour, we shift from implementation habits to project planning. Good engineering is not just secure code and working code; it is also knowing how to scope, sequence, and deliver a project you can actually finish.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#section-1-recap-security-mindset-reset-5-minutes" class="depth-2">Section 1: Recap &amp; Security Mindset Reset (5 minutes)</a></li>
+<li><a href="#connecting-to-the-previous-hour" class="depth-3">Connecting to the Previous Hour</a></li>
+<li><a href="#framing-question" class="depth-3">Framing Question</a></li>
+<li><a href="#section-2-core-concepts-secrets-configuration-and-hard-coded-risk-12-minutes" class="depth-2">Section 2: Core Concepts – Secrets, Configuration, and Hard-Coded Risk (12 minutes)</a></li>
+<li><a href="#what-counts-as-a-secret" class="depth-3">What Counts as a Secret?</a></li>
+<li><a href="#why-hard-coding-secrets-is-a-problem" class="depth-3">Why Hard-Coding Secrets Is a Problem</a></li>
+<li><a href="#environment-variables-as-a-simple-practical-pattern" class="depth-3">Environment Variables as a Simple, Practical Pattern</a></li>
+<li><a href="#a-envexample-file-is-a-template-not-a-secret-store" class="depth-3">A .env.example File Is a Template, Not a Secret Store</a></li>
+<li><a href="#gitignore-and-readme-guidance" class="depth-3">.gitignore and README Guidance</a></li>
+<li><a href="#section-3-hashing-vs-encryption-high-level-only-10-minutes" class="depth-2">Section 3: Hashing vs Encryption – High-Level Only (10 minutes)</a></li>
+<li><a href="#the-big-conceptual-difference" class="depth-3">The Big Conceptual Difference</a></li>
+<li><a href="#why-scope-discipline-matters" class="depth-3">Why Scope Discipline Matters</a></li>
+<li><a href="#sha256-demo-for-comparison-only-use" class="depth-3">sha256 Demo for Comparison-Only Use</a></li>
+<li><a href="#important-scope-reminder" class="depth-3">Important Scope Reminder</a></li>
+<li><a href="#section-4-live-demo-environment-variables-gated-admin-action-10-minutes" class="depth-2">Section 4: Live Demo – Environment Variables + Gated Admin Action (10 minutes)</a></li>
+<li><a href="#demo-goal" class="depth-3">Demo Goal</a></li>
+<li><a href="#demo-narration" class="depth-3">Demo Narration</a></li>
+<li><a href="#questions-to-ask-during-the-demo" class="depth-3">Questions to Ask During the Demo</a></li>
+<li><a href="#section-5-hands-on-lab-secure-ish-configuration-18-minutes" class="depth-2">Section 5: Hands-On Lab – Secure-ish Configuration (18 minutes)</a></li>
+<li><a href="#lab-framing" class="depth-3">Lab Framing</a></li>
+<li><a href="#student-task" class="depth-3">Student Task</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#circulation-notes" class="depth-3">Circulation Notes</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-3">Common Pitfalls to Watch For</a></li>
+<li><a href="#optional-extensions" class="depth-3">Optional Extensions</a></li>
+<li><a href="#security-habit-checklist-for-everyday-development" class="depth-3">Security Habit Checklist for Everyday Development</a></li>
+<li><a href="#environment-variables-are-better-not-magical" class="depth-3">Environment Variables Are Better, Not Magical</a></li>
+<li><a href="#what-to-do-if-a-secret-is-accidentally-committed" class="depth-3">What to Do If a Secret Is Accidentally Committed</a></li>
+<li><a href="#instructor-response-guide-for-common-questions" class="depth-3">Instructor Response Guide for Common Questions</a></li>
+<li><a href="#instructor-mini-scenario-discussion" class="depth-3">Instructor Mini-Scenario Discussion</a></li>
+<li><a href="#suggested-instructor-language-for-scope-control" class="depth-3">Suggested Instructor Language for Scope Control</a></li>
+<li><a href="#strong-solution-characteristics-to-highlight-publicly" class="depth-3">Strong Solution Characteristics to Highlight Publicly</a></li>
+<li><a href="#final-reinforcement-before-debrief" class="depth-3">Final Reinforcement Before Debrief</a></li>
+<li><a href="#short-reflection-prompt-if-time-remains" class="depth-3">Short Reflection Prompt if Time Remains</a></li>
+<li><a href="#safe-demo-practices-in-the-classroom" class="depth-3">Safe Demo Practices in the Classroom</a></li>
+<li><a href="#mini-debrief-questions-for-stronger-discussion" class="depth-3">Mini Debrief Questions for Stronger Discussion</a></li>
+<li><a href="#final-instructor-checklist-for-review" class="depth-3">Final Instructor Checklist for Review</a></li>
+<li><a href="#one-sentence-takeaway-to-repeat-aloud" class="depth-3">One-Sentence Takeaway to Repeat Aloud</a></li>
+<li><a href="#section-6-debrief-exit-ticket-5-minutes" class="depth-2">Section 6: Debrief &amp; Exit Ticket (5 minutes)</a></li>
+<li><a href="#group-debrief" class="depth-3">Group Debrief</a></li>
+<li><a href="#exit-ticket" class="depth-3">Exit Ticket</a></li>
+<li><a href="#instructor-closing-line" class="depth-3">Instructor Closing Line</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day4_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day4_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

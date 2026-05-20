@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5 Hour 2 Advanced — Tkinter Layout, Usability, and Resizing (Instructor Script) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day5_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day5_Hour1_Advanced.html">
+    <link rel="next" href="Day5_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="5" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 5 Hour 2 Advanced — Tkinter Layout, Usability, and Resizing (Instructor Script)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-intent-and-anti-drift-guardrails">Instructor intent and anti-drift guardrails</h2>
+<p>This hour is a layout and usability hour. Keep the center of gravity on how interface structure affects readability, alignment, and resizing behavior under realistic user interaction. Your teaching posture should be practical and design minded, not purely syntax minded. Learners should leave with the ability to look at a cluttered Tkinter screen and apply a repeatable refactor plan that improves legibility, spacing, and window adaptability.</p>
+<p>Anti-drift note for you to say out loud near the beginning and repeat once before the lab:</p>
+<ul>
+<li>We are not re-teaching Hour 1 widget fundamentals. Assume learners already know basic widget creation and event wiring.</li>
+<li>We are not drifting into Hour 3 validation UX. We are not designing error states, field-level validation strategy, or submission validation messaging in this hour.</li>
+<li>This hour stays focused on layout, usability, and resizing behavior.</li>
+</ul>
+<p>You can frame this as a contract with the room: if a question starts to move into Hour 1 basics or Hour 3 validation details, capture it in a parking lot note and bring the class back to layout and resizing.</p>
+<h2 id="runbook-alignment-outcomes-talk-points-demo-lab-completion-criteria">Runbook alignment: outcomes, talk points, demo, lab, completion criteria</h2>
+<p>Use this section as your internal checklist and as visible class framing.</p>
+<p>Required runbook outcomes for this hour:</p>
+<ul>
+<li>Learners can explain when to use nested frames to impose structure.</li>
+<li>Learners can align labels, entries, lists, and action controls in a coherent grid.</li>
+<li>Learners can configure row and column weights so a window expands predictably.</li>
+<li>Learners can identify and fix common layout defects: overlap, collapse, cramped spacing, and unbalanced resizing.</li>
+<li>Learners can perform a practical refactor from messy initial layout to readable responsive layout.</li>
+<li>Learners can self-test usability by resizing the window and scanning for readability defects.</li>
+</ul>
+<p>Required talk points to explicitly cover:</p>
+<ul>
+<li>Parent-child geometry ownership and why each parent should have one geometry strategy.</li>
+<li>Mental model for frame decomposition: page, regions, and local grids.</li>
+<li>Sticky behavior and anchor intent for readability.</li>
+<li>Padding as a usability signal, not decorative fluff.</li>
+<li>Row and column weights as resize budget allocation.</li>
+<li>Minimum size constraints and when to use them.</li>
+<li>Concrete pitfalls: overlap and collapse caused by missing sticky, missing padding, and missing weights.</li>
+<li>Decision flow for refactor: structure first, spacing second, resize behavior third.</li>
+</ul>
+<p>Required demo outcomes:</p>
+<ul>
+<li>Show a flawed baseline UI.</li>
+<li>Refactor incrementally with narration.</li>
+<li>Verify each change using quick visual tests.</li>
+<li>Demonstrate resizing after each milestone.</li>
+<li>End with a readable, aligned, and acceptably resizable interface.</li>
+</ul>
+<p>Required lab outcomes:</p>
+<ul>
+<li>Students refactor a provided or copied rough layout.</li>
+<li>Students run a checklist-based test sequence including narrow width, tall height, and wide layout scenarios.</li>
+<li>Students pair-check each other using observable criteria.</li>
+<li>Students capture one pitfall encountered and the fix they applied.</li>
+</ul>
+<p>Completion criteria for this hour must be stated literally and visibly:</p>
+<ul>
+<li>UI readable and aligned</li>
+<li>resizing acceptable</li>
+</ul>
+<h2 id="timing-map-and-arithmetic-check">Timing map and arithmetic check</h2>
+<p>Segment timing must remain exact:</p>
+<ul>
+<li>4 min recap</li>
+<li>8 min layout manager mental model</li>
+<li>7 min usability/resizing concepts</li>
+<li>10 min live refactor demo</li>
+<li>26 min hands-on lab</li>
+<li>5 min debrief</li>
+</ul>
+<p>Arithmetic check for class transparency and pacing discipline:</p>
+<p>4 + 8 + 7 + 10 + 26 + 5 = 60.</p>
+<p>Call out that this arithmetic is intentional. It helps learners trust the flow and helps you avoid over-teaching one segment at the expense of lab time.</p>
+<h2 id="segment-1-4-min-recap">Segment 1 — 4 min recap</h2>
+<p>Facilitation goal: reactivate prior memory quickly, then pivot to today’s skill transfer.</p>
+<p>Suggested near-verbatim script:</p>
+<p>“Welcome back. In the previous hour, you already worked with core widgets and interaction wiring. Today we shift from widget existence to interface quality. Two apps can have the same widgets and wildly different usability. This hour is about making a Tkinter interface readable, aligned, and stable when users resize the window. You will practice diagnosis and refactoring, not just typing syntax.”</p>
+<p>“Before we start, one boundary statement: we are not reteaching basic widget fundamentals from Hour 1, and we are not moving ahead into validation UX from Hour 3. We stay tightly focused on layout, usability, and resizing behavior.”</p>
+<p>Rapid recall prompts:</p>
+<ul>
+<li>“What problems do users report when layout is weak?”</li>
+<li>“What visual signs tell you a UI is hard to scan?”</li>
+<li>“What often breaks first when a window is resized?”</li>
+</ul>
+<p>Expected learner responses you can harvest:</p>
+<ul>
+<li>Text fields not aligned, labels drifting, buttons floating oddly.</li>
+<li>Crowded controls with no breathing room.</li>
+<li>Lists stay fixed while empty whitespace appears elsewhere.</li>
+<li>Controls overlap or disappear when the window gets smaller.</li>
+<li>One region stretches too much while another region collapses.</li>
+</ul>
+<p>Bridge statement to next segment:</p>
+<p>“Excellent. That list is our target. We now build a mental model that predicts those failures before they happen.”</p>
+<p>Observation checkpoint in this recap:</p>
+<ul>
+<li>At least three learners can describe a concrete resize failure.</li>
+<li>At least two learners can name one mechanism they suspect is responsible, like missing weights or poor frame decomposition.</li>
+</ul>
+<p>If energy is low, use a rapid vote:</p>
+<ul>
+<li>“Hands up if you have ever resized an app and watched the layout break.”</li>
+<li>“Hands up if that app might have been yours.”</li>
+<li>Use humor, then transition immediately.</li>
+</ul>
+<h2 id="segment-2-8-min-layout-manager-mental-model">Segment 2 — 8 min layout manager mental model</h2>
+<p>Facilitation goal: give learners a durable reasoning model so they can design and debug layout with intent.</p>
+<p>Start with plain language model:</p>
+<p>“A Tkinter layout is a tree. Every widget has one parent. Geometry decisions happen per parent container. The parent decides how its direct children are arranged. This is why structure comes before polish.”</p>
+<p>Core principle you must emphasize:</p>
+<ul>
+<li>In a given parent, use one geometry manager strategy for its direct children.</li>
+<li>You may use different geometry managers in different nested parents, but do not mix pack and grid in the same parent.</li>
+</ul>
+<p>Explain with analogy:</p>
+<p>“Think of each frame as a room. Inside one room, choose one rule for placing furniture. If you switch rules halfway inside the same room, the room manager gets conflicting instructions.”</p>
+<p>Talk point detail:</p>
+<ul>
+<li>Parent ownership: each frame controls placement of children.</li>
+<li>Local coordination: each frame can have its own grid logic.</li>
+<li>Nested composition: page-level frame holds region frames, then each region frame manages local detail.</li>
+</ul>
+<p>Use a minimal, clean example and narrate intent:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.title(&quot;Layout Mental Model&quot;)
+root.geometry(&quot;860x500&quot;)
+root.minsize(720, 420)
+
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+page = ttk.Frame(root, padding=12)
+page.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+page.columnconfigure(0, weight=3)
+page.columnconfigure(1, weight=2)
+page.rowconfigure(1, weight=1)
+
+header = ttk.Frame(page, padding=(0, 0, 0, 8))
+header.grid(row=0, column=0, columnspan=2, sticky=&quot;ew&quot;)
+
+content = ttk.Frame(page, padding=(0, 0, 8, 0))
+content.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+
+sidebar = ttk.Frame(page)
+sidebar.grid(row=1, column=1, sticky=&quot;nsew&quot;)
+
+header.columnconfigure(0, weight=1)
+ttk.Label(header, text=&quot;Inventory Workspace&quot;).grid(row=0, column=0, sticky=&quot;w&quot;)
+ttk.Button(header, text=&quot;Refresh&quot;).grid(row=0, column=1, sticky=&quot;e&quot;)
+
+content.columnconfigure(1, weight=1)
+ttk.Label(content, text=&quot;Item name&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+ttk.Entry(content).grid(row=0, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+ttk.Label(content, text=&quot;Quantity&quot;).grid(row=1, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+ttk.Entry(content).grid(row=1, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+
+sidebar.rowconfigure(1, weight=1)
+ttk.Label(sidebar, text=&quot;Items&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, pady=(0, 8))
+items = tk.Listbox(sidebar)
+items.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+ttk.Button(sidebar, text=&quot;Delete Selected&quot;).grid(row=2, column=0, sticky=&quot;ew&quot;, pady=(8, 0))
+
+root.mainloop()
+</code></pre>
+<p>Narration points while showing this:</p>
+<ul>
+<li>“I configured root and page to stretch, then I allocated proportional space at page level.”</li>
+<li>“Header, content, and sidebar are separate layout concerns.”</li>
+<li>“Within content, labels stay left and entries stretch horizontally.”</li>
+<li>“Within sidebar, the list area gets vertical growth budget.”</li>
+</ul>
+<p>Now teach the prohibited pattern with short warning and explanation:</p>
+<p>“Mixing pack and grid in the same parent creates unpredictable behavior and runtime errors. If you inherit code that does this, your first fix is structural: place one set of widgets into a nested frame, then give that frame one manager.”</p>
+<p>Concrete pitfall example 1 for overlap via missing sticky:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.geometry(&quot;600x320&quot;)
+
+panel = ttk.Frame(root, padding=10)
+panel.grid(row=0, column=0)
+
+ttk.Label(panel, text=&quot;Name&quot;).grid(row=0, column=0)
+entry = ttk.Entry(panel)
+entry.grid(row=0, column=1)
+
+notes = tk.Text(panel, width=30, height=6)
+notes.grid(row=1, column=0, columnspan=2)
+
+root.mainloop()
+</code></pre>
+<p>Explain defect:</p>
+<ul>
+<li>Window enlarges but entry and text do not follow available space.</li>
+<li>Crowding appears because no sticky and no column weight.</li>
+<li>People call this overlap or cramped collapse because controls visually collide as window shape changes.</li>
+</ul>
+<p>Concrete pitfall example 2 for collapse due to missing weights:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.geometry(&quot;820x420&quot;)
+
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+main = ttk.Frame(root, padding=10)
+main.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+main.columnconfigure(0, weight=1)
+main.columnconfigure(1, weight=1)
+
+left = ttk.Frame(main)
+left.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+right = ttk.Frame(main)
+right.grid(row=0, column=1, sticky=&quot;nsew&quot;)
+
+left_list = tk.Listbox(left)
+left_list.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+right_list = tk.Listbox(right)
+right_list.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+root.mainloop()
+</code></pre>
+<p>Explain defect:</p>
+<ul>
+<li>Parent grids have some weights, but inner frames lack row and column weight.</li>
+<li>Lists appear but do not grow as expected, giving a collapsed feel.</li>
+<li>Users perceive wasted blank zones and cramped lists.</li>
+</ul>
+<p>Concrete pitfall example 3 for readability collapse via missing padding:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.geometry(&quot;640x280&quot;)
+
+frame = ttk.Frame(root)
+frame.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+for r, label in enumerate([&quot;First&quot;, &quot;Last&quot;, &quot;Email&quot;, &quot;Phone&quot;]):
+    ttk.Label(frame, text=label).grid(row=r, column=0, sticky=&quot;w&quot;)
+    ttk.Entry(frame).grid(row=r, column=1, sticky=&quot;ew&quot;)
+
+ttk.Button(frame, text=&quot;Save&quot;).grid(row=4, column=0)
+ttk.Button(frame, text=&quot;Cancel&quot;).grid(row=4, column=1)
+
+root.mainloop()
+</code></pre>
+<p>Explain defect:</p>
+<ul>
+<li>No internal or external padding causes visual crowding.</li>
+<li>Scan path is noisy because rows touch each other.</li>
+<li>Buttons sit too close to fields, reducing readability and increasing accidental clicks.</li>
+</ul>
+<p>Transition line:</p>
+<p>“Mental model first, then usability decisions, then resize tuning. That sequence reduces thrash.”</p>
+<h2 id="segment-3-7-min-usability-and-resizing-concepts">Segment 3 — 7 min usability and resizing concepts</h2>
+<p>Facilitation goal: connect geometry choices to user perception and task efficiency.</p>
+<p>Open with high-value statement:</p>
+<p>“A good layout is not merely pretty. It reduces cognitive load. Users find controls faster, make fewer mistakes, and trust the app more.”</p>
+<p>Concept cluster 1: readability through alignment and spacing</p>
+<ul>
+<li>Align labels consistently, usually left aligned in a label column.</li>
+<li>Align entry widgets so start and end edges create visual rhythm.</li>
+<li>Keep action buttons grouped by intent and separated from data entry area.</li>
+<li>Use consistent vertical rhythm with small repeated pady values.</li>
+<li>Use asymmetric padding intentionally when label-to-field spacing differs from section-to-section spacing.</li>
+</ul>
+<p>Concept cluster 2: resizing as behavior contract</p>
+<ul>
+<li>Decide what should grow and what should remain stable.</li>
+<li>Text areas and lists often grow.</li>
+<li>Labels, compact buttons, and small status badges often remain fixed or minimally stretched.</li>
+<li>Horizontal and vertical growth should feel intentional, not accidental.</li>
+</ul>
+<p>Explain sticky succinctly:</p>
+<ul>
+<li>sticky controls where a widget attaches within its grid cell.</li>
+<li>Use ew for horizontal stretch, ns for vertical stretch, and nsew for full stretch.</li>
+<li>Without sticky, widget may sit centered and underuse available space.</li>
+</ul>
+<p>Explain weights as budget:</p>
+<p>“Weight is your resize budget. A column with weight two gets twice the extra width of a column with weight one. A row with weight zero gets no extra stretch. If you do not assign budget, the interface has nowhere sensible to send extra space.”</p>
+<p>Teach minimum size and practical limits:</p>
+<ul>
+<li>Use minsize to protect baseline readability.</li>
+<li>Avoid making minsize so large that users on smaller displays cannot use the app.</li>
+<li>Test three conditions live: narrow, wide, and tall.</li>
+</ul>
+<p>Usability checkpoint script:</p>
+<p>“Ask yourself: can a user scan labels top to bottom without zig-zag eye movement? Can the user see which controls belong together? When I resize, does useful content gain space while utility controls remain stable?”</p>
+<p>Concrete before/after explanation for missing sticky:</p>
+<ul>
+<li>Before: entry remains fixed width while window grows, creating awkward blank area.</li>
+<li>After: entry sticky ew plus column weight gives fluid width.</li>
+<li>User impact: less truncation, easier editing, fewer horizontal scroll surprises.</li>
+</ul>
+<p>Concrete before/after explanation for missing padding:</p>
+<ul>
+<li>Before: labels, entries, and buttons touch or nearly touch.</li>
+<li>After: consistent padx and pady define chunks.</li>
+<li>User impact: faster visual parsing and lower error rate.</li>
+</ul>
+<p>Concrete before/after explanation for missing weights:</p>
+<ul>
+<li>Before: listbox does not expand; user sees clipped content.</li>
+<li>After: relevant row and column weights let listbox claim expansion space.</li>
+<li>User impact: more visible records and smoother interaction.</li>
+</ul>
+<p>Transition to demo:</p>
+<p>“Now we do a full refactor with narration. Watch sequence more than typing speed.”</p>
+<h2 id="segment-4-10-min-live-refactor-demo">Segment 4 — 10 min live refactor demo</h2>
+<p>Facilitation goal: model expert thinking and sequencing under real constraints.</p>
+<p>Demo framing:</p>
+<ul>
+<li>Start with intentionally rough UI.</li>
+<li>Apply changes in small batches.</li>
+<li>After each batch, run a visual test.</li>
+<li>Speak cause and effect explicitly.</li>
+</ul>
+<p>Baseline rough UI code for demonstration:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.title(&quot;Order Console&quot;)
+root.geometry(&quot;840x460&quot;)
+
+main = ttk.Frame(root)
+main.grid(row=0, column=0)
+
+ttk.Label(main, text=&quot;Customer&quot;).grid(row=0, column=0)
+ttk.Entry(main).grid(row=0, column=1)
+ttk.Label(main, text=&quot;Order ID&quot;).grid(row=0, column=2)
+ttk.Entry(main).grid(row=0, column=3)
+
+ttk.Label(main, text=&quot;Notes&quot;).grid(row=1, column=0)
+notes = tk.Text(main, width=30, height=6)
+notes.grid(row=1, column=1)
+
+listbox = tk.Listbox(main, height=8)
+listbox.grid(row=1, column=2)
+
+ttk.Button(main, text=&quot;Add&quot;).grid(row=2, column=0)
+ttk.Button(main, text=&quot;Delete&quot;).grid(row=2, column=1)
+ttk.Button(main, text=&quot;Refresh&quot;).grid(row=2, column=2)
+
+root.mainloop()
+</code></pre>
+<p>Narrate observed defects:</p>
+<ul>
+<li>Regions are not conceptually grouped.</li>
+<li>Labels and entries on row zero are cramped.</li>
+<li>Notes and listbox do not share space clearly.</li>
+<li>Buttons are disconnected from the list region.</li>
+<li>Resizing is poor due to no meaningful sticky and no weights.</li>
+</ul>
+<p>Refactor step 1 structure with nested frames:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.title(&quot;Order Console&quot;)
+root.geometry(&quot;840x460&quot;)
+root.minsize(720, 400)
+
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+page = ttk.Frame(root, padding=12)
+page.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+page.columnconfigure(0, weight=3)
+page.columnconfigure(1, weight=2)
+page.rowconfigure(1, weight=1)
+
+form = ttk.Frame(page, padding=(0, 0, 10, 0))
+form.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+
+list_panel = ttk.Frame(page)
+list_panel.grid(row=1, column=1, sticky=&quot;nsew&quot;)
+
+ttk.Label(page, text=&quot;Order Workspace&quot;).grid(row=0, column=0, columnspan=2, sticky=&quot;w&quot;, pady=(0, 10))
+</code></pre>
+<p>What to say:</p>
+<p>“I created page, then two primary regions: form and list panel. This gives us local control and cleaner mental boundaries.”</p>
+<p>Refactor step 2 alignment and spacing in form:</p>
+<pre><code class="language-python">form.columnconfigure(1, weight=1)
+form.rowconfigure(2, weight=1)
+
+ttk.Label(form, text=&quot;Customer&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+customer_entry = ttk.Entry(form)
+customer_entry.grid(row=0, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+
+ttk.Label(form, text=&quot;Order ID&quot;).grid(row=1, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+order_entry = ttk.Entry(form)
+order_entry.grid(row=1, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+
+ttk.Label(form, text=&quot;Notes&quot;).grid(row=2, column=0, sticky=&quot;nw&quot;, padx=(0, 8), pady=(0, 8))
+notes = tk.Text(form, wrap=&quot;word&quot;)
+notes.grid(row=2, column=1, sticky=&quot;nsew&quot;, pady=(0, 8))
+</code></pre>
+<p>What to say:</p>
+<p>“Now labels align left, entries stretch, notes gets vertical growth. Padding creates rhythm. Notice how this immediately improves readability without changing business logic.”</p>
+<p>Refactor step 3 list region behavior and optional extension hook:</p>
+<pre><code class="language-python">list_panel.columnconfigure(0, weight=1)
+list_panel.rowconfigure(1, weight=1)
+
+ttk.Label(list_panel, text=&quot;Recent Orders&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, pady=(0, 8))
+
+orders = tk.Listbox(list_panel)
+orders.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+
+toolbar = ttk.Frame(list_panel, padding=(0, 8, 0, 0))
+toolbar.grid(row=2, column=0, sticky=&quot;ew&quot;)
+toolbar.columnconfigure((0, 1, 2), weight=1)
+
+ttk.Button(toolbar, text=&quot;Add&quot;).grid(row=0, column=0, sticky=&quot;ew&quot;, padx=(0, 4))
+ttk.Button(toolbar, text=&quot;Delete&quot;).grid(row=0, column=1, sticky=&quot;ew&quot;, padx=4)
+ttk.Button(toolbar, text=&quot;Refresh&quot;).grid(row=0, column=2, sticky=&quot;ew&quot;, padx=(4, 0))
+</code></pre>
+<p>What to say:</p>
+<p>“Here is the optional extension already scaffolded as a toolbar frame with Add, Delete, Refresh. This is useful for learners who finish early. Also notice the toolbar is in its own frame so button spacing and growth are locally controlled.”</p>
+<p>Refactor step 4 resize verification script:</p>
+<ul>
+<li>Drag window wider: check entries and list expand.</li>
+<li>Drag window taller: notes and list gain height.</li>
+<li>Drag narrower to minsize: confirm baseline readability retained.</li>
+<li>Confirm no overlap or clipping.</li>
+</ul>
+<p>Say:</p>
+<p>“Every layout change should be followed by a resize test. If you only test at default size, you are not done.”</p>
+<p>Quick diagnostic prompts while demo runs:</p>
+<ul>
+<li>“Which row is responsible for vertical growth in form?”</li>
+<li>“Which column is responsible for horizontal growth in form?”</li>
+<li>“Where did we assign list panel growth budget?”</li>
+<li>“What would break if we removed sticky nsew from notes?”</li>
+</ul>
+<p>Expected answers:</p>
+<ul>
+<li>form row 2.</li>
+<li>form column 1.</li>
+<li>list_panel row 1 and column 0.</li>
+<li>notes would stop filling space and appear collapsed relative to cell.</li>
+</ul>
+<p>Remediation mini-playbook during demo:</p>
+<ul>
+<li>If entry not stretching, check columnconfigure weight and entry sticky ew.</li>
+<li>If text area not stretching vertically, check rowconfigure weight and text sticky nsew.</li>
+<li>If elements look cramped, add consistent padding at region and widget levels.</li>
+<li>If mixed geometry warning appears, identify parent and unify manager strategy.</li>
+</ul>
+<p>Close demo with explicit criteria mapping:</p>
+<p>“We now have readable alignment and acceptable resizing behavior. This is the same target you will apply in lab.”</p>
+<h2 id="segment-5-26-min-hands-on-lab">Segment 5 — 26 min hands-on lab</h2>
+<p>Facilitation goal: convert observed refactor pattern into independent execution and diagnosis skill.</p>
+<p>Lab framing script:</p>
+<p>“You now own the process. You are not copying style line by line. You are applying a layout strategy. Your deliverable is a refactored UI that meets objective criteria under resize tests.”</p>
+<p>Lab objective:</p>
+<p>Refactor a rough Tkinter screen so structure, spacing, alignment, and resizing behavior are intentional and testable.</p>
+<p>Lab setup instructions:</p>
+<ol>
+<li>Start from the provided starter file or copy the rough baseline layout from the demo.</li>
+<li>Run once and observe default problems.</li>
+<li>Sketch region decomposition on paper or in comments in plain text.</li>
+<li>Implement structural frames first.</li>
+<li>Apply alignment and spacing.</li>
+<li>Configure resize behavior with weights and sticky.</li>
+<li>Run resize test checklist.</li>
+<li>Perform peer observation and adjust.</li>
+</ol>
+<p>Suggested starter code for lab use:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+root.title(&quot;Project Tracker&quot;)
+root.geometry(&quot;900x520&quot;)
+
+main = ttk.Frame(root)
+main.grid(row=0, column=0)
+
+ttk.Label(main, text=&quot;Project&quot;).grid(row=0, column=0)
+ttk.Entry(main).grid(row=0, column=1)
+ttk.Label(main, text=&quot;Owner&quot;).grid(row=0, column=2)
+ttk.Entry(main).grid(row=0, column=3)
+ttk.Label(main, text=&quot;Status&quot;).grid(row=1, column=0)
+ttk.Combobox(main, values=[&quot;Open&quot;, &quot;In Progress&quot;, &quot;Blocked&quot;, &quot;Done&quot;]).grid(row=1, column=1)
+
+ttk.Label(main, text=&quot;Details&quot;).grid(row=2, column=0)
+details = tk.Text(main, width=34, height=8)
+details.grid(row=2, column=1)
+
+tasks = tk.Listbox(main, height=10)
+tasks.grid(row=2, column=2)
+
+ttk.Button(main, text=&quot;Add Task&quot;).grid(row=3, column=0)
+ttk.Button(main, text=&quot;Delete Task&quot;).grid(row=3, column=1)
+ttk.Button(main, text=&quot;Refresh&quot;).grid(row=3, column=2)
+
+root.mainloop()
+</code></pre>
+<p>Lab constraints you should post clearly:</p>
+<ul>
+<li>Keep this hour focused on layout and resizing.</li>
+<li>Do not add validation workflows.</li>
+<li>Do not rework widget event logic beyond what is needed for layout.</li>
+<li>Use nested frames intentionally.</li>
+<li>Use consistent padding and sticky strategy.</li>
+<li>Configure row and column weights where growth is expected.</li>
+</ul>
+<p>Mandatory student tests during lab:</p>
+<ul>
+<li>Narrow width test: reduce width until near minsize and inspect clipping.</li>
+<li>Wide width test: expand width significantly and inspect wasted space distribution.</li>
+<li>Tall height test: expand height and verify text/list growth priorities.</li>
+<li>Quick scan test: verify labels and entries are easy to read in one top-to-bottom pass.</li>
+</ul>
+<p>Observation checkpoints at minute 8 of lab:</p>
+<ul>
+<li>Each student has identified at least two region frames.</li>
+<li>At least one row and one column weight is configured in a meaningful parent.</li>
+<li>Students can articulate which widgets should stretch and which should remain compact.</li>
+</ul>
+<p>Observation checkpoints at minute 16 of lab:</p>
+<ul>
+<li>Most students have spacing rhythm applied through padx and pady.</li>
+<li>At least one concrete resize defect has been found and fixed.</li>
+<li>Students can point to exact line causing the fix.</li>
+</ul>
+<p>Observation checkpoints at minute 22 of lab:</p>
+<ul>
+<li>Peer review pairs run each other’s window through three resize scenarios.</li>
+<li>Peer gives one commendation and one targeted adjustment.</li>
+<li>Student writes a short rationale for final layout choices.</li>
+</ul>
+<p>Instructor roaming script and questions:</p>
+<ul>
+<li>“Show me your parent frame tree. Where does each responsibility live?”</li>
+<li>“Which parent owns this widget’s geometry?”</li>
+<li>“If this entry should expand, where is the weight configured?”</li>
+<li>“If this row should absorb height, which row has weight and which widget uses sticky nsew?”</li>
+<li>“Is this spacing intentional or accidental?”</li>
+<li>“What happens if I shrink width by 35 percent right now?”</li>
+</ul>
+<p>Common lab pitfalls and remediation playbook:</p>
+<p>Pitfall A: overlap feel from missing sticky
+Symptom: entries remain tiny while cells enlarge, controls appear mispositioned.
+Fix path:
+- Confirm target widget sticky includes ew or nsew.
+- Confirm parent column weight exists.
+- Re-run wide test and verify change.</p>
+<p>Pitfall B: collapse feel from missing row weight
+Symptom: text area or listbox does not gain height when window grows vertically.
+Fix path:
+- Add rowconfigure for the row containing expanding widget.
+- Confirm widget sticky nsew.
+- Re-run tall test and compare.</p>
+<p>Pitfall C: crowded interface from missing padding
+Symptom: labels, fields, and actions visually blend and scan poorly.
+Fix path:
+- Add region-level padding first.
+- Add widget-level padx and pady rhythm second.
+- Maintain consistency instead of random values.</p>
+<p>Pitfall D: mixed manager confusion
+Symptom: runtime warning or unpredictable arrangement in one container.
+Fix path:
+- Identify offending parent.
+- Keep one geometry manager for direct children.
+- If needed, insert a nested frame and isolate strategy.</p>
+<p>Pitfall E: uneven growth budget
+Symptom: one side stretches aggressively while primary content remains constrained.
+Fix path:
+- Reassess column weights at page region level.
+- Decide intended ratio based on use case.
+- Validate with wide test.</p>
+<p>Pitfall F: minsize too restrictive or too permissive
+Symptom: either app cannot fit smaller display or app becomes unreadable when tiny.
+Fix path:
+- Set practical minsize after layout is stable.
+- Test with target classroom and laptop resolutions.
+- Keep readability threshold as guiding standard.</p>
+<p>Quick intervention snippets you can suggest without taking keyboard control:</p>
+<ul>
+<li>“Try setting the form entry column to weight one and entry sticky ew.”</li>
+<li>“Give the text widget row vertical budget and sticky nsew.”</li>
+<li>“Move action buttons into a toolbar frame to simplify spacing.”</li>
+<li>“Add top padding below section titles for hierarchy clarity.”</li>
+</ul>
+<p>Optional extension for fast finishers:</p>
+<ul>
+<li>Add a toolbar frame with Add/Delete/Refresh controls.</li>
+<li>Keep toolbar local to list or task panel.</li>
+<li>Make buttons stretch evenly.</li>
+<li>Demonstrate that toolbar remains stable while list grows.</li>
+</ul>
+<p>Example extension guidance in near-verbatim voice:</p>
+<p>“If you are done early, implement the optional extension: create a toolbar frame containing Add, Delete, Refresh. Place it under your list panel. Give toolbar columns equal weight so buttons align and stretch evenly. This extension reinforces local layout ownership and avoids clutter in the main frame.”</p>
+<p>Lab quality rubric you can announce:</p>
+<ul>
+<li>Structure clarity: frame decomposition is obvious.</li>
+<li>Alignment quality: labels and fields align predictably.</li>
+<li>Spacing quality: breathing room is consistent.</li>
+<li>Resize behavior: growth allocation matches task priority.</li>
+<li>Defect handling: student can explain at least one pitfall and fix.</li>
+</ul>
+<p>Peer review script for students:</p>
+<ul>
+<li>“I can read this quickly without searching for labels.”</li>
+<li>“When I resize wider, the most useful region gains space.”</li>
+<li>“When I resize taller, long-text or list regions gain space.”</li>
+<li>“I did not observe overlap, clipping, or collapse under normal ranges.”</li>
+</ul>
+<p>Time management cues for you:</p>
+<ul>
+<li>Minute 0 to 4 of lab: planning and first frame decomposition.</li>
+<li>Minute 5 to 12: alignment and spacing pass.</li>
+<li>Minute 13 to 18: resize behavior and defect fixes.</li>
+<li>Minute 19 to 23: peer review and final tune.</li>
+<li>Minute 24 to 26: prepare debrief response.</li>
+</ul>
+<p>Keep lab psychologically safe:</p>
+<ul>
+<li>Praise diagnosis language, not just final appearance.</li>
+<li>Normalize iterative correction.</li>
+<li>Encourage small test loops after each change.</li>
+<li>Discourage giant edits followed by one late run.</li>
+</ul>
+<p>Instructor notes on helping struggling learners:</p>
+<p>If a learner is blocked, do not rewrite their full layout for them. Ask sequence questions:</p>
+<ol>
+<li>“What should this region do when width increases?”</li>
+<li>“Which parent controls that region?”</li>
+<li>“Where can we assign horizontal budget?”</li>
+<li>“Which widget should attach to that budget using sticky?”</li>
+</ol>
+<p>Then let learner apply one change and run.</p>
+<p>If a learner overcomplicates:</p>
+<ul>
+<li>Recommend reducing to three regions.</li>
+<li>Remove ornamental widgets.</li>
+<li>Stabilize core layout first, then reintroduce extras.</li>
+</ul>
+<p>If a learner attempts validation logic work:</p>
+<ul>
+<li>Appreciate initiative.</li>
+<li>Park it for Hour 3.</li>
+<li>Bring them back to resize and readability checklist.</li>
+</ul>
+<p>Documenting learning during lab:</p>
+<p>Ask each learner to write short notes:</p>
+<ul>
+<li>One defect observed.</li>
+<li>One line-level fix applied.</li>
+<li>One test scenario that confirmed improvement.</li>
+<li>One remaining edge case they want to revisit later.</li>
+</ul>
+<p>This reflection improves transfer beyond this hour.</p>
+<h2 id="quick-check-section">Quick-check section</h2>
+<p>Why shouldn’t you mix pack and grid in the same parent?</p>
+<p>Use this exact sentence as displayed above, then ask for verbal responses from at least two learners. Expected answer pattern: one parent should have one geometry strategy for direct children, otherwise conflicting geometry instructions cause unstable or error-prone behavior.</p>
+<h2 id="segment-6-5-min-debrief">Segment 6 — 5 min debrief</h2>
+<p>Facilitation goal: consolidate mental model, validate outcomes, and set up next hour without drifting into it.</p>
+<p>Debrief script:</p>
+<p>“Let’s close by naming what changed in your thinking. We moved from placing widgets to designing behavior. Layout is not a final polish pass. It is a structural decision that directly affects usability.”</p>
+<p>“Tell me one defect you fixed and the mechanism behind the fix.”</p>
+<p>Harvest examples and map to core concepts:</p>
+<ul>
+<li>Missing sticky corrected by ew or nsew.</li>
+<li>Missing weight corrected by rowconfigure or columnconfigure.</li>
+<li>Missing spacing corrected by consistent padx and pady.</li>
+<li>Confused structure corrected by introducing nested frames.</li>
+</ul>
+<p>State completion criteria visibly and literally:</p>
+<ul>
+<li>UI readable and aligned</li>
+<li>resizing acceptable</li>
+</ul>
+<p>Ask for confirmation:</p>
+<p>“Raise your hand if your current version meets both criteria under at least three resize scenarios.”</p>
+<p>If hands are mixed, normalize and give immediate recovery plan:</p>
+<p>“Not finishing perfection in one pass is normal. Before next hour, run one more three-case resize test, then fix one highest-impact issue first.”</p>
+<p>Close with boundary reminder to prevent drift:</p>
+<p>“In the next hour we can talk about validation UX concerns. For this hour, success means your structure, alignment, spacing, and resize behavior are solid. Keep your focus on layout quality.”</p>
+<h2 id="practical-instructor-appendix-expanded-facilitation-notes">Practical instructor appendix: expanded facilitation notes</h2>
+<p>Use this appendix during delivery if you need richer prompts without improvising from scratch.</p>
+<p>High-impact phrasing library:</p>
+<ul>
+<li>“Structure first, detail second, behavior third.”</li>
+<li>“Every parent is a local layout jurisdiction.”</li>
+<li>“Resize behavior is part of correctness, not optional polish.”</li>
+<li>“Padding is information architecture, not decoration.”</li>
+<li>“If a user cannot scan quickly, layout is not done.”</li>
+<li>“Weights allocate extra space, sticky claims that space.”</li>
+</ul>
+<p>Advanced diagnostic sequence you can model on projector:</p>
+<ol>
+<li>Identify the widget showing a defect.</li>
+<li>Find its parent.</li>
+<li>Inspect parent grid weight configuration.</li>
+<li>Inspect widget sticky value.</li>
+<li>Inspect spacing and neighboring constraints.</li>
+<li>Run one resize test.</li>
+<li>Confirm behavioral change.</li>
+<li>Repeat for next defect.</li>
+</ol>
+<p>Use this micro-sequence when students ask “why is this not stretching.”</p>
+<p>Comparative checklist for learners who finish very early:</p>
+<ul>
+<li>Did you separate primary content from action controls?</li>
+<li>Are labels consistently aligned left?</li>
+<li>Do text and list regions gain space first on resize?</li>
+<li>Are compact controls prevented from over-stretching?</li>
+<li>Is there clear spacing between input region and action region?</li>
+<li>Is minsize appropriate for readability?</li>
+<li>Does toolbar extension behave consistently?</li>
+</ul>
+<p>Edge-case prompts for stronger learners:</p>
+<ul>
+<li>“What happens at very narrow widths?”</li>
+<li>“Does section hierarchy remain obvious at large widths?”</li>
+<li>“Which controls become hard to reach in tall windows?”</li>
+<li>“Could you simplify one nested frame without losing clarity?”</li>
+<li>“Is your ratio of content to sidebar space justified by task frequency?”</li>
+</ul>
+<p>Remediation mini-script if the room is behind schedule at lab minute 15:</p>
+<p>“We will prioritize minimum viable layout quality. Focus only on three goals: frame structure, one consistent alignment rhythm, and one robust resize path for your largest content region. Ignore cosmetic tweaks. Hit criteria first, then style.”</p>
+<p>Remediation mini-script if the room is ahead of schedule:</p>
+<p>“Great pace. Add the toolbar extension and run peer stress testing. Try intentional break tests by removing one weight or one sticky, predict failure, then restore. This deepens your diagnostic confidence.”</p>
+<p>Classroom management notes for near-verbatim coaching:</p>
+<ul>
+<li>Keep explanations short during roaming, then ask students to narrate back.</li>
+<li>Avoid keyboard takeover except for class-wide demo moments.</li>
+<li>Praise precise language like row weight, parent frame, and sticky intent.</li>
+<li>Redirect generic statements into concrete observations.</li>
+</ul>
+<p>Examples:
+- Student says “It looks weird.”
+  Coach response: “Point to one widget and one behavior. Is it alignment, spacing, or resize allocation?”</p>
+<ul>
+<li>Student says “It does not work.”
+  Coach response: “Run one test scenario and tell me expected versus observed behavior.”</li>
+</ul>
+<p>This keeps learners in a diagnostic mindset.</p>
+<h2 id="reference-implementation-for-post-lab-comparison">Reference implementation for post-lab comparison</h2>
+<p>Use this only after most students have attempted their own solution. Present as one possible design, not the only design.</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+def build_app() -&gt; tk.Tk:
+    root = tk.Tk()
+    root.title(&quot;Project Tracker Refactor&quot;)
+    root.geometry(&quot;960x560&quot;)
+    root.minsize(760, 440)
+
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
+
+    page = ttk.Frame(root, padding=12)
+    page.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+
+    page.columnconfigure(0, weight=3)
+    page.columnconfigure(1, weight=2)
+    page.rowconfigure(1, weight=1)
+
+    title_row = ttk.Frame(page, padding=(0, 0, 0, 10))
+    title_row.grid(row=0, column=0, columnspan=2, sticky=&quot;ew&quot;)
+    title_row.columnconfigure(0, weight=1)
+
+    ttk.Label(title_row, text=&quot;Project Tracker Workspace&quot;).grid(row=0, column=0, sticky=&quot;w&quot;)
+    ttk.Label(title_row, text=&quot;Layout and resizing focus&quot;).grid(row=0, column=1, sticky=&quot;e&quot;)
+
+    form = ttk.Frame(page, padding=(0, 0, 10, 0))
+    form.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+    form.columnconfigure(1, weight=1)
+    form.rowconfigure(3, weight=1)
+
+    ttk.Label(form, text=&quot;Project&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+    project_entry = ttk.Entry(form)
+    project_entry.grid(row=0, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+
+    ttk.Label(form, text=&quot;Owner&quot;).grid(row=1, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+    owner_entry = ttk.Entry(form)
+    owner_entry.grid(row=1, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+
+    ttk.Label(form, text=&quot;Status&quot;).grid(row=2, column=0, sticky=&quot;w&quot;, padx=(0, 8), pady=(0, 8))
+    status_combo = ttk.Combobox(form, values=[&quot;Open&quot;, &quot;In Progress&quot;, &quot;Blocked&quot;, &quot;Done&quot;], state=&quot;readonly&quot;)
+    status_combo.current(0)
+    status_combo.grid(row=2, column=1, sticky=&quot;ew&quot;, pady=(0, 8))
+
+    ttk.Label(form, text=&quot;Details&quot;).grid(row=3, column=0, sticky=&quot;nw&quot;, padx=(0, 8), pady=(0, 8))
+    details = tk.Text(form, wrap=&quot;word&quot;)
+    details.grid(row=3, column=1, sticky=&quot;nsew&quot;, pady=(0, 8))
+
+    right = ttk.Frame(page)
+    right.grid(row=1, column=1, sticky=&quot;nsew&quot;)
+    right.columnconfigure(0, weight=1)
+    right.rowconfigure(1, weight=1)
+
+    ttk.Label(right, text=&quot;Tasks&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, pady=(0, 8))
+    tasks = tk.Listbox(right)
+    tasks.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+
+    toolbar = ttk.Frame(right, padding=(0, 8, 0, 0))
+    toolbar.grid(row=2, column=0, sticky=&quot;ew&quot;)
+    toolbar.columnconfigure(0, weight=1)
+    toolbar.columnconfigure(1, weight=1)
+    toolbar.columnconfigure(2, weight=1)
+
+    ttk.Button(toolbar, text=&quot;Add&quot;).grid(row=0, column=0, sticky=&quot;ew&quot;, padx=(0, 4))
+    ttk.Button(toolbar, text=&quot;Delete&quot;).grid(row=0, column=1, sticky=&quot;ew&quot;, padx=4)
+    ttk.Button(toolbar, text=&quot;Refresh&quot;).grid(row=0, column=2, sticky=&quot;ew&quot;, padx=(4, 0))
+
+    status_bar = ttk.Frame(page, padding=(0, 10, 0, 0))
+    status_bar.grid(row=2, column=0, columnspan=2, sticky=&quot;ew&quot;)
+    status_bar.columnconfigure(0, weight=1)
+    ttk.Label(status_bar, text=&quot;Resize test: narrow, wide, tall&quot;).grid(row=0, column=0, sticky=&quot;w&quot;)
+    ttk.Label(status_bar, text=&quot;Target: readable and aligned&quot;).grid(row=0, column=1, sticky=&quot;e&quot;)
+
+    return root
+
+if __name__ == &quot;__main__&quot;:
+    app = build_app()
+    app.mainloop()
+</code></pre>
+<p>Debrief this implementation with restraint:</p>
+<ul>
+<li>Mention that many layouts can satisfy criteria.</li>
+<li>Highlight how structure and behavior mapping are explicit.</li>
+<li>Reinforce that this is a reference, not a single correct answer.</li>
+</ul>
+<h2 id="instructor-self-check-before-ending-hour">Instructor self-check before ending hour</h2>
+<p>Use this quick internal review in the final minute:</p>
+<ul>
+<li>Did I preserve the exact timing plan?</li>
+<li>Did I explicitly show arithmetic 4 + 8 + 7 + 10 + 26 + 5 = 60.</li>
+<li>Did I enforce anti-drift boundaries?</li>
+<li>Did I include concrete pitfall examples for missing sticky, missing padding, and missing weights?</li>
+<li>Did learners practice resize testing, not just static visual inspection?</li>
+<li>Did I state completion criteria literally as required?</li>
+<li>Did I include the optional toolbar extension pathway?</li>
+</ul>
+<p>If all are true, this hour is complete and aligned.</p>
+<h2 id="final-spoken-close">Final spoken close</h2>
+<p>“Strong work. You now have a repeatable method for Tkinter layout quality: frame structure, alignment rhythm, and resize behavior contracts. Keep this process close. It will save you time every time a UI grows. Next session can build on this foundation, but for now your win condition is clear and met when your interface is readable, aligned, and stable under resize tests.”</p>
+<p>(agent_id: issue296-hour2-finaldraft — use write_agent to send follow-up messages)</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-intent-and-anti-drift-guardrails" class="depth-2">Instructor intent and anti-drift guardrails</a></li>
+<li><a href="#runbook-alignment-outcomes-talk-points-demo-lab-completion-criteria" class="depth-2">Runbook alignment: outcomes, talk points, demo, lab, completion criteria</a></li>
+<li><a href="#timing-map-and-arithmetic-check" class="depth-2">Timing map and arithmetic check</a></li>
+<li><a href="#segment-1-4-min-recap" class="depth-2">Segment 1 — 4 min recap</a></li>
+<li><a href="#segment-2-8-min-layout-manager-mental-model" class="depth-2">Segment 2 — 8 min layout manager mental model</a></li>
+<li><a href="#segment-3-7-min-usability-and-resizing-concepts" class="depth-2">Segment 3 — 7 min usability and resizing concepts</a></li>
+<li><a href="#segment-4-10-min-live-refactor-demo" class="depth-2">Segment 4 — 10 min live refactor demo</a></li>
+<li><a href="#segment-5-26-min-hands-on-lab" class="depth-2">Segment 5 — 26 min hands-on lab</a></li>
+<li><a href="#quick-check-section" class="depth-2">Quick-check section</a></li>
+<li><a href="#segment-6-5-min-debrief" class="depth-2">Segment 6 — 5 min debrief</a></li>
+<li><a href="#practical-instructor-appendix-expanded-facilitation-notes" class="depth-2">Practical instructor appendix: expanded facilitation notes</a></li>
+<li><a href="#reference-implementation-for-post-lab-comparison" class="depth-2">Reference implementation for post-lab comparison</a></li>
+<li><a href="#instructor-self-check-before-ending-hour" class="depth-2">Instructor self-check before ending hour</a></li>
+<li><a href="#final-spoken-close" class="depth-2">Final spoken close</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day5_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

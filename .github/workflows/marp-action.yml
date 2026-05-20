@@ -16,11 +16,14 @@ on:
       - "Advanced/quizzes/**"
       - "slides/**"
       - "scripts/generate_day_overviews.py"
+      - "scripts/generate_lecture_pages.py"
       - "scripts/generate_portal_manifest.py"
       - "scripts/check_portal_publish.py"
+      - "scripts/validate_lecture_html.py"
       - ".marprc.yml"
       - ".github/workflows/marp-action.yml"
       - "_site/slides/**"
+      - "slides/shared/lecture/**"
 
 permissions:
   contents: read
@@ -55,6 +58,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
+      - name: Install lecture generation dependency
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install Markdown==3.7
 
       - name: Check generated day overview pages
         run: python scripts/generate_day_overviews.py --check
@@ -169,6 +177,12 @@ jobs:
             cp -R slides/shared/portal/. _site/slides/shared/portal
           fi
 
+          rm -rf _site/slides/shared/lecture
+          if [ -d slides/shared/lecture ]; then
+            mkdir -p _site/slides/shared/lecture
+            cp -R slides/shared/lecture/. _site/slides/shared/lecture
+          fi
+
           if [ -f Basics/lessons/slides/index.html ]; then
             mkdir -p _site/slides/basics
             cp Basics/lessons/slides/index.html _site/slides/basics/index.html
@@ -194,6 +208,16 @@ jobs:
           done
 
           for MODULE in Basics Advanced; do
+            if [ -d "${MODULE}/lessons/lecture" ]; then
+              rm -rf "_site/${MODULE}/lessons/lecture"
+              find "${MODULE}/lessons/lecture" -type f -name '*.html' | while IFS= read -r SOURCE_LECTURE_HTML; do
+                RELATIVE_LECTURE_HTML="${SOURCE_LECTURE_HTML#./}"
+                TARGET_LECTURE_HTML="_site/${RELATIVE_LECTURE_HTML}"
+                mkdir -p "$(dirname "${TARGET_LECTURE_HTML}")"
+                cp "${SOURCE_LECTURE_HTML}" "${TARGET_LECTURE_HTML}"
+              done
+            fi
+
             if [ -d "${MODULE}/assignments" ]; then
               rm -rf "_site/${MODULE}/assignments"
               mkdir -p "_site/${MODULE}/assignments"
@@ -216,6 +240,9 @@ jobs:
               done
             fi
           done
+
+          python scripts/generate_lecture_pages.py --repo-root . --output-root _site
+          python scripts/validate_lecture_html.py _site
 
           python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json
 

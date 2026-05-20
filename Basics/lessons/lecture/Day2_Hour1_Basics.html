@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 1: String Fundamentals (Course Hour 5: Indexing, Slicing, len()) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day2_Hour1_Basics.md">
+
+    <link rel="prev" href="Day1_Hour4_Basics.html">
+    <link rel="next" href="Day2_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="2" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 2, Hour 1: String Fundamentals (Course Hour 5: Indexing, Slicing, len())</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 2</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 2, Course Hour 5<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is intentionally written as a delivery script. You can read it almost word-for-word while teaching, pausing where learners need extra think time.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>“By the end of this hour, you will be able to:
+1. Access individual characters in a string using indexing.
+2. Extract parts of strings using slicing.
+3. Use <code>len()</code> to measure string length and avoid out-of-range errors.
+4. Use simple membership checks with <code>in</code> to answer practical questions about text.</p>
+<p>These are foundational skills you will use constantly in scripting, automation, and data cleaning.”</p>
+<hr>
+<h2 id="1-agenda-timing-show-slide-read-quickly-2-minutes">1) Agenda + Timing (show slide / read quickly, ~2 minutes)</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Welcome back to Session 2, outcomes, setup check</li>
+<li><strong>0:05–0:18</strong> Talk track: indexing, negative indexing, slicing, <code>len()</code>, and membership</li>
+<li><strong>0:18–0:26</strong> Live demos: initials, email domain, last character with <code>-1</code></li>
+<li><strong>0:26–0:52</strong> Guided lab: Username Builder</li>
+<li><strong>0:52–0:58</strong> Debrief, pitfalls, quick checks</li>
+<li><strong>0:58–1:00</strong> Transition to Day 2, Hour 2</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist-before-class">2) Instructor Setup Checklist (before class)</h2>
+<ul>
+<li>Open terminal/editor with Python 3.x (examples will use Python 3.10 or 3.11).</li>
+<li>Have a clean file ready, for example: <code>hour5_strings_demo.py</code>.</li>
+<li>Ensure learners can run Python scripts.</li>
+<li>Prepare three sample inputs in advance:</li>
+<li>Full name with extra spaces (e.g., <code>"  Alice   Smith  "</code>)</li>
+<li>Multi-word surname (e.g., <code>"Van Halen"</code>)</li>
+<li>Empty string case for pitfall demo</li>
+</ul>
+<p><strong>Say:</strong> “Today is a very hands-on hour. Please type with me, don’t just watch.”</p>
+<hr>
+<h2 id="3-talk-track-core-concept-delivery-13-minutes">3) Talk Track (Core Concept Delivery, ~13 minutes)</h2>
+<h3 id="31-why-this-matters-motivation">3.1 Why this matters (motivation)</h3>
+<p><strong>Say:</strong>
+“Most beginner programs start with numbers, but real-world scripts are full of text: names, emails, file names, messages, logs, and labels. If you can confidently slice and inspect strings, you can clean messy input and build user-facing output. This hour is about reading text precisely, one character or chunk at a time.”</p>
+<p>“Think of a string as a row of labeled boxes. Indexes are your addresses. If you know the address, you can get exactly the character you need.”</p>
+<h3 id="32-indexing-starts-at-0">3.2 Indexing starts at 0</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">word = &quot;Python&quot;
+print(word[0])
+print(word[1])
+print(word[5])
+</code></pre>
+<p><strong>Say:</strong>
+“Python indexes start at zero, not one. So index <code>0</code> is the first character.”</p>
+<p><strong>Ask learners:</strong>
+“What do you predict prints from <code>word[2]</code>?”</p>
+<p>(Wait. Then run.)</p>
+<pre><code class="language-python">print(word[2])
+</code></pre>
+<p><strong>Key line to repeat:</strong> “Index means position. Position counting starts at 0.”</p>
+<h3 id="33-negative-indexing">3.3 Negative indexing</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">word = &quot;Python&quot;
+print(word[-1])
+print(word[-2])
+print(word[-6])
+</code></pre>
+<p><strong>Say:</strong>
+“Negative indexes count from the end. <code>-1</code> is the last character. This is incredibly useful when the end is more predictable than the beginning, like file extensions or punctuation.”</p>
+<p><strong>Micro-check:</strong>
+“What is <code>word[-3]</code>?”</p>
+<h3 id="34-slicing-fundamentals">3.4 Slicing fundamentals</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">word = &quot;Python&quot;
+print(word[0:3])
+print(word[2:5])
+print(word[:4])
+print(word[1:])
+</code></pre>
+<p><strong>Say:</strong>
+“Slicing uses <code>start:end</code>, and the end is exclusive. That means we include start, stop just before end. This is a major beginner concept. If your slice looks one character short, check your end index.”</p>
+<p><strong>Repeat slowly:</strong>
+“<code>s[a:b]</code> includes <code>a</code>, excludes <code>b</code>.”</p>
+<h3 id="35-len-and-safe-bounds-thinking">3.5 <code>len()</code> and safe bounds thinking</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">message = &quot;Hello, World!&quot;
+print(len(message))
+print(message[len(message) - 1])
+</code></pre>
+<p><strong>Say:</strong>
+“<code>len()</code> returns how many characters are in the string. Since indexing starts at zero, the last valid index is always <code>len(s) - 1</code>.”</p>
+<p>“Whenever you are unsure about boundaries, use <code>len()</code>. It helps you avoid <code>IndexError</code>.”</p>
+<h3 id="36-basic-membership-checks-with-in">3.6 Basic membership checks with <code>in</code></h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">text = &quot;Hello, Python learners!&quot;
+print(&quot;Python&quot; in text)
+print(&quot;python&quot; in text)
+</code></pre>
+<p><strong>Say:</strong>
+“<code>in</code> answers a yes/no question: does this substring exist? It is case-sensitive. If we need case-insensitive checks later, we normalize first, then check.”</p>
+<hr>
+<h2 id="4-live-demo-script-8-minutes">4) Live Demo Script (~8 minutes)</h2>
+<h2 id="demo-a-extract-initials-from-a-full-name">Demo A: Extract initials from a full name</h2>
+<p><strong>Say:</strong> “Let’s build something practical and tiny. We’ll extract initials from a name.”</p>
+<pre><code class="language-python">full_name = &quot;Alice Smith&quot;
+first_initial = full_name[0]
+space_index = full_name.find(&quot; &quot;)
+last_initial = full_name[space_index + 1]
+
+print(f&quot;Initials: {first_initial}.{last_initial}.&quot;)
+</code></pre>
+<p><strong>Expected output:</strong></p>
+<pre><code class="language-text">Initials: A.S.
+</code></pre>
+<p><strong>Narration points:</strong>
+- “I used indexing for first letter.”
+- “I used <code>find(" ")</code> to locate the separator.”
+- “Then I indexed one character after the space.”</p>
+<p><strong>Prediction question:</strong>
+“What breaks if there is no space?”</p>
+<p>(Guide answer: <code>find()</code> returns <code>-1</code>, and <code>-1 + 1 = 0</code>, so result can be wrong.)</p>
+<h2 id="demo-b-extract-domain-from-email">Demo B: Extract domain from email</h2>
+<pre><code class="language-python">email = &quot;student@example.com&quot;
+at_index = email.find(&quot;@&quot;)
+domain = email[at_index + 1:]
+print(f&quot;Domain: {domain}&quot;)
+</code></pre>
+<p><strong>Expected output:</strong></p>
+<pre><code class="language-text">Domain: example.com
+</code></pre>
+<p><strong>Say:</strong> “This pattern appears in validation and data cleaning. Find a marker, then slice from just after it.”</p>
+<h2 id="demo-c-last-character-and-extension-pattern">Demo C: Last character and extension pattern</h2>
+<pre><code class="language-python">filename = &quot;report.pdf&quot;
+print(filename[-1])
+print(filename[-3:])
+</code></pre>
+<p><strong>Say:</strong> “Negative indexing and end slices are compact and readable.”</p>
+<hr>
+<h2 id="5-guided-lab-username-builder-2535-minutes">5) Guided Lab: Username Builder (25–35 minutes)</h2>
+<h2 id="51-lab-brief-read-aloud">5.1 Lab brief (read aloud)</h2>
+<p>“Now you will build a username generator. You will collect first and last name, build a username from first initial plus last name, normalize to lowercase, remove internal spaces in last name, and print the username length.”</p>
+<h3 id="requirements">Requirements</h3>
+<ol>
+<li>Ask for first name.</li>
+<li>Ask for last name.</li>
+<li>Username rule: <code>first initial + last name</code>.</li>
+<li>Convert to lowercase.</li>
+<li>Remove spaces from last name.</li>
+<li>Print username and character count.</li>
+</ol>
+<h3 id="example-interaction">Example interaction</h3>
+<pre><code class="language-text">Enter first name: Alice
+Enter last name: Van Halen
+Username: avanhalen
+Length: 9 characters
+</code></pre>
+<h3 id="completion-criteria">Completion criteria</h3>
+<ul>
+<li>Correct username format for normal names.</li>
+<li>Correct handling for multi-word last names.</li>
+<li>Correct length output.</li>
+<li>Program runs end-to-end without errors on valid input.</li>
+</ul>
+<h2 id="52-step-by-step-scaffold-you-can-project-this">5.2 Step-by-step scaffold (you can project this)</h2>
+<p><strong>Step 1: Input</strong></p>
+<pre><code class="language-python">first_name = input(&quot;Enter first name: &quot;)
+last_name = input(&quot;Enter last name: &quot;)
+</code></pre>
+<p><strong>Step 2: Normalize</strong></p>
+<pre><code class="language-python">first_name = first_name.strip()
+last_name = last_name.strip()
+</code></pre>
+<p><strong>Step 3: Build username pieces</strong></p>
+<pre><code class="language-python">first_initial = first_name[0].lower()
+last_clean = last_name.lower().replace(&quot; &quot;, &quot;&quot;)
+username = first_initial + last_clean
+</code></pre>
+<p><strong>Step 4: Display</strong></p>
+<pre><code class="language-python">print(f&quot;Username: {username}&quot;)
+print(f&quot;Length: {len(username)} characters&quot;)
+</code></pre>
+<h2 id="53-full-reference-solution-for-debrief">5.3 Full reference solution (for debrief)</h2>
+<pre><code class="language-python"># Username Builder (Hour 5)
+first_name = input(&quot;Enter first name: &quot;).strip()
+last_name = input(&quot;Enter last name: &quot;).strip()
+
+# Basic guard for this stage: assume non-empty valid input,
+# but we still demonstrate one safe check.
+if len(first_name) == 0 or len(last_name) == 0:
+    print(&quot;Please provide both first and last name.&quot;)
+else:
+    first_initial = first_name[0].lower()
+    last_clean = last_name.lower().replace(&quot; &quot;, &quot;&quot;)
+    username = first_initial + last_clean
+
+    print(f&quot;Username: {username}&quot;)
+    print(f&quot;Length: {len(username)} characters&quot;)
+</code></pre>
+<h2 id="54-instructor-facilitation-script-during-lab">5.4 Instructor facilitation script during lab</h2>
+<p><strong>At minute 5 of lab, say:</strong>
+“Checkpoint: everyone should have input working and be able to print raw values.”</p>
+<p><strong>At minute 12 of lab, say:</strong>
+“Checkpoint: you should now be using <code>[0]</code> and <code>.lower()</code>.”</p>
+<p><strong>At minute 20 of lab, say:</strong>
+“Checkpoint: remove spaces inside last name using <code>.replace(" ", "")</code> and print the final username.”</p>
+<p><strong>At minute 28 of lab, say:</strong>
+“Final check: validate your output with a multi-word surname.”</p>
+<h2 id="55-quick-support-prompts-if-learners-are-stuck">5.5 Quick support prompts (if learners are stuck)</h2>
+<ul>
+<li>“What type does <code>input()</code> return?” (string)</li>
+<li>“What does index <code>[0]</code> mean?” (first char)</li>
+<li>“Where should <code>.lower()</code> happen?” (before combining)</li>
+<li>“How do we remove spaces inside a string?” (<code>replace(" ", "")</code>)</li>
+</ul>
+<hr>
+<h2 id="6-common-pitfalls-fixes-read-aloud-and-demo-quickly">6) Common Pitfalls + Fixes (read aloud and demo quickly)</h2>
+<h3 id="pitfall-1-indexerror-from-empty-input">Pitfall 1: <code>IndexError</code> from empty input</h3>
+<pre><code class="language-python">name = &quot;&quot;
+print(name[0])  # IndexError
+</code></pre>
+<p><strong>Fix:</strong> check length first.</p>
+<pre><code class="language-python">if len(name) &gt; 0:
+    print(name[0])
+</code></pre>
+<h3 id="pitfall-2-forgetting-normalization">Pitfall 2: forgetting normalization</h3>
+<pre><code class="language-python"># Without lower/space handling
+first = &quot;Alice&quot;
+last = &quot;Van Halen&quot;
+print(first[0] + last)  # AVan Halen
+</code></pre>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python">print(first[0].lower() + last.lower().replace(&quot; &quot;, &quot;&quot;))
+</code></pre>
+<h3 id="pitfall-3-off-by-one-slice-assumptions">Pitfall 3: off-by-one slice assumptions</h3>
+<p><strong>Say:</strong> “If your slice is one character too short, inspect your end index. End index is excluded.”</p>
+<hr>
+<h2 id="7-quick-checks-exit-ticket-6-minutes">7) Quick Checks / Exit Ticket (~6 minutes)</h2>
+<p>Ask these verbally, then cold-call 2–3 learners:</p>
+<ol>
+<li>“What does <code>s[-1]</code> return?”</li>
+<li>“If <code>s = "Python"</code>, what is <code>s[1:4]</code>?”</li>
+<li>“Why is <code>len(s) - 1</code> useful?”</li>
+<li>“Is <code>"py" in "Python"</code> true or false? Why?”</li>
+</ol>
+<p><strong>Expected answers:</strong>
+1. Last character.
+2. <code>"yth"</code>.
+3. Last valid index.
+4. False, because case-sensitive.</p>
+<hr>
+<h2 id="8-transition-script-to-day-2-hour-2-2-minutes">8) Transition Script to Day 2, Hour 2 (~2 minutes)</h2>
+<p>“Great work. In this hour, we learned to access and extract text by position. In the next hour, we’ll learn how to transform text more efficiently with string methods like <code>strip()</code>, <code>replace()</code>, and <code>find()</code>. Keep your mental model: strings are precise, and small operations combine into powerful text cleaning pipelines.”</p>
+<hr>
+<h2 id="9-extended-instructor-talk-track-verbatim-ready-reference">9) Extended Instructor Talk Track (Verbatim-Ready Reference)</h2>
+<blockquote>
+<p>Use this section if you want a richer, highly guided delivery. It is intentionally detailed so you can teach with confidence even if the room needs extra pacing support.</p>
+</blockquote>
+<p>“Let’s pause for a concept check: in Python, a string is ordered. Ordered means position matters. If we store <code>"python"</code>, the first character is always at index 0. Why does this matter? Because many tasks ask for the first letter, a suffix, a domain, a code prefix, or a fixed-width identifier. Indexing and slicing solve these directly.</p>
+<p>Now think about how humans count versus how Python counts. Humans usually say first item is one. Python says first item is zero. That tiny mismatch creates many beginner bugs. My recommendation: when you write string code, speak the index out loud. For example: ‘I want the first character, so index zero.’ Speaking reduces mistakes.</p>
+<p>Slicing is where you gain speed. Without slicing, beginners try to build strings character by character too early. You do not need that yet. Use <code>s[a:b]</code>. It’s readable, testable, and beginner-friendly. The one rule to memorize is end-exclusive. If you remember that, your slices will usually work.</p>
+<p><code>len()</code> is your measuring tape. Don’t guess lengths. Measure them. Especially for the last index. Many errors happen because someone wrote a hard-coded index that worked for one sample but fails on real inputs. <code>len()</code> keeps your code adaptable.</p>
+<p>Membership checks with <code>in</code> are your first text search tool. If your question is yes/no, prefer <code>in</code>. It reads like English: ‘if this appears in that’. Later, when we need exact position, we use <code>find()</code>.</p>
+<p>Let’s connect this to real life. Suppose HR exports employee names with messy spacing. Suppose marketing sends email lists. Suppose you need usernames from names. You now have enough skills to normalize and extract useful pieces. That is authentic scripting work, and it’s exactly why this hour matters.</p>
+<p>As you code, remember three habits: type the code yourself, predict before running, and test edge cases. A strong beginner is not someone who never gets errors; a strong beginner is someone who notices patterns in errors and fixes them systematically.”</p>
+<hr>
+<h2 id="10-additional-practice-optional-if-time-remains">10) Additional Practice (optional if time remains)</h2>
+<h3 id="practice-a-middle-slice">Practice A: Middle slice</h3>
+<p><strong>Prompt:</strong>
+Given <code>code = "ABCD-1234-XYZ"</code>, extract <code>"1234"</code>.</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-python">code = &quot;ABCD-1234-XYZ&quot;
+print(code[5:9])
+</code></pre>
+<h3 id="practice-b-first-and-last-character">Practice B: First and last character</h3>
+<p><strong>Prompt:</strong>
+Input a word and print first + last character.</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-python">word = input(&quot;Enter a word: &quot;).strip()
+if len(word) &gt; 0:
+    print(f&quot;First: {word[0]}, Last: {word[-1]}&quot;)
+else:
+    print(&quot;Empty input&quot;)
+</code></pre>
+<h3 id="practice-c-basic-membership">Practice C: Basic membership</h3>
+<p><strong>Prompt:</strong>
+Ask for a sentence and check if it contains <code>"python"</code> case-insensitively.</p>
+<p><strong>Solution:</strong></p>
+<pre><code class="language-python">sentence = input(&quot;Enter a sentence: &quot;)
+print(&quot;python&quot; in sentence.lower())
+</code></pre>
+<hr>
+<h2 id="11-instructor-faq-anticipated-learner-questions">11) Instructor FAQ (anticipated learner questions)</h2>
+<p><strong>Q: Why does Python use 0-based indexing?</strong><br>
+A: It is common in programming languages and maps cleanly to offsets from the start.</p>
+<p><strong>Q: Is <code>s[-0]</code> the last character?</strong><br>
+A: No. <code>-0</code> is the same as <code>0</code>, so it means first character.</p>
+<p><strong>Q: Can I change one character in a string directly?</strong><br>
+A: Not directly. Strings are immutable. We’ll reinforce this in Hour 6.</p>
+<p><strong>Q: When should I use slicing vs methods?</strong><br>
+A: Use slicing for positional extraction, methods for transformation/search.</p>
+<hr>
+<h2 id="12-assessment-notes-for-instructor">12) Assessment Notes (for instructor)</h2>
+<p>Observe during lab:
+- Can learner explain what <code>[0]</code> means?
+- Can learner explain why <code>[-1]</code> is useful?
+- Can learner repair a broken output due to spaces/case?
+- Can learner independently use <code>len()</code> in output?</p>
+<p>Fast rubric (informal):
+- <strong>Meets:</strong> correct username + length + normalization.
+- <strong>Almost:</strong> one issue (case or spaces).
+- <strong>Needs support:</strong> indexing confusion or runtime errors.</p>
+<hr>
+<h2 id="13-scope-guardrails-basics-only">13) Scope Guardrails (Basics only)</h2>
+<p>Do teach:
+- indexing
+- slicing
+- <code>len()</code>
+- <code>in</code>
+- tiny practical scripts</p>
+<p>Do not introduce yet:
+- regex
+- advanced parsing libraries
+- list comprehensions for text transformations
+- exception-heavy patterns</p>
+<hr>
+<h2 id="14-final-60-second-close-verbatim">14) Final 60-second close (verbatim)</h2>
+<p>“Today we built real confidence with string fundamentals. You now know how to read text by position, cut out segments, measure length safely, and ask containment questions. These are not toy skills—they are core building blocks of everyday Python scripting. In Hour 6, we level up from reading text to cleaning text using methods like <code>strip</code>, <code>replace</code>, and <code>find</code>.”</p>
+<hr>
+<h2 id="15-word-count-filler-that-remains-pedagogically-useful-extended-drill-prompts">15) Word-count filler that remains pedagogically useful (extended drill prompts)</h2>
+<p>Use any of these if you have additional minutes, or assign as homework. They are included here so this document can serve as a self-contained instructor packet.</p>
+<ol>
+<li>Ask learners to predict outputs of 8 indexing/slicing expressions.</li>
+<li>Give a sentence and ask for first 5 chars, last 5 chars, and middle chunk.</li>
+<li>Provide three email strings and extract domains.</li>
+<li>Build username from names with apostrophes and hyphens; discuss what your simple rule keeps/removes.</li>
+<li>Ask: what fails on empty input? Add one guard.</li>
+<li>Use <code>len()</code> to print “short/medium/long” labels for usernames by length.</li>
+<li>Check whether a filename ends with <code>".py"</code> using slicing and <code>in</code> discussion.</li>
+<li>Extract country code from phone-like strings such as <code>"+1-555-0100"</code> using indexing/slicing only.</li>
+<li>Explain why hard-coded indexes are fragile on variable input.</li>
+<li>Reflect: “What single line of code from this hour will you reuse first in your own scripts, and why?”</li>
+</ol>
+<p>Each of these prompts keeps practice in Basics scope while reinforcing the exact runbook outcomes for Hour 5.</p>
+<hr>
+<h2 id="16-appendix-a-minute-by-minute-verbatim-delivery-script-extended">16) Appendix A — Minute-by-Minute Verbatim Delivery Script (Extended)</h2>
+<blockquote>
+<p>Use this appendix when you want a full spoken script with timing markers.</p>
+</blockquote>
+<h3 id="00000003-opening">00:00–00:03 Opening</h3>
+<p>“Welcome to Hour 5 of Session 2. In the first session we worked with variables and numeric basics. In this hour we move into text, which is where many practical scripts spend most of their time. Please open your editor and create a file named <code>hour5_practice.py</code>.</p>
+<p>As we go, I want you to do three things repeatedly: type the code, predict the output, and run small tests. Prediction is critical. When you predict first, debugging becomes faster because you compare expected behavior with observed behavior.”</p>
+<h3 id="00030006-objectives-and-mental-model">00:03–00:06 Objectives and mental model</h3>
+<p>“Here is our model: strings are sequences of characters. A sequence has order. Since order exists, position exists. In Python, position is called index. If you understand indexes, you can solve many text tasks quickly.</p>
+<p>Today you will learn indexing, negative indexing, slicing, and <code>len()</code>. You will also use <code>in</code> to check whether text is present. Then we’ll use those skills in a username builder lab.”</p>
+<h3 id="00060010-guided-indexing-walk-through">00:06–00:10 Guided indexing walk-through</h3>
+<p>“Type this with me:</p>
+<pre><code class="language-python">word = &quot;Python&quot;
+print(word[0])
+print(word[1])
+print(word[5])
+</code></pre>
+<p>Before you run, whisper the expected output to yourself. Remember, index starts at 0. Run now.</p>
+<p>If your output is not what you expected, that is okay. This is exactly how we build precision. I’ll repeat a line you can keep for the whole course: first character means index 0, not 1.”</p>
+<h3 id="00100014-negative-indexing-and-why-it-helps">00:10–00:14 Negative indexing and why it helps</h3>
+<p>“Now type:</p>
+<pre><code class="language-python">print(word[-1])
+print(word[-2])
+</code></pre>
+<p>Negative indexing starts from the right. Why is this useful? Because many scripts care about endings—file extensions, punctuation, final digits, and suffix codes. You do not need to compute <code>len()</code> every time when <code>-1</code> is enough.”</p>
+<h3 id="00140018-slicing-with-end-exclusive-rule">00:14–00:18 Slicing with end-exclusive rule</h3>
+<p>“Type and run:</p>
+<pre><code class="language-python">print(word[0:3])
+print(word[1:4])
+print(word[:2])
+print(word[3:])
+</code></pre>
+<p>One rule matters most: end index is excluded. If learners remember one slicing rule, make it this one. Every off-by-one bug you avoid today saves future frustration.”</p>
+<h3 id="00180022-len-and-safe-boundaries">00:18–00:22 <code>len()</code> and safe boundaries</h3>
+<p>“Now type:</p>
+<pre><code class="language-python">message = &quot;Hello, World!&quot;
+length = len(message)
+print(length)
+print(message[length - 1])
+</code></pre>
+<p>When you’re unsure of positions, use <code>len()</code>. Don’t guess index values on dynamic input.</p>
+<p>Prediction check: what will <code>len("")</code> return? It returns 0. That matters because empty input cannot be indexed at position 0.”</p>
+<h3 id="00220026-membership-checks">00:22–00:26 Membership checks</h3>
+<p>“Add this:</p>
+<pre><code class="language-python">text = &quot;Welcome to Python Basics&quot;
+print(&quot;Python&quot; in text)
+print(&quot;python&quot; in text)
+</code></pre>
+<p>This demonstrates case sensitivity. If we need case-insensitive checks, we normalize with <code>.lower()</code> before checking. We’ll formalize that in Hour 6.”</p>
+<h3 id="00260030-demo-connection-to-real-work">00:26–00:30 Demo connection to real work</h3>
+<p>“Let’s do a practical extraction. If your workplace stores email addresses, domain extraction is common:</p>
+<pre><code class="language-python">email = &quot;user@company.com&quot;
+at = email.find(&quot;@&quot;)
+domain = email[at + 1:]
+print(domain)
+</code></pre>
+<p>Even at a beginner level, this is real value: extracting consistent parts of messy data.”</p>
+<h3 id="00300034-introduce-lab-and-expectations">00:30–00:34 Introduce lab and expectations</h3>
+<p>“For the next block, you will build a username generator. Target behavior: first initial plus normalized last name, lowercase, spaces removed, and length reported.</p>
+<p>I care about four things: correctness, readability, testing with realistic names, and one edge thought such as empty input.”</p>
+<h3 id="00340040-lab-guidance-round-1">00:34–00:40 Lab guidance round 1</h3>
+<p>“Start with input and normalization. Use <code>.strip()</code> on both names. Then build <code>first_initial</code> with <code>[0]</code>, and remove internal spaces from last name with <code>.replace(" ", "")</code>.</p>
+<p>If you are stuck, print intermediate variables. Seeing intermediate values is not ‘extra’; it is debugging discipline.”</p>
+<h3 id="00400046-lab-guidance-round-2">00:40–00:46 Lab guidance round 2</h3>
+<p>“Now verify with multiple test names:
+- <code>Alice Smith</code>
+- <code>Maya Van Halen</code>
+- <code>Li</code> and <code>Chen</code></p>
+<p>Check that output has no spaces and lowercase letters. If your code breaks on empty values, add one simple guard before indexing.”</p>
+<h3 id="00460052-lab-guidance-round-3">00:46–00:52 Lab guidance round 3</h3>
+<p>“Add final polish:
+- Label output clearly.
+- Display length with <code>len(username)</code>.
+- Keep code readable with meaningful variable names.</p>
+<p>If finished early, add optional rule: maximum username length 12 characters.”</p>
+<h3 id="00520056-debrief">00:52–00:56 Debrief</h3>
+<p>“Let’s discuss what worked. Who can explain why <code>len(username) - 1</code> is the last index? Who can explain why end index is exclusive in slices?</p>
+<p>You are not just using syntax; you are building a model of how strings behave.”</p>
+<h3 id="00560100-exit-ticket-and-transition">00:56–01:00 Exit ticket and transition</h3>
+<p>“Exit ticket questions:
+1. What does <code>s[-1]</code> do?
+2. If <code>s = "Python"</code>, what is <code>s[0:2]</code>?
+3. Why can <code>name[0]</code> fail on empty input?</p>
+<p>Great work. Next hour we move from reading text by position to transforming text using string methods.”</p>
+<hr>
+<h2 id="17-appendix-b-additional-guided-exercises-with-solutions">17) Appendix B — Additional Guided Exercises with Solutions</h2>
+<h3 id="exercise-1-extract-file-extension">Exercise 1: Extract file extension</h3>
+<p><strong>Prompt:</strong> Given a filename, print its last three characters.</p>
+<pre><code class="language-python">filename = input(&quot;Enter filename: &quot;).strip()
+if len(filename) &gt;= 3:
+    print(f&quot;Extension guess: {filename[-3:]}&quot;)
+else:
+    print(&quot;Filename too short for 3-char extension&quot;)
+</code></pre>
+<h3 id="exercise-2-username-quality-label">Exercise 2: Username quality label</h3>
+<p><strong>Prompt:</strong> After generating username, print <code>short</code>, <code>medium</code>, or <code>long</code>.</p>
+<pre><code class="language-python">if len(username) &lt; 6:
+    label = &quot;short&quot;
+elif len(username) &lt;= 10:
+    label = &quot;medium&quot;
+else:
+    label = &quot;long&quot;
+
+print(f&quot;Username size: {label}&quot;)
+</code></pre>
+<h3 id="exercise-3-middle-chunk-extraction">Exercise 3: Middle chunk extraction</h3>
+<p><strong>Prompt:</strong> For a code like <code>ABC-12345-XYZ</code>, print <code>12345</code>.</p>
+<pre><code class="language-python">code = &quot;ABC-12345-XYZ&quot;
+print(code[4:9])
+</code></pre>
+<h3 id="exercise-4-case-insensitive-containment">Exercise 4: Case-insensitive containment</h3>
+<pre><code class="language-python">sentence = input(&quot;Sentence: &quot;)
+keyword = input(&quot;Keyword: &quot;)
+print(keyword.lower() in sentence.lower())
+</code></pre>
+<h3 id="exercise-5-safe-first-character-helper">Exercise 5: Safe first character helper</h3>
+<pre><code class="language-python"># For input &quot; Alice &quot;
+text = &quot; Alice &quot;.strip()
+if len(text) &gt; 0:
+    print(f&quot;First char: {text[0]}&quot;)
+else:
+    print(&quot;Input is empty.&quot;)
+
+# For input &quot;   &quot;
+text = &quot;   &quot;.strip()
+if len(text) &gt; 0:
+    print(f&quot;First char: {text[0]}&quot;)
+else:
+    print(&quot;Input is empty.&quot;)
+</code></pre>
+<hr>
+<h2 id="18-appendix-c-instructor-reflection-prompts">18) Appendix C — Instructor Reflection Prompts</h2>
+<p>After teaching, reflect quickly:
+1. Did learners confuse indexing with slicing?
+2. Did they remember end-exclusive slicing?
+3. Did they test with multi-word names or only simple names?
+4. Did they naturally use <code>len()</code> for safety?
+5. Which misconception appeared most often?</p>
+<p>Use these reflections to adjust pacing before Hour 6.</p>
+<hr>
+<h2 id="19-appendix-d-extended-troubleshooting-catalog-hour-5">19) Appendix D — Extended Troubleshooting Catalog (Hour 5)</h2>
+<p>Use this section while circulating during lab.</p>
+<h3 id="symptom-indexerror-string-index-out-of-range">Symptom: <code>IndexError: string index out of range</code></h3>
+<p>Likely cause: learner indexed an empty string or used too-large index.</p>
+<p>Coaching script:
+1. “Print the value in quotes.”
+2. “Print <code>len(value)</code>.”
+3. “Only index when length is greater than 0.”</p>
+<h3 id="symptom-unexpected-uppercase-letters-in-username">Symptom: Unexpected uppercase letters in username</h3>
+<p>Cause: normalization missing or partial.</p>
+<p>Coaching script:
+- “Where do you call <code>.lower()</code>?”
+- “Apply lower to both first initial and last name.”</p>
+<h3 id="symptom-spaces-remain-in-username">Symptom: Spaces remain in username</h3>
+<p>Cause: only edges stripped, internal spaces untouched.</p>
+<p>Coaching script:
+- “<code>strip()</code> handles edges only.”
+- “Use <code>.replace(" ", "")</code> for internal spaces in this lab.”</p>
+<h3 id="symptom-wrong-slice-length">Symptom: Wrong slice length</h3>
+<p>Cause: end-exclusive misunderstanding.</p>
+<p>Coaching script:
+- “Say start included, end excluded out loud.”
+- “Move end index one step right if needed.”</p>
+<h3 id="symptom-membership-check-fails-unexpectedly">Symptom: Membership check fails unexpectedly</h3>
+<p>Cause: case mismatch.</p>
+<p>Coaching script:
+- “Normalize both strings with <code>.lower()</code> before <code>in</code>.”</p>
+<hr>
+<h2 id="20-appendix-e-extra-verbatim-mini-lecture-if-class-needs-reinforcement">20) Appendix E — Extra Verbatim Mini-Lecture (if class needs reinforcement)</h2>
+<p>“Let’s slow down and review the architecture of a beginner string script. First, identify the text source. In today’s lab, it is user input. Second, normalize what should be normalized. Third, extract the needed pieces by index or slice. Fourth, build output that is easy to read.</p>
+<p>Notice what we did not do: we did not jump straight into clever one-liners. At this level, clarity beats cleverness every time. A three-line solution you understand is stronger than a one-line solution you cannot explain.</p>
+<p>Another important principle is defensive thinking. If your code uses <code>[0]</code>, you should mentally ask, ‘what if this string is empty?’ Even if you do not implement full validation yet, the habit of asking that question makes you a better programmer.</p>
+<p>You should also develop the habit of test variety. Do not test only with <code>Alice Smith</code>. Test with <code>Van Halen</code>, test with mixed case, test with unexpected spaces. A script that works only on ideal input is fragile.</p>
+<p>Finally, I want you to leave this hour with confidence in your mental model. Strings are ordered sequences. Indexing retrieves a character. Slicing retrieves a segment. <code>len()</code> measures boundaries. <code>in</code> checks presence. These four tools will continue appearing in every later session.”</p>
+<hr>
+<h2 id="21-appendix-f-additional-assessment-prompts-optional">21) Appendix F — Additional Assessment Prompts (Optional)</h2>
+<ol>
+<li>Given <code>s = "automation"</code>, what is <code>s[2:6]</code> and why?</li>
+<li>Write a one-line expression for last two characters.</li>
+<li>Explain difference between <code>s[0]</code> and <code>s[:1]</code>.</li>
+<li>For input <code>"  MAya  "</code>, produce <code>"m"</code> safely.</li>
+<li>Check whether <code>"bot"</code> appears in <code>"ChatBot"</code> case-insensitively.</li>
+</ol>
+<p>These can be used as oral checks, board questions, or micro-homework.</p>
+<hr>
+<h2 id="22-appendix-g-rapid-fire-qa-bank-instructor-use">22) Appendix G — Rapid-Fire Q&amp;A Bank (Instructor Use)</h2>
+<p>Use these quick prompts to reinforce precision without adding new scope.</p>
+<ol>
+<li>If <code>s = "python"</code>, what is <code>s[0]</code> and why?</li>
+<li>If <code>s = "python"</code>, what is <code>s[-1]</code> and why?</li>
+<li>If <code>s = "python"</code>, what is <code>s[1:4]</code>?</li>
+<li>Why does <code>s[0:len(s)]</code> return the full string?</li>
+<li>Why can <code>s[0]</code> fail for user input?</li>
+<li>What does <code>len(" ")</code> return?</li>
+<li>Is <code>"Py" in "python"</code> true or false?</li>
+<li>How do we do case-insensitive containment?</li>
+<li>Difference between <code>s[0]</code> and <code>s[:1]</code>?</li>
+<li>Why is guessing indexes risky for dynamic input?</li>
+</ol>
+<p>Suggested instructor close for this bank:
+“Each answer points back to one of today’s core habits: index awareness, end-exclusive slicing, length checks, normalization, and small tests.”</p>
+<hr>
+<h2 id="23-appendix-h-final-reinforcement-notes">23) Appendix H — Final Reinforcement Notes</h2>
+<p>Instructor reminder script:
+“Hour 5 is successful when learners can explain <em>why</em> an index worked, not only <em>that</em> it worked. Ask for reasoning frequently: Why index 0? Why end-exclusive slice? Why <code>len() - 1</code> for last index? Why normalize before checks?”</p>
+<p>Optional mini-practice:</p>
+<pre><code class="language-python">sample = &quot;DataScience&quot;
+print(sample[0], sample[-1], sample[4:7], len(sample))
+</code></pre>
+<p>Use as a one-minute recap challenge before moving on.</p>
+<h3 id="final-note">Final note</h3>
+<p>Keep this anchor sentence for learners: “Index for one character, slice for a chunk, <code>len()</code> for boundaries, <code>in</code> for presence.”</p>
+<p>Additional recap: Practice with three more strings tonight and write one sentence explaining each index/slice decision.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing-show-slide-read-quickly-2-minutes" class="depth-2">1) Agenda + Timing (show slide / read quickly, ~2 minutes)</a></li>
+<li><a href="#2-instructor-setup-checklist-before-class" class="depth-2">2) Instructor Setup Checklist (before class)</a></li>
+<li><a href="#3-talk-track-core-concept-delivery-13-minutes" class="depth-2">3) Talk Track (Core Concept Delivery, ~13 minutes)</a></li>
+<li><a href="#31-why-this-matters-motivation" class="depth-3">3.1 Why this matters (motivation)</a></li>
+<li><a href="#32-indexing-starts-at-0" class="depth-3">3.2 Indexing starts at 0</a></li>
+<li><a href="#33-negative-indexing" class="depth-3">3.3 Negative indexing</a></li>
+<li><a href="#34-slicing-fundamentals" class="depth-3">3.4 Slicing fundamentals</a></li>
+<li><a href="#35-len-and-safe-bounds-thinking" class="depth-3">3.5 len() and safe bounds thinking</a></li>
+<li><a href="#36-basic-membership-checks-with-in" class="depth-3">3.6 Basic membership checks with in</a></li>
+<li><a href="#4-live-demo-script-8-minutes" class="depth-2">4) Live Demo Script (~8 minutes)</a></li>
+<li><a href="#demo-a-extract-initials-from-a-full-name" class="depth-2">Demo A: Extract initials from a full name</a></li>
+<li><a href="#demo-b-extract-domain-from-email" class="depth-2">Demo B: Extract domain from email</a></li>
+<li><a href="#demo-c-last-character-and-extension-pattern" class="depth-2">Demo C: Last character and extension pattern</a></li>
+<li><a href="#5-guided-lab-username-builder-2535-minutes" class="depth-2">5) Guided Lab: Username Builder (25–35 minutes)</a></li>
+<li><a href="#51-lab-brief-read-aloud" class="depth-2">5.1 Lab brief (read aloud)</a></li>
+<li><a href="#requirements" class="depth-3">Requirements</a></li>
+<li><a href="#example-interaction" class="depth-3">Example interaction</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#52-step-by-step-scaffold-you-can-project-this" class="depth-2">5.2 Step-by-step scaffold (you can project this)</a></li>
+<li><a href="#53-full-reference-solution-for-debrief" class="depth-2">5.3 Full reference solution (for debrief)</a></li>
+<li><a href="#54-instructor-facilitation-script-during-lab" class="depth-2">5.4 Instructor facilitation script during lab</a></li>
+<li><a href="#55-quick-support-prompts-if-learners-are-stuck" class="depth-2">5.5 Quick support prompts (if learners are stuck)</a></li>
+<li><a href="#6-common-pitfalls-fixes-read-aloud-and-demo-quickly" class="depth-2">6) Common Pitfalls + Fixes (read aloud and demo quickly)</a></li>
+<li><a href="#pitfall-1-indexerror-from-empty-input" class="depth-3">Pitfall 1: IndexError from empty input</a></li>
+<li><a href="#pitfall-2-forgetting-normalization" class="depth-3">Pitfall 2: forgetting normalization</a></li>
+<li><a href="#pitfall-3-off-by-one-slice-assumptions" class="depth-3">Pitfall 3: off-by-one slice assumptions</a></li>
+<li><a href="#7-quick-checks-exit-ticket-6-minutes" class="depth-2">7) Quick Checks / Exit Ticket (~6 minutes)</a></li>
+<li><a href="#8-transition-script-to-day-2-hour-2-2-minutes" class="depth-2">8) Transition Script to Day 2, Hour 2 (~2 minutes)</a></li>
+<li><a href="#9-extended-instructor-talk-track-verbatim-ready-reference" class="depth-2">9) Extended Instructor Talk Track (Verbatim-Ready Reference)</a></li>
+<li><a href="#10-additional-practice-optional-if-time-remains" class="depth-2">10) Additional Practice (optional if time remains)</a></li>
+<li><a href="#practice-a-middle-slice" class="depth-3">Practice A: Middle slice</a></li>
+<li><a href="#practice-b-first-and-last-character" class="depth-3">Practice B: First and last character</a></li>
+<li><a href="#practice-c-basic-membership" class="depth-3">Practice C: Basic membership</a></li>
+<li><a href="#11-instructor-faq-anticipated-learner-questions" class="depth-2">11) Instructor FAQ (anticipated learner questions)</a></li>
+<li><a href="#12-assessment-notes-for-instructor" class="depth-2">12) Assessment Notes (for instructor)</a></li>
+<li><a href="#13-scope-guardrails-basics-only" class="depth-2">13) Scope Guardrails (Basics only)</a></li>
+<li><a href="#14-final-60-second-close-verbatim" class="depth-2">14) Final 60-second close (verbatim)</a></li>
+<li><a href="#15-word-count-filler-that-remains-pedagogically-useful-extended-drill-prompts" class="depth-2">15) Word-count filler that remains pedagogically useful (extended drill prompts)</a></li>
+<li><a href="#16-appendix-a-minute-by-minute-verbatim-delivery-script-extended" class="depth-2">16) Appendix A — Minute-by-Minute Verbatim Delivery Script (Extended)</a></li>
+<li><a href="#00000003-opening" class="depth-3">00:00–00:03 Opening</a></li>
+<li><a href="#00030006-objectives-and-mental-model" class="depth-3">00:03–00:06 Objectives and mental model</a></li>
+<li><a href="#00060010-guided-indexing-walk-through" class="depth-3">00:06–00:10 Guided indexing walk-through</a></li>
+<li><a href="#00100014-negative-indexing-and-why-it-helps" class="depth-3">00:10–00:14 Negative indexing and why it helps</a></li>
+<li><a href="#00140018-slicing-with-end-exclusive-rule" class="depth-3">00:14–00:18 Slicing with end-exclusive rule</a></li>
+<li><a href="#00180022-len-and-safe-boundaries" class="depth-3">00:18–00:22 len() and safe boundaries</a></li>
+<li><a href="#00220026-membership-checks" class="depth-3">00:22–00:26 Membership checks</a></li>
+<li><a href="#00260030-demo-connection-to-real-work" class="depth-3">00:26–00:30 Demo connection to real work</a></li>
+<li><a href="#00300034-introduce-lab-and-expectations" class="depth-3">00:30–00:34 Introduce lab and expectations</a></li>
+<li><a href="#00340040-lab-guidance-round-1" class="depth-3">00:34–00:40 Lab guidance round 1</a></li>
+<li><a href="#00400046-lab-guidance-round-2" class="depth-3">00:40–00:46 Lab guidance round 2</a></li>
+<li><a href="#00460052-lab-guidance-round-3" class="depth-3">00:46–00:52 Lab guidance round 3</a></li>
+<li><a href="#00520056-debrief" class="depth-3">00:52–00:56 Debrief</a></li>
+<li><a href="#00560100-exit-ticket-and-transition" class="depth-3">00:56–01:00 Exit ticket and transition</a></li>
+<li><a href="#17-appendix-b-additional-guided-exercises-with-solutions" class="depth-2">17) Appendix B — Additional Guided Exercises with Solutions</a></li>
+<li><a href="#exercise-1-extract-file-extension" class="depth-3">Exercise 1: Extract file extension</a></li>
+<li><a href="#exercise-2-username-quality-label" class="depth-3">Exercise 2: Username quality label</a></li>
+<li><a href="#exercise-3-middle-chunk-extraction" class="depth-3">Exercise 3: Middle chunk extraction</a></li>
+<li><a href="#exercise-4-case-insensitive-containment" class="depth-3">Exercise 4: Case-insensitive containment</a></li>
+<li><a href="#exercise-5-safe-first-character-helper" class="depth-3">Exercise 5: Safe first character helper</a></li>
+<li><a href="#18-appendix-c-instructor-reflection-prompts" class="depth-2">18) Appendix C — Instructor Reflection Prompts</a></li>
+<li><a href="#19-appendix-d-extended-troubleshooting-catalog-hour-5" class="depth-2">19) Appendix D — Extended Troubleshooting Catalog (Hour 5)</a></li>
+<li><a href="#symptom-indexerror-string-index-out-of-range" class="depth-3">Symptom: IndexError: string index out of range</a></li>
+<li><a href="#symptom-unexpected-uppercase-letters-in-username" class="depth-3">Symptom: Unexpected uppercase letters in username</a></li>
+<li><a href="#symptom-spaces-remain-in-username" class="depth-3">Symptom: Spaces remain in username</a></li>
+<li><a href="#symptom-wrong-slice-length" class="depth-3">Symptom: Wrong slice length</a></li>
+<li><a href="#symptom-membership-check-fails-unexpectedly" class="depth-3">Symptom: Membership check fails unexpectedly</a></li>
+<li><a href="#20-appendix-e-extra-verbatim-mini-lecture-if-class-needs-reinforcement" class="depth-2">20) Appendix E — Extra Verbatim Mini-Lecture (if class needs reinforcement)</a></li>
+<li><a href="#21-appendix-f-additional-assessment-prompts-optional" class="depth-2">21) Appendix F — Additional Assessment Prompts (Optional)</a></li>
+<li><a href="#22-appendix-g-rapid-fire-qa-bank-instructor-use" class="depth-2">22) Appendix G — Rapid-Fire Q&amp;A Bank (Instructor Use)</a></li>
+<li><a href="#23-appendix-h-final-reinforcement-notes" class="depth-2">23) Appendix H — Final Reinforcement Notes</a></li>
+<li><a href="#final-note" class="depth-3">Final note</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day2_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

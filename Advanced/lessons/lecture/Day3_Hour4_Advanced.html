@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 3, Hour 4: Decorators for Timing, Toy Authorization, and Lightweight Validation | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="3">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day3_Hour4_Advanced.md">
+
+    <link rel="prev" href="Day3_Hour3_Advanced.html">
+    <link rel="next" href="Day4_Hour1_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="3" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-03/index.html">Day 3</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 3, Hour 4: Decorators for Timing, Toy Authorization, and Lightweight Validation</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 3</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour1_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day3_Hour4_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 3, Hour 4 of 48, also Hour 12 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Writing small decorators that wrap service functions without changing their behavior, especially a practical <code>@timed</code> decorator that logs execution duration.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 3, Hour 12.</li>
+<li><strong>Prerequisites</strong>: Learners should have completed Day 3 Hours 1-3 or have equivalent project structure: package code under <code>src/tracker/</code>, logging configured from Day 3 Hour 2, and safe-save vocabulary from Day 3 Hour 3.</li>
+<li><strong>Advanced trajectory</strong>: This hour stays on the PCAP-to-PCPP1 path. Learners are using decorators as a professional readability tool, not studying metaprogramming internals.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner can write and apply a simple decorator, explain <code>wrapper(*args, **kwargs)</code>, preserve the original return value, and verify timing messages in <code>logs/app.log</code>.</li>
+</ul>
+<p>Important instructor positioning:</p>
+<ul>
+<li>Keep the decorator examples practical and small. The runbook scope is decorators for timing, toy authorization, and lightweight validation.</li>
+<li>The canonical <code>@timed</code> decorator in this hour uses <code>time.perf_counter()</code>, <code>logging.getLogger(__name__).info(...)</code>, returns the original function result, and uses <code>@wraps(func)</code> in the professional version.</li>
+<li>Tie the logging output directly back to Day 3 Hour 2. The point is not "print a benchmark to the terminal." The point is "record useful operational information in the same logging system, such as <code>logs/app.log</code>."</li>
+<li>Keep the Day 3 Hour 3 bridge visible: safe saves protect files; decorators help avoid repeated wrapper code around service behavior. Both are about making the project more reliable without cluttering the main business logic.</li>
+<li>Use the phrase <strong>toy authorization</strong> for <code>@requires_api_key</code>. It teaches the wrapper shape; it is not production security.</li>
+<li>Use keyword-only <code>api_key</code> in the toy authorization example. This avoids positional ambiguity and gives you a clean teaching point before Session 4 HTTP/API work.</li>
+<li>Mention validation as a lightweight example, but do not overbuild a validation framework.</li>
+<li>Protect the lab time. Learners need enough minutes to implement, apply, run, and inspect log output.</li>
+</ul>
+<p>Explicitly out of scope today:</p>
+<ul>
+<li>decorator factories with arguments, such as <code>@timed(level=logging.DEBUG)</code></li>
+<li>class decorators</li>
+<li>descriptors</li>
+<li>metaclasses</li>
+<li>async decorators</li>
+<li>framework authentication systems</li>
+<li>production security design</li>
+<li>replacing tests, logging, validation, or API security with one clever decorator</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from safe saves to reusable wrappers</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect Hour 3 safe persistence habits to reducing duplicated operational code</td>
+</tr>
+<tr>
+<td>Outcomes, setup, and scope boundaries</td>
+<td style="text-align: right;">5 min</td>
+<td>Name what learners will build and what is intentionally out of scope</td>
+</tr>
+<tr>
+<td>Concept briefing: decorator anatomy and readability</td>
+<td style="text-align: right;">8 min</td>
+<td>Explain functions wrapping functions, <code>wrapper(*args, **kwargs)</code>, return values, and small readable decorators</td>
+</tr>
+<tr>
+<td>Live demo: professional <code>@timed</code> for service methods</td>
+<td style="text-align: right;">8 min</td>
+<td>Build a logging-based timing decorator with <code>perf_counter</code>, <code>@wraps</code>, method support, and preserved return values</td>
+</tr>
+<tr>
+<td>Live demo: toy <code>@requires_api_key</code> and validation discussion</td>
+<td style="text-align: right;">5 min</td>
+<td>Show a second decorator shape with keyword-only <code>api_key</code>; position validation as lightweight and limited</td>
+</tr>
+<tr>
+<td>Guided lab: timing decorator in the tracker project</td>
+<td style="text-align: right;">26 min</td>
+<td>Learners implement <code>@timed</code>, apply it to two service functions, and verify timing logs in <code>logs/app.log</code></td>
+</tr>
+<tr>
+<td>Pitfalls, quick check, and Session 4 bridge</td>
+<td style="text-align: right;">3 min</td>
+<td>Confirm return-value behavior, signature pass-through, and the connection to HTTP/API work</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 8 + 8 + 5 + 26 + 3 = 60. The guided lab is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect that lab time. If discussion runs long, shorten the second demo and validation discussion rather than shrinking student practice. The required outcome is practical: the timing decorator works, does not change behavior, and writes timing output through the logging system.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain in plain language that a decorator takes a function, wraps it, and returns a new callable.</li>
+<li>Write a simple decorator using an inner <code>wrapper(*args, **kwargs)</code> function.</li>
+<li>Explain why <code>*args</code> and <code>**kwargs</code> help a wrapper work with ordinary functions and methods.</li>
+<li>Preserve the original return value from a decorated function.</li>
+<li>Apply a <code>@timed</code> decorator to at least two service functions.</li>
+<li>Use <code>time.perf_counter()</code> for elapsed-time measurement.</li>
+<li>Log timing output with <code>logging.getLogger(__name__).info(...)</code> so messages can appear in <code>logs/app.log</code>.</li>
+<li>Use <code>functools.wraps</code> in the professional version to preserve metadata such as the function name.</li>
+<li>Recognize how decorators reduce duplicated timing, authorization-style, or validation-style logic.</li>
+<li>Explain why decorators should stay small and readable.</li>
+<li>Identify common pitfalls: forgetting to return the result, breaking signatures, hiding too much logic, and using toy authorization as if it were production security.</li>
+<li>Describe how these wrapper patterns prepare the project for Session 4 HTTP clients and API boundaries.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 3, Hour 12 visible. The required scope is decorators for timing, authorization, and validation.</li>
+<li>Open your Day 3 Hour 2 logging notes. You will reuse the idea that application behavior should be recorded through the logger, not scattered <code>print()</code> calls.</li>
+<li>Open your Day 3 Hour 3 safe-save notes. The bridge sentence is: "Safe saves kept file-writing details out of the main story; decorators keep repeated wrapper behavior out of the main story."</li>
+<li>Confirm learners know where their log file is. In this course, use <code>logs/app.log</code> when following the Day 3 Hour 2 logging setup.</li>
+<li>Prepare this board note:</li>
+</ul>
+<pre><code class="language-text">Decorator mental model:
+original function -&gt; wrapper adds behavior -&gt; original result still comes back
+</code></pre>
+<ul>
+<li>Prepare a second board note:</li>
+</ul>
+<pre><code class="language-text">Decorator checklist:
+1. Accept func.
+2. Define wrapper(*args, **kwargs).
+3. Do small before/after behavior.
+4. Call func(*args, **kwargs).
+5. Return the result.
+6. Return wrapper.
+</code></pre>
+<ul>
+<li>Be ready to demonstrate the canonical professional <code>@timed</code> decorator:</li>
+</ul>
+<pre><code class="language-python">import logging
+import time
+from functools import wraps
+from typing import Any, Callable
+
+
+def timed(func: Callable[..., Any]) -&gt; Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -&gt; Any:
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+        logging.getLogger(__name__).info(
+            &quot;%s completed in %.6f seconds&quot;,
+            func.__name__,
+            elapsed,
+        )
+        return result
+
+    return wrapper
+</code></pre>
+<ul>
+<li>If you demo in a real learner project, avoid timing functions that depend on network access. Keep the demonstration deterministic and Windows-friendly.</li>
+<li>If logging is not already configured in a learner's project, have them quickly configure it using their Day 3 Hour 2 pattern. Do not spend the hour redesigning logging.</li>
+</ul>
+<hr>
+<h2 id="opening-bridge-from-safe-saves-to-reusable-wrappers-5-minutes">Opening Bridge from Safe Saves to Reusable Wrappers (5 minutes)</h2>
+<h3 id="instructor-talk-track">Instructor talk track</h3>
+<p>"Welcome back. In the previous hour, we focused on safer file operations. We used <code>with</code>, wrote JSON to a temporary file, and replaced the real file only after the new content had been written successfully."</p>
+<p>"That pattern had a bigger theme behind it: we want the main service code to stay focused on the main job. If the service is saving tasks, the service should not be cluttered with five different improvised versions of 'open this file, write this JSON, clean up after failure.' We moved that responsibility into a helper."</p>
+<p>"Decorators continue the same theme. They help us move repeated around-the-edges behavior into one reusable place."</p>
+<p>Display:</p>
+<pre><code class="language-text">Hour 2 logging: record what happened.
+Hour 3 safe saves: avoid damaging data during writes.
+Hour 4 decorators: avoid repeating wrapper logic around functions.
+</code></pre>
+<p>"Here is a common problem. Imagine we want to time several service operations: add a task, list tasks, search tasks, maybe save tasks. We could copy this pattern into every method."</p>
+<pre><code class="language-python">start = time.perf_counter()
+result = do_the_real_work()
+elapsed = time.perf_counter() - start
+logging.getLogger(__name__).info(&quot;operation completed in %.6f seconds&quot;, elapsed)
+return result
+</code></pre>
+<p>"That works once. But after the third or fourth copy, we have duplication. If we want to change the message format, we have to edit every copy. If one method forgets to return the original result, we introduce a bug. If one method uses <code>print()</code> instead of logging, our observability becomes inconsistent."</p>
+<p>"A decorator lets us write that wrapping behavior once, then apply it with the <code>@</code> syntax."</p>
+<p>Display:</p>
+<pre><code class="language-python">@timed
+def list_tasks():
+    ...
+</code></pre>
+<p>"The goal today is not to become decorator magicians. The goal is much more practical: use a small decorator to reduce duplicated logic while keeping behavior intact."</p>
+<p>Pause and ask:</p>
+<p>"If a function returns a list of tasks before decoration, what should it return after we add <code>@timed</code>?"</p>
+<p>Expected answer:</p>
+<p>"The same list of tasks. The decorator may add logging, but it should not change the function's meaning."</p>
+<h3 id="transition">Transition</h3>
+<p>"Let's name the outcomes and boundaries so we stay focused and do not wander into metaprogramming topics we do not need today."</p>
+<hr>
+<h2 id="outcomes-setup-and-scope-boundaries-5-minutes">Outcomes, Setup, and Scope Boundaries (5 minutes)</h2>
+<h3 id="instructor-talk-track-2">Instructor talk track</h3>
+<p>"By the end of this hour, you should be able to write and apply a decorator like this."</p>
+<pre><code class="language-python">@timed
+def search_tasks(query: str) -&gt; list[str]:
+    ...
+</code></pre>
+<p>"When <code>search_tasks()</code> runs, the real search still happens. The return value still comes back. The extra behavior is that timing information is logged."</p>
+<p>"We will use three examples today."</p>
+<p>Display:</p>
+<pre><code class="language-text">Required practical example:
+    @timed
+    Logs execution time for service functions.
+
+Second toy example:
+    @requires_api_key
+    Demonstrates authorization-shaped wrapping.
+
+Lightweight discussion example:
+    validation
+    Shows where a small repeated check might fit.
+</code></pre>
+<p>"Timing is the one you must implement in the lab. The API-key decorator is a toy pattern. It is deliberately not production security. Real authentication and authorization involve protocols, storage, secrets, framework integration, threat modeling, transport security, rotation, auditing, and more. We are not doing that in five minutes. We are using a tiny example to practice the decorator shape."</p>
+<p>"Validation is also lightweight today. A decorator can sometimes check inputs before calling a function, but validation can easily become business logic. If the validation is central to the behavior, it may belong inside the function, the model, or the service. We will mention it, not build a validation framework."</p>
+<p>"Here is what we are explicitly not doing today: decorator factories with arguments, class decorators, descriptors, metaclasses, async decorators, framework auth, or production security. Those are real topics, but they are not needed for the runbook outcome."</p>
+<p>"Our project convention remains the same as the previous hours. Source code lives under <code>src/tracker/</code>. Logging can write to <code>logs/app.log</code>. Run demos from the project root so relative paths behave predictably on Windows, macOS, and Linux."</p>
+<h3 id="quick-setup-check">Quick setup check</h3>
+<p>Ask:</p>
+<p>"Where should timing messages go if we are following the Day 3 Hour 2 logging setup?"</p>
+<p>Expected answer:</p>
+<p>"Through logging, into the configured logs such as <code>logs/app.log</code>, not just printed to the terminal."</p>
+<h3 id="transition-2">Transition</h3>
+<p>"Now let's build the mental model. Decorators can feel mysterious because the syntax is compact. We will slow it down and show the plain function shape first."</p>
+<hr>
+<h2 id="concept-briefing-decorator-anatomy-and-readability-8-minutes">Concept Briefing: Decorator Anatomy and Readability (8 minutes)</h2>
+<h3 id="part-1-a-decorator-is-a-function-that-returns-a-function">Part 1: A decorator is a function that returns a function</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The shortest useful definition is this: a decorator is a function that takes a function, wraps it, and returns a replacement callable."</p>
+<p>Display:</p>
+<pre><code class="language-python">def my_decorator(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        return result
+
+    return wrapper
+</code></pre>
+<p>"This example does not add behavior yet. It only shows the shape."</p>
+<p>"The outer function, <code>my_decorator</code>, receives the original function. The inner function, <code>wrapper</code>, is what will run when someone calls the decorated function. Inside the wrapper, we usually call the original function. Then we return the original function's result."</p>
+<p>"The <code>@</code> syntax is a friendly way to apply that wrapping."</p>
+<pre><code class="language-python">@my_decorator
+def greet(name: str) -&gt; str:
+    return f&quot;Hello, {name}!&quot;
+</code></pre>
+<p>"This is roughly equivalent to writing this after the function definition."</p>
+<pre><code class="language-python">def greet(name: str) -&gt; str:
+    return f&quot;Hello, {name}!&quot;
+
+
+greet = my_decorator(greet)
+</code></pre>
+<p>"The name <code>greet</code> now refers to the wrapped version. That is why the wrapper must be careful. If the wrapper does not call the original function, the original work does not happen. If the wrapper does not return the original result, callers may receive <code>None</code> even though the original function produced a value."</p>
+<h3 id="part-2-why-wrapperargs-kwargs-matters">Part 2: Why <code>wrapper(*args, **kwargs)</code> matters</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The wrapper often uses <code>*args</code> and <code>**kwargs</code>. This is not decoration magic. It is ordinary Python argument forwarding."</p>
+<p>Display:</p>
+<pre><code class="language-python">def wrapper(*args, **kwargs):
+    result = func(*args, **kwargs)
+    return result
+</code></pre>
+<p>"<code>*args</code> collects positional arguments. <code>**kwargs</code> collects keyword arguments. Passing them into <code>func(*args, **kwargs)</code> forwards the call to the original function."</p>
+<p>"This matters for methods. When we decorate an instance method, Python still passes <code>self</code> as the first positional argument. The wrapper does not need to know that the first positional argument is named <code>self</code>. It simply forwards all positional and keyword arguments to the original function."</p>
+<p>Display:</p>
+<pre><code class="language-python">class TaskService:
+    @timed
+    def list_titles(self) -&gt; list[str]:
+        return [&quot;Write tests&quot;, &quot;Review logs&quot;]
+</code></pre>
+<p>"When <code>service.list_titles()</code> runs, <code>self</code> is still passed through. The wrapper receives it in <code>args</code>, forwards it to the original method, and returns the list. That is how a method decorator preserves normal method behavior."</p>
+<h3 id="part-3-keep-decorators-small-and-readable">Part 3: Keep decorators small and readable</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Decorators are powerful, so our readability rule matters."</p>
+<p>Display:</p>
+<pre><code class="language-text">Use a decorator when:
+- the extra behavior repeats
+- the wrapper stays small
+- the original function becomes easier to read
+
+Avoid a decorator when:
+- it hides the main business rule
+- it creates surprising side effects
+- it makes debugging harder than the duplication did
+</code></pre>
+<p>"For this hour, timing is a good decorator because it is cross-cutting. Timing can apply to many functions without becoming the main purpose of those functions."</p>
+<p>"Authorization-style checks can also be cross-cutting, but today's API-key example is intentionally small and artificial. In real applications, authorization deserves serious design."</p>
+<p>"Validation is mixed. A tiny repeated check may be fine. But if validation rules are the core business logic, hiding them in a decorator can make the code harder to understand."</p>
+<h3 id="transition-3">Transition</h3>
+<p>"Now we will live-code the practical version: <code>@timed</code> that logs through the Day 3 logging setup and preserves method behavior."</p>
+<hr>
+<h2 id="live-demo-professional-timed-for-service-methods-8-minutes">Live Demo: Professional <code>@timed</code> for Service Methods (8 minutes)</h2>
+<h3 id="demo-framing">Demo framing</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"We are going to build the professional version first. That means we will not use <code>print()</code> for timing. We will use <code>logging.getLogger(__name__).info(...)</code> so the timing message flows through the same logging setup we introduced in Day 3 Hour 2."</p>
+<p>"We will also use <code>time.perf_counter()</code>. This is the right tool for measuring elapsed time because it gives us a high-resolution performance counter suitable for durations."</p>
+<p>"Finally, we will use <code>@wraps(func)</code> from <code>functools</code>. <code>wraps</code> preserves useful metadata from the original function, such as the name and docstring. Without it, tools may think every decorated function is named <code>wrapper</code>."</p>
+<h3 id="live-code-the-decorator">Live-code the decorator</h3>
+<p>Type or display:</p>
+<pre><code class="language-python">import logging
+import time
+from functools import wraps
+from pathlib import Path
+from typing import Any, Callable
+
+
+def configure_logging() -&gt; None:
+    Path(&quot;logs&quot;).mkdir(exist_ok=True)
+    logging.basicConfig(
+        filename=Path(&quot;logs&quot;) / &quot;app.log&quot;,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )
+
+
+def timed(func: Callable[..., Any]) -&gt; Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -&gt; Any:
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+        logging.getLogger(__name__).info(
+            &quot;%s completed in %.6f seconds&quot;,
+            func.__name__,
+            elapsed,
+        )
+        return result
+
+    return wrapper
+</code></pre>
+<h3 id="narrate-each-important-line">Narrate each important line</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The <code>configure_logging()</code> helper is here only to make the standalone demo runnable. If your project already configures logging from Hour 2, use your existing setup instead of copying this exact helper everywhere."</p>
+<p>"<code>logging.getLogger(__name__).info(...)</code> sends the timing message through the named logger for this module. This is the same logging family we used in the logging lesson, and it lets log records include the module name."</p>
+<p>"<code>def timed(func: Callable[..., Any]) -&gt; Callable[..., Any]</code> says this decorator accepts a callable and returns a callable. The type hints are intentionally broad because the decorator can wrap many different function signatures."</p>
+<p>"<code>@wraps(func)</code> goes above the wrapper. This is the professional version. It helps keep the wrapped function's identity visible to logs, debuggers, documentation tools, and tests."</p>
+<p>"<code>start = time.perf_counter()</code> captures the start time. After the original function runs, we call <code>time.perf_counter()</code> again and subtract."</p>
+<p>"The most important behavior line is <code>result = func(*args, **kwargs)</code>. That is where the original function actually runs."</p>
+<p>"The most important preservation line is <code>return result</code>. Without that line, the wrapper changes the behavior."</p>
+<h3 id="add-a-deterministic-service-method-example">Add a deterministic service-method example</h3>
+<p>Type or display:</p>
+<pre><code class="language-python">class TaskService:
+    def __init__(self) -&gt; None:
+        self._titles: list[str] = []
+
+    @timed
+    def add_task(self, title: str) -&gt; int:
+        self._titles.append(title)
+        return len(self._titles)
+
+    @timed
+    def list_titles(self) -&gt; list[str]:
+        return list(self._titles)
+
+
+def main() -&gt; None:
+    configure_logging()
+
+    service = TaskService()
+    first_id = service.add_task(&quot;Review safe saves&quot;)
+    second_id = service.add_task(&quot;Add timing decorator&quot;)
+    titles = service.list_titles()
+
+    print(first_id)
+    print(second_id)
+    print(titles)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Expected terminal output:</p>
+<pre><code class="language-text">1
+2
+['Review safe saves', 'Add timing decorator']
+</code></pre>
+<p>Expected log shape in <code>logs/app.log</code>:</p>
+<pre><code class="language-text">INFO __main__ add_task completed in 0.000123 seconds
+INFO __main__ add_task completed in 0.000045 seconds
+INFO __main__ list_titles completed in 0.000030 seconds
+</code></pre>
+<p>The exact duration will differ by machine. That is expected. The deterministic part is that the return values still match the original method behavior.</p>
+<p>On Windows, learners can inspect recent log lines with:</p>
+<pre><code class="language-powershell">Get-Content logs/app.log -Tail 20
+</code></pre>
+<h3 id="method-behavior-callout">Method behavior callout</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Notice that <code>add_task</code> and <code>list_titles</code> are instance methods. They depend on <code>self</code>. We did not write special code for <code>self</code> in the decorator. The wrapper receives <code>self</code> as part of <code>args</code> and forwards it to the original method."</p>
+<p>"Also notice the return values. <code>add_task</code> still returns the new task count. <code>list_titles</code> still returns a list. The decorator adds timing logs, but it does not change the meaning of the method."</p>
+<h3 id="transition-4">Transition</h3>
+<p>"Now that the main timing decorator is clear, let's look at a second small example: a toy API-key check. This helps you see that the same wrapper shape can appear around authorization-style behavior, while still making clear that real security is out of scope today."</p>
+<hr>
+<h2 id="live-demo-toy-requiresapikey-and-validation-discussion-5-minutes">Live Demo: Toy <code>@requires_api_key</code> and Validation Discussion (5 minutes)</h2>
+<h3 id="toy-authorization-demo">Toy authorization demo</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"This next example is intentionally a toy. It is not production authentication or authorization. It does not store secrets safely. It does not rotate keys. It does not integrate with a framework. It is only here to show another decorator shape."</p>
+<p>"The important design choice is that the decorated function accepts <code>api_key</code> as a keyword-only argument. The <code>*</code> in the function signature means callers must write <code>api_key='demo-key'</code>. That avoids positional ambiguity."</p>
+<p>Type or display:</p>
+<pre><code class="language-python">from functools import wraps
+from typing import Any, Callable
+
+
+def requires_api_key(func: Callable[..., Any]) -&gt; Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -&gt; Any:
+        api_key = kwargs.get(&quot;api_key&quot;)
+        if api_key != &quot;demo-key&quot;:
+            raise PermissionError(&quot;invalid API key&quot;)
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@requires_api_key
+def fetch_remote_task_titles(*, api_key: str) -&gt; list[str]:
+    return [&quot;Plan API client&quot;, &quot;Document JSON contract&quot;]
+</code></pre>
+<p>Then show the calls:</p>
+<pre><code class="language-python">try:
+    fetch_remote_task_titles(api_key=&quot;wrong-key&quot;)
+except PermissionError as error:
+    print(f&quot;Access denied in toy demo: {error}&quot;)
+
+print(fetch_remote_task_titles(api_key=&quot;demo-key&quot;))
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Access denied in toy demo: invalid API key
+['Plan API client', 'Document JSON contract']
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"The wrapper looks inside <code>kwargs</code> for <code>api_key</code>. Because the function requires keyword-only <code>api_key</code>, we do not have to guess whether the first positional argument might be the key, the query, the user id, or something else."</p>
+<p>"Again: this is a teaching example. In Session 4, when we start HTTP and API work, we will talk more concretely about request errors, JSON contracts, and boundaries. Do not treat this toy decorator as a security system."</p>
+<h3 id="lightweight-validation-mention">Lightweight validation mention</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Validation can use the same idea, but we need restraint. A tiny repeated check might be reasonable."</p>
+<p>Display:</p>
+<pre><code class="language-python">def ensure_non_empty_title(title: str) -&gt; None:
+    if not title.strip():
+        raise ValueError(&quot;title must not be empty&quot;)
+</code></pre>
+<p>"A decorator could wrap several functions with a small repeated validation rule, but we are not building that today. If validation is the main business rule, make it visible in the service or model. Do not hide important decisions in clever wrappers."</p>
+<h3 id="transition-5">Transition</h3>
+<p>"Now you will implement the required piece: <code>@timed</code> that logs execution time and applies to two service functions."</p>
+<hr>
+<h2 id="guided-lab-timing-decorator-in-the-tracker-project-26-minutes">Guided Lab: Timing Decorator in the Tracker Project (26 minutes)</h2>
+<h3 id="lab-purpose">Lab purpose</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Your lab is to build one useful decorator: <code>@timed</code>. It should log execution time, preserve the original return value, and work on at least two service functions."</p>
+<p>"This lab connects directly to Day 3 Hour 2. If your logging setup writes to <code>logs/app.log</code>, your timing messages should appear there. If your logging setup is slightly different, use your project's existing logger configuration, but keep the decorator's logging call in the professional style."</p>
+<p>"This lab also connects back to Hour 3. Safe saves helped us avoid repeating risky file-write steps. Decorators help us avoid repeating timing code around multiple service methods."</p>
+<h3 id="student-prompt">Student prompt</h3>
+<p>Implement <code>@timed</code> in a suitable existing module in your tracker project. Apply it to at least two service functions or methods, such as:</p>
+<ul>
+<li><code>add_task(...)</code></li>
+<li><code>list_tasks(...)</code></li>
+<li><code>search_tasks(...)</code></li>
+<li><code>save_tasks(...)</code></li>
+<li><code>load_tasks(...)</code></li>
+</ul>
+<p>Your decorator must:</p>
+<ol>
+<li>Accept the original function.</li>
+<li>Define <code>wrapper(*args, **kwargs)</code>.</li>
+<li>Use <code>time.perf_counter()</code> before and after the original call.</li>
+<li>Call the original function with <code>func(*args, **kwargs)</code>.</li>
+<li>Store and return the original result.</li>
+<li>Log the elapsed time with <code>logging.getLogger(__name__).info(...)</code>.</li>
+<li>Use <code>@wraps(func)</code> in the professional version.</li>
+</ol>
+<h3 id="lab-timing-checklist">Lab timing checklist</h3>
+<table>
+<thead>
+<tr>
+<th>Lab step</th>
+<th style="text-align: right;">Suggested time</th>
+<th>Done when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Locate two service functions</td>
+<td style="text-align: right;">4 min</td>
+<td>Learner chooses two functions or methods that already work</td>
+</tr>
+<tr>
+<td>Implement <code>@timed</code></td>
+<td style="text-align: right;">7 min</td>
+<td>Decorator uses <code>perf_counter</code>, <code>logging.getLogger(__name__).info</code>, <code>@wraps</code>, and returns <code>result</code></td>
+</tr>
+<tr>
+<td>Apply the decorator</td>
+<td style="text-align: right;">4 min</td>
+<td>Two service functions have <code>@timed</code> above their definitions</td>
+</tr>
+<tr>
+<td>Run behavior checks</td>
+<td style="text-align: right;">5 min</td>
+<td>Decorated functions still return the same values as before</td>
+</tr>
+<tr>
+<td>Verify log output</td>
+<td style="text-align: right;">4 min</td>
+<td><code>logs/app.log</code> or configured log destination shows timing messages</td>
+</tr>
+<tr>
+<td>Reflect and clean up</td>
+<td style="text-align: right;">2 min</td>
+<td>Learner can explain <code>wrapper(*args, **kwargs)</code> and remove noisy experiments</td>
+</tr>
+</tbody>
+</table>
+<p>Total lab time: 4 + 7 + 4 + 5 + 4 + 2 = 26 minutes.</p>
+<h3 id="starter-code">Starter code</h3>
+<p>Offer this if learners need scaffolding:</p>
+<pre><code class="language-python">import logging
+import time
+from functools import wraps
+from typing import Any, Callable
+
+
+def timed(func: Callable[..., Any]) -&gt; Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -&gt; Any:
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+        logging.getLogger(__name__).info(
+            &quot;%s completed in %.6f seconds&quot;,
+            func.__name__,
+            elapsed,
+        )
+        return result
+
+    return wrapper
+</code></pre>
+<h3 id="example-application-to-service-methods">Example application to service methods</h3>
+<p>If learners need a concrete model, show:</p>
+<pre><code class="language-python">class TaskService:
+    def __init__(self) -&gt; None:
+        self._titles: list[str] = []
+
+    @timed
+    def add_task(self, title: str) -&gt; int:
+        self._titles.append(title)
+        return len(self._titles)
+
+    @timed
+    def search_tasks(self, query: str) -&gt; list[str]:
+        normalized_query = query.casefold()
+        return [
+            title
+            for title in self._titles
+            if normalized_query in title.casefold()
+        ]
+</code></pre>
+<p>Then show a deterministic behavior check:</p>
+<pre><code class="language-python">service = TaskService()
+assert service.add_task(&quot;Write timing decorator&quot;) == 1
+assert service.add_task(&quot;Review timing logs&quot;) == 2
+assert service.search_tasks(&quot;timing&quot;) == [
+    &quot;Write timing decorator&quot;,
+    &quot;Review timing logs&quot;,
+]
+</code></pre>
+<p>"These assertions focus on behavior. If they passed before decoration, they should still pass after decoration. The decorator adds logging; it should not change what the service returns."</p>
+<h3 id="log-verification">Log verification</h3>
+<p>Ask learners to run their normal demo or tests from the project root. On Windows, a common command shape is:</p>
+<pre><code class="language-powershell">py -m src.tracker.demo
+Get-Content logs/app.log -Tail 20
+</code></pre>
+<p>If their project uses <code>python</code> instead of <code>py</code>, use:</p>
+<pre><code class="language-powershell">python -m src.tracker.demo
+Get-Content logs/app.log -Tail 20
+</code></pre>
+<p>Expected log shape:</p>
+<pre><code class="language-text">INFO src.tracker.services add_task completed in 0.000080 seconds
+INFO src.tracker.services search_tasks completed in 0.000050 seconds
+</code></pre>
+<p>The exact module name and duration may differ. The required evidence is that two decorated functions produce timing log records and still behave correctly.</p>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>Students are done when:</p>
+<ul>
+<li><code>@timed</code> is implemented with <code>wrapper(*args, **kwargs)</code>.</li>
+<li><code>@timed</code> uses <code>time.perf_counter()</code>.</li>
+<li><code>@timed</code> logs with <code>logging.getLogger(__name__).info(...)</code>.</li>
+<li>The wrapper calls the original function.</li>
+<li>The wrapper returns the original result.</li>
+<li>At least two service functions or methods are decorated.</li>
+<li>The decorated functions still produce the same return values or side effects as before.</li>
+<li>Timing messages appear in <code>logs/app.log</code> or the project's configured log destination.</li>
+<li>The code remains small and readable.</li>
+</ul>
+<h3 id="instructor-circulation-notes">Instructor circulation notes</h3>
+<ul>
+<li>If a learner says, "My function now returns <code>None</code>," inspect the wrapper for a missing <code>return result</code>.</li>
+<li>If a learner says, "My method says it is missing <code>self</code> or an argument," inspect whether the wrapper accepts and forwards <code>*args</code> and <code>**kwargs</code>.</li>
+<li>If a learner logs with <code>print()</code>, acknowledge that it can help while debugging, then redirect them to the logging requirement so the output lands in <code>logs/app.log</code>.</li>
+<li>If a learner uses <code>time.time()</code>, explain that it often works for timestamps, but <code>time.perf_counter()</code> is preferred for measuring elapsed durations.</li>
+<li>If a learner wants to decorate every function in the project, slow them down. The requirement is two service functions. Quality and explanation matter more than coverage.</li>
+<li>If a learner starts building decorator factories, class decorators, or authorization frameworks, remind them those topics are explicitly out of scope today.</li>
+<li>If logging does not appear, check whether logging was configured before the decorated functions were called. Then check the current working directory and the expected location of <code>logs/app.log</code>.</li>
+</ul>
+<h3 id="stretch-options-only-after-completion">Stretch options only after completion</h3>
+<p>Offer these only if the required lab is complete:</p>
+<ul>
+<li>Compare <code>service.add_task.__name__</code> with and without <code>@wraps(func)</code>.</li>
+<li>Add timing to a safe-save helper and confirm that both success and failure paths are still visible through logs.</li>
+<li>Add one tiny validation helper or decorator for a clearly repeated check, such as a non-empty title, but keep it small and readable.</li>
+</ul>
+<p>Do not let stretch work consume the required lab or turn into production security design.</p>
+<hr>
+<h2 id="pitfalls-quick-check-and-session-4-bridge-3-minutes">Pitfalls, Quick Check, and Session 4 Bridge (3 minutes)</h2>
+<h3 id="common-pitfalls-recap">Common pitfalls recap</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's close by naming the mistakes that matter most."</p>
+<p>Display:</p>
+<pre><code class="language-text">Decorator pitfalls:
+1. Forgetting to return the original result.
+2. Forgetting to forward *args and **kwargs.
+3. Timing with print instead of the logging system.
+4. Losing metadata by omitting functools.wraps.
+5. Hiding major business logic in a decorator.
+6. Treating a toy API-key example as production security.
+</code></pre>
+<p>"The first two are behavior bugs. If you forget to return the result, callers may receive <code>None</code>. If you break argument forwarding, methods and functions may stop accepting the arguments they accepted before."</p>
+<p>"The logging issue is a project consistency issue. Day 3 Hour 2 gave us a logging system. Use it."</p>
+<p>"The metadata issue is why we use <code>@wraps(func)</code> in the professional version."</p>
+<p>"The last two are design issues. Decorators should reduce duplication and improve readability. They should not hide the main story of the program."</p>
+<h3 id="quick-check-exit-ticket">Quick check / exit ticket</h3>
+<p>Ask:</p>
+<p>"What happens if your wrapper calls the original function but forgets to return the result?"</p>
+<p>Expected answer:</p>
+<p>"The original function may still run, but the decorated function returns <code>None</code> unless the wrapper returns the original result. That changes behavior and can break calling code."</p>
+<p>Ask one follow-up:</p>
+<p>"Why do we use <code>wrapper(*args, **kwargs)</code> instead of naming one fixed parameter list?"</p>
+<p>Expected answer:</p>
+<p>"It lets the decorator forward whatever arguments the original function or method expects, including <code>self</code> for methods and keyword arguments."</p>
+<h3 id="wrap-up-and-bridge-to-session-4">Wrap-up and bridge to Session 4</h3>
+<p><strong>Instructor closing line</strong></p>
+<p>"Today you added a small professional tool to the project: a decorator that can wrap service behavior without changing what the service means. That prepares us for Session 4, where HTTP clients and JSON API contracts introduce more repeated edge behavior: timing calls, logging failures, handling request errors, and keeping core functions readable. The same discipline applies there: keep wrappers small, keep behavior explicit, and use logs to make the program observable."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour1_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-safe-saves-to-reusable-wrappers-5-minutes" class="depth-2">Opening Bridge from Safe Saves to Reusable Wrappers (5 minutes)</a></li>
+<li><a href="#instructor-talk-track" class="depth-3">Instructor talk track</a></li>
+<li><a href="#transition" class="depth-3">Transition</a></li>
+<li><a href="#outcomes-setup-and-scope-boundaries-5-minutes" class="depth-2">Outcomes, Setup, and Scope Boundaries (5 minutes)</a></li>
+<li><a href="#instructor-talk-track-2" class="depth-3">Instructor talk track</a></li>
+<li><a href="#quick-setup-check" class="depth-3">Quick setup check</a></li>
+<li><a href="#transition-2" class="depth-3">Transition</a></li>
+<li><a href="#concept-briefing-decorator-anatomy-and-readability-8-minutes" class="depth-2">Concept Briefing: Decorator Anatomy and Readability (8 minutes)</a></li>
+<li><a href="#part-1-a-decorator-is-a-function-that-returns-a-function" class="depth-3">Part 1: A decorator is a function that returns a function</a></li>
+<li><a href="#part-2-why-wrapperargs-kwargs-matters" class="depth-3">Part 2: Why wrapper(*args, **kwargs) matters</a></li>
+<li><a href="#part-3-keep-decorators-small-and-readable" class="depth-3">Part 3: Keep decorators small and readable</a></li>
+<li><a href="#transition-3" class="depth-3">Transition</a></li>
+<li><a href="#live-demo-professional-timed-for-service-methods-8-minutes" class="depth-2">Live Demo: Professional @timed for Service Methods (8 minutes)</a></li>
+<li><a href="#demo-framing" class="depth-3">Demo framing</a></li>
+<li><a href="#live-code-the-decorator" class="depth-3">Live-code the decorator</a></li>
+<li><a href="#narrate-each-important-line" class="depth-3">Narrate each important line</a></li>
+<li><a href="#add-a-deterministic-service-method-example" class="depth-3">Add a deterministic service-method example</a></li>
+<li><a href="#method-behavior-callout" class="depth-3">Method behavior callout</a></li>
+<li><a href="#transition-4" class="depth-3">Transition</a></li>
+<li><a href="#live-demo-toy-requiresapikey-and-validation-discussion-5-minutes" class="depth-2">Live Demo: Toy @requires_api_key and Validation Discussion (5 minutes)</a></li>
+<li><a href="#toy-authorization-demo" class="depth-3">Toy authorization demo</a></li>
+<li><a href="#lightweight-validation-mention" class="depth-3">Lightweight validation mention</a></li>
+<li><a href="#transition-5" class="depth-3">Transition</a></li>
+<li><a href="#guided-lab-timing-decorator-in-the-tracker-project-26-minutes" class="depth-2">Guided Lab: Timing Decorator in the Tracker Project (26 minutes)</a></li>
+<li><a href="#lab-purpose" class="depth-3">Lab purpose</a></li>
+<li><a href="#student-prompt" class="depth-3">Student prompt</a></li>
+<li><a href="#lab-timing-checklist" class="depth-3">Lab timing checklist</a></li>
+<li><a href="#starter-code" class="depth-3">Starter code</a></li>
+<li><a href="#example-application-to-service-methods" class="depth-3">Example application to service methods</a></li>
+<li><a href="#log-verification" class="depth-3">Log verification</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#instructor-circulation-notes" class="depth-3">Instructor circulation notes</a></li>
+<li><a href="#stretch-options-only-after-completion" class="depth-3">Stretch options only after completion</a></li>
+<li><a href="#pitfalls-quick-check-and-session-4-bridge-3-minutes" class="depth-2">Pitfalls, Quick Check, and Session 4 Bridge (3 minutes)</a></li>
+<li><a href="#common-pitfalls-recap" class="depth-3">Common pitfalls recap</a></li>
+<li><a href="#quick-check-exit-ticket" class="depth-3">Quick check / exit ticket</a></li>
+<li><a href="#wrap-up-and-bridge-to-session-4" class="depth-3">Wrap-up and bridge to Session 4</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day3_Hour4_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour3_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour1_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

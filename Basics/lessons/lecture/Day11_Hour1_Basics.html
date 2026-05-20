@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 11, Hour 1: Files — Reading and Writing Text | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="11">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day11_Hour1_Basics.md">
+
+    <link rel="prev" href="Day10_Hour4_Basics.html">
+    <link rel="next" href="Day11_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="11" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-11/index.html">Day 11</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 11, Hour 1: Files — Reading and Writing Text</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 11</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day11_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-use-notes-read-first">Instructor Use Notes (Read First)</h2>
+<p>This script is designed to be read almost verbatim during class. It is intentionally detailed so you can teach confidently even if learners are seeing file I/O for the first time.</p>
+<ul>
+<li><strong>Runbook alignment:</strong> Session 11, Hour 41 (Files: reading and writing text)</li>
+<li><strong>Time model:</strong></li>
+<li>Talk + teach: 10–15 minutes</li>
+<li>Live demo: 5–10 minutes</li>
+<li>Lab: 25–35 minutes</li>
+<li>Quick check + wrap: remaining minutes</li>
+<li><strong>Scope guard:</strong> This hour is strictly Basics.
+  We stay with plain text files, <code>with open(...) as f</code>, and line-by-line reading/writing.</li>
+<li><strong>Important non-goals for this hour:</strong> JSON structure design, full path-manipulation lesson, advanced parsing, classes, databases.</li>
+</ul>
+<hr>
+<h2 id="outcomes-state-these-clearly-at-the-top-of-class">Outcomes (state these clearly at the top of class)</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Open files safely using <code>with</code>.</li>
+<li>Write lines to a text file using <code>write()</code>.</li>
+<li>Read lines from a text file using <code>readlines()</code> (and see <code>read()</code>).</li>
+<li>Explain where a file was saved by checking:
+   - the <strong>current working directory</strong> (CWD), and
+   - the file’s <strong>absolute path</strong>.</li>
+<li>Load saved data back and print it clearly.</li>
+</ol>
+<hr>
+<h2 id="materials-setup-checklist-instructor">Materials + Setup Checklist (Instructor)</h2>
+<p>Before learners start typing:</p>
+<ol>
+<li>Confirm everyone is in the same lesson/project folder.</li>
+<li>Confirm everyone can run a Python script from that folder.</li>
+<li>Ask learners to close unrelated terminals to reduce confusion about working directory.</li>
+<li>Remind learners: “Today we are saving data that survives after the script stops.”</li>
+</ol>
+<p>Suggested opening line:</p>
+<blockquote>
+<p>“Up to now, most of our variables lived only while the script ran. Today we’re making data persistent by writing to files and then loading it back.”</p>
+</blockquote>
+<hr>
+<h2 id="section-plan-for-your-pacing-and-transitions">Section Plan (for your pacing and transitions)</h2>
+<ol>
+<li>Why files matter (motivation)</li>
+<li>Core talk points (10–15 min)</li>
+<li>Live demo: shopping list save + load (5–10 min)</li>
+<li>Guided lab: contacts/tasks save + load (25–35 min)</li>
+<li>Debrief, pitfalls, quick check</li>
+</ol>
+<hr>
+<h2 id="why-this-matters-23-minute-motivation">Why This Matters (2–3 minute motivation)</h2>
+<p>Use this framing:</p>
+<ul>
+<li>Without files, a script “forgets” everything after it ends.</li>
+<li>With files, we can:</li>
+<li>save shopping lists,</li>
+<li>store contacts,</li>
+<li>track tasks,</li>
+<li>and generate simple reports.</li>
+<li>This is the first step toward real apps that keep data between runs.</li>
+</ul>
+<p>Short analogy:</p>
+<blockquote>
+<p>“Memory variables are like writing on a whiteboard that gets erased when class ends. Files are like writing in a notebook you can open tomorrow.”</p>
+</blockquote>
+<hr>
+<h2 id="instructor-talk-points-1015-min">Instructor Talk Points (10–15 min)</h2>
+<p>Use these 12 talk points in order. Pause for prediction questions between points.</p>
+<h3 id="1-what-is-a-text-file-in-this-context">1) What is a text file in this context?</h3>
+<p>A text file is plain characters, line by line. Examples:</p>
+<ul>
+<li><code>shopping.txt</code></li>
+<li><code>contacts.txt</code></li>
+<li><code>tasks.txt</code></li>
+</ul>
+<p>We are <strong>not</strong> doing JSON in this hour; we are doing plain text lines.</p>
+<h3 id="2-file-path-vs-filename">2) File path vs filename</h3>
+<ul>
+<li>A <strong>filename</strong>: <code>shopping.txt</code></li>
+<li>A <strong>path</strong>: where that file lives on disk</li>
+<li>If you provide only a filename, Python uses the current working directory.</li>
+</ul>
+<p>Say this out loud:</p>
+<blockquote>
+<p>“When learners say ‘Python can’t find my file,’ 80% of the time they’re in the wrong folder.”</p>
+</blockquote>
+<h3 id="3-working-directory-cwd-controls-relative-file-access">3) Working directory (CWD) controls relative file access</h3>
+<p>Introduce this concept operationally:</p>
+<ul>
+<li><code>Path.cwd()</code> tells us the current folder of execution.</li>
+<li><code>Path("shopping.txt").resolve()</code> gives the full absolute location.</li>
+</ul>
+<p>This is critical for completion criteria (“can locate file on disk”).</p>
+<h3 id="4-with-open-as-f-is-the-default-safe-pattern">4) <code>with open(...) as f</code> is the default safe pattern</h3>
+<p>Core syntax:</p>
+<pre><code class="language-python">with open(&quot;shopping.txt&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;Apples\n&quot;)
+</code></pre>
+<p>Explain:</p>
+<ul>
+<li><code>with</code> creates a context block.</li>
+<li>File is automatically closed at block end.</li>
+<li>Safer than manual <code>open()</code> + <code>close()</code> because it still closes on errors.</li>
+</ul>
+<h3 id="5-common-file-modes-for-this-lesson">5) Common file modes for this lesson</h3>
+<ul>
+<li><code>"r"</code> read</li>
+<li><code>"w"</code> write (overwrites file)</li>
+<li><code>"a"</code> append (adds to end)</li>
+</ul>
+<p>You can mention append briefly, but keep practice focused on <code>"w"</code> then <code>"r"</code> per runbook.</p>
+<h3 id="6-write-writes-exactly-what-you-pass">6) <code>write()</code> writes exactly what you pass</h3>
+<p>Important behavior:</p>
+<ul>
+<li><code>f.write("Milk")</code> writes <code>Milk</code> only.</li>
+<li><code>f.write("Milk\n")</code> writes <code>Milk</code> and a new line.</li>
+</ul>
+<p>This is where newline pitfalls start. Make this explicit.</p>
+<h3 id="7-read-vs-readlines">7) <code>read()</code> vs <code>readlines()</code></h3>
+<ul>
+<li><code>read()</code> returns one big string (entire file).</li>
+<li><code>readlines()</code> returns a list of strings (one entry per line, newline included).</li>
+</ul>
+<p>Show that newline characters remain in each line until stripped.</p>
+<h3 id="8-cleaning-line-endings">8) Cleaning line endings</h3>
+<p>When printing loaded lines cleanly:</p>
+<pre><code class="language-python">clean_line = line.strip()
+</code></pre>
+<p><code>strip()</code> removes surrounding whitespace, including newline at line end.</p>
+<h3 id="9-deterministic-output-habits">9) Deterministic output habits</h3>
+<p>For classroom reliability:</p>
+<ul>
+<li>Use fixed sample data.</li>
+<li>Print clear headings.</li>
+<li>Number output consistently.</li>
+</ul>
+<p>Avoid random data in required examples.</p>
+<h3 id="10-error-awareness-without-over-scoping">10) Error awareness without over-scoping</h3>
+<p>At Basics level, we can gently guard read step:</p>
+<ul>
+<li>If file may not exist, catch <code>FileNotFoundError</code>.</li>
+<li>Keep message simple and actionable.</li>
+</ul>
+<p>Do not turn this hour into full exception design; Hour 44 goes deep.</p>
+<h3 id="11-operational-file-location-check-required-for-this-hour">11) Operational file-location check (required for this hour)</h3>
+<p>Every learner should print:</p>
+<ol>
+<li>CWD</li>
+<li>File absolute path</li>
+<li>Whether the path exists</li>
+</ol>
+<p>This makes “file location” measurable and not vague.</p>
+<h3 id="12-mental-model-recap">12) Mental model recap</h3>
+<p>Use this recap sentence:</p>
+<blockquote>
+<p>“We open with <code>with</code>, write lines with <code>write()</code>, include <code>\n</code>, read back with <code>readlines()</code>, clean with <code>strip()</code>, and confirm location with CWD + absolute path.”</p>
+</blockquote>
+<hr>
+<h2 id="live-demo-510-min">Live Demo (5–10 min)</h2>
+<h3 id="demo-goal">Demo Goal</h3>
+<p>Write a shopping list to a file, then read and print it.</p>
+<h3 id="instructor-narrative-what-to-say-while-coding">Instructor Narrative (what to say while coding)</h3>
+<p>Use this sequence:</p>
+<ol>
+<li>“First, we will save a list to <code>shopping.txt</code>.”</li>
+<li>“Then we will print where the file lives.”</li>
+<li>“Finally, we will read it back and display numbered items.”</li>
+</ol>
+<h3 id="live-demo-code-single-runnable-script">Live Demo Code (single runnable script)</h3>
+<pre><code class="language-python">from pathlib import Path
+
+shopping_items = [&quot;Apples&quot;, &quot;Bananas&quot;, &quot;Bread&quot;, &quot;Milk&quot;]  # Fixed sample data for deterministic classroom output
+
+file_path = Path(&quot;shopping.txt&quot;)
+
+print(&quot;=== FILE LOCATION CHECK ===&quot;)
+print(f&quot;Current working directory: {Path.cwd()}&quot;)
+print(f&quot;Absolute path for target file: {file_path.resolve()}&quot;)
+
+print(&quot;\n=== WRITE STEP ===&quot;)
+with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    for item in shopping_items:
+        f.write(item + &quot;\n&quot;)
+print(&quot;Shopping list written to file.&quot;)
+
+print(&quot;\n=== VERIFY FILE EXISTS ===&quot;)
+print(f&quot;File exists? {file_path.exists()}&quot;)
+
+print(&quot;\n=== READ STEP ===&quot;)
+with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    lines = f.readlines()
+
+print(&quot;Items loaded from file:&quot;)
+for index, line in enumerate(lines, start=1):
+    print(f&quot;{index}. {line.strip()}&quot;)
+</code></pre>
+<h3 id="expected-output-shape-exact-words-may-include-your-local-path">Expected Output Shape (exact words may include your local path)</h3>
+<pre><code class="language-text">=== FILE LOCATION CHECK ===
+Current working directory: C:\...\your_folder
+Absolute path for target file: C:\...\your_folder\shopping.txt
+
+=== WRITE STEP ===
+Shopping list written to file.
+
+=== VERIFY FILE EXISTS ===
+File exists? True
+
+=== READ STEP ===
+Items loaded from file:
+1. Apples
+2. Bananas
+3. Bread
+4. Milk
+</code></pre>
+<h3 id="debrief-prompts-right-after-demo">Debrief Prompts Right After Demo</h3>
+<p>Ask:</p>
+<ol>
+<li>“What would happen if I removed <code>\n</code> from the write line?”</li>
+<li>“Why are we using <code>line.strip()</code> before printing?”</li>
+<li>“Where exactly is this file on disk?”</li>
+</ol>
+<p>Expected learner answers:</p>
+<ul>
+<li>Without <code>\n</code>, all items may appear merged in one line of file content.</li>
+<li><code>strip()</code> removes newline/extra whitespace for clean display.</li>
+<li>File is in CWD unless a different path is provided.</li>
+</ul>
+<hr>
+<h2 id="quick-micro-variation-optional-2-minute-in-demo-branch">Quick Micro-Variation (Optional 2-minute in-demo branch)</h2>
+<p>If time allows, show this mini read contrast:</p>
+<pre><code class="language-python">with open(&quot;shopping.txt&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    entire_text = f.read()
+print(entire_text)
+</code></pre>
+<p>Then say:</p>
+<blockquote>
+<p>“<code>read()</code> is useful when you want the whole file as one string. <code>readlines()</code> is often easier when your data is one item per line.”</p>
+</blockquote>
+<p>Keep this short; main lab uses line-based flow.</p>
+<hr>
+<h2 id="hands-on-lab-2535-min">Hands-on Lab (25–35 min)</h2>
+<h2 id="lab-title">Lab Title</h2>
+<p><strong>Save and Load (Text): Contacts or Tasks</strong></p>
+<h3 id="lab-prompt-what-learners-must-do">Lab Prompt (what learners must do)</h3>
+<ol>
+<li>Create a list of contacts or tasks in Python.</li>
+<li>Save each item to a text file, one per line.</li>
+<li>Load items back from the same file.</li>
+<li>Print them as a numbered list.</li>
+<li>Print CWD and absolute file path so the file location is explicit.</li>
+</ol>
+<p>Allowed simple formats:</p>
+<ul>
+<li>Tasks only, e.g., <code>Buy batteries</code></li>
+<li>Contact format, e.g., <code>Ava Lee|555-0199</code></li>
+</ul>
+<h3 id="scope-reminder-to-learners">Scope Reminder to Learners</h3>
+<p>Keep it simple:</p>
+<ul>
+<li>one <code>.txt</code> file</li>
+<li>write with <code>"w"</code></li>
+<li>read with <code>"r"</code></li>
+<li>line-per-item format</li>
+</ul>
+<p>No advanced parsing required.</p>
+<hr>
+<h2 id="lab-walkthrough-guided-first-then-independent">Lab Walkthrough (Guided First, Then Independent)</h2>
+<p>Use this as your spoken guide.</p>
+<h3 id="step-1-choose-a-file-name">Step 1 — Choose a file name</h3>
+<p>Use one of:</p>
+<ul>
+<li><code>tasks.txt</code></li>
+<li><code>contacts.txt</code></li>
+</ul>
+<p>Keep it in the current working directory for this required path.</p>
+<h3 id="step-2-build-fixed-sample-data">Step 2 — Build fixed sample data</h3>
+<p>Task example:</p>
+<pre><code class="language-python">tasks = [
+    &quot;Review notes&quot;,
+    &quot;Email instructor&quot;,
+    &quot;Practice file I/O&quot;,
+    &quot;Prepare tomorrow plan&quot;,
+]
+</code></pre>
+<p>Contact example:</p>
+<pre><code class="language-python">contacts = [
+    &quot;Ava Lee|555-0199&quot;,
+    &quot;Noah Kim|555-0142&quot;,
+    &quot;Mia Chen|555-0188&quot;,
+]
+</code></pre>
+<h3 id="step-3-print-location-info-first">Step 3 — Print location info first</h3>
+<p>Require this in every submission:</p>
+<pre><code class="language-python">from pathlib import Path
+
+file_path = Path(&quot;tasks.txt&quot;)  # or Path(&quot;contacts.txt&quot;)
+print(f&quot;CWD: {Path.cwd()}&quot;)
+print(f&quot;Target absolute path: {file_path.resolve()}&quot;)
+</code></pre>
+<p>Why first? It reduces confusion before writing/reading.</p>
+<h3 id="step-4-write-one-item-per-line">Step 4 — Write one item per line</h3>
+<pre><code class="language-python">with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    for item in tasks:
+        f.write(item + &quot;\n&quot;)
+</code></pre>
+<p>or for contacts:</p>
+<pre><code class="language-python">with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    for contact in contacts:
+        f.write(contact + &quot;\n&quot;)
+</code></pre>
+<h3 id="step-5-verify-existence">Step 5 — Verify existence</h3>
+<pre><code class="language-python">print(f&quot;Created successfully? {file_path.exists()}&quot;)
+</code></pre>
+<h3 id="step-6-read-lines-back">Step 6 — Read lines back</h3>
+<pre><code class="language-python">with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    loaded_lines = f.readlines()
+</code></pre>
+<h3 id="step-7-print-numbered-output">Step 7 — Print numbered output</h3>
+<pre><code class="language-python">for index, line in enumerate(loaded_lines, start=1):
+    print(f&quot;{index}. {line.strip()}&quot;)
+</code></pre>
+<hr>
+<h2 id="full-lab-reference-solution-tasks-version">Full Lab Reference Solution (Tasks version)</h2>
+<p>Use this after independent work or for support.</p>
+<pre><code class="language-python">from pathlib import Path
+
+tasks = [
+    &quot;Review notes&quot;,
+    &quot;Email instructor&quot;,
+    &quot;Practice file I/O&quot;,
+    &quot;Prepare tomorrow plan&quot;,
+]
+
+file_path = Path(&quot;tasks.txt&quot;)
+
+print(&quot;=== LOCATION ===&quot;)
+print(f&quot;CWD: {Path.cwd()}&quot;)
+print(f&quot;Target absolute path: {file_path.resolve()}&quot;)
+
+print(&quot;\n=== WRITE ===&quot;)
+with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    for task in tasks:
+        f.write(task + &quot;\n&quot;)
+print(&quot;Write complete.&quot;)
+
+print(&quot;\n=== CHECK FILE ===&quot;)
+print(f&quot;Exists: {file_path.exists()}&quot;)
+
+print(&quot;\n=== READ + PRINT ===&quot;)
+with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    loaded_tasks = f.readlines()
+
+for number, line in enumerate(loaded_tasks, start=1):
+    print(f&quot;{number}. {line.strip()}&quot;)
+</code></pre>
+<h3 id="full-lab-reference-solution-contacts-namephone-version">Full Lab Reference Solution (Contacts <code>name|phone</code> version)</h3>
+<pre><code class="language-python">from pathlib import Path
+
+contacts = [
+    &quot;Ava Lee|555-0199&quot;,
+    &quot;Noah Kim|555-0142&quot;,
+    &quot;Mia Chen|555-0188&quot;,
+]
+
+file_path = Path(&quot;contacts.txt&quot;)
+
+print(&quot;=== LOCATION ===&quot;)
+print(f&quot;CWD: {Path.cwd()}&quot;)
+print(f&quot;Target absolute path: {file_path.resolve()}&quot;)
+
+print(&quot;\n=== WRITE ===&quot;)
+with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    for contact in contacts:
+        f.write(contact + &quot;\n&quot;)
+print(&quot;Write complete.&quot;)
+
+print(&quot;\n=== CHECK FILE ===&quot;)
+print(f&quot;Exists: {file_path.exists()}&quot;)
+
+print(&quot;\n=== READ + PRINT ===&quot;)
+with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    loaded_contacts = f.readlines()
+
+for number, line in enumerate(loaded_contacts, start=1):
+    print(f&quot;{number}. {line.strip()}&quot;)
+</code></pre>
+<hr>
+<h2 id="completion-criteria-use-for-gradingspot-check">Completion Criteria (Use for grading/spot-check)</h2>
+<p>A learner is complete when all are true:</p>
+<ol>
+<li><strong>File created correctly</strong>
+   Their script writes a <code>.txt</code> file with one item per line.</li>
+<li><strong>File reloaded correctly</strong>
+   Their script reads lines back and prints a numbered list.</li>
+<li><strong>File location proven</strong>
+   Their output includes:
+   - current working directory (<code>Path.cwd()</code>), and
+   - absolute file path (<code>file_path.resolve()</code>), and
+   - existence check result (<code>True</code> expected after write).</li>
+<li><strong>Learner can locate file on disk</strong>
+   Learner can navigate to printed path in IDE/file explorer and show file exists.</li>
+</ol>
+<h3 id="fast-instructor-rubric-passfix">Fast instructor rubric (pass/fix)</h3>
+<ul>
+<li><strong>Pass:</strong> all four criteria met.</li>
+<li><strong>Fix needed:</strong> missing one or more criteria.</li>
+</ul>
+<p>If fix needed, give one precise next action:</p>
+<ul>
+<li>“Add <code>\n</code> while writing.”</li>
+<li>“Print CWD to verify path.”</li>
+<li>“Open with <code>with</code> so file closes safely.”</li>
+</ul>
+<hr>
+<h2 id="common-pitfalls-to-watch-for-and-exact-coaching-language">Common Pitfalls to Watch For (and exact coaching language)</h2>
+<h3 id="pitfall-1-wrong-path-or-wrong-working-directory">Pitfall 1: Wrong path or wrong working directory</h3>
+<p>Symptoms:</p>
+<ul>
+<li><code>FileNotFoundError</code> on read</li>
+<li>File created, but learner “can’t find it”</li>
+</ul>
+<p>Coaching script:</p>
+<blockquote>
+<p>“Let’s print <code>Path.cwd()</code> and <code>file_path.resolve()</code> first.
+If the folder is not where you expect, run the script from the correct folder or update the path.”</p>
+</blockquote>
+<p>Quick fix checklist:</p>
+<ol>
+<li>Print CWD.</li>
+<li>Confirm file name spelling.</li>
+<li>Confirm script execution folder.</li>
+<li>Re-run write step, then check <code>.exists()</code>.</li>
+</ol>
+<h3 id="pitfall-2-forgetting-newline-characters">Pitfall 2: Forgetting newline characters</h3>
+<p>Symptoms:</p>
+<ul>
+<li>All records appear as one long line in file.</li>
+<li>Printed output doesn’t match intended line structure.</li>
+</ul>
+<p>Coaching script:</p>
+<blockquote>
+<p>“<code>write()</code> only writes exactly what you give it.
+Add <code>'\n'</code> for each item to put each record on its own line.”</p>
+</blockquote>
+<p>Quick fix:</p>
+<pre><code class="language-python">f.write(item + &quot;\n&quot;)
+</code></pre>
+<h3 id="pitfall-3-brief-mention-misusing-w-when-expecting-append-behavior">Pitfall 3 (brief mention): Misusing <code>"w"</code> when expecting append behavior</h3>
+<p>Symptoms:</p>
+<ul>
+<li>Old contents disappear each run.</li>
+</ul>
+<p>Coaching:</p>
+<blockquote>
+<p>“<code>'w'</code> starts fresh each time. That is fine for this lab’s required behavior.
+Use <code>'a'</code> only when you intentionally want to add to existing content.”</p>
+</blockquote>
+<p>Keep this note short to avoid scope drift.</p>
+<hr>
+<h2 id="instructor-live-support-patterns-during-lab">Instructor Live Support Patterns During Lab</h2>
+<p>When circulating, ask these in order:</p>
+<ol>
+<li>“Show me your CWD line.”</li>
+<li>“Show me your absolute path line.”</li>
+<li>“Show me where you add <code>\n</code> while writing.”</li>
+<li>“Show me where you call <code>readlines()</code>.”</li>
+<li>“Show me where you print cleaned lines with <code>strip()</code>.”</li>
+</ol>
+<p>This sequence finds most issues in under one minute.</p>
+<p>If a learner is stuck, avoid typing for them immediately.
+Instead, coach with micro-prompts:</p>
+<ul>
+<li>“What does your script print before writing?”</li>
+<li>“What does <code>.exists()</code> show?”</li>
+<li>“Is your read step opening the same filename?”</li>
+</ul>
+<hr>
+<h2 id="suggested-minute-by-minute-facilitation-plan">Suggested Minute-by-Minute Facilitation Plan</h2>
+<h3 id="minutes-03-context-and-outcomes">Minutes 0–3: Context and outcomes</h3>
+<ul>
+<li>Explain persistence vs temporary memory.</li>
+<li>State two outcomes clearly:</li>
+<li>use <code>with</code></li>
+<li>read/write lines.</li>
+</ul>
+<h3 id="minutes-312-talk-points">Minutes 3–12: Talk points</h3>
+<ul>
+<li>Cover CWD/path, file modes, <code>write</code>, <code>read</code>, <code>readlines</code>.</li>
+<li>Ask one prediction question every 2–3 minutes.</li>
+</ul>
+<h3 id="minutes-1220-live-demo">Minutes 12–20: Live demo</h3>
+<ul>
+<li>Run shopping demo exactly once end-to-end.</li>
+<li>Make one deliberate mistake (remove <code>\n</code>) and fix live if time allows.</li>
+</ul>
+<h3 id="minutes-2050-lab">Minutes 20–50: Lab</h3>
+<ul>
+<li>First 8 minutes guided steps.</li>
+<li>Next 15–20 minutes independent.</li>
+<li>Final 5–7 minutes spot checks and debrief.</li>
+</ul>
+<h3 id="minutes-5060-quick-check-recap">Minutes 50–60: Quick check + recap</h3>
+<ul>
+<li>Exit ticket question on <code>with</code>.</li>
+<li>Confirm everyone can locate their file.</li>
+</ul>
+<hr>
+<h2 id="differentiation-guidance">Differentiation Guidance</h2>
+<h3 id="for-learners-who-need-more-support">For learners who need more support</h3>
+<ul>
+<li>Provide them the tasks version (single field, no separator).</li>
+<li>Have them complete only:</li>
+<li>write 3 lines</li>
+<li>read and print 3 lines</li>
+<li>print CWD + absolute path.</li>
+</ul>
+<h3 id="for-learners-who-finish-early-still-basics">For learners who finish early (still Basics)</h3>
+<p>Use <strong>optional</strong> extensions only (not required for completion):</p>
+<ol>
+<li>Add a timestamp header line.</li>
+<li>Export a pretty report text file.</li>
+</ol>
+<p>Clearly say:</p>
+<blockquote>
+<p>“These extensions are enrichment only.
+They are not required for today’s pass criteria.”</p>
+</blockquote>
+<hr>
+<h2 id="optional-extensions-strictly-non-required">Optional Extensions (Strictly Non-Required)</h2>
+<p>These are explicitly optional and should not block core completion.</p>
+<h3 id="optional-extension-a-timestamp-header-line">Optional Extension A — Timestamp Header Line</h3>
+<p>Goal: write a first line such as <code>Generated: 2026-01-13 10:30:00</code>.</p>
+<p>Example:</p>
+<pre><code class="language-python">from datetime import datetime
+from pathlib import Path
+
+items = [&quot;Review notes&quot;, &quot;Email instructor&quot;, &quot;Practice file I/O&quot;]
+file_path = Path(&quot;tasks_with_header.txt&quot;)
+
+with open(file_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(f&quot;Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n&quot;)
+    for item in items:
+        f.write(item + &quot;\n&quot;)
+</code></pre>
+<p>Instructor note: timestamp value changes by run, so output is not fixed.
+That is acceptable here because this is optional enrichment.</p>
+<h3 id="optional-extension-b-pretty-report-export">Optional Extension B — Pretty Report Export</h3>
+<p>Goal: create a second file with simple formatting.</p>
+<p>Example:</p>
+<pre><code class="language-python">from pathlib import Path
+
+loaded_items = [&quot;Review notes&quot;, &quot;Email instructor&quot;, &quot;Practice file I/O&quot;]
+report_path = Path(&quot;tasks_report.txt&quot;)
+
+with open(report_path, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;TASK REPORT\n&quot;)
+    f.write(&quot;===========\n&quot;)
+    for i, item in enumerate(loaded_items, start=1):
+        f.write(f&quot;{i}. {item}\n&quot;)
+</code></pre>
+<p>Again, optional only.</p>
+<hr>
+<h2 id="quick-check-exit-ticket-required">Quick Check / Exit Ticket (Required)</h2>
+<p>Ask exactly:</p>
+<blockquote>
+<p>“Why is using <code>with</code> recommended for file handling?”</p>
+</blockquote>
+<p>Strong answer:</p>
+<blockquote>
+<p>“<code>with</code> automatically closes the file when the block ends, even if an error happens.
+That prevents resource leaks and reduces file corruption risk.”</p>
+</blockquote>
+<p>Acceptable shorter answer:</p>
+<blockquote>
+<p>“It guarantees proper closing and is safer than manual <code>open()</code>/<code>close()</code>.”</p>
+</blockquote>
+<hr>
+<h2 id="debrief-script-end-of-hour-close">Debrief Script (End-of-Hour Close)</h2>
+<p>Use this short closing narrative:</p>
+<blockquote>
+<p>“Today you wrote real data to disk and loaded it back.
+You practiced the core file workflow used everywhere in Python scripting:
+open with <code>with</code>, write with <code>write</code>, read with <code>readlines</code>, clean with <code>strip</code>.
+Most importantly, you proved where your file is by printing CWD and absolute path.
+That path awareness will save you hours of debugging.”</p>
+</blockquote>
+<p>Then ask for one volunteer to screenshare:</p>
+<ol>
+<li>Their script output</li>
+<li>Their file in file explorer/IDE</li>
+<li>The matching absolute path</li>
+</ol>
+<hr>
+<h2 id="board-notes-slide-notes-concise-reference">Board Notes / Slide Notes (Concise Reference)</h2>
+<p>If you need a quick board summary:</p>
+<pre><code class="language-text">with open(&quot;file.txt&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;line\n&quot;)
+
+with open(&quot;file.txt&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    lines = f.readlines()
+</code></pre>
+<p>Remember:</p>
+<ul>
+<li>CWD controls relative paths</li>
+<li>Print absolute path to locate files</li>
+<li>Add "\n" when writing line-by-line</li>
+<li>Use .strip() when printing loaded lines</li>
+</ul>
+<hr>
+<h2 id="troubleshooting-appendix-instructor-rapid-response">Troubleshooting Appendix (Instructor Rapid Response)</h2>
+<h3 id="a-learner-gets-filenotfounderror">A) Learner gets <code>FileNotFoundError</code></h3>
+<p>Checklist:</p>
+<ol>
+<li>Did they run write step before read step?</li>
+<li>Same filename in both places?</li>
+<li>CWD unexpected?</li>
+<li>Typo in extension (<code>.text</code> vs <code>.txt</code>)?</li>
+</ol>
+<p>Recovery script:</p>
+<pre><code class="language-python">from pathlib import Path
+
+file_path = Path(&quot;tasks.txt&quot;)
+print(Path.cwd())
+print(file_path.resolve())
+print(file_path.exists())
+</code></pre>
+<p>If <code>exists()</code> is <code>False</code>, write step likely failed or path mismatch.</p>
+<h3 id="b-learner-output-has-blank-lines-between-items">B) Learner output has blank lines between items</h3>
+<p>Cause:</p>
+<ul>
+<li>They may have both line breaks in data and extra newline handling in print.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Use <code>line.strip()</code> in print loop.</li>
+</ul>
+<h3 id="c-learner-sees-all-text-in-one-line">C) Learner sees all text in one line</h3>
+<p>Cause:</p>
+<ul>
+<li>Missing <code>\n</code> while writing.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Append newline per record in write loop.</li>
+</ul>
+<h3 id="d-learner-can-run-script-but-cannot-find-file-in-editor-sidebar">D) Learner can run script but cannot find file in editor sidebar</h3>
+<p>Cause:</p>
+<ul>
+<li>Script executed from different terminal location.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Print CWD.</li>
+<li>Change terminal to expected folder.</li>
+<li>Run again.</li>
+<li>Refresh editor file tree.</li>
+</ul>
+<hr>
+<h2 id="verbatim-teaching-script-use-as-live-speaking-guide">Verbatim Teaching Script (Use as Live Speaking Guide)</h2>
+<p>The section below is intentionally written as a near-verbatim script you can read with minor personalization. It is split by classroom time windows so you can stay on pace.</p>
+<h3 id="minute-02-opening-and-relevance">Minute 0–2: Opening and relevance</h3>
+<p>“Welcome back, everyone. In this hour we are learning one of the most practical Python skills: saving data to a file, then loading it back.
+So far, many of our variables existed only while the script ran. Once the script ended, data was gone.
+Today we solve that by writing text files.</p>
+<p>By the end of this hour, you will be able to:</p>
+<ol>
+<li>open files safely with <code>with</code>,</li>
+<li>write lines using <code>write()</code>,</li>
+<li>read lines using <code>readlines()</code>,</li>
+<li>and prove where your file is saved by printing both your current working directory and absolute path.</li>
+</ol>
+<p>That last part matters. If you can’t find your file, your code is not done yet.”</p>
+<p>Pause and ask:</p>
+<p>“Quick thumbs check: who has ever saved a file and then couldn’t find it?”
+(Most hands go up.)
+“Perfect. We’re going to fix that permanently today.”</p>
+<h3 id="minute-25-concept-framing-and-vocabulary">Minute 2–5: Concept framing and vocabulary</h3>
+<p>“Let’s define our core terms in plain language:</p>
+<ul>
+<li>A <strong>text file</strong> is plain characters.</li>
+<li>A <strong>line</strong> is one row of text ending with newline.</li>
+<li>A <strong>filename</strong> is something like <code>tasks.txt</code>.</li>
+<li>A <strong>path</strong> is where that file lives.</li>
+<li>The <strong>current working directory</strong>, or CWD, is the folder your script is running from.</li>
+</ul>
+<p>When we pass only <code>tasks.txt</code>, Python looks in the CWD.
+So if your script is running in a different folder than you think, your file might be created somewhere else.</p>
+<p>This is why today we always print:</p>
+<ol>
+<li><code>Path.cwd()</code></li>
+<li><code>file_path.resolve()</code></li>
+<li><code>file_path.exists()</code></li>
+</ol>
+<p>If we print those three things, we can always answer: ‘Where is my file?’”</p>
+<h3 id="minute-59-safe-file-opening-pattern">Minute 5–9: Safe file-opening pattern</h3>
+<p>“Now the syntax pattern:</p>
+<p><code>with open('tasks.txt', 'w', encoding='utf-8') as f:</code></p>
+<p>Say it with me: <strong>with open as f</strong>.</p>
+<p><code>with</code> is recommended because it closes the file automatically when the block ends, even if an error occurs.
+If we manually open and forget to close, we can leak resources or leave files in a bad state.</p>
+<p>For this lesson we use modes:</p>
+<ul>
+<li><code>'w'</code> write (start fresh / overwrite),</li>
+<li><code>'r'</code> read,</li>
+<li>and optional mention: <code>'a'</code> append.</li>
+</ul>
+<p>We are not building an append-heavy app yet, but I want you to know <code>'a'</code> exists.”</p>
+<p>Ask:</p>
+<p>“If I use <code>'w'</code> on an existing file, does it keep old content?”
+Expected response: “No, it overwrites.”</p>
+<h3 id="minute-912-reading-and-writing-details">Minute 9–12: Reading and writing details</h3>
+<p>“Now the key methods:</p>
+<ul>
+<li><code>write()</code> writes exactly the string you give it.</li>
+<li><code>read()</code> reads all text into one big string.</li>
+<li><code>readlines()</code> reads into a list, one item per line.</li>
+</ul>
+<p>Important detail: <code>write()</code> does not automatically add line breaks.
+If you want one item per line, add <code>'\n'</code>.</p>
+<p>When reading with <code>readlines()</code>, each line usually still has <code>'\n'</code> at the end.
+So before printing, use <code>strip()</code> for clean output.”</p>
+<p>Mini prediction:</p>
+<p>“What happens if I forget <code>'\n'</code> while writing a loop of items?”
+Expected answer: “Everything gets stuck together.”</p>
+<h3 id="minute-1220-live-demo-script">Minute 12–20: Live demo script</h3>
+<p>“I’m now running a full save-and-load demo with shopping items.
+Watch for four checkpoints:</p>
+<ol>
+<li>print CWD,</li>
+<li>print absolute path,</li>
+<li>write list,</li>
+<li>read and print numbered lines.</li>
+</ol>
+<p>While I type, your job is to predict each output section.”</p>
+<p>As you run, narrate:</p>
+<p>“Here is <code>file_path = Path('shopping.txt')</code>.
+Before writing, I print CWD and absolute path.
+Now we open in write mode and loop through fixed list data.
+Notice I explicitly add <code>'\n'</code> each time.
+After writing, we check <code>exists()</code> to verify file creation.
+Then we open same file in read mode and call <code>readlines()</code>.
+Finally, we print each line with <code>strip()</code> and numbering.”</p>
+<p>After run:</p>
+<p>“Look at the screen:</p>
+<ul>
+<li>We know exactly where the file was created.</li>
+<li>We confirmed it exists.</li>
+<li>We read back exactly what we wrote.</li>
+</ul>
+<p>This is a complete persistence cycle.”</p>
+<h3 id="minute-2022-transition-to-lab">Minute 20–22: Transition to lab</h3>
+<p>“Your lab now follows the same pattern.
+You’ll create either a tasks list or contacts list, save it to a text file, load it back, and print it clearly.</p>
+<p>Required today:</p>
+<ul>
+<li>one item per line,</li>
+<li>CWD + absolute path output,</li>
+<li>and successful reload.</li>
+</ul>
+<p>Optional additions exist, but they are non-required and only for early finishers.”</p>
+<h3 id="minute-2235-guided-lab-phase-script">Minute 22–35: Guided lab phase script</h3>
+<p>“For the first phase, code with me:</p>
+<p>Step 1: choose filename (<code>tasks.txt</code> or <code>contacts.txt</code>).
+Step 2: create a fixed Python list.
+Step 3: print CWD and absolute path.
+Step 4: write lines with <code>'\n'</code>.
+Step 5: check <code>.exists()</code>.
+Step 6: read with <code>readlines()</code>.
+Step 7: print numbered, stripped lines.</p>
+<p>If you get an error, do not panic.
+Your first debug question is: ‘What folder am I running in?’”</p>
+<p>Walk room and repeat:</p>
+<p>“Show me your CWD line.”
+“Show me where you add newline.”
+“Show me your read step.”</p>
+<h3 id="minute-3548-independent-lab-phase-script">Minute 35–48: Independent lab phase script</h3>
+<p>“Now work independently for 10–13 minutes.
+You may choose tasks or contacts format.</p>
+<p>If you finish early, optional extension:</p>
+<ul>
+<li>add timestamp header line, or</li>
+<li>export pretty report file.</li>
+</ul>
+<p>Reminder: those are enrichment only, not required.”</p>
+<p>As you circulate, use this coaching script:</p>
+<p>“Tell me what is supposed to happen.
+Show me what happened instead.
+Where do we see that in output?
+Which line of code controls that behavior?”</p>
+<p>This encourages debugging thinking, not code copying.</p>
+<h3 id="minute-4855-debrief-script">Minute 48–55: Debrief script</h3>
+<p>“Let’s debrief with two volunteer solutions.</p>
+<p>Volunteer one: tasks version.
+Volunteer two: contacts <code>name|phone</code> version.</p>
+<p>As we review, everyone check:</p>
+<ul>
+<li>Did they print CWD?</li>
+<li>Did they show absolute path?</li>
+<li>Did <code>.exists()</code> show True?</li>
+<li>Did output print clean numbered lines?</li>
+</ul>
+<p>If all yes, that is complete.”</p>
+<h3 id="minute-5560-exit-ticket-script">Minute 55–60: Exit ticket script</h3>
+<p>“Final quick check:</p>
+<p>Why is <code>with</code> recommended for file handling?”</p>
+<p>Call on two learners:</p>
+<ul>
+<li>one short answer,</li>
+<li>one full answer.</li>
+</ul>
+<p>Close:</p>
+<p>“Great work. You now have the core workflow that every data-saving script depends on.”</p>
+<hr>
+<h2 id="structured-question-bank-use-during-teaching">Structured Question Bank (Use During Teaching)</h2>
+<p>Use these prompts to keep learners active rather than passive.</p>
+<h3 id="prediction-questions">Prediction Questions</h3>
+<ol>
+<li>“If I remove <code>\n</code>, what changes in the saved file?”</li>
+<li>“If I run from a different folder, where will the file go?”</li>
+<li>“What data type does <code>readlines()</code> return?”</li>
+<li>“Why call <code>strip()</code> before printing?”</li>
+<li>“What does <code>'w'</code> do to existing content?”</li>
+</ol>
+<h3 id="debugging-questions">Debugging Questions</h3>
+<ol>
+<li>“What is your current working directory right now?”</li>
+<li>“Is read step opening same filename as write step?”</li>
+<li>“What does <code>file_path.exists()</code> return?”</li>
+<li>“Where is the exact mismatch between expected and actual output?”</li>
+<li>“What is one small change to test next?”</li>
+</ol>
+<h3 id="reflection-questions">Reflection Questions</h3>
+<ol>
+<li>“How does saving to file change what your app can do tomorrow?”</li>
+<li>“What bug did you hit, and what print helped you solve it?”</li>
+<li>“Which is easier for this task: <code>read()</code> or <code>readlines()</code>? Why?”</li>
+</ol>
+<hr>
+<h2 id="assessment-support-spot-check-prompts-by-completion-criterion">Assessment Support: Spot-Check Prompts by Completion Criterion</h2>
+<p>When grading quickly, ask one proof question per criterion.</p>
+<h3 id="criterion-1-file-created-correctly">Criterion 1 — File created correctly</h3>
+<p>Prompt: “Run your write step now. What does your console show right after write?”</p>
+<p>Expected evidence:</p>
+<ul>
+<li>Success message and <code>exists()</code> True.</li>
+</ul>
+<h3 id="criterion-2-file-reloaded-correctly">Criterion 2 — File reloaded correctly</h3>
+<p>Prompt: “Run your read step now. Show me numbered output.”</p>
+<p>Expected evidence:</p>
+<ul>
+<li>Items printed as list, not one merged line.</li>
+</ul>
+<h3 id="criterion-3-location-proven">Criterion 3 — Location proven</h3>
+<p>Prompt: “Show me CWD and absolute path lines.”</p>
+<p>Expected evidence:</p>
+<ul>
+<li>Both printed clearly, paths are valid.</li>
+</ul>
+<h3 id="criterion-4-locate-on-disk">Criterion 4 — Locate on disk</h3>
+<p>Prompt: “Open file explorer/editor and navigate to that absolute path.”</p>
+<p>Expected evidence:</p>
+<ul>
+<li>Learner can visibly open the file from that path.</li>
+</ul>
+<hr>
+<h2 id="instructor-notes-on-scope-control-avoid-overrun">Instructor Notes on Scope Control (Avoid Overrun)</h2>
+<p>Because this hour is foundational, it is easy to drift into too many side topics. Use these boundaries:</p>
+<ul>
+<li>Keep required file path minimal (current folder + simple filename).</li>
+<li>Keep required data format simple (line-per-item).</li>
+<li>Keep required parsing minimal (<code>strip()</code> only).</li>
+<li>Keep required methods focused (<code>write</code>, <code>readlines</code>, optional mention of <code>read</code>).</li>
+<li>Keep exception handling light (single-file not-found awareness only).</li>
+</ul>
+<p>Avoid in required path:</p>
+<ul>
+<li>nested folder creation workflows,</li>
+<li>CSV module deep dive,</li>
+<li>JSON serialization details,</li>
+<li>complex validation frameworks.</li>
+</ul>
+<p>If a strong learner asks advanced questions, answer briefly and park for later hour:</p>
+<blockquote>
+<p>“Great question. We’ll go deeper in upcoming sessions. For now, let’s lock in the core pattern first.”</p>
+</blockquote>
+<hr>
+<h2 id="model-classroom-safe-data-sets-deterministic">Model Classroom-Safe Data Sets (Deterministic)</h2>
+<p>Use these fixed samples to prevent sensitive or unpredictable outputs.</p>
+<h3 id="shopping-demo-set">Shopping demo set</h3>
+<ul>
+<li>Apples</li>
+<li>Bananas</li>
+<li>Bread</li>
+<li>Milk</li>
+</ul>
+<h3 id="tasks-lab-set">Tasks lab set</h3>
+<ul>
+<li>Review notes</li>
+<li>Email instructor</li>
+<li>Practice file I/O</li>
+<li>Prepare tomorrow plan</li>
+</ul>
+<h3 id="contacts-lab-set">Contacts lab set</h3>
+<ul>
+<li>Ava Lee|555-0199</li>
+<li>Noah Kim|555-0142</li>
+<li>Mia Chen|555-0188</li>
+</ul>
+<p>These are deterministic, neutral, and classroom-safe.</p>
+<hr>
+<h2 id="minimal-required-path-to-prevent-scope-overrun">Minimal Required Path (to prevent scope overrun)</h2>
+<p>For this required hour, keep the path minimal:</p>
+<ul>
+<li>use <code>Path("shopping.txt")</code>, <code>Path("tasks.txt")</code>, or <code>Path("contacts.txt")</code></li>
+<li>keep file in current working directory</li>
+<li>verify with CWD + absolute path print</li>
+</ul>
+<p>We intentionally avoid deeper directory management in this required flow.
+Directory-specific path work is covered later.</p>
+<hr>
+<h2 id="instructor-self-check-before-ending-the-hour">Instructor Self-Check Before Ending the Hour</h2>
+<p>Confirm all required runbook targets were covered:</p>
+<ul>
+<li>[x] Outcomes: open files with <code>with</code>; read lines and write lines</li>
+<li>[x] Talk points: file paths and working directory; <code>with open(...) as f</code>; <code>read/readlines/write</code></li>
+<li>[x] Live demo: shopping list write then read/print</li>
+<li>[x] Lab: contacts/tasks one-per-line; load and print; simple format (<code>name|phone</code> acceptable)</li>
+<li>[x] Completion criteria: file created/reloaded correctly; learner can locate file on disk</li>
+<li>[x] Pitfalls: wrong path/working directory; forgetting newline characters</li>
+<li>[x] Optional extension mention: timestamp header line and pretty report export</li>
+<li>[x] Quick check: why <code>with</code> is recommended</li>
+<li>[x] Operationalized location check: CWD + absolute path + exists check</li>
+</ul>
+<p>If all boxes are checked, Hour 41 objective is complete.</p>
+<hr>
+<h2 id="short-homework-suggestion-optional-510-minutes-outside-class">Short Homework Suggestion (Optional, 5–10 minutes outside class)</h2>
+<p>Create <code>my_notes.txt</code> with five lines:</p>
+<ol>
+<li>one thing learned today,</li>
+<li>one question still unclear,</li>
+<li>one error they hit,</li>
+<li>how they fixed it,</li>
+<li>one practice goal for tomorrow.</li>
+</ol>
+<p>Then write a script to read and print those five lines in numbered format.</p>
+<p>This reinforces the same read/write loop without adding scope.</p>
+<hr>
+<h2 id="final-instructor-wrap-statement">Final Instructor Wrap Statement</h2>
+<blockquote>
+<p>“Great work. You now know how to persist simple data with text files, load it back, and verify file location clearly.
+These habits—especially using <code>with</code> and checking CWD/absolute path—are foundational for everything we build next.”</p>
+</blockquote>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-use-notes-read-first" class="depth-2">Instructor Use Notes (Read First)</a></li>
+<li><a href="#outcomes-state-these-clearly-at-the-top-of-class" class="depth-2">Outcomes (state these clearly at the top of class)</a></li>
+<li><a href="#materials-setup-checklist-instructor" class="depth-2">Materials + Setup Checklist (Instructor)</a></li>
+<li><a href="#section-plan-for-your-pacing-and-transitions" class="depth-2">Section Plan (for your pacing and transitions)</a></li>
+<li><a href="#why-this-matters-23-minute-motivation" class="depth-2">Why This Matters (2–3 minute motivation)</a></li>
+<li><a href="#instructor-talk-points-1015-min" class="depth-2">Instructor Talk Points (10–15 min)</a></li>
+<li><a href="#1-what-is-a-text-file-in-this-context" class="depth-3">1) What is a text file in this context?</a></li>
+<li><a href="#2-file-path-vs-filename" class="depth-3">2) File path vs filename</a></li>
+<li><a href="#3-working-directory-cwd-controls-relative-file-access" class="depth-3">3) Working directory (CWD) controls relative file access</a></li>
+<li><a href="#4-with-open-as-f-is-the-default-safe-pattern" class="depth-3">4) with open(...) as f is the default safe pattern</a></li>
+<li><a href="#5-common-file-modes-for-this-lesson" class="depth-3">5) Common file modes for this lesson</a></li>
+<li><a href="#6-write-writes-exactly-what-you-pass" class="depth-3">6) write() writes exactly what you pass</a></li>
+<li><a href="#7-read-vs-readlines" class="depth-3">7) read() vs readlines()</a></li>
+<li><a href="#8-cleaning-line-endings" class="depth-3">8) Cleaning line endings</a></li>
+<li><a href="#9-deterministic-output-habits" class="depth-3">9) Deterministic output habits</a></li>
+<li><a href="#10-error-awareness-without-over-scoping" class="depth-3">10) Error awareness without over-scoping</a></li>
+<li><a href="#11-operational-file-location-check-required-for-this-hour" class="depth-3">11) Operational file-location check (required for this hour)</a></li>
+<li><a href="#12-mental-model-recap" class="depth-3">12) Mental model recap</a></li>
+<li><a href="#live-demo-510-min" class="depth-2">Live Demo (5–10 min)</a></li>
+<li><a href="#demo-goal" class="depth-3">Demo Goal</a></li>
+<li><a href="#instructor-narrative-what-to-say-while-coding" class="depth-3">Instructor Narrative (what to say while coding)</a></li>
+<li><a href="#live-demo-code-single-runnable-script" class="depth-3">Live Demo Code (single runnable script)</a></li>
+<li><a href="#expected-output-shape-exact-words-may-include-your-local-path" class="depth-3">Expected Output Shape (exact words may include your local path)</a></li>
+<li><a href="#debrief-prompts-right-after-demo" class="depth-3">Debrief Prompts Right After Demo</a></li>
+<li><a href="#quick-micro-variation-optional-2-minute-in-demo-branch" class="depth-2">Quick Micro-Variation (Optional 2-minute in-demo branch)</a></li>
+<li><a href="#hands-on-lab-2535-min" class="depth-2">Hands-on Lab (25–35 min)</a></li>
+<li><a href="#lab-title" class="depth-2">Lab Title</a></li>
+<li><a href="#lab-prompt-what-learners-must-do" class="depth-3">Lab Prompt (what learners must do)</a></li>
+<li><a href="#scope-reminder-to-learners" class="depth-3">Scope Reminder to Learners</a></li>
+<li><a href="#lab-walkthrough-guided-first-then-independent" class="depth-2">Lab Walkthrough (Guided First, Then Independent)</a></li>
+<li><a href="#step-1-choose-a-file-name" class="depth-3">Step 1 — Choose a file name</a></li>
+<li><a href="#step-2-build-fixed-sample-data" class="depth-3">Step 2 — Build fixed sample data</a></li>
+<li><a href="#step-3-print-location-info-first" class="depth-3">Step 3 — Print location info first</a></li>
+<li><a href="#step-4-write-one-item-per-line" class="depth-3">Step 4 — Write one item per line</a></li>
+<li><a href="#step-5-verify-existence" class="depth-3">Step 5 — Verify existence</a></li>
+<li><a href="#step-6-read-lines-back" class="depth-3">Step 6 — Read lines back</a></li>
+<li><a href="#step-7-print-numbered-output" class="depth-3">Step 7 — Print numbered output</a></li>
+<li><a href="#full-lab-reference-solution-tasks-version" class="depth-2">Full Lab Reference Solution (Tasks version)</a></li>
+<li><a href="#full-lab-reference-solution-contacts-namephone-version" class="depth-3">Full Lab Reference Solution (Contacts name|phone version)</a></li>
+<li><a href="#completion-criteria-use-for-gradingspot-check" class="depth-2">Completion Criteria (Use for grading/spot-check)</a></li>
+<li><a href="#fast-instructor-rubric-passfix" class="depth-3">Fast instructor rubric (pass/fix)</a></li>
+<li><a href="#common-pitfalls-to-watch-for-and-exact-coaching-language" class="depth-2">Common Pitfalls to Watch For (and exact coaching language)</a></li>
+<li><a href="#pitfall-1-wrong-path-or-wrong-working-directory" class="depth-3">Pitfall 1: Wrong path or wrong working directory</a></li>
+<li><a href="#pitfall-2-forgetting-newline-characters" class="depth-3">Pitfall 2: Forgetting newline characters</a></li>
+<li><a href="#pitfall-3-brief-mention-misusing-w-when-expecting-append-behavior" class="depth-3">Pitfall 3 (brief mention): Misusing &quot;w&quot; when expecting append behavior</a></li>
+<li><a href="#instructor-live-support-patterns-during-lab" class="depth-2">Instructor Live Support Patterns During Lab</a></li>
+<li><a href="#suggested-minute-by-minute-facilitation-plan" class="depth-2">Suggested Minute-by-Minute Facilitation Plan</a></li>
+<li><a href="#minutes-03-context-and-outcomes" class="depth-3">Minutes 0–3: Context and outcomes</a></li>
+<li><a href="#minutes-312-talk-points" class="depth-3">Minutes 3–12: Talk points</a></li>
+<li><a href="#minutes-1220-live-demo" class="depth-3">Minutes 12–20: Live demo</a></li>
+<li><a href="#minutes-2050-lab" class="depth-3">Minutes 20–50: Lab</a></li>
+<li><a href="#minutes-5060-quick-check-recap" class="depth-3">Minutes 50–60: Quick check + recap</a></li>
+<li><a href="#differentiation-guidance" class="depth-2">Differentiation Guidance</a></li>
+<li><a href="#for-learners-who-need-more-support" class="depth-3">For learners who need more support</a></li>
+<li><a href="#for-learners-who-finish-early-still-basics" class="depth-3">For learners who finish early (still Basics)</a></li>
+<li><a href="#optional-extensions-strictly-non-required" class="depth-2">Optional Extensions (Strictly Non-Required)</a></li>
+<li><a href="#optional-extension-a-timestamp-header-line" class="depth-3">Optional Extension A — Timestamp Header Line</a></li>
+<li><a href="#optional-extension-b-pretty-report-export" class="depth-3">Optional Extension B — Pretty Report Export</a></li>
+<li><a href="#quick-check-exit-ticket-required" class="depth-2">Quick Check / Exit Ticket (Required)</a></li>
+<li><a href="#debrief-script-end-of-hour-close" class="depth-2">Debrief Script (End-of-Hour Close)</a></li>
+<li><a href="#board-notes-slide-notes-concise-reference" class="depth-2">Board Notes / Slide Notes (Concise Reference)</a></li>
+<li><a href="#troubleshooting-appendix-instructor-rapid-response" class="depth-2">Troubleshooting Appendix (Instructor Rapid Response)</a></li>
+<li><a href="#a-learner-gets-filenotfounderror" class="depth-3">A) Learner gets FileNotFoundError</a></li>
+<li><a href="#b-learner-output-has-blank-lines-between-items" class="depth-3">B) Learner output has blank lines between items</a></li>
+<li><a href="#c-learner-sees-all-text-in-one-line" class="depth-3">C) Learner sees all text in one line</a></li>
+<li><a href="#d-learner-can-run-script-but-cannot-find-file-in-editor-sidebar" class="depth-3">D) Learner can run script but cannot find file in editor sidebar</a></li>
+<li><a href="#verbatim-teaching-script-use-as-live-speaking-guide" class="depth-2">Verbatim Teaching Script (Use as Live Speaking Guide)</a></li>
+<li><a href="#minute-02-opening-and-relevance" class="depth-3">Minute 0–2: Opening and relevance</a></li>
+<li><a href="#minute-25-concept-framing-and-vocabulary" class="depth-3">Minute 2–5: Concept framing and vocabulary</a></li>
+<li><a href="#minute-59-safe-file-opening-pattern" class="depth-3">Minute 5–9: Safe file-opening pattern</a></li>
+<li><a href="#minute-912-reading-and-writing-details" class="depth-3">Minute 9–12: Reading and writing details</a></li>
+<li><a href="#minute-1220-live-demo-script" class="depth-3">Minute 12–20: Live demo script</a></li>
+<li><a href="#minute-2022-transition-to-lab" class="depth-3">Minute 20–22: Transition to lab</a></li>
+<li><a href="#minute-2235-guided-lab-phase-script" class="depth-3">Minute 22–35: Guided lab phase script</a></li>
+<li><a href="#minute-3548-independent-lab-phase-script" class="depth-3">Minute 35–48: Independent lab phase script</a></li>
+<li><a href="#minute-4855-debrief-script" class="depth-3">Minute 48–55: Debrief script</a></li>
+<li><a href="#minute-5560-exit-ticket-script" class="depth-3">Minute 55–60: Exit ticket script</a></li>
+<li><a href="#structured-question-bank-use-during-teaching" class="depth-2">Structured Question Bank (Use During Teaching)</a></li>
+<li><a href="#prediction-questions" class="depth-3">Prediction Questions</a></li>
+<li><a href="#debugging-questions" class="depth-3">Debugging Questions</a></li>
+<li><a href="#reflection-questions" class="depth-3">Reflection Questions</a></li>
+<li><a href="#assessment-support-spot-check-prompts-by-completion-criterion" class="depth-2">Assessment Support: Spot-Check Prompts by Completion Criterion</a></li>
+<li><a href="#criterion-1-file-created-correctly" class="depth-3">Criterion 1 — File created correctly</a></li>
+<li><a href="#criterion-2-file-reloaded-correctly" class="depth-3">Criterion 2 — File reloaded correctly</a></li>
+<li><a href="#criterion-3-location-proven" class="depth-3">Criterion 3 — Location proven</a></li>
+<li><a href="#criterion-4-locate-on-disk" class="depth-3">Criterion 4 — Locate on disk</a></li>
+<li><a href="#instructor-notes-on-scope-control-avoid-overrun" class="depth-2">Instructor Notes on Scope Control (Avoid Overrun)</a></li>
+<li><a href="#model-classroom-safe-data-sets-deterministic" class="depth-2">Model Classroom-Safe Data Sets (Deterministic)</a></li>
+<li><a href="#shopping-demo-set" class="depth-3">Shopping demo set</a></li>
+<li><a href="#tasks-lab-set" class="depth-3">Tasks lab set</a></li>
+<li><a href="#contacts-lab-set" class="depth-3">Contacts lab set</a></li>
+<li><a href="#minimal-required-path-to-prevent-scope-overrun" class="depth-2">Minimal Required Path (to prevent scope overrun)</a></li>
+<li><a href="#instructor-self-check-before-ending-the-hour" class="depth-2">Instructor Self-Check Before Ending the Hour</a></li>
+<li><a href="#short-homework-suggestion-optional-510-minutes-outside-class" class="depth-2">Short Homework Suggestion (Optional, 5–10 minutes outside class)</a></li>
+<li><a href="#final-instructor-wrap-statement" class="depth-2">Final Instructor Wrap Statement</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day11_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day11_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day11_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

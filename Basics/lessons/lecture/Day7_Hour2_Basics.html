@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 7, Hour 2: while Loops + Sentinel Patterns (Course Hour 26) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="7">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day7_Hour2_Basics.md">
+
+    <link rel="prev" href="Day7_Hour1_Basics.html">
+    <link rel="next" href="Day7_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="7" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-07/index.html">Day 7</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 7, Hour 2: while Loops + Sentinel Patterns (Course Hour 26)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 7</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day7_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 7</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)
+<strong>Runbook alignment:</strong> Session 7, Course Hour 26 – while loops + sentinel patterns
+<strong>Duration:</strong> 60 minutes
+<strong>Mode:</strong> Instructor-led + live coding + guided lab
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on while loops: what they are, how they repeat until a condition becomes False, how to avoid infinite loops, and how to use break and continue for early exits. The sentinel pattern (using a special value like 'q' to signal stopping) is the core application. Stay within Basics scope — do not introduce do-while patterns (Python does not have them), complex state machines, or event-driven loops. The key outcomes are writing while loops with proper termination conditions, using break/continue appropriately, and building a password prompt with attempt limiting. The lab reinforces all of this in a retry-until-success authentication flow.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Write a while loop that repeats code until a condition becomes False.</li>
+<li>Explain the difference between a while loop and a for loop (which we will cover in Hour 3).</li>
+<li>Use the break statement to exit a loop early when a goal is achieved.</li>
+<li>Use the continue statement to skip the rest of the current iteration and start the next one.</li>
+<li>Implement a sentinel pattern: keep prompting the user until they enter a special value like 'q' to quit.</li>
+<li>Build a password prompt that allows up to 3 attempts and locks out after failures."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to Hour 1 conditionals; introduce the need for repetition</li>
+<li><strong>0:05–0:18</strong> Core concept: while loops, loop condition, infinite loops, updating state</li>
+<li><strong>0:18–0:28</strong> break and continue: early exits and skipping iterations</li>
+<li><strong>0:28–0:35</strong> Sentinel patterns: special values that signal stopping</li>
+<li><strong>0:35–0:45</strong> Live demo: password prompt with attempt counter</li>
+<li><strong>0:45–0:57</strong> Guided lab: Password Prompt with retry limit</li>
+<li><strong>0:57–1:00</strong> Debrief, recap, and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file called <code>hour26_while_demo.py</code> before class begins.</li>
+<li>Have a second file called <code>hour26_lab_password.py</code> ready with empty comments as a starter for learners who fall behind.</li>
+<li>Have the Python REPL ready in a terminal for quick experiments.</li>
+<li>Plan to deliberately create an infinite loop and show how to stop it (Ctrl+C).</li>
+<li>Plan to show the difference between break (exit loop) and continue (skip to next iteration).</li>
+<li>Have a simple flowchart or diagram ready to show how while evaluates the condition at the top of each iteration.</li>
+</ul>
+<p><strong>Say:</strong> "Please have your editor open and an empty file ready. Today we learn how to make programs repeat actions until a goal is reached. You will type alongside me, then build your own authentication flow."</p>
+<hr>
+<h2 id="3-opening-script-reconnect-to-earlier-learning-5-minutes">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</h2>
+<h3 id="31-quick-recap-from-hour-1">3.1 Quick recap from Hour 1</h3>
+<p><strong>Say:</strong>
+"Welcome back. In Hour 1, we learned how to make programs choose between different paths using if/elif/else statements. Your program could evaluate a condition once and execute one block of code based on that condition.</p>
+<p>But what if you need to repeat an action multiple times? What if you want to keep asking the user for input until they give you a valid answer? What if you want to retry a failed operation until it succeeds?</p>
+<p>That is where loops come in. A loop repeats a block of code. Today we focus on one type of loop: the while loop."</p>
+<h3 id="32-motivating-the-need">3.2 Motivating the need</h3>
+<p><strong>Say:</strong>
+"Let me give you a few real-world situations where you need repetition:</p>
+<ul>
+<li>A password prompt: keep asking for the password until the user gets it right, or until they fail 3 times.</li>
+<li>A menu system: show options, execute the user's choice, then show options again until they choose 'quit.'</li>
+<li>A game loop: process player input, update the game state, render the screen, repeat until the player quits or loses.</li>
+<li>A data validation loop: keep prompting for a number until the user enters something that can be converted to an integer.</li>
+</ul>
+<p>In each case, you do not know in advance how many times the loop will run. It depends on what the user does. This is different from 'repeat exactly 10 times,' which we will cover in Hour 3. Today, we focus on 'repeat until some condition is met.'"</p>
+<h3 id="33-set-expectations-for-the-hour">3.3 Set expectations for the hour</h3>
+<p><strong>Say:</strong>
+"In this hour, we will learn:
+- how to write a while loop that repeats code until a condition becomes False
+- how to avoid infinite loops by ensuring the condition eventually becomes False
+- how to use break to exit a loop early
+- how to use continue to skip the rest of an iteration
+- how to implement a sentinel pattern, where a special input value signals 'stop'
+- and how to build a secure password prompt with a limited number of attempts</p>
+<p>The concepts are simple, but while loops are powerful and require careful thinking. If you do not update the loop condition properly, your program will run forever."</p>
+<hr>
+<h2 id="4-concept-while-loops">4) Concept: while Loops</h2>
+<h3 id="41-beginner-friendly-definition">4.1 Beginner-friendly definition</h3>
+<p><strong>Say:</strong>
+"A while loop repeats a block of code as long as a condition is True. The structure is:</p>
+<pre><code class="language-python">while condition:
+    # code to repeat
+</code></pre>
+<p>Here is how Python executes a while loop:</p>
+<ol>
+<li>Evaluate the condition.</li>
+<li>If the condition is True, execute the indented block.</li>
+<li>Go back to step 1 and evaluate the condition again.</li>
+<li>If the condition is False, skip the loop and continue with the code after it.</li>
+</ol>
+<p>The key insight: the condition is checked before each iteration, including the first one. If the condition is False the first time, the loop body never runs."</p>
+<h3 id="42-simple-example">4.2 Simple example</h3>
+<p><strong>Say:</strong>
+"Let me show you the simplest possible while loop:</p>
+<pre><code class="language-python">count = 1
+
+while count &lt;= 3:
+    print(f&quot;Iteration {count}&quot;)
+    count = count + 1
+
+print(&quot;Done&quot;)
+</code></pre>
+<p>Let us trace this:</p>
+<ul>
+<li>Start: count is 1.</li>
+<li>Check condition: is 1 &lt;= 3? Yes, so enter the loop.</li>
+<li>Print 'Iteration 1.'</li>
+<li>Increment count to 2.</li>
+<li>Check condition: is 2 &lt;= 3? Yes, so loop again.</li>
+<li>Print 'Iteration 2.'</li>
+<li>Increment count to 3.</li>
+<li>Check condition: is 3 &lt;= 3? Yes, so loop again.</li>
+<li>Print 'Iteration 3.'</li>
+<li>Increment count to 4.</li>
+<li>Check condition: is 4 &lt;= 3? No, so exit the loop.</li>
+<li>Print 'Done.'</li>
+</ul>
+<p>The loop ran exactly 3 times because we updated count each time, and eventually the condition became False."</p>
+<h3 id="43-the-infinite-loop-danger">4.3 The infinite loop danger</h3>
+<p><strong>Say:</strong>
+"What happens if you forget to update the variable that the condition depends on?</p>
+<pre><code class="language-python">count = 1
+
+while count &lt;= 3:
+    print(f&quot;Iteration {count}&quot;)
+    # forgot to increment count
+</code></pre>
+<p>Now count never changes. The condition is always True. The loop runs forever. This is called an infinite loop.</p>
+<p>If you accidentally create an infinite loop, your program will freeze. You must stop it manually. In most terminals and editors, press Ctrl+C to send a keyboard interrupt and stop the program.</p>
+<p>Rule: every while loop must have a way for the condition to eventually become False. This usually means updating a variable inside the loop."</p>
+<hr>
+<h2 id="5-concept-break-and-continue">5) Concept: break and continue</h2>
+<h3 id="51-the-break-statement">5.1 The break statement</h3>
+<p><strong>Say:</strong>
+"Sometimes you want to exit a loop before the condition becomes False. You use the break statement:</p>
+<pre><code class="language-python">count = 1
+
+while count &lt;= 10:
+    print(f&quot;Iteration {count}&quot;)
+    if count == 3:
+        print(&quot;Breaking out of loop&quot;)
+        break
+    count = count + 1
+
+print(&quot;Done&quot;)
+</code></pre>
+<p>When Python hits break, it immediately exits the loop, even though the condition <code>count &lt;= 10</code> is still True. The program jumps to the code after the loop.</p>
+<p>Output:</p>
+<pre><code>Iteration 1
+Iteration 2
+Iteration 3
+Breaking out of loop
+Done
+</code></pre>
+<p>Use break when you achieve your goal early and do not need to keep looping."</p>
+<h3 id="52-the-continue-statement">5.2 The continue statement</h3>
+<p><strong>Say:</strong>
+"The continue statement skips the rest of the current iteration and jumps back to the top of the loop to check the condition again.</p>
+<pre><code class="language-python">count = 0
+
+while count &lt; 5:
+    count = count + 1
+    if count == 3:
+        print(f&quot;Skipping {count}&quot;)
+        continue
+    print(f&quot;Processing {count}&quot;)
+
+print(&quot;Done&quot;)
+</code></pre>
+<p>When count is 3, we hit continue. Python skips the line <code>print(f'Processing {count}')</code> and goes straight back to the top. The condition is checked, and the loop continues.</p>
+<p>Output:</p>
+<pre><code>Processing 1
+Processing 2
+Skipping 3
+Processing 4
+Processing 5
+Done
+</code></pre>
+<p>Use continue when you want to skip certain cases but keep looping."</p>
+<h3 id="53-when-to-use-break-vs-continue">5.3 When to use break vs continue</h3>
+<p><strong>Say:</strong>
+"Use break when:
+- You found what you were looking for (e.g., correct password entered).
+- You hit an error condition that makes continuing pointless (e.g., file not found).
+- The user chose to quit early (e.g., typed 'q').</p>
+<p>Use continue when:
+- You want to skip processing for this iteration but keep going (e.g., skip blank lines in a file).
+- You hit a recoverable error and want to retry (e.g., user entered invalid input, re-prompt without exiting).</p>
+<p>Both are control flow tools. Use them sparingly and clearly document why you are exiting or skipping."</p>
+<hr>
+<h2 id="6-concept-sentinel-patterns">6) Concept: Sentinel Patterns</h2>
+<h3 id="61-what-is-a-sentinel-value">6.1 What is a sentinel value?</h3>
+<p><strong>Say:</strong>
+"A sentinel is a special value that signals 'stop.' It is a common pattern in CLI programs.</p>
+<p>Example: you want to let the user enter as many names as they want, then stop when they type 'done.'</p>
+<pre><code class="language-python">names = []
+
+while True:
+    name = input(&quot;Enter a name (or 'done' to finish): &quot;)
+    if name == 'done':
+        break
+    names.append(name)
+
+print(f&quot;You entered {len(names)} names.&quot;)
+</code></pre>
+<p>Notice the pattern:
+1. The loop condition is <code>while True</code>, which means 'repeat forever.'
+2. Inside the loop, we check if the user entered the sentinel value 'done.'
+3. If they did, we break out of the loop.
+4. Otherwise, we process the input and loop again.</p>
+<p>This is called a 'loop-and-a-half' or 'sentinel pattern.' It is safe because the break guarantees we will eventually exit."</p>
+<h3 id="62-choosing-a-sentinel-value">6.2 Choosing a sentinel value</h3>
+<p><strong>Say:</strong>
+"Your sentinel should be a value that the user would never enter as real data. For names, 'done' or 'quit' works. For numbers, -1 or 0 might work, but be careful: what if the user legitimately wants to enter 0?</p>
+<p>Common sentinels:
+- 'q' or 'quit' for text input
+- Empty string '' if blank input is not valid data
+- -1 for lists of positive numbers
+- None in some contexts (not covered in Basics)</p>
+<p>Document your sentinel clearly in the prompt so users know how to stop."</p>
+<hr>
+<h2 id="7-live-coding-demo-password-prompt-10-minutes">7) Live Coding Demo: Password Prompt (~10 minutes)</h2>
+<h3 id="71-announce-the-demo">7.1 Announce the demo</h3>
+<p><strong>Say:</strong>
+"Now I am going to build a password prompt. The rules are:</p>
+<ul>
+<li>The correct password is 'python123' (hardcoded for demo purposes).</li>
+<li>The user has up to 3 attempts to enter it correctly.</li>
+<li>If they succeed, print 'Access granted' and stop.</li>
+<li>If they fail 3 times, print 'Account locked' and stop.</li>
+</ul>
+<p>I will use a while loop with an attempt counter and a break statement. Watch how I think through the logic."</p>
+<h3 id="72-code-the-solution">7.2 Code the solution</h3>
+<p><strong>Type aloud:</strong></p>
+<pre><code class="language-python"># Password prompt with retry limit
+
+correct_password = &quot;python123&quot;
+max_attempts = 3
+attempts = 0
+
+while attempts &lt; max_attempts:
+    attempts = attempts + 1
+    password = input(f&quot;Enter password (attempt {attempts} of {max_attempts}): &quot;)
+
+    if password == correct_password:
+        print(&quot;Access granted!&quot;)
+        break
+    else:
+        print(&quot;Incorrect password.&quot;)
+
+# Check if we exited because of success or failure
+if attempts == max_attempts and password != correct_password:
+    print(&quot;Account locked. Too many failed attempts.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Let me explain the key parts:</p>
+<ol>
+<li>
+<p><strong>Loop condition:</strong> <code>while attempts &lt; max_attempts</code> means 'keep looping as long as we have not used all attempts.'</p>
+</li>
+<li>
+<p><strong>Increment first:</strong> We increment attempts at the start of each iteration so the counter is accurate.</p>
+</li>
+<li>
+<p><strong>Check for success:</strong> If the password is correct, we print 'Access granted' and break immediately. This exits the loop even though we might have attempts left.</p>
+</li>
+<li>
+<p><strong>Final check:</strong> After the loop, we check if we used all attempts and still failed. If so, we lock the account.</p>
+</li>
+</ol>
+<p>Notice that if the user succeeds on attempt 1, the loop exits immediately and we never reach attempts 2 or 3. That is the power of break."</p>
+<h3 id="73-test-the-code">7.3 Test the code</h3>
+<p><strong>Say:</strong>
+"Let me test this with a few scenarios."</p>
+<p><strong>Test 1: Success on first try</strong>
+- Input: python123
+- Output: "Access granted!"</p>
+<p><strong>Test 2: Success on third try</strong>
+- Input: wrong1
+- Output: "Incorrect password."
+- Input: wrong2
+- Output: "Incorrect password."
+- Input: python123
+- Output: "Access granted!"</p>
+<p><strong>Test 3: Failure after 3 tries</strong>
+- Input: wrong1
+- Output: "Incorrect password."
+- Input: wrong2
+- Output: "Incorrect password."
+- Input: wrong3
+- Output: "Incorrect password."
+- Output: "Account locked. Too many failed attempts."</p>
+<p><strong>Say:</strong>
+"All three scenarios work correctly. The loop terminates either when the user succeeds (via break) or when attempts reaches 3 (condition becomes False)."</p>
+<h3 id="74-common-mistake-off-by-one-in-attempts">7.4 Common mistake: off-by-one in attempts</h3>
+<p><strong>Say:</strong>
+"A common bug is incrementing attempts in the wrong place. If you increment after checking the password, the count will be wrong:</p>
+<pre><code class="language-python"># WRONG
+while attempts &lt; max_attempts:
+    password = input(&quot;Enter password: &quot;)
+    if password == correct_password:
+        break
+    attempts = attempts + 1  # incremented only on failure
+</code></pre>
+<p>Now if the user succeeds on attempt 1, attempts never increments, and the final check does not work correctly. Always increment at the top of the loop so the counter is accurate every iteration."</p>
+<hr>
+<h2 id="8-guided-lab-password-prompt-25-minutes">8) Guided Lab: Password Prompt (~25 minutes)</h2>
+<h3 id="81-announce-the-lab">8.1 Announce the lab</h3>
+<p><strong>Say:</strong>
+"Now it is your turn. You will build a password prompt with retry logic. Here is the specification:</p>
+<p><strong>Lab: Password Prompt</strong></p>
+<p><strong>Goal:</strong> Create a program that prompts for a password up to 3 times. If the user enters the correct password, grant access and stop. If they fail 3 times, lock them out.</p>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>Correct password: 'secure123' (hardcoded for this lab)</li>
+<li>Maximum 3 attempts</li>
+<li>After each incorrect attempt, show how many attempts remain</li>
+<li>On success, print 'Access granted!' and stop immediately</li>
+<li>On failure, print 'Account locked. Contact support.'</li>
+</ul>
+<p><strong>Optional extensions (if you finish early):</strong></p>
+<ol>
+<li>Add a message showing remaining attempts after each failure.</li>
+<li>Add validation: if the user enters an empty string, do not count it as an attempt and re-prompt.</li>
+</ol>
+<p><strong>Completion criteria:</strong></p>
+<ul>
+<li>Program stops correctly on success (uses break)</li>
+<li>Program stops correctly after 3 failures</li>
+<li>Attempt counter is accurate</li>
+<li>Clear output for each attempt</li>
+</ul>
+<p>You have 25 minutes. I will circulate and help."</p>
+<h3 id="82-circulate-and-provide-feedback">8.2 Circulate and provide feedback</h3>
+<p>Walk around the room. Look for:</p>
+<ul>
+<li><strong>Infinite loops:</strong> Students forget to increment the attempt counter, or forget to use break.</li>
+<li><strong>Off-by-one errors:</strong> Incrementing attempts in the wrong place, or using the wrong comparison (&lt;= vs &lt;).</li>
+<li><strong>No final check:</strong> Not checking after the loop whether the user succeeded or failed.</li>
+<li><strong>Hardcoding instead of looping:</strong> Using three separate if statements instead of a loop.</li>
+</ul>
+<p><strong>Common mistake to watch for:</strong></p>
+<pre><code class="language-python">while attempts &lt; 3:
+    password = input(&quot;Enter password: &quot;)
+    if password == correct_password:
+        print(&quot;Access granted&quot;)
+    attempts = attempts + 1
+</code></pre>
+<p>This keeps prompting even after success, because there is no break. The user sees "Access granted" but the loop continues. The fix is to add <code>break</code> after the success message.</p>
+<p><strong>Coaching language:</strong></p>
+<ul>
+<li>"What happens if the user enters the correct password on attempt 1? Does your loop stop immediately?"</li>
+<li>"If I run your program and deliberately fail 3 times, what message do I see?"</li>
+<li>"How do you know whether the loop exited because of success or because of running out of attempts?"</li>
+</ul>
+<h3 id="83-debugging-support">8.3 Debugging support</h3>
+<p>If a student is stuck:</p>
+<ol>
+<li>Ask them to add <code>print(f"Attempt: {attempts}")</code> at the top of the loop to trace the counter.</li>
+<li>Ask them to run the program and deliberately fail 3 times. What happens?</li>
+<li>If they have an infinite loop, help them identify which variable needs to change in each iteration.</li>
+</ol>
+<hr>
+<h2 id="9-debrief-and-knowledge-check-12-minutes">9) Debrief and Knowledge Check (~12 minutes)</h2>
+<h3 id="91-share-out">9.1 Share-out</h3>
+<p><strong>Say:</strong>
+"Let us hear from a few people. Who wants to show their solution and explain how they used break?"</p>
+<p><strong>Call on 2–3 learners. Ask:</strong></p>
+<ul>
+<li>"Where did you increment the attempt counter? Why there?"</li>
+<li>"What happens if the user succeeds on the first try?"</li>
+<li>"How did you check whether the user succeeded or ran out of attempts?"</li>
+</ul>
+<h3 id="92-common-mistakes-review">9.2 Common mistakes review</h3>
+<p><strong>Say:</strong>
+"Here are the most common mistakes I saw today:</p>
+<ol>
+<li>
+<p><strong>Infinite loop:</strong> Forgetting to update the variable that the loop condition depends on. If <code>attempts</code> never changes, <code>attempts &lt; 3</code> is always True.</p>
+</li>
+<li>
+<p><strong>No break on success:</strong> The program prints 'Access granted' but keeps looping. You must use break to exit immediately.</p>
+</li>
+<li>
+<p><strong>Wrong condition:</strong> Using <code>while attempts &lt;= 3</code> instead of <code>while attempts &lt; 3</code> gives the user 4 attempts instead of 3.</p>
+</li>
+<li>
+<p><strong>Incrementing in the wrong place:</strong> If you increment only on failure, your counter is wrong when the user succeeds early.</p>
+</li>
+<li>
+<p><strong>Not checking final state:</strong> After the loop, you must check whether the user succeeded or failed. Do not assume failure just because the loop ended.</p>
+</li>
+</ol>
+<p>The fix for all of these: plan your loop carefully, update the counter consistently, and test both success and failure paths."</p>
+<h3 id="93-conceptual-recap">9.3 Conceptual recap</h3>
+<p><strong>Say:</strong>
+"Let me summarize today's key ideas:</p>
+<ol>
+<li>
+<p><strong>while loops repeat as long as a condition is True.</strong> Python checks the condition at the top of each iteration. If it is False, the loop body does not run.</p>
+</li>
+<li>
+<p><strong>Update the loop variable.</strong> Every while loop must change something that affects the condition, or you get an infinite loop.</p>
+</li>
+<li>
+<p><strong>break exits immediately.</strong> Use break when you achieve your goal early and do not need to keep looping.</p>
+</li>
+<li>
+<p><strong>continue skips the rest of this iteration.</strong> Use continue when you want to move to the next iteration without executing the rest of the loop body.</p>
+</li>
+<li>
+<p><strong>Sentinel pattern:</strong> Use <code>while True</code> with a break when the user enters a special value. This is safe as long as your break is inside the loop.</p>
+</li>
+</ol>
+<p>While loops are flexible and powerful, but they require careful logic. In Hour 3, we will learn for loops, which are better suited for 'repeat exactly N times' scenarios."</p>
+<hr>
+<h2 id="10-exit-ticket-3-minutes">10) Exit Ticket (~3 minutes)</h2>
+<p><strong>Say:</strong>
+"Before we finish, write down your answer to this question. You do not need to submit it, but think it through:</p>
+<p><strong>Question:</strong> What is the minimum number of times a while loop's body can execute? What is the maximum?</p>
+<p>Hint: think about what happens if the condition is False on the first check."</p>
+<p><strong>Pause for 1 minute, then reveal the answer:</strong></p>
+<p><strong>Say:</strong>
+"Minimum: <strong>zero times</strong>. If the condition is False the first time Python checks it, the loop body never runs.</p>
+<p>Example:</p>
+<pre><code class="language-python">count = 10
+while count &lt; 5:
+    print('This never prints')
+</code></pre>
+<p>Maximum: <strong>infinite</strong>. If the condition never becomes False, the loop runs forever. That is why you must always update the loop variable.</p>
+<p>This is different from a do-while loop in some other languages, which guarantees at least one execution. Python does not have do-while. If you need to run at least once, you can use <code>while True</code> with a break inside, or simply put the first execution before the loop."</p>
+<hr>
+<h2 id="11-transition-to-next-hour">11) Transition to Next Hour</h2>
+<p><strong>Say:</strong>
+"Excellent work today. You now know how to repeat actions until a condition is met, how to exit loops early, and how to implement sentinel patterns.</p>
+<p>In Hour 3, we will learn about for loops, which are designed for iterating over sequences like lists and ranges. We will use range() to repeat code a specific number of times and iterate over collections item by item.</p>
+<p>Take a 5-minute break. When you return, have your editor ready."</p>
+<hr>
+<h2 id="12-appendix-quick-reference-for-instructors">12) Appendix: Quick Reference for Instructors</h2>
+<h3 id="while-loop-patterns">While loop patterns</h3>
+<p><strong>Count-controlled:</strong></p>
+<pre><code class="language-python">count = 0
+while count &lt; n:
+    # do something
+    count += 1
+</code></pre>
+<p><strong>Sentinel-controlled:</strong></p>
+<pre><code class="language-python">while True:
+    value = input(&quot;Enter value (or 'q' to quit): &quot;)
+    if value == 'q':
+        break
+    # process value
+</code></pre>
+<p><strong>Condition-controlled:</strong></p>
+<pre><code class="language-python">success = False
+while not success:
+    result = try_something()
+    if result is good:
+        success = True
+</code></pre>
+<h3 id="testing-checklist">Testing checklist</h3>
+<ul>
+<li>Does the loop ever start? (Check initial condition)</li>
+<li>Does the loop eventually stop? (Check that the condition can become False)</li>
+<li>Does break work correctly? (Test early exit cases)</li>
+<li>Does continue work correctly? (Test skip cases)</li>
+<li>What happens on the first iteration?</li>
+<li>What happens on the last iteration?</li>
+</ul>
+<h3 id="troubleshooting-common-student-issues">Troubleshooting common student issues</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"My program never stops"</td>
+<td>Infinite loop; condition never becomes False</td>
+<td>Check that loop variable is updated each iteration</td>
+</tr>
+<tr>
+<td>"My loop runs 4 times instead of 3"</td>
+<td>Wrong comparison operator</td>
+<td>Use <code>&lt;</code> not <code>&lt;=</code> if you want exactly 3 iterations</td>
+</tr>
+<tr>
+<td>"Program prints 'Access granted' but keeps looping"</td>
+<td>No break after success</td>
+<td>Add <code>break</code> after success message</td>
+</tr>
+<tr>
+<td>"Attempt counter shows wrong number"</td>
+<td>Incrementing in wrong place</td>
+<td>Increment at top of loop, not only on failure</td>
+</tr>
+<tr>
+<td>"How do I stop an infinite loop?"</td>
+<td>Ctrl+C not working</td>
+<td>In some IDEs, use Stop button; in terminal, Ctrl+C</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="13-deep-dive-loop-invariants-optional-for-advanced-learners">13) Deep Dive: Loop Invariants (Optional, for advanced learners)</h2>
+<p><strong>Teaching point:</strong>
+"A loop invariant is a statement that is true before the loop starts, remains true after each iteration, and is still true when the loop ends.</p>
+<p>Example: In our password prompt, the invariant might be 'attempts is always the count of how many times we have checked the password.'</p>
+<p>Thinking about invariants helps you design correct loops:</p>
+<ol>
+<li>What must be true before the loop starts? (Initialization)</li>
+<li>What must remain true after each iteration? (Maintenance)</li>
+<li>What is true when the loop ends? (Termination)</li>
+</ol>
+<p>In our password example:</p>
+<ol>
+<li>Before loop: attempts = 0 (no checks yet)</li>
+<li>After each iteration: attempts = number of checks performed</li>
+<li>After loop: attempts &lt;= max_attempts, and either password matched or attempts == max_attempts</li>
+</ol>
+<p>This is an advanced concept, but it is how computer scientists prove that loops are correct. For now, just remember: think about what your loop variables mean at each stage."</p>
+<hr>
+<h2 id="14-real-world-context-why-loops-go-wrong">14) Real-World Context: Why Loops Go Wrong</h2>
+<p><strong>Teaching point:</strong>
+"Infinite loops are one of the most common bugs in software. Here are real examples:</p>
+<ol>
+<li>
+<p><strong>Mars Rover:</strong> A NASA rover's software had a loop that did not properly handle a sensor timeout. The loop kept retrying indefinitely, draining the battery. Engineers had to send a patch.</p>
+</li>
+<li>
+<p><strong>ATM Machines:</strong> An ATM software bug caused the screen to loop between 'Processing' and 'Please wait' forever. Users could not cancel the transaction. The fix required a reboot.</p>
+</li>
+<li>
+<p><strong>Video Games:</strong> Many games have had bugs where the loading screen loops forever. This happens when the loop waits for a resource that never loads, and there is no timeout.</p>
+</li>
+<li>
+<p><strong>Web Servers:</strong> A server application had a loop that retried failed database connections without a delay. It made thousands of connection attempts per second, overwhelming the database and crashing both systems.</p>
+</li>
+</ol>
+<p>The lesson: always design your loops with a clear exit condition, and test that the condition can actually become False."</p>
+<hr>
+<h2 id="15-style-guide-writing-readable-loops">15) Style Guide: Writing Readable Loops</h2>
+<p><strong>Teaching point:</strong>
+"Good loop style makes your code easier to understand and debug:</p>
+<p><strong>1. Use meaningful loop variable names:</strong></p>
+<p>Bad:</p>
+<pre><code class="language-python">i = 0
+while i &lt; 3:
+    # what does i represent?
+    i += 1
+</code></pre>
+<p>Better:</p>
+<pre><code class="language-python">attempts = 0
+while attempts &lt; max_attempts:
+    # clear that this counts attempts
+    attempts += 1
+</code></pre>
+<p><strong>2. Document why the loop exists:</strong></p>
+<pre><code class="language-python"># Keep prompting until user enters a valid positive number
+while True:
+    value = input(&quot;Enter a positive number: &quot;)
+    if value.isdigit() and int(value) &gt; 0:
+        break
+</code></pre>
+<p><strong>3. Avoid nested while loops if possible:</strong></p>
+<p>Nested while loops are hard to reason about and easy to break. If you need nested loops, consider refactoring into functions (covered in Session 9).</p>
+<p><strong>4. Initialize loop variables clearly:</strong></p>
+<pre><code class="language-python"># Good: all initialization together, before the loop
+attempts = 0
+success = False
+max_attempts = 3
+
+while attempts &lt; max_attempts and not success:
+    # loop body
+</code></pre>
+<p>These are not strict rules, but they make your code easier to read and maintain."</p>
+<hr>
+<h2 id="16-comparison-while-vs-for-preview">16) Comparison: while vs for (Preview)</h2>
+<p><strong>Teaching point:</strong>
+"We have not covered for loops yet, but here is a quick preview of the difference:</p>
+<p><strong>while loop:</strong> Use when you do not know in advance how many times you need to loop. The loop continues until a condition becomes False.</p>
+<p>Example: Keep asking for input until the user enters 'quit.'</p>
+<p><strong>for loop (covered next hour):</strong> Use when you know in advance how many times to loop, or when you want to iterate over a collection.</p>
+<p>Example: Print every name in a list, or repeat an action exactly 10 times.</p>
+<p>Both are powerful, and you will use both throughout this course. The key is choosing the right tool for the job."</p>
+<hr>
+<h2 id="17-summary-key-takeaways">17) Summary: Key Takeaways</h2>
+<p><strong>Say:</strong>
+"Before we move to Hour 3, let me emphasize the four most important points:</p>
+<ol>
+<li>
+<p><strong>while loops repeat as long as a condition is True.</strong> You must ensure the condition eventually becomes False, or you get an infinite loop.</p>
+</li>
+<li>
+<p><strong>Update the loop variable consistently.</strong> Increment counters at the top of the loop so they are accurate every iteration.</p>
+</li>
+<li>
+<p><strong>Use break to exit early.</strong> When you achieve your goal (like correct password), use break to stop immediately.</p>
+</li>
+<li>
+<p><strong>Sentinel patterns are safe.</strong> Using <code>while True</code> with a break inside is a common and correct pattern, as long as the break is guaranteed to execute eventually.</p>
+</li>
+</ol>
+<p>These principles apply to every loop you will ever write, not just password prompts."</p>
+<hr>
+<p><strong>End of Hour 2 Script</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-reconnect-to-earlier-learning-5-minutes" class="depth-2">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</a></li>
+<li><a href="#31-quick-recap-from-hour-1" class="depth-3">3.1 Quick recap from Hour 1</a></li>
+<li><a href="#32-motivating-the-need" class="depth-3">3.2 Motivating the need</a></li>
+<li><a href="#33-set-expectations-for-the-hour" class="depth-3">3.3 Set expectations for the hour</a></li>
+<li><a href="#4-concept-while-loops" class="depth-2">4) Concept: while Loops</a></li>
+<li><a href="#41-beginner-friendly-definition" class="depth-3">4.1 Beginner-friendly definition</a></li>
+<li><a href="#42-simple-example" class="depth-3">4.2 Simple example</a></li>
+<li><a href="#43-the-infinite-loop-danger" class="depth-3">4.3 The infinite loop danger</a></li>
+<li><a href="#5-concept-break-and-continue" class="depth-2">5) Concept: break and continue</a></li>
+<li><a href="#51-the-break-statement" class="depth-3">5.1 The break statement</a></li>
+<li><a href="#52-the-continue-statement" class="depth-3">5.2 The continue statement</a></li>
+<li><a href="#53-when-to-use-break-vs-continue" class="depth-3">5.3 When to use break vs continue</a></li>
+<li><a href="#6-concept-sentinel-patterns" class="depth-2">6) Concept: Sentinel Patterns</a></li>
+<li><a href="#61-what-is-a-sentinel-value" class="depth-3">6.1 What is a sentinel value?</a></li>
+<li><a href="#62-choosing-a-sentinel-value" class="depth-3">6.2 Choosing a sentinel value</a></li>
+<li><a href="#7-live-coding-demo-password-prompt-10-minutes" class="depth-2">7) Live Coding Demo: Password Prompt (~10 minutes)</a></li>
+<li><a href="#71-announce-the-demo" class="depth-3">7.1 Announce the demo</a></li>
+<li><a href="#72-code-the-solution" class="depth-3">7.2 Code the solution</a></li>
+<li><a href="#73-test-the-code" class="depth-3">7.3 Test the code</a></li>
+<li><a href="#74-common-mistake-off-by-one-in-attempts" class="depth-3">7.4 Common mistake: off-by-one in attempts</a></li>
+<li><a href="#8-guided-lab-password-prompt-25-minutes" class="depth-2">8) Guided Lab: Password Prompt (~25 minutes)</a></li>
+<li><a href="#81-announce-the-lab" class="depth-3">8.1 Announce the lab</a></li>
+<li><a href="#82-circulate-and-provide-feedback" class="depth-3">8.2 Circulate and provide feedback</a></li>
+<li><a href="#83-debugging-support" class="depth-3">8.3 Debugging support</a></li>
+<li><a href="#9-debrief-and-knowledge-check-12-minutes" class="depth-2">9) Debrief and Knowledge Check (~12 minutes)</a></li>
+<li><a href="#91-share-out" class="depth-3">9.1 Share-out</a></li>
+<li><a href="#92-common-mistakes-review" class="depth-3">9.2 Common mistakes review</a></li>
+<li><a href="#93-conceptual-recap" class="depth-3">9.3 Conceptual recap</a></li>
+<li><a href="#10-exit-ticket-3-minutes" class="depth-2">10) Exit Ticket (~3 minutes)</a></li>
+<li><a href="#11-transition-to-next-hour" class="depth-2">11) Transition to Next Hour</a></li>
+<li><a href="#12-appendix-quick-reference-for-instructors" class="depth-2">12) Appendix: Quick Reference for Instructors</a></li>
+<li><a href="#while-loop-patterns" class="depth-3">While loop patterns</a></li>
+<li><a href="#testing-checklist" class="depth-3">Testing checklist</a></li>
+<li><a href="#troubleshooting-common-student-issues" class="depth-3">Troubleshooting common student issues</a></li>
+<li><a href="#13-deep-dive-loop-invariants-optional-for-advanced-learners" class="depth-2">13) Deep Dive: Loop Invariants (Optional, for advanced learners)</a></li>
+<li><a href="#14-real-world-context-why-loops-go-wrong" class="depth-2">14) Real-World Context: Why Loops Go Wrong</a></li>
+<li><a href="#15-style-guide-writing-readable-loops" class="depth-2">15) Style Guide: Writing Readable Loops</a></li>
+<li><a href="#16-comparison-while-vs-for-preview" class="depth-2">16) Comparison: while vs for (Preview)</a></li>
+<li><a href="#17-summary-key-takeaways" class="depth-2">17) Summary: Key Takeaways</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day7_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day7_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

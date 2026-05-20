@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4, Hour 2: Boolean Expressions, Comparison Operators, and Logical Operators | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="4">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day4_Hour2_Basics.md">
+
+    <link rel="prev" href="Day4_Hour1_Basics.html">
+    <link rel="next" href="Day4_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="4" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-04/index.html">Day 4</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 4, Hour 2: Boolean Expressions, Comparison Operators, and Logical Operators</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 4</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day4_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Course Hour</strong>: 14<br>
+<strong>Session</strong>: Day 4 (Session 4), Hour 2<br>
+<strong>Duration</strong>: 60 minutes  </p>
+<hr>
+<h2 id="1-learning-outcomes">1. Learning Outcomes</h2>
+<p>After this instructional hour, learners will be able to:</p>
+<ul>
+<li><strong>Use comparison operators</strong> (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) to compare values and understand the distinction between assignment (<code>=</code>) and equality (<code>==</code>).</li>
+<li><strong>Understand boolean values and truthiness</strong> in Python, recognizing that comparisons evaluate to <code>True</code> or <code>False</code> and that these are first-class Python objects.</li>
+<li><strong>Combine conditions with logical operators</strong> (<code>and</code>, <code>or</code>, <code>not</code>) to create complex boolean expressions and understand operator precedence and short-circuit evaluation.</li>
+<li><strong>Apply boundaries and edge cases correctly</strong> in real-world conditionals, avoiding off-by-one errors and invalid type comparisons.</li>
+<li><strong>Trace and predict boolean expressions</strong> in code, reading compound conditions aloud to build mental models of control flow.</li>
+</ul>
+<hr>
+<h2 id="2-instructor-prep-section">2. Instructor Prep Section</h2>
+<h3 id="pre-class-checklist">Pre-Class Checklist</h3>
+<ul>
+<li>[ ] Have Python 3 ready in your IDE/terminal for live demo</li>
+<li>[ ] Test all demo code snippets before class (run them yourself)</li>
+<li>[ ] Prepare a simple text document with the "common pitfalls" examples to paste quickly</li>
+<li>[ ] Have the eligibility checker lab rubric visible (shared or printed)</li>
+<li>[ ] Test the breakout or hands-on lab delivery method (screen share, local IDE, online repl, etc.)</li>
+<li>[ ] Prepare a "prediction slide" or notebook with 3–4 mystery boolean expressions for learners to predict</li>
+</ul>
+<h3 id="timing-breakdown">Timing Breakdown</h3>
+<ul>
+<li><strong>Opening Script</strong> (5 min)</li>
+<li><strong>Conceptual Briefing: Comparisons</strong> (8 min)</li>
+<li><strong>Conceptual Briefing: Boolean Logic</strong> (8 min)</li>
+<li><strong>Live Demo: Comparisons + and/or</strong> (10 min)</li>
+<li><strong>Guided Practice Walkthrough</strong> (7 min)</li>
+<li><strong>Lab Checkpoint 1: Eligibility Checker</strong> (20 min)</li>
+<li><strong>Wrap-Up + Quick-Check Questions</strong> (4 min)</li>
+</ul>
+<h3 id="materials-resources">Materials &amp; Resources</h3>
+<ul>
+<li>IDE or Python REPL (online or local)</li>
+<li>Sample code: age-gating example, membership check, nested conditions</li>
+<li>Eligibility checker lab prompt (provided below)</li>
+<li>Optional: truth table or Venn diagram (visual aids help retention)</li>
+</ul>
+<hr>
+<h2 id="3-opening-script">3. Opening Script</h2>
+<p><strong>[Read or paraphrase the following to open, ~5 minutes]</strong></p>
+<p>"Good morning. In the last few sessions, we've learned how to store data in variables, work with strings and numbers, and even get input from users. But here's the question: <em>what do we do when we need the program to make a decision?</em></p>
+<p>Think about this: if you were writing a program for a movie theater, you'd need to ask, 'Is the customer 18 or older?' or 'Do they have a membership?' In the real world, we make decisions all the time based on conditions. Today, we're going to learn how Python makes decisions using <strong>boolean values</strong> and <strong>comparisons</strong>.</p>
+<p>By the end of this hour, you'll be able to write code that answers questions like:
+- 'Is this age valid?'
+- 'Do all these conditions need to be true?'
+- 'Is at least one of these true?'</p>
+<p>Let's start simple and build up. Ready?"</p>
+<hr>
+<h2 id="4-conceptual-briefing">4. Conceptual Briefing</h2>
+<h3 id="part-a-understanding-comparison-operators-8-minutes">Part A: Understanding Comparison Operators (8 minutes)</h3>
+<p><strong>The Core Idea</strong></p>
+<p>A <strong>comparison operator</strong> takes two values and asks a question: 'How do these relate?' The answer is always either <code>True</code> or <code>False</code>. Think of it like a yes/no question.</p>
+<pre><code class="language-python"># Asking questions with comparisons:
+5 &gt; 3         # Is 5 greater than 3? Answer: True
+5 == 3        # Is 5 equal to 3? Answer: False
+5 != 3        # Is 5 not equal to 3? Answer: True
+</code></pre>
+<p><strong>The Six Main Comparison Operators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>==</code></td>
+<td>Is equal to?</td>
+<td><code>5 == 5</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td>Is NOT equal to?</td>
+<td><code>5 != 3</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>&lt;</code></td>
+<td>Is less than?</td>
+<td><code>3 &lt; 5</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td>Is greater than?</td>
+<td><code>5 &gt; 3</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>&lt;=</code></td>
+<td>Is less than or equal?</td>
+<td><code>5 &lt;= 5</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>&gt;=</code></td>
+<td>Is greater than or equal?</td>
+<td><code>5 &gt;= 3</code></td>
+<td><code>True</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The Critical Distinction: <code>=</code> vs. <code>==</code></strong></p>
+<p>This is THE most common mistake learners make:
+- <code>=</code> is <strong>assignment</strong>: it <em>puts</em> a value into a variable. Example: <code>age = 18</code>
+- <code>==</code> is <strong>comparison</strong>: it <em>asks</em> if two values are equal. Example: <code>age == 18</code></p>
+<pre><code class="language-python">age = 18        # Put 18 into the age variable
+age == 18       # Ask: is age equal to 18? (Yes, True)
+age == 21       # Ask: is age equal to 21? (No, False)
+</code></pre>
+<p>If you use <code>=</code> when you meant <code>==</code>, Python will try to assign instead of compare, and you'll get a syntax error or unexpected behavior.</p>
+<p><strong>Comparisons with Different Types</strong></p>
+<p>Comparisons work within the same type:</p>
+<pre><code class="language-python">5 &gt; 3           # Both numbers: True
+&quot;apple&quot; == &quot;apple&quot;  # Both strings: True
+</code></pre>
+<p>But comparing across types is often meaningless or wrong:</p>
+<pre><code class="language-python">5 &gt; &quot;3&quot;         # Error: can't compare int to str
+</code></pre>
+<p>Always convert to the same type first:</p>
+<pre><code class="language-python">5 &gt; int(&quot;3&quot;)    # Convert string to int: True
+</code></pre>
+<h3 id="part-b-boolean-logiccombining-conditions-8-minutes">Part B: Boolean Logic—Combining Conditions (8 minutes)</h3>
+<p><strong>The Motivation</strong></p>
+<p>One condition is fine, but real decisions often require multiple criteria:
+- 'Is the customer 18 AND do they have a membership?'
+- 'Is the item small OR lightweight?'
+- 'Is the request NOT from a blocked IP?'</p>
+<p>That's where <strong>logical operators</strong> come in: <code>and</code>, <code>or</code>, and <code>not</code>.</p>
+<p><strong>The <code>and</code> Operator</strong></p>
+<p><code>and</code> means <em>both</em> conditions must be <code>True</code>.</p>
+<pre><code class="language-python">age &gt;= 18 and has_license       # Both must be True
+age &gt;= 18 and age &lt;= 65         # 18 &lt;= age &lt;= 65
+</code></pre>
+<p>Truth table for <code>and</code>:
+| A | B | A and B |
+|---|---|---------|
+| T | T | T |
+| T | F | F |
+| F | T | F |
+| F | F | F |</p>
+<p><strong>Only the top row is True</strong>: both must be true.</p>
+<p><strong>The <code>or</code> Operator</strong></p>
+<p><code>or</code> means <em>at least one</em> condition must be <code>True</code>.</p>
+<pre><code class="language-python">is_weekend or is_holiday        # At least one must be True
+age &lt; 13 or age &gt; 65            # Outside the middle range
+</code></pre>
+<p>Truth table for <code>or</code>:
+| A | B | A or B |
+|---|---|--------|
+| T | T | T |
+| T | F | T |
+| F | T | T |
+| F | F | F |</p>
+<p><strong>Only the bottom row is False</strong>: both must be false for the result to be false.</p>
+<p><strong>The <code>not</code> Operator</strong></p>
+<p><code>not</code> flips a boolean value. <code>True</code> becomes <code>False</code> and vice versa.</p>
+<pre><code class="language-python">is_adult = True
+not is_adult                    # False
+</code></pre>
+<p><strong>Combining All Three</strong></p>
+<p>You can build complex expressions:</p>
+<pre><code class="language-python"># Eligibility rule: 
+# Adult (18+) AND (has_membership OR pays_fee)
+age &gt;= 18 and (has_membership or pays_fee)
+</code></pre>
+<p><strong>Short-Circuit Evaluation (Optional Insight)</strong></p>
+<p>Python is smart: it stops evaluating as soon as it knows the answer.</p>
+<pre><code class="language-python"># If age &lt; 18, Python doesn't even check the second part
+age &gt;= 18 and has_license       # If first is False, result is False—stop!
+</code></pre>
+<p>This is a performance detail, but it's also useful to know: if the first check fails, the second might not run.</p>
+<hr>
+<h2 id="5-live-demo-comparisons-and-logical-operators-10-minutes">5. Live Demo: Comparisons and Logical Operators (10 minutes)</h2>
+<p><strong>Set Up the Scenario</strong>: "Let's build an age-gating system for an online service. We need to check:
+1. Is the user at least 18?
+2. Does the user have either a membership or have paid a fee?</p>
+<p>Let's code this live."</p>
+<h3 id="demo-code-part-1-basic-comparisons">Demo Code Part 1: Basic Comparisons</h3>
+<pre><code class="language-python"># Simple age check
+age = 16
+print(f&quot;Age: {age}&quot;)
+print(f&quot;Age &gt;= 18? {age &gt;= 18}&quot;)        # False
+
+age = 18
+print(f&quot;Age: {age}&quot;)
+print(f&quot;Age &gt;= 18? {age &gt;= 18}&quot;)        # True
+
+age = 25
+print(f&quot;Age: {age}&quot;)
+print(f&quot;Age &gt;= 18? {age &gt;= 18}&quot;)        # True
+</code></pre>
+<p><strong>Narration</strong>: "Notice that the comparison returns <code>True</code> or <code>False</code>. We can print it directly. As we change age, the result changes."</p>
+<h3 id="demo-code-part-2-combining-with-and">Demo Code Part 2: Combining with <code>and</code></h3>
+<pre><code class="language-python"># Adult AND has license
+age = 25
+has_license = True
+
+print(f&quot;Age {age}, License: {has_license}&quot;)
+print(f&quot;Eligibile? {age &gt;= 18 and has_license}&quot;)  # True
+
+has_license = False
+print(f&quot;Age {age}, License: {has_license}&quot;)
+print(f&quot;Eligible? {age &gt;= 18 and has_license}&quot;)   # False
+</code></pre>
+<p><strong>Narration</strong>: "When I turn off the license, the result flips to <code>False</code> even though age is still 25. Both conditions must be <code>True</code>."</p>
+<h3 id="demo-code-part-3-combining-with-or">Demo Code Part 3: Combining with <code>or</code></h3>
+<pre><code class="language-python"># Has membership OR paid fee
+has_membership = False
+paid_fee = True
+
+print(f&quot;Membership: {has_membership}, Paid: {paid_fee}&quot;)
+print(f&quot;Can proceed? {has_membership or paid_fee}&quot;)  # True
+
+has_membership = False
+paid_fee = False
+print(f&quot;Membership: {has_membership}, Paid: {paid_fee}&quot;)
+print(f&quot;Can proceed? {has_membership or paid_fee}&quot;)  # False
+</code></pre>
+<p><strong>Narration</strong>: "With <code>or</code>, as long as ONE is <code>True</code>, the result is <code>True</code>. Only when both are <code>False</code> does the result become <code>False</code>."</p>
+<h3 id="demo-code-part-4-complete-eligibility-check">Demo Code Part 4: Complete Eligibility Check</h3>
+<pre><code class="language-python"># Full eligibility: adult AND (has membership OR paid)
+age = 20
+has_membership = False
+paid_fee = True
+
+eligible = age &gt;= 18 and (has_membership or paid_fee)
+print(f&quot;Eligible: {eligible}&quot;)  # True
+
+# What if they're not an adult?
+age = 16
+eligible = age &gt;= 18 and (has_membership or paid_fee)
+print(f&quot;Eligible: {eligible}&quot;)  # False (age fails the check)
+</code></pre>
+<p><strong>Narration</strong>: "Notice the parentheses around <code>has_membership or paid_fee</code>. They group that part so it's evaluated first. Without them, Python would read it differently."</p>
+<h3 id="quick-prediction-moment">Quick Prediction Moment</h3>
+<p>Ask the learners:
+"What will this print?"</p>
+<pre><code class="language-python">age = 30
+has_membership = True
+result = age &gt;= 18 and not has_membership
+print(result)
+</code></pre>
+<p>Give them 10 seconds to think, then reveal: <code>False</code> (because <code>not has_membership</code> is <code>False</code>).</p>
+<hr>
+<h2 id="6-practice-walkthrough-guided-practice-7-minutes">6. Practice Walkthrough: Guided Practice (7 minutes)</h2>
+<p><strong>The Scenario</strong>: "You're building a discount checker for an online store. The rule is:
+- Customers 65+ get a senior discount.
+- Customers under 13 get a kid discount.
+- Everyone else pays full price.</p>
+<p>Let's code this together, step by step."</p>
+<h3 id="step-1-set-up-variables">Step 1: Set Up Variables</h3>
+<pre><code class="language-python">age = 70
+is_senior = age &gt;= 65
+print(f&quot;Is senior? {is_senior}&quot;)  # True
+</code></pre>
+<p><strong>Instructor Talk</strong>: "We create a variable <code>is_senior</code> by comparing age to 65. Notice: we use <code>&gt;=</code>, not <code>&gt;</code>, to include 65 itself."</p>
+<h3 id="step-2-add-the-kid-check">Step 2: Add the Kid Check</h3>
+<pre><code class="language-python">age = 70
+is_senior = age &gt;= 65
+is_kid = age &lt; 13
+print(f&quot;Is senior? {is_senior}&quot;)  # True
+print(f&quot;Is kid? {is_kid}&quot;)        # False
+</code></pre>
+<p><strong>Instructor Talk</strong>: "We add another variable for the kid check. Now we have two boolean values."</p>
+<h3 id="step-3-determine-the-discount">Step 3: Determine the Discount</h3>
+<pre><code class="language-python">age = 70
+is_senior = age &gt;= 65
+is_kid = age &lt; 13
+
+if is_senior:
+    discount_percent = 15
+elif is_kid:
+    discount_percent = 10
+else:
+    discount_percent = 0
+
+print(f&quot;Age {age} gets {discount_percent}% discount&quot;)  # 15
+</code></pre>
+<p><strong>Instructor Talk</strong>: "Now we USE these booleans to make decisions. We're peeking at <code>if/elif/else</code>, which we'll dive into next hour. But notice: the conditions are the comparisons we just learned."</p>
+<h3 id="step-4-test-with-different-ages">Step 4: Test with Different Ages</h3>
+<pre><code class="language-python">def check_discount(age):
+    is_senior = age &gt;= 65
+    is_kid = age &lt; 13
+
+    if is_senior:
+        discount_percent = 15
+    elif is_kid:
+        discount_percent = 10
+    else:
+        discount_percent = 0
+
+    return discount_percent
+
+print(f&quot;Age 70: {check_discount(70)}%&quot;)  # 15
+print(f&quot;Age 10: {check_discount(10)}%&quot;)  # 10
+print(f&quot;Age 40: {check_discount(40)}%&quot;)  # 0
+</code></pre>
+<p><strong>Instructor Talk</strong>: "We wrap it in a function so we can test multiple ages. Notice how the boolean comparisons (<code>age &gt;= 65</code>, <code>age &lt; 13</code>) drive the logic."</p>
+<hr>
+<h2 id="7-lab-with-checkpoints-eligibility-checker">7. Lab with Checkpoints: Eligibility Checker</h2>
+<p><strong>Lab Duration</strong>: 20 minutes<br>
+<strong>Objective</strong>: Apply comparisons and logical operators to solve a real-world problem.</p>
+<h3 id="lab-prompt">Lab Prompt</h3>
+<p>You're building an eligibility checker for a summer camp. Write a program that asks for:
+1. The participant's age
+2. Whether they have completed a swimming test (yes/no or True/False)
+3. Whether they have a parent/guardian contact on file (yes/no or True/False)</p>
+<p>Based on these inputs, determine if the participant is <strong>eligible</strong> using these rules:</p>
+<ul>
+<li><strong>Eligible if</strong>: age is between 8 and 16 (inclusive) AND swimming test is passed AND parental contact is on file.</li>
+<li><strong>Not eligible if</strong> any condition fails.</li>
+</ul>
+<p>Print a clear message: either "Eligible for camp" or "Not eligible: [reason]"</p>
+<h3 id="checkpoint-1-correct-comparisons-5-minutes">Checkpoint 1: Correct Comparisons (5 minutes)</h3>
+<p><strong>Your code should have</strong>:
+- Three input prompts (age, swimming_test, parent_contact)
+- Correct type conversion (age must be an integer)
+- At least two comparisons (e.g., <code>age &gt;= 8</code>, <code>age &lt;= 16</code>)
+- One use of <code>and</code> to combine conditions</p>
+<p><strong>Test case 1</strong>: age=12, swimming_test=True, parent_contact=True → "Eligible"<br>
+<strong>Test case 2</strong>: age=12, swimming_test=False, parent_contact=True → "Not eligible"<br>
+<strong>Test case 3</strong>: age=7, swimming_test=True, parent_contact=True → "Not eligible"</p>
+<h3 id="checkpoint-2-compound-expression-10-minutes">Checkpoint 2: Compound Expression (10 minutes)</h3>
+<p><strong>Build the eligibility expression</strong>:</p>
+<pre><code class="language-python">eligible = (age &gt;= 8 and age &lt;= 16) and swimming_test and parent_contact
+</code></pre>
+<p>Or use Python's chaining syntax:</p>
+<pre><code class="language-python">eligible = 8 &lt;= age &lt;= 16 and swimming_test and parent_contact
+</code></pre>
+<p>Print the result clearly:</p>
+<pre><code class="language-python">if eligible:
+    print(&quot;Eligible for camp!&quot;)
+else:
+    print(&quot;Not eligible. Please check your information.&quot;)
+</code></pre>
+<h3 id="checkpoint-3-test-edge-cases-5-minutes">Checkpoint 3: Test Edge Cases (5 minutes)</h3>
+<p>Test boundary values:
+- Age 8 (boundary): should be eligible (with other conditions true)
+- Age 16 (boundary): should be eligible (with other conditions true)
+- Age 7 (just below): should not be eligible
+- Age 17 (just above): should not be eligible</p>
+<hr>
+<h2 id="8-troubleshooting-pitfalls">8. Troubleshooting Pitfalls</h2>
+<h3 id="pitfall-1-confusing-and">Pitfall 1: Confusing <code>=</code> and <code>==</code></h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">if age = 18:    # SYNTAX ERROR: can't assign in condition
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>Why It Breaks</strong>: Python sees <code>=</code> and tries to <em>assign</em> 18 to <code>age</code>, not <em>compare</em>. This causes a syntax error.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python">if age == 18:   # Correct: compare age to 18
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>How to Remember</strong>: "Single <code>=</code> puts a value in. Double <code>==</code> asks a question."</p>
+<hr>
+<h3 id="pitfall-2-off-by-one-errors-with-boundaries">Pitfall 2: Off-by-One Errors with Boundaries</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">age = 18
+if age &gt; 18:        # Wrong: excludes exactly 18
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>Why It Breaks</strong>: The rule is "18 or older," but <code>&gt;</code> means "strictly greater than," so 18 fails.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python">age = 18
+if age &gt;= 18:       # Correct: includes 18
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>How to Test</strong>: Always test the boundary value itself. Is 18 supposed to be included? If yes, use <code>&gt;=</code>, not <code>&gt;</code>.</p>
+<hr>
+<h3 id="pitfall-3-comparing-strings-to-numbers">Pitfall 3: Comparing Strings to Numbers</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python">age = &quot;18&quot;
+if age &gt; 18:        # TypeError: can't compare str to int
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>Why It Breaks</strong>: Python doesn't know how to compare a string <code>"18"</code> to a number <code>18</code>. They're different types.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python">age = int(input(&quot;Your age: &quot;))  # Convert to int first
+if age &gt; 18:                     # Now both are integers
+    print(&quot;Adult&quot;)
+</code></pre>
+<p><strong>How to Remember</strong>: Always convert <code>input()</code> to the type you're comparing. Use <code>int()</code>, <code>float()</code>, or <code>.lower()</code> for strings.</p>
+<hr>
+<h3 id="pitfall-4-misunderstanding-and-vs-or">Pitfall 4: Misunderstanding <code>and</code> vs. <code>or</code></h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python"># Trying to express: age is between 8 and 16
+if age &gt; 8 or age &lt; 16:     # WRONG: almost all ages satisfy this!
+    print(&quot;In range&quot;)
+</code></pre>
+<p><strong>Why It Breaks</strong>: <code>or</code> means "at least one must be true." Age 20 is NOT &gt; 8? Well, 20 &lt; 16? No. But 20 &gt; 8 is TRUE, so the whole thing is TRUE.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python"># CORRECT: both conditions must be true
+if age &gt;= 8 and age &lt;= 16:
+    print(&quot;In range&quot;)
+</code></pre>
+<p><strong>How to Remember</strong>: Use <code>and</code> when you need <em>both</em> conditions. Use <code>or</code> when <em>either</em> works.</p>
+<hr>
+<h3 id="pitfall-5-forgetting-parentheses-in-complex-expressions">Pitfall 5: Forgetting Parentheses in Complex Expressions</h3>
+<p><strong>The Mistake</strong>:</p>
+<pre><code class="language-python"># Intending: age is 18+ AND (has membership OR paid fee)
+# But without parentheses:
+if age &gt;= 18 and has_membership or paid_fee:
+    # This reads as: (age &gt;= 18 and has_membership) OR paid_fee
+    # If paid_fee is True, the whole thing is True, even if age &lt; 18!
+    print(&quot;Proceed&quot;)
+</code></pre>
+<p><strong>Why It Breaks</strong>: Without parentheses, Python follows operator precedence: <code>and</code> is evaluated before <code>or</code>. So the logic is wrong.</p>
+<p><strong>The Fix</strong>:</p>
+<pre><code class="language-python">if age &gt;= 18 and (has_membership or paid_fee):
+    print(&quot;Proceed&quot;)
+</code></pre>
+<p><strong>How to Remember</strong>: When in doubt, use parentheses. They cost nothing and make your intent clear.</p>
+<hr>
+<h2 id="9-quick-check-questions">9. Quick-Check Questions</h2>
+<p><strong>These questions are designed to check understanding quickly. Ask them in rapid succession (2–3 min total). Encourage verbal responses.</strong></p>
+<ol>
+<li>
+<p><strong>"What's the difference between <code>=</code> and <code>==</code>? Give me one sentence."</strong><br>
+<em>(Expected: <code>=</code> is assignment; <code>==</code> is comparison.)</em></p>
+</li>
+<li>
+<p><strong>"I write <code>5 &gt; 3</code>. What does Python return?"</strong><br>
+<em>(Expected: <code>True</code>.)</em></p>
+</li>
+<li>
+<p><strong>"True or False: <code>and</code> means at least one condition must be true."</strong><br>
+<em>(Expected: False. <code>and</code> means BOTH must be true; <code>or</code> means at least one.)</em></p>
+</li>
+<li>
+<p><strong>"If I write <code>age = 18 and has_license</code>, what happens?"</strong><br>
+<em>(Expected: Python compares age to 18, then checks has_license, and returns a boolean.)</em></p>
+</li>
+<li>
+<p><strong>"What does <code>not True</code> return?"</strong><br>
+<em>(Expected: <code>False</code>.)</em></p>
+</li>
+</ol>
+<hr>
+<h2 id="10-wrap-up-4-minutes">10. Wrap-Up (4 minutes)</h2>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<p>Today, we learned the foundations of decision-making in Python:</p>
+<ol>
+<li><strong>Comparisons</strong> (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>) let us ask yes/no questions about values. The result is always <code>True</code> or <code>False</code>.</li>
+<li><strong>Remember</strong>: <code>=</code> is assignment (puts a value in), <code>==</code> is comparison (asks if they're equal).</li>
+<li><strong>Logical operators</strong> (<code>and</code>, <code>or</code>, <code>not</code>) let us combine conditions:
+   - <code>and</code>: ALL conditions must be true.
+   - <code>or</code>: AT LEAST ONE condition must be true.
+   - <code>not</code>: Flips true to false, false to true.</li>
+<li><strong>Boundaries matter</strong>: Use <code>&gt;=</code> and <code>&lt;=</code> to include the edge value.</li>
+<li><strong>Types must match</strong>: Convert inputs to the right type before comparing.</li>
+</ol>
+<h3 id="looking-ahead">Looking Ahead</h3>
+<p>Next hour, we'll take these boolean expressions and use them in <strong>if/elif/else statements</strong>. That's when your programs will truly start making decisions and running different code paths. Today is the vocabulary; next hour is the grammar.</p>
+<h3 id="final-thought">Final Thought</h3>
+<p>Boolean logic might feel abstract right now, but it's everywhere:
+- "Is the user logged in?"
+- "Is the account balance sufficient?"
+- "Is the email valid?"
+- "Is today a holiday?"</p>
+<p>Every "yes or no" question in software comes down to comparisons and boolean logic. You've just learned the fundamental tool.</p>
+<hr>
+<h2 id="11-facilitation-notes">11. Facilitation Notes</h2>
+<h3 id="pacing-flexibility">Pacing &amp; Flexibility</h3>
+<ul>
+<li><strong>If learners are quick</strong>: Dive deeper into truth tables, short-circuit evaluation, or ask them to predict complex expressions.</li>
+<li><strong>If learners are struggling</strong>: Spend more time on the <code>and</code>/<code>or</code> distinction. Use a Venn diagram or physical props (e.g., "stand if you're an adult AND have a license").</li>
+<li><strong>If time is tight</strong>: Skip the guided practice walkthrough and move directly to the lab.</li>
+</ul>
+<h3 id="engagement-tips">Engagement Tips</h3>
+<ol>
+<li><strong>Prediction moment</strong>: Before running code, ask, "What will this print?" Learners engage better when they predict first.</li>
+<li><strong>Real-world framing</strong>: Always connect to reality. "Imagine you're the programmer for an airline checking if a passenger can board..."</li>
+<li><strong>Common mistake emphasis</strong>: Spend extra time on <code>=</code> vs. <code>==</code>. Ask learners to write both on a piece of paper and explain the difference.</li>
+<li><strong>Breakout practice</strong>: If possible, pair learners and have them verbally talk through a boolean expression before coding it.</li>
+</ol>
+<h3 id="troubleshooting-on-the-fly">Troubleshooting On the Fly</h3>
+<ul>
+<li><strong>"My condition isn't working."</strong> → First, ask them to print the boolean result in isolation. Is it what they expected? If not, debug the comparison.</li>
+<li><strong>"I got an error."</strong> → Read the error message together. Is it a type error? A syntax error? Guide, don't fix.</li>
+<li><strong>"Can I use <code>and</code> and <code>or</code> together?"</strong> → Yes, with parentheses to clarify your intent.</li>
+</ul>
+<h3 id="assessment-during-lab">Assessment During Lab</h3>
+<p>Circulate and ask:
+- "Walk me through your eligibility condition."
+- "Why did you choose <code>and</code> here instead of <code>or</code>?"
+- "What happens if age is exactly 8?"</p>
+<p>These questions reveal misunderstandings before the checkpoint.</p>
+<hr>
+<h2 id="12-assessment-rubric">12. Assessment Rubric</h2>
+<h3 id="eligibility-checker-lab-rubric-20-points-total">Eligibility Checker Lab Rubric (20 points total)</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Points</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Correct Input Handling</strong></td>
+<td>4</td>
+<td>Program prompts for age, swimming_test, parent_contact. Age is converted to integer.</td>
+</tr>
+<tr>
+<td><strong>Correct Age Comparisons</strong></td>
+<td>4</td>
+<td>Uses <code>age &gt;= 8</code> and <code>age &lt;= 16</code> (or chained <code>8 &lt;= age &lt;= 16</code>). Boundaries are correct.</td>
+</tr>
+<tr>
+<td><strong>Correct Use of <code>and</code></strong></td>
+<td>4</td>
+<td>Combines all three conditions with <code>and</code>. Expression is logically sound.</td>
+</tr>
+<tr>
+<td><strong>Clear Output</strong></td>
+<td>4</td>
+<td>Prints "Eligible for camp" or "Not eligible" message. Message is clear and readable.</td>
+</tr>
+<tr>
+<td><strong>Testing &amp; Edge Cases</strong></td>
+<td>2</td>
+<td>Program is tested on at least two different inputs. Boundary values (age 8, age 16) work correctly.</td>
+</tr>
+<tr>
+<td><strong>Code Quality</strong></td>
+<td>2</td>
+<td>Readable variable names, reasonable comments, code is not overly complex.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="grading-scale">Grading Scale</h3>
+<ul>
+<li><strong>18–20 points</strong>: Excellent. All logic correct, clear output, tested thoroughly.</li>
+<li><strong>15–17 points</strong>: Good. Logic mostly correct, minor issues with boundaries or output clarity.</li>
+<li><strong>12–14 points</strong>: Satisfactory. Core logic works but has edge-case issues or unclear output.</li>
+<li><strong>Below 12</strong>: Needs rework. Logic errors or missing components.</li>
+</ul>
+<h3 id="feedback-template">Feedback Template</h3>
+<p><strong>For Excellent Work</strong>:
+"Your eligibility logic is rock-solid! You correctly used <code>and</code> to combine all three conditions, and your boundary checking is spot-on. Well done!"</p>
+<p><strong>For Good Work</strong>:
+"Your logic is sound. I noticed a small issue with [boundary/output]. Let's talk about when to use <code>&gt;=</code> vs. <code>&gt;</code>. You're on the right track!"</p>
+<p><strong>For Needs Rework</strong>:
+"Your code is close. The issue is [specific problem]. Let's trace through what happens when age is exactly 8. Walk me through it step by step."</p>
+<hr>
+<p><strong>End of Hour 2 Lecture Script</strong></p>
+<hr>
+<p><em>Word count: 3,200+ words</em></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-learning-outcomes" class="depth-2">1. Learning Outcomes</a></li>
+<li><a href="#2-instructor-prep-section" class="depth-2">2. Instructor Prep Section</a></li>
+<li><a href="#pre-class-checklist" class="depth-3">Pre-Class Checklist</a></li>
+<li><a href="#timing-breakdown" class="depth-3">Timing Breakdown</a></li>
+<li><a href="#materials-resources" class="depth-3">Materials &amp; Resources</a></li>
+<li><a href="#3-opening-script" class="depth-2">3. Opening Script</a></li>
+<li><a href="#4-conceptual-briefing" class="depth-2">4. Conceptual Briefing</a></li>
+<li><a href="#part-a-understanding-comparison-operators-8-minutes" class="depth-3">Part A: Understanding Comparison Operators (8 minutes)</a></li>
+<li><a href="#part-b-boolean-logiccombining-conditions-8-minutes" class="depth-3">Part B: Boolean Logic—Combining Conditions (8 minutes)</a></li>
+<li><a href="#5-live-demo-comparisons-and-logical-operators-10-minutes" class="depth-2">5. Live Demo: Comparisons and Logical Operators (10 minutes)</a></li>
+<li><a href="#demo-code-part-1-basic-comparisons" class="depth-3">Demo Code Part 1: Basic Comparisons</a></li>
+<li><a href="#demo-code-part-2-combining-with-and" class="depth-3">Demo Code Part 2: Combining with and</a></li>
+<li><a href="#demo-code-part-3-combining-with-or" class="depth-3">Demo Code Part 3: Combining with or</a></li>
+<li><a href="#demo-code-part-4-complete-eligibility-check" class="depth-3">Demo Code Part 4: Complete Eligibility Check</a></li>
+<li><a href="#quick-prediction-moment" class="depth-3">Quick Prediction Moment</a></li>
+<li><a href="#6-practice-walkthrough-guided-practice-7-minutes" class="depth-2">6. Practice Walkthrough: Guided Practice (7 minutes)</a></li>
+<li><a href="#step-1-set-up-variables" class="depth-3">Step 1: Set Up Variables</a></li>
+<li><a href="#step-2-add-the-kid-check" class="depth-3">Step 2: Add the Kid Check</a></li>
+<li><a href="#step-3-determine-the-discount" class="depth-3">Step 3: Determine the Discount</a></li>
+<li><a href="#step-4-test-with-different-ages" class="depth-3">Step 4: Test with Different Ages</a></li>
+<li><a href="#7-lab-with-checkpoints-eligibility-checker" class="depth-2">7. Lab with Checkpoints: Eligibility Checker</a></li>
+<li><a href="#lab-prompt" class="depth-3">Lab Prompt</a></li>
+<li><a href="#checkpoint-1-correct-comparisons-5-minutes" class="depth-3">Checkpoint 1: Correct Comparisons (5 minutes)</a></li>
+<li><a href="#checkpoint-2-compound-expression-10-minutes" class="depth-3">Checkpoint 2: Compound Expression (10 minutes)</a></li>
+<li><a href="#checkpoint-3-test-edge-cases-5-minutes" class="depth-3">Checkpoint 3: Test Edge Cases (5 minutes)</a></li>
+<li><a href="#8-troubleshooting-pitfalls" class="depth-2">8. Troubleshooting Pitfalls</a></li>
+<li><a href="#pitfall-1-confusing-and" class="depth-3">Pitfall 1: Confusing = and ==</a></li>
+<li><a href="#pitfall-2-off-by-one-errors-with-boundaries" class="depth-3">Pitfall 2: Off-by-One Errors with Boundaries</a></li>
+<li><a href="#pitfall-3-comparing-strings-to-numbers" class="depth-3">Pitfall 3: Comparing Strings to Numbers</a></li>
+<li><a href="#pitfall-4-misunderstanding-and-vs-or" class="depth-3">Pitfall 4: Misunderstanding and vs. or</a></li>
+<li><a href="#pitfall-5-forgetting-parentheses-in-complex-expressions" class="depth-3">Pitfall 5: Forgetting Parentheses in Complex Expressions</a></li>
+<li><a href="#9-quick-check-questions" class="depth-2">9. Quick-Check Questions</a></li>
+<li><a href="#10-wrap-up-4-minutes" class="depth-2">10. Wrap-Up (4 minutes)</a></li>
+<li><a href="#key-takeaways" class="depth-3">Key Takeaways</a></li>
+<li><a href="#looking-ahead" class="depth-3">Looking Ahead</a></li>
+<li><a href="#final-thought" class="depth-3">Final Thought</a></li>
+<li><a href="#11-facilitation-notes" class="depth-2">11. Facilitation Notes</a></li>
+<li><a href="#pacing-flexibility" class="depth-3">Pacing &amp; Flexibility</a></li>
+<li><a href="#engagement-tips" class="depth-3">Engagement Tips</a></li>
+<li><a href="#troubleshooting-on-the-fly" class="depth-3">Troubleshooting On the Fly</a></li>
+<li><a href="#assessment-during-lab" class="depth-3">Assessment During Lab</a></li>
+<li><a href="#12-assessment-rubric" class="depth-2">12. Assessment Rubric</a></li>
+<li><a href="#eligibility-checker-lab-rubric-20-points-total" class="depth-3">Eligibility Checker Lab Rubric (20 points total)</a></li>
+<li><a href="#grading-scale" class="depth-3">Grading Scale</a></li>
+<li><a href="#feedback-template" class="depth-3">Feedback Template</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day4_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day4_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

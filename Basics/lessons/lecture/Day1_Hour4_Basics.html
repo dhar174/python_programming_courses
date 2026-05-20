@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 1, Hour 4: Numbers and Operators | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="1">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day1_Hour4_Basics.md">
+
+    <link rel="prev" href="Day1_Hour3_Basics.html">
+    <link rel="next" href="Day2_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="1" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-01/index.html">Day 1</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 1, Hour 4: Numbers and Operators</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 1</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day1_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="python-programming-basics-lecture-script">Python Programming (Basics) – Lecture Script</h2>
+<p><strong>Course:</strong> Python Programming (Basics) – 48 Hours<br>
+<strong>Session:</strong> Day 1 (Session 1)<br>
+<strong>Hour:</strong> 4 of 4<br>
+<strong>Duration:</strong> 60 minutes (instructional time)<br>
+<strong>Topic:</strong> Numbers and Arithmetic Operators  </p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:
+- Use Python's arithmetic operators (+, -, <em>, /, //, %, </em>*)
+- Apply order of operations (PEMDAS) in expressions
+- Explain the difference between integer division (//) and float division (/)
+- Use the modulo operator (%) for practical tasks like even/odd checks
+- Convert user input to numeric types for calculations
+- Use round() appropriately for display formatting
+- Build a practical calculator program from scratch</p>
+<hr>
+<h2 id="hour-overview-and-timing">Hour Overview and Timing</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>Duration</th>
+<th>Activity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recap &amp; Hook</td>
+<td>5 min</td>
+<td>Review Hours 1-3, preview Hour 4</td>
+</tr>
+<tr>
+<td>Instruction</td>
+<td>10-15 min</td>
+<td>Operators, precedence, int vs float</td>
+</tr>
+<tr>
+<td>Live Demo</td>
+<td>5-10 min</td>
+<td>Mini calculator walkthrough</td>
+</tr>
+<tr>
+<td>Hands-On Lab</td>
+<td>25-35 min</td>
+<td>Tip Calculator project</td>
+</tr>
+<tr>
+<td>Debrief &amp; Wrap</td>
+<td>5-10 min</td>
+<td>Solutions share, Day 1 celebration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Break reminder:</strong> If you haven't taken your mid-session break yet, consider offering a 3-5 minute micro-break before the lab.</p>
+<hr>
+<h2 id="part-1-recap-and-context-5-minutes">Part 1: Recap and Context (5 minutes)</h2>
+<h3 id="opening-welcome-back">Opening (Welcome Back)</h3>
+<p><strong>[Speaking cue: Enthusiastic, acknowledging progress]</strong></p>
+<p>"Alright everyone, welcome to Hour 4—the final hour of Day 1! Let's take just a moment to appreciate how far we've come today. If this is your first time programming in Python—or your first time programming at all—you should feel really good about what you've accomplished."</p>
+<p><strong>[Pause briefly for effect]</strong></p>
+<p>"In Hour 1, we got our environment set up, learned how to save files, run scripts, and navigate the LogicalLabs workspace. That's not trivial—many people struggle with just getting Python running."</p>
+<p>"In Hour 2, we learned how to use <code>print()</code>, write comments, and most importantly, how to <strong>read error messages</strong>. That skill alone will save you hours of frustration as you continue learning."</p>
+<p>"In Hour 3, we learned about variables and data types—strings, numbers, booleans—and we used the <code>type()</code> function to peek inside our data. We learned that <code>'5'</code> and <code>5</code> are very different things in Python."</p>
+<p><strong>[Transition tone: Building momentum]</strong></p>
+<p>"Now in Hour 4, we're going to put numbers to work. We're going to do <strong>math</strong>—but not math class math. This is <strong>practical math</strong>: the kind you need to split a restaurant bill, calculate a tip, figure out per-person costs, or build any program that deals with money, measurements, or counts."</p>
+<h3 id="quick-recap-question-interactive">Quick Recap Question (Interactive)</h3>
+<p><strong>[Instructor cue: Ask for a volunteer or call on someone]</strong></p>
+<p>"Before we dive in, let's do a quick check. Who can remind us: what's the difference between <code>'5'</code> and <code>5</code>?"</p>
+<p><strong>[Expected answer:]</strong>
+- <code>'5'</code> is a string (text)—you can't do math with it directly
+- <code>5</code> is an integer (a number)—you can add, subtract, multiply it</p>
+<p><strong>[If no one answers, provide it yourself with energy]</strong></p>
+<p>"Right! <code>'5'</code> is a string—it's text, it has quotes around it. Python treats it like the letter 'A' or the word 'hello'. You can't add it to another number. But <code>5</code> is an <strong>integer</strong>—an actual number—and Python knows how to do math with it."</p>
+<p><strong>[Transition: Set the stage]</strong></p>
+<p>"That distinction is going to be <strong>super important</strong> in about 30 minutes when you build your first calculator program. Let's get started!"</p>
+<hr>
+<h2 id="part-2-instruction-numbers-and-operators-10-15-minutes">Part 2: Instruction – Numbers and Operators (10-15 minutes)</h2>
+<h3 id="the-seven-arithmetic-operators">The Seven Arithmetic Operators</h3>
+<p><strong>[Speaking cue: Clear, methodical delivery]</strong></p>
+<p>"Python gives us seven main arithmetic operators. You already know most of them from regular math, but a couple might be new. I'm going to walk through all seven, and then we'll see them in action."</p>
+<p><strong>[Write on screen or show slide—speak as you display each operator]</strong></p>
+<h4 id="1-addition"><strong>1. Addition: <code>+</code></strong></h4>
+<p>"First up: <strong>addition</strong>. The plus sign does exactly what you'd expect."</p>
+<pre><code class="language-python">result = 10 + 5
+print(result)  # Output: 15
+</code></pre>
+<p>"Ten plus five equals fifteen. No surprises here."</p>
+<hr>
+<h4 id="2-subtraction"><strong>2. Subtraction: <code>-</code></strong></h4>
+<p>"Next: <strong>subtraction</strong>. The minus sign."</p>
+<pre><code class="language-python">result = 10 - 5
+print(result)  # Output: 5
+</code></pre>
+<p>"Ten minus five equals five. Still straightforward."</p>
+<hr>
+<h4 id="3-multiplication"><strong>3. Multiplication: <code>*</code></strong></h4>
+<p>"Now <strong>multiplication</strong>. In Python, we use the <strong>asterisk</strong> or star symbol."</p>
+<pre><code class="language-python">result = 10 * 5
+print(result)  # Output: 50
+</code></pre>
+<p>"Ten times five equals fifty. Notice we use <code>*</code>, not the × symbol you might see in a math textbook. That's because × isn't on your keyboard, and computers prefer symbols we can actually type."</p>
+<hr>
+<h4 id="4-division"><strong>4. Division: <code>/</code></strong></h4>
+<p>"Okay, here's where things get interesting. <strong>Division</strong> uses a single forward slash."</p>
+<pre><code class="language-python">result = 10 / 5
+print(result)  # Output: 2.0
+</code></pre>
+<p><strong>[Pause—this is important]</strong></p>
+<p>"Notice the result: <code>2.0</code>, not <code>2</code>. Even though 10 divided by 5 equals exactly 2, Python gives us <code>2.0</code>—a <strong>float</strong>, which is a decimal number."</p>
+<p><strong>[Emphasize this point]</strong></p>
+<p>"This is by design. In Python 3, the <code>/</code> operator <strong>always</strong> gives you a float, even when the division is exact. That's actually helpful because it means you never lose precision by accident."</p>
+<p><strong>[Give another example]</strong></p>
+<pre><code class="language-python">result = 10 / 3
+print(result)  # Output: 3.3333333333333335
+</code></pre>
+<p>"Ten divided by three gives us a long decimal. Python keeps many digits of precision. In a few minutes, we'll talk about how to round this for display."</p>
+<hr>
+<h4 id="5-integer-division-floor-division"><strong>5. Integer Division (Floor Division): <code>//</code></strong></h4>
+<p><strong>[Speaking cue: Slow down—this is a common confusion point]</strong></p>
+<p>"Now here's operator number five, and this one trips people up: <strong>integer division</strong>, also called <strong>floor division</strong>. It uses <strong>two forward slashes</strong>."</p>
+<pre><code class="language-python">result = 10 // 3
+print(result)  # Output: 3
+</code></pre>
+<p>"Notice: the result is <code>3</code>, not <code>3.333...</code>. The <code>//</code> operator <strong>throws away the decimal part</strong> and gives you just the whole number."</p>
+<p><strong>[Make this concrete with a real-world analogy]</strong></p>
+<p>"Think about it like this: If you have 10 cookies and 3 people, how many <strong>whole cookies</strong> does each person get? Three. That's what <code>//</code> tells you. It doesn't round—it just cuts off everything after the decimal point. This is called 'floor division' because it rounds <strong>down</strong> to the nearest integer."</p>
+<p><strong>[Another example]</strong></p>
+<pre><code class="language-python">result = 10 // 5
+print(result)  # Output: 2
+</code></pre>
+<p>"Ten divided by five with <code>//</code> gives us <code>2</code>—an integer, not <code>2.0</code>. So when you want a whole number result and you don't care about the remainder, use <code>//</code>."</p>
+<p><strong>[Check for understanding]</strong></p>
+<p>"Quick prediction question: What will <code>7 // 2</code> give us?"</p>
+<p><strong>[Pause for answers—expected: 3]</strong></p>
+<p>"Right! Seven divided by two is 3.5, but <code>7 // 2</code> gives us <strong>3</strong>—it chops off the <code>.5</code>."</p>
+<hr>
+<h4 id="6-modulo"><strong>6. Modulo: <code>%</code></strong></h4>
+<p><strong>[Speaking cue: This is unfamiliar to many—go slow]</strong></p>
+<p>"Operator number six is called <strong>modulo</strong>, and it uses the percent sign: <code>%</code>."</p>
+<p><strong>[Important: Define clearly]</strong></p>
+<p>"The modulo operator gives you the <strong>remainder</strong> after division. Not the quotient—the <strong>remainder</strong>."</p>
+<pre><code class="language-python">result = 10 % 3
+print(result)  # Output: 1
+</code></pre>
+<p><strong>[Explain step-by-step]</strong></p>
+<p>"Ten divided by three is 3 with a remainder of 1. The <code>%</code> operator gives us that remainder: <code>1</code>."</p>
+<p><strong>[More examples to solidify]</strong></p>
+<pre><code class="language-python">print(10 % 5)  # Output: 0  (no remainder—divides evenly)
+print(7 % 2)   # Output: 1  (7 ÷ 2 = 3 remainder 1)
+print(8 % 2)   # Output: 0  (8 ÷ 2 = 4 remainder 0)
+</code></pre>
+<p><strong>[Real-world application—this makes it click]</strong></p>
+<p>"Here's why modulo is incredibly useful: checking if a number is <strong>even or odd</strong>."</p>
+<pre><code class="language-python">number = 7
+if number % 2 == 0:
+    print(&quot;Even&quot;)
+else:
+    print(&quot;Odd&quot;)
+</code></pre>
+<p>"If a number divided by 2 has a remainder of 0, it's even. If the remainder is 1, it's odd. We haven't covered <code>if</code> statements yet—that's coming in Session 7—but just know that <code>%</code> is the tool you use for this kind of check."</p>
+<p><strong>[Another real-world use case]</strong></p>
+<p>"You'll also see modulo used for things like: 'Every 10th customer gets a discount,' or 'Wrap around after reaching a limit,' or 'Check if a year is a leap year.' The remainder operation shows up <strong>everywhere</strong> in real programs."</p>
+<hr>
+<h4 id="7-exponentiation"><strong>7. Exponentiation: <code>**</code></strong></h4>
+<p><strong>[Final operator—quick and clear]</strong></p>
+<p>"Last one: <strong>exponentiation</strong>, which means 'raising to a power.' Python uses <strong>two asterisks</strong>."</p>
+<pre><code class="language-python">result = 2 ** 3
+print(result)  # Output: 8
+</code></pre>
+<p>"Two to the power of three equals eight. Two times two times two."</p>
+<pre><code class="language-python">result = 5 ** 2
+print(result)  # Output: 25
+</code></pre>
+<p>"Five squared equals twenty-five."</p>
+<p><strong>[Note for context]</strong></p>
+<p>"You won't use this one as often in basic programs, but it's there when you need it—for area calculations, scientific formulas, or compound interest."</p>
+<hr>
+<h3 id="order-of-operations-pemdas">Order of Operations (PEMDAS)</h3>
+<p><strong>[Speaking cue: Connect to prior knowledge]</strong></p>
+<p>"Okay, now that we know all seven operators, let's talk about <strong>order of operations</strong>. If you've taken algebra, you might remember <strong>PEMDAS</strong>—Parentheses, Exponents, Multiplication/Division, Addition/Subtraction."</p>
+<p><strong>[Reassure the audience]</strong></p>
+<p>"If that sounds like a flashback to math class, don't worry—we're not doing algebra here. We just need to understand how Python decides what to calculate first."</p>
+<p><strong>[Show an example]</strong></p>
+<pre><code class="language-python">result = 10 + 5 * 2
+print(result)  # Output: 20, not 30
+</code></pre>
+<p><strong>[Ask the audience to predict]</strong></p>
+<p>"Quick prediction: is the result <code>30</code> or <code>20</code>?"</p>
+<p><strong>[Pause for answers]</strong></p>
+<p>"The answer is <strong>20</strong>. Here's why: Python does <strong>multiplication before addition</strong>. So it calculates <code>5 * 2</code> first, which gives <code>10</code>, and then adds <code>10 + 10</code> to get <code>20</code>."</p>
+<p><strong>[Show what happens if you want 30]</strong></p>
+<pre><code class="language-python">result = (10 + 5) * 2
+print(result)  # Output: 30
+</code></pre>
+<p>"If you want to force the addition to happen first, you use <strong>parentheses</strong>. Python always does what's inside parentheses first. So <code>(10 + 5)</code> becomes <code>15</code>, and then <code>15 * 2</code> gives us <code>30</code>."</p>
+<p><strong>[Practical takeaway]</strong></p>
+<p>"When in doubt, <strong>use parentheses</strong>. They make your code clearer, and they guarantee the calculation happens in the order you intend."</p>
+<hr>
+<h3 id="integer-results-vs-float-results">Integer Results vs. Float Results</h3>
+<p><strong>[Speaking cue: Reinforce the earlier point]</strong></p>
+<p>"Let's revisit something we touched on earlier: <strong>integers vs. floats</strong>."</p>
+<p><strong>[Clear definitions]</strong></p>
+<p>"An <strong>integer</strong> is a whole number—no decimal point. Examples: <code>5</code>, <code>-3</code>, <code>1000</code>."</p>
+<p>"A <strong>float</strong> is a number with a decimal point. Examples: <code>5.0</code>, <code>3.14</code>, <code>-0.5</code>."</p>
+<p><strong>[Key rules in Python]</strong></p>
+<pre><code class="language-python">print(10 / 5)   # 2.0 (float)—regular division always gives a float
+print(10 // 5)  # 2 (int)—floor division gives an integer
+print(10 * 2)   # 20 (int)—both operands are ints
+print(10 * 2.0) # 20.0 (float)—one operand is a float, so result is a float
+</code></pre>
+<p><strong>[Explain the last one]</strong></p>
+<p>"Notice that last one: <code>10 * 2.0</code> gives us <code>20.0</code>, not <code>20</code>. Why? Because when you mix an integer and a float in an operation, Python 'promotes' the result to a float. That's called <strong>type coercion</strong>, and it happens automatically."</p>
+<p><strong>[Practical implication]</strong></p>
+<p>"For most of your programs, this won't matter. But if you're doing something like counting items or working with array indices, you'll want integers. If you're doing money calculations or scientific measurements, you'll usually want floats."</p>
+<hr>
+<h3 id="using-round-for-display-not-storage">Using <code>round()</code> for Display (Not Storage)</h3>
+<p><strong>[Speaking cue: Practical guidance—this prevents a common mistake]</strong></p>
+<p>"Alright, last concept before we get to the demo: rounding."</p>
+<p><strong>[Show a messy result]</strong></p>
+<pre><code class="language-python">result = 10 / 3
+print(result)  # Output: 3.3333333333333335
+</code></pre>
+<p>"That's ugly. If you're displaying a price or a measurement, you don't want 15 decimal places. You want something clean like <code>3.33</code>."</p>
+<p><strong>[Introduce round()]</strong></p>
+<p>"Python has a built-in function called <code>round()</code> that lets you control how many decimal places to show."</p>
+<pre><code class="language-python">result = 10 / 3
+print(round(result, 2))  # Output: 3.33
+</code></pre>
+<p>"The first argument is the number you want to round. The second argument is how many decimal places to keep. So <code>round(result, 2)</code> gives us two decimal places: <code>3.33</code>."</p>
+<p><strong>[Important warning]</strong></p>
+<p>"Here's the key thing: use <code>round()</code> when you're <strong>displaying</strong> a result—when you're printing it to the screen or showing it to a user. <strong>Do not</strong> round intermediate values that you're going to use in further calculations."</p>
+<p><strong>[Show why]</strong></p>
+<pre><code class="language-python"># Bad: rounding too early
+price = 19.99
+tax = round(price * 0.07, 2)  # 1.40
+total = price + tax  # 21.39
+
+# Good: round only at the end
+price = 19.99
+tax = price * 0.07  # 1.3993
+total = price + tax  # 21.3893
+print(f&quot;Total: ${round(total, 2)}&quot;)  # Display: $21.39
+</code></pre>
+<p>"If you round too early, you can introduce tiny errors that compound. So as a rule of thumb: <strong>calculate with full precision, round only for display</strong>."</p>
+<p><strong>[Quick formatting note]</strong></p>
+<p>"Later in the course, we'll learn about <strong>f-strings</strong> with formatting options, which give you even more control over how numbers look. For now, <code>round()</code> will get the job done."</p>
+<hr>
+<p><strong>[Transition to demo]</strong></p>
+<p>"Alright! That's the theory. Let's see this stuff in action with a live demo."</p>
+<hr>
+<h2 id="part-3-live-demo-mini-calculator-5-10-minutes">Part 3: Live Demo – Mini Calculator (5-10 minutes)</h2>
+<p><strong>[Instructor cue: Share your screen and open VS Code or the Python environment]</strong></p>
+<h3 id="demo-overview">Demo Overview</h3>
+<p>"I'm going to build a tiny calculator program right in front of you. This will show you how to use the operators, how to handle user input, and how to format the output. I'll also show you a common mistake and how to fix it."</p>
+<p><strong>[Narrate as you type—this is live coding, so go slow]</strong></p>
+<hr>
+<h3 id="step-1-basic-arithmetic">Step 1: Basic Arithmetic</h3>
+<p><strong>[Start with a new file: <code>calculator_demo.py</code>]</strong></p>
+<pre><code class="language-python"># calculator_demo.py
+# Simple calculator demonstrating Python operators
+
+print(&quot;=== Basic Arithmetic ===&quot;)
+a = 10
+b = 3
+
+print(f&quot;{a} + {b} = {a + b}&quot;)
+print(f&quot;{a} - {b} = {a - b}&quot;)
+print(f&quot;{a} * {b} = {a * b}&quot;)
+print(f&quot;{a} / {b} = {a / b}&quot;)
+print(f&quot;{a} // {b} = {a // b}&quot;)
+print(f&quot;{a} % {b} = {a % b}&quot;)
+print(f&quot;{a} ** {b} = {a ** b}&quot;)
+</code></pre>
+<p><strong>[Run the program]</strong></p>
+<p>"Let's run this and see what we get."</p>
+<p><strong>[Expected output:]</strong></p>
+<pre><code>=== Basic Arithmetic ===
+10 + 3 = 13
+10 - 3 = 7
+10 * 3 = 30
+10 / 3 = 3.3333333333333335
+10 // 3 = 3
+10 % 3 = 1
+10 ** 3 = 1000
+</code></pre>
+<p><strong>[Point out key results]</strong></p>
+<p>"Look at the division results. Regular division gives us that long decimal: <code>3.333...</code>. Floor division gives us <code>3</code>—just the whole number. And modulo gives us <code>1</code>—the remainder."</p>
+<hr>
+<h3 id="step-2-division-comparison">Step 2: Division Comparison</h3>
+<p><strong>[Add to the file]</strong></p>
+<pre><code class="language-python">print(&quot;\n=== Division: / vs // ===&quot;)
+print(f&quot;10 / 4 = {10 / 4}&quot;)    # 2.5
+print(f&quot;10 // 4 = {10 // 4}&quot;)  # 2
+print(f&quot;10 / 5 = {10 / 5}&quot;)    # 2.0
+print(f&quot;10 // 5 = {10 // 5}&quot;)  # 2
+</code></pre>
+<p><strong>[Run again and narrate]</strong></p>
+<p>"Even when the division is exact—like 10 divided by 5—the single slash gives us <code>2.0</code> (a float), and the double slash gives us <code>2</code> (an integer)."</p>
+<hr>
+<h3 id="step-3-evenodd-check-with-modulo">Step 3: Even/Odd Check with Modulo</h3>
+<p><strong>[Add to the file]</strong></p>
+<pre><code class="language-python">print(&quot;\n=== Even/Odd Check with % ===&quot;)
+number = 7
+remainder = number % 2
+print(f&quot;{number} % 2 = {remainder}&quot;)
+if remainder == 0:
+    print(f&quot;{number} is even&quot;)
+else:
+    print(f&quot;{number} is odd&quot;)
+</code></pre>
+<p><strong>[Run and explain]</strong></p>
+<p>"Seven mod two equals one, so we know seven is odd."</p>
+<p><strong>[Change the number and re-run]</strong></p>
+<pre><code class="language-python">number = 8
+remainder = number % 2
+print(f&quot;{number} % 2 = {remainder}&quot;)
+if remainder == 0:
+    print(f&quot;{number} is even&quot;)
+else:
+    print(f&quot;{number} is odd&quot;)
+</code></pre>
+<p>"Eight mod two equals zero, so eight is even. This is a super common pattern—you'll use it all the time."</p>
+<hr>
+<h3 id="step-4-getting-user-input-the-gotcha">Step 4: Getting User Input (The Gotcha)</h3>
+<p><strong>[Speaking cue: Slow down—this is where the common mistake happens]</strong></p>
+<p>"Now let's make this interactive. Let's ask the user for two numbers and do some math."</p>
+<p><strong>[Add to the file—intentionally make the mistake first]</strong></p>
+<pre><code class="language-python">print(&quot;\n=== User Input Calculator ===&quot;)
+num1 = input(&quot;Enter first number: &quot;)
+num2 = input(&quot;Enter second number: &quot;)
+result = num1 + num2
+print(f&quot;Result: {result}&quot;)
+</code></pre>
+<p><strong>[Run the program and enter values]</strong></p>
+<pre><code>Enter first number: 10
+Enter second number: 5
+Result: 105
+</code></pre>
+<p><strong>[React with surprise]</strong></p>
+<p>"Whoa! I entered 10 and 5, and instead of getting 15, I got <code>105</code>! What happened?"</p>
+<p><strong>[Pause for effect, then explain]</strong></p>
+<p>"Remember what we said at the start: <code>input()</code> <strong>always returns a string</strong>. So when I typed <code>10</code>, Python stored <code>'10'</code>—the text version. And when you use <code>+</code> with strings, Python <strong>concatenates</strong> them—it glues them together. So <code>'10' + '5'</code> becomes <code>'105'</code>."</p>
+<p><strong>[Fix it by converting to float]</strong></p>
+<pre><code class="language-python">print(&quot;\n=== User Input Calculator (Fixed) ===&quot;)
+num1 = float(input(&quot;Enter first number: &quot;))
+num2 = float(input(&quot;Enter second number: &quot;))
+result = num1 + num2
+print(f&quot;Result: {result}&quot;)
+</code></pre>
+<p><strong>[Run again]</strong></p>
+<pre><code>Enter first number: 10
+Enter second number: 5
+Result: 15.0
+</code></pre>
+<p>"There we go! By wrapping <code>input()</code> with <code>float()</code>, we convert the string to a number <strong>before</strong> we do the math. Now it works correctly."</p>
+<hr>
+<h3 id="step-5-formatting-the-output">Step 5: Formatting the Output</h3>
+<p><strong>[Add rounding for clean display]</strong></p>
+<pre><code class="language-python">print(f&quot;Result: {round(result, 2)}&quot;)
+</code></pre>
+<p><strong>[Run again]</strong></p>
+<p>"Now if we do a division that gives us a messy decimal, we can round it for display."</p>
+<p><strong>[Demo with division]</strong></p>
+<pre><code class="language-python">num1 = float(input(&quot;Enter first number: &quot;))
+num2 = float(input(&quot;Enter second number: &quot;))
+result = num1 / num2
+print(f&quot;Result: {round(result, 2)}&quot;)
+</code></pre>
+<p><strong>[Enter 10 and 3]</strong></p>
+<pre><code>Enter first number: 10
+Enter second number: 3
+Result: 3.33
+</code></pre>
+<p>"Much cleaner."</p>
+<hr>
+<p><strong>[Wrap the demo]</strong></p>
+<p>"Alright, so that's your mini calculator. You've seen all seven operators, you've seen the difference between <code>/</code> and <code>//</code>, you've seen how to use <code>%</code> to check for even or odd, and you've seen the <strong>critical</strong> step of converting <code>input()</code> to a number before doing math."</p>
+<p><strong>[Transition to lab]</strong></p>
+<p>"Now it's your turn. You're going to build a <strong>Tip Calculator</strong>—a real, practical program that you could actually use at a restaurant. Let's walk through what you'll be building."</p>
+<hr>
+<h2 id="part-4-hands-on-lab-tip-calculator-25-35-minutes">Part 4: Hands-On Lab – Tip Calculator (25-35 minutes)</h2>
+<p><strong>[Instructor cue: Display the lab instructions on screen]</strong></p>
+<h3 id="lab-overview">Lab Overview</h3>
+<p>"Here's what you're going to build: a program that asks for a restaurant bill total and a tip percentage, then calculates the tip amount and the final total. And we want the output to look clean—two decimal places, like real money."</p>
+<hr>
+<h3 id="lab-instructions">Lab Instructions</h3>
+<p><strong>[Read through these clearly and slowly]</strong></p>
+<p><strong>Your task:</strong></p>
+<ol>
+<li>Create a new file called <code>tip_calculator.py</code></li>
+<li>Ask the user for the bill total (before tip)</li>
+<li>Ask the user for the tip percentage (e.g., 15, 18, 20)</li>
+<li>Calculate the tip amount in dollars</li>
+<li>Calculate the final total (bill + tip)</li>
+<li>Display both the tip amount and final total, formatted to 2 decimal places</li>
+</ol>
+<p><strong>Example run:</strong></p>
+<pre><code>Enter the bill total: 45.50
+Enter the tip percentage: 18
+Tip amount: $8.19
+Final total: $53.69
+</code></pre>
+<hr>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<p><strong>[Explain what "done" looks like]</strong></p>
+<p>Your program is complete when:
+- It correctly calculates the tip for <strong>any</strong> bill amount and percentage
+- It handles decimal inputs (e.g., 45.50, not just whole numbers)
+- The output is formatted to exactly 2 decimal places
+- You've tested it with at least two different inputs</p>
+<p><strong>[Encourage testing]</strong></p>
+<p>"Don't just run it once and call it done. Try a few different values. Try $100 with a 20% tip—does it give you $20.00 and $120.00? Try $47.82 with 15%—does it give you $7.17 and $54.99? Testing is part of building."</p>
+<hr>
+<h3 id="hints-and-reminders">Hints and Reminders</h3>
+<p><strong>[Provide scaffolding without giving away the solution]</strong></p>
+<ol>
+<li>
+<p><strong>Use <code>float()</code> to convert input:</strong> Remember, <code>input()</code> gives you a string. You need <code>float(input(...))</code> to get a number you can do math with.</p>
+</li>
+<li>
+<p><strong>Tip percentage is out of 100:</strong> If someone types <code>18</code>, they mean 18%, which is <code>0.18</code> as a decimal. So you'll need to divide by 100.</p>
+</li>
+<li>
+<p><strong>Use <code>round()</code> for display:</strong> To show exactly 2 decimal places, use <code>round(amount, 2)</code>.</p>
+</li>
+<li>
+<p><strong>Formula reminder:</strong>
+   - <code>tip_amount = bill * (tip_percent / 100)</code>
+   - <code>final_total = bill + tip_amount</code></p>
+</li>
+</ol>
+<hr>
+<h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
+<p><strong>[Warn about the traps]</strong></p>
+<ul>
+<li>
+<p><strong>Forgetting <code>float()</code> conversion:</strong> If your program prints weird results or crashes, check if you're converting input to a number.</p>
+</li>
+<li>
+<p><strong>Using integer division by accident:</strong> If you use <code>//</code> instead of <code>/</code>, your tip will be wrong.</p>
+</li>
+<li>
+<p><strong>Rounding too early:</strong> Don't round the tip amount before adding it to the bill. Do all the math first, then round for display.</p>
+</li>
+<li>
+<p><strong>Type mismatches:</strong> If you see an error like <code>can't multiply sequence by non-int</code>, it means you're trying to do math with a string.</p>
+</li>
+</ul>
+<hr>
+<h3 id="optional-extensions-if-you-finish-early">Optional Extensions (If You Finish Early)</h3>
+<p><strong>[For advanced learners or those who finish quickly]</strong></p>
+<ol>
+<li>
+<p><strong>Split the bill among friends:</strong> Ask how many people are splitting the bill, then calculate the per-person cost.</p>
+</li>
+<li>
+<p><strong>Add sales tax:</strong> Ask for a sales tax percentage and apply it <strong>before</strong> calculating the tip (because you tip on the pre-tax total, or post-tax—dealer's choice!).</p>
+</li>
+<li>
+<p><strong>Offer tip suggestions:</strong> Before asking for a tip percentage, display three options—15%, 18%, and 20%—with the dollar amounts for each.</p>
+</li>
+</ol>
+<hr>
+<h3 id="lab-time-get-started">Lab Time: Get Started!</h3>
+<p><strong>[Instructor cue: Set expectations]</strong></p>
+<p>"You've got about 25 to 35 minutes for this lab. I'll be walking around to help if you get stuck. Remember: <strong>errors are feedback</strong>. If you see a red error message, read it carefully. It's usually telling you exactly what's wrong and where."</p>
+<p><strong>[Encourage collaboration but not copy/paste]</strong></p>
+<p>"Feel free to talk to the person next to you if you're stuck, but make sure you understand every line of <strong>your own</strong> code. Copying someone else's solution doesn't teach you anything."</p>
+<p><strong>[Final encouragement]</strong></p>
+<p>"You've got this! You already know everything you need to build this program. Go ahead and get started."</p>
+<hr>
+<p><strong>[Instructor: Circulate during lab time]</strong></p>
+<h3 id="while-students-work-circulating-tips">While Students Work: Circulating Tips</h3>
+<p><strong>Look for these common issues:</strong></p>
+<ol>
+<li>
+<p><strong>Missing <code>float()</code> conversion:</strong>
+   - Symptom: Program prints <code>105</code> instead of <code>15</code>, or crashes with "can't multiply..."
+   - Fix: Show them how to wrap <code>input()</code> with <code>float()</code></p>
+</li>
+<li>
+<p><strong>Forgetting to divide tip_percent by 100:</strong>
+   - Symptom: Tip amount is 18 times the bill instead of 18% of the bill
+   - Fix: Point out that 18% means <code>18 / 100</code>, which is <code>0.18</code></p>
+</li>
+<li>
+<p><strong>Using <code>//</code> instead of <code>/</code>:</strong>
+   - Symptom: Tip amount is way too low or zero
+   - Fix: Explain the difference and ask which one they want</p>
+</li>
+<li>
+<p><strong>Rounding issues:</strong>
+   - Symptom: Output shows too many decimals or weird rounding
+   - Fix: Show correct usage of <code>round(value, 2)</code></p>
+</li>
+<li>
+<p><strong>Syntax errors (missing parentheses, quotes, etc.):</strong>
+   - Response: Ask them to read the error message out loud, then ask where the line is</p>
+</li>
+</ol>
+<p><strong>[Encourage debugging mindset]</strong></p>
+<p>When a student says "It's not working," ask:
+- "What did you expect to happen?"
+- "What actually happened?"
+- "What does the error message say?"
+- "Can you print out the intermediate values to see where it goes wrong?"</p>
+<hr>
+<h2 id="part-5-debrief-and-wrap-up-5-10-minutes">Part 5: Debrief and Wrap-Up (5-10 minutes)</h2>
+<p><strong>[Instructor cue: Call everyone back together]</strong></p>
+<p>"Alright everyone, let's come back together and talk through what we built."</p>
+<hr>
+<h3 id="solution-walkthrough">Solution Walkthrough</h3>
+<p><strong>[Show a complete working solution on screen]</strong></p>
+<p>"Here's one way to solve the Tip Calculator. Yours might look a little different, and that's fine—there are many correct ways to write this."</p>
+<pre><code class="language-python"># tip_calculator.py
+# Calculates tip and total for a restaurant bill
+
+print(&quot;=== Tip Calculator ===&quot;)
+
+# Get input from user
+bill = float(input(&quot;Enter the bill total: &quot;))
+tip_percent = float(input(&quot;Enter the tip percentage: &quot;))
+
+# Calculate tip and total
+tip_amount = bill * (tip_percent / 100)
+final_total = bill + tip_amount
+
+# Display results with 2 decimal places
+print(f&quot;Tip amount: ${round(tip_amount, 2)}&quot;)
+print(f&quot;Final total: ${round(final_total, 2)}&quot;)
+</code></pre>
+<p><strong>[Walk through key parts]</strong></p>
+<p>"Let's break this down:"</p>
+<ol>
+<li>
+<p><strong>Line 5-6:</strong> We use <code>float(input(...))</code> to get numeric input. This converts the string to a float so we can do math with it.</p>
+</li>
+<li>
+<p><strong>Line 9:</strong> We calculate the tip by multiplying the bill by the percentage divided by 100. So if the bill is $50 and the tip is 20%, we do <code>50 * (20 / 100)</code>, which gives us <code>50 * 0.2</code>, which is $10.</p>
+</li>
+<li>
+<p><strong>Line 10:</strong> We add the tip to the bill to get the final total.</p>
+</li>
+<li>
+<p><strong>Line 13-14:</strong> We use <code>round()</code> with 2 decimal places to make the output look like real money.</p>
+</li>
+</ol>
+<p><strong>[Test it together]</strong></p>
+<p>"Let's test this with an example. If the bill is $45.50 and we tip 18%, what should we get?"</p>
+<p><strong>[Calculate on screen or ask students]</strong></p>
+<ul>
+<li>Tip: $45.50 × 0.18 = $8.19</li>
+<li>Total: $45.50 + $8.19 = $53.69</li>
+</ul>
+<p>"Perfect. That matches what the program prints."</p>
+<hr>
+<h3 id="common-issues-and-fixes">Common Issues and Fixes</h3>
+<p><strong>[Share the most common mistakes you saw during lab time]</strong></p>
+<p>"As I was walking around, I saw a few common mistakes. Let's talk about them so everyone can learn."</p>
+<p><strong>1. Forgetting <code>float()</code> conversion</strong></p>
+<pre><code class="language-python"># Wrong:
+bill = input(&quot;Enter the bill total: &quot;)
+tip_amount = bill * 0.18  # ERROR! Can't multiply string by float
+</code></pre>
+<pre><code class="language-python"># Right:
+bill = float(input(&quot;Enter the bill total: &quot;))
+tip_amount = bill * 0.18  # Works!
+</code></pre>
+<p>"If you forget <code>float()</code>, Python treats the input as text, and you can't do math with text."</p>
+<hr>
+<p><strong>2. Not dividing tip percentage by 100</strong></p>
+<pre><code class="language-python"># Wrong:
+tip_amount = bill * tip_percent  # If tip_percent is 18, this multiplies bill by 18!
+</code></pre>
+<pre><code class="language-python"># Right:
+tip_amount = bill * (tip_percent / 100)  # Converts 18 to 0.18
+</code></pre>
+<p>"Remember: when someone says '18%', they mean 18 out of 100, which is 0.18 as a decimal."</p>
+<hr>
+<p><strong>3. Rounding too early</strong></p>
+<pre><code class="language-python"># Less precise:
+tip_amount = round(bill * (tip_percent / 100), 2)
+final_total = round(bill + tip_amount, 2)
+</code></pre>
+<pre><code class="language-python"># Better:
+tip_amount = bill * (tip_percent / 100)
+final_total = bill + tip_amount
+print(f&quot;Tip: ${round(tip_amount, 2)}&quot;)
+print(f&quot;Total: ${round(final_total, 2)}&quot;)
+</code></pre>
+<p>"Do all your math with full precision, then round only when you display. This avoids tiny errors."</p>
+<hr>
+<h3 id="student-solutions-share-out">Student Solutions Share-Out</h3>
+<p><strong>[Ask for volunteers]</strong></p>
+<p>"Who wants to share their solution? Did anyone do something different, or add one of the optional extensions?"</p>
+<p><strong>[Call on 1-2 students to share their screen or read their code]</strong></p>
+<p><strong>[Provide positive, specific feedback]</strong></p>
+<ul>
+<li>"I like how you added helpful comments at the top."</li>
+<li>"Nice job using descriptive variable names—<code>bill_total</code> is clearer than just <code>b</code>."</li>
+<li>"Cool! You added the split feature. How did that work?"</li>
+</ul>
+<hr>
+<h3 id="quick-check-exit-ticket">Quick Check / Exit Ticket</h3>
+<p><strong>[Speaking cue: Final knowledge check]</strong></p>
+<p>"Before we wrap up Day 1, one last quick check question:"</p>
+<p><strong>Question:</strong> "What does the modulo operator (<code>%</code>) return, and when is it useful?"</p>
+<p><strong>[Pause for answers]</strong></p>
+<p><strong>Expected answer:</strong>
+- It returns the <strong>remainder</strong> after division
+- Useful for checking if a number is even/odd, or for repeating patterns, or "every Nth item" logic</p>
+<p><strong>[If no one answers, give it yourself]</strong></p>
+<p>"<code>%</code> gives you the remainder. So <code>10 % 3</code> is <code>1</code> because 10 divided by 3 is 3 with a remainder of 1. You use it all the time to check if a number is even or odd—if <code>number % 2</code> equals zero, it's even."</p>
+<hr>
+<h3 id="day-1-wrap-up-and-celebration">Day 1 Wrap-Up and Celebration</h3>
+<p><strong>[Speaking cue: Celebratory and encouraging tone]</strong></p>
+<p>"Alright everyone, let's talk about what you just accomplished today—because it's actually a <strong>big deal</strong>."</p>
+<p><strong>[Recap the day]</strong></p>
+<p>"In <strong>four hours</strong>, you went from 'I don't know Python' to 'I can build a working calculator program.'"</p>
+<p><strong>[List the wins]</strong></p>
+<p>"You learned how to:
+- Set up and run Python scripts
+- Print output and read error messages
+- Create variables and work with different data types
+- Use seven different arithmetic operators
+- Handle user input and convert it to the right type
+- Format numbers for clean output
+- Build a complete, functioning program from scratch"</p>
+<p><strong>[Make it real]</strong></p>
+<p>"That Tip Calculator you just built? That's a <strong>real program</strong>. You could literally use it the next time you go out to eat. You could send it to a friend. You could put it in a portfolio. It's small, but it's <strong>real</strong>."</p>
+<hr>
+<h3 id="whats-next-preview-of-day-2-session-2">What's Next: Preview of Day 2 (Session 2)</h3>
+<p><strong>[Speaking cue: Build anticipation]</strong></p>
+<p>"Tomorrow, we're going to level up. We're going to talk about <strong>strings</strong>—how to slice them, search them, clean them up, and format them. Strings are everywhere in real programs: user input, file names, email addresses, URLs, messages. So we'll spend a whole session making you really comfortable with text."</p>
+<p><strong>[Quick preview of topics]</strong></p>
+<p>"Here's what's coming in Session 2:
+- <strong>Hour 5:</strong> String indexing and slicing—how to grab parts of a string
+- <strong>Hour 6:</strong> String methods—cleaning, searching, replacing
+- <strong>Hour 7:</strong> More input/output patterns and type conversions
+- <strong>Hour 8:</strong> Checkpoint 1—a mini-assessment so you can test your fundamentals and see how far you've come"</p>
+<p><strong>[Set expectations]</strong></p>
+<p>"So make sure you save your work from today. If you haven't already, click <strong>Save All</strong> in your editor and make sure your files are in the right folder. When you come back tomorrow, we'll hit the ground running."</p>
+<hr>
+<h3 id="closing-encouragement">Closing Encouragement</h3>
+<p><strong>[Speaking cue: Warm, genuine, motivating]</strong></p>
+<p>"I just want to say: if you've never programmed before, today might have felt challenging. And that's <strong>normal</strong>. Learning to code is like learning a new language—it takes time, it takes practice, and it takes patience with yourself."</p>
+<p><strong>[Acknowledge the effort]</strong></p>
+<p>"But you showed up. You typed the code. You ran into errors and you fixed them. You built something. That's what matters."</p>
+<p><strong>[Set the tone for the rest of the course]</strong></p>
+<p>"Over the next 11 sessions, we're going to keep building on what you learned today. Each day, you'll add a new skill. And by the end of this course, you'll look back at today and think, 'Wow, I've come a long way.'"</p>
+<p><strong>[Final practical reminders]</strong></p>
+<p>"Before you leave:
+- Make sure your files are saved in the lab workspace
+- If you had any login issues or technical problems, let me know before next session
+- If you want extra practice tonight, try building a different kind of calculator—maybe one that converts Fahrenheit to Celsius, or calculates the area of a rectangle"</p>
+<p><strong>[Dismiss with energy]</strong></p>
+<p>"Great work today, everyone. I'll see you tomorrow for Session 2. Have a great rest of your day!"</p>
+<hr>
+<h2 id="appendix-troubleshooting-reference">Appendix: Troubleshooting Reference</h2>
+<h3 id="error-messages-and-fixes">Error Messages and Fixes</h3>
+<p><strong>Error:</strong> <code>TypeError: can't multiply sequence by non-int of type 'float'</code></p>
+<p><strong>Cause:</strong> Trying to do math with a string (usually forgot to convert <code>input()</code>)</p>
+<p><strong>Fix:</strong> </p>
+<pre><code class="language-python"># Wrong:
+bill = input(&quot;Enter bill: &quot;)
+tip = bill * 0.18
+
+# Right:
+bill = float(input(&quot;Enter bill: &quot;))
+tip = bill * 0.18
+</code></pre>
+<hr>
+<p><strong>Error:</strong> <code>ValueError: could not convert string to float: 'hello'</code></p>
+<p><strong>Cause:</strong> User typed non-numeric input when program expected a number</p>
+<p><strong>Fix:</strong> Add input validation (covered in Session 8) or give clearer instructions</p>
+<hr>
+<p><strong>Error:</strong> <code>ZeroDivisionError: division by zero</code></p>
+<p><strong>Cause:</strong> Dividing by zero</p>
+<p><strong>Fix:</strong> Check the value before dividing, or give a better error message</p>
+<hr>
+<p><strong>Issue:</strong> Output shows too many decimal places (e.g., <code>8.190000000001</code>)</p>
+<p><strong>Cause:</strong> Float precision quirks</p>
+<p><strong>Fix:</strong> Use <code>round(value, 2)</code> for display</p>
+<hr>
+<p><strong>Issue:</strong> Program prints <code>'105'</code> instead of <code>15</code> when adding two inputs</p>
+<p><strong>Cause:</strong> Forgot to convert <code>input()</code> to <code>float()</code> or <code>int()</code></p>
+<p><strong>Fix:</strong> Wrap <code>input()</code> with <code>float()</code></p>
+<hr>
+<h2 id="additional-practice-problems-optional-homework">Additional Practice Problems (Optional Homework)</h2>
+<h3 id="problem-1-temperature-converter">Problem 1: Temperature Converter</h3>
+<p>Write a program that converts Fahrenheit to Celsius using the formula:</p>
+<pre><code>C = (F - 32) × 5 / 9
+</code></pre>
+<h3 id="problem-2-area-calculator">Problem 2: Area Calculator</h3>
+<p>Calculate the area of a rectangle given length and width. Display the result with 2 decimal places.</p>
+<h3 id="problem-3-split-the-bill">Problem 3: Split the Bill</h3>
+<p>Extend the tip calculator to split the total among a group of people. Ask how many people, then show the per-person cost.</p>
+<h3 id="problem-4-compound-interest">Problem 4: Compound Interest</h3>
+<p>Calculate compound interest given principal, rate (as a percentage), and years. Formula:</p>
+<pre><code>A = P × (1 + r/100) ** t
+</code></pre>
+<hr>
+<h2 id="instructor-notes">Instructor Notes</h2>
+<h3 id="timing-adjustments">Timing Adjustments</h3>
+<ul>
+<li>If running behind: Skip the optional extensions discussion, shorten the demo</li>
+<li>If running ahead: Do a second demo showing one of the extensions, or do more interactive prediction questions</li>
+<li>The lab is the most important part—protect that time</li>
+</ul>
+<h3 id="common-question-when-do-i-use-vs">Common Question: "When do I use <code>/</code> vs <code>//</code>?"</h3>
+<p><strong>Answer:</strong> Use <code>/</code> (regular division) for almost everything—money, measurements, averages. Use <code>//</code> (floor division) when you specifically need a whole number and you want to ignore the remainder—like "how many full boxes do I need?" or "how many complete weeks?"</p>
+<h3 id="common-question-why-doesnt-python-just-use-and">Common Question: "Why doesn't Python just use × and ÷?"</h3>
+<p><strong>Answer:</strong> Because those symbols aren't on a standard keyboard! Python uses symbols that every keyboard has: <code>*</code> for multiply, <code>/</code> for divide. It's the same reason we use <code>==</code> for "equals" instead of a single <code>=</code> (which is already taken for assignment).</p>
+<h3 id="common-question-do-i-need-to-memorize-pemdas">Common Question: "Do I need to memorize PEMDAS?"</h3>
+<p><strong>Answer:</strong> Not really. Just remember: when in doubt, use parentheses. They make your code clearer and guarantee the order you want. Python will follow standard math order, but explicit is better than implicit.</p>
+<hr>
+<h2 id="key-takeaways-summary-for-students">Key Takeaways (Summary for Students)</h2>
+<ol>
+<li><strong>Seven arithmetic operators:</strong> <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>//</code>, <code>%</code>, <code>**</code></li>
+<li><strong>Division always gives a float:</strong> <code>/</code> → float, <code>//</code> → integer</li>
+<li><strong>Modulo gives the remainder:</strong> Useful for even/odd checks and repeating patterns</li>
+<li><strong>Use parentheses to control order:</strong> They make your intent clear</li>
+<li><strong>Always convert <code>input()</code> before math:</strong> Use <code>float()</code> or <code>int()</code></li>
+<li><strong>Round for display, not storage:</strong> Do math with full precision, round only at the end</li>
+</ol>
+<hr>
+<p><strong>End of Day 1, Hour 4</strong></p>
+<hr>
+<p><strong>Total Word Count: ~5,200 words</strong></p>
+<p>This script is designed to be read nearly verbatim by an instructor, with natural pauses for interaction, demonstrations, and student work time. The tone is conversational and encouraging, appropriate for beginners with no prior programming experience.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#python-programming-basics-lecture-script" class="depth-2">Python Programming (Basics) – Lecture Script</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#hour-overview-and-timing" class="depth-2">Hour Overview and Timing</a></li>
+<li><a href="#part-1-recap-and-context-5-minutes" class="depth-2">Part 1: Recap and Context (5 minutes)</a></li>
+<li><a href="#opening-welcome-back" class="depth-3">Opening (Welcome Back)</a></li>
+<li><a href="#quick-recap-question-interactive" class="depth-3">Quick Recap Question (Interactive)</a></li>
+<li><a href="#part-2-instruction-numbers-and-operators-10-15-minutes" class="depth-2">Part 2: Instruction – Numbers and Operators (10-15 minutes)</a></li>
+<li><a href="#the-seven-arithmetic-operators" class="depth-3">The Seven Arithmetic Operators</a></li>
+<li><a href="#1-addition" class="depth-4">1. Addition: +</a></li>
+<li><a href="#2-subtraction" class="depth-4">2. Subtraction: -</a></li>
+<li><a href="#3-multiplication" class="depth-4">3. Multiplication: *</a></li>
+<li><a href="#4-division" class="depth-4">4. Division: /</a></li>
+<li><a href="#5-integer-division-floor-division" class="depth-4">5. Integer Division (Floor Division): //</a></li>
+<li><a href="#6-modulo" class="depth-4">6. Modulo: %</a></li>
+<li><a href="#7-exponentiation" class="depth-4">7. Exponentiation: **</a></li>
+<li><a href="#order-of-operations-pemdas" class="depth-3">Order of Operations (PEMDAS)</a></li>
+<li><a href="#integer-results-vs-float-results" class="depth-3">Integer Results vs. Float Results</a></li>
+<li><a href="#using-round-for-display-not-storage" class="depth-3">Using round() for Display (Not Storage)</a></li>
+<li><a href="#part-3-live-demo-mini-calculator-5-10-minutes" class="depth-2">Part 3: Live Demo – Mini Calculator (5-10 minutes)</a></li>
+<li><a href="#demo-overview" class="depth-3">Demo Overview</a></li>
+<li><a href="#step-1-basic-arithmetic" class="depth-3">Step 1: Basic Arithmetic</a></li>
+<li><a href="#step-2-division-comparison" class="depth-3">Step 2: Division Comparison</a></li>
+<li><a href="#step-3-evenodd-check-with-modulo" class="depth-3">Step 3: Even/Odd Check with Modulo</a></li>
+<li><a href="#step-4-getting-user-input-the-gotcha" class="depth-3">Step 4: Getting User Input (The Gotcha)</a></li>
+<li><a href="#step-5-formatting-the-output" class="depth-3">Step 5: Formatting the Output</a></li>
+<li><a href="#part-4-hands-on-lab-tip-calculator-25-35-minutes" class="depth-2">Part 4: Hands-On Lab – Tip Calculator (25-35 minutes)</a></li>
+<li><a href="#lab-overview" class="depth-3">Lab Overview</a></li>
+<li><a href="#lab-instructions" class="depth-3">Lab Instructions</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#hints-and-reminders" class="depth-3">Hints and Reminders</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-3">Common Pitfalls to Watch For</a></li>
+<li><a href="#optional-extensions-if-you-finish-early" class="depth-3">Optional Extensions (If You Finish Early)</a></li>
+<li><a href="#lab-time-get-started" class="depth-3">Lab Time: Get Started!</a></li>
+<li><a href="#while-students-work-circulating-tips" class="depth-3">While Students Work: Circulating Tips</a></li>
+<li><a href="#part-5-debrief-and-wrap-up-5-10-minutes" class="depth-2">Part 5: Debrief and Wrap-Up (5-10 minutes)</a></li>
+<li><a href="#solution-walkthrough" class="depth-3">Solution Walkthrough</a></li>
+<li><a href="#common-issues-and-fixes" class="depth-3">Common Issues and Fixes</a></li>
+<li><a href="#student-solutions-share-out" class="depth-3">Student Solutions Share-Out</a></li>
+<li><a href="#quick-check-exit-ticket" class="depth-3">Quick Check / Exit Ticket</a></li>
+<li><a href="#day-1-wrap-up-and-celebration" class="depth-3">Day 1 Wrap-Up and Celebration</a></li>
+<li><a href="#whats-next-preview-of-day-2-session-2" class="depth-3">What&#x27;s Next: Preview of Day 2 (Session 2)</a></li>
+<li><a href="#closing-encouragement" class="depth-3">Closing Encouragement</a></li>
+<li><a href="#appendix-troubleshooting-reference" class="depth-2">Appendix: Troubleshooting Reference</a></li>
+<li><a href="#error-messages-and-fixes" class="depth-3">Error Messages and Fixes</a></li>
+<li><a href="#additional-practice-problems-optional-homework" class="depth-2">Additional Practice Problems (Optional Homework)</a></li>
+<li><a href="#problem-1-temperature-converter" class="depth-3">Problem 1: Temperature Converter</a></li>
+<li><a href="#problem-2-area-calculator" class="depth-3">Problem 2: Area Calculator</a></li>
+<li><a href="#problem-3-split-the-bill" class="depth-3">Problem 3: Split the Bill</a></li>
+<li><a href="#problem-4-compound-interest" class="depth-3">Problem 4: Compound Interest</a></li>
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-adjustments" class="depth-3">Timing Adjustments</a></li>
+<li><a href="#common-question-when-do-i-use-vs" class="depth-3">Common Question: &quot;When do I use / vs //?&quot;</a></li>
+<li><a href="#common-question-why-doesnt-python-just-use-and" class="depth-3">Common Question: &quot;Why doesn&#x27;t Python just use × and ÷?&quot;</a></li>
+<li><a href="#common-question-do-i-need-to-memorize-pemdas" class="depth-3">Common Question: &quot;Do I need to memorize PEMDAS?&quot;</a></li>
+<li><a href="#key-takeaways-summary-for-students" class="depth-2">Key Takeaways (Summary for Students)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day1_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day1_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

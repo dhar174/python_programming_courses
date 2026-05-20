@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day5_Hour3_Advanced.md">
+
+    <link rel="prev" href="Day5_Hour2_Advanced.html">
+    <link rel="next" href="Day5_Hour4_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="5" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour4_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour3_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-script-purpose-and-scope">Instructor script purpose and scope</h2>
+<p>This hour is the practical bridge between “a form exists” and “a form is trustworthy.”
+Students already built layout structure in the previous hour. In this hour, they build form behavior that protects data quality and helps users recover quickly from mistakes.</p>
+<p>Runbook source of truth for this hour: Hour 19 in <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>.</p>
+<p>Core outcomes for this hour are explicit and non-negotiable:</p>
+<ul>
+<li>Validate input before saving.</li>
+<li>Display validation errors clearly.</li>
+</ul>
+<p>Required talk points for this hour:</p>
+<ul>
+<li>Inline validation vs messagebox.</li>
+<li>Actionable error messages.</li>
+<li>Disable/enable buttons when needed.</li>
+</ul>
+<p>Required live demo elements for this hour:</p>
+<ul>
+<li>Highlight invalid field + show message.</li>
+<li>Show trimming/normalizing input before validation.</li>
+</ul>
+<p>Required lab outcomes for this hour:</p>
+<ul>
+<li>Add required-field checks (non-empty).</li>
+<li>Show validation feedback without crashing.</li>
+<li>Ensure service-layer errors are surfaced cleanly.</li>
+</ul>
+<p>Required completion criteria for this hour:</p>
+<ul>
+<li>Invalid entries show clear feedback.</li>
+<li>Valid entries save successfully.</li>
+</ul>
+<p>Required pitfalls to teach explicitly:</p>
+<ul>
+<li>Silent failure (button does nothing).</li>
+<li>Stack trace shown to user.</li>
+</ul>
+<p>Required optional extension:</p>
+<ul>
+<li>Add a Clear form button.</li>
+</ul>
+<p>Required quick-check concept:</p>
+<ul>
+<li>Good validation message vs bad validation message.</li>
+</ul>
+<p>Anti-drift guardrail for instructor delivery:</p>
+<ul>
+<li>Do not re-teach Hour 18 layout mechanics (grid weight tuning, spacing deep dive, frame choreography).</li>
+<li>Do not drift into Hour 20 list/table selection patterns (Listbox, Treeview, selection events, detail pane sync).</li>
+<li>Keep this hour centered on form submission quality, validation feedback patterns, and a clean UI/service boundary.</li>
+</ul>
+<h2 id="timing-plan-must-total-exactly-60-minutes">Timing plan (must total exactly 60 minutes)</h2>
+<p>Use this exact pacing unless class conditions require very minor adjustment:</p>
+<ul>
+<li>Recap/transition: 4 minutes</li>
+<li>Validation principles &amp; feedback quality: 9 minutes</li>
+<li>UI/service responsibility design: 8 minutes</li>
+<li>Live demo: 8 minutes</li>
+<li>Hands-on lab: 26 minutes</li>
+<li>Debrief/quick check/exit: 5 minutes</li>
+</ul>
+<p>Runbook talk-point window alignment (10-20 minutes):</p>
+<ul>
+<li>Required talk points are delivered across Segment 2 and the opening of Segment 3 (minute 4 through minute 21 total = 17 minutes).</li>
+<li>This keeps inline-vs-messagebox, actionable messaging, and disable/enable behavior inside the required 10-20 minute instruction window.</li>
+</ul>
+<p>Arithmetic shown explicitly:</p>
+<p><strong>4 + 9 + 8 + 8 + 26 + 5 = 60</strong></p>
+<h2 id="learning-outcomes-student-facing">Learning outcomes (student-facing)</h2>
+<p>By the end of this hour, students can:</p>
+<ol>
+<li>Explain why validation must happen before save operations.</li>
+<li>Normalize input values before applying validation rules.</li>
+<li>Implement required-field checks for non-empty values.</li>
+<li>Show clear, actionable inline validation feedback near fields.</li>
+<li>Move focus to the first invalid field so correction starts immediately.</li>
+<li>Disable and re-enable the Save button at appropriate points in the save flow.</li>
+<li>Surface service-layer failures to users without exposing technical stack traces.</li>
+<li>Verify both failure path and success path with explicit pass/fail checks.</li>
+</ol>
+<h2 id="instructor-setup-and-delivery-posture">Instructor setup and delivery posture</h2>
+<p>Before class, prepare a starter GUI with three fields and one Save button:</p>
+<ul>
+<li>Name</li>
+<li>Email</li>
+<li>Role</li>
+<li>Save</li>
+</ul>
+<p>Students should already be able to run a Tkinter app.
+You are not teaching raw widget layout from scratch here.
+You are teaching form behavior quality and architecture boundaries.</p>
+<p>Delivery posture for this hour:</p>
+<ul>
+<li>Keep language practical and concrete.</li>
+<li>Repeat that validation is both technical and communicative.</li>
+<li>Treat every bad input path as an expected user journey, not as an edge case.</li>
+<li>Model calm language. The user is not “wrong”; the form needs to guide.</li>
+</ul>
+<p>Short framing line to open the hour:</p>
+<p>“Last hour we made the form look organized. This hour we make it reliable, kind, and hard to misuse.”</p>
+<h2 id="segment-1-4-minutes-recap-and-transition">Segment 1 (4 minutes): Recap and transition</h2>
+<p>Use this speaking flow nearly verbatim:</p>
+<ul>
+<li>“Quick recap: we have form controls on screen and a Save interaction.”</li>
+<li>“Today we add behavior quality: when input is invalid, the app should guide, not punish.”</li>
+<li>“A strong form does three things every time: normalize, validate, then communicate clearly.”</li>
+<li>“Our focus is not on visual polish only; our focus is on trust and recoverability.”</li>
+</ul>
+<p>Ask two fast warm-up questions:</p>
+<ol>
+<li>“If Save does nothing and gives no message, what does the user think happened?”</li>
+<li>“If a traceback appears in front of a user, what confidence impact does that create?”</li>
+</ol>
+<p>Expected responses:</p>
+<ul>
+<li>User confusion, repeated clicks, possible duplicate submissions.</li>
+<li>Reduced trust, anxiety, and no clear next step.</li>
+</ul>
+<p>Transition line into next segment:</p>
+<p>“Let’s define what good validation feedback sounds like and where it should appear.”</p>
+<h2 id="segment-2-9-minutes-validation-principles-and-feedback-quality">Segment 2 (9 minutes): Validation principles and feedback quality</h2>
+<h3 id="21-inline-validation-vs-messagebox-required-talk-point">2.1 Inline validation vs messagebox (required talk point)</h3>
+<p>Teach this contrast clearly:</p>
+<p>Inline validation strengths:</p>
+<ul>
+<li>Keeps user attention in context.</li>
+<li>Connects each error to the exact field.</li>
+<li>Reduces interruption and cognitive reset.</li>
+<li>Supports correction flow without modal popups.</li>
+</ul>
+<p>Messagebox strengths:</p>
+<ul>
+<li>Useful for major state changes (success confirmations in some apps, destructive actions, severe failures).</li>
+<li>Useful when one global action failed for a reason not tied to a single field.</li>
+<li>Useful when you must force acknowledgement for safety reasons.</li>
+</ul>
+<p>Instructor emphasis:</p>
+<p>“For expected input mistakes, inline is usually better. For major cross-form or system-level issues, messagebox may be appropriate.”</p>
+<p>Practical rule for students:</p>
+<ul>
+<li>Field-level problems -&gt; inline field message + focus behavior.</li>
+<li>App-level unexpected failure -&gt; concise global status or controlled popup, never raw traceback.</li>
+</ul>
+<h3 id="22-actionable-error-messages-required-talk-point">2.2 Actionable error messages (required talk point)</h3>
+<p>Define “actionable”:</p>
+<p>A message is actionable when it tells the user exactly what to do next.</p>
+<p>Bad examples:</p>
+<ul>
+<li>“Invalid input.”</li>
+<li>“Error.”</li>
+<li>“Email wrong.”</li>
+</ul>
+<p>Good examples:</p>
+<ul>
+<li>“Email is required.”</li>
+<li>“Enter an email like name@example.com.”</li>
+<li>“Role is required before saving.”</li>
+</ul>
+<p>Even better examples include context and expected format:</p>
+<ul>
+<li>“Name is required. Use at least 2 letters.”</li>
+<li>“Email must include @ and a domain, for example name@example.com.”</li>
+</ul>
+<p>Teach message design checklist:</p>
+<ul>
+<li>Specific field reference.</li>
+<li>Clear correction action.</li>
+<li>Neutral tone.</li>
+<li>No blame.</li>
+<li>No developer jargon.</li>
+</ul>
+<h3 id="23-disableenable-buttons-when-needed-required-talk-point">2.3 Disable/enable buttons when needed (required talk point)</h3>
+<p>State this as behavior, not decoration:</p>
+<ul>
+<li>Save button should disable when save process begins.</li>
+<li>Save button should re-enable when processing ends, including failure path.</li>
+<li>This prevents accidental duplicate actions and creates clear interaction state.</li>
+</ul>
+<p>Common student mistake:</p>
+<ul>
+<li>Disabling Save but forgetting to re-enable on exception path.</li>
+</ul>
+<p>Instructor line:</p>
+<p>“If you disable a control, you own re-enabling it on every path. <code>finally</code> is your safety net.”</p>
+<h3 id="24-feedback-stack-what-user-should-see">2.4 Feedback stack: what user should see</h3>
+<p>When a user clicks Save with invalid input, they should see all of this:</p>
+<ul>
+<li>Clear summary feedback near Save or status area.</li>
+<li>Inline message under each invalid field.</li>
+<li>Focus moved to first invalid field.</li>
+<li>No crash, no console-only message as primary user signal.</li>
+</ul>
+<p>Rubber Duck critique integration (required behavior):</p>
+<ul>
+<li>“Highlight invalid field” must be explicit and testable:</li>
+<li>Move focus to first invalid field.</li>
+<li>Show visible indication (focus + inline error text).</li>
+</ul>
+<h3 id="25-micro-practice-prompt-1-minute-inside-this-segment">2.5 Micro-practice prompt (1 minute inside this segment)</h3>
+<p>Ask class:</p>
+<p>“Which is better and why?”</p>
+<p>A: “Invalid email.”
+B: “Enter an email like name@example.com.”</p>
+<p>Expected answer:</p>
+<p>B is better because it names the expected format and gives an example.</p>
+<p>Transition line:</p>
+<p>“Now let’s separate responsibilities so your code stays maintainable.”</p>
+<h2 id="segment-3-8-minutes-uiservice-responsibility-design">Segment 3 (8 minutes): UI/service responsibility design</h2>
+<h3 id="31-why-this-boundary-matters">3.1 Why this boundary matters</h3>
+<p>If validation logic is scattered directly across button handlers and widget callbacks, code becomes fragile:</p>
+<ul>
+<li>Rules duplicated in multiple places.</li>
+<li>Inconsistent behavior across screens.</li>
+<li>Harder testing.</li>
+<li>Harder migration to other interfaces later.</li>
+</ul>
+<p>Architecture target for this hour:</p>
+<ul>
+<li>UI layer handles interaction and presentation.</li>
+<li>Service layer handles normalization + validation + persistence decision.</li>
+<li>UI displays returned validation errors and catches service exceptions for user-friendly output.</li>
+</ul>
+<h3 id="32-recommended-service-contract">3.2 Recommended service contract</h3>
+<p>Teach one clear contract:</p>
+<ul>
+<li>Input: raw strings from UI.</li>
+<li>Service normalizes values (trim, normalize case where appropriate).</li>
+<li>Service validates required fields and format rules.</li>
+<li>If validation fails: returns structured error map.</li>
+<li>If validation passes: saves and returns success payload.</li>
+<li>If unexpected infra/system issue: raises service exception.</li>
+</ul>
+<p>Structured error map example:</p>
+<pre><code class="language-python">{
+    &quot;name&quot;: &quot;Name is required.&quot;,
+    &quot;email&quot;: &quot;Enter an email like name@example.com.&quot;
+}
+</code></pre>
+<p>UI then:</p>
+<ul>
+<li>Clears old errors.</li>
+<li>Applies new field errors.</li>
+<li>Moves focus to first invalid field.</li>
+<li>Sets summary status line.</li>
+<li>Keeps app responsive.</li>
+</ul>
+<h3 id="33-responsibility-matrix-to-speak-through">3.3 Responsibility matrix to speak through</h3>
+<ul>
+<li>UI owns:</li>
+<li>Reading field values.</li>
+<li>Clearing old UI error state.</li>
+<li>Disabling/enabling Save control.</li>
+<li>Rendering inline errors and summary messages.</li>
+<li>Focus management.</li>
+<li>Service owns:</li>
+<li>Input normalization.</li>
+<li>Validation rule decisions.</li>
+<li>Persistence call.</li>
+<li>Raising controlled service errors for unexpected conditions.</li>
+</ul>
+<h3 id="34-guardrail-against-drift">3.4 Guardrail against drift</h3>
+<p>Say this explicitly:</p>
+<p>“We are not doing list/table selection in this hour. That belongs to the next hour.
+We are also not redoing layout fundamentals from the previous hour.
+This hour is about form submission quality and clear user feedback.”</p>
+<p>Transition line:</p>
+<p>“Let’s implement the complete pattern end to end.”</p>
+<h2 id="segment-4-8-minutes-live-demo-required-elements-included">Segment 4 (8 minutes): Live demo (required elements included)</h2>
+<p>Demo objective:</p>
+<p>Build a form flow that validates before save, surfaces errors clearly, highlights first invalid field through focus + inline message, normalizes input before validation, and requires Save button disable/enable behavior.</p>
+<h3 id="41-demo-code-runnable">4.1 Demo code (runnable)</h3>
+<pre><code class="language-python">from __future__ import annotations
+
+from dataclasses import dataclass
+import tkinter as tk
+from tkinter import ttk
+
+
+class ServiceSaveError(Exception):
+    pass
+
+
+@dataclass(slots=True)
+class Contact:
+    name: str
+    email: str
+    role: str
+
+
+@dataclass(slots=True)
+class ValidationResult:
+    ok: bool
+    errors: dict[str, str]
+    record: Contact | None = None
+
+
+class ContactService:
+    def __init__(self) -&gt; None:
+        self._records: list[Contact] = []
+        self._simulate_failure = False
+
+    def set_failure_mode(self, enabled: bool) -&gt; None:
+        self._simulate_failure = enabled
+
+    def validate_and_save(self, name: str, email: str, role: str) -&gt; ValidationResult:
+        clean_name = &quot; &quot;.join(name.strip().split())
+        clean_email = email.strip().lower()
+        clean_role = &quot; &quot;.join(role.strip().split())
+
+        errors: dict[str, str] = {}
+
+        if not clean_name:
+            errors[&quot;name&quot;] = &quot;Name is required.&quot;
+        elif len(clean_name) &lt; 2:
+            errors[&quot;name&quot;] = &quot;Name must contain at least 2 letters.&quot;
+
+        if not clean_email:
+            errors[&quot;email&quot;] = &quot;Email is required.&quot;
+        elif &quot;@&quot; not in clean_email or &quot;.&quot; not in clean_email.split(&quot;@&quot;)[-1]:
+            errors[&quot;email&quot;] = &quot;Enter an email like name@example.com.&quot;
+
+        if not clean_role:
+            errors[&quot;role&quot;] = &quot;Role is required.&quot;
+
+        if errors:
+            return ValidationResult(ok=False, errors=errors)
+
+        if self._simulate_failure:
+            raise ServiceSaveError(&quot;Storage service unavailable&quot;)
+
+        record = Contact(name=clean_name, email=clean_email, role=clean_role)
+        self._records.append(record)
+        return ValidationResult(ok=True, errors={}, record=record)
+
+    def count(self) -&gt; int:
+        return len(self._records)
+
+
+class ContactFormApp:
+    def __init__(self, root: tk.Tk, service: ContactService) -&gt; None:
+        self.root = root
+        self.service = service
+
+        self.root.title(&quot;Hour 19 Validation Demo&quot;)
+        self.root.geometry(&quot;620x390&quot;)
+
+        self.name_var = tk.StringVar()
+        self.email_var = tk.StringVar()
+        self.role_var = tk.StringVar()
+        self.status_var = tk.StringVar(value=&quot;Fill the form, then select Save.&quot;)
+        self.failure_var = tk.BooleanVar(value=False)
+
+        self.error_vars: dict[str, tk.StringVar] = {
+            &quot;name&quot;: tk.StringVar(value=&quot;&quot;),
+            &quot;email&quot;: tk.StringVar(value=&quot;&quot;),
+            &quot;role&quot;: tk.StringVar(value=&quot;&quot;),
+        }
+
+        self.entries: dict[str, ttk.Entry] = {}
+
+        self._build_ui()
+        self._wire_live_validation_state()
+
+    def _build_ui(self) -&gt; None:
+        style = ttk.Style()
+        style.configure(&quot;Error.TLabel&quot;, foreground=&quot;#b00020&quot;)
+        style.configure(&quot;Status.TLabel&quot;, foreground=&quot;#1a237e&quot;)
+
+        container = ttk.Frame(self.root, padding=16)
+        container.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
+        container.columnconfigure(1, weight=1)
+
+        ttk.Label(container, text=&quot;Contact Form&quot;).grid(row=0, column=0, columnspan=3, sticky=&quot;w&quot;)
+
+        self._add_field(container, row=1, label=&quot;Name&quot;, field_key=&quot;name&quot;, variable=self.name_var)
+        self._add_field(container, row=3, label=&quot;Email&quot;, field_key=&quot;email&quot;, variable=self.email_var)
+        self._add_field(container, row=5, label=&quot;Role&quot;, field_key=&quot;role&quot;, variable=self.role_var)
+
+        self.save_btn = ttk.Button(container, text=&quot;Save&quot;, command=self.on_save)
+        self.save_btn.grid(row=7, column=0, columnspan=2, sticky=&quot;ew&quot;, pady=(10, 6))
+
+        self.clear_btn = ttk.Button(container, text=&quot;Clear&quot;, command=self.on_clear)
+        self.clear_btn.grid(row=7, column=2, sticky=&quot;ew&quot;, pady=(10, 6), padx=(8, 0))
+
+        ttk.Checkbutton(
+            container,
+            text=&quot;Simulate service failure&quot;,
+            variable=self.failure_var,
+            command=self._on_toggle_failure_mode,
+        ).grid(row=8, column=0, columnspan=3, sticky=&quot;w&quot;, pady=(4, 6))
+
+        ttk.Label(
+            container,
+            textvariable=self.status_var,
+            style=&quot;Status.TLabel&quot;,
+            wraplength=580,
+        ).grid(row=9, column=0, columnspan=3, sticky=&quot;w&quot;)
+
+    def _add_field(
+        self,
+        parent: ttk.Frame,
+        row: int,
+        label: str,
+        field_key: str,
+        variable: tk.StringVar,
+    ) -&gt; None:
+        ttk.Label(parent, text=label).grid(row=row, column=0, sticky=&quot;w&quot;)
+        entry = ttk.Entry(parent, textvariable=variable)
+        entry.grid(row=row, column=1, columnspan=2, sticky=&quot;ew&quot;, pady=(0, 2))
+        self.entries[field_key] = entry
+
+        ttk.Label(
+            parent,
+            textvariable=self.error_vars[field_key],
+            style=&quot;Error.TLabel&quot;,
+            wraplength=420,
+        ).grid(row=row + 1, column=1, columnspan=2, sticky=&quot;w&quot;, pady=(0, 8))
+
+    def _wire_live_validation_state(self) -&gt; None:
+        for var in (self.name_var, self.email_var, self.role_var):
+            var.trace_add(&quot;write&quot;, lambda *args: self._update_save_enabled_state())
+        self._update_save_enabled_state()
+
+    def _update_save_enabled_state(self) -&gt; None:
+        has_any_text = any(
+            value.strip() for value in (self.name_var.get(), self.email_var.get(), self.role_var.get())
+        )
+        if has_any_text:
+            self.save_btn.state([&quot;!disabled&quot;])
+        else:
+            self.save_btn.state([&quot;disabled&quot;])
+
+    def _on_toggle_failure_mode(self) -&gt; None:
+        self.service.set_failure_mode(self.failure_var.get())
+
+    def _clear_inline_errors(self) -&gt; None:
+        for var in self.error_vars.values():
+            var.set(&quot;&quot;)
+
+    def _focus_first_invalid(self, errors: dict[str, str]) -&gt; None:
+        if not errors:
+            return
+        order = [&quot;name&quot;, &quot;email&quot;, &quot;role&quot;]
+        for key in order:
+            if key in errors:
+                self.entries[key].focus_set()
+                return
+
+    def on_save(self) -&gt; None:
+        self._clear_inline_errors()
+        self.status_var.set(&quot;Saving...&quot;)
+        self.save_btn.state([&quot;disabled&quot;])
+
+        try:
+            result = self.service.validate_and_save(
+                name=self.name_var.get(),
+                email=self.email_var.get(),
+                role=self.role_var.get(),
+            )
+        except ServiceSaveError:
+            self.status_var.set(
+                &quot;We could not save right now due to a service issue. Please try again in a moment.&quot;
+            )
+            return
+        finally:
+            self._update_save_enabled_state()
+
+        if not result.ok:
+            for field, message in result.errors.items():
+                self.error_vars[field].set(message)
+            self._focus_first_invalid(result.errors)
+            self.status_var.set(&quot;Please fix the highlighted fields, then select Save again.&quot;)
+            return
+
+        assert result.record is not None
+        self.status_var.set(
+            f&quot;Saved {result.record.name}. Total saved records in this run: {self.service.count()}.&quot;
+        )
+        self.on_clear(move_focus=False)
+        self.entries[&quot;name&quot;].focus_set()
+
+    def on_clear(self, move_focus: bool = True) -&gt; None:
+        self.name_var.set(&quot;&quot;)
+        self.email_var.set(&quot;&quot;)
+        self.role_var.set(&quot;&quot;)
+        self._clear_inline_errors()
+        self.status_var.set(&quot;Form cleared. Enter values and select Save.&quot;)
+        self._update_save_enabled_state()
+        if move_focus:
+            self.entries[&quot;name&quot;].focus_set()
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    service = ContactService()
+    ContactFormApp(root, service)
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="42-live-demo-narration-script-minute-by-minute">4.2 Live demo narration script (minute by minute)</h3>
+<p>Minute 0-1:</p>
+<ul>
+<li>“I start with a service method called <code>validate_and_save</code>.”</li>
+<li>“Notice normalization first: trim whitespace and normalize email case.”</li>
+<li>“Validation decisions live here, not in the widget layout code.”</li>
+</ul>
+<p>Minute 1-2:</p>
+<ul>
+<li>“Required field checks are explicit: name, email, role.”</li>
+<li>“Errors come back as a dictionary keyed by field.”</li>
+<li>“The UI can map each field to a visible inline label.”</li>
+</ul>
+<p>Minute 2-3:</p>
+<ul>
+<li>“Now in <code>on_save</code>, I clear old errors first.”</li>
+<li>“Then I disable Save immediately.”</li>
+<li>“This is required behavior, not optional polish.”</li>
+</ul>
+<p>Minute 3-4:</p>
+<ul>
+<li>“I call service in a <code>try</code> block.”</li>
+<li>“Unexpected service failure is caught and translated into a calm user message.”</li>
+<li>“No traceback shown to users.”</li>
+</ul>
+<p>Minute 4-5:</p>
+<ul>
+<li>“In <code>finally</code>, I restore Save state using centralized logic.”</li>
+<li>“If no text remains in the form, Save can stay disabled. If text exists, it re-enables.”</li>
+</ul>
+<p>Minute 5-6:</p>
+<ul>
+<li>“If validation fails, I set inline messages and move focus to the first invalid field.”</li>
+<li>“This is our explicit ‘highlight invalid field’ behavior: focus plus inline error.”</li>
+</ul>
+<p>Minute 6-7:</p>
+<ul>
+<li>“If validation passes, record saves, status confirms success, and form resets cleanly.”</li>
+<li>“User gets immediate confirmation and can continue.”</li>
+</ul>
+<p>Minute 7-8:</p>
+<ul>
+<li>“I show failure mode toggle to simulate service outage.”</li>
+<li>“Notice the app still behaves cleanly: user sees understandable message and app does not crash.”</li>
+</ul>
+<h3 id="43-required-demo-test-steps-visible-explicit-testable">4.3 Required demo test steps (visible, explicit, testable)</h3>
+<p>Run these in front of class:</p>
+<ol>
+<li>Leave all fields blank, click Save.
+   - Expected:<ul>
+<li>Inline messages appear under required fields.</li>
+<li>Focus moves to Name.</li>
+<li>Status tells user to fix highlighted fields.</li>
+</ul>
+</li>
+<li>Enter only spaces in Name and Role, invalid email text in Email.
+   - Expected:<ul>
+<li>Trimming catches non-empty illusion.</li>
+<li>Email format message appears with actionable example.</li>
+</ul>
+</li>
+<li>Enter valid Name, Email, Role.
+   - Expected:<ul>
+<li>Save succeeds.</li>
+<li>Success status shown.</li>
+<li>Form clears.</li>
+</ul>
+</li>
+<li>Enable simulated service failure and enter valid data.
+   - Expected:<ul>
+<li>User sees clean service issue message.</li>
+<li>No crash.</li>
+<li>No stack trace in UI.</li>
+</ul>
+</li>
+<li>Verify Save button behavior.
+   - Expected:<ul>
+<li>Save disabled while processing.</li>
+<li>Save state returns appropriately after processing.</li>
+</ul>
+</li>
+</ol>
+<p>Instructor line after test steps:</p>
+<p>“If your class implementation does not pass these five checks, it is not complete yet.”</p>
+<h2 id="segment-5-26-minutes-hands-on-lab-required-25-35-set-to-26">Segment 5 (26 minutes): Hands-on lab (required 25-35, set to 26)</h2>
+<h3 id="51-lab-objective-statement-for-students">5.1 Lab objective statement for students</h3>
+<p>“Add validation behavior to your form so that invalid input is guided clearly, valid input saves successfully, and service-layer failures are surfaced cleanly without crashing.”</p>
+<h3 id="52-lab-constraints-and-required-deliverables">5.2 Lab constraints and required deliverables</h3>
+<p>Students must implement all of the following:</p>
+<ol>
+<li>Required-field checks for non-empty values.</li>
+<li>Input normalization before validation (at least trim whitespace).</li>
+<li>Inline validation feedback near invalid fields.</li>
+<li>Focus movement to first invalid field.</li>
+<li>Save button disable/enable behavior in submission flow.</li>
+<li>User-friendly handling of service-layer error conditions.</li>
+<li>No user-facing stack traces.</li>
+<li>Demonstrable valid save path.</li>
+</ol>
+<h3 id="53-lab-timeline-inside-the-26-minute-block">5.3 Lab timeline inside the 26-minute block</h3>
+<ul>
+<li>Minute 0-3: Read lab goal, open starter app, identify save flow location.</li>
+<li>Minute 3-9: Implement service normalization + required validation.</li>
+<li>Minute 9-14: Add UI inline error mapping and summary status line.</li>
+<li>Minute 14-18: Implement focus-to-first-invalid behavior.</li>
+<li>Minute 18-21: Add Save disable/enable behavior with safe restoration.</li>
+<li>Minute 21-24: Add service failure handling path with clean message.</li>
+<li>Minute 24-26: Run pass/fail checklist and prepare one-minute share.</li>
+</ul>
+<h3 id="54-lab-starter-architecture-guidance-say-aloud-while-circulating">5.4 Lab starter architecture guidance (say aloud while circulating)</h3>
+<ul>
+<li>“If your Save handler is too long, split helper functions.”</li>
+<li>“Keep rule decisions in service, display decisions in UI.”</li>
+<li>“Return structured errors when input is fixable.”</li>
+<li>“Raise controlled service exception for infrastructure issues.”</li>
+<li>“Catch service exception in UI and convert to user-safe message.”</li>
+</ul>
+<h3 id="55-instructor-circulation-checklist">5.5 Instructor circulation checklist</h3>
+<p>As you move through the room, verify these quickly:</p>
+<ul>
+<li>Are they trimming strings before required checks?</li>
+<li>Are blank-space-only values rejected?</li>
+<li>Do messages mention the field and next action?</li>
+<li>Does first invalid field receive focus?</li>
+<li>Do inline messages disappear on subsequent successful save?</li>
+<li>Is Save state restored after both success and failure?</li>
+<li>Is there any path where button click appears to do nothing?</li>
+<li>Is any traceback visible to user-facing UI?</li>
+</ul>
+<h3 id="56-required-lab-acceptance-tests-students-must-run">5.6 Required lab acceptance tests (students must run)</h3>
+<p>Students should execute these exact tests:</p>
+<p>Test A: Invalid path (empty fields)</p>
+<ul>
+<li>Action: Leave fields empty, click Save.</li>
+<li>Required result:</li>
+<li>Clear feedback appears.</li>
+<li>First invalid field is focused.</li>
+<li>Save does not crash app.</li>
+<li>Save button state follows input rules and re-enables immediately after user enters valid correction input.</li>
+</ul>
+<p>Test B: Invalid path (whitespace and malformed email)</p>
+<ul>
+<li>Action: Name = spaces, Email = “abc”, Role = spaces, click Save.</li>
+<li>Required result:</li>
+<li>Whitespace is trimmed then rejected.</li>
+<li>Email message gives actionable format guidance.</li>
+<li>UI remains stable.</li>
+</ul>
+<p>Test C: Valid path</p>
+<ul>
+<li>Action: Name = “Ava Stone”, Email = “Ava.Stone@Example.com”, Role = “Data Lead”, click Save.</li>
+<li>Required result:</li>
+<li>Save succeeds.</li>
+<li>Normalized value behavior is applied where implemented.</li>
+<li>Success feedback appears.</li>
+<li>Inline errors are cleared.</li>
+</ul>
+<p>Test D: Service error path</p>
+<ul>
+<li>Action: Trigger service failure mode and submit valid data.</li>
+<li>Required result:</li>
+<li>User sees clean service failure message.</li>
+<li>No stack trace shown in UI.</li>
+<li>App remains interactive.</li>
+</ul>
+<p>Test E: Save control behavior</p>
+<ul>
+<li>Action: Click Save during processing path.</li>
+<li>Required result:</li>
+<li>Save disables while processing.</li>
+<li>Save re-enables correctly when done.</li>
+</ul>
+<h3 id="57-explicit-passfail-completion-checklist-required-by-critique">5.7 Explicit pass/fail completion checklist (required by critique)</h3>
+<p>Use this exact checklist at the end of lab.</p>
+<h4 id="invalid-path-checklist-must-all-pass">Invalid-path checklist (must all pass)</h4>
+<ul>
+<li>Pass/Fail: Invalid entries show clear feedback.</li>
+<li>Pass/Fail: Inline error appears for each invalid required field.</li>
+<li>Pass/Fail: Focus moves to first invalid field.</li>
+<li>Pass/Fail: Summary status explains next action.</li>
+<li>Pass/Fail: Save button behavior is correct (disabled during processing, enabled appropriately after).</li>
+<li>Pass/Fail: App does not crash on invalid input.</li>
+<li>Pass/Fail: No silent failure (button does nothing).</li>
+</ul>
+<h4 id="valid-path-checklist-must-all-pass">Valid-path checklist (must all pass)</h4>
+<ul>
+<li>Pass/Fail: Valid entries save successfully.</li>
+<li>Pass/Fail: Success message is visible and specific.</li>
+<li>Pass/Fail: Prior error messages are cleared.</li>
+<li>Pass/Fail: Form state is ready for next entry.</li>
+<li>Pass/Fail: Save control returns to correct enabled state.</li>
+</ul>
+<p>Instructor instruction:</p>
+<p>“A solution is complete only when both invalid-path and valid-path checklists pass.”</p>
+<h3 id="58-required-lab-checklist-item-for-save-button-behavior">5.8 Required lab checklist item for Save button behavior</h3>
+<p>State this explicitly during lab kickoff:</p>
+<p>“Disabling and re-enabling Save is required in this lab. It is not optional and not only a discussion point.”</p>
+<h3 id="59-service-layer-error-surfacing-pattern-student-coaching-script">5.9 Service-layer error surfacing pattern (student coaching script)</h3>
+<p>If a student asks, “Should I just <code>print(e)</code> and move on?” answer:</p>
+<ul>
+<li>Print can help developers during development.</li>
+<li>User still needs a clear on-screen message.</li>
+<li>The UI must never expose raw technical exceptions as user feedback.</li>
+<li>Use concise phrasing:</li>
+<li>“We could not save right now. Please try again.”</li>
+<li>Add more detail only if it helps user action.</li>
+</ul>
+<h3 id="510-common-student-implementation-traps-during-lab">5.10 Common student implementation traps during lab</h3>
+<p>Trap 1: Validation in too many places</p>
+<ul>
+<li>Symptom: one rule in UI, another in service.</li>
+<li>Risk: inconsistent outcomes.</li>
+<li>Fix: put canonical rule in service; UI displays results.</li>
+</ul>
+<p>Trap 2: Old errors remain after success</p>
+<ul>
+<li>Symptom: success message appears but old field errors still visible.</li>
+<li>Fix: clear inline errors at start of save and on success.</li>
+</ul>
+<p>Trap 3: Button lockout bug</p>
+<ul>
+<li>Symptom: Save stays disabled forever after exception.</li>
+<li>Fix: restore state in <code>finally</code> or centralized state updater.</li>
+</ul>
+<p>Trap 4: Missing normalization</p>
+<ul>
+<li>Symptom: “  Ava  ” accepted as odd formatting or blank spaces accepted as non-empty.</li>
+<li>Fix: normalize first, validate second.</li>
+</ul>
+<p>Trap 5: Non-actionable feedback</p>
+<ul>
+<li>Symptom: “Invalid value.”</li>
+<li>Fix: include field and correction guidance.</li>
+</ul>
+<h3 id="511-optional-extension-for-early-finishers-required-runbook-extension">5.11 Optional extension for early finishers (required runbook extension)</h3>
+<p>Optional extension:</p>
+<ul>
+<li>Add a <strong>Clear form</strong> button.</li>
+</ul>
+<p>Extension success criteria:</p>
+<ul>
+<li>Clears all field values.</li>
+<li>Clears inline errors.</li>
+<li>Resets summary status.</li>
+<li>Returns focus to first field.</li>
+<li>Recomputes Save enabled state.</li>
+</ul>
+<h2 id="segment-6-5-minutes-debrief-quick-check-exit">Segment 6 (5 minutes): Debrief, quick check, exit</h2>
+<h3 id="61-debrief-talking-points">6.1 Debrief talking points</h3>
+<p>Use this concise summary:</p>
+<ul>
+<li>“Validation before save protects data integrity.”</li>
+<li>“Feedback quality protects user confidence.”</li>
+<li>“Service decides rules; UI decides presentation.”</li>
+<li>“A complete feature includes invalid path and valid path.”</li>
+</ul>
+<p>Reinforce anti-drift closure:</p>
+<p>“Next hour we move to record list/table selection behavior. That is separate from this hour’s form validation responsibility.”</p>
+<h3 id="62-quick-check-required-prompt-included">6.2 Quick check (required prompt included)</h3>
+<p>Ask this required question:</p>
+<p>“Give me a good validation message and a bad validation message for email.”</p>
+<p>Expected answers:</p>
+<ul>
+<li>Bad: “Invalid email.”</li>
+<li>Good: “Enter an email like name@example.com.”</li>
+</ul>
+<p>Follow-up prompt:</p>
+<p>“What makes the good one better?”</p>
+<p>Expected:</p>
+<ul>
+<li>Specific.</li>
+<li>Actionable.</li>
+<li>Gives example format.</li>
+</ul>
+<h3 id="63-exit-ticket-fast-verbal-or-written">6.3 Exit ticket (fast verbal or written)</h3>
+<p>Prompt 1:</p>
+<p>“Where should normalization and validation rules live by default in this app architecture?”</p>
+<p>Expected:</p>
+<ul>
+<li>Service layer.</li>
+</ul>
+<p>Prompt 2:</p>
+<p>“What are the two required completion truths for this hour?”</p>
+<p>Expected exact ideas:</p>
+<ul>
+<li>Invalid entries show clear feedback.</li>
+<li>Valid entries save successfully.</li>
+</ul>
+<p>Prompt 3:</p>
+<p>“What is one behavior that proves your UI highlights invalid field in a testable way?”</p>
+<p>Expected:</p>
+<ul>
+<li>Focus moves to first invalid field and inline error is visible.</li>
+</ul>
+<h2 id="instructor-reference-concise-rubric-for-grading-in-class-implementations">Instructor reference: concise rubric for grading in-class implementations</h2>
+<p>Use this rubric when evaluating student submissions during or right after class.</p>
+<h3 id="category-a-validation-correctness">Category A: Validation correctness</h3>
+<ul>
+<li>Required checks exist for non-empty fields.</li>
+<li>Trimming/normalization occurs before validation.</li>
+<li>Invalid path does not write data.</li>
+<li>Valid path writes data.</li>
+</ul>
+<h3 id="category-b-feedback-clarity">Category B: Feedback clarity</h3>
+<ul>
+<li>Inline field error messages visible.</li>
+<li>Summary status line communicates what to do next.</li>
+<li>Messages are actionable, not generic.</li>
+<li>Tone is neutral and user-centered.</li>
+</ul>
+<h3 id="category-c-interaction-quality">Category C: Interaction quality</h3>
+<ul>
+<li>Focus moves to first invalid field.</li>
+<li>Save button disable/enable behavior works correctly.</li>
+<li>App remains responsive after failures.</li>
+<li>Old errors cleared on subsequent attempts.</li>
+</ul>
+<h3 id="category-d-error-handling-boundary">Category D: Error handling boundary</h3>
+<ul>
+<li>Service-layer failures are caught and surfaced cleanly.</li>
+<li>No stack trace shown to user.</li>
+<li>No silent failure path.</li>
+</ul>
+<p>Pass recommendation:</p>
+<ul>
+<li>All items in A and C pass.</li>
+<li>At least 3 of 4 in B pass.</li>
+<li>All items in D pass.</li>
+</ul>
+<h2 id="extended-speaking-notes-for-deeper-instructor-confidence">Extended speaking notes for deeper instructor confidence</h2>
+<p>Use these notes if students ask “why not just validate in the UI directly?”</p>
+<p>Answer structure:</p>
+<ol>
+<li>UI-level validation alone is brittle.</li>
+<li>Service-level validation is reusable and testable.</li>
+<li>Another interface can reuse same service rules.</li>
+<li>UI still plays critical role by communicating errors clearly.</li>
+</ol>
+<p>If students ask “why show both summary and inline errors?”:</p>
+<ul>
+<li>Summary gives global state and next action.</li>
+<li>Inline gives precise field correction.</li>
+<li>Together they reduce confusion and speed recovery.</li>
+</ul>
+<p>If students ask “should we validate on every keystroke?”:</p>
+<ul>
+<li>Not required for this hour.</li>
+<li>Start with submit-time validation.</li>
+<li>Add real-time validation later when it clearly improves UX and avoids noisy feedback.</li>
+<li>Keep rules and messages consistent across modes.</li>
+</ul>
+<p>If students ask “can we just use messagebox for everything?”:</p>
+<ul>
+<li>You can, but it often hurts flow for predictable field errors.</li>
+<li>Inline keeps context and supports quick correction.</li>
+<li>Reserve modal interruptions for cases where interruption is useful.</li>
+</ul>
+<p>If students ask “how strict should validation be?”:</p>
+<ul>
+<li>Be strict enough to protect data quality.</li>
+<li>Be lenient enough to avoid blocking valid user intent unnecessarily.</li>
+<li>Keep rules explicit and predictable.</li>
+<li>Provide examples in messages for format-sensitive fields.</li>
+</ul>
+<h2 id="practical-language-bank-for-instructor-and-students">Practical language bank for instructor and students</h2>
+<p>Helpful phrases to model during class:</p>
+<ul>
+<li>“Please fix the highlighted fields, then save again.”</li>
+<li>“Email is required.”</li>
+<li>“Enter an email like name@example.com.”</li>
+<li>“Name must contain at least 2 letters.”</li>
+<li>“We could not save right now. Please try again.”</li>
+</ul>
+<p>Phrases to avoid:</p>
+<ul>
+<li>“Invalid input.”</li>
+<li>“Something broke.”</li>
+<li>“Bad value.”</li>
+<li>Technical internals as user feedback.</li>
+</ul>
+<h2 id="required-pitfalls-section-must-be-spoken-and-shown">Required pitfalls section (must be spoken and shown)</h2>
+<h3 id="silent-failure-button-does-nothing">Silent failure (button does nothing)</h3>
+<p>What it looks like:</p>
+<ul>
+<li>User clicks Save.</li>
+<li>No message appears.</li>
+<li>No visible change in UI.</li>
+<li>User cannot tell if action happened.</li>
+</ul>
+<p>Why it is harmful:</p>
+<ul>
+<li>User retries unpredictably.</li>
+<li>Trust drops.</li>
+<li>Duplicate attempts may occur.</li>
+<li>Support load increases.</li>
+</ul>
+<p>How to prevent:</p>
+<ul>
+<li>Always set status text after Save attempt.</li>
+<li>Always show inline errors for invalid fields.</li>
+<li>Always handle catch path with user-visible message.</li>
+</ul>
+<h3 id="stack-trace-shown-to-user">Stack trace shown to user</h3>
+<p>What it looks like:</p>
+<ul>
+<li>Raw exception details appear in UI.</li>
+<li>Technical file paths or traceback lines visible.</li>
+</ul>
+<p>Why it is harmful:</p>
+<ul>
+<li>Confusing and alarming for users.</li>
+<li>Leaks technical details.</li>
+<li>Does not help correction.</li>
+</ul>
+<p>How to prevent:</p>
+<ul>
+<li>Catch known service exceptions in UI.</li>
+<li>Convert to clean, user-centered message.</li>
+<li>Keep technical logging separate from user presentation.</li>
+</ul>
+<h2 id="scripted-mini-walk-through-of-good-vs-bad-messaging-2-minute-insert-if-needed">Scripted mini walk-through of good vs bad messaging (2-minute insert if needed)</h2>
+<p>Say:</p>
+<p>“I will show two versions of the same outcome.”</p>
+<p>Version 1:</p>
+<ul>
+<li>Status: “Error.”</li>
+<li>Field: none highlighted.</li>
+<li>Result: user confusion.</li>
+</ul>
+<p>Version 2:</p>
+<ul>
+<li>Email inline: “Enter an email like name@example.com.”</li>
+<li>Focus moved to email field.</li>
+<li>Status: “Please fix the highlighted fields, then select Save again.”</li>
+<li>Result: user knows exactly what to do.</li>
+</ul>
+<p>Ask:</p>
+<p>“Which version reduces retries and support requests?”</p>
+<p>Expected:</p>
+<ul>
+<li>Version 2.</li>
+</ul>
+<h2 id="reinforcement-of-required-behaviors-for-this-hour">Reinforcement of required behaviors for this hour</h2>
+<p>Before ending class, restate these as checklist truths:</p>
+<ul>
+<li>Validation happens before save.</li>
+<li>Errors are shown clearly and actionably.</li>
+<li>First invalid field gets focus and inline message.</li>
+<li>Save button disables/enables correctly during save flow.</li>
+<li>Service-layer failures are surfaced cleanly.</li>
+<li>Invalid entries show clear feedback.</li>
+<li>Valid entries save successfully.</li>
+</ul>
+<p>If any student solution misses one of these, coach revision immediately.</p>
+<h2 id="anti-drift-closing-note-for-instructor-planning">Anti-drift closing note for instructor planning</h2>
+<p>For lesson continuity:</p>
+<ul>
+<li>End this hour after form validation and feedback quality are working.</li>
+<li>Do not begin table/list selection mechanics here.</li>
+<li>Carry forward saved data concepts only as context, not as new list UI implementation.</li>
+</ul>
+<p>Bridge sentence to next hour:</p>
+<p>“Now that form input is reliable, next we will show saved records in list/table views and react to selection events.”</p>
+<h2 id="compact-one-page-delivery-checklist-for-your-podium-notes">Compact one-page delivery checklist (for your podium notes)</h2>
+<ul>
+<li>Time arithmetic visible: 4 + 9 + 8 + 8 + 26 + 5 = 60</li>
+<li>Talk points covered:</li>
+<li>Inline validation vs messagebox</li>
+<li>Actionable messages</li>
+<li>Disable/enable buttons</li>
+<li>Demo includes:</li>
+<li>Trim/normalize before validate</li>
+<li>Focus first invalid field + inline message</li>
+<li>Save disable/enable behavior</li>
+<li>Clean service-error surfacing</li>
+<li>Lab includes:</li>
+<li>Required-field checks</li>
+<li>Non-crashing invalid path</li>
+<li>Service-layer error handling</li>
+<li>Required Save button state behavior</li>
+<li>Pass/fail checklist for invalid and valid path</li>
+<li>Completion criteria spoken:</li>
+<li>Invalid entries show clear feedback</li>
+<li>Valid entries save successfully</li>
+<li>Pitfalls spoken:</li>
+<li>Silent failure (button does nothing)</li>
+<li>Stack trace shown to user</li>
+<li>Optional extension offered:</li>
+<li>Clear form button</li>
+<li>Quick check asked:</li>
+<li>Good validation message vs bad validation message</li>
+</ul>
+<p>This completes Hour 19 delivery with strict runbook alignment and explicit, testable validation behavior.</p>
+<p>(agent_id: issue297-hour3-rewrite — use write_agent to send follow-up messages)</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour4_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-script-purpose-and-scope" class="depth-2">Instructor script purpose and scope</a></li>
+<li><a href="#timing-plan-must-total-exactly-60-minutes" class="depth-2">Timing plan (must total exactly 60 minutes)</a></li>
+<li><a href="#learning-outcomes-student-facing" class="depth-2">Learning outcomes (student-facing)</a></li>
+<li><a href="#instructor-setup-and-delivery-posture" class="depth-2">Instructor setup and delivery posture</a></li>
+<li><a href="#segment-1-4-minutes-recap-and-transition" class="depth-2">Segment 1 (4 minutes): Recap and transition</a></li>
+<li><a href="#segment-2-9-minutes-validation-principles-and-feedback-quality" class="depth-2">Segment 2 (9 minutes): Validation principles and feedback quality</a></li>
+<li><a href="#21-inline-validation-vs-messagebox-required-talk-point" class="depth-3">2.1 Inline validation vs messagebox (required talk point)</a></li>
+<li><a href="#22-actionable-error-messages-required-talk-point" class="depth-3">2.2 Actionable error messages (required talk point)</a></li>
+<li><a href="#23-disableenable-buttons-when-needed-required-talk-point" class="depth-3">2.3 Disable/enable buttons when needed (required talk point)</a></li>
+<li><a href="#24-feedback-stack-what-user-should-see" class="depth-3">2.4 Feedback stack: what user should see</a></li>
+<li><a href="#25-micro-practice-prompt-1-minute-inside-this-segment" class="depth-3">2.5 Micro-practice prompt (1 minute inside this segment)</a></li>
+<li><a href="#segment-3-8-minutes-uiservice-responsibility-design" class="depth-2">Segment 3 (8 minutes): UI/service responsibility design</a></li>
+<li><a href="#31-why-this-boundary-matters" class="depth-3">3.1 Why this boundary matters</a></li>
+<li><a href="#32-recommended-service-contract" class="depth-3">3.2 Recommended service contract</a></li>
+<li><a href="#33-responsibility-matrix-to-speak-through" class="depth-3">3.3 Responsibility matrix to speak through</a></li>
+<li><a href="#34-guardrail-against-drift" class="depth-3">3.4 Guardrail against drift</a></li>
+<li><a href="#segment-4-8-minutes-live-demo-required-elements-included" class="depth-2">Segment 4 (8 minutes): Live demo (required elements included)</a></li>
+<li><a href="#41-demo-code-runnable" class="depth-3">4.1 Demo code (runnable)</a></li>
+<li><a href="#42-live-demo-narration-script-minute-by-minute" class="depth-3">4.2 Live demo narration script (minute by minute)</a></li>
+<li><a href="#43-required-demo-test-steps-visible-explicit-testable" class="depth-3">4.3 Required demo test steps (visible, explicit, testable)</a></li>
+<li><a href="#segment-5-26-minutes-hands-on-lab-required-25-35-set-to-26" class="depth-2">Segment 5 (26 minutes): Hands-on lab (required 25-35, set to 26)</a></li>
+<li><a href="#51-lab-objective-statement-for-students" class="depth-3">5.1 Lab objective statement for students</a></li>
+<li><a href="#52-lab-constraints-and-required-deliverables" class="depth-3">5.2 Lab constraints and required deliverables</a></li>
+<li><a href="#53-lab-timeline-inside-the-26-minute-block" class="depth-3">5.3 Lab timeline inside the 26-minute block</a></li>
+<li><a href="#54-lab-starter-architecture-guidance-say-aloud-while-circulating" class="depth-3">5.4 Lab starter architecture guidance (say aloud while circulating)</a></li>
+<li><a href="#55-instructor-circulation-checklist" class="depth-3">5.5 Instructor circulation checklist</a></li>
+<li><a href="#56-required-lab-acceptance-tests-students-must-run" class="depth-3">5.6 Required lab acceptance tests (students must run)</a></li>
+<li><a href="#57-explicit-passfail-completion-checklist-required-by-critique" class="depth-3">5.7 Explicit pass/fail completion checklist (required by critique)</a></li>
+<li><a href="#invalid-path-checklist-must-all-pass" class="depth-4">Invalid-path checklist (must all pass)</a></li>
+<li><a href="#valid-path-checklist-must-all-pass" class="depth-4">Valid-path checklist (must all pass)</a></li>
+<li><a href="#58-required-lab-checklist-item-for-save-button-behavior" class="depth-3">5.8 Required lab checklist item for Save button behavior</a></li>
+<li><a href="#59-service-layer-error-surfacing-pattern-student-coaching-script" class="depth-3">5.9 Service-layer error surfacing pattern (student coaching script)</a></li>
+<li><a href="#510-common-student-implementation-traps-during-lab" class="depth-3">5.10 Common student implementation traps during lab</a></li>
+<li><a href="#511-optional-extension-for-early-finishers-required-runbook-extension" class="depth-3">5.11 Optional extension for early finishers (required runbook extension)</a></li>
+<li><a href="#segment-6-5-minutes-debrief-quick-check-exit" class="depth-2">Segment 6 (5 minutes): Debrief, quick check, exit</a></li>
+<li><a href="#61-debrief-talking-points" class="depth-3">6.1 Debrief talking points</a></li>
+<li><a href="#62-quick-check-required-prompt-included" class="depth-3">6.2 Quick check (required prompt included)</a></li>
+<li><a href="#63-exit-ticket-fast-verbal-or-written" class="depth-3">6.3 Exit ticket (fast verbal or written)</a></li>
+<li><a href="#instructor-reference-concise-rubric-for-grading-in-class-implementations" class="depth-2">Instructor reference: concise rubric for grading in-class implementations</a></li>
+<li><a href="#category-a-validation-correctness" class="depth-3">Category A: Validation correctness</a></li>
+<li><a href="#category-b-feedback-clarity" class="depth-3">Category B: Feedback clarity</a></li>
+<li><a href="#category-c-interaction-quality" class="depth-3">Category C: Interaction quality</a></li>
+<li><a href="#category-d-error-handling-boundary" class="depth-3">Category D: Error handling boundary</a></li>
+<li><a href="#extended-speaking-notes-for-deeper-instructor-confidence" class="depth-2">Extended speaking notes for deeper instructor confidence</a></li>
+<li><a href="#practical-language-bank-for-instructor-and-students" class="depth-2">Practical language bank for instructor and students</a></li>
+<li><a href="#required-pitfalls-section-must-be-spoken-and-shown" class="depth-2">Required pitfalls section (must be spoken and shown)</a></li>
+<li><a href="#silent-failure-button-does-nothing" class="depth-3">Silent failure (button does nothing)</a></li>
+<li><a href="#stack-trace-shown-to-user" class="depth-3">Stack trace shown to user</a></li>
+<li><a href="#scripted-mini-walk-through-of-good-vs-bad-messaging-2-minute-insert-if-needed" class="depth-2">Scripted mini walk-through of good vs bad messaging (2-minute insert if needed)</a></li>
+<li><a href="#reinforcement-of-required-behaviors-for-this-hour" class="depth-2">Reinforcement of required behaviors for this hour</a></li>
+<li><a href="#anti-drift-closing-note-for-instructor-planning" class="depth-2">Anti-drift closing note for instructor planning</a></li>
+<li><a href="#compact-one-page-delivery-checklist-for-your-podium-notes" class="depth-2">Compact one-page delivery checklist (for your podium notes)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour3_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day5_Hour3_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour2_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour4_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

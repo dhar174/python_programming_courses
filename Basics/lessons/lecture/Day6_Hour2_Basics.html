@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 6, Hour 2: Data-Structure Drill Circuit (Course Hour 22) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="6">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day6_Hour2_Basics.md">
+
+    <link rel="prev" href="Day6_Hour1_Basics.html">
+    <link rel="next" href="Day6_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="6" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-06/index.html">Day 6</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 6, Hour 2: Data-Structure Drill Circuit (Course Hour 22)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 6</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day6_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 6</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 6, Course Hour 22 – Data-structure drill circuit<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + timed guided practice + share-out<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 22. The purpose of this hour is fluency through structured repetition. Learners already know the core structures from Session 5 and just practiced structure choice in Hour 21. This hour should feel energetic, practical, and supportive. It is a drill circuit, not a high-stakes assessment. The runbook names four short tasks: list filtering, set uniqueness, dictionary counting, and tuple unpacking. Keep reinforcing a simple rhythm at every station: <strong>read the prompt, choose the right structure, build the smallest working version, test with tiny data, then improve output if time remains</strong>. Stay within Basics scope. Do not require comprehensions, lambdas, advanced sorting, nested dictionaries, or clever shortcuts. The goal is steady confidence, not speed for speed’s sake. Every <strong>Say:</strong> block is written to be read nearly verbatim; adapt naturally, but keep the supportive tone and practical guidance.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Complete short practice tasks using lists, tuples, sets, and dictionaries with increasing confidence.</li>
+<li>Recognize the core pattern behind each structure quickly: list filtering, set uniqueness, dictionary counting, and tuple unpacking.</li>
+<li>Test small pieces of code with sample values before deciding a task is finished.</li>
+<li>Explain verbally why a given structure fits a specific short problem.</li>
+<li>Share one working solution and describe one mistake you corrected during practice."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Set expectations and explain the drill-circuit format</li>
+<li><strong>0:05–0:11</strong> Quick demo of one station and expected output style</li>
+<li><strong>0:11–0:47</strong> Four short stations with circulation and time checks</li>
+<li><strong>0:47–0:55</strong> Share-out and solution walkthroughs</li>
+<li><strong>0:55–1:00</strong> Recap and exit ticket</li>
+</ul>
+<blockquote>
+<p><strong>Pacing note:</strong> The runbook describes four short tasks. In a live room, do not obsess over mathematically perfect equal timing. A practical rhythm is about 8–9 minutes per station plus transition time and a few whole-room resets.</p>
+</blockquote>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file called <code>hour22_drill_demo.py</code>.</li>
+<li>Prepare either four starter files or one document with four clearly labeled station sections.</li>
+<li>Put the station titles on screen before class begins:
+  1. Filter numbers &gt; 10
+  2. Unique emails
+  3. Word frequency
+  4. Coordinates unpacking</li>
+<li>Have a visible timer ready.</li>
+<li>Prepare one tiny test example for each station so you can model the testing habit.</li>
+<li>Decide whether learners will rotate physically, scroll through one worksheet, or move between files. Keep the logistics simple.</li>
+<li>Be ready to normalize partial completion. The runbook target is at least <strong>three of four</strong> stations completed.</li>
+</ul>
+<p><strong>Say:</strong> "This hour is about repetition with purpose. You do not need perfect code on the first try. You do need to choose a sensible structure, write the smallest working version you can, and test before you trust your result."</p>
+<hr>
+<h2 id="3-opening-script-why-a-drill-circuit-matters-5-minutes">3) Opening Script: Why a Drill Circuit Matters (~5 minutes)</h2>
+<h3 id="31-reconnect-to-hour-21">3.1 Reconnect to Hour 21</h3>
+<p><strong>Say:</strong>
+"In Hour 21, we focused on judgment. We asked, ‘Which structure fits this task best?’ That was important because design choices affect everything that comes next.</p>
+<p>Now we need fluency. It is one thing to say, ‘A set is good for uniqueness.’ It is another thing to open a file, write the code, test it, and get the right result in a few minutes."</p>
+<h3 id="32-normalize-the-format">3.2 Normalize the format</h3>
+<p><strong>Say:</strong>
+"The point of a drill circuit is not to create stress. The point is to create useful repetition.</p>
+<p>You are going to see patterns again and again until they start to feel familiar:
+- filter with a list
+- remove duplicates with a set
+- count with a dictionary
+- unpack fixed records with tuples</p>
+<p>When those patterns become familiar, you stop guessing as much."</p>
+<h3 id="33-the-work-mindset-for-the-hour">3.3 The work mindset for the hour</h3>
+<p><strong>Say:</strong>
+"Here is the mindset I want:</p>
+<ul>
+<li>Solve the actual prompt in front of you.</li>
+<li>Use the clearest structure, not the fanciest one.</li>
+<li>Test with tiny examples before polishing output.</li>
+<li>If you get stuck, simplify.</li>
+<li>If you finish early, improve formatting or add a small extension.</li>
+</ul>
+<p>The goal is steady confidence, not racing."</p>
+<hr>
+<h2 id="4-explain-the-circuit-format-clearly">4) Explain the Circuit Format Clearly</h2>
+<h3 id="41-how-the-rotations-work">4.1 How the rotations work</h3>
+<p><strong>Say:</strong>
+"You will work through four short stations. You can do them in order. If you finish a station, move on. If you get stuck for more than two minutes, ask one focused question, test a smaller example, or move to the next station and come back later.</p>
+<p>Your success target is to complete at least <strong>three of the four</strong> stations. If you complete all four, excellent. If you complete three cleanly and can explain your choices, that is also strong work."</p>
+<h3 id="42-what-counts-as-done-at-a-station">4.2 What counts as ‘done’ at a station</h3>
+<p><strong>Say:</strong>
+"At each station, I am looking for three things:</p>
+<ol>
+<li>The code runs.</li>
+<li>The output matches the prompt.</li>
+<li>You can explain why the chosen structure fits the task.</li>
+</ol>
+<p>Fast code that you cannot explain is not the goal. Clear code that works and makes sense is more valuable."</p>
+<h3 id="43-testing-habit-reminder">4.3 Testing habit reminder</h3>
+<p><strong>Say:</strong>
+"Before a station feels finished, test with a tiny example.</p>
+<ul>
+<li>two or three numbers, not fifty</li>
+<li>two emails with one duplicate, not a giant list</li>
+<li>three words with one repeat, not a paragraph</li>
+<li>two coordinate pairs, not a huge dataset</li>
+</ul>
+<p>Small tests make bugs easier to spot and fix."</p>
+<h3 id="44-normalize-imperfect-progress">4.4 Normalize imperfect progress</h3>
+<p><strong>Say:</strong>
+"If one station goes badly, do not let it ruin the hour. In programming, you do not need every attempt to be smooth. You need to keep moving, keep testing, and keep learning from the mistakes."</p>
+<hr>
+<h2 id="5-quick-demo-model-one-station-from-start-to-finish-6-minutes">5) Quick Demo: Model One Station from Start to Finish (~6 minutes)</h2>
+<h3 id="51-choose-station-1-for-the-demo">5.1 Choose Station 1 for the demo</h3>
+<p><strong>Say:</strong>
+"I am going to model one station quickly so you can see the level of detail I expect. I am not trying to show off speed. I am trying to show a method."</p>
+<h3 id="52-type-the-prompt">5.2 Type the prompt</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">numbers: list[int] = [4, 11, 9, 15, 22, 3, 10]
+filtered: list[int] = []
+
+for number in numbers:
+    if number &gt; 10:
+        filtered.append(number)
+
+print(filtered)
+</code></pre>
+<p>Run it.</p>
+<h3 id="53-narrate-the-thinking-process">5.3 Narrate the thinking process</h3>
+<p><strong>Say:</strong>
+"Notice the thinking:</p>
+<ul>
+<li>I saw an ordered sequence of numbers, so a list made sense.</li>
+<li>I needed to collect some numbers and skip others, so I created a second list.</li>
+<li>I used a simple loop and an <code>if</code> statement.</li>
+<li>Then I tested with a small example before calling it finished.</li>
+</ul>
+<p>That is the exact rhythm I want you to use at every station."</p>
+<h3 id="54-show-what-not-to-do">5.4 Show what not to do</h3>
+<p><strong>Say:</strong>
+"What I do not want is staring at a blank file waiting for a perfect idea. Start small. Make the first working step obvious."</p>
+<hr>
+<h2 id="6-station-1-filter-numbers-10-list-pattern">6) Station 1: Filter Numbers &gt; 10 (List Pattern)</h2>
+<h3 id="61-station-prompt">6.1 Station prompt</h3>
+<p>Display or read aloud:</p>
+<h3 id="station-1-filter-numbers-10">Station 1 — Filter Numbers &gt; 10</h3>
+<p>You are given a list of numbers.</p>
+<pre><code class="language-python">numbers = [4, 11, 9, 15, 22, 3, 10, 18]
+</code></pre>
+<p>Tasks:
+1. Create a new list containing only the numbers greater than 10.
+2. Print the filtered list.
+3. Print how many numbers made it into the filtered list.</p>
+<h3 id="62-why-this-is-a-list-task">6.2 Why this is a list task</h3>
+<p><strong>Say:</strong>
+"This is a list task because we are working with an ordered sequence, and we want to build another sequence from it. We are not removing duplicates. We are not doing lookup by key. We are filtering one ordered collection into another."</p>
+<h3 id="63-suggested-instructor-guidance-during-work-time">6.3 Suggested instructor guidance during work time</h3>
+<p><strong>Say:</strong>
+"If you are unsure how to begin, start with three lines:</p>
+<ul>
+<li>the original list</li>
+<li>an empty result list</li>
+<li>a <code>for</code> loop</li>
+</ul>
+<p>Then add the <code>if</code> condition."</p>
+<h3 id="64-completion-criteria">6.4 Completion criteria</h3>
+<pre><code class="language-text">Completion criteria
+</code></pre>
+<ul>
+<li>Program creates a second list with only values above 10.</li>
+<li>Output clearly shows the filtered values.</li>
+<li>Program also prints the count of filtered values using <code>len()</code>.</li>
+</ul>
+<h3 id="65-hints-if-learners-stall">6.5 Hints if learners stall</h3>
+<p><strong>Say:</strong>
+"Ask yourself: which list am I looping through, and which list am I appending to? Those should not be confused."</p>
+<p><strong>Say:</strong>
+"If your result is empty, check the <code>if</code> condition. If your program crashes, check indentation and colons first."</p>
+<h3 id="66-common-pitfalls">6.6 Common pitfalls</h3>
+<pre><code class="language-text">Common pitfalls to watch for
+</code></pre>
+<ul>
+<li>Appending to the original list instead of the result list</li>
+<li>Using <code>&gt;= 10</code> when the prompt says greater than 10</li>
+<li>Forgetting the colon after <code>if number &gt; 10</code></li>
+<li>Printing the result before the loop finishes and misreading partial output</li>
+</ul>
+<h3 id="67-optional-extension">6.7 Optional extension</h3>
+<pre><code class="language-text">Optional extensions (stay in Basics scope)
+</code></pre>
+<ul>
+<li>Print the numbers one per line with a label such as <code>Accepted:</code>.</li>
+<li>Also create a second list of numbers <code>&lt;= 10</code> and print both groups.</li>
+</ul>
+<hr>
+<h2 id="7-station-2-unique-emails-set-pattern">7) Station 2: Unique Emails (Set Pattern)</h2>
+<h3 id="71-station-prompt">7.1 Station prompt</h3>
+<h3 id="station-2-unique-emails">Station 2 — Unique Emails</h3>
+<p>You are given a list of email addresses with duplicates.</p>
+<pre><code class="language-python">emails = [
+    &quot;ana@example.com&quot;,
+    &quot;ben@example.com&quot;,
+    &quot;ana@example.com&quot;,
+    &quot;chris@example.com&quot;,
+    &quot;ben@example.com&quot;,
+    &quot;dana@example.com&quot;,
+]
+</code></pre>
+<p>Tasks:
+1. Convert the list into a set of unique email addresses.
+2. Print the unique emails.
+3. Print the original count and the unique count.
+4. Explain in one comment why a set fits this task.</p>
+<h3 id="72-why-this-is-a-set-task">7.2 Why this is a set task</h3>
+<p><strong>Say:</strong>
+"This station is built around the central strength of sets: uniqueness. If the problem says duplicates should disappear, that is your clue."</p>
+<h3 id="73-read-aloud-guidance">7.3 Read-aloud guidance</h3>
+<p><strong>Say:</strong>
+"Remember that a set is unordered. If the printed order looks different from the original list, that is normal. Do not waste time trying to force the set to print in the same order unless the prompt specifically requires that."</p>
+<h3 id="74-completion-criteria">7.4 Completion criteria</h3>
+<pre><code class="language-text">Completion criteria
+</code></pre>
+<ul>
+<li>Learner creates a set from the list successfully.</li>
+<li>Program prints the unique collection and both counts.</li>
+<li>Comment explains that the set removes duplicates automatically.</li>
+</ul>
+<h3 id="75-hints">7.5 Hints</h3>
+<p><strong>Say:</strong>
+"The built-in <code>set()</code> constructor is your friend here. You already know this pattern from Session 5."</p>
+<p><strong>Say:</strong>
+"If you want the counts, think <code>len(emails)</code> and <code>len(unique_emails)</code>."</p>
+<h3 id="76-common-pitfalls">7.6 Common pitfalls</h3>
+<pre><code class="language-text">Common pitfalls to watch for
+</code></pre>
+<ul>
+<li>Creating <code>{}</code> and accidentally making an empty dictionary instead of a set</li>
+<li>Expecting the set to preserve the original order</li>
+<li>Forgetting that printing a set directly is acceptable for this station</li>
+<li>Trying to use <code>append()</code> on a set instead of <code>add()</code> if building it manually</li>
+</ul>
+<h3 id="77-optional-extension">7.7 Optional extension</h3>
+<pre><code class="language-text">Optional extensions (stay in Basics scope)
+</code></pre>
+<ul>
+<li>Ask the user for one more email and report whether it is already present using <code>in</code>.</li>
+<li>Convert the set to a sorted list for prettier display if learners already know <code>sorted()</code>.</li>
+</ul>
+<hr>
+<h2 id="8-station-3-word-frequency-dictionary-pattern">8) Station 3: Word Frequency (Dictionary Pattern)</h2>
+<h3 id="81-station-prompt">8.1 Station prompt</h3>
+<h3 id="station-3-word-frequency">Station 3 — Word Frequency</h3>
+<p>You are given a short list of words.</p>
+<pre><code class="language-python">words = [&quot;red&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;red&quot;]
+</code></pre>
+<p>Tasks:
+1. Build a dictionary that counts how many times each word appears.
+2. Print the dictionary.
+3. Print each word and count on its own line.
+4. Add a short comment explaining why a dictionary is a better fit than a list for this task.</p>
+<h3 id="82-why-this-is-a-dictionary-task">8.2 Why this is a dictionary task</h3>
+<p><strong>Say:</strong>
+"This is the counting pattern from Session 5. The question is not just what words we have, but how many times each one appears. That naturally suggests a mapping from word to count. That is a dictionary."</p>
+<h3 id="83-remind-the-core-counting-pattern">8.3 Remind the core counting pattern</h3>
+<p><strong>Say:</strong>
+"If learners need a nudge, remind them of the essential line:</p>
+<p><code>counts[word] = counts.get(word, 0) + 1</code></p>
+<p>That line says: if the word is not in the dictionary yet, start from 0. Then add 1. If it is already there, take the existing count and add 1."</p>
+<h3 id="84-completion-criteria">8.4 Completion criteria</h3>
+<pre><code class="language-text">Completion criteria
+</code></pre>
+<ul>
+<li>Program builds a correct frequency dictionary.</li>
+<li>Output includes at least one loop through <code>items()</code> to print each word with its count.</li>
+<li>Learner explanation mentions key-value mapping or lookup by word.</li>
+</ul>
+<h3 id="85-hints">8.5 Hints</h3>
+<p><strong>Say:</strong>
+"Start with an empty dictionary. Then loop through the words. Then update the count one word at a time."</p>
+<p><strong>Say:</strong>
+"If your counts look wrong, test with the smallest possible list like <code>['red', 'red']</code> and trace the dictionary after each step."</p>
+<h3 id="86-common-pitfalls">8.6 Common pitfalls</h3>
+<pre><code class="language-text">Common pitfalls to watch for
+</code></pre>
+<ul>
+<li>Using <code>counts[word] += 1</code> before the key exists, causing a <code>KeyError</code></li>
+<li>Forgetting to use <code>.items()</code> when printing both the word and count together</li>
+<li>Replacing the count with <code>1</code> every time instead of adding to it</li>
+<li>Not testing with a tiny list before assuming the logic is correct</li>
+</ul>
+<h3 id="87-optional-extension">8.7 Optional extension</h3>
+<pre><code class="language-text">Optional extensions (stay in Basics scope)
+</code></pre>
+<ul>
+<li>Ask the user for a color word and print its count using <code>get()</code>.</li>
+<li>Print the counts in sorted word order using <code>for word in sorted(counts.keys()):</code> if appropriate for your learners.</li>
+</ul>
+<hr>
+<h2 id="9-station-4-coordinates-unpacking-tuple-pattern">9) Station 4: Coordinates Unpacking (Tuple Pattern)</h2>
+<h3 id="91-station-prompt">9.1 Station prompt</h3>
+<h3 id="station-4-coordinates-unpacking">Station 4 — Coordinates Unpacking</h3>
+<p>You are given a list of coordinate pairs.</p>
+<pre><code class="language-python">points = [(2, 3), (5, 8), (1, 4), (7, 2)]
+</code></pre>
+<p>Tasks:
+1. Loop through the points.
+2. Unpack each tuple into <code>x</code> and <code>y</code>.
+3. Print each point in a sentence like <code>Point at x=2, y=3</code>.
+4. Track the largest <code>x</code> value and print it at the end.</p>
+<h3 id="92-why-this-is-a-tuple-task">9.2 Why this is a tuple task</h3>
+<p><strong>Say:</strong>
+"Each point is one fixed record with two parts: x and y. That is exactly the kind of small, fixed grouping tuples were made for."</p>
+<h3 id="93-guidance-for-the-loop">9.3 Guidance for the loop</h3>
+<p><strong>Say:</strong>
+"The key pattern here is unpacking right in the loop header:</p>
+<p><code>for x, y in points:</code></p>
+<p>That works because each item in <code>points</code> is a tuple with exactly two values."</p>
+<h3 id="94-completion-criteria">9.4 Completion criteria</h3>
+<pre><code class="language-text">Completion criteria
+</code></pre>
+<ul>
+<li>Learner loops through all points successfully.</li>
+<li>Each tuple is unpacked into <code>x</code> and <code>y</code>.</li>
+<li>Program prints a sentence for each point.</li>
+<li>Program reports the largest <code>x</code> value correctly.</li>
+</ul>
+<h3 id="95-hints">9.5 Hints</h3>
+<p><strong>Say:</strong>
+"If you are not sure how to find the largest x value, start with <code>largest_x = None</code>, then compare each new <code>x</code> as you loop."</p>
+<p><strong>Say:</strong>
+"If unpacking fails, check that every item in the list is actually a two-value tuple."</p>
+<h3 id="96-common-pitfalls">9.6 Common pitfalls</h3>
+<pre><code class="language-text">Common pitfalls to watch for
+</code></pre>
+<ul>
+<li>Writing <code>for point in points:</code> and then forgetting to unpack the tuple</li>
+<li>Comparing the entire tuple instead of the <code>x</code> value when tracking the largest x</li>
+<li>Initializing <code>largest_x</code> in the wrong place so it resets every loop</li>
+<li>Confusing the role of x and y in the output sentence</li>
+</ul>
+<h3 id="97-optional-extension">9.7 Optional extension</h3>
+<pre><code class="language-text">Optional extensions (stay in Basics scope)
+</code></pre>
+<ul>
+<li>Also find the largest <code>y</code> value.</li>
+<li>Count how many points have <code>x &gt; y</code>.</li>
+</ul>
+<hr>
+<h2 id="10-whole-room-time-checks-during-the-circuit">10) Whole-Room Time Checks During the Circuit</h2>
+<h3 id="101-first-time-check-15-minutes-into-work-time">10.1 First time check (~15 minutes into work time)</h3>
+<p><strong>Say:</strong>
+"Quick room check: by now you should have at least one station finished or almost finished. If you are stuck on syntax, simplify and test a smaller example. If you are stuck on the structure choice, look back at the station title — it is giving you a clue."</p>
+<h3 id="102-second-time-check-30-minutes-into-work-time">10.2 Second time check (~30 minutes into work time)</h3>
+<p><strong>Say:</strong>
+"At this point, aim to have two stations complete and be moving into your third. Remember, three clean stations is a strong result. Do not let perfection slow down progress."</p>
+<h3 id="103-final-time-check-40-minutes-into-work-time">10.3 Final time check (~40 minutes into work time)</h3>
+<p><strong>Say:</strong>
+"You have a few more minutes. If you are mid-station, focus on getting the minimum working version done. Fancy formatting can wait."</p>
+<hr>
+<h2 id="11-share-out-and-walkthroughs-8-minutes">11) Share-Out and Walkthroughs (~8 minutes)</h2>
+<h3 id="111-transition-back-to-whole-group">11.1 Transition back to whole group</h3>
+<p><strong>Say:</strong>
+"Let’s come back together. I want to hear a few solutions, but I especially want to hear the thinking behind them."</p>
+<h3 id="112-suggested-share-out-structure">11.2 Suggested share-out structure</h3>
+<p>Ask for one volunteer per pattern if possible:
+- one learner shares list filtering
+- one learner shares set uniqueness
+- one learner shares dictionary counting
+- one learner shares tuple unpacking</p>
+<h3 id="113-suggested-instructor-prompts">11.3 Suggested instructor prompts</h3>
+<p><strong>Ask learners:</strong>
+- "Why was a list the right fit for Station 1?"
+- "What did the set do automatically in Station 2?"
+- "Why is a dictionary a natural match for word frequency?"
+- "What did tuple unpacking make easier to read in Station 4?"</p>
+<h3 id="114-model-a-strong-verbal-explanation">11.4 Model a strong verbal explanation</h3>
+<p><strong>Say:</strong>
+"A strong explanation sounds like this: ‘I used a dictionary in Station 3 because each word needed to map to a count. The dictionary let me look up the current count for a word and update it as I looped.’</p>
+<p>That kind of explanation shows structure awareness, not just code copying."</p>
+<h3 id="115-normalize-mistakes-as-useful-feedback">11.5 Normalize mistakes as useful feedback</h3>
+<p><strong>Say:</strong>
+"I also want to normalize something important: if you made a mistake today and then corrected it, that is progress. Some of the best learning in programming comes from noticing, ‘Oh, I used the wrong structure there,’ or ‘I forgot to test a tiny case.’"</p>
+<hr>
+<h2 id="12-recap-exit-ticket-5-minutes">12) Recap + Exit Ticket (~5 minutes)</h2>
+<h3 id="121-recap-the-four-patterns">12.1 Recap the four patterns</h3>
+<p><strong>Say:</strong>
+"Today’s hour was about making four important patterns feel more natural:</p>
+<ul>
+<li>list for filtering an ordered sequence</li>
+<li>set for uniqueness</li>
+<li>dictionary for counting or lookup</li>
+<li>tuple for fixed records and unpacking</li>
+</ul>
+<p>These are not random exercises. They are the building blocks of many real Python programs."</p>
+<h3 id="122-exit-ticket">12.2 Exit ticket</h3>
+<pre><code class="language-text">Quick check / exit ticket
+</code></pre>
+<p>Ask learners to answer one or more of these:</p>
+<ol>
+<li>Which station felt easiest, and why?</li>
+<li>Which station felt most useful for real work, and why?</li>
+<li>Name one bug you hit and how you fixed it.</li>
+<li>Name one data-structure pattern you think you will use again soon.</li>
+</ol>
+<h3 id="123-closing-bridge-to-hour-23">12.3 Closing bridge to Hour 23</h3>
+<p><strong>Say:</strong>
+"In the next hour, we move from short drills to a more coherent mini-project. The patterns from today will come back, but now they will work together in one in-memory tracker program."</p>
+<hr>
+<h2 id="13-detailed-share-out-walkthrough-guide">13) Detailed Share-Out Walkthrough Guide</h2>
+<h3 id="131-why-the-share-out-matters">13.1 Why the share-out matters</h3>
+<p><strong>Say:</strong>
+"Do not rush the share-out just because the station work felt busy. The share-out is where learners convert activity into understanding. They need to hear the pattern named clearly after they have struggled with it a little."</p>
+<h3 id="132-suggested-sequence-for-the-walkthrough">13.2 Suggested sequence for the walkthrough</h3>
+<p>Use this order if time allows:</p>
+<ol>
+<li>Station 1 — list filtering  </li>
+<li>Station 2 — set uniqueness  </li>
+<li>Station 4 — tuple unpacking  </li>
+<li>Station 3 — dictionary counting</li>
+</ol>
+<p><strong>Say:</strong>
+"I like ending with the dictionary station because it is often the richest one conceptually. It reminds learners that dictionaries are not only for storing fixed information like contacts or inventory. They are also for <em>building information</em> as a program runs."</p>
+<h3 id="133-station-1-walkthrough-talking-points">13.3 Station 1 walkthrough talking points</h3>
+<p><strong>Say:</strong>
+"In Station 1, the important idea was that we started with one ordered sequence and built another ordered sequence from it. We did not need uniqueness. We did not need key lookup. We simply needed to test each number and decide whether it belonged in the result.</p>
+<p>That is why a list was the natural fit. If a learner used a set here, the program might still contain numbers above 10, but it would lose the original order and might remove duplicates that were actually meaningful. So the structure choice really mattered."</p>
+<p>Ask:
+- "What line actually decides whether a number belongs in the new list?"
+- "Why do we append to <code>filtered</code> instead of changing <code>numbers</code> directly?"</p>
+<h3 id="134-station-2-walkthrough-talking-points">13.4 Station 2 walkthrough talking points</h3>
+<p><strong>Say:</strong>
+"In Station 2, the crucial shift was from storing every email to storing each email only once. That is the exact moment where a set becomes powerful. A set enforces the rule of uniqueness for us. We do not have to write extra code to remove duplicates one by one."</p>
+<p>Ask:
+- "What information was important here: order, or uniqueness?"
+- "What happened automatically when the duplicate emails were converted into a set?"</p>
+<p>Then reinforce:</p>
+<p><strong>Say:</strong>
+"Remember that a set being unordered is not a bug. It is part of the tradeoff. When order matters, choose something else. When uniqueness matters more, a set is often the cleaner tool."</p>
+<h3 id="135-station-3-walkthrough-talking-points">13.5 Station 3 walkthrough talking points</h3>
+<p><strong>Say:</strong>
+"Station 3 matters because it takes learners beyond storing data and into <em>accumulating</em> data. A word-frequency dictionary starts empty and grows as the loop runs. The keys are words. The values are counts. That is a beautiful example of matching a structure to the shape of the problem."</p>
+<p>Write or restate the central line:</p>
+<pre><code class="language-python">counts[word] = counts.get(word, 0) + 1
+</code></pre>
+<p><strong>Say:</strong>
+"This one line handles both cases:
+- if the word is new, start at 0 and add 1
+- if the word is already present, take the current count and add 1</p>
+<p>That is one of the most reusable patterns beginners learn in the first half of a Python course."</p>
+<p>Ask:
+- "Why does this use a dictionary instead of a list?"
+- "What would go wrong with <code>counts[word] += 1</code> if the key is not there yet?"</p>
+<h3 id="136-station-4-walkthrough-talking-points">13.6 Station 4 walkthrough talking points</h3>
+<p><strong>Say:</strong>
+"Station 4 reminded us that tuples are not just a weird alternative to lists. They are useful when one item naturally has a fixed number of parts. Each point had exactly two values, x and y, and unpacking let us work with those values clearly."</p>
+<p>Ask:
+- "What made the tuple a good fit for one point?"
+- "What made the outer structure a list?"</p>
+<p>Then reinforce:</p>
+<p><strong>Say:</strong>
+"That combination — a list of tuples — is worth remembering. It shows how structures can work together: the list stores many records, and the tuple stores the fixed parts of one record."</p>
+<h3 id="137-end-the-share-out-by-naming-the-patterns-again">13.7 End the share-out by naming the patterns again</h3>
+<p><strong>Say:</strong>
+"I want to name the four patterns one more time because repetition matters:</p>
+<ul>
+<li>filter with a list</li>
+<li>keep unique values in a set</li>
+<li>count with a dictionary</li>
+<li>unpack fixed records from tuples</li>
+</ul>
+<p>If those four patterns start to feel familiar, learners are building real fluency."</p>
+<hr>
+<h2 id="14-troubleshooting-playbook-during-the-circuit">14) Troubleshooting Playbook During the Circuit</h2>
+<h3 id="141-if-learners-freeze-at-the-blank-page">14.1 If learners freeze at the blank page</h3>
+<p><strong>Say:</strong>
+"Write the data first. Then write the empty result structure if needed. Then write the loop. Then write the condition. That order reduces stress because it turns one big task into a small sequence of obvious steps."</p>
+<h3 id="142-if-learners-choose-the-wrong-structure">14.2 If learners choose the wrong structure</h3>
+<p><strong>Say:</strong>
+"Do not immediately say, 'That is wrong.' Instead ask a question that lets them notice the mismatch:</p>
+<ul>
+<li>Do duplicates matter here?</li>
+<li>Do you care about order here?</li>
+<li>Are you looking things up by key here?</li>
+<li>Is this one fixed record or many items?"</li>
+</ul>
+<p>This preserves learner ownership while still guiding them toward a better fit.</p>
+<h3 id="143-if-learners-have-syntax-errors">14.3 If learners have syntax errors</h3>
+<p><strong>Say:</strong>
+"Read the error calmly. Then check the beginner basics first:</p>
+<ul>
+<li>missing colon</li>
+<li>indentation mismatch</li>
+<li>missing comma</li>
+<li>unmatched quote</li>
+<li>variable name typo</li>
+</ul>
+<p>Many drill-circuit errors are not deep logic issues. They are fast syntax issues caused by rushing."</p>
+<h3 id="144-if-learners-have-logic-errors">14.4 If learners have logic errors</h3>
+<p><strong>Say:</strong>
+"Shrink the test case. If the list has eight numbers, try two. If the words list has six items, try two repeated words. Tiny tests make the logic visible."</p>
+<h3 id="145-if-learners-finish-early">14.5 If learners finish early</h3>
+<p><strong>Say:</strong>
+"Do not let early finishers drift. Give them one of these productive next steps:</p>
+<ul>
+<li>improve output formatting</li>
+<li>add a tiny extension</li>
+<li>help explain a pattern to a neighbor without taking over the keyboard</li>
+<li>write one comment per station explaining why the structure fit"</li>
+</ul>
+<h3 id="146-if-learners-finish-only-two-stations">14.6 If learners finish only two stations</h3>
+<p><strong>Say:</strong>
+"That is still useful information. Ask which pattern slowed them down and why. The goal is not to shame partial completion. The goal is to identify where the next practice should go."</p>
+<h3 id="147-instructor-wrap-up-language">14.7 Instructor wrap-up language</h3>
+<p><strong>Say:</strong>
+"This hour was meant to create productive repetition, not perfection. If one or two patterns still feel shaky, that is normal. What matters is that learners can now name the pattern, recognize it in a prompt, and get started with less hesitation than before."</p>
+<hr>
+<h2 id="15-appendix-instructor-reference-for-fast-support-during-stations">15) Appendix: Instructor Reference for Fast Support During Stations</h2>
+<h3 id="151-fast-coaching-questions">15.1 Fast coaching questions</h3>
+<p>Keep these ready while circulating:</p>
+<ul>
+<li>"What is the main job of this collection?"</li>
+<li>"Do you need order here?"</li>
+<li>"Do duplicates matter here?"</li>
+<li>"Would a key-value mapping help here?"</li>
+<li>"Can you test with a smaller example?"</li>
+</ul>
+<h3 id="152-minimal-pattern-reminders-you-can-put-on-the-board">15.2 Minimal pattern reminders you can put on the board</h3>
+<pre><code class="language-python"># List filtering
+result = []
+for item in items:
+    if condition:
+        result.append(item)
+
+# Set uniqueness
+unique_items = set(items)
+
+# Dictionary counting
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+# Tuple unpacking
+for x, y in points:
+    print(x, y)
+</code></pre>
+<p><strong>Say:</strong>
+"These are not magic spells to memorize. They are reusable patterns. The more you practice them, the more natural they become."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-why-a-drill-circuit-matters-5-minutes" class="depth-2">3) Opening Script: Why a Drill Circuit Matters (~5 minutes)</a></li>
+<li><a href="#31-reconnect-to-hour-21" class="depth-3">3.1 Reconnect to Hour 21</a></li>
+<li><a href="#32-normalize-the-format" class="depth-3">3.2 Normalize the format</a></li>
+<li><a href="#33-the-work-mindset-for-the-hour" class="depth-3">3.3 The work mindset for the hour</a></li>
+<li><a href="#4-explain-the-circuit-format-clearly" class="depth-2">4) Explain the Circuit Format Clearly</a></li>
+<li><a href="#41-how-the-rotations-work" class="depth-3">4.1 How the rotations work</a></li>
+<li><a href="#42-what-counts-as-done-at-a-station" class="depth-3">4.2 What counts as ‘done’ at a station</a></li>
+<li><a href="#43-testing-habit-reminder" class="depth-3">4.3 Testing habit reminder</a></li>
+<li><a href="#44-normalize-imperfect-progress" class="depth-3">4.4 Normalize imperfect progress</a></li>
+<li><a href="#5-quick-demo-model-one-station-from-start-to-finish-6-minutes" class="depth-2">5) Quick Demo: Model One Station from Start to Finish (~6 minutes)</a></li>
+<li><a href="#51-choose-station-1-for-the-demo" class="depth-3">5.1 Choose Station 1 for the demo</a></li>
+<li><a href="#52-type-the-prompt" class="depth-3">5.2 Type the prompt</a></li>
+<li><a href="#53-narrate-the-thinking-process" class="depth-3">5.3 Narrate the thinking process</a></li>
+<li><a href="#54-show-what-not-to-do" class="depth-3">5.4 Show what not to do</a></li>
+<li><a href="#6-station-1-filter-numbers-10-list-pattern" class="depth-2">6) Station 1: Filter Numbers &gt; 10 (List Pattern)</a></li>
+<li><a href="#61-station-prompt" class="depth-3">6.1 Station prompt</a></li>
+<li><a href="#station-1-filter-numbers-10" class="depth-3">Station 1 — Filter Numbers &gt; 10</a></li>
+<li><a href="#62-why-this-is-a-list-task" class="depth-3">6.2 Why this is a list task</a></li>
+<li><a href="#63-suggested-instructor-guidance-during-work-time" class="depth-3">6.3 Suggested instructor guidance during work time</a></li>
+<li><a href="#64-completion-criteria" class="depth-3">6.4 Completion criteria</a></li>
+<li><a href="#65-hints-if-learners-stall" class="depth-3">6.5 Hints if learners stall</a></li>
+<li><a href="#66-common-pitfalls" class="depth-3">6.6 Common pitfalls</a></li>
+<li><a href="#67-optional-extension" class="depth-3">6.7 Optional extension</a></li>
+<li><a href="#7-station-2-unique-emails-set-pattern" class="depth-2">7) Station 2: Unique Emails (Set Pattern)</a></li>
+<li><a href="#71-station-prompt" class="depth-3">7.1 Station prompt</a></li>
+<li><a href="#station-2-unique-emails" class="depth-3">Station 2 — Unique Emails</a></li>
+<li><a href="#72-why-this-is-a-set-task" class="depth-3">7.2 Why this is a set task</a></li>
+<li><a href="#73-read-aloud-guidance" class="depth-3">7.3 Read-aloud guidance</a></li>
+<li><a href="#74-completion-criteria" class="depth-3">7.4 Completion criteria</a></li>
+<li><a href="#75-hints" class="depth-3">7.5 Hints</a></li>
+<li><a href="#76-common-pitfalls" class="depth-3">7.6 Common pitfalls</a></li>
+<li><a href="#77-optional-extension" class="depth-3">7.7 Optional extension</a></li>
+<li><a href="#8-station-3-word-frequency-dictionary-pattern" class="depth-2">8) Station 3: Word Frequency (Dictionary Pattern)</a></li>
+<li><a href="#81-station-prompt" class="depth-3">8.1 Station prompt</a></li>
+<li><a href="#station-3-word-frequency" class="depth-3">Station 3 — Word Frequency</a></li>
+<li><a href="#82-why-this-is-a-dictionary-task" class="depth-3">8.2 Why this is a dictionary task</a></li>
+<li><a href="#83-remind-the-core-counting-pattern" class="depth-3">8.3 Remind the core counting pattern</a></li>
+<li><a href="#84-completion-criteria" class="depth-3">8.4 Completion criteria</a></li>
+<li><a href="#85-hints" class="depth-3">8.5 Hints</a></li>
+<li><a href="#86-common-pitfalls" class="depth-3">8.6 Common pitfalls</a></li>
+<li><a href="#87-optional-extension" class="depth-3">8.7 Optional extension</a></li>
+<li><a href="#9-station-4-coordinates-unpacking-tuple-pattern" class="depth-2">9) Station 4: Coordinates Unpacking (Tuple Pattern)</a></li>
+<li><a href="#91-station-prompt" class="depth-3">9.1 Station prompt</a></li>
+<li><a href="#station-4-coordinates-unpacking" class="depth-3">Station 4 — Coordinates Unpacking</a></li>
+<li><a href="#92-why-this-is-a-tuple-task" class="depth-3">9.2 Why this is a tuple task</a></li>
+<li><a href="#93-guidance-for-the-loop" class="depth-3">9.3 Guidance for the loop</a></li>
+<li><a href="#94-completion-criteria" class="depth-3">9.4 Completion criteria</a></li>
+<li><a href="#95-hints" class="depth-3">9.5 Hints</a></li>
+<li><a href="#96-common-pitfalls" class="depth-3">9.6 Common pitfalls</a></li>
+<li><a href="#97-optional-extension" class="depth-3">9.7 Optional extension</a></li>
+<li><a href="#10-whole-room-time-checks-during-the-circuit" class="depth-2">10) Whole-Room Time Checks During the Circuit</a></li>
+<li><a href="#101-first-time-check-15-minutes-into-work-time" class="depth-3">10.1 First time check (~15 minutes into work time)</a></li>
+<li><a href="#102-second-time-check-30-minutes-into-work-time" class="depth-3">10.2 Second time check (~30 minutes into work time)</a></li>
+<li><a href="#103-final-time-check-40-minutes-into-work-time" class="depth-3">10.3 Final time check (~40 minutes into work time)</a></li>
+<li><a href="#11-share-out-and-walkthroughs-8-minutes" class="depth-2">11) Share-Out and Walkthroughs (~8 minutes)</a></li>
+<li><a href="#111-transition-back-to-whole-group" class="depth-3">11.1 Transition back to whole group</a></li>
+<li><a href="#112-suggested-share-out-structure" class="depth-3">11.2 Suggested share-out structure</a></li>
+<li><a href="#113-suggested-instructor-prompts" class="depth-3">11.3 Suggested instructor prompts</a></li>
+<li><a href="#114-model-a-strong-verbal-explanation" class="depth-3">11.4 Model a strong verbal explanation</a></li>
+<li><a href="#115-normalize-mistakes-as-useful-feedback" class="depth-3">11.5 Normalize mistakes as useful feedback</a></li>
+<li><a href="#12-recap-exit-ticket-5-minutes" class="depth-2">12) Recap + Exit Ticket (~5 minutes)</a></li>
+<li><a href="#121-recap-the-four-patterns" class="depth-3">12.1 Recap the four patterns</a></li>
+<li><a href="#122-exit-ticket" class="depth-3">12.2 Exit ticket</a></li>
+<li><a href="#123-closing-bridge-to-hour-23" class="depth-3">12.3 Closing bridge to Hour 23</a></li>
+<li><a href="#13-detailed-share-out-walkthrough-guide" class="depth-2">13) Detailed Share-Out Walkthrough Guide</a></li>
+<li><a href="#131-why-the-share-out-matters" class="depth-3">13.1 Why the share-out matters</a></li>
+<li><a href="#132-suggested-sequence-for-the-walkthrough" class="depth-3">13.2 Suggested sequence for the walkthrough</a></li>
+<li><a href="#133-station-1-walkthrough-talking-points" class="depth-3">13.3 Station 1 walkthrough talking points</a></li>
+<li><a href="#134-station-2-walkthrough-talking-points" class="depth-3">13.4 Station 2 walkthrough talking points</a></li>
+<li><a href="#135-station-3-walkthrough-talking-points" class="depth-3">13.5 Station 3 walkthrough talking points</a></li>
+<li><a href="#136-station-4-walkthrough-talking-points" class="depth-3">13.6 Station 4 walkthrough talking points</a></li>
+<li><a href="#137-end-the-share-out-by-naming-the-patterns-again" class="depth-3">13.7 End the share-out by naming the patterns again</a></li>
+<li><a href="#14-troubleshooting-playbook-during-the-circuit" class="depth-2">14) Troubleshooting Playbook During the Circuit</a></li>
+<li><a href="#141-if-learners-freeze-at-the-blank-page" class="depth-3">14.1 If learners freeze at the blank page</a></li>
+<li><a href="#142-if-learners-choose-the-wrong-structure" class="depth-3">14.2 If learners choose the wrong structure</a></li>
+<li><a href="#143-if-learners-have-syntax-errors" class="depth-3">14.3 If learners have syntax errors</a></li>
+<li><a href="#144-if-learners-have-logic-errors" class="depth-3">14.4 If learners have logic errors</a></li>
+<li><a href="#145-if-learners-finish-early" class="depth-3">14.5 If learners finish early</a></li>
+<li><a href="#146-if-learners-finish-only-two-stations" class="depth-3">14.6 If learners finish only two stations</a></li>
+<li><a href="#147-instructor-wrap-up-language" class="depth-3">14.7 Instructor wrap-up language</a></li>
+<li><a href="#15-appendix-instructor-reference-for-fast-support-during-stations" class="depth-2">15) Appendix: Instructor Reference for Fast Support During Stations</a></li>
+<li><a href="#151-fast-coaching-questions" class="depth-3">15.1 Fast coaching questions</a></li>
+<li><a href="#152-minimal-pattern-reminders-you-can-put-on-the-board" class="depth-3">15.2 Minimal pattern reminders you can put on the board</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day6_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day6_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

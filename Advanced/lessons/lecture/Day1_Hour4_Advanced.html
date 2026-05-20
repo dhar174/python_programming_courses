@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 1, Hour 4: Composition vs Inheritance and Polymorphism | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="1">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day1_Hour4_Advanced.md">
+
+    <link rel="prev" href="Day1_Hour3_Advanced.html">
+    <link rel="next" href="Day2_Hour1_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="1" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-01/index.html">Day 1</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 1, Hour 4: Composition vs Inheritance and Polymorphism</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 1</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour1_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day1_Hour4_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 1, Hour 4 of 48</li>
+<li><strong>Focus</strong>: Choosing composition or inheritance appropriately, using polymorphism to simplify branching, and recognizing when shared behavior does not require a shared parent class.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 1, Hour 4.</li>
+<li><strong>Prerequisites</strong>: Learners should be able to define classes, create instances, call methods, pass objects into functions or constructors, use <code>if</code>/<code>elif</code> branching, and read simple tracebacks.</li>
+<li><strong>Advanced trajectory</strong>: This hour moves learners from PCAP-level object syntax toward PCPP1-style design judgment. The goal is not "use more classes." The goal is to make code easier to change by choosing the smallest useful structure: inheritance for true <strong>is-a</strong> relationships, composition for <strong>has-a</strong> relationships, and polymorphism for calling different objects through the same expected behavior.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has refactored a branching feature into at least two classes that share the same method name, used a composed object that stores one of those formatter or processor objects, and explained why the design uses composition and duck-typed polymorphism instead of unnecessary inheritance.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Hour 3</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect protected object state to object collaboration</td>
+</tr>
+<tr>
+<td>Outcomes and vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Define inheritance, composition, polymorphism, interface, and duck typing</td>
+</tr>
+<tr>
+<td>Concept briefing: choosing the relationship</td>
+<td style="text-align: right;">10 min</td>
+<td>Teach <strong>is-a</strong> vs <strong>has-a</strong> and how polymorphism removes branching</td>
+</tr>
+<tr>
+<td>Live demo: refactor report export branching</td>
+<td style="text-align: right;">10 min</td>
+<td>Show before-state <code>if</code>/<code>elif</code>, two shared-method classes, and a composed runner</td>
+</tr>
+<tr>
+<td>Guided lab: refactor a branching feature</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners refactor into two classes with the same method and a composed caller</td>
+</tr>
+<tr>
+<td>Quick checks, completion criteria, and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Verify design judgment and preview the next day</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays within the runbook's required 25-35 minute lab range. If the room needs support, protect the guided lab. Shorten the vocabulary discussion before shortening learner practice. Do not make composition, inheritance choice, or polymorphism optional; those are the required objectives for this hour.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain inheritance as an <strong>is-a</strong> relationship and give a reasonable example.</li>
+<li>Explain composition as a <strong>has-a</strong> relationship and give a reasonable example.</li>
+<li>Choose composition instead of inheritance when an object needs to use or hold another object.</li>
+<li>Describe polymorphism as calling different objects through the same expected method name.</li>
+<li>Explain Python duck typing: if an object provides the method the caller needs, the caller does not require a shared parent class.</li>
+<li>Identify <code>if</code>/<code>elif</code> chains that are good candidates for polymorphic refactoring.</li>
+<li>Refactor a deterministic branching exporter into at least two classes with the same method name.</li>
+<li>Demonstrate a composed object that stores a formatter or processor and delegates work to it.</li>
+<li>Keep printing or display logic in caller/demo code where appropriate while service/model objects return strings or data.</li>
+<li>Avoid overengineering with too many tiny classes or mixing inheritance and composition without a clear reason.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 1, Hour 4 visible for yourself. The required scope is composition vs inheritance, polymorphism, a messy <code>if</code>/<code>elif</code> refactor, a composed object holding another object, a lab refactor exercise, completion criteria, common pitfalls, optional third implementation, and a quick check about composition being safer than inheritance.</li>
+<li>Open the learner project from Hour 3, or prepare a clean <code>advanced_tracker</code> workspace with a <code>src/</code> directory.</li>
+<li>Prepare a blank file named <code>day1_hour4_polymorphism_demo.py</code> for the live demo, or be ready to create it in front of the class.</li>
+<li>Confirm the terminal command for the environment. Use <code>python day1_hour4_polymorphism_demo.py</code> if <code>python</code> works. If the lab requires <code>python3</code>, consistently say and show <code>python3 day1_hour4_polymorphism_demo.py</code>.</li>
+<li>Prepare a board or shared note with these definitions:</li>
+</ul>
+<pre><code class="language-text">Inheritance: use when one type really is a specialized version of another type.
+Composition: use when one object has or uses another object.
+Polymorphism: different objects can be used through the same expected method.
+Duck typing: Python cares more about available behavior than declared ancestry.
+</code></pre>
+<ul>
+<li>Be ready to correct two common mistakes early. First, learners may create a base class because they think polymorphism always requires inheritance. It does not in Python. Second, learners may move the <code>if</code>/<code>elif</code> chain into a new class and believe they refactored. They have only relocated the branching; they have not simplified the design.</li>
+<li>Decide whether learners will use an exporter, checkout/payment, notification, or tracker report scenario for the lab. This script uses a report exporter because it connects naturally to tracker-style applications.</li>
+</ul>
+<p>Suggested board note before the session starts:</p>
+<pre><code class="language-text">Day 1 Hour 4 goals:
+1. Inheritance = is-a
+2. Composition = has-a
+3. Polymorphism = same call, different objects
+4. Refactor if/elif into shared-method classes
+5. Use a runner/service that has-a formatter
+</code></pre>
+<hr>
+<h2 id="opening-bridge-from-hour-3-5-minutes">Opening Bridge from Hour 3 (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"In Hour 3, we focused on objects protecting their own valid state. We used properties, invariants, and custom exceptions to make invalid data difficult to store. That was a big step toward professional object-oriented code. A class was no longer just a bag of attributes. It became a place where important rules live."</p>
+<p>"Now we are going to look at the next design question: once we have more than one object, how should those objects relate to each other? Should one class inherit from another? Should one object hold another object? Should a function choose behavior with <code>if</code> and <code>elif</code>, or can it call a method on an object and let the object decide how to do the work?"</p>
+<p>"These choices matter because code grows. Early in a program, one <code>if</code> statement feels harmless. Then a second case is added. Then a third format is needed. Then one branch needs validation, another branch needs a different output structure, and another branch needs a special field. Soon the function becomes a long control center that knows too much about every variation. At that point, a small change in one feature can accidentally break another feature."</p>
+<p>Pause and ask:</p>
+<p>"Think about a feature like exporting a report. Maybe it can export plain text, a dictionary for an API, or CSV later. Where have you seen code that says something like <code>if format_type == 'text'</code>, <code>elif format_type == 'json'</code>, <code>elif format_type == 'csv'</code>?"</p>
+<p>Take a few short answers. Connect them:</p>
+<p>"Exactly. That style is common. It is not evil. Branching is a normal programming tool. But today we learn when branching is becoming a design smell. If the branches represent different kinds of objects that all do the same conceptual job, polymorphism may let us simplify the caller."</p>
+<p>"The key phrase for this hour is: same request, different object. We want the caller to say, 'format this report,' without caring whether it received a text formatter or a dictionary formatter. That is polymorphism."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's name the vocabulary first, then we will refactor a small report exporter. The demo will start with working code that uses <code>if</code> and <code>elif</code>, because in real life we often refactor from working code. Then we will move toward a design that is easier to extend."</p>
+<hr>
+<h2 id="outcomes-and-vocabulary-5-minutes">Outcomes and Vocabulary (5 minutes)</h2>
+<p>Use this section to make the vocabulary practical. Keep it concrete and repeat the relationship language several times.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"There are four vocabulary items we need today: inheritance, composition, polymorphism, and duck typing."</p>
+<p>"First, <strong>inheritance</strong>. Inheritance means one class is based on another class. A subclass receives behavior or structure from a parent class. The design question is not, 'Can Python technically do this?' Python can do many things. The design question is, 'Does this relationship mean the subclass really <strong>is a</strong> kind of the parent?'"</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Inheritance test:
+Can I honestly say &quot;A ___ is a ___&quot;?
+</code></pre>
+<p>"For example, if we had a general <code>Report</code> class and a <code>SalesReport</code> class, we might say, 'A sales report is a report.' That might be a reasonable inheritance relationship. We would still need to think carefully, but the sentence at least makes sense."</p>
+<p>"Second, <strong>composition</strong>. Composition means one object contains, stores, receives, or uses another object. The relationship is <strong>has-a</strong> or <strong>uses-a</strong>. If a <code>ReportRunner</code> has a formatter, the runner should not inherit from the formatter. A report runner is not a formatter. It uses a formatter."</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Composition test:
+Can I honestly say &quot;A ___ has a ___&quot; or &quot;A ___ uses a ___&quot;?
+</code></pre>
+<p>"Third, <strong>polymorphism</strong>. The word means many forms. In code, it means different objects can respond to the same kind of request. A text formatter and a dictionary formatter can both have a method named <code>format</code>. The caller does not need to know the internal details. It calls <code>formatter.format(report)</code> either way."</p>
+<p>"Fourth, <strong>duck typing</strong>. Python often cares more about what an object can do than what it inherits from. You may have heard the phrase, 'If it walks like a duck and quacks like a duck, treat it like a duck.' In our code, if an object has the method we need, such as <code>format(report)</code>, then the caller can use it. The object does not have to inherit from a shared base class just to be useful."</p>
+<p>"That does not mean inheritance is bad. Inheritance is powerful when the relationship is real and stable. It does mean inheritance is not required for every shared method name."</p>
+<p><strong>Instructor emphasis</strong></p>
+<p>"A very common early advanced mistake is to think, 'These two classes both have a <code>format</code> method, so I must create a parent class.' Not necessarily. In Python, shared behavior at the call site can be enough. Later in the course, when we discuss protocols, abstract base classes, and larger architecture, we will see more formal tools. For this hour, the important habit is simpler: choose the relationship intentionally."</p>
+<hr>
+<h2 id="concept-briefing-choosing-the-relationship-10-minutes">Concept Briefing: Choosing the Relationship (10 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's use a tracker-style example. Imagine our application stores a small project report. The report has a title and a few metrics. We want to export it as readable text for a person, and as a dictionary for another part of a program. Later, we might add CSV."</p>
+<p>"A beginner-friendly first version might use one function with a format string."</p>
+<pre><code class="language-python">def export_report(report: dict[str, object], format_type: str) -&gt; object:
+    if format_type == &quot;text&quot;:
+        return &quot;some text&quot;
+    elif format_type == &quot;dict&quot;:
+        return {&quot;some&quot;: &quot;data&quot;}
+    else:
+        raise ValueError(&quot;Unknown format&quot;)
+</code></pre>
+<p>"That works. It is not automatically wrong. But notice the direction of change. Every time we add a new format, we reopen this function. We add another branch. We risk breaking an existing branch. The caller also has to pass a string that might be misspelled. The function becomes a traffic controller for every variation."</p>
+<p>"Now ask a different question. Are text formatting and dictionary formatting two different <strong>kinds of behavior</strong> that share the same conceptual request? Yes. Both answer the request, 'format this report.' That suggests polymorphism."</p>
+<p>"Should <code>TextReportFormatter</code> inherit from <code>DictReportFormatter</code>? No. A text formatter is not a dictionary formatter. Should both inherit from <code>ReportRunner</code>? No. A formatter is not a runner. Should <code>ReportRunner</code> inherit from a formatter so it can format reports? Also no. A runner has or uses a formatter. That is composition."</p>
+<p>Write this mapping:</p>
+<pre><code class="language-text">TextReportFormatter and DictReportFormatter:
+    same method name: format(report)
+    relationship to caller: polymorphism
+
+ReportRunner:
+    has a formatter
+    relationship: composition
+
+No inheritance needed:
+    neither formatter is a specialized kind of the other
+    the runner is not a formatter
+</code></pre>
+<p>"This is the design judgment we want. We are not trying to eliminate every <code>if</code> statement from every program. We are trying to notice when branching is selecting between interchangeable behaviors. When that happens, one clean option is to move each behavior into its own object and let the caller use the same method name."</p>
+<p><strong>Ask a prediction question</strong></p>
+<p>"If both formatter classes define a method named <code>format</code>, what does the caller need to know before it can use a formatter?"</p>
+<p>Expected answers:</p>
+<ul>
+<li>"It needs to know that the object has a <code>format</code> method."</li>
+<li>"It needs to know what argument to pass."</li>
+<li>"It needs to know what the method returns."</li>
+</ul>
+<p>Respond:</p>
+<p>"Good. That is the practical interface. The interface here is not a formal Python base class. It is the shared expectation: this object can format this report when I call <code>format(report)</code>."</p>
+<p><strong>Clarify return values and printing</strong></p>
+<p>"One more design habit before the demo. The formatter should return a value. It should not usually print directly. Printing is a display decision. Returning strings or data makes the code easier to test and reuse. In the demo, the caller code will print the result so we can see it. The formatter classes will return strings or dictionaries."</p>
+<p>"That boundary connects to Hour 2 and Hour 3. In Hour 2, we kept <code>print()</code> out of the model when possible. In Hour 3, we kept domain validation inside the object and user-friendly display at the caller boundary. Today we keep formatting behavior inside formatter objects, while display remains in demo or caller code."</p>
+<p><strong>Relationship examples</strong></p>
+<p>"Let's do a few quick relationship checks."</p>
+<ol>
+<li>"<code>Checkout</code> and <code>PaymentProcessor</code>: A checkout has a payment processor. Composition."</li>
+<li>"<code>EmailNotifier</code> and <code>SmsNotifier</code>: One is not a special kind of the other. They may share a <code>send</code> method. Polymorphism."</li>
+<li>"<code>SavingsAccount</code> and <code>BankAccount</code>: A savings account is a bank account. Inheritance might be reasonable if the shared rules are stable."</li>
+<li>"<code>Task</code> and <code>Logger</code>: A task is not a logger. If a task needs logging, it has or uses a logger. Composition."</li>
+<li>"<code>ReportRunner</code> and <code>TextReportFormatter</code>: A runner is not a formatter. It has a formatter. Composition."</li>
+</ol>
+<p>"When learners start using classes heavily, it is tempting to make elaborate family trees. Resist that urge. A shallow design that uses composition is often easier to change than a deep inheritance hierarchy."</p>
+<p><strong>Transition to demo</strong></p>
+<p>"Now we will start from a working but branching exporter. Then we will refactor in small steps. Watch for three things: the before-state branch, the two classes with the same method name, and the composed runner that stores a formatter object."</p>
+<hr>
+<h2 id="live-demo-refactor-report-export-branching-10-minutes">Live Demo: Refactor Report Export Branching (10 minutes)</h2>
+<p>Create or open <code>day1_hour4_polymorphism_demo.py</code>. Explain that the file is self-contained and deterministic. There is no user input, no file system dependency, and no randomness.</p>
+<h3 id="step-1-start-with-a-working-before-state">Step 1: Start with a working before-state</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First, we need a small report. I am using a dictionary so we can focus on design relationships rather than data modeling. In a larger project, this could be a dataclass or a validated model class. Today the relationship pattern is the main point."</p>
+<p>Type or paste:</p>
+<pre><code class="language-python">from typing import Any
+
+
+Report = dict[str, Any]
+
+
+def export_report(report: Report, format_type: str) -&gt; object:
+    if format_type == &quot;text&quot;:
+        lines = [
+            f&quot;Report: {report['title']}&quot;,
+            f&quot;Completed: {report['completed']}&quot;,
+            f&quot;Pending: {report['pending']}&quot;,
+        ]
+        return &quot;\n&quot;.join(lines)
+    elif format_type == &quot;dict&quot;:
+        total = int(report[&quot;completed&quot;]) + int(report[&quot;pending&quot;])
+        return {
+            &quot;title&quot;: report[&quot;title&quot;],
+            &quot;completed&quot;: report[&quot;completed&quot;],
+            &quot;pending&quot;: report[&quot;pending&quot;],
+            &quot;total&quot;: total,
+        }
+    else:
+        raise ValueError(f&quot;Unknown report format: {format_type}&quot;)
+
+
+def run_before_demo() -&gt; None:
+    report = {
+        &quot;title&quot;: &quot;Day 1 Tracker&quot;,
+        &quot;completed&quot;: 7,
+        &quot;pending&quot;: 3,
+    }
+
+    text_output = export_report(report, &quot;text&quot;)
+    dict_output = export_report(report, &quot;dict&quot;)
+
+    print(&quot;BEFORE: text export&quot;)
+    print(text_output)
+    print()
+    print(&quot;BEFORE: dict export&quot;)
+    print(dict_output)
+
+
+run_before_demo()
+</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash">python day1_hour4_polymorphism_demo.py
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">BEFORE: text export
+Report: Day 1 Tracker
+Completed: 7
+Pending: 3
+
+BEFORE: dict export
+{'title': 'Day 1 Tracker', 'completed': 7, 'pending': 3, 'total': 10}
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"This code works. That is important. Refactoring usually starts from working code. We are not refactoring because the output is wrong. We are refactoring because the shape of the code makes future change harder than it needs to be."</p>
+<p>"What is the smell? The <code>export_report</code> function knows every format. If we add CSV, we edit this function. If we add HTML, we edit this function again. If the text format changes, we risk touching code near the dictionary format. Also, the format type is a string, which can be misspelled."</p>
+<p>"The branches represent interchangeable behavior. Both branches answer the same request: format this report. That means we can try polymorphism."</p>
+<h3 id="step-2-refactor-into-two-classes-with-the-same-method-name">Step 2: Refactor into two classes with the same method name</h3>
+<p>Replace the file with the refactored version, or comment out the before-state and add the after-state below it. If time is tight, paste the after-state and narrate each part.</p>
+<pre><code class="language-python">from typing import Any
+
+
+Report = dict[str, Any]
+
+
+class TextReportFormatter:
+    def format(self, report: Report) -&gt; str:
+        lines = [
+            f&quot;Report: {report['title']}&quot;,
+            f&quot;Completed: {report['completed']}&quot;,
+            f&quot;Pending: {report['pending']}&quot;,
+        ]
+        return &quot;\n&quot;.join(lines)
+
+
+class DictReportFormatter:
+    def format(self, report: Report) -&gt; dict[str, Any]:
+        total = int(report[&quot;completed&quot;]) + int(report[&quot;pending&quot;])
+        return {
+            &quot;title&quot;: report[&quot;title&quot;],
+            &quot;completed&quot;: report[&quot;completed&quot;],
+            &quot;pending&quot;: report[&quot;pending&quot;],
+            &quot;total&quot;: total,
+        }
+
+
+class ReportRunner:
+    def __init__(self, formatter: Any) -&gt; None:
+        self.formatter = formatter
+
+    def build_output(self, report: Report) -&gt; object:
+        return self.formatter.format(report)
+
+
+def run_after_demo() -&gt; None:
+    report = {
+        &quot;title&quot;: &quot;Day 1 Tracker&quot;,
+        &quot;completed&quot;: 7,
+        &quot;pending&quot;: 3,
+    }
+
+    text_runner = ReportRunner(TextReportFormatter())
+    dict_runner = ReportRunner(DictReportFormatter())
+
+    print(&quot;AFTER: text export&quot;)
+    print(text_runner.build_output(report))
+    print()
+    print(&quot;AFTER: dict export&quot;)
+    print(dict_runner.build_output(report))
+
+
+run_after_demo()
+</code></pre>
+<p>Run it again:</p>
+<pre><code class="language-bash">python day1_hour4_polymorphism_demo.py
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">AFTER: text export
+Report: Day 1 Tracker
+Completed: 7
+Pending: 3
+
+AFTER: dict export
+{'title': 'Day 1 Tracker', 'completed': 7, 'pending': 3, 'total': 10}
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now look at what changed. The text-specific logic lives in <code>TextReportFormatter</code>. The dictionary-specific logic lives in <code>DictReportFormatter</code>. Both classes have a method named <code>format</code>. That shared method name is what lets the caller treat them polymorphically."</p>
+<p>"The <code>ReportRunner</code> demonstrates composition. It has a formatter. The formatter is stored in <code>self.formatter</code>. The runner does not inherit from either formatter. It is not a text formatter. It is not a dictionary formatter. It is an object that uses a formatter to build output."</p>
+<p>"This line is the composition moment:"</p>
+<pre><code class="language-python">text_runner = ReportRunner(TextReportFormatter())
+</code></pre>
+<p>"We are passing one object into another object. Then the <code>ReportRunner</code> stores it. That is a <strong>has-a</strong> relationship."</p>
+<p>"This line is the polymorphism moment:"</p>
+<pre><code class="language-python">return self.formatter.format(report)
+</code></pre>
+<p>"The runner does not ask, 'Are you a text formatter? Are you a dictionary formatter?' It simply calls the method it expects. If the formatter object has a compatible <code>format</code> method, this works."</p>
+<p><strong>Important type-hint note</strong></p>
+<p>"You may notice I used <code>formatter: Any</code> in the constructor for now. <code>Any</code> keeps the Day 1 example simple while avoiding a misleading <code>object</code> annotation that would hide the expected <code>format</code> method from static checkers. Later in the course, we can make this more precise with protocols or abstract base classes. Today, we are learning the design idea: shared method name, duck typing, and composition. The object must provide the behavior the runner needs."</p>
+<p>If learners ask whether this is unsafe, respond:</p>
+<p>"It is flexible, but the caller is responsible for passing the right kind of object. In production code, we may add tests, protocols, abstract base classes, or runtime validation. But do not jump to those tools too early. First understand the relationship."</p>
+<h3 id="step-3-explain-why-inheritance-is-not-needed">Step 3: Explain why inheritance is not needed</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Should we create a parent class named <code>ReportFormatter</code>? Maybe later, maybe not. For this demo, we do not need it. Why? Because neither formatter needs inherited code from a parent. We do not have shared state. We do not have shared behavior. We only have a shared method name. Python's duck typing handles that nicely."</p>
+<p>"If I wrote <code>class TextReportFormatter(DictReportFormatter)</code>, that would be wrong. A text formatter is not a dictionary formatter. If I wrote <code>class ReportRunner(TextReportFormatter)</code>, that would also be wrong. A report runner is not a text formatter. These would be examples of using inheritance because it feels advanced rather than because the relationship is true."</p>
+<p>"Professional design often means saying no to a tool. We know inheritance exists. We choose not to use it when composition and polymorphism express the design more clearly."</p>
+<h3 id="step-4-optional-quick-extension-if-the-demo-is-ahead-of-schedule">Step 4: Optional quick extension if the demo is ahead of schedule</h3>
+<p>If you are ahead by two minutes, add a third formatter to show extension without modifying <code>ReportRunner</code>.</p>
+<pre><code class="language-python">class SummaryReportFormatter:
+    def format(self, report: Report) -&gt; str:
+        total = int(report[&quot;completed&quot;]) + int(report[&quot;pending&quot;])
+        return f&quot;{report['title']}: {report['completed']} of {total} complete&quot;
+</code></pre>
+<p>Then add:</p>
+<pre><code class="language-python">summary_runner = ReportRunner(SummaryReportFormatter())
+print()
+print(&quot;AFTER: summary export&quot;)
+print(summary_runner.build_output(report))
+</code></pre>
+<p>Expected additional output:</p>
+<pre><code class="language-text">AFTER: summary export
+Day 1 Tracker: 7 of 10 complete
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"Notice what we did not edit. We did not edit <code>ReportRunner</code>. We did not add another branch inside <code>build_output</code>. We created one more object with the same expected method. That is the payoff."</p>
+<p>Do not let this optional extension consume lab time. If the room is moving slowly, skip the third formatter and proceed to the lab.</p>
+<hr>
+<h2 id="guided-lab-refactor-a-branching-feature-25-minutes">Guided Lab: Refactor a Branching Feature (25 minutes)</h2>
+<p><strong>Lab framing</strong></p>
+<p>"Now you will do the same kind of refactor. Start with a feature that works using <code>if</code> and <code>elif</code>. Then refactor into two classes that share the same method name. Finally, create a composed object that stores one of those objects and calls it through the shared interface."</p>
+<p>"You may use the report exporter scenario below, or you may adapt it to checkout/payment processors, notifications, or another tracker-related feature. The completion criteria are the same either way."</p>
+<h3 id="required-lab-scenario">Required lab scenario</h3>
+<p>Learners should begin with this starter code or an equivalent branching feature:</p>
+<pre><code class="language-python">from typing import Any
+
+
+Report = dict[str, Any]
+
+
+def export_summary(report: Report, format_type: str) -&gt; object:
+    if format_type == &quot;text&quot;:
+        return (
+            f&quot;{report['title']}\n&quot;
+            f&quot;Owner: {report['owner']}\n&quot;
+            f&quot;Open items: {report['open_items']}&quot;
+        )
+    elif format_type == &quot;dict&quot;:
+        return {
+            &quot;title&quot;: report[&quot;title&quot;],
+            &quot;owner&quot;: report[&quot;owner&quot;],
+            &quot;open_items&quot;: report[&quot;open_items&quot;],
+            &quot;status&quot;: &quot;needs attention&quot; if report[&quot;open_items&quot;] else &quot;clear&quot;,
+        }
+    else:
+        raise ValueError(f&quot;Unsupported format: {format_type}&quot;)
+
+
+def main() -&gt; None:
+    report = {
+        &quot;title&quot;: &quot;Refactor Lab&quot;,
+        &quot;owner&quot;: &quot;Data Team&quot;,
+        &quot;open_items&quot;: 4,
+    }
+
+    print(export_summary(report, &quot;text&quot;))
+    print(export_summary(report, &quot;dict&quot;))
+
+
+main()
+</code></pre>
+<h3 id="lab-tasks">Lab tasks</h3>
+<p>Ask learners to complete these tasks in order:</p>
+<ol>
+<li>Run the starter code and confirm the before-state works.</li>
+<li>Create a <code>TextSummaryFormatter</code> class with a method named <code>format</code>.</li>
+<li>Create a <code>DictSummaryFormatter</code> class with the same method name, <code>format</code>.</li>
+<li>Move the text branch logic into <code>TextSummaryFormatter.format</code>.</li>
+<li>Move the dictionary branch logic into <code>DictSummaryFormatter.format</code>.</li>
+<li>Create a composed object named <code>SummaryExporter</code>, <code>ReportRunner</code>, or similar.</li>
+<li>Give that object an <code>__init__</code> method that accepts a formatter object and stores it on <code>self</code>.</li>
+<li>Give the composed object a method such as <code>export(report)</code> or <code>build_output(report)</code> that calls <code>self.formatter.format(report)</code>.</li>
+<li>Update <code>main()</code> so it creates one runner with <code>TextSummaryFormatter()</code> and one runner with <code>DictSummaryFormatter()</code>.</li>
+<li>Print the returned output in <code>main()</code>, not inside the formatter classes.</li>
+</ol>
+<h3 id="lab-success-shape">Lab success shape</h3>
+<p>Learner solutions may vary, but they should resemble this structure:</p>
+<pre><code class="language-python">from typing import Any
+
+
+Report = dict[str, Any]
+
+
+class TextSummaryFormatter:
+    def format(self, report: Report) -&gt; str:
+        return (
+            f&quot;{report['title']}\n&quot;
+            f&quot;Owner: {report['owner']}\n&quot;
+            f&quot;Open items: {report['open_items']}&quot;
+        )
+
+
+class DictSummaryFormatter:
+    def format(self, report: Report) -&gt; dict[str, Any]:
+        return {
+            &quot;title&quot;: report[&quot;title&quot;],
+            &quot;owner&quot;: report[&quot;owner&quot;],
+            &quot;open_items&quot;: report[&quot;open_items&quot;],
+            &quot;status&quot;: &quot;needs attention&quot; if report[&quot;open_items&quot;] else &quot;clear&quot;,
+        }
+
+
+class SummaryExporter:
+    def __init__(self, formatter: Any) -&gt; None:
+        self.formatter = formatter
+
+    def export(self, report: Report) -&gt; object:
+        return self.formatter.format(report)
+
+
+def main() -&gt; None:
+    report = {
+        &quot;title&quot;: &quot;Refactor Lab&quot;,
+        &quot;owner&quot;: &quot;Data Team&quot;,
+        &quot;open_items&quot;: 4,
+    }
+
+    text_exporter = SummaryExporter(TextSummaryFormatter())
+    dict_exporter = SummaryExporter(DictSummaryFormatter())
+
+    print(&quot;Text output:&quot;)
+    print(text_exporter.export(report))
+    print()
+    print(&quot;Dictionary output:&quot;)
+    print(dict_exporter.export(report))
+
+
+main()
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Text output:
+Refactor Lab
+Owner: Data Team
+Open items: 4
+
+Dictionary output:
+{'title': 'Refactor Lab', 'owner': 'Data Team', 'open_items': 4, 'status': 'needs attention'}
+</code></pre>
+<h3 id="instructor-circulation-plan">Instructor circulation plan</h3>
+<p>Use the first 5 minutes to make sure everyone has a working before-state. Say:</p>
+<p>"Do not refactor code you have not run. First prove the starting behavior. Refactoring means changing structure while preserving behavior."</p>
+<p>Use the next 10 minutes to look for the shared method name. Ask:</p>
+<p>"What method name did you choose for both classes?"</p>
+<p>If a learner has <code>to_text</code> in one class and <code>to_dict</code> in another, guide them:</p>
+<p>"Those names describe the output type, but they do not give the caller one common request. For polymorphism, the caller should be able to make the same call on either object. Try using <code>format(report)</code> on both, or use <code>export(report)</code> on both."</p>
+<p>Use the next 5 minutes to check composition. Ask:</p>
+<p>"Where is one object stored inside another object?"</p>
+<p>Expected learner answer:</p>
+<p>"The exporter stores the formatter on <code>self.formatter</code>."</p>
+<p>If they only have standalone formatter classes and no composed runner, prompt:</p>
+<p>"You have the polymorphic classes. Now add an object that has one of those classes. Its job is to receive a formatter in <code>__init__</code>, store it, and call the shared method."</p>
+<p>Use the final 5 minutes for completion checks, optional extensions, and one or two quick student explanations.</p>
+<h3 id="required-completion-criteria">Required completion criteria</h3>
+<p>By the end of the lab, each learner should be able to show:</p>
+<ul>
+<li>The original feature started with <code>if</code>/<code>elif</code> branching.</li>
+<li>The refactor reduced or removed the format-selection branching from the main export path.</li>
+<li>There are at least two classes with the same method name.</li>
+<li>The shared method accepts the same kind of input.</li>
+<li>The caller can use both objects through the same interface.</li>
+<li>There is a composed object that stores another object, such as <code>self.formatter</code>.</li>
+<li>The feature still works and produces equivalent useful output.</li>
+<li>The resulting code is easier to read because each class owns one variation.</li>
+</ul>
+<hr>
+<h2 id="troubleshooting-during-the-lab">Troubleshooting During the Lab</h2>
+<h3 id="problem-the-learner-created-classes-but-kept-the-entire-ifelif">Problem: The learner created classes but kept the entire <code>if</code>/<code>elif</code></h3>
+<p><strong>Symptom</strong></p>
+<p>The code now has a class named <code>Exporter</code>, but inside it there is still a long method:</p>
+<pre><code class="language-python">def export(self, report: Report, format_type: str) -&gt; object:
+    if format_type == &quot;text&quot;:
+        ...
+    elif format_type == &quot;dict&quot;:
+        ...
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"This is a common first step, but it is not the refactor we are aiming for. You moved the branch into a class, but the class still knows every format. Try creating one class per format. Then the caller chooses the object once, and the export method no longer needs to ask which format it is."</p>
+<h3 id="problem-the-learner-used-inheritance-without-an-is-a-relationship">Problem: The learner used inheritance without an is-a relationship</h3>
+<p><strong>Symptom</strong></p>
+<p>The code says something like:</p>
+<pre><code class="language-python">class DictSummaryFormatter(TextSummaryFormatter):
+    ...
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"Read that relationship out loud. Is a dictionary formatter a text formatter? Not really. They are siblings in behavior, not parent and child. They can share a method name without inheriting from each other. Remove the inheritance for now and let both classes stand independently."</p>
+<h3 id="problem-the-composed-object-is-missing">Problem: The composed object is missing</h3>
+<p><strong>Symptom</strong></p>
+<p>The learner directly calls:</p>
+<pre><code class="language-python">TextSummaryFormatter().format(report)
+DictSummaryFormatter().format(report)
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"That demonstrates polymorphism, but we also need composition today. Add a small <code>SummaryExporter</code> or <code>ReportRunner</code> that receives a formatter object in <code>__init__</code>, stores it, and delegates to it. The important line will look like <code>self.formatter = formatter</code>."</p>
+<h3 id="problem-the-classes-print-instead-of-returning-values">Problem: The classes print instead of returning values</h3>
+<p><strong>Symptom</strong></p>
+<p>The formatter method contains <code>print(...)</code> and returns <code>None</code>.</p>
+<p><strong>Instructor response</strong></p>
+<p>"For this design, make the formatter return the formatted value. Then <code>main()</code> can print it. Returning values keeps the formatter easier to test and reuse. If tomorrow we send the output to a file, an API, or a GUI, a returned value is more flexible than a print statement buried inside the formatter."</p>
+<h3 id="problem-the-shared-method-names-do-not-match">Problem: The shared method names do not match</h3>
+<p><strong>Symptom</strong></p>
+<p>One class has <code>to_text</code>; another has <code>to_dict</code>; the runner has to branch or know which one to call.</p>
+<p><strong>Instructor response</strong></p>
+<p>"Those method names are descriptive, but they force the caller to know the concrete type. For polymorphism, choose one shared method name, such as <code>format</code> or <code>export</code>. The object decides how to satisfy that request."</p>
+<h3 id="problem-attributeerror-appears">Problem: AttributeError appears</h3>
+<p><strong>Symptom</strong></p>
+<p>The terminal shows:</p>
+<pre><code class="language-text">AttributeError: 'Something' object has no attribute 'format'
+</code></pre>
+<p><strong>Instructor response</strong></p>
+<p>"This is duck typing feedback. The runner expected an object with a <code>format</code> method, but the object it received did not provide that method name. Check the object you passed into the runner. Check the spelling of the method. Check whether you called <code>format_report</code> in one place and <code>format</code> in another."</p>
+<h3 id="problem-the-learner-created-many-tiny-classes">Problem: The learner created many tiny classes</h3>
+<p><strong>Symptom</strong></p>
+<p>There is a class for the title line, a class for the owner line, a class for the open-items line, and a class for every small expression.</p>
+<p><strong>Instructor response</strong></p>
+<p>"This is overengineering. Advanced design does not mean every line gets its own class. A class should own a meaningful responsibility. In this lab, one formatter class per output variation is enough."</p>
+<hr>
+<h2 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h2>
+<ol>
+<li><strong>Using inheritance because it looks advanced</strong></li>
+</ol>
+<p>Inheritance should communicate a real <strong>is-a</strong> relationship. If the sentence sounds false, avoid the inheritance. A <code>Checkout</code> is not a <code>PaymentProcessor</code>. A <code>ReportRunner</code> is not a <code>TextFormatter</code>. A <code>Task</code> is not a <code>Logger</code>.</p>
+<ol start="2">
+<li><strong>Confusing shared method names with shared ancestry</strong></li>
+</ol>
+<p>In Python, two classes can both define <code>format</code> without inheriting from the same parent. That is often enough for simple duck-typed polymorphism.</p>
+<ol start="3">
+<li><strong>Moving branching instead of reducing branching</strong></li>
+</ol>
+<p>A class that contains the same large <code>if</code>/<code>elif</code> chain may not be an improvement. The goal is to let different objects own different behavior so the caller does not need to know every case.</p>
+<ol start="4">
+<li><strong>Mixing inheritance and composition without a reason</strong></li>
+</ol>
+<p>A design can use both tools, but each relationship needs a reason. If an object has another object, use composition. If one type truly is a specialized version of another type, inheritance may fit. Do not combine them because the diagram looks more impressive.</p>
+<ol start="5">
+<li><strong>Printing inside service or formatter code too early</strong></li>
+</ol>
+<p>Printing makes demos visible, but it also couples logic to the terminal. Prefer returning strings or data from formatter and service objects. Print at the caller boundary.</p>
+<ol start="6">
+<li><strong>Creating too many tiny classes</strong></li>
+</ol>
+<p>Polymorphism is useful when there are meaningful interchangeable behaviors. It is not useful if every small line of code becomes a new class. Keep the design as simple as the problem allows.</p>
+<ol start="7">
+<li><strong>Letting type strings leak everywhere</strong></li>
+</ol>
+<p>A string such as <code>"text"</code> or <code>"dict"</code> can be useful at a boundary, such as command-line input or an API request. But once the program has chosen a formatter object, the deeper code should not keep branching on the same string.</p>
+<hr>
+<h2 id="optional-extensions">Optional Extensions</h2>
+<p>Offer these only after learners have met the required completion criteria.</p>
+<h3 id="extension-1-add-a-third-implementation">Extension 1: Add a third implementation</h3>
+<p>Add a <code>CsvSummaryFormatter</code> or <code>SummaryLineFormatter</code> with the same method name:</p>
+<pre><code class="language-python">class CsvSummaryFormatter:
+    def format(self, report: Report) -&gt; str:
+        return (
+            &quot;title,owner,open_items\n&quot;
+            f&quot;{report['title']},{report['owner']},{report['open_items']}&quot;
+        )
+</code></pre>
+<p>Then demonstrate:</p>
+<pre><code class="language-python">csv_exporter = SummaryExporter(CsvSummaryFormatter())
+print(csv_exporter.export(report))
+</code></pre>
+<p>The important rule: do not edit <code>SummaryExporter</code> to add a CSV branch. The extension is successful only if the composed runner can use the new formatter through the same method call.</p>
+<h3 id="extension-2-boundary-mapping-from-strings-to-objects">Extension 2: Boundary mapping from strings to objects</h3>
+<p>If learners ask how a real app chooses the formatter from user input, show a small boundary-level mapping:</p>
+<pre><code class="language-python">formatters = {
+    &quot;text&quot;: TextSummaryFormatter(),
+    &quot;dict&quot;: DictSummaryFormatter(),
+    &quot;csv&quot;: CsvSummaryFormatter(),
+}
+
+chosen_formatter = formatters[&quot;text&quot;]
+exporter = SummaryExporter(chosen_formatter)
+</code></pre>
+<p>Emphasize:</p>
+<p>"A small dictionary at the boundary is different from scattering <code>if</code>/<code>elif</code> logic throughout the application. The boundary chooses an object. The rest of the code uses the shared interface."</p>
+<h3 id="extension-3-checkoutpayment-variation">Extension 3: Checkout/payment variation</h3>
+<p>Fast finishers may refactor a checkout example instead:</p>
+<pre><code class="language-python">class CreditCardProcessor:
+    def process(self, amount: float) -&gt; str:
+        return f&quot;Charged ${amount:.2f} to credit card&quot;
+
+
+class GiftCardProcessor:
+    def process(self, amount: float) -&gt; str:
+        return f&quot;Used ${amount:.2f} from gift card balance&quot;
+
+
+class Checkout:
+    def __init__(self, processor: Any) -&gt; None:
+        self.processor = processor
+
+    def complete(self, amount: float) -&gt; str:
+        return self.processor.process(amount)
+</code></pre>
+<p>Ask:</p>
+<p>"Which relationship is composition here?"</p>
+<p>Expected answer:</p>
+<p>"Checkout has a processor."</p>
+<p>Ask:</p>
+<p>"Which part demonstrates polymorphism?"</p>
+<p>Expected answer:</p>
+<p>"Both processors have <code>process(amount)</code>, and <code>Checkout.complete</code> calls that method without branching."</p>
+<hr>
+<h2 id="quick-checks-completion-criteria-and-wrap-up-5-minutes">Quick Checks, Completion Criteria, and Wrap-up (5 minutes)</h2>
+<h3 id="quick-check-1-composition-safer-than-inheritance">Quick check 1: Composition safer than inheritance</h3>
+<p>Ask:</p>
+<p>"Name one scenario where composition is safer or more flexible than inheritance."</p>
+<p>Expected answers:</p>
+<ul>
+<li>"When an object needs to use a helper, such as a report runner using a formatter."</li>
+<li>"When behavior may change at runtime, such as swapping a payment processor."</li>
+<li>"When the relationship is has-a instead of is-a."</li>
+<li>"When a class would otherwise inherit from something it is not, such as a task inheriting from a logger."</li>
+</ul>
+<p>Reinforce:</p>
+<p>"Good. Composition is safer when we want to plug in or swap behavior without claiming one class is a subtype of another."</p>
+<h3 id="quick-check-2-identify-the-relationship">Quick check 2: Identify the relationship</h3>
+<p>Read each prompt and ask learners to answer "inheritance," "composition," or "polymorphism."</p>
+<ol>
+<li>
+<p>"<code>Checkout</code> stores a <code>CreditCardProcessor</code> object."
+   Expected: "Composition."</p>
+</li>
+<li>
+<p>"<code>TextFormatter</code> and <code>DictFormatter</code> both have <code>format(report)</code> and the caller uses either one."
+   Expected: "Polymorphism."</p>
+</li>
+<li>
+<p>"<code>AdminUser</code> is a specialized kind of <code>User</code>."
+   Expected: "Inheritance may be appropriate."</p>
+</li>
+<li>
+<p>"<code>ReportRunner</code> inherits from <code>TextFormatter</code> so it can use text formatting."
+   Expected: "Probably wrong. Use composition."</p>
+</li>
+</ol>
+<h3 id="completion-criteria-for-the-hour">Completion criteria for the hour</h3>
+<p>Before ending, make sure learners can show or explain:</p>
+<ul>
+<li>They know inheritance is for <strong>is-a</strong> relationships.</li>
+<li>They know composition is for <strong>has-a</strong> or <strong>uses-a</strong> relationships.</li>
+<li>They can describe polymorphism as using the same method call with different objects.</li>
+<li>They refactored a branching feature into at least two shared-method classes.</li>
+<li>They used a composed object that stores another object.</li>
+<li>The feature still works after refactoring.</li>
+<li>The code is easier to read because each variation has a clear home.</li>
+</ul>
+<h3 id="wrap-up-script">Wrap-up script</h3>
+<p>"Today closes Day 1 of Advanced Python. We started the day by setting up the environment and Git workflow. Then we moved into object-oriented design: first identifying responsibilities, then protecting valid state with properties and exceptions, and now choosing relationships between objects."</p>
+<p>"The big lesson from this hour is not that inheritance is bad. Inheritance is useful when the relationship is truly <strong>is-a</strong>. The lesson is that inheritance should not be our default tool for every relationship. If one object needs another object, use composition. If several objects can answer the same request, use polymorphism. In Python, that polymorphism can often be simple duck typing: the object has the method the caller needs."</p>
+<p>"As you continue into the next sessions, keep asking three design questions. First: what responsibility does this code own? Second: is this relationship <strong>is-a</strong> or <strong>has-a</strong>? Third: am I branching because I truly have different logic in this moment, or because I should be passing in a different object with the same method?"</p>
+<p>"Those questions are part of the move from writing scripts that work once to designing programs that can grow."</p>
+<p>End with:</p>
+<p>"Before you leave, make sure your Hour 4 lab file is saved. If you are using Git, make a checkpoint commit with a message such as <code>Refactor exporter with composition and polymorphism</code>. We will build on these design habits in the next session."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour1_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-hour-3-5-minutes" class="depth-2">Opening Bridge from Hour 3 (5 minutes)</a></li>
+<li><a href="#outcomes-and-vocabulary-5-minutes" class="depth-2">Outcomes and Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-choosing-the-relationship-10-minutes" class="depth-2">Concept Briefing: Choosing the Relationship (10 minutes)</a></li>
+<li><a href="#live-demo-refactor-report-export-branching-10-minutes" class="depth-2">Live Demo: Refactor Report Export Branching (10 minutes)</a></li>
+<li><a href="#step-1-start-with-a-working-before-state" class="depth-3">Step 1: Start with a working before-state</a></li>
+<li><a href="#step-2-refactor-into-two-classes-with-the-same-method-name" class="depth-3">Step 2: Refactor into two classes with the same method name</a></li>
+<li><a href="#step-3-explain-why-inheritance-is-not-needed" class="depth-3">Step 3: Explain why inheritance is not needed</a></li>
+<li><a href="#step-4-optional-quick-extension-if-the-demo-is-ahead-of-schedule" class="depth-3">Step 4: Optional quick extension if the demo is ahead of schedule</a></li>
+<li><a href="#guided-lab-refactor-a-branching-feature-25-minutes" class="depth-2">Guided Lab: Refactor a Branching Feature (25 minutes)</a></li>
+<li><a href="#required-lab-scenario" class="depth-3">Required lab scenario</a></li>
+<li><a href="#lab-tasks" class="depth-3">Lab tasks</a></li>
+<li><a href="#lab-success-shape" class="depth-3">Lab success shape</a></li>
+<li><a href="#instructor-circulation-plan" class="depth-3">Instructor circulation plan</a></li>
+<li><a href="#required-completion-criteria" class="depth-3">Required completion criteria</a></li>
+<li><a href="#troubleshooting-during-the-lab" class="depth-2">Troubleshooting During the Lab</a></li>
+<li><a href="#problem-the-learner-created-classes-but-kept-the-entire-ifelif" class="depth-3">Problem: The learner created classes but kept the entire if/elif</a></li>
+<li><a href="#problem-the-learner-used-inheritance-without-an-is-a-relationship" class="depth-3">Problem: The learner used inheritance without an is-a relationship</a></li>
+<li><a href="#problem-the-composed-object-is-missing" class="depth-3">Problem: The composed object is missing</a></li>
+<li><a href="#problem-the-classes-print-instead-of-returning-values" class="depth-3">Problem: The classes print instead of returning values</a></li>
+<li><a href="#problem-the-shared-method-names-do-not-match" class="depth-3">Problem: The shared method names do not match</a></li>
+<li><a href="#problem-attributeerror-appears" class="depth-3">Problem: AttributeError appears</a></li>
+<li><a href="#problem-the-learner-created-many-tiny-classes" class="depth-3">Problem: The learner created many tiny classes</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-2">Common Pitfalls to Watch For</a></li>
+<li><a href="#optional-extensions" class="depth-2">Optional Extensions</a></li>
+<li><a href="#extension-1-add-a-third-implementation" class="depth-3">Extension 1: Add a third implementation</a></li>
+<li><a href="#extension-2-boundary-mapping-from-strings-to-objects" class="depth-3">Extension 2: Boundary mapping from strings to objects</a></li>
+<li><a href="#extension-3-checkoutpayment-variation" class="depth-3">Extension 3: Checkout/payment variation</a></li>
+<li><a href="#quick-checks-completion-criteria-and-wrap-up-5-minutes" class="depth-2">Quick Checks, Completion Criteria, and Wrap-up (5 minutes)</a></li>
+<li><a href="#quick-check-1-composition-safer-than-inheritance" class="depth-3">Quick check 1: Composition safer than inheritance</a></li>
+<li><a href="#quick-check-2-identify-the-relationship" class="depth-3">Quick check 2: Identify the relationship</a></li>
+<li><a href="#completion-criteria-for-the-hour" class="depth-3">Completion criteria for the hour</a></li>
+<li><a href="#wrap-up-script" class="depth-3">Wrap-up script</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day1_Hour4_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour3_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour1_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

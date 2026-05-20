@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 9, Hour 4: Modules: Imports and Creating utils.py | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="9">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day9_Hour4_Basics.md">
+
+    <link rel="prev" href="Day9_Hour3_Basics.html">
+    <link rel="next" href="Day10_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="9" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-09/index.html">Day 9</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 9, Hour 4: Modules: Imports and Creating utils.py</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 9</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day9_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="1-instructor-note-why-this-matters">1. Instructor Note: Why This Matters</h2>
+<p>This hour represents a critical inflection point in the Basics curriculum. Students transition from viewing Python as a single-file scripting environment to understanding it as a modular system where code organization and reuse become architectural concerns. By mastering imports and creating custom utility modules, learners develop professional coding habits that scale from command-line scripts to full applications.</p>
+<p>The ability to write custom modules like <code>utils.py</code> teaches students that they are not limited to built-in functionality or third-party packages—they can architect their own solutions. This shift in mindset underpins everything that follows: object-oriented design, testing frameworks, and real-world software development. The challenges they overcome in this hour (naming conflicts, import syntax, relative vs. absolute imports) will surface repeatedly in their careers, making hands-on practice now invaluable.</p>
+<p>Emphasize that professional Python developers spend significant time organizing code into logical modules and packages. Their success in this hour directly impacts their confidence and capability moving forward.</p>
+<h2 id="2-learning-outcomes">2. Learning Outcomes</h2>
+<p>By the end of this hour, students will be able to:</p>
+<ol>
+<li><strong>Import from the Python Standard Library</strong> using various import forms (<code>import module</code>, <code>from module import name</code>, <code>import module as alias</code>) and apply them correctly in real code.</li>
+<li><strong>Understand the <code>__name__</code> special variable</strong> and how it controls when code runs, enabling the creation of modules that work both as standalone scripts and as importable libraries.</li>
+<li><strong>Create custom utility modules</strong> (such as <code>utils.py</code>) with focused, reusable functions that encapsulate common tasks.</li>
+<li><strong>Import custom modules into main scripts</strong> using correct file organization and naming practices to avoid import errors.</li>
+<li><strong>Troubleshoot common import errors</strong> including naming conflicts, circular imports, and incorrect file paths, using effective debugging strategies.</li>
+</ol>
+<h2 id="3-agenda-and-timing-total-60-minutes">3. Agenda and Timing (Total: 60 minutes)</h2>
+<ul>
+<li><strong>0:00–0:03</strong> — Opening Script: Module Philosophy (3 minutes)</li>
+<li><strong>0:03–0:18</strong> — Concept Briefing: Import Forms, <code>__name__</code>, Naming Practices (15 minutes)</li>
+<li><strong>0:18–0:35</strong> — Live Demo: Standard Library Imports and Custom Module Creation (17 minutes)</li>
+<li><strong>0:35–1:00</strong> — Hands-On Lab: Building and Using <code>utils.py</code> (25 minutes)</li>
+<li>Checkpoint 1 (0:35–0:40): Setup—Create file structure and initial functions</li>
+<li>Checkpoint 2 (0:40–0:48): Implement <code>safe_int()</code> function with validation</li>
+<li>Checkpoint 3 (0:48–0:56): Implement <code>format_money()</code> function with proper formatting</li>
+<li>Checkpoint 4 (0:56–1:00): Test integration—Import and use functions in main script</li>
+</ul>
+<h2 id="4-opening-script-3-minutes">4. Opening Script (~3 minutes)</h2>
+<p>Begin with a concrete scenario:</p>
+<p>"Imagine you're building a financial tracking application. Your main script handles user interactions, but you need functions to safely convert user input to integers and format currency values. Do you hardcode these into your main file? No. Professional developers extract these into a utility module—a <code>.py</code> file full of helper functions.</p>
+<p>Today, you become that professional developer. You'll create <code>utils.py</code>, a reusable module containing functions that can be used in multiple programs. When you're done, your main script will be cleaner, your code will be reusable, and you'll understand how real Python projects are organized.</p>
+<p>Think of it this way: imports are how Python's ecosystem works. Every package you might use—data science libraries, web frameworks, testing tools—is organized around modules and imports. Learning this now isn't just about today's assignment; it's about building the mental model that powers your entire future in Python."</p>
+<h2 id="5-concept-briefing-import-forms-name-and-module-best-practices-15-minutes">5. Concept Briefing: Import Forms, <code>__name__</code>, and Module Best Practices (15 minutes)</h2>
+<h3 id="import-forms-three-essential-patterns">Import Forms: Three Essential Patterns</h3>
+<p>Students should understand three core syntactic patterns, each with distinct advantages and use cases:</p>
+<p><strong>1. <code>import module</code> — Full Module Import</strong></p>
+<p>Syntax: <code>import math</code><br>
+Access: <code>math.sqrt(16)</code><br>
+Use Case: When you want organized namespacing and multiple functions from a module.</p>
+<p>This form imports the entire module as a namespace. Every function or constant you use must be prefixed with the module name. The advantage is clarity: when you read <code>math.sqrt()</code>, you immediately know the function comes from the <code>math</code> module. This prevents name collisions when two modules have functions with the same name.</p>
+<p>Example workflow:</p>
+<pre><code class="language-python">import math
+import random
+
+result = math.sqrt(25)           # Clear: sqrt is from math
+value = random.randint(1, 100)   # Clear: randint is from random
+</code></pre>
+<p>The downside is verbosity. If you're calling the same function repeatedly, the module prefix gets repetitive. This form is ideal for one-off uses or when working with multiple modules simultaneously.</p>
+<hr>
+<p><strong>2. <code>from module import name</code> — Targeted Import</strong></p>
+<p>Syntax: <code>from math import sqrt</code><br>
+Access: <code>sqrt(16)</code><br>
+Use Case: When you need specific functions and plan to use them frequently.</p>
+<p>This form brings specific names directly into your namespace. You can call <code>sqrt()</code> without the <code>math.</code> prefix, making the code more concise. The tradeoff is reduced clarity—someone reading <code>sqrt()</code> alone doesn't immediately know where it comes from.</p>
+<p>Example workflow:</p>
+<pre><code class="language-python">from math import sqrt, pi, ceil
+from random import choice, randint
+
+result = sqrt(25)                        # Clean, but source isn't obvious
+selected = choice([1, 2, 3, 4, 5])       # Where does choice come from?
+</code></pre>
+<p>This form is useful when you're focused on a specific task (e.g., all math operations), but it can lead to namespace pollution if overused.</p>
+<hr>
+<p><strong>3. <code>import module as alias</code> — Aliased Import</strong></p>
+<p>Syntax: <code>import math as m</code> or <code>import numpy as np</code><br>
+Access: <code>m.sqrt(16)</code> or <code>np.array([1, 2, 3])</code><br>
+Use Case: Shortening long module names or avoiding naming conflicts.</p>
+<p>This form assigns a module a shorter nickname. It's especially common with long module names (e.g., <code>numpy as np</code>, <code>pandas as pd</code>). It combines clarity (you still have module-like prefixing) with conciseness (the prefix is shorter).</p>
+<p>Example workflow:</p>
+<pre><code class="language-python">import math as m
+result = m.sqrt(25)
+area = m.pi * m.sqrt(radius)
+
+import datetime as dt
+now = dt.datetime.now()
+</code></pre>
+<p>This form is professional convention for widely-used libraries. Learning it now prepares students for real-world code.</p>
+<hr>
+<p><strong>Comparing the Three Forms</strong></p>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Clarity</th>
+<th>Conciseness</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>import module</code></td>
+<td>High</td>
+<td>Low</td>
+<td>Organization, one-off uses</td>
+</tr>
+<tr>
+<td><code>from module import name</code></td>
+<td>Low</td>
+<td>High</td>
+<td>Frequent, focused use</td>
+</tr>
+<tr>
+<td><code>import module as alias</code></td>
+<td>High</td>
+<td>Medium</td>
+<td>Common libraries, avoiding conflicts</td>
+</tr>
+</tbody>
+</table>
+<p>Students should understand that all three are valid; the choice depends on context.</p>
+<h3 id="the-name-special-variable-understanding-module-execution-context">The <code>__name__</code> Special Variable: Understanding Module Execution Context</h3>
+<p>Every Python file has access to a special variable called <code>__name__</code>. Its value depends on how the file is executed. This is one of the most important concepts in modular Python design.</p>
+<p><strong>When run directly:</strong></p>
+<pre><code class="language-python">if __name__ == &quot;__main__&quot;:
+    print(&quot;This script was run directly&quot;)
+</code></pre>
+<p>The value is <code>"__main__"</code> (literally the string <code>__main__</code>).</p>
+<p><strong>When imported as a module:</strong></p>
+<pre><code class="language-python"># In another file:
+import utils
+# Inside utils.py, __name__ would be &quot;utils&quot; (the module name)
+</code></pre>
+<p>The value is the module's name as a string (e.g., <code>"utils"</code>, <code>"math"</code>, <code>"random"</code>).</p>
+<p>This powerful pattern enables a file to serve dual purposes:</p>
+<ol>
+<li><strong>As a standalone script</strong>: When executed directly, the setup code and tests run.</li>
+<li><strong>As a reusable module</strong>: When imported, only the function definitions are available; setup code is skipped.</li>
+</ol>
+<p><strong>Practical Example: Dual-Purpose File</strong></p>
+<pre><code class="language-python">def add(a, b):
+    return a + b
+
+def multiply(a, b):
+    return a * b
+
+if __name__ == &quot;__main__&quot;:
+    # This only runs when the file is executed directly
+    print(&quot;Testing math functions:&quot;)
+    print(f&quot;add(5, 3) = {add(5, 3)}&quot;)
+    print(f&quot;multiply(5, 3) = {multiply(5, 3)}&quot;)
+</code></pre>
+<p>When you run this file directly (<code>python math_module.py</code>), you see the test output. When another file imports it (<code>from math_module import add</code>), the test code is skipped, and only the functions are available.</p>
+<p>This is why most professional Python modules end with an <code>if __name__ == "__main__":</code> block. It's not required, but it's standard practice and demonstrates that the author understands the pattern.</p>
+<p><strong>Why This Matters</strong></p>
+<p>Many learners struggle because they run their module file directly, see the test output, assume everything works, then panic when <code>main.py</code> imports it and fails. Understanding <code>__name__</code> prevents this confusion.</p>
+<h3 id="naming-practices-and-avoiding-conflicts-a-critical-skill">Naming Practices and Avoiding Conflicts: A Critical Skill</h3>
+<p>A critical pitfall occurs when students create files with names matching standard library modules. This is more than a minor inconvenience—it's a common source of confusion and errors.</p>
+<p><strong>Why Naming Matters</strong></p>
+<p>Python searches for modules in a specific order:</p>
+<ol>
+<li>The current directory (highest priority)</li>
+<li>Directories in <code>PYTHONPATH</code></li>
+<li>Installation-dependent default paths (standard library, site-packages)</li>
+</ol>
+<p>If you create <code>random.py</code> in your project directory, Python finds it first before the standard library <code>random</code> module. Your file shadows the built-in, and any <code>import random</code> brings in your file instead of the standard library. This causes unexpected behavior or import errors if your file lacks the expected functions.</p>
+<p><strong>Example of the Problem:</strong></p>
+<pre><code class="language-python"># File: random.py (your custom module)
+def get_random_number():
+    return 42
+
+# File: main.py
+import random
+print(random.randint(1, 10))  # Error! Your random.py has no randint() function
+</code></pre>
+<p>Running <code>main.py</code> fails because <code>random</code> refers to your file, which doesn't have <code>randint()</code>.</p>
+<p><strong>Best Practices for Naming</strong></p>
+<ol>
+<li>
+<p><strong>Avoid single-word names</strong> that might match the standard library:
+   - ❌ <code>random.py</code> (shadows <code>random</code> module)
+   - ❌ <code>string.py</code> (shadows <code>string</code> module)
+   - ❌ <code>math.py</code> (shadows <code>math</code> module)</p>
+</li>
+<li>
+<p><strong>Use descriptive, multi-word names</strong>:
+   - ✅ <code>utils.py</code> (generic but clear, not a stdlib name)
+   - ✅ <code>math_helpers.py</code> (clearly custom, math-related)
+   - ✅ <code>formatters.py</code> (descriptive, single-function purpose)
+   - ✅ <code>validators.py</code> (descriptive, validation-focused)</p>
+</li>
+<li>
+<p><strong>Use prefixes if collision risk is high</strong>:
+   - ✅ <code>my_math.py</code> (the <code>my_</code> prefix signals it's custom)
+   - ✅ <code>app_utils.py</code> (prefixed with context)</p>
+</li>
+<li>
+<p><strong>Document your module's purpose in the filename</strong>:
+   - ✅ <code>input_handlers.py</code> (clearly handles input)
+   - ✅ <code>data_formatters.py</code> (clearly formats data)</p>
+</li>
+</ol>
+<p>By following these conventions, you prevent hours of debugging frustration later.</p>
+<h3 id="file-organization">File Organization</h3>
+<p>For the remainder of the Basics course, a typical project structure looks like:</p>
+<pre><code>project_folder/
+├── main.py            (entry point; contains user interaction and control flow)
+├── utils.py           (reusable utility functions)
+└── config.py          (if config is needed; optional)
+</code></pre>
+<p>The key principle: separable concerns live in separate files. <code>main.py</code> orchestrates; <code>utils.py</code> provides reusable helpers. This mirrors professional practice.</p>
+<h2 id="6-live-demo-standard-library-imports-and-custom-module-demo-17-minutes">6. Live Demo: Standard Library Imports and Custom Module Demo (17 minutes)</h2>
+<h3 id="demo-1-standard-library-imports-5-minutes">Demo 1: Standard Library Imports (5 minutes)</h3>
+<p>Create a file called <code>stdlib_demo.py</code>:</p>
+<pre><code class="language-python">import math
+import random
+from datetime import datetime
+from random import choice
+
+print(&quot;=== Standard Library Import Demonstrations ===\n&quot;)
+
+# Demo 1: math module
+print(&quot;1. Using the math module:&quot;)
+print(f&quot;   math.sqrt(25) = {math.sqrt(25)}&quot;)
+print(f&quot;   math.pi = {math.pi}&quot;)
+print(f&quot;   math.ceil(3.2) = {math.ceil(3.2)}\n&quot;)
+
+# Demo 2: random module
+print(&quot;2. Using the random module:&quot;)
+numbers = [1, 2, 3, 4, 5]
+print(f&quot;   random.choice({numbers}) = {random.choice(numbers)}&quot;)
+print(f&quot;   random.randint(1, 10) = {random.randint(1, 10)}\n&quot;)
+
+# Demo 3: datetime
+print(&quot;3. Using the datetime module:&quot;)
+now = datetime.now()
+print(f&quot;   Current time: {now}&quot;)
+print(f&quot;   Year: {now.year}, Month: {now.month}, Day: {now.day}\n&quot;)
+
+# Demo 4: Using 'from' import
+print(&quot;4. Using 'from' import (directly calling choice):&quot;)
+selected = choice([&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;])
+print(f&quot;   Selected fruit: {selected}&quot;)
+</code></pre>
+<p><strong>Teaching Point</strong>: Run this file and show the output. Emphasize that these modules are built into Python and are accessible immediately via imports. Show how different import forms (<code>import X</code>, <code>from X import Y</code>) affect how you call the functions.</p>
+<h3 id="demo-2-creating-a-simple-custom-module-6-minutes">Demo 2: Creating a Simple Custom Module (6 minutes)</h3>
+<p>Create a file called <code>math_helpers.py</code>:</p>
+<pre><code class="language-python">def add(a, b):
+    &quot;&quot;&quot;Add two numbers.&quot;&quot;&quot;
+    return a + b
+
+def multiply(a, b):
+    &quot;&quot;&quot;Multiply two numbers.&quot;&quot;&quot;
+    return a * b
+
+def power(base, exponent):
+    &quot;&quot;&quot;Raise base to exponent.&quot;&quot;&quot;
+    return base ** exponent
+
+if __name__ == &quot;__main__&quot;:
+    print(&quot;Testing math_helpers when run directly:&quot;)
+    print(f&quot;add(3, 5) = {add(3, 5)}&quot;)
+    print(f&quot;multiply(4, 7) = {multiply(4, 7)}&quot;)
+    print(f&quot;power(2, 8) = {power(2, 8)}&quot;)
+</code></pre>
+<p>Create a companion file called <code>use_math_helpers.py</code>:</p>
+<pre><code class="language-python">from math_helpers import add, multiply, power
+
+print(&quot;Using math_helpers module:&quot;)
+print(f&quot;add(10, 20) = {add(10, 20)}&quot;)
+print(f&quot;multiply(3, 9) = {multiply(3, 9)}&quot;)
+print(f&quot;power(3, 4) = {power(3, 4)}&quot;)
+</code></pre>
+<p><strong>Teaching Point</strong>: Run <code>math_helpers.py</code> directly to show the "Testing" output. Then run <code>use_math_helpers.py</code> to show the functions being imported and used. Demonstrate that <code>math_helpers.py</code> can act as both a standalone script and a reusable module. This is the <code>__name__ == "__main__"</code> pattern in action.</p>
+<h3 id="demo-3-preview-of-todays-lab-utilspy-structure-6-minutes">Demo 3: Preview of Today's Lab — utils.py Structure (6 minutes)</h3>
+<p>Create a skeleton <code>utils.py</code> that students will complete in the lab:</p>
+<pre><code class="language-python">def safe_int(prompt):
+    &quot;&quot;&quot;
+    Safely get an integer from the user.
+    Keeps asking until valid input is provided.
+    &quot;&quot;&quot;
+    while True:
+        try:
+            user_input = input(prompt)
+            return int(user_input)
+        except ValueError:
+            print(&quot;   ERROR: Please enter a valid integer.&quot;)
+
+def format_money(value):
+    &quot;&quot;&quot;
+    Format a numeric value as USD currency.
+    Example: 1234.5 becomes $1,234.50
+    &quot;&quot;&quot;
+    return f&quot;${value:,.2f}&quot;
+
+if __name__ == &quot;__main__&quot;:
+    print(&quot;Testing utils.py:&quot;)
+    value = safe_int(&quot;Enter a number: &quot;)
+    print(f&quot;You entered: {value}&quot;)
+    print(f&quot;Formatted as money: {format_money(value)}&quot;)
+</code></pre>
+<p>Create a companion <code>main.py</code>:</p>
+<pre><code class="language-python">from utils import safe_int, format_money
+
+print(&quot;=== Simple Banking Demo ===&quot;)
+balance = safe_int(&quot;Enter your account balance: $&quot;)
+withdrawal = safe_int(&quot;Enter withdrawal amount: $&quot;)
+
+new_balance = balance - withdrawal
+print(f&quot;Previous balance: {format_money(balance)}&quot;)
+print(f&quot;Withdrawal:      {format_money(withdrawal)}&quot;)
+print(f&quot;New balance:     {format_money(new_balance)}&quot;)
+</code></pre>
+<p><strong>Teaching Point</strong>: Run both files to show the integrated workflow. Emphasize that <code>main.py</code> is the user-facing script; <code>utils.py</code> contains the reusable functions. This structure is exactly what the lab will produce.</p>
+<h2 id="7-lab-specification-and-walkthrough-building-and-using-utilspy-25-minutes">7. Lab Specification and Walkthrough: Building and Using utils.py (25 minutes)</h2>
+<h3 id="lab-objective">Lab Objective</h3>
+<p>Students will create a <code>utils.py</code> module containing two essential functions (<code>safe_int()</code> and <code>format_money()</code>) and use them in a <code>main.py</code> script. They will practice proper module structure, imports, and the <code>__name__ == "__main__"</code> pattern.</p>
+<h3 id="lab-walkthrough-with-checkpoints">Lab Walkthrough with Checkpoints</h3>
+<h4 id="checkpoint-1-setup-and-file-creation-035040-5-minutes">Checkpoint 1: Setup and File Creation (0:35–0:40, 5 minutes)</h4>
+<p><strong>Objective:</strong> Students create the basic file structure and establish the project foundation. This checkpoint ensures they understand file organization before writing code.</p>
+<p><strong>Tasks:</strong></p>
+<ol>
+<li>
+<p><strong>Create two empty <code>.py</code> files in the same folder:</strong> <code>utils.py</code> and <code>main.py</code>.
+   - Navigate to a project folder (e.g., <code>~/Desktop/Day9Lab/</code>).
+   - Create two new files with these exact names.
+   - Verify both files exist in the same directory.</p>
+</li>
+<li>
+<p><strong>Add a module docstring to <code>utils.py</code>:</strong></p>
+</li>
+</ol>
+<pre><code class="language-python">&quot;&quot;&quot;
+utils.py
+Utility functions for common programming tasks.
+Provides reusable functions for input validation and output formatting.
+&quot;&quot;&quot;
+</code></pre>
+<p>This docstring serves two purposes: it documents the module's purpose and is required by professional Python style guides (PEP 257).</p>
+<ol start="3">
+<li><strong>Add the beginning of <code>main.py</code>:</strong></li>
+</ol>
+<pre><code class="language-python">&quot;&quot;&quot;
+main.py
+Main script demonstrating use of utils.py
+Orchestrates user interaction using utility functions.
+&quot;&quot;&quot;
+
+from utils import safe_int, format_money
+
+print(&quot;=== Utility Functions Demo ===&quot;)
+</code></pre>
+<p>Note: The imports at the top will initially cause an error because <code>safe_int</code> and <code>format_money</code> don't exist yet. This is intentional—students should see the error, understand it, and resolve it in subsequent checkpoints.</p>
+<p><strong>Validation Criteria:</strong>
+- [ ] Both files exist in the same directory.
+- [ ] Each file has a docstring explaining its purpose.
+- [ ] <code>main.py</code> already imports the functions (error expected at this stage).
+- [ ] Students can explain why <code>main.py</code> currently fails when run.</p>
+<p><strong>Common Question:</strong> "Why would we import functions that don't exist yet?"<br>
+<strong>Answer:</strong> This mirrors real development. You often design the interface (what functions you'll use) before implementing them. This checkpoint establishes the contract: <code>main.py</code> expects <code>utils.py</code> to provide these functions. In the next checkpoint, you make good on that promise.</p>
+<hr>
+<h4 id="checkpoint-2-implement-safeint-040048-8-minutes">Checkpoint 2: Implement safe_int() (0:40–0:48, 8 minutes)</h4>
+<p><strong>Objective:</strong> Students implement a robust input validation function that exemplifies defensive programming. This function demonstrates error handling and user experience considerations.</p>
+<p><strong>Task:</strong> In <code>utils.py</code>, add the <code>safe_int()</code> function:</p>
+<pre><code class="language-python">def safe_int(prompt):
+    &quot;&quot;&quot;
+    Safely request and return an integer from the user.
+    Loops until valid input is provided.
+
+    Args:
+        prompt (str): The message to display to the user.
+
+    Returns:
+        int: The validated integer input.
+
+    Example:
+        &gt;&gt;&gt; value = safe_int(&quot;Enter your age: &quot;)
+        Enter your age: abc
+        ERROR: Invalid input. Please enter an integer.
+        Enter your age: 25
+        &gt;&gt;&gt; value
+        25
+    &quot;&quot;&quot;
+    while True:
+        try:
+            user_input = input(prompt)
+            return int(user_input)
+        except ValueError:
+            print(&quot;   ERROR: Invalid input. Please enter an integer.&quot;)
+</code></pre>
+<p><strong>Key Teaching Points:</strong>
+- The <code>while True</code> loop continues until <code>return</code> is called (when <code>int()</code> succeeds).
+- The <code>try-except</code> block catches <code>ValueError</code>, which <code>int()</code> raises for non-numeric input.
+- The error message is intentionally friendly ("Please enter an integer") rather than technical.
+- The indented error message (with spaces) provides visual feedback to the user.</p>
+<p><strong>Validation Criteria:</strong>
+- [ ] Function is defined in <code>utils.py</code>.
+- [ ] It includes a complete docstring with description, arguments, return value, and example.
+- [ ] It uses a <code>while True</code> loop to handle repeated invalid input.
+- [ ] It includes a <code>try-except</code> block catching <code>ValueError</code>.
+- [ ] It provides user-friendly error messages.
+- [ ] The function has no syntax errors and can be called successfully.</p>
+<p><strong>Quick Test in the Python Interpreter:</strong></p>
+<pre><code class="language-python"># Run this in Python REPL to test:
+from utils import safe_int
+value = safe_int(&quot;Enter a number: &quot;)
+# Type an invalid value, see the error message, then enter a valid one
+</code></pre>
+<hr>
+<h4 id="checkpoint-3-implement-formatmoney-048056-8-minutes">Checkpoint 3: Implement format_money() (0:48–0:56, 8 minutes)</h4>
+<p><strong>Objective:</strong> Students learn formatted output using f-strings and format specifiers. This function demonstrates how to present data professionally.</p>
+<p><strong>Task:</strong> In <code>utils.py</code>, add the <code>format_money()</code> function:</p>
+<pre><code class="language-python">def format_money(value):
+    &quot;&quot;&quot;
+    Format a numeric value as US currency.
+
+    Args:
+        value (float or int): The amount to format.
+
+    Returns:
+        str: Formatted string like &quot;$1,234.50&quot;
+
+    Example:
+        &gt;&gt;&gt; format_money(1234.5)
+        '$1,234.50'
+        &gt;&gt;&gt; format_money(5)
+        '$5.00'
+        &gt;&gt;&gt; format_money(999999.1)
+        '$999,999.10'
+    &quot;&quot;&quot;
+    return f&quot;${value:,.2f}&quot;
+</code></pre>
+<p><strong>Key Teaching Points:</strong>
+- F-strings (f"...") allow expressions inside curly braces.
+- The format specifier <code>:,.2f</code> does three things:
+  - <code>,.</code> adds thousand-separators (commas).
+  - <code>2f</code> formats as a float with exactly 2 decimal places.
+- This replaces older string formatting methods and is the modern Python standard.</p>
+<p><strong>Validation Criteria:</strong>
+- [ ] Function is defined in <code>utils.py</code>.
+- [ ] It includes a complete docstring with examples showing various inputs.
+- [ ] It uses f-string formatting with the <code>:,.2f</code> specifier.
+- [ ] It returns a properly formatted string with dollar sign, commas, and two decimals.
+- [ ] The function has no syntax errors.</p>
+<p><strong>Quick Test in the Python Interpreter:</strong></p>
+<pre><code class="language-python"># Mentally verify or test these:
+format_money(1234.5)      # Should return &quot;$1,234.50&quot;
+format_money(5)           # Should return &quot;$5.00&quot;
+format_money(999999.1)    # Should return &quot;$999,999.10&quot;
+format_money(0)           # Should return &quot;$0.00&quot;
+</code></pre>
+<hr>
+<h4 id="checkpoint-4-integration-and-testing-056100-4-minutes">Checkpoint 4: Integration and Testing (0:56–1:00, 4 minutes)</h4>
+<p><strong>Objective:</strong> Students complete the module structure, verify both functions work together, and experience the satisfying moment when separate pieces integrate seamlessly.</p>
+<p><strong>Tasks:</strong></p>
+<ol>
+<li><strong>Add the <code>if __name__ == "__main__":</code> guard to <code>utils.py</code></strong> so it can test itself:</li>
+</ol>
+<pre><code class="language-python">if __name__ == &quot;__main__&quot;:
+    print(&quot;Testing utils.py directly:&quot;)
+    print()
+    test_value = safe_int(&quot;Enter a test number: &quot;)
+    print(f&quot;You entered: {test_value}&quot;)
+    print(f&quot;Formatted as money: {format_money(test_value)}&quot;)
+</code></pre>
+<ol start="2">
+<li><strong>Flesh out <code>main.py</code></strong> to use both functions in a realistic scenario:</li>
+</ol>
+<pre><code class="language-python">from utils import safe_int, format_money
+
+print(&quot;=== Simple Account Manager ===\n&quot;)
+
+account_balance = safe_int(&quot;Enter your starting balance: $&quot;)
+print(f&quot;Your balance: {format_money(account_balance)}\n&quot;)
+
+transaction = safe_int(&quot;Enter a transaction amount: $&quot;)
+new_balance = account_balance + transaction
+
+print(f&quot;Previous balance: {format_money(account_balance)}&quot;)
+print(f&quot;Transaction:     {format_money(transaction)}&quot;)
+print(f&quot;New balance:     {format_money(new_balance)}&quot;)
+</code></pre>
+<ol start="3">
+<li><strong>Testing:</strong>
+   - Run <code>python utils.py</code> directly. It should prompt for input, accept a number, and display formatted output.
+   - Run <code>python main.py</code> directly. It should simulate a simple banking interaction without errors.
+   - Verify that both scripts accept invalid input gracefully and re-prompt.</li>
+</ol>
+<p><strong>Validation Criteria:</strong>
+- [ ] Both files are in the same directory with correct naming (no naming conflicts).
+- [ ] <code>main.py</code> successfully imports and uses both functions.
+- [ ] Running <code>utils.py</code> directly displays the test output.
+- [ ] Running <code>main.py</code> provides a functional banking interface.
+- [ ] User can enter integers without the program crashing.
+- [ ] Currency values are formatted correctly with commas and two decimal places.
+- [ ] No import errors occur when running either file.</p>
+<p><strong>Celebration Point:</strong> At this stage, students have created a working modular system. <code>main.py</code> is clean and focused on user interaction. <code>utils.py</code> provides reusable, tested functions. This is the professional pattern scaled down for learning.</p>
+<hr>
+<h3 id="stretch-goals-if-time-permits">Stretch Goals (If Time Permits)</h3>
+<p>Students who finish early can extend the lab:</p>
+<ol>
+<li><strong>Add a <code>menu_choice()</code> function to <code>utils.py</code></strong>: Creates a simple menu and returns the user's choice as an integer.</li>
+<li><strong>Create a second module</strong>: Extract formatting functions into <code>formatters.py</code> and import from there.</li>
+<li><strong>Add more functions</strong>: Implement <code>get_positive_number()</code>, <code>percent_of()</code>, or <code>compound_interest()</code> in <code>utils.py</code>.</li>
+</ol>
+<h2 id="8-troubleshooting-common-import-pitfalls-and-fixes-reference-material-for-instructors">8. Troubleshooting: Common Import Pitfalls and Fixes (Reference Material for Instructors)</h2>
+<h3 id="pitfall-1-naming-conflict-with-standard-library">Pitfall 1: Naming Conflict with Standard Library</h3>
+<p><strong>Symptom:</strong> Student creates a file named <code>random.py</code>. When they try to <code>import random</code> in their main script, it imports their file instead of the standard library module. Suddenly, functions like <code>random.randint()</code> stop working, and instead they get an error like <code>AttributeError: module 'random' has no attribute 'randint'</code>.</p>
+<p><strong>Root Cause:</strong> Python searches for modules in the current directory first, before checking the standard library. Creating <code>random.py</code> in your project directory shadows the built-in <code>random</code> module. Any script that imports <code>random</code> gets your file instead of the standard library.</p>
+<p><strong>Fix:</strong> Rename the custom file to something descriptive that doesn't collide with standard library names. Good alternatives: <code>random_utils.py</code>, <code>my_random.py</code>, <code>game_random.py</code>, or <code>custom_random.py</code>. This establishes a naming convention that avoids collisions entirely.</p>
+<p><strong>Prevention Strategy:</strong> Avoid single-word module names that match standard library modules. Aim for multi-word names or clearly prefixed names. When in doubt, check the Python documentation for a list of standard library module names.</p>
+<p><strong>Interactive Debugging:</strong></p>
+<pre><code class="language-python"># To see which file Python is importing, use:
+import random
+print(random.__file__)  # Shows the file path
+# If it shows your current directory, you've shadowed the stdlib
+</code></pre>
+<hr>
+<h3 id="pitfall-2-incorrect-import-syntax">Pitfall 2: Incorrect Import Syntax</h3>
+<p><strong>Symptom:</strong> Student writes <code>import math.sqrt()</code> or <code>from math import sqrt()</code> or <code>import math sqrt</code>. The code fails with a <code>SyntaxError</code> or <code>ImportError</code>.</p>
+<p><strong>Root Cause:</strong> Confusion between importing a module vs. calling a function. The syntax is very strict:
+- Import statements do NOT use parentheses.
+- You import names (modules, functions), not expressions.</p>
+<p><strong>Fix:</strong> Clarify the three correct forms:</p>
+<pre><code class="language-python">import math                    # Correct: import module
+from math import sqrt          # Correct: import function from module
+sqrt(25)                       # Correct: call function
+
+# These are WRONG:
+import math.sqrt()             # Wrong: mixing import and function call
+from math import sqrt()        # Wrong: parentheses in import
+math.sqrt(25)                  # Correct (this one is right)
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Create a reference card with the three import forms clearly labeled. Practice writing imports until they become second nature.</p>
+<hr>
+<h3 id="pitfall-3-incorrect-file-organization">Pitfall 3: Incorrect File Organization</h3>
+<p><strong>Symptom:</strong> <code>utils.py</code> is in one folder, <code>main.py</code> is in another folder (e.g., different directories or a <code>src/</code> subfolder structure). When <code>main.py</code> tries to <code>from utils import function</code>, it fails with <code>ModuleNotFoundError: No module named 'utils'</code>.</p>
+<p><strong>Root Cause:</strong> Python doesn't find <code>utils.py</code> because it's not in the same directory or on the Python path. The search strategy is:
+1. The directory where the running script lives (first priority)
+2. The <code>PYTHONPATH</code> environment variable directories
+3. Standard library locations</p>
+<p>For Basics-level projects, files must be in the same directory.</p>
+<p><strong>Fix:</strong> Keep related files in the same directory. For the purposes of this course, maintain a flat structure:</p>
+<pre><code>project/
+├── main.py
+└── utils.py
+</code></pre>
+<p>Both files live in the same folder. When you run <code>python main.py</code>, Python looks in the same directory for imports.</p>
+<p><strong>Prevention Strategy:</strong> Always verify that <code>main.py</code> and <code>utils.py</code> are in the same folder before attempting to import. Use <code>os.getcwd()</code> and <code>os.listdir()</code> to verify your working directory and file structure if confused.</p>
+<p><strong>Advanced Note (for later):</strong> As projects grow, Python uses packages (folders with <code>__init__.py</code> files) to organize modules. This is beyond Basics scope but worth knowing exists.</p>
+<hr>
+<h3 id="pitfall-4-using-name-incorrectly">Pitfall 4: Using <code>__name__</code> Incorrectly</h3>
+<p><strong>Symptom:</strong> Code under <code>if __name__ == "__main"</code> (missing closing underscores) or <code>if __name__ == "main"</code> (without underscores) never runs. Or the code runs when it shouldn't.</p>
+<p><strong>Root Cause:</strong> Typo in the special variable name or incorrect string comparison. Common mistakes:
+- <code>if __name__ == "__main"</code> (missing closing <code>__</code>)
+- <code>if __name__ == "main"</code> (missing underscores entirely)
+- <code>if name == "__main__"</code> (forgot the double underscores on the variable)</p>
+<p><strong>Fix:</strong> The correct form is <code>if __name__ == "__main__":</code> with:
+- Double underscores at the start: <code>__</code>
+- Double underscores at the end: <code>__</code>
+- The word <code>main</code> in the middle
+- Double quotes around the string</p>
+<pre><code class="language-python"># Correct:
+if __name__ == &quot;__main__&quot;:
+    print(&quot;Running as main&quot;)
+
+# Wrong:
+if __name__ == &quot;__main&quot;:        # Missing closing __
+if __name__ == &quot;main&quot;:           # Missing all underscores
+if name == &quot;__main__&quot;:           # Forgot __ on variable
+</code></pre>
+<p><strong>Prevention Strategy:</strong> Copy-paste the correct form from trusted documentation or a template. Type it slowly and deliberately until it becomes muscle memory. Use your IDE's autocomplete if available.</p>
+<hr>
+<h3 id="pitfall-5-circular-imports">Pitfall 5: Circular Imports</h3>
+<p><strong>Symptom:</strong> <code>module_a.py</code> imports from <code>module_b.py</code>, and <code>module_b.py</code> imports from <code>module_a.py</code>. Python raises <code>ImportError</code> or <code>ModuleNotFoundError</code>, or functions are unexpectedly undefined.</p>
+<p><strong>Root Cause:</strong> Each module tries to import the other, creating a circular dependency. When Python tries to import <code>module_a</code>, it discovers that <code>module_a</code> imports <code>module_b</code>. It starts importing <code>module_b</code>, but then discovers that <code>module_b</code> imports <code>module_a</code>. Python can't complete either import, resulting in errors.</p>
+<p><strong>Fix:</strong> Restructure code so one module is independent and doesn't import from the other. In Basics projects, the standard pattern is:
+- <code>utils.py</code> (or other utility modules) contain <strong>only functions</strong>, with <strong>no imports</strong> from <code>main.py</code>.
+- <code>main.py</code> imports from <code>utils.py</code>, but <code>utils.py</code> never imports from <code>main.py</code>.</p>
+<p>This hierarchical structure ensures no circular dependencies.</p>
+<p><strong>Prevention Strategy:</strong> Follow a clear import hierarchy:
+- Entry point (<code>main.py</code>) sits at the top.
+- Utility modules (<code>utils.py</code>) sit below.
+- Main imports utilities; utilities don't import main.
+- Never have two files importing from each other.</p>
+<p><strong>Example Structure:</strong></p>
+<pre><code class="language-python"># File: utils.py
+def helper():
+    return &quot;I help&quot;
+
+# File: main.py
+from utils import helper      # OK: main imports utils
+
+print(helper())               # OK: works fine
+</code></pre>
+<p><strong>Never do this:</strong></p>
+<pre><code class="language-python"># File: utils.py
+from main import setup_data   # WRONG: circular!
+
+# File: main.py
+from utils import helper      # This creates a cycle
+</code></pre>
+<hr>
+<h3 id="bonus-pitfall-running-the-wrong-file">Bonus Pitfall: Running the Wrong File</h3>
+<p><strong>Symptom:</strong> Student runs <code>utils.py</code> directly and sees test output. They assume everything works. Then they run <code>main.py</code>, which imports <code>utils.py</code>, and suddenly new errors appear.</p>
+<p><strong>Root Cause:</strong> Running <code>utils.py</code> directly executes the <code>if __name__ == "__main__":</code> block. When <code>main.py</code> imports <code>utils.py</code>, this block is skipped. If there's an error in the import or in the module-level code (outside the main guard), it surfaces only when importing.</p>
+<p><strong>Fix:</strong> Always test by running <code>main.py</code> (the entry point), not <code>utils.py</code> (the utility module). If <code>main.py</code> works, the imports are correct. If <code>utils.py</code> errors when imported, debug the import or the module-level code.</p>
+<p><strong>Prevention Strategy:</strong> Establish a testing workflow:
+1. Run the entry point (<code>main.py</code>).
+2. If errors occur, check the full error message to identify the source.
+3. Debug the module or import that's causing the issue.</p>
+<hr>
+<h2 id="9-quick-check-formative-assessment-reference-material-for-instructors">9. Quick-Check Formative Assessment (Reference Material for Instructors)</h2>
+<p><strong>Question 1:</strong> What is the value of <code>__name__</code> when <code>utils.py</code> is imported into <code>main.py</code> as a module?</p>
+<p><strong>Answer:</strong> <code>__name__</code> equals <code>"utils"</code> (the module name).</p>
+<hr>
+<p><strong>Question 2:</strong> If you want to use only the <code>sqrt</code> function from the <code>math</code> module without prefixing it with <code>math.</code>, which import form do you use?</p>
+<p><strong>Answer:</strong> <code>from math import sqrt</code></p>
+<hr>
+<p><strong>Question 3:</strong> Why is naming a custom file <code>string.py</code> problematic?</p>
+<p><strong>Answer:</strong> It shadows the standard library <code>string</code> module, causing import errors or unexpected behavior.</p>
+<hr>
+<p><strong>Question 4:</strong> In the <code>safe_int()</code> function, which exception is caught to detect invalid integer input?</p>
+<p><strong>Answer:</strong> <code>ValueError</code> (raised by <code>int()</code> when the string cannot be converted to an integer).</p>
+<hr>
+<p><strong>Question 5:</strong> What is the purpose of the <code>if __name__ == "__main__":</code> pattern?</p>
+<p><strong>Answer:</strong> It allows a file to run standalone while also being importable as a module without executing setup code.</p>
+<hr>
+<h2 id="10-wrap-up-narrative-professional-context">10. Wrap-Up Narrative: Professional Context</h2>
+<p>This section is delivered during the final 2–3 minutes of the 60-minute hour as the in-class wrap-up. The following reference materials (Sections 8–9) are not part of the core 60-minute delivery and are provided for instructors who want extension activities, additional troubleshooting examples, or advanced practice problems after class.</p>
+<h3 id="in-class-wrap-up-23-minutes">In-Class Wrap-Up (2–3 minutes)</h3>
+<p>"Today, you've learned something fundamental that professional Python developers use every single day. Every large project—web applications, data analysis pipelines, machine learning systems—is built on the principle of modules and imports.</p>
+<p>Think about NumPy, Pandas, Django, or any package you might encounter. They're all organized the same way: a collection of modules that you import as needed. By writing <code>utils.py</code> today, you're not just completing an assignment. You're practicing the architectural thinking that underpins real software.</p>
+<p>Moreover, you've solved practical problems: input validation (<code>safe_int</code>), formatting (<code>format_money</code>). These aren't contrived exercises. Real applications validate user input constantly and format data for display. Your <code>utils.py</code> is the beginning of a personal library of reusable code.</p>
+<p>As you progress—to object-oriented programming, web frameworks, testing—you'll use these same patterns. Import a class. Create a helper. Organize logic into files. This foundation is essential.</p>
+<p>In your next assignment, when you're working on a larger project, remember today: separate concerns into modules, avoid naming conflicts, and use imports to bring it all together. That's how professionals build software."</p>
+<hr>
+<h2 id="11-facilitation-notes-classroom-management-and-differentiation">11. Facilitation Notes: Classroom Management and Differentiation</h2>
+<h3 id="pre-class-setup-and-materials-preparation">Pre-Class Setup and Materials Preparation</h3>
+<ul>
+<li><strong>Test your demo files thoroughly</strong> (<code>stdlib_demo.py</code>, <code>math_helpers.py</code>, <code>use_math_helpers.py</code>) on your system and the current Python version before teaching. Ensure they run without errors and produce the expected output. This prevents embarrassing failures during live demonstrations.</li>
+<li><strong>Have template code ready</strong> (<code>utils.py</code> and <code>main.py</code> skeletons) on a slide or in a shareable document so students can copy-paste the base structure if they get stuck on file creation.</li>
+<li><strong>Set up a class project folder structure</strong> (e.g., <code>day9_lab/</code>) that students can reference, or guide them through creating one. Verify that all students have the same directory structure before they start writing code.</li>
+<li><strong>Have backup implementations</strong> available in case you need to share a working solution on screen. This accelerates debugging if a student's code is irreparably broken mid-lab.</li>
+</ul>
+<h3 id="classroom-management-during-the-lab">Classroom Management During the Lab</h3>
+<ul>
+<li><strong>Circulate frequently</strong> during Checkpoint 1 and 2. File organization and import errors are the most common blockers at this stage. Catching them early prevents cascading failures.</li>
+<li><strong>Use error messages as teaching moments</strong>. When a student encounters an import error, don't fix it for them. Ask: "What file is Python looking for? Where is it? Are they in the same directory?" Guide them to the diagnosis.</li>
+<li><strong>Celebrate small wins</strong>. When a checkpoint passes without errors, acknowledge it. This hour represents a significant mindset shift for learners; positive reinforcement matters.</li>
+</ul>
+<h3 id="common-misconceptions-and-interventions">Common Misconceptions and Interventions</h3>
+<ol>
+<li>
+<p><strong>"I have to use the exact names <code>utils.py</code> and <code>main.py</code>."</strong>
+   - Clarify: The names are project convention, not Python law. However, using clear, descriptive names prevents errors. Discourage students from using single-word names that shadow the standard library. Emphasize professional convention: clarity and consistency matter in shared codebases.</p>
+</li>
+<li>
+<p><strong>"<code>__name__</code> is something I create, like a variable."</strong>
+   - Clarify: <code>__name__</code> is a <strong>special variable</strong> created automatically by Python. Every module has it. You don't create it; you check its value. It's read-only. Analogy: "It's like your social security number—the system assigns it, and you can look at it, but you can't change it."</p>
+</li>
+<li>
+<p><strong>"If I import a module, all the code in it runs."</strong>
+   - Clarify: Only the code outside of <code>if __name__ == "__main__":</code> runs on import. Code inside that guard runs only when the file is executed directly. This is why test code goes inside the guard—it shouldn't clutter imports.</p>
+</li>
+<li>
+<p><strong>"The error message is confusing. I don't know how to fix it."</strong>
+   - Teach error message reading systematically: ModuleNotFoundError tells you Python can't find a file. ImportError tells you the module exists but doesn't have what you're looking for. Guide students to extract the key information and reason about what's wrong.</p>
+</li>
+</ol>
+<h3 id="differentiation-strategies-for-varied-learners">Differentiation Strategies for Varied Learners</h3>
+<p><strong>For Students Who Finish Early:</strong>
+- Assign stretch goals immediately: build a <code>formatters.py</code> module with additional functions (<code>format_percentage()</code>, <code>format_phone_number()</code>) and import from both <code>utils.py</code> and <code>formatters.py</code> in <code>main.py</code>.
+- Have them create a <code>config.py</code> module to store constants (e.g., <code>COMPANY_NAME</code>, <code>MAX_TRANSACTION_AMOUNT</code>) and import them in <code>main.py</code>.
+- Ask them to document their modules with comprehensive docstrings following the Google or NumPy style guide.
+- Introduce the concept of packages (folders with <code>__init__.py</code>), which naturally extends module organization.</p>
+<p><strong>For Students Struggling:</strong>
+- Pair them with a peer who successfully completed Checkpoint 1 (file organization). Peer teaching is often more accessible than instructor re-teaching.
+- Provide a partially completed <code>utils.py</code> and have them finish the functions. This reduces cognitive load.
+- Walk through Checkpoints 1–2 together as a small group, then release them to complete Checkpoints 3–4 independently.
+- Use the <strong>debugging strategy session</strong>: Together, run <code>utils.py</code> directly, check for errors, fix them, then attempt <code>main.py</code>. This establishes a systematic debugging workflow.</p>
+<h3 id="pacing-guidance-and-time-management">Pacing Guidance and Time Management</h3>
+<ul>
+<li><strong>If running behind by 5–10 minutes</strong>: Skip the second demo (<code>math_helpers.py</code> / <code>use_math_helpers.py</code>) and move directly to the third demo (preview of today's lab). The second demo reinforces the <code>__name__</code> pattern, but Checkpoint 4 covers this anyway.</li>
+<li><strong>If running exactly on time</strong>: Proceed as planned. The lab fits snugly into 25 minutes with all four checkpoints.</li>
+<li><strong>If running ahead by 10+ minutes</strong>: Use extra time for the stretch goals, code review (examine a student's solution on screen), or introduce the concept of packages or relative imports (beyond Basics scope but intellectually enriching).</li>
+</ul>
+<h2 id="12-assessment-and-differentiation-rubric">12. Assessment and Differentiation Rubric</h2>
+<h3 id="completion-checklist-all-items-required-to-pass">Completion Checklist (All items required to pass)</h3>
+<ul>
+<li>[ ] <code>utils.py</code> exists in the same directory as <code>main.py</code>.</li>
+<li>[ ] <code>utils.py</code> contains <code>safe_int()</code> function with a try-except block and a while loop.</li>
+<li>[ ] <code>utils.py</code> contains <code>format_money()</code> function that formats values as USD currency.</li>
+<li>[ ] <code>utils.py</code> includes the <code>if __name__ == "__main__":</code> guard with test code.</li>
+<li>[ ] <code>main.py</code> successfully imports both functions from <code>utils.py</code>.</li>
+<li>[ ] <code>main.py</code> runs without <code>ImportError</code> or <code>ModuleNotFoundError</code>.</li>
+<li>[ ] <code>safe_int()</code> handles invalid user input and re-prompts (no crashes on non-integer input).</li>
+<li>[ ] <code>format_money()</code> produces output like <code>"$1,234.50"</code> (with commas and two decimal places).</li>
+</ul>
+<h3 id="grading-rubric-10-points">Grading Rubric (10 points)</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Points</th>
+<th>Rubric</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Module Structure</strong></td>
+<td>2</td>
+<td>File organization is correct; both files in same directory with no naming conflicts. (2 pts) or File exists but minor naming confusion. (1 pt) or Files in wrong location or wrong names. (0 pts)</td>
+</tr>
+<tr>
+<td><strong>safe_int() Implementation</strong></td>
+<td>2</td>
+<td>Robust input validation with try-except and while loop. (2 pts) or Basic loop and try-except but missing edge case handling. (1 pt) or Function missing or non-functional. (0 pts)</td>
+</tr>
+<tr>
+<td><strong>format_money() Implementation</strong></td>
+<td>2</td>
+<td>Correct f-string format specifier <code>:,.2f</code> producing proper output. (2 pts) or Formatting works but specifier is slightly off (e.g., <code>:,.1f</code>). (1 pt) or Function missing or formatting incorrect. (0 pts)</td>
+</tr>
+<tr>
+<td><strong>Module Imports</strong></td>
+<td>2</td>
+<td><code>main.py</code> correctly imports both functions with no errors. (2 pts) or Import succeeds but syntax is unconventional. (1 pt) or Import fails or missing. (0 pts)</td>
+</tr>
+<tr>
+<td><strong>Execution and Testing</strong></td>
+<td>2</td>
+<td>Both files run without errors; functions produce correct output. (2 pts) or Files run but output has minor issues (e.g., rounding). (1 pt) or Files crash or produce incorrect output. (0 pts)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 10 points</strong></p>
+<hr>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<ul>
+<li><strong>Pass (7–10 points)</strong>: Student demonstrates understanding of modules, imports, and custom function creation. They can run both files without errors and produce correct output.</li>
+<li><strong>Needs Revision (4–6 points)</strong>: Core functionality works, but there are naming conflicts, import errors, or minor logic bugs. Student should revise and resubmit.</li>
+<li><strong>Incomplete (0–3 points)</strong>: Major structural issues (file organization, missing functions, or import errors). Student needs re-teaching or one-on-one support.</li>
+</ul>
+<hr>
+<h3 id="stretch-goals-bonus-up-to-2-points">Stretch Goals (Bonus, up to +2 points)</h3>
+<ul>
+<li>[ ] <strong>Bonus +1</strong>: Create a <code>formatters.py</code> module with additional formatting functions (e.g., <code>format_percentage()</code>, <code>format_phone_number()</code>) and import from both <code>utils.py</code> and <code>formatters.py</code> in <code>main.py</code>.</li>
+<li>[ ] <strong>Bonus +1</strong>: Add comprehensive docstrings to all functions and modules, and write a README file explaining how to use the modules.</li>
+</ul>
+<hr>
+<h3 id="exit-ticket-verbal-or-written">Exit Ticket (Verbal or Written)</h3>
+<p>Before students leave, ask:</p>
+<ol>
+<li><strong>What does <code>__name__ == "__main__"</code> do?</strong> (Understanding the control flow pattern)</li>
+<li><strong>If you created a file called <code>math.py</code>, what would happen?</strong> (Anticipate naming conflicts)</li>
+<li><strong>Why is it better to have <code>utils.py</code> and <code>main.py</code> separate instead of putting everything in one file?</strong> (Code organization and reusability)</li>
+</ol>
+<hr>
+<h2 id="summary">Summary</h2>
+<p>This hour equips students with professional module and import practices. By creating and using <code>utils.py</code>, they move beyond single-file scripts to organized, reusable code. The troubleshooting section prepares them for the real errors they'll encounter, and the assessment rubric ensures they've internalized the concepts. This foundation directly supports all advanced topics that follow.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-instructor-note-why-this-matters" class="depth-2">1. Instructor Note: Why This Matters</a></li>
+<li><a href="#2-learning-outcomes" class="depth-2">2. Learning Outcomes</a></li>
+<li><a href="#3-agenda-and-timing-total-60-minutes" class="depth-2">3. Agenda and Timing (Total: 60 minutes)</a></li>
+<li><a href="#4-opening-script-3-minutes" class="depth-2">4. Opening Script (~3 minutes)</a></li>
+<li><a href="#5-concept-briefing-import-forms-name-and-module-best-practices-15-minutes" class="depth-2">5. Concept Briefing: Import Forms, __name__, and Module Best Practices (15 minutes)</a></li>
+<li><a href="#import-forms-three-essential-patterns" class="depth-3">Import Forms: Three Essential Patterns</a></li>
+<li><a href="#the-name-special-variable-understanding-module-execution-context" class="depth-3">The __name__ Special Variable: Understanding Module Execution Context</a></li>
+<li><a href="#naming-practices-and-avoiding-conflicts-a-critical-skill" class="depth-3">Naming Practices and Avoiding Conflicts: A Critical Skill</a></li>
+<li><a href="#file-organization" class="depth-3">File Organization</a></li>
+<li><a href="#6-live-demo-standard-library-imports-and-custom-module-demo-17-minutes" class="depth-2">6. Live Demo: Standard Library Imports and Custom Module Demo (17 minutes)</a></li>
+<li><a href="#demo-1-standard-library-imports-5-minutes" class="depth-3">Demo 1: Standard Library Imports (5 minutes)</a></li>
+<li><a href="#demo-2-creating-a-simple-custom-module-6-minutes" class="depth-3">Demo 2: Creating a Simple Custom Module (6 minutes)</a></li>
+<li><a href="#demo-3-preview-of-todays-lab-utilspy-structure-6-minutes" class="depth-3">Demo 3: Preview of Today&#x27;s Lab — utils.py Structure (6 minutes)</a></li>
+<li><a href="#7-lab-specification-and-walkthrough-building-and-using-utilspy-25-minutes" class="depth-2">7. Lab Specification and Walkthrough: Building and Using utils.py (25 minutes)</a></li>
+<li><a href="#lab-objective" class="depth-3">Lab Objective</a></li>
+<li><a href="#lab-walkthrough-with-checkpoints" class="depth-3">Lab Walkthrough with Checkpoints</a></li>
+<li><a href="#checkpoint-1-setup-and-file-creation-035040-5-minutes" class="depth-4">Checkpoint 1: Setup and File Creation (0:35–0:40, 5 minutes)</a></li>
+<li><a href="#checkpoint-2-implement-safeint-040048-8-minutes" class="depth-4">Checkpoint 2: Implement safe_int() (0:40–0:48, 8 minutes)</a></li>
+<li><a href="#checkpoint-3-implement-formatmoney-048056-8-minutes" class="depth-4">Checkpoint 3: Implement format_money() (0:48–0:56, 8 minutes)</a></li>
+<li><a href="#checkpoint-4-integration-and-testing-056100-4-minutes" class="depth-4">Checkpoint 4: Integration and Testing (0:56–1:00, 4 minutes)</a></li>
+<li><a href="#stretch-goals-if-time-permits" class="depth-3">Stretch Goals (If Time Permits)</a></li>
+<li><a href="#8-troubleshooting-common-import-pitfalls-and-fixes-reference-material-for-instructors" class="depth-2">8. Troubleshooting: Common Import Pitfalls and Fixes (Reference Material for Instructors)</a></li>
+<li><a href="#pitfall-1-naming-conflict-with-standard-library" class="depth-3">Pitfall 1: Naming Conflict with Standard Library</a></li>
+<li><a href="#pitfall-2-incorrect-import-syntax" class="depth-3">Pitfall 2: Incorrect Import Syntax</a></li>
+<li><a href="#pitfall-3-incorrect-file-organization" class="depth-3">Pitfall 3: Incorrect File Organization</a></li>
+<li><a href="#pitfall-4-using-name-incorrectly" class="depth-3">Pitfall 4: Using __name__ Incorrectly</a></li>
+<li><a href="#pitfall-5-circular-imports" class="depth-3">Pitfall 5: Circular Imports</a></li>
+<li><a href="#bonus-pitfall-running-the-wrong-file" class="depth-3">Bonus Pitfall: Running the Wrong File</a></li>
+<li><a href="#9-quick-check-formative-assessment-reference-material-for-instructors" class="depth-2">9. Quick-Check Formative Assessment (Reference Material for Instructors)</a></li>
+<li><a href="#10-wrap-up-narrative-professional-context" class="depth-2">10. Wrap-Up Narrative: Professional Context</a></li>
+<li><a href="#in-class-wrap-up-23-minutes" class="depth-3">In-Class Wrap-Up (2–3 minutes)</a></li>
+<li><a href="#11-facilitation-notes-classroom-management-and-differentiation" class="depth-2">11. Facilitation Notes: Classroom Management and Differentiation</a></li>
+<li><a href="#pre-class-setup-and-materials-preparation" class="depth-3">Pre-Class Setup and Materials Preparation</a></li>
+<li><a href="#classroom-management-during-the-lab" class="depth-3">Classroom Management During the Lab</a></li>
+<li><a href="#common-misconceptions-and-interventions" class="depth-3">Common Misconceptions and Interventions</a></li>
+<li><a href="#differentiation-strategies-for-varied-learners" class="depth-3">Differentiation Strategies for Varied Learners</a></li>
+<li><a href="#pacing-guidance-and-time-management" class="depth-3">Pacing Guidance and Time Management</a></li>
+<li><a href="#12-assessment-and-differentiation-rubric" class="depth-2">12. Assessment and Differentiation Rubric</a></li>
+<li><a href="#completion-checklist-all-items-required-to-pass" class="depth-3">Completion Checklist (All items required to pass)</a></li>
+<li><a href="#grading-rubric-10-points" class="depth-3">Grading Rubric (10 points)</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#stretch-goals-bonus-up-to-2-points" class="depth-3">Stretch Goals (Bonus, up to +2 points)</a></li>
+<li><a href="#exit-ticket-verbal-or-written" class="depth-3">Exit Ticket (Verbal or Written)</a></li>
+<li><a href="#summary" class="depth-2">Summary</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day9_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day9_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 7, Hour 1: From Objects to Tables — Schema Thinking + the Repository Idea (Course Hour 25) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="7">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day7_Hour1_Advanced.md">
+
+    <link rel="prev" href="Day6_Hour4_Advanced.html">
+    <link rel="next" href="Day7_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="7" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-07/index.html">Day 7</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 7, Hour 1: From Objects to Tables — Schema Thinking + the Repository Idea (Course Hour 25)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 7</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day7_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course:</strong> Python Programming (Advanced)</li>
+<li><strong>Session:</strong> 7 (Hour 1 — Course Hour 25)</li>
+<li><strong>Runbook reference:</strong> Session 7, Course Hour 25 – From objects to tables: schema thinking + repository idea</li>
+<li><strong>Duration:</strong> 60 minutes</li>
+<li><strong>Mode:</strong> Instructor-led + live coding + guided design lab</li>
+<li><strong>Audience:</strong> Advanced Python learners who already have classes, service-layer logic, and basic file persistence experience</li>
+</ul>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is intentionally written as a read-aloud teaching guide. Your job this hour is not to turn learners into database administrators and not to jump ahead into ORM tooling. Keep the focus on a practical bridge: we already know how to model business concepts as Python objects, and now we need a reliable way to store those objects in a relational database. Emphasize schema thinking, stable IDs, the shape of CRUD operations, and the value of a repository as a boundary between business logic and SQL details. Learners should leave with a schema draft and a clean repository interface, even if the concrete SQLite implementation comes in the next hour.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>
+<p>Explain how a Python object maps to a database row and how object attributes map to table columns.</p>
+</li>
+<li>
+<p>Explain how a Python object maps to a database row and how object attributes map to table columns.</p>
+</li>
+<li>Design a simple relational schema for a core domain object, including a primary key and sensible constraints.</li>
+<li>Describe the CRUD operations your application will need before you write SQL.</li>
+<li>Explain what a repository is and why it keeps your service layer cleaner.</li>
+<li>Write a repository interface for a realistic domain model using modern Python type hints and dataclasses.</li>
+<li>Make principled decisions about which fields are required, optional, or derived."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to prior work: objects, services, and the need for persistence</li>
+<li><strong>0:05–0:15</strong> Schema thinking: moving from object attributes to table columns</li>
+<li><strong>0:15–0:25</strong> Primary keys, data types, nullability, and practical constraints</li>
+<li><strong>0:25–0:35</strong> CRUD planning before code</li>
+<li><strong>0:35–0:45</strong> Repository idea: what it is, what it is not, and why it matters</li>
+<li><strong>0:45–0:55</strong> Live design demo + repository interface walkthrough</li>
+<li><strong>0:55–1:00</strong> Checkpoint, recap, and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file named <code>hour25_schema_design.py</code> for the live design portion.</li>
+<li>Have a second file ready named <code>hour25_repository_interface.py</code> in case you want to separate the dataclasses from the interface.</li>
+<li>Be ready to draw a simple table on the board or in a shared document with columns: <code>id</code>, <code>title</code>, <code>amount</code>, <code>category</code>, <code>spent_on</code>, <code>notes</code>.</li>
+<li>Be ready to compare two bad design choices:</li>
+<li>using the title as the identifier</li>
+<li>storing everything in one giant text blob</li>
+<li>Be ready to say out loud that we are <strong>not</strong> using an ORM today. You may mention ORMs briefly for contrast, but do not let the hour become a tooling survey.</li>
+<li>If possible, have a sample project tree visible:</li>
+</ul>
+<pre><code class="language-text">project/
+├── data/
+├── src/
+│   ├── models.py
+│   ├── services.py
+│   └── repositories.py
+└── tests/
+</code></pre>
+<p><strong>Say:</strong> "Please keep your editor open and be ready to make design decisions before we write implementation code. Good database work starts with naming and structure, not with random SQL copied from memory."</p>
+<hr>
+<h2 id="3-opening-script-why-we-need-more-than-in-memory-objects-5-minutes">3) Opening Script: Why We Need More Than In-Memory Objects (~5 minutes)</h2>
+<p><strong>Say:</strong>
+"Up to this point in the advanced course, we have spent a lot of time getting our Python objects and application structure into good shape. We designed classes from requirements. We added validation, custom exceptions, and service-layer methods. Some of you also built GUI workflows that create, update, and display records during a program run.</p>
+<p>That is progress. But there is a problem. If the application closes, where does the data go?</p>
+<p>If everything lives only in Python memory, it disappears when the process ends. That is fine for a quick demo, but it is not fine for a usable application. Real applications need persistence. They need data to survive across runs.</p>
+<p>We already know one form of persistence: files. We can save JSON. We can write text. That is valuable and sometimes completely appropriate.</p>
+<p>But once data becomes more structured and the application needs create, read, update, and delete workflows, databases become a better fit. A database gives us a durable place to store records, query them efficiently, and update specific rows instead of rewriting an entire file.</p>
+<p>Today is the bridge from object thinking to table thinking. We are not abandoning good object design. We are extending it."</p>
+<h3 id="31-frame-the-hours-core-question">3.1 Frame the hour's core question</h3>
+<p><strong>Say:</strong>
+"The key question for this hour is this: if I already have a well-designed Python object, how do I store it in a table without turning my whole codebase into database soup?</p>
+<p>That question has two parts:</p>
+<ol>
+<li>How do I design the schema — the table, columns, types, and identifiers?</li>
+<li>How do I isolate the storage details so my business logic is not full of SQL strings?</li>
+</ol>
+<p>Those two parts lead us to schema thinking and the repository idea."</p>
+<hr>
+<h2 id="4-schema-thinking-from-one-object-to-one-row">4) Schema Thinking: From One Object to One Row</h2>
+<h3 id="41-use-a-concrete-domain-model">4.1 Use a concrete domain model</h3>
+<p><strong>Say:</strong>
+"I want a domain model that is simple enough to reason about but realistic enough to feel like application code. We will use an expense tracker example. Even if your capstone is not an expense tracker, the ideas transfer directly to inventory items, tasks, contacts, notes, or bookings."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import date
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+@dataclass(slots=True)
+class Expense(NewExpense):
+    expense_id: int
+</code></pre>
+<p><strong>Say:</strong>
+"Pause and notice what these classes communicate.</p>
+<ul>
+<li><code>NewExpense</code> represents data before the database assigns an ID.</li>
+<li><code>Expense</code> represents a persisted record that already has a stable primary key.</li>
+<li>We are using <code>dataclass</code> because these are data-carrying objects.</li>
+<li>We are using type hints because clarity matters and static tools can help us.</li>
+<li>We are using <code>date</code> for the domain model because a spending date is conceptually a date, not just a string.</li>
+</ul>
+<p>Now let's translate that into database terms."</p>
+<h3 id="42-show-the-mapping-explicitly">4.2 Show the mapping explicitly</h3>
+<p><strong>Say while drawing or listing on screen:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Python concept</th>
+<th>Database concept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Expense</code> object</td>
+<td>one row in a table</td>
+</tr>
+<tr>
+<td><code>expenses</code> collection</td>
+<td>table</td>
+</tr>
+<tr>
+<td><code>expense_id</code> attribute</td>
+<td>primary key column</td>
+</tr>
+<tr>
+<td><code>title</code>, <code>amount</code>, <code>category</code>, <code>spent_on</code>, <code>notes</code></td>
+<td>regular columns</td>
+</tr>
+<tr>
+<td><code>list[Expense]</code> returned by the app</td>
+<td>result set returned by a query</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Say:</strong>
+"A relational table is not some mystical new world. In many beginner-friendly cases, a row is just a stored record, and a record is very close to an object.</p>
+<p>The one place where people get tripped up is this: the database does not store Python objects directly. It stores scalar values in columns. So our job is to decide how each attribute should be represented in the table."</p>
+<h3 id="43-ask-learners-to-map-fields">4.3 Ask learners to map fields</h3>
+<p><strong>Ask:</strong>
+"If <code>title</code> in Python is a string, what should it become in SQLite?"</p>
+<p>Wait for: <code>TEXT</code>.</p>
+<p><strong>Ask:</strong>
+"If <code>amount</code> is a Python float, what is the natural SQLite type?"</p>
+<p>Wait for: <code>REAL</code>.</p>
+<p><strong>Ask:</strong>
+"If <code>spent_on</code> is a Python <code>date</code>, what are our options?"</p>
+<p>Guide them toward: store it as ISO text, or as an integer timestamp, or use adapters. Then say:</p>
+<p><strong>Say:</strong>
+"For this course, the most readable choice is usually ISO-formatted text, like <code>2026-01-13</code>. It is easy to inspect, sort, and debug. So our domain model uses <code>date</code>, but our table will likely store <code>spent_on</code> as <code>TEXT</code>. That is a normal and healthy boundary conversion."</p>
+<hr>
+<h2 id="5-table-design-columns-primary-keys-and-constraints">5) Table Design: Columns, Primary Keys, and Constraints</h2>
+<h3 id="51-draft-the-schema-together">5.1 Draft the schema together</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-sql">CREATE TABLE expenses (
+    expense_id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    amount REAL NOT NULL,
+    category TEXT NOT NULL,
+    spent_on TEXT NOT NULL,
+    notes TEXT
+);
+</code></pre>
+<p><strong>Say:</strong>
+"This is a first draft, not holy scripture. But it is already telling a strong story.</p>
+<ul>
+<li><code>expense_id</code> is the primary key.</li>
+<li>The fields our application requires are marked <code>NOT NULL</code>.</li>
+<li><code>notes</code> is optional, so it can be null.</li>
+<li>The schema reflects the structure of our domain object.</li>
+</ul>
+<p>Now let me explain the design decisions, because copying SQL without understanding the decisions is how bugs get baked in."</p>
+<h3 id="52-why-a-stable-primary-key-matters">5.2 Why a stable primary key matters</h3>
+<p><strong>Say:</strong>
+"The most important column in the table is the primary key.</p>
+<p>A primary key gives every row a stable identity. Without that, update and delete operations become fragile. If we try to update rows by title, what happens when two expenses are both called <code>Lunch</code>? If we delete by amount, what happens when several purchases cost <code>12.50</code>? We need a field whose job is identity.</p>
+<p>That is why <code>INTEGER PRIMARY KEY</code> is such a common and practical choice in SQLite. It is stable. It is simple. It is efficient. The database can generate it for us.</p>
+<p>In some applications, a text ID is appropriate — for example, a UUID or a business-defined code. But the rule is the same: every row needs a stable, unique identity, and update/delete operations should target that identity."</p>
+<h3 id="53-required-versus-optional-fields">5.3 Required versus optional fields</h3>
+<p><strong>Say:</strong>
+"A schema also forces us to be explicit about what is truly required.</p>
+<p>This is a design strength, not a nuisance. When you create a table, you have to decide:</p>
+<ul>
+<li>Is <code>title</code> required? Usually yes.</li>
+<li>Is <code>amount</code> required? Absolutely.</li>
+<li>Is <code>category</code> required? In our example, yes, because categorization matters.</li>
+<li>Is <code>notes</code> required? Probably not.</li>
+</ul>
+<p>This is the same kind of thinking we already used when designing dataclasses and validation rules. A good schema mirrors business rules."</p>
+<h3 id="54-explain-data-integrity-at-the-design-level">5.4 Explain data integrity at the design level</h3>
+<p><strong>Say:</strong>
+"At the table level, constraints protect data quality. Today we are keeping constraints practical and light. You have already seen <code>NOT NULL</code>. Later we may add checks like <code>amount &gt;= 0</code> or foreign keys that connect one table to another.</p>
+<p>What matters now is the mindset: if a value must be present or must follow a rule, the database can help enforce that. Databases are not just storage boxes. They are also guardians of structural integrity."</p>
+<hr>
+<h2 id="6-crud-planning-before-sql">6) CRUD Planning Before SQL</h2>
+<h3 id="61-name-the-operations-first">6.1 Name the operations first</h3>
+<p><strong>Say:</strong>
+"Before we implement anything, I want us to name the operations the application needs. This is a very practical design habit. If you know the workflows, you can design the repository around them.</p>
+<p>CRUD stands for:</p>
+<ul>
+<li><strong>Create</strong>: add a new record</li>
+<li><strong>Read</strong>: fetch one record or many records</li>
+<li><strong>Update</strong>: change an existing record</li>
+<li><strong>Delete</strong>: remove a record</li>
+</ul>
+<p>For our expense tracker, the first version probably needs these operations:</p>
+<ol>
+<li>Add a new expense</li>
+<li>List all expenses</li>
+<li>Get one expense by ID</li>
+<li>Update an expense by ID</li>
+<li>Delete an expense by ID</li>
+</ol>
+<p>Maybe later we add search by category or date range, but these five are the baseline."</p>
+<h3 id="62-connect-crud-to-real-user-actions">6.2 Connect CRUD to real user actions</h3>
+<p><strong>Say:</strong>
+"Do not think of CRUD as a database vocabulary quiz. Think of it as user intent.</p>
+<ul>
+<li>When a user submits a form, that is usually Create.</li>
+<li>When a UI screen loads records, that is usually Read.</li>
+<li>When a user edits a record and clicks Save, that is usually Update.</li>
+<li>When a user confirms removal, that is Delete.</li>
+</ul>
+<p>This matters because it keeps database design tied to actual application behavior."</p>
+<h3 id="63-remind-learners-of-the-quality-gate">6.3 Remind learners of the quality gate</h3>
+<p><strong>Say:</strong>
+"From the runbook, there are four quality rules I want you to start internalizing right now:</p>
+<ol>
+<li>All SQL should use parameter placeholders — question marks in SQLite — not string concatenation.</li>
+<li>Writes must be committed, either explicitly or via a connection context manager.</li>
+<li>Every table needs a stable primary key.</li>
+<li>Update and delete operations should target IDs.</li>
+</ol>
+<p>We are not running SQL yet in this hour, but these quality gates shape the design."</p>
+<hr>
+<h2 id="7-the-repository-idea">7) The Repository Idea</h2>
+<h3 id="71-give-a-plain-language-definition">7.1 Give a plain-language definition</h3>
+<p><strong>Say:</strong>
+"A repository is a layer whose job is to store and retrieve domain objects.</p>
+<p>That is the plain-English definition.</p>
+<p>A repository sits between your service layer and the database. Your service logic says things like:</p>
+<ul>
+<li>add this expense</li>
+<li>get expense 42</li>
+<li>update this record</li>
+<li>delete that record</li>
+</ul>
+<p>The repository knows how to turn those requests into SQL and how to turn database rows back into domain objects."</p>
+<h3 id="72-why-not-call-sqlite3-everywhere">7.2 Why not call sqlite3 everywhere?</h3>
+<p><strong>Say:</strong>
+"A common early mistake is to scatter database code all over the application. A GUI callback opens a connection. A service function runs a query directly. Another file builds SQL with f-strings. Another deletes a record in a totally different style.</p>
+<p>That approach works for about ten minutes and then becomes painful.</p>
+<p>The repository helps because it centralizes persistence logic. It gives us:</p>
+<ul>
+<li>one place to change SQL</li>
+<li>one place to handle row mapping</li>
+<li>one place to manage connection details</li>
+<li>cleaner service methods</li>
+<li>easier testing, because you can replace the concrete repository with a fake or mock</li>
+</ul>
+<p>So the repository is not magic. It is a boundary. It is an organizational decision that keeps responsibilities separated."</p>
+<h3 id="73-what-the-repository-is-not">7.3 What the repository is not</h3>
+<p><strong>Say:</strong>
+"A repository is not the same thing as an ORM.</p>
+<p>An ORM, or object-relational mapper, is a framework that automatically maps objects to tables and often generates SQL for you. Tools like SQLAlchemy can be useful, but today we are staying closer to the metal so you understand what is happening.</p>
+<p>We are writing plain Python and plain SQLite queries. The repository pattern is the design idea. SQLite is the storage technology. An ORM is optional tooling that can come later."</p>
+<h3 id="74-explain-dependency-direction">7.4 Explain dependency direction</h3>
+<p><strong>Say:</strong>
+"In a well-structured application, the service layer should depend on a repository interface, not on hard-coded SQLite details.</p>
+<p>That means the service layer can say, 'I need something that can add and fetch expenses.' It does not need to know if the data is stored in SQLite, JSON, memory, or something else.</p>
+<p>That is a powerful design idea because it keeps your code flexible without making it abstract for the sake of abstraction."</p>
+<hr>
+<h2 id="8-live-coding-demo-dataclasses-repository-interface-10-minutes">8) Live Coding Demo: Dataclasses + Repository Interface (~10 minutes)</h2>
+<p><strong>Say:</strong>
+"Now I am going to write the shape of the persistence boundary before I write the persistence code itself. This is a very intentional design move."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+@dataclass(slots=True)
+class Expense(NewExpense):
+    expense_id: int
+
+
+class ExpenseRepository(ABC):
+    @abstractmethod
+    def add(self, expense: NewExpense) -&gt; int:
+        &quot;&quot;&quot;Store a new expense and return its generated ID.&quot;&quot;&quot;
+
+    @abstractmethod
+    def get_by_id(self, expense_id: int) -&gt; Expense:
+        &quot;&quot;&quot;Return one stored expense or raise if it is missing.&quot;&quot;&quot;
+
+    @abstractmethod
+    def list_all(self) -&gt; list[Expense]:
+        &quot;&quot;&quot;Return all stored expenses, usually ordered by ID.&quot;&quot;&quot;
+
+    @abstractmethod
+    def update(self, expense: Expense) -&gt; None:
+        &quot;&quot;&quot;Persist changes to an existing expense.&quot;&quot;&quot;
+
+    @abstractmethod
+    def delete(self, expense_id: int) -&gt; None:
+        &quot;&quot;&quot;Remove an expense by stable ID.&quot;&quot;&quot;
+
+
+@dataclass(slots=True)
+class AppPaths:
+    project_root: Path
+
+    @property
+    def data_dir(self) -&gt; Path:
+        return self.project_root / &quot;data&quot;
+
+    @property
+    def database_file(self) -&gt; Path:
+        return self.data_dir / &quot;expenses.db&quot;
+</code></pre>
+<p><strong>Say:</strong>
+"There are several useful design choices here.</p>
+<p>First, the repository interface speaks in domain terms, not SQL terms. The caller asks for <code>Expense</code> objects, not rows and cursors.</p>
+<p>Second, the methods align directly with CRUD.</p>
+<p>Third, we distinguish between a new expense and a persisted expense. That prevents awkward code like passing <code>None</code> around as a pretend ID unless we truly want to.</p>
+<p>Fourth, notice that I already brought in <code>pathlib.Path</code> through <code>AppPaths</code>. We are not even connecting to the database yet, but we are designing the file location in a modern, readable way.</p>
+<p>This is what good software design looks like: even the boundaries are explicit."</p>
+<h3 id="81-show-how-the-service-layer-would-use-the-interface">8.1 Show how the service layer would use the interface</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">class ExpenseService:
+    def __init__(self, repository: ExpenseRepository) -&gt; None:
+        self.repository = repository
+
+    def record_expense(self, expense: NewExpense) -&gt; int:
+        if expense.amount &lt;= 0:
+            raise ValueError(&quot;amount must be positive&quot;)
+        return self.repository.add(expense)
+</code></pre>
+<p><strong>Say:</strong>
+"Notice what the service does not do. It does not open a database file. It does not build SQL. It does not know about cursors.</p>
+<p>That is exactly the point. The service layer focuses on business rules. The repository handles persistence. Separation of concerns is not just a slogan. It produces cleaner code."</p>
+<hr>
+<h2 id="9-design-walkthrough-turning-the-model-into-a-table-plan">9) Design Walkthrough: Turning the Model into a Table Plan</h2>
+<h3 id="91-build-a-schema-decision-table-with-learners">9.1 Build a schema decision table with learners</h3>
+<p><strong>Say:</strong>
+"When you design a table, ask the same questions for every field."</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Python type</th>
+<th>SQLite storage choice</th>
+<th>Required?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>expense_id</code></td>
+<td><code>int</code></td>
+<td><code>INTEGER PRIMARY KEY</code></td>
+<td>yes</td>
+<td>database-generated identity</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>str</code></td>
+<td><code>TEXT</code></td>
+<td>yes</td>
+<td>short human-readable label</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td><code>float</code></td>
+<td><code>REAL</code></td>
+<td>yes</td>
+<td>practical for this course</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td><code>str</code></td>
+<td><code>TEXT</code></td>
+<td>yes</td>
+<td>could later become related table</td>
+</tr>
+<tr>
+<td><code>spent_on</code></td>
+<td><code>date</code></td>
+<td><code>TEXT</code></td>
+<td>yes</td>
+<td>store as ISO format</td>
+</tr>
+<tr>
+<td><code>notes</code></td>
+<td><code>str | None</code></td>
+<td><code>TEXT</code></td>
+<td>no</td>
+<td>optional free text</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Say:</strong>
+"This little table is valuable. It exposes assumptions before code gets written. If learners can produce a table like this for their own project, they are doing strong engineering work."</p>
+<h3 id="92-mention-derived-and-nested-data">9.2 Mention derived and nested data</h3>
+<p><strong>Say:</strong>
+"Two design warnings before we move to practice.</p>
+<p>First, not every property on an object should automatically become a stored column. Some values are <strong>derived</strong>. If you can calculate them from other stored values, maybe you do not need to store them.</p>
+<p>Second, nested objects require a plan. If your object contains a list or another custom object, do not just panic and turn the whole thing into one text blob. Stop and think. Should this be another table? Should it be serialized? Should the model be simplified?</p>
+<p>The runbook warns us specifically about trying to store nested objects without a plan. That warning is there because it is a very common trap."</p>
+<hr>
+<h2 id="10-guided-practice-schema-draft-repository-contract-10-minutes">10) Guided Practice: Schema Draft + Repository Contract (~10 minutes)</h2>
+<p><strong>Say:</strong>
+"Now it is your turn. I want you to do two things.</p>
+<ol>
+<li>Draft the schema for your main application record.</li>
+<li>Draft a repository interface with CRUD method stubs.</li>
+</ol>
+<p>If you are following along with the expense example, use that. If you already have a capstone domain, use your own domain model."</p>
+<h3 id="101-prompt-to-display-or-read-aloud">10.1 Prompt to display or read aloud</h3>
+<p><strong>Guided Practice Prompt</strong></p>
+<p>Create a short design document or Python file that includes:</p>
+<ol>
+<li>A domain dataclass for a new record and a persisted record.</li>
+<li>A table plan with field names, SQLite types, and whether each field is required.</li>
+<li>A repository interface with at least these methods:
+   - <code>add(...) -&gt; int</code>
+   - <code>get_by_id(...) -&gt; ...</code>
+   - <code>list_all() -&gt; list[...]</code>
+   - <code>update(...) -&gt; None</code>
+   - <code>delete(...) -&gt; None</code></li>
+<li>One sentence explaining why you chose your primary key.</li>
+</ol>
+<h3 id="102-coaching-notes-while-learners-work">10.2 Coaching notes while learners work</h3>
+<ul>
+<li>If a learner wants to use a name or title as the primary key, ask: "What happens if two rows share the same name?"</li>
+<li>If a learner stores dates as custom objects in the schema draft, ask: "What is the database actually storing on disk?"</li>
+<li>If a learner tries to mix service rules and repository methods together, ask: "Which layer should know business policy, and which should know storage mechanics?"</li>
+<li>If a learner is overcomplicating the design with ten tables, remind them: "One strong table is better than five speculative tables you do not yet need."</li>
+</ul>
+<hr>
+<h2 id="11-checkpoint-discussion-5-minutes">11) Checkpoint Discussion (~5 minutes)</h2>
+<p><strong>Ask these questions aloud:</strong></p>
+<ol>
+<li>"Why is a stable primary key more trustworthy than updating by title or amount?"</li>
+<li>"What is the relationship between a Python object and a database row?"</li>
+<li>"Why does the repository return domain objects instead of raw SQL cursors?"</li>
+<li>"What is one field in your design that should be optional, and why?"</li>
+<li>"What is one field that should definitely be <code>NOT NULL</code>, and why?"</li>
+</ol>
+<h3 id="111-ideal-answers-to-reinforce">11.1 Ideal answers to reinforce</h3>
+<p><strong>Say:</strong>
+"A strong answer to the first question sounds like this: a stable primary key gives each row unique identity, so update and delete operations are precise and do not rely on changeable or duplicate business data.</p>
+<p>A strong answer to the repository question sounds like this: the repository keeps database details isolated so the rest of the app can work in terms of domain concepts rather than SQL mechanics."</p>
+<hr>
+<h2 id="12-recap-script-3-minutes">12) Recap Script (~3 minutes)</h2>
+<p><strong>Say:</strong>
+"Let's close the hour by naming what we accomplished.</p>
+<p>We started with a Python object model and translated it into table language. We identified columns, types, nullability, and the need for a stable primary key. We named the CRUD operations the application needs. Then we introduced the repository as a boundary that keeps SQL details out of higher-level business logic.</p>
+<p>That is the conceptual foundation for the next several hours. In the next hour, we will take this design and connect it to a real SQLite database using the standard library <code>sqlite3</code> module. We will create the database file, create the table, and run parameterized queries safely.</p>
+<p>If today felt less flashy than a demo-heavy hour, that is okay. Good persistence code begins with good thinking. Schema design is part of programming, not paperwork."</p>
+<hr>
+<h2 id="13-exit-ticket">13) Exit Ticket</h2>
+<p><strong>Prompt learners to answer in one or two sentences:</strong></p>
+<ol>
+<li>Why is a repository useful even in a small project?</li>
+<li>Which field in your schema is your primary key, and why did you choose it?</li>
+<li>Which one of your fields is optional, and what made you decide that?</li>
+</ol>
+<hr>
+<h2 id="14-optional-instructor-reference-minimal-complete-design-example">14) Optional Instructor Reference: Minimal Complete Design Example</h2>
+<p>Use this if you want a single, clean example to leave on screen at the end of the hour.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+@dataclass(slots=True)
+class Expense(NewExpense):
+    expense_id: int
+
+
+class ExpenseRepository(ABC):
+    @abstractmethod
+    def add(self, expense: NewExpense) -&gt; int:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_by_id(self, expense_id: int) -&gt; Expense:
+        raise NotImplementedError
+
+    @abstractmethod
+    def list_all(self) -&gt; list[Expense]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(self, expense: Expense) -&gt; None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(self, expense_id: int) -&gt; None:
+        raise NotImplementedError
+
+
+@dataclass(slots=True)
+class AppPaths:
+    root: Path
+
+    @property
+    def data_dir(self) -&gt; Path:
+        return self.root / &quot;data&quot;
+
+    @property
+    def db_path(self) -&gt; Path:
+        return self.data_dir / &quot;expenses.db&quot;
+</code></pre>
+<p><strong>Suggested closing sentence:</strong>
+"If you can explain this file clearly, you are ready for the first SQLite implementation." </p>
+<hr>
+<h2 id="15-additional-instructor-talking-points-how-to-coach-schema-decisions-in-real-time">15) Additional Instructor Talking Points: How to Coach Schema Decisions in Real Time</h2>
+<p><strong>Say:</strong>
+"I want to give you a few extra schema-design questions that professional developers ask all the time. When learners get stuck, these questions help them move from vague object thinking to precise table thinking."</p>
+<h3 id="151-question-set-to-model-aloud">15.1 Question set to model aloud</h3>
+<p><strong>Say:</strong>
+"For each field, ask:</p>
+<ul>
+<li>What is this field's job?</li>
+<li>Is it identity, description, classification, or optional context?</li>
+<li>Should it always be present?</li>
+<li>Can it change later?</li>
+<li>Will users search or update by this field?</li>
+<li>Is it a primitive value, or is it secretly another entity hiding inside the object?</li>
+</ul>
+<p>If learners start answering those questions well, their schema quality improves immediately."</p>
+<h3 id="152-example-coaching-conversation">15.2 Example coaching conversation</h3>
+<p><strong>Say:</strong>
+"Imagine a learner has a task tracker object with fields like <code>title</code>, <code>status</code>, <code>assigned_to</code>, and <code>comments</code>.</p>
+<p>I might ask:</p>
+<ul>
+<li>Is <code>title</code> identity? No. It is descriptive.</li>
+<li>Can two tasks have the same title? Yes. Then it should not be the primary key.</li>
+<li>Is <code>assigned_to</code> just a string for now, or is it really a user entity? If it is just a string today, that is fine. If users become their own table later, we can redesign deliberately.</li>
+<li>Are <code>comments</code> a single text field, or is this actually a one-to-many relationship? If each task can have many comments, one comments text blob may be a temporary shortcut, but it is good to name that tradeoff honestly.</li>
+</ul>
+<p>This kind of conversation teaches design judgment, not just syntax."</p>
+<h3 id="153-remind-learners-that-version-one-can-be-simple">15.3 Remind learners that version one can be simple</h3>
+<p><strong>Say:</strong>
+"There is another important coaching point here: version one does not need to model the whole universe.</p>
+<p>A lot of advanced learners become ambitious and try to predict every future feature before writing a single table. That usually leads to complexity that has not earned its place yet.</p>
+<p>A simpler rule is this:</p>
+<ul>
+<li>model the core record well</li>
+<li>give it a stable ID</li>
+<li>make required data required</li>
+<li>keep optional data clearly optional</li>
+<li>and leave room to extend later</li>
+</ul>
+<p>That is not under-designing. That is responsible scoping."</p>
+<hr>
+<h2 id="16-suggested-whiteboard-sequence-for-the-hour">16) Suggested Whiteboard Sequence for the Hour</h2>
+<p>If you prefer to structure this hour visually, here is a reliable sequence.</p>
+<ol>
+<li>Draw one Python object with labeled attributes.</li>
+<li>Draw one table row with labeled columns.</li>
+<li>Draw a primary-key badge next to the ID column.</li>
+<li>List the five CRUD operations in plain English.</li>
+<li>Draw a box labeled <code>Service Layer</code> and another labeled <code>Repository</code>.</li>
+<li>Draw an arrow from service to repository, and a separate arrow from repository to database.</li>
+</ol>
+<p><strong>Say:</strong>
+"The visual story is simple: business logic talks to repositories, repositories talk to tables, and the model is translated across that boundary. If you teach that picture clearly, learners are much less likely to dump SQL into random parts of the application."</p>
+<hr>
+<h2 id="17-optional-mini-challenge-for-fast-finishers">17) Optional Mini-Challenge for Fast Finishers</h2>
+<p><strong>Prompt:</strong></p>
+<p>Take the expense schema from this hour and propose one realistic extension, but do it carefully.</p>
+<p>Choose one:</p>
+<ol>
+<li>Add a <code>merchant</code> column.</li>
+<li>Add a <code>payment_method</code> column.</li>
+<li>Add a separate <code>categories</code> table and explain what foreign key you would eventually need.</li>
+</ol>
+<p>For whichever option you choose, answer these questions:</p>
+<ul>
+<li>Why does this field or table exist?</li>
+<li>Is it required or optional?</li>
+<li>Would it change the repository interface right away?</li>
+<li>Would the service layer need any new validation?</li>
+</ul>
+<p><strong>Instructor debrief note:</strong> Fast finishers often want to jump straight into coding. Make them explain the design implications first. That keeps the extension aligned with the learning target instead of turning into feature sprawl.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-why-we-need-more-than-in-memory-objects-5-minutes" class="depth-2">3) Opening Script: Why We Need More Than In-Memory Objects (~5 minutes)</a></li>
+<li><a href="#31-frame-the-hours-core-question" class="depth-3">3.1 Frame the hour&#x27;s core question</a></li>
+<li><a href="#4-schema-thinking-from-one-object-to-one-row" class="depth-2">4) Schema Thinking: From One Object to One Row</a></li>
+<li><a href="#41-use-a-concrete-domain-model" class="depth-3">4.1 Use a concrete domain model</a></li>
+<li><a href="#42-show-the-mapping-explicitly" class="depth-3">4.2 Show the mapping explicitly</a></li>
+<li><a href="#43-ask-learners-to-map-fields" class="depth-3">4.3 Ask learners to map fields</a></li>
+<li><a href="#5-table-design-columns-primary-keys-and-constraints" class="depth-2">5) Table Design: Columns, Primary Keys, and Constraints</a></li>
+<li><a href="#51-draft-the-schema-together" class="depth-3">5.1 Draft the schema together</a></li>
+<li><a href="#52-why-a-stable-primary-key-matters" class="depth-3">5.2 Why a stable primary key matters</a></li>
+<li><a href="#53-required-versus-optional-fields" class="depth-3">5.3 Required versus optional fields</a></li>
+<li><a href="#54-explain-data-integrity-at-the-design-level" class="depth-3">5.4 Explain data integrity at the design level</a></li>
+<li><a href="#6-crud-planning-before-sql" class="depth-2">6) CRUD Planning Before SQL</a></li>
+<li><a href="#61-name-the-operations-first" class="depth-3">6.1 Name the operations first</a></li>
+<li><a href="#62-connect-crud-to-real-user-actions" class="depth-3">6.2 Connect CRUD to real user actions</a></li>
+<li><a href="#63-remind-learners-of-the-quality-gate" class="depth-3">6.3 Remind learners of the quality gate</a></li>
+<li><a href="#7-the-repository-idea" class="depth-2">7) The Repository Idea</a></li>
+<li><a href="#71-give-a-plain-language-definition" class="depth-3">7.1 Give a plain-language definition</a></li>
+<li><a href="#72-why-not-call-sqlite3-everywhere" class="depth-3">7.2 Why not call sqlite3 everywhere?</a></li>
+<li><a href="#73-what-the-repository-is-not" class="depth-3">7.3 What the repository is not</a></li>
+<li><a href="#74-explain-dependency-direction" class="depth-3">7.4 Explain dependency direction</a></li>
+<li><a href="#8-live-coding-demo-dataclasses-repository-interface-10-minutes" class="depth-2">8) Live Coding Demo: Dataclasses + Repository Interface (~10 minutes)</a></li>
+<li><a href="#81-show-how-the-service-layer-would-use-the-interface" class="depth-3">8.1 Show how the service layer would use the interface</a></li>
+<li><a href="#9-design-walkthrough-turning-the-model-into-a-table-plan" class="depth-2">9) Design Walkthrough: Turning the Model into a Table Plan</a></li>
+<li><a href="#91-build-a-schema-decision-table-with-learners" class="depth-3">9.1 Build a schema decision table with learners</a></li>
+<li><a href="#92-mention-derived-and-nested-data" class="depth-3">9.2 Mention derived and nested data</a></li>
+<li><a href="#10-guided-practice-schema-draft-repository-contract-10-minutes" class="depth-2">10) Guided Practice: Schema Draft + Repository Contract (~10 minutes)</a></li>
+<li><a href="#101-prompt-to-display-or-read-aloud" class="depth-3">10.1 Prompt to display or read aloud</a></li>
+<li><a href="#102-coaching-notes-while-learners-work" class="depth-3">10.2 Coaching notes while learners work</a></li>
+<li><a href="#11-checkpoint-discussion-5-minutes" class="depth-2">11) Checkpoint Discussion (~5 minutes)</a></li>
+<li><a href="#111-ideal-answers-to-reinforce" class="depth-3">11.1 Ideal answers to reinforce</a></li>
+<li><a href="#12-recap-script-3-minutes" class="depth-2">12) Recap Script (~3 minutes)</a></li>
+<li><a href="#13-exit-ticket" class="depth-2">13) Exit Ticket</a></li>
+<li><a href="#14-optional-instructor-reference-minimal-complete-design-example" class="depth-2">14) Optional Instructor Reference: Minimal Complete Design Example</a></li>
+<li><a href="#15-additional-instructor-talking-points-how-to-coach-schema-decisions-in-real-time" class="depth-2">15) Additional Instructor Talking Points: How to Coach Schema Decisions in Real Time</a></li>
+<li><a href="#151-question-set-to-model-aloud" class="depth-3">15.1 Question set to model aloud</a></li>
+<li><a href="#152-example-coaching-conversation" class="depth-3">15.2 Example coaching conversation</a></li>
+<li><a href="#153-remind-learners-that-version-one-can-be-simple" class="depth-3">15.3 Remind learners that version one can be simple</a></li>
+<li><a href="#16-suggested-whiteboard-sequence-for-the-hour" class="depth-2">16) Suggested Whiteboard Sequence for the Hour</a></li>
+<li><a href="#17-optional-mini-challenge-for-fast-finishers" class="depth-2">17) Optional Mini-Challenge for Fast Finishers</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day7_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day7_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day6_Hour4_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

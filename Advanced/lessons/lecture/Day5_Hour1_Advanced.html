@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day5_Hour1_Advanced.md">
+
+    <link rel="prev" href="Day4_Hour4_Advanced.html">
+    <link rel="next" href="Day5_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="5" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: 5</li>
+<li><strong>Hour</strong>: 1 of 4 for this session, corresponding to <strong>Hour 17</strong> in the 48-hour Advanced runbook</li>
+<li><strong>Focus</strong>: GUI fundamentals with Tkinter/ttk — event loop, widgets, callbacks, and service-layer wiring</li>
+<li><strong>Runbook alignment</strong>: Create a window and basic widgets; wire callbacks to service functions; explain event-driven GUI behavior; avoid blocking calls; use <code>Label</code>, <code>Entry</code>, and <code>Button</code>; separate UI from service logic; build a minimal GUI that adds a record through a service layer; show <code>messagebox</code> feedback; run a Hello GUI + Add form lab</li>
+<li><strong>Prerequisites</strong>:</li>
+<li>Students can write functions and basic classes.</li>
+<li>Students understand exceptions and basic validation.</li>
+<li>Students are comfortable with strings, lists, and dictionaries.</li>
+<li>Students have seen separation of concerns in previous sessions.</li>
+<li><strong>Teaching goal</strong>: Shift students from a command-line, top-to-bottom mental model into an event-driven GUI mental model without overwhelming them.</li>
+<li><strong>Demo app theme</strong>: A small contact-entry desktop app.</li>
+<li><strong>Key message to repeat</strong>: “The GUI handles interaction; the service layer handles rules.”</li>
+<li><strong>Environment note</strong>: Tkinter ships with standard Python in most course environments, including typical Windows Python installations. In a few Linux or managed lab environments, Tkinter may require an additional OS package or may not display if no graphical desktop is available. For this course hour, Tkinter availability is assumed; if one learner has an environment issue, pair them temporarily while the lab environment is corrected.</li>
+<li><strong>Scope guard</strong>: Do not turn this hour into advanced layout, threading, async programming, databases, or a full MVC framework discussion. Those topics either come later or are intentionally out of scope for this first GUI hour.</li>
+<li><strong>Success criteria for the hour</strong>:</li>
+<li>Students can explain what <code>mainloop()</code> does.</li>
+<li>Students can create a simple window with <code>Label</code>, <code>Entry</code>, and <code>Button</code>.</li>
+<li>Students can wire a callback to a button.</li>
+<li>Students can call service logic from the UI and show success/error feedback.</li>
+<li>Students can identify why blocking work inside a callback freezes the interface.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recap</td>
+<td style="text-align: right;">4 minutes</td>
+</tr>
+<tr>
+<td>GUI Mental Model</td>
+<td style="text-align: right;">9 minutes</td>
+</tr>
+<tr>
+<td>Core Widget/Callback/Service Design</td>
+<td style="text-align: right;">8 minutes</td>
+</tr>
+<tr>
+<td>Live Demo</td>
+<td style="text-align: right;">8 minutes</td>
+</tr>
+<tr>
+<td>Hands-On Lab</td>
+<td style="text-align: right;">26 minutes</td>
+</tr>
+<tr>
+<td>Debrief/Exit</td>
+<td style="text-align: right;">5 minutes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total arithmetic:</strong> 4 + 9 + 8 + 8 + 26 + 5 = 60 minutes exactly.</p>
+<hr>
+<h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
+<p>By the end of this hour, students should be able to:</p>
+<ol>
+<li>Explain what makes GUI programming event-driven.</li>
+<li>Describe the role of <code>mainloop()</code> in a Tkinter application.</li>
+<li>Create a simple window using Tkinter and themed ttk widgets.</li>
+<li>Build a small form with labels, entry fields, a button, and a status area.</li>
+<li>Connect a button click to a callback function.</li>
+<li>Keep UI code separate from service or business logic.</li>
+<li>Provide user feedback with a status label and a message box.</li>
+<li>Recognize common first-GUI mistakes: missing <code>mainloop()</code>, blocking callbacks, layout mistakes that hide widgets, and business rules buried inside button handlers.</li>
+</ol>
+<hr>
+<h2 id="section-1-recap-4-minutes">Section 1: Recap (4 minutes)</h2>
+<h3 id="purpose-of-this-opening">Purpose of This Opening</h3>
+<p>This section should be brief and energetic. The goal is to connect GUI programming to the design habits students have already practiced: functions, classes, exceptions, validation, and separation of concerns. Do not begin by explaining every Tkinter feature. Begin by reminding students that the same Python design discipline still applies, but the user interaction model changes.</p>
+<h3 id="instructor-script">Instructor Script</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Welcome back. In the previous parts of the advanced course, we spent a lot of time building Python programs that were organized around responsibilities. We wrote functions that did one job, classes that represented a concept, exceptions that explained failure, and service code that handled rules instead of scattering rules everywhere.</p>
+<p>Today we keep those habits, but we change the way the user talks to the program.</p>
+<p>Most of the Python programs you have written so far have followed a command-line style. The script starts, asks for input or reads data, performs work, prints output, and ends. That style is direct and useful, but it is not how a graphical application feels to a user.</p>
+<p>A graphical user interface, or GUI, opens a window and stays alive. The user decides what happens next by clicking, typing, pressing keys, or closing the window. The program is not simply marching from line one to the final line. It is waiting for user events and responding to them.</p>
+<p>So this hour is not about making a beautiful application yet. It is about learning the core mechanics:</p>
+<ul>
+<li>create a window,</li>
+<li>place a few widgets,</li>
+<li>respond to a button click,</li>
+<li>call service logic,</li>
+<li>show feedback,</li>
+<li>and keep the interface responsive.</li>
+</ul>
+<p>The key design message for today is: <strong>the GUI handles interaction; the service layer handles rules.</strong></p>
+<h3 id="fast-warm-up-prompt">Fast Warm-Up Prompt</h3>
+<p><strong>[Ask students:]</strong></p>
+<p>Think of a desktop app, a web page, or a mobile app you used recently. What actions did you take that caused the interface to respond?</p>
+<p><strong>Expected answers:</strong> clicking a button, typing into a field, pressing Enter, choosing a menu item, selecting a row, closing a dialog, resizing a window.</p>
+<p><strong>[Instructor continues:]</strong></p>
+<p>Those actions are the center of GUI programming. We call them events. Today we will build just enough Tkinter to make that event-driven idea concrete.</p>
+<hr>
+<h2 id="section-2-gui-mental-model-9-minutes">Section 2: GUI Mental Model (9 minutes)</h2>
+<h3 id="the-shift-from-script-flow-to-event-flow">The Shift from Script Flow to Event Flow</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The most important concept in this hour is this:</p>
+<blockquote>
+<p>A GUI is event-driven.</p>
+</blockquote>
+<p>Let’s unpack that carefully.</p>
+<p>In a command-line script, you can often understand the program by reading from top to bottom. The program says, “Do this, then do this, then do this.” If you see an <code>input()</code> call, the program stops there and waits for the user. After the user types something, the program continues to the next line.</p>
+<p>In a GUI, the program creates a window and gives control to the GUI toolkit. The toolkit listens for events: button clicks, key presses, mouse movement, text entry, window closing, and so on. When an event occurs, the toolkit calls a function that you registered for that event. That function is called a callback.</p>
+<p>So the question changes from:</p>
+<blockquote>
+<p>What line runs next?</p>
+</blockquote>
+<p>to:</p>
+<blockquote>
+<p>What should happen when the user does this?</p>
+</blockquote>
+<p>That question is the GUI mental model.</p>
+<h3 id="tkinter-ttk-and-the-window">Tkinter, ttk, and the Window</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Tkinter is Python’s standard GUI toolkit. It is included with most Python installations, which makes it reliable for a course environment. The <code>ttk</code> module provides themed widgets. The basic behavior is the same as classic Tkinter widgets, but the default appearance is usually cleaner and more native-looking.</p>
+<p>Today we will use:</p>
+<ul>
+<li><code>tk.Tk()</code> for the main application window,</li>
+<li><code>ttk.Label</code> to display text,</li>
+<li><code>ttk.Entry</code> to accept typed text,</li>
+<li><code>ttk.Button</code> to trigger an action,</li>
+<li><code>tk.StringVar</code> to hold values connected to the interface,</li>
+<li>and <code>messagebox</code> for simple user feedback.</li>
+</ul>
+<p>We are intentionally staying small. We are not building a complex layout system today. Hour 18 goes deeper into layout and usability. Today, if the window appears, the fields appear, the button works, and the callback calls the service layer, that is success.</p>
+<h3 id="what-mainloop-does">What <code>mainloop()</code> Does</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Every Tkinter application needs an event loop. In Tkinter, we start that event loop by calling:</p>
+<pre><code class="language-python">root.mainloop()
+</code></pre>
+<p>When <code>mainloop()</code> starts, Tkinter keeps the window alive and listens for events. If the user clicks the Add button, Tkinter notices the click and calls the callback connected to that button. If the user types in an entry field, Tkinter updates the widget state. If the user closes the window, Tkinter exits the event loop and the program can end.</p>
+<p>Without <code>mainloop()</code>, you may create Python objects that represent a window and widgets, but the application will not behave like a live GUI. In many environments the window may flash and disappear, or nothing useful may appear at all, because the script reaches the end and exits.</p>
+<p><strong>[Instructor board sketch:]</strong></p>
+<pre><code class="language-text">create widgets -&gt; register callbacks -&gt; start mainloop()
+                                      |
+                                      v
+                         wait for events and respond
+</code></pre>
+<h3 id="why-blocking-calls-matter">Why Blocking Calls Matter</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The event loop also explains why we must avoid blocking calls inside callbacks.</p>
+<p>Imagine the user clicks <strong>Add</strong>, and the callback does this:</p>
+<pre><code class="language-python">time.sleep(10)
+</code></pre>
+<p>For those ten seconds, the callback is busy. While it is busy, the GUI cannot smoothly process other events. The window may look frozen. Buttons may not respond. The user may think the app crashed.</p>
+<p>The same problem can happen with long network calls, large file processing, slow database work, or heavy calculations placed directly in a button handler. Those topics require additional techniques, but not today. Today our rule is simple: callbacks should be short. They gather input, call service logic, and update feedback.</p>
+<p>One important nuance: <code>messagebox.showinfo()</code> and <code>messagebox.showerror()</code> are modal dialogs. In plain language, <strong>messagebox is modal</strong>: the dialog briefly takes focus and blocks interaction with the main window until the user dismisses it. That is acceptable here because it is short, intentional user feedback. It is very different from putting a long sleep, a slow network request, or a large file operation inside a callback. A quick message box says, “Please acknowledge this result.” A long blocking task says, “The interface is stuck while Python works.” Those are not the same user experience.</p>
+<h3 id="quick-concept-check">Quick Concept Check</h3>
+<p><strong>[Ask students:]</strong></p>
+<p>If a GUI program is event-driven, who decides what happens next: the programmer’s top-to-bottom script flow, or the user’s actions?</p>
+<p><strong>Expected answer:</strong> the user’s actions trigger events; our code responds through callbacks.</p>
+<p><strong>[Instructor reinforces:]</strong></p>
+<p>Exactly. We still write the code, but the user drives the sequence.</p>
+<hr>
+<h2 id="section-3-core-widgetcallbackservice-design-8-minutes">Section 3: Core Widget/Callback/Service Design (8 minutes)</h2>
+<h3 id="the-three-part-pattern">The Three-Part Pattern</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>For this first GUI hour, we will use one simple design pattern repeatedly:</p>
+<pre><code class="language-text">widgets collect input -&gt; callback responds -&gt; service layer validates and stores
+</code></pre>
+<p>Then the callback updates the interface with success or error feedback.</p>
+<p>Let’s define the pieces.</p>
+<p>A <strong>widget</strong> is a visible user interface element. A label shows text. An entry field accepts text. A button can be clicked.</p>
+<p>A <strong>callback</strong> is a Python function or method that Tkinter calls when an event happens. For a button, we connect the callback with the <code>command</code> option:</p>
+<pre><code class="language-python">ttk.Button(parent, text=&quot;Add&quot;, command=self.on_add)
+</code></pre>
+<p>Notice the important detail: <code>command=self.on_add</code>, not <code>command=self.on_add()</code>.</p>
+<p>When we write <code>self.on_add</code>, we are passing the function itself so Tkinter can call it later. When we write <code>self.on_add()</code>, we call the function immediately while building the interface. That is one of the most common first-GUI bugs.</p>
+<p>A <strong>service layer</strong> is ordinary Python code that owns business rules. In today’s contact-entry example, the service layer decides that a name is required, an email is required, and an email must include <code>@</code>. The UI should not invent those rules. The UI should ask the service to add a record, then display the result.</p>
+<h3 id="why-we-separate-ui-from-service-logic">Why We Separate UI from Service Logic</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>One of the fastest ways to make GUI code hard to maintain is to put every rule inside the button callback.</p>
+<p>A beginner’s callback often grows into one large function that:</p>
+<ul>
+<li>reads every field,</li>
+<li>validates every field,</li>
+<li>transforms text,</li>
+<li>creates a record,</li>
+<li>stores the record,</li>
+<li>updates labels,</li>
+<li>shows popups,</li>
+<li>clears the form,</li>
+<li>catches exceptions,</li>
+<li>and prints debug output.</li>
+</ul>
+<p>That may work for a tiny script, but it becomes painful quickly. It is hard to test because you have to click through the GUI. It is hard to reuse because the rule is trapped inside a window class. It is hard to change because display code and business rules are tangled together.</p>
+<p>The better pattern is:</p>
+<ol>
+<li>The UI gathers raw input from widgets.</li>
+<li>The callback passes that input to the service.</li>
+<li>The service validates and performs the operation.</li>
+<li>The service returns a result or raises a meaningful error.</li>
+<li>The UI shows the success or error to the user.</li>
+</ol>
+<h3 id="minimal-example-of-the-separation">Minimal Example of the Separation</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Here is the shape without all the GUI details:</p>
+<pre><code class="language-python">class ContactService:
+    def add_record(self, name: str, email: str) -&gt; str:
+        clean_name = name.strip()
+        clean_email = email.strip().lower()
+
+        if not clean_name:
+            raise ValueError(&quot;Name is required.&quot;)
+        if &quot;@&quot; not in clean_email:
+            raise ValueError(&quot;Email must include '@'.&quot;)
+
+        return clean_name
+</code></pre>
+<p>The service does not know about labels, buttons, <code>StringVar</code>, or message boxes. That is a feature, not a limitation.</p>
+<p>The callback can stay small:</p>
+<pre><code class="language-python">def on_add(self) -&gt; None:
+    try:
+        name = self.service.add_record(self.name_var.get(), self.email_var.get())
+    except ValueError as exc:
+        self.status_var.set(f&quot;Error: {exc}&quot;)
+        return
+
+    self.status_var.set(f&quot;Added {name}.&quot;)
+</code></pre>
+<p>This is the design habit we want to reinforce throughout the GUI unit. The callback coordinates. The service decides.</p>
+<h3 id="layout-caution-for-today">Layout Caution for Today</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>We will use simple <code>pack()</code> calls today because they are enough for a first form. Later we will compare <code>pack()</code> and <code>grid()</code> more carefully. For now, remember two practical rules:</p>
+<ul>
+<li>A widget does not appear until you place it with a layout manager such as <code>pack()</code> or <code>grid()</code>.</li>
+<li>Do not mix <code>pack()</code> and <code>grid()</code> in the same parent container.</li>
+</ul>
+<p>That second rule is important. You can use <code>pack()</code> in one frame and <code>grid()</code> in a different frame, but do not use both inside the same parent. Mixing them in one parent commonly leads to layout errors or confusing results. Today we will keep the layout deterministic and Windows-friendly by using one main frame and <code>pack()</code> consistently.</p>
+<hr>
+<h2 id="section-4-live-demo-8-minutes">Section 4: Live Demo (8 minutes)</h2>
+<h3 id="demo-framing">Demo Framing</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>I am going to build a small contact-entry GUI. The user will type a name and email, click <strong>Add Record</strong>, and receive either a success message or a validation error.</p>
+<p>This demo is intentionally small and should take about 8 minutes. Watch for four things:</p>
+<ol>
+<li>where the widgets are created,</li>
+<li>where the callback is connected,</li>
+<li>where validation lives,</li>
+<li>and where <code>mainloop()</code> starts the event loop.</li>
+</ol>
+<h3 id="demo-code">Demo Code</h3>
+<p>Use this as the live-coding target. If time is tight, paste the class definitions and live-code the <code>_build_ui()</code> and <code>on_add()</code> methods.</p>
+<pre><code class="language-python">from __future__ import annotations
+
+from dataclasses import dataclass
+import tkinter as tk
+from tkinter import messagebox, ttk
+
+
+@dataclass(slots=True)
+class ContactRecord:
+    name: str
+    email: str
+
+
+class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when contact data is invalid.&quot;&quot;&quot;
+
+
+class ContactService:
+    def __init__(self) -&gt; None:
+        self._records: list[ContactRecord] = []
+
+    def add_record(self, name: str, email: str) -&gt; ContactRecord:
+        clean_name = name.strip()
+        clean_email = email.strip().lower()
+
+        if not clean_name:
+            raise ValidationError(&quot;Name is required.&quot;)
+
+        if not clean_email:
+            raise ValidationError(&quot;Email is required.&quot;)
+
+        if &quot;@&quot; not in clean_email:
+            raise ValidationError(&quot;Email must include '@'.&quot;)
+
+        record = ContactRecord(name=clean_name, email=clean_email)
+        self._records.append(record)
+        return record
+
+    def count_records(self) -&gt; int:
+        return len(self._records)
+
+
+class ContactApp:
+    def __init__(self, root: tk.Tk, service: ContactService) -&gt; None:
+        self.root = root
+        self.service = service
+
+        self.root.title(&quot;Contact Entry&quot;)
+        self.root.geometry(&quot;420x240&quot;)
+
+        self.name_var = tk.StringVar()
+        self.email_var = tk.StringVar()
+        self.status_var = tk.StringVar(value=&quot;Ready to add a record.&quot;)
+
+        self._build_ui()
+
+    def _build_ui(self) -&gt; None:
+        main_frame = ttk.Frame(self.root, padding=16)
+        main_frame.pack(fill=&quot;both&quot;, expand=True)
+
+        ttk.Label(main_frame, text=&quot;Name&quot;).pack(anchor=&quot;w&quot;)
+        ttk.Entry(main_frame, textvariable=self.name_var).pack(fill=&quot;x&quot;, pady=(0, 10))
+
+        ttk.Label(main_frame, text=&quot;Email&quot;).pack(anchor=&quot;w&quot;)
+        ttk.Entry(main_frame, textvariable=self.email_var).pack(fill=&quot;x&quot;, pady=(0, 10))
+
+        ttk.Button(
+            main_frame,
+            text=&quot;Add Record&quot;,
+            command=self.on_add,
+        ).pack(pady=(4, 10))
+
+        ttk.Label(
+            main_frame,
+            textvariable=self.status_var,
+            foreground=&quot;navy&quot;,
+            wraplength=360,
+        ).pack(anchor=&quot;w&quot;)
+
+    def on_add(self) -&gt; None:
+        try:
+            record = self.service.add_record(
+                self.name_var.get(),
+                self.email_var.get(),
+            )
+        except ValidationError as exc:
+            self.status_var.set(f&quot;Error: {exc}&quot;)
+            messagebox.showerror(&quot;Validation Error&quot;, str(exc))
+            return
+
+        self.status_var.set(
+            f&quot;Added {record.name} successfully. Total records: &quot;
+            f&quot;{self.service.count_records()}.&quot;
+        )
+        messagebox.showinfo(&quot;Success&quot;, f&quot;Saved record for {record.name}.&quot;)
+        self.name_var.set(&quot;&quot;)
+        self.email_var.set(&quot;&quot;)
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    service = ContactService()
+    ContactApp(root, service)
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-narration-and-timing">Demo Narration and Timing</h3>
+<p><strong>Minute 1: Service first.</strong></p>
+<p><strong>[Instructor speaks while coding:]</strong></p>
+<p>I am starting with the service layer because these rules are not GUI rules. A contact name is required whether the contact comes from a GUI, a command-line prompt, an API, or a file import. The service owns that rule.</p>
+<p><strong>Minute 2: Record and validation.</strong></p>
+<p>Point out <code>ContactRecord</code>, <code>ValidationError</code>, and <code>ContactService.add_record()</code>. Emphasize that the service returns a record on success and raises a meaningful exception on invalid input.</p>
+<p><strong>Minute 3: Root window.</strong></p>
+<p>Create <code>root = tk.Tk()</code>, set the title, and explain that this is the main application window. Mention that <code>geometry()</code> is used here only to keep the demo predictable on Windows classroom machines.</p>
+<p><strong>Minute 4: Variables and widgets.</strong></p>
+<p>Create <code>StringVar</code> objects, labels, entries, and the button. As each widget is created, call <code>.pack()</code> so students see that creating a widget and displaying a widget are separate ideas.</p>
+<p><strong>Minute 5: Callback wiring.</strong></p>
+<p>Pause at <code>command=self.on_add</code>.</p>
+<p><strong>[Ask students:]</strong></p>
+<p>Why is this <code>self.on_add</code> instead of <code>self.on_add()</code>?</p>
+<p><strong>Expected answer:</strong> because Tkinter needs the function to call later, not the result of calling it now.</p>
+<p><strong>Minute 6: Callback calls service.</strong></p>
+<p>Show <code>self.name_var.get()</code> and <code>self.email_var.get()</code>. Explain that the UI gathers strings, but it does not validate all rules itself. It asks the service.</p>
+<p><strong>Minute 7: Feedback.</strong></p>
+<p>Show both feedback paths: status label and message box. Remind students that the message box is modal and briefly blocks the main window until dismissed, which is acceptable for short feedback.</p>
+<p><strong>Minute 8: Run and test.</strong></p>
+<p>Run three cases:</p>
+<ol>
+<li>blank name,</li>
+<li>email without <code>@</code>,</li>
+<li>valid contact such as <code>Ada Lovelace</code> and <code>ada@example.com</code>.</li>
+</ol>
+<p>Point to <code>root.mainloop()</code> and close by saying:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This is a small app, but it already has the essential structure: window, widgets, callback, service, validation, feedback, and event loop.</p>
+<h3 id="demo-questions">Demo Questions</h3>
+<p>Use these questions during or immediately after the demo:</p>
+<ul>
+<li>Where is the rule that email must contain <code>@</code>?</li>
+<li>What connects the Add button to the callback?</li>
+<li>What happens if we forget <code>.pack()</code> on a widget?</li>
+<li>What does the UI do after the service raises <code>ValidationError</code>?</li>
+<li>Why is a short message box acceptable, but a long sleep inside the callback is not?</li>
+</ul>
+<hr>
+<h2 id="section-5-hands-on-lab-26-minutes">Section 5: Hands-On Lab (26 minutes)</h2>
+<h3 id="lab-goal">Lab Goal</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Now you will build your own small GUI. The lab has two parts. First, you will make a Hello GUI to prove that your environment and event loop work. Second, you will build an Add form that sends input through a service layer and shows success or error feedback.</p>
+<p>The goal is not visual polish. The goal is a reliable event-driven flow:</p>
+<pre><code class="language-text">user types -&gt; user clicks Add -&gt; callback runs -&gt; service validates -&gt; UI shows feedback
+</code></pre>
+<h3 id="lab-mini-budget">Lab Mini-Budget</h3>
+<p>Use this mini-budget to keep the 26-minute lab on track:</p>
+<table>
+<thead>
+<tr>
+<th>Lab activity</th>
+<th style="text-align: right;">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Part A: Hello GUI launches</td>
+<td style="text-align: right;">5 minutes</td>
+</tr>
+<tr>
+<td>Part B: Add form widgets</td>
+<td style="text-align: right;">7 minutes</td>
+</tr>
+<tr>
+<td>Part C: Service validation and callback wiring</td>
+<td style="text-align: right;">8 minutes</td>
+</tr>
+<tr>
+<td>Part D: Test, fix, and optional extension</td>
+<td style="text-align: right;">6 minutes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lab arithmetic:</strong> 5 + 7 + 8 + 6 = <strong>26 minutes</strong>.</p>
+<h3 id="part-a-hello-gui-launches">Part A: Hello GUI Launches</h3>
+<p>Create a file named something simple such as <code>hello_gui.py</code> or use the course lab file if one has been provided. Start with this minimal program:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    root.title(&quot;Hello GUI&quot;)
+
+    ttk.Label(root, text=&quot;Hello from Tkinter!&quot;).pack(padx=16, pady=16)
+
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p><strong>Expected result:</strong> a small window opens with the text “Hello from Tkinter!”.</p>
+<p><strong>Instructor circulation prompts:</strong></p>
+<ul>
+<li>Does the window launch?</li>
+<li>Can you point to the line that starts the event loop?</li>
+<li>What happens if you comment out <code>root.mainloop()</code> and run again?</li>
+</ul>
+<p>If a learner’s Tkinter environment fails, confirm they are using the expected Python interpreter. In this course hour we assume Tkinter is available, but some managed environments may need instructor support.</p>
+<h3 id="part-b-add-form-widgets">Part B: Add Form Widgets</h3>
+<p>Expand the app into a small Add form. Students may use contacts, tasks, inventory items, or notes. To preserve the demo theme, contacts are recommended.</p>
+<p>Minimum fields:</p>
+<ul>
+<li>record name,</li>
+<li>record detail such as email, owner, category, or note,</li>
+<li>Add button,</li>
+<li>status area.</li>
+</ul>
+<p>Starter shape:</p>
+<pre><code class="language-python">import tkinter as tk
+from tkinter import ttk
+
+
+class RecordService:
+    def __init__(self) -&gt; None:
+        self._records: list[tuple[str, str]] = []
+
+    def add_record(self, name: str, detail: str) -&gt; int:
+        clean_name = name.strip()
+        clean_detail = detail.strip()
+
+        if not clean_name:
+            raise ValueError(&quot;Name is required.&quot;)
+
+        if not clean_detail:
+            raise ValueError(&quot;Detail is required.&quot;)
+
+        self._records.append((clean_name, clean_detail))
+        return len(self._records)
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    root.title(&quot;Add Record&quot;)
+    root.geometry(&quot;420x240&quot;)
+
+    service = RecordService()
+    name_var = tk.StringVar()
+    detail_var = tk.StringVar()
+    status_var = tk.StringVar(value=&quot;Ready.&quot;)
+
+    main_frame = ttk.Frame(root, padding=16)
+    main_frame.pack(fill=&quot;both&quot;, expand=True)
+
+    ttk.Label(main_frame, text=&quot;Name&quot;).pack(anchor=&quot;w&quot;)
+    ttk.Entry(main_frame, textvariable=name_var).pack(fill=&quot;x&quot;, pady=(0, 10))
+
+    ttk.Label(main_frame, text=&quot;Detail&quot;).pack(anchor=&quot;w&quot;)
+    ttk.Entry(main_frame, textvariable=detail_var).pack(fill=&quot;x&quot;, pady=(0, 10))
+
+    def on_add() -&gt; None:
+        try:
+            count = service.add_record(name_var.get(), detail_var.get())
+        except ValueError as exc:
+            status_var.set(f&quot;Error: {exc}&quot;)
+            return
+
+        status_var.set(f&quot;Added record. Total records: {count}.&quot;)
+        name_var.set(&quot;&quot;)
+        detail_var.set(&quot;&quot;)
+
+    ttk.Button(main_frame, text=&quot;Add&quot;, command=on_add).pack(pady=(4, 10))
+    ttk.Label(main_frame, textvariable=status_var, wraplength=360).pack(anchor=&quot;w&quot;)
+
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>This starter uses a function callback instead of an app class. That is acceptable for the lab. The design requirement is not “must use a class.” The design requirement is “do not bury business rules directly inside the callback.” The service still validates and stores the record.</p>
+<h3 id="part-c-add-messagebox-feedback">Part C: Add Messagebox Feedback</h3>
+<p>After the basic status label works, add <code>messagebox</code> feedback:</p>
+<pre><code class="language-python">from tkinter import messagebox, ttk
+</code></pre>
+<p>Inside the error path:</p>
+<pre><code class="language-python">messagebox.showerror(&quot;Validation Error&quot;, str(exc))
+</code></pre>
+<p>Inside the success path:</p>
+<pre><code class="language-python">messagebox.showinfo(&quot;Success&quot;, &quot;Record added successfully.&quot;)
+</code></pre>
+<p><strong>Instructor note:</strong> remind students again that message boxes are modal. They briefly block interaction with the main window until dismissed. For short success or error feedback, that is fine. For long work, do not simulate progress by freezing the GUI with <code>sleep()</code>.</p>
+<h3 id="part-d-test-cases-students-must-try">Part D: Test Cases Students Must Try</h3>
+<p>Students should run all of these cases before calling the lab complete:</p>
+<ol>
+<li>Launch the GUI.</li>
+<li>Click <strong>Add</strong> with both fields blank.</li>
+<li>Fill only the first field and click <strong>Add</strong>.</li>
+<li>Fill both fields and click <strong>Add</strong>.</li>
+<li>Confirm the status area changes after each attempt.</li>
+<li>Confirm success or error feedback appears.</li>
+<li>Close and relaunch the GUI to confirm it starts reliably.</li>
+</ol>
+<p>For a contact form, add one domain-specific validation rule:</p>
+<pre><code class="language-python">if &quot;@&quot; not in clean_detail:
+    raise ValueError(&quot;Email must include '@'.&quot;)
+</code></pre>
+<p>Only add that rule if the detail field is email. If the learner chose task owner or category, choose a simple rule that fits the domain, such as “category is required.” Keep the validation deterministic and local. Do not introduce files, databases, web requests, random values, or external services.</p>
+<h3 id="completion-criteria">Completion Criteria</h3>
+<p>A complete lab submission for this hour should:</p>
+<ol>
+<li>GUI launches reliably as a Tkinter application.</li>
+<li>Show a window with at least two record fields.</li>
+<li>Include <code>Label</code>, <code>Entry</code>, and <code>Button</code> widgets.</li>
+<li>Include a visible status area.</li>
+<li>Wire the Add button to a callback.</li>
+<li>Validate through a service function or service class.</li>
+<li>Add action works and shows feedback when the record is valid.</li>
+<li>Add action works and shows feedback when the record is invalid.</li>
+<li>Keep long-running or blocking work out of the callback.</li>
+<li>Include <code>root.mainloop()</code> exactly where the app is ready to start handling events.</li>
+</ol>
+<h3 id="instructor-circulation-prompts">Instructor Circulation Prompts</h3>
+<p>Use these prompts while walking the room:</p>
+<ul>
+<li>Show me the line where your window is created.</li>
+<li>Show me where your widgets are placed on the screen.</li>
+<li>Show me the callback connected to the Add button.</li>
+<li>Is your button using <code>command=on_add</code> or accidentally using <code>command=on_add()</code>?</li>
+<li>Show me where validation happens.</li>
+<li>If the user enters bad data, what message appears?</li>
+<li>If the user enters good data, what message appears?</li>
+<li>What line starts the event loop?</li>
+<li>Are all widgets in this same parent using the same layout manager?</li>
+</ul>
+<h3 id="common-pitfalls-during-the-lab">Common Pitfalls During the Lab</h3>
+<h4 id="pitfall-1-business-logic-inside-the-callback">Pitfall 1: Business logic inside the callback</h4>
+<p>If students put all validation rules directly inside the button handler, the app may still run, but the design is moving in the wrong direction. Coach them to move the rules into a helper function or service class.</p>
+<p>Use this phrase:</p>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>The callback should coordinate the interaction. The service should decide whether the record is valid.</p>
+<h4 id="pitfall-2-forgetting-mainloop">Pitfall 2: Forgetting <code>mainloop()</code></h4>
+<p>If the script appears to do nothing or the window flashes and disappears, check for <code>root.mainloop()</code>. It should be called after widgets and callbacks are set up.</p>
+<h4 id="pitfall-3-callback-called-immediately">Pitfall 3: Callback called immediately</h4>
+<p>If the callback runs before the button is clicked, look for this:</p>
+<pre><code class="language-python">command=on_add()
+</code></pre>
+<p>It should be:</p>
+<pre><code class="language-python">command=on_add
+</code></pre>
+<p>The first version calls the function during setup. The second passes the function for Tkinter to call later.</p>
+<h4 id="pitfall-4-widget-not-displayed-due-to-layout-mistakes">Pitfall 4: Widget not displayed due to layout mistakes</h4>
+<p>If a label, entry, button, or status area does not appear, check whether the student created the widget but forgot to place it with <code>.pack()</code> or <code>.grid()</code>.</p>
+<p>Also check parent containers. A widget placed in a frame appears only if the frame itself is placed. For example, if <code>main_frame</code> is never packed, the labels inside it will not be visible either.</p>
+<h4 id="pitfall-5-mixing-pack-and-grid-in-the-same-parent">Pitfall 5: Mixing <code>pack()</code> and <code>grid()</code> in the same parent</h4>
+<p>Do not mix <code>pack()</code> and <code>grid()</code> inside the same parent container. For example, do not call <code>.pack()</code> on one child of <code>main_frame</code> and <code>.grid()</code> on another child of <code>main_frame</code>. That can cause Tkinter layout errors or confusing behavior.</p>
+<p>It is okay to use <code>pack()</code> in one frame and <code>grid()</code> in a different frame, but that is more than we need today. For this lab, use <code>pack()</code> consistently unless the instructor explicitly provides a different starter.</p>
+<h4 id="pitfall-6-no-visible-feedback">Pitfall 6: No visible feedback</h4>
+<p>If the button works internally but the screen does not change, the user cannot tell what happened. Require at least a status label. A message box is also useful for this hour.</p>
+<h3 id="optional-extensions">Optional Extensions</h3>
+<p>Offer these only after the minimum criteria are working:</p>
+<ol>
+<li>Clear the form after a successful add.</li>
+<li>Add a small record-count label.</li>
+<li>Add a <strong>Clear</strong> button that clears fields and resets the status message.</li>
+<li>Bind the Enter key to submit.</li>
+</ol>
+<p>For the Enter key extension, make it implementable. If using the function-style starter, bind Enter on the root window after <code>on_add()</code> is defined:</p>
+<pre><code class="language-python">root.bind(&quot;&lt;Return&gt;&quot;, lambda event: on_add())
+</code></pre>
+<p>If using the <code>ContactApp</code> class from the demo, bind Enter in <code>__init__()</code> after <code>_build_ui()</code>:</p>
+<pre><code class="language-python">self.root.bind(&quot;&lt;Return&gt;&quot;, lambda event: self.on_add())
+</code></pre>
+<p>If students want to focus a specific entry after clearing the form, keep a reference to that entry:</p>
+<pre><code class="language-python">name_entry = ttk.Entry(main_frame, textvariable=name_var)
+name_entry.pack(fill=&quot;x&quot;, pady=(0, 10))
+name_entry.focus()
+</code></pre>
+<p>Do not require the Enter binding for completion. It is an extension for students who finish early.</p>
+<hr>
+<h2 id="section-6-debriefexit-5-minutes">Section 6: Debrief/Exit (5 minutes)</h2>
+<h3 id="debrief">Debrief</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>Let’s name what we accomplished. We created a real desktop window. We added basic widgets. We connected a button to a callback. We sent the user’s input through service logic. We displayed feedback. Most importantly, we practiced the event-driven mental model.</p>
+<p>In a command-line script, the program often controls the sequence. In a GUI, the user’s events control the sequence, and our callbacks respond.</p>
+<h3 id="quick-check">Quick Check</h3>
+<p><strong>Prompt:</strong> What does mainloop() do?</p>
+<p><strong>Expected answer:</strong> It starts Tkinter’s event loop, keeps the window alive, listens for user events, and runs callbacks until the application closes.</p>
+<h3 id="additional-exit-questions">Additional Exit Questions</h3>
+<p>Use these if time allows:</p>
+<ol>
+<li>What is a widget?
+   - <strong>Expected answer:</strong> a visible UI element such as a label, entry, or button.</li>
+<li>What is a callback?
+   - <strong>Expected answer:</strong> a function that runs in response to a GUI event.</li>
+<li>Why should validation live in a service layer?
+   - <strong>Expected answer:</strong> it keeps business rules reusable, testable, and separate from display code.</li>
+<li>Why should we avoid long blocking work inside callbacks?
+   - <strong>Expected answer:</strong> it can freeze the GUI because the event loop cannot process other events smoothly.</li>
+</ol>
+<h3 id="pitfalls-recap">Pitfalls Recap</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>As you continue, watch for these common mistakes:</p>
+<ul>
+<li>putting business logic directly inside callbacks,</li>
+<li>forgetting <code>mainloop()</code>,</li>
+<li>writing <code>command=on_add()</code> instead of <code>command=on_add</code>,</li>
+<li>creating widgets but not displaying them with a layout manager,</li>
+<li>mixing <code>pack()</code> and <code>grid()</code> in the same parent,</li>
+<li>showing no success or error feedback,</li>
+<li>and doing long blocking work inside a callback.</li>
+</ul>
+<h3 id="wrap-up">Wrap-Up</h3>
+<p><strong>[Instructor speaks:]</strong></p>
+<p>This hour was about getting the GUI alive and understanding how interaction flows. The big idea is not “memorize Tkinter methods.” The big idea is that a GUI is a Python program that waits for events, responds through callbacks, and still benefits from clean separation of concerns.</p>
+<p>In the next hour, we will focus on layout and usability. We will take the same basic widgets and arrange them more intentionally with frames, spacing, resizing behavior, and clearer form structure. For now, if your app launches, accepts input, calls service logic, and shows feedback, you have the foundation.</p>
+<hr>
+<h2 id="optional-instructor-reference-notes">Optional Instructor Reference Notes</h2>
+<h3 id="one-sentence-summary">One-Sentence Summary</h3>
+<p>Tkinter apps are event-driven programs where widgets gather input, callbacks respond to user actions, service logic owns validation rules, and <code>mainloop()</code> keeps the application alive and listening.</p>
+<h3 id="if-students-finish-early">If Students Finish Early</h3>
+<p>Invite them to:</p>
+<ul>
+<li>add a third field,</li>
+<li>add a record counter,</li>
+<li>add an Enter key binding with <code>root.bind("&lt;Return&gt;", lambda event: on_add())</code>,</li>
+<li>compare feedback in a status label versus a message box,</li>
+<li>or refactor a function-style solution into a small app class without adding new features.</li>
+</ul>
+<h3 id="instructor-reminders-for-scope">Instructor Reminders for Scope</h3>
+<ul>
+<li>Keep the live demo between 5 and 10 minutes; this script budgets 8 minutes.</li>
+<li>Keep the lab between 25 and 35 minutes; this script budgets 26 minutes.</li>
+<li>Do not introduce database persistence yet.</li>
+<li>Do not introduce background threads or async techniques yet.</li>
+<li>Do not turn layout into the main topic; Hour 18 owns layout depth.</li>
+<li>Keep examples deterministic and Windows-friendly.</li>
+</ul>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes-for-this-hour" class="depth-2">Learning Outcomes for This Hour</a></li>
+<li><a href="#section-1-recap-4-minutes" class="depth-2">Section 1: Recap (4 minutes)</a></li>
+<li><a href="#purpose-of-this-opening" class="depth-3">Purpose of This Opening</a></li>
+<li><a href="#instructor-script" class="depth-3">Instructor Script</a></li>
+<li><a href="#fast-warm-up-prompt" class="depth-3">Fast Warm-Up Prompt</a></li>
+<li><a href="#section-2-gui-mental-model-9-minutes" class="depth-2">Section 2: GUI Mental Model (9 minutes)</a></li>
+<li><a href="#the-shift-from-script-flow-to-event-flow" class="depth-3">The Shift from Script Flow to Event Flow</a></li>
+<li><a href="#tkinter-ttk-and-the-window" class="depth-3">Tkinter, ttk, and the Window</a></li>
+<li><a href="#what-mainloop-does" class="depth-3">What mainloop() Does</a></li>
+<li><a href="#why-blocking-calls-matter" class="depth-3">Why Blocking Calls Matter</a></li>
+<li><a href="#quick-concept-check" class="depth-3">Quick Concept Check</a></li>
+<li><a href="#section-3-core-widgetcallbackservice-design-8-minutes" class="depth-2">Section 3: Core Widget/Callback/Service Design (8 minutes)</a></li>
+<li><a href="#the-three-part-pattern" class="depth-3">The Three-Part Pattern</a></li>
+<li><a href="#why-we-separate-ui-from-service-logic" class="depth-3">Why We Separate UI from Service Logic</a></li>
+<li><a href="#minimal-example-of-the-separation" class="depth-3">Minimal Example of the Separation</a></li>
+<li><a href="#layout-caution-for-today" class="depth-3">Layout Caution for Today</a></li>
+<li><a href="#section-4-live-demo-8-minutes" class="depth-2">Section 4: Live Demo (8 minutes)</a></li>
+<li><a href="#demo-framing" class="depth-3">Demo Framing</a></li>
+<li><a href="#demo-code" class="depth-3">Demo Code</a></li>
+<li><a href="#demo-narration-and-timing" class="depth-3">Demo Narration and Timing</a></li>
+<li><a href="#demo-questions" class="depth-3">Demo Questions</a></li>
+<li><a href="#section-5-hands-on-lab-26-minutes" class="depth-2">Section 5: Hands-On Lab (26 minutes)</a></li>
+<li><a href="#lab-goal" class="depth-3">Lab Goal</a></li>
+<li><a href="#lab-mini-budget" class="depth-3">Lab Mini-Budget</a></li>
+<li><a href="#part-a-hello-gui-launches" class="depth-3">Part A: Hello GUI Launches</a></li>
+<li><a href="#part-b-add-form-widgets" class="depth-3">Part B: Add Form Widgets</a></li>
+<li><a href="#part-c-add-messagebox-feedback" class="depth-3">Part C: Add Messagebox Feedback</a></li>
+<li><a href="#part-d-test-cases-students-must-try" class="depth-3">Part D: Test Cases Students Must Try</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion Criteria</a></li>
+<li><a href="#instructor-circulation-prompts" class="depth-3">Instructor Circulation Prompts</a></li>
+<li><a href="#common-pitfalls-during-the-lab" class="depth-3">Common Pitfalls During the Lab</a></li>
+<li><a href="#pitfall-1-business-logic-inside-the-callback" class="depth-4">Pitfall 1: Business logic inside the callback</a></li>
+<li><a href="#pitfall-2-forgetting-mainloop" class="depth-4">Pitfall 2: Forgetting mainloop()</a></li>
+<li><a href="#pitfall-3-callback-called-immediately" class="depth-4">Pitfall 3: Callback called immediately</a></li>
+<li><a href="#pitfall-4-widget-not-displayed-due-to-layout-mistakes" class="depth-4">Pitfall 4: Widget not displayed due to layout mistakes</a></li>
+<li><a href="#pitfall-5-mixing-pack-and-grid-in-the-same-parent" class="depth-4">Pitfall 5: Mixing pack() and grid() in the same parent</a></li>
+<li><a href="#pitfall-6-no-visible-feedback" class="depth-4">Pitfall 6: No visible feedback</a></li>
+<li><a href="#optional-extensions" class="depth-3">Optional Extensions</a></li>
+<li><a href="#section-6-debriefexit-5-minutes" class="depth-2">Section 6: Debrief/Exit (5 minutes)</a></li>
+<li><a href="#debrief" class="depth-3">Debrief</a></li>
+<li><a href="#quick-check" class="depth-3">Quick Check</a></li>
+<li><a href="#additional-exit-questions" class="depth-3">Additional Exit Questions</a></li>
+<li><a href="#pitfalls-recap" class="depth-3">Pitfalls Recap</a></li>
+<li><a href="#wrap-up" class="depth-3">Wrap-Up</a></li>
+<li><a href="#optional-instructor-reference-notes" class="depth-2">Optional Instructor Reference Notes</a></li>
+<li><a href="#one-sentence-summary" class="depth-3">One-Sentence Summary</a></li>
+<li><a href="#if-students-finish-early" class="depth-3">If Students Finish Early</a></li>
+<li><a href="#instructor-reminders-for-scope" class="depth-3">Instructor Reminders for Scope</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day5_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour4_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

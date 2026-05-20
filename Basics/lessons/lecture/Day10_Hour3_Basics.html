@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 10, Hour 3: Basic Encapsulation + Data Validation (Course Hour 39) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="10">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day10_Hour3_Basics.md">
+
+    <link rel="prev" href="Day10_Hour2_Basics.html">
+    <link rel="next" href="Day10_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="10" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-10/index.html">Day 10</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 10, Hour 3: Basic Encapsulation + Data Validation (Course Hour 39)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 10</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day10_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 10, Hour 3</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 10, Course Hour 39 – Basic encapsulation + data validation<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)<br>
+<strong>Prerequisites:</strong> Contact class from Day 10 Hour 2; understanding of class methods and return statements  </p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this 60-minute session, learners will be able to:</p>
+<ol>
+<li>
+<p><strong>Write simple data validation rules directly inside class methods</strong> — using conditional checks and return values to guard against invalid data.</p>
+</li>
+<li>
+<p><strong>Differentiate between core business logic and User Interface (UI) logic</strong> — recognizing that validation belongs in the class blueprint, not scattered across the menu loop.</p>
+</li>
+<li>
+<p><strong>Manage invalid data gracefully</strong> — preventing bad data from entering the system while providing clear feedback to users.</p>
+</li>
+<li>
+<p><strong>Raise and preview ValueError</strong> — introducing exception raising as an alternative to boolean returns (with the understanding that full error handling comes later in the course).</p>
+</li>
+<li>
+<p><strong>Keep UI code clean and focused</strong> — delegating validation responsibility to the class so the menu loop remains readable.</p>
+</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-notes">Instructor Prep Notes</h2>
+<p><strong>Before class:</strong></p>
+<ul>
+<li>Open a blank file named <code>hour39_validation_demo.py</code> in your code editor, ready for live typing.</li>
+<li>Have the <code>Contact</code> class from Day 10 Hour 2 available for reference (or paste it at the top of your demo file).</li>
+<li>Test both the "return boolean" and "raise ValueError" patterns locally to ensure smooth live demo.</li>
+<li>Prepare a Contact object with a known valid phone number (e.g., "555-1234-5678") for live demonstration.</li>
+<li>Review common pitfalls section below so you can spot-check student code during lab circulation.</li>
+</ul>
+<p><strong>Setup instruction (read aloud to class):</strong></p>
+<p>"Please open your code editors and either create a new file called <code>validation_practice.py</code> or open your existing Contact Manager script. We're going to add smart validation to keep bad data out of our contact database. By the end of this hour, your program will reject invalid phone numbers automatically—no garbage data allowed!"</p>
+<hr>
+<h2 id="opening-script-guardrails-for-our-data-5-minutes">Opening Script: Guardrails for Our Data (~5 minutes)</h2>
+<p><strong>Say (instructor narrative):</strong></p>
+<p>"Right now, think about what happens when someone runs our Contact Manager. We ask for a name, a phone number, maybe an age or email. Our current <code>Contact</code> class accepts whatever the user types without question. What if someone types a negative age? What if they type letters where we expect numbers? What if they paste a phone number in an invalid format?</p>
+<p>In real software development, one of your most important jobs is being a data gatekeeper. You are the guardian of data quality. We need guardrails—rules that prevent garbage from polluting our database.</p>
+<p>Here's the key question I want you to think about: <strong>Where should those guardrails live?</strong> Should we put them in the <code>while</code> loop, right after we call <code>input()</code>? Or should we put them inside the <code>Contact</code> class itself?</p>
+<p>Let me ask you to predict: what happens when a user manager imports contacts from a CSV file instead of typing them in a menu? If all our validation logic is buried in the menu loop, we'd have to copy-paste those same checks everywhere—once for keyboard entry, once for file import, once for API data. That's not maintainable. That's not professional.</p>
+<p>The answer is <strong>encapsulation</strong>. We put the guardrails directly into the class. The class becomes a self-contained, intelligent unit that knows the rules of valid data. Anywhere that code wants to add or update a contact—whether through a menu, a file, an API, or anywhere else—it uses the class methods, and the class enforces the rules once, in one place."</p>
+<hr>
+<h2 id="concept-briefing-encapsulation-and-business-logic-vs-ui">Concept Briefing: Encapsulation and Business Logic vs. UI</h2>
+<h3 id="understanding-encapsulation">Understanding Encapsulation</h3>
+<p><strong>Say:</strong></p>
+<p>"Encapsulation is the practice of bundling data and the rules that protect that data into a single unit—the class. Think of it like a bank account. The bank doesn't let you just set your balance directly. You can't walk into the bank and say, 'I'd like my balance to be $1,000,000.' The bank has validation rules. You deposit or withdraw through specific methods, and those methods enforce the business rules.</p>
+<p>Our <code>Contact</code> class should work the same way. Instead of:</p>
+<pre><code class="language-python">c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+c.phone = user_input  # No! Just stuffing data in!
+</code></pre>
+<p>We do:</p>
+<pre><code class="language-python">c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+success = c.update_phone(user_input)  # The method decides if it's valid
+if success:
+    print(&quot;Update successful!&quot;)
+else:
+    print(&quot;Invalid phone number.&quot;)
+</code></pre>
+<p>The key difference: the second approach keeps control inside the class. The class makes the decision."</p>
+<h3 id="separating-ui-from-core-logic">Separating UI from Core Logic</h3>
+<p><strong>Say:</strong></p>
+<p>"This leads to our second core idea: <strong>separation of concerns</strong>. Your program has two different jobs:</p>
+<ol>
+<li>
+<p><strong>Core Logic (the class):</strong> Understands what makes a Contact valid. Knows the business rules. Protects the data.</p>
+</li>
+<li>
+<p><strong>User Interface (the menu loop):</strong> Talks to the user. Prints prompts. Gets input. Calls the class methods. Responds to success or failure.</p>
+</li>
+</ol>
+<p>These two should not know too much about each other. The UI shouldn't know <em>why</em> a phone number is invalid—it should just know it <em>is</em> invalid. The class shouldn't need to know anything about <code>input()</code> or print statements—it just focuses on keeping data clean.</p>
+<p>When you separate these concerns:
+- <strong>Code is reusable:</strong> Any code that imports contacts uses the same validation.
+- <strong>Code is maintainable:</strong> Change validation rules in one place.
+- <strong>Code is testable:</strong> You can test the class without a running menu loop.
+- <strong>Code is readable:</strong> The menu loop isn't cluttered with validation logic.</p>
+<p>Let's look at how to actually build this."</p>
+<h3 id="a-simple-validation-method-the-boolean-approach">A Simple Validation Method: The Boolean Approach</h3>
+<p><strong>Say:</strong></p>
+<p>"The simplest way to add validation is to have your method return <code>True</code> if the update succeeds and <code>False</code> if it fails."</p>
+<p><strong>Type the following code and narrate as you type:</strong></p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def update_phone(self, new_phone):
+        &quot;&quot;&quot;
+        Update the phone number if it passes validation.
+        Returns: True if valid and updated, False otherwise.
+        &quot;&quot;&quot;
+        # Validation rule 1: Length check
+        # Phone numbers should be at least 7 characters
+        if len(new_phone) &lt; 7:
+            return False
+
+        # If we got here, the phone number passed all checks
+        self.phone = new_phone
+        return True
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"Notice the method signature: it takes one parameter, <code>new_phone</code>. It doesn't modify <code>self.phone</code> right away. Instead, it first validates. If validation passes, update and return <code>True</code>. If validation fails, don't touch the data, just return <code>False</code>.</p>
+<p>This pattern is clean and simple. The caller knows exactly what the boolean means: success or failure. Let me show you a second approach that's more forceful."</p>
+<hr>
+<h2 id="concept-defensive-programming-with-valueerror">Concept: Defensive Programming with ValueError</h2>
+<p><strong>Say:</strong></p>
+<p>"Returning <code>False</code> is polite. Sometimes we want to be more aggressive. In Python, when something is fundamentally wrong with a value—its format, its type, its content—we can <strong>raise an exception</strong>. Specifically, we raise a <code>ValueError</code> to say 'This value is invalid.'</p>
+<p>The idea is: if someone passes bad data to the method, the method doesn't silently fail; it crashes with a clear message. Later in the course, we'll learn how to 'catch' these exceptions so the program doesn't crash, but for now, raising an error is a powerful way for the class to say 'No, I will not accept this.'</p>
+<p>Here's the same <code>Contact</code> class, but using <code>ValueError</code>:"</p>
+<p><strong>Type the following code:</strong></p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def update_phone(self, new_phone):
+        &quot;&quot;&quot;
+        Update the phone number if it passes validation.
+        Raises ValueError if the phone number is invalid.
+        &quot;&quot;&quot;
+        # Clean up the phone number: remove spaces and dashes
+        # This helps us check if the remaining characters are all digits
+        clean_phone = new_phone.replace(&quot; &quot;, &quot;&quot;).replace(&quot;-&quot;, &quot;&quot;)
+
+        # Validation rule 1: Must contain only digits after cleanup
+        if not clean_phone.isdigit():
+            raise ValueError(
+                f&quot;Phone '{new_phone}' contains invalid characters. &quot;
+                f&quot;Use only digits, spaces, and dashes.&quot;
+            )
+
+        # Validation rule 2: Must be at least 7 digits
+        if len(clean_phone) &lt; 7:
+            raise ValueError(
+                f&quot;Phone '{new_phone}' is too short. &quot;
+                f&quot;Must be at least 7 digits.&quot;
+            )
+
+        # If we get here, all validations passed
+        self.phone = new_phone
+        return True
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"When we write <code>raise ValueError(...)</code>, we're telling Python 'Stop. Something is wrong. Here's the message explaining why.' The program stops right there, and the error message prints.</p>
+<p>Notice how much more expressive the error messages are compared to returning <code>False</code>. We can tell the user exactly what's wrong: 'Use only digits,' or 'Too short.' The <code>f-string</code> lets us include the actual data the user entered, which is helpful for debugging.</p>
+<p>For this hour, we're introducing ValueError as a preview. We're not catching it yet—the program will crash if it's raised. But that's okay for now. It's a powerful signal. Later, you'll learn <code>try</code>/<code>except</code> to catch these errors gracefully."</p>
+<hr>
+<h2 id="demo-wiring-validation-to-the-ui-8-minutes">Demo: Wiring Validation to the UI (~8 minutes)</h2>
+<p><strong>Say:</strong></p>
+<p>"Now let's connect the class to a real menu loop. I'm going to show both approaches side by side, and you'll see how clean the menu becomes when the validation lives in the class."</p>
+<p><strong>Demo 1: Using the Boolean Approach</strong></p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python"># Approach 1: Boolean return value
+class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def update_phone(self, new_phone):
+        # Validation: phone must be at least 7 characters
+        if len(new_phone) &lt; 7:
+            return False  # Tell caller: invalid
+        self.phone = new_phone  # Update only if valid
+        return True  # Tell caller: success
+
+# Instantiate a contact object
+my_contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+
+# Menu loop to update contact
+while True:
+    print(f&quot;\nCurrent phone: {my_contact.phone}&quot;)
+    user_input = input(&quot;Enter new phone (or 'q' to quit): &quot;)
+
+    if user_input.lower() == 'q':
+        break
+
+    # Call method and capture the success/failure boolean
+    success = my_contact.update_phone(user_input)
+
+    # React to the result
+    if success:
+        print(&quot;✓ Phone updated successfully!&quot;)
+    else:
+        print(&quot;✗ Invalid phone number. Must be at least 7 characters.&quot;)
+</code></pre>
+<p><strong>Say as you narrate:</strong></p>
+<p>"Look at how clean the <code>while</code> loop is. It only does two things: (1) present information to the user, (2) call the class method and respond to the result. The loop doesn't know anything about phone number validation rules. That responsibility lives in the class."</p>
+<p><strong>Run the demo with valid and invalid inputs:</strong></p>
+<pre><code>Current phone: 555-1234
+Enter new phone (or 'q' to quit): 123
+✗ Invalid phone number. Must be at least 7 characters.
+
+Current phone: 555-1234
+Enter new phone (or 'q' to quit): 555-9999
+✓ Phone updated successfully!
+
+Current phone: 555-9999
+Enter new phone (or 'q' to quit): q
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"Notice: when I type '123', the class rejects it and returns False. When I type '555-9999', it's accepted. The loop doesn't need to understand why; it just follows the boolean result."</p>
+<p><strong>Demo 2: Using ValueError (Quick Preview)</strong></p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python"># Using the ValueError approach
+class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def update_phone(self, new_phone):
+        clean_phone = new_phone.replace(&quot; &quot;, &quot;&quot;).replace(&quot;-&quot;, &quot;&quot;)
+        if not clean_phone.isdigit():
+            raise ValueError(&quot;Phone must contain only digits, spaces, and dashes.&quot;)
+        if len(clean_phone) &lt; 7:
+            raise ValueError(&quot;Phone must be at least 7 digits.&quot;)
+        self.phone = new_phone
+        return True
+
+# Create a contact
+my_contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+
+# UI loop
+while True:
+    print(f&quot;\nCurrent phone: {my_contact.phone}&quot;)
+    user_input = input(&quot;Enter new phone (or 'q' to quit): &quot;)
+
+    if user_input.lower() == 'q':
+        break
+
+    # Try to update; if an error is raised, it will crash (for now)
+    try:
+        my_contact.update_phone(user_input)
+        print(&quot;✓ Phone updated successfully!&quot;)
+    except ValueError as e:
+        print(f&quot;✗ Error: {e}&quot;)
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"This version uses <code>try</code>/<code>except</code>, which we'll cover in detail in the next module. The key idea: the class raises a <code>ValueError</code> with a specific message. The UI catches it and shows a friendly error. Either way—boolean or exception—the rule lives in the class, and the menu loop stays clean.</p>
+<p>For the lab, I recommend the boolean approach since we haven't formally covered exceptions yet. But it's good to see both."</p>
+<hr>
+<h2 id="practice-exercise-live-validation-8-minutes">Practice Exercise: Live Validation (~8 minutes)</h2>
+<p><strong>Say:</strong></p>
+<p>"Let's work through a quick practice example together. I want you to think through the logic before I type."</p>
+<p><strong>Present the scenario:</strong></p>
+<p>"Imagine we have a <code>BankAccount</code> class. We want to write an <code>update_balance</code> method. Here's the rule: the new balance must be non-negative (you can't have negative money). Should we allow a balance of zero? Let's say yes—you can have zero balance."</p>
+<p><strong>Ask the class:</strong></p>
+<p>"What validation check should I write? Talk to your neighbor for 20 seconds. What's the condition?"</p>
+<p><strong>Listen to answers. Then type:</strong></p>
+<pre><code class="language-python">class BankAccount:
+    def __init__(self, account_holder, balance):
+        self.account_holder = account_holder
+        self.balance = balance
+
+    def update_balance(self, new_balance):
+        &quot;&quot;&quot;Update balance if non-negative.&quot;&quot;&quot;
+        if new_balance &lt; 0:
+            return False
+        self.balance = new_balance
+        return True
+
+# Test it
+account = BankAccount(&quot;Bob&quot;, 100)
+
+# Valid updates
+print(account.update_balance(50))   # True, balance becomes 50
+print(account.update_balance(0))    # True, balance becomes 0
+print(account.balance)               # 0
+
+# Invalid update
+print(account.update_balance(-10))  # False, balance stays 0
+print(account.balance)               # Still 0
+</code></pre>
+<p><strong>Say:</strong></p>
+<p>"Notice: the invalid update doesn't change the balance. The method returns <code>False</code>, signaling failure. The data stays protected. This is encapsulation in action."</p>
+<p><strong>Ask a follow-up:</strong></p>
+<p>"What if the user enters the string '-10' instead of the number -10? Should we convert it? Should we reject it?"</p>
+<p><strong>Discuss briefly:</strong> For now, assume data comes in as the correct type. In real applications, you'd handle type conversion carefully.</p>
+<hr>
+<h2 id="hands-on-lab-add-validation-to-your-contact-manager-28-minutes">Hands-On Lab: Add Validation to Your Contact Manager (~28 minutes)</h2>
+<p><strong>Say:</strong></p>
+<p>"Now it's your turn. You have about 28 minutes for this lab. Here's what I want you to do."</p>
+<h3 id="lab-overview-and-specification">Lab Overview and Specification</h3>
+<p><strong>Read aloud or display:</strong></p>
+<p><strong>Objective:</strong> Add a validation method to your <code>Contact</code> class and update your menu to use it.</p>
+<p><strong>Task Steps:</strong></p>
+<ol>
+<li>
+<p><strong>Open your Contact Manager script</strong> (or start fresh with a simple Contact class if you don't have one yet).</p>
+</li>
+<li>
+<p><strong>Add a validation method to your <code>Contact</code> class</strong> named <code>update_phone(new_phone)</code>:
+   - The method takes one parameter: <code>new_phone</code> (a string).
+   - It should implement <strong>at least one</strong> validation rule. Examples:</p>
+<ul>
+<li>Check that the phone length is at least 7 characters: <code>len(new_phone) &gt;= 7</code></li>
+<li>Check that it contains only digits, spaces, or dashes: <code>clean_phone.isdigit()</code> where <code>clean_phone = new_phone.replace(" ", "").replace("-", "")</code></li>
+<li>Check that it starts with a specific digit or country code</li>
+<li>If the phone is valid, update <code>self.phone</code> and return <code>True</code>.</li>
+<li>If invalid, do <strong>not</strong> modify <code>self.phone</code>, and return <code>False</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Update your menu loop</strong> (specifically the "Update Contact" or "Search and Update" section):
+   - When you ask the user for a new phone number, <strong>do not</strong> directly assign it to the contact's attribute.
+   - <strong>Do not</strong> write: <code>contact.phone = user_input</code>
+   - <strong>Instead</strong>, call your new method: <code>success = contact.update_phone(user_input)</code>
+   - Check the <code>success</code> boolean:</p>
+<ul>
+<li>If <code>True</code>, print a success message.</li>
+<li>If <code>False</code>, print a helpful error message that explains what went wrong (e.g., "Phone number must be at least 7 characters").</li>
+<li>Consider re-prompting the user or moving to the next menu item.</li>
+</ul>
+</li>
+<li>
+<p><strong>Test your code</strong> with both valid and invalid inputs:
+   - Try a valid phone number and confirm it updates.
+   - Try an invalid phone number and confirm it's rejected.
+   - Verify that the contact's phone doesn't change when invalid input is given.</p>
+</li>
+</ol>
+<h3 id="lab-checkpoints-measurable-criteria">Lab Checkpoints (Measurable Criteria)</h3>
+<p><strong>You must complete these checkpoints:</strong></p>
+<ul>
+<li>[ ] <strong>Checkpoint 1:</strong> The <code>update_phone</code> method exists and takes <code>new_phone</code> as a parameter.</li>
+<li>[ ] <strong>Checkpoint 2:</strong> The method contains at least one <code>if</code> statement that validates the phone.</li>
+<li>[ ] <strong>Checkpoint 3:</strong> The method returns <code>True</code> if valid, <code>False</code> if invalid.</li>
+<li>[ ] <strong>Checkpoint 4:</strong> The method updates <code>self.phone</code> only when the validation passes.</li>
+<li>[ ] <strong>Checkpoint 5:</strong> Your menu loop calls <code>update_phone</code> (not direct assignment) and handles the boolean result.</li>
+<li>[ ] <strong>Checkpoint 6:</strong> Invalid input is rejected without crashing; a helpful message is printed.</li>
+<li>[ ] <strong>Checkpoint 7:</strong> Your code runs without syntax errors when tested with valid and invalid inputs.</li>
+</ul>
+<h3 id="lab-walkthrough-solution-minute-20">Lab Walkthrough Solution (~Minute 20)</h3>
+<p><strong>After ~20 minutes of work, gather attention and show a solution sketch:</strong></p>
+<p><strong>Say:</strong></p>
+<p>"Let me show you a working example. Your code might look different, and that's fine—there are many valid ways to solve this. But watch for these key pieces."</p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def display(self):
+        return f&quot;Contact: {self.name}, Phone: {self.phone}&quot;
+
+    def update_phone(self, new_phone):
+        &quot;&quot;&quot;
+        Validate and update the phone number.
+        Returns True if successful, False if invalid.
+        &quot;&quot;&quot;
+        # Remove spaces and dashes for validation
+        clean = new_phone.replace(&quot; &quot;, &quot;&quot;).replace(&quot;-&quot;, &quot;&quot;)
+
+        # Rule 1: Must be all digits
+        if not clean.isdigit():
+            return False
+
+        # Rule 2: Must be at least 7 digits
+        if len(clean) &lt; 7:
+            return False
+
+        # Rule 3 (optional): No more than 15 digits
+        if len(clean) &gt; 15:
+            return False
+
+        # All rules passed: update the attribute
+        self.phone = new_phone
+        return True
+
+# Example menu snippet
+if choice == &quot;update&quot;:
+    target_name = input(&quot;Enter contact name to update: &quot;)
+    # [Assume we search and find the contact; store in 'found']
+    if found:
+        new_phone = input(&quot;Enter new phone number: &quot;)
+
+        # Call the validation method
+        if found.update_phone(new_phone):
+            print(&quot;✓ Phone number updated!&quot;)
+        else:
+            print(&quot;✗ Invalid phone number.&quot;)
+            print(&quot;   Phone must have 7-15 digits (spaces and dashes allowed).&quot;)
+</code></pre>
+<p><strong>Key teaching points to emphasize:</strong></p>
+<ul>
+<li><strong>Validation lives in the method:</strong> The menu doesn't need to know the exact rules.</li>
+<li><strong>Boolean return:</strong> Simple, clear contract: <code>True</code> means success, <code>False</code> means failure.</li>
+<li><strong>Message clarity:</strong> If validation fails, tell the user exactly what went wrong.</li>
+<li><strong>No silent failures:</strong> If the phone is invalid, <code>self.phone</code> is not modified.</li>
+</ul>
+<p><strong>Say:</strong></p>
+<p>"Did everyone get these pieces? The method, the boolean return, the UI handling? Spend the last few minutes finishing your code. I'll circulate and help anyone stuck."</p>
+<h3 id="circulation-notes-for-instructor">Circulation Notes for Instructor</h3>
+<p><strong>What to look for:</strong></p>
+<ul>
+<li><strong>Common mistake 1:</strong> Validation logic in the menu, not in the class method.</li>
+<li>
+<p><strong>Fix:</strong> "Move that <code>if</code> statement into the <code>update_phone</code> method. The class owns the rules."</p>
+</li>
+<li>
+<p><strong>Common mistake 2:</strong> Not storing the boolean result; code like <code>contact.update_phone(new_phone)</code> with no <code>if</code> after.</p>
+</li>
+<li>
+<p><strong>Fix:</strong> "You need to capture the return value: <code>success = contact.update_phone(new_phone)</code>. Then use <code>if success:</code>."</p>
+</li>
+<li>
+<p><strong>Common mistake 3:</strong> Validation rule too strict (e.g., rejecting valid phone formats).</p>
+</li>
+<li>
+<p><strong>Fix:</strong> "That rule is too strict. A phone like '555-1234' is valid. Remove the <code>.replace()</code> calls, or adjust your rule."</p>
+</li>
+<li>
+<p><strong>Common mistake 4:</strong> Modifying <code>self.phone</code> before validation passes.</p>
+</li>
+<li><strong>Fix:</strong> "Check first, then update. Do the <code>if</code> check, and only inside the <code>if True</code> block, update the attribute."</li>
+</ul>
+<hr>
+<h2 id="troubleshooting-common-pitfalls">Troubleshooting &amp; Common Pitfalls</h2>
+<h3 id="pitfall-1-validation-logic-lives-in-the-wrong-place">Pitfall 1: Validation Logic Lives in the Wrong Place</h3>
+<p><strong>The trap:</strong></p>
+<pre><code class="language-python"># ❌ WRONG: Validation is in the menu loop, not the class
+contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+
+phone = input(&quot;Enter phone: &quot;)
+if len(phone) &gt;= 7:  # Validation is HERE in the menu
+    contact.phone = phone  # Direct assignment
+else:
+    print(&quot;Invalid&quot;)
+</code></pre>
+<p><strong>The fix:</strong></p>
+<pre><code class="language-python"># ✓ RIGHT: Validation is in the class method
+contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+
+phone = input(&quot;Enter phone: &quot;)
+if contact.update_phone(phone):  # Validation is in the method
+    print(&quot;Updated!&quot;)
+else:
+    print(&quot;Invalid—try again&quot;)
+</code></pre>
+<p><strong>Why it matters:</strong> If your validation logic is in the menu loop, other parts of your code (or other people's code, or future code) might bypass it. By putting validation inside the class, you protect the data <em>everywhere</em> the class is used.</p>
+<hr>
+<h3 id="pitfall-2-forgetting-to-return-a-boolean">Pitfall 2: Forgetting to Return a Boolean</h3>
+<p><strong>The trap:</strong></p>
+<pre><code class="language-python"># ❌ WRONG: No return statement
+def update_phone(self, new_phone):
+    if len(new_phone) &gt;= 7:
+        self.phone = new_phone
+        print(&quot;Phone updated!&quot;)  # Prints, but returns None implicitly
+    # If invalid, returns None (implicitly)
+</code></pre>
+<p><strong>What happens:</strong> The method returns <code>None</code>, not <code>True</code> or <code>False</code>. Your UI code might do this:</p>
+<pre><code class="language-python">result = contact.update_phone(phone)
+if result:  # None is falsy, so this looks like False
+    print(&quot;Success&quot;)
+else:
+    print(&quot;Failed&quot;)  # Always prints &quot;Failed&quot;, even if it worked!
+</code></pre>
+<p><strong>The fix:</strong></p>
+<pre><code class="language-python"># ✓ RIGHT: Explicit return statements
+def update_phone(self, new_phone):
+    if len(new_phone) &gt;= 7:
+        self.phone = new_phone
+        return True  # Explicit return
+    else:
+        return False  # Explicit return
+</code></pre>
+<p><strong>Student drill:</strong> "Always ask: does my method return <code>True</code> or <code>False</code>? Say it out loud: 'If valid, return True. If invalid, return False.'"</p>
+<hr>
+<h3 id="pitfall-3-modifying-the-data-even-when-validation-fails">Pitfall 3: Modifying the Data Even When Validation Fails</h3>
+<p><strong>The trap:</strong></p>
+<pre><code class="language-python"># ❌ WRONG: Updates the data before checking validity
+def update_phone(self, new_phone):
+    self.phone = new_phone  # Oops, changed it!
+    if len(new_phone) &gt;= 7:
+        return True
+    else:
+        self.phone = old_phone  # Try to undo—but we lost old_phone!
+        return False
+</code></pre>
+<p><strong>What happens:</strong> Either you corrupt the data or you get an error (<code>old_phone</code> is not defined).</p>
+<p><strong>The fix:</strong></p>
+<pre><code class="language-python"># ✓ RIGHT: Validate first, update only if valid
+def update_phone(self, new_phone):
+    # Check the validation BEFORE modifying anything
+    if len(new_phone) &gt;= 7:
+        self.phone = new_phone  # Now it's safe to update
+        return True
+    else:
+        # Don't modify self.phone if invalid
+        return False
+</code></pre>
+<p><strong>Teaching point:</strong> "Always validate first. Think of it like checking the weather before you leave the house. You don't put on your coat and then check—you check first, then decide."</p>
+<hr>
+<h3 id="pitfall-4-writing-overly-strict-validation-rules">Pitfall 4: Writing Overly Strict Validation Rules</h3>
+<p><strong>The trap:</strong></p>
+<pre><code class="language-python"># ❌ TOO STRICT: Rejects valid phone numbers
+def update_phone(self, new_phone):
+    # Rule: must be exactly 10 characters
+    if len(new_phone) == 10:  # What about &quot;(555) 123-4567&quot;? That's 14 chars!
+        self.phone = new_phone
+        return True
+    return False
+</code></pre>
+<p><strong>What happens:</strong> Students with formatted phone numbers (with spaces, parentheses, dashes) get rejected. This is frustrating.</p>
+<p><strong>The fix:</strong></p>
+<pre><code class="language-python"># ✓ BETTER: Account for formatting
+def update_phone(self, new_phone):
+    # Extract only digits
+    digits_only = new_phone.replace(&quot; &quot;, &quot;&quot;).replace(&quot;-&quot;, &quot;&quot;).replace(&quot;(&quot;, &quot;&quot;).replace(&quot;)&quot;, &quot;&quot;)
+
+    # Rule: must have at least 7 digits
+    if len(digits_only) &gt;= 7:
+        self.phone = new_phone  # Store as user entered it (or normalize if you want)
+        return True
+    return False
+</code></pre>
+<p><strong>For the lab:</strong> "Start simple: just check the length. If students want to add more rules, great! Show them how. But don't make it so complicated that valid data gets rejected."</p>
+<hr>
+<h3 id="pitfall-5-exception-handling-overkill-valueerror-confusion">Pitfall 5: Exception Handling Overkill (ValueError Confusion)</h3>
+<p><strong>The trap:</strong></p>
+<p>Students might try to use exceptions in ways that complicate their code:</p>
+<pre><code class="language-python"># ❌ OVERLY COMPLEX: Raising exceptions for normal failures
+def update_phone(self, new_phone):
+    if len(new_phone) &lt; 7:
+        raise ValueError(&quot;Phone too short&quot;)  # OK for critical failures, not for normal validation
+    self.phone = new_phone
+    return True
+</code></pre>
+<p><strong>Then in the menu:</strong></p>
+<pre><code class="language-python"># ❌ MESSY: Have to catch and handle
+try:
+    success = contact.update_phone(phone)  # But now it might raise an exception, confusing!
+except ValueError:
+    print(&quot;Invalid&quot;)
+</code></pre>
+<p><strong>For the lab:</strong> Remind students: "We're doing boolean returns this hour. ValueError is a preview for the next module. If your method works, stick with the boolean pattern. Don't mix—keep it simple."</p>
+<hr>
+<h3 id="pitfall-6-infinite-loops-in-the-menu">Pitfall 6: Infinite Loops in the Menu</h3>
+<p><strong>The trap:</strong></p>
+<pre><code class="language-python"># ❌ WRONG: Menu loop that doesn't exit cleanly
+while True:
+    phone = input(&quot;Enter phone: &quot;)
+    if not contact.update_phone(phone):
+        print(&quot;Invalid. Try again.&quot;)
+        # Falls through to next iteration... infinite loop if user can't get it right
+</code></pre>
+<p><strong>What happens:</strong> If the user keeps entering invalid data, they have no way out. They have to hit Ctrl+C.</p>
+<p><strong>The fix:</strong></p>
+<pre><code class="language-python"># ✓ RIGHT: Offer a way out
+while True:
+    phone = input(&quot;Enter phone (or 'q' to skip): &quot;)
+    if phone.lower() == 'q':
+        break
+    if contact.update_phone(phone):
+        print(&quot;Updated!&quot;)
+        break  # Exit after success
+    else:
+        print(&quot;Invalid. Try again or press 'q' to skip.&quot;)
+</code></pre>
+<p><strong>Teaching point:</strong> "Always give users a way out. Even if validation fails, don't trap them."</p>
+<hr>
+<h3 id="pitfall-7-not-testing-edge-cases">Pitfall 7: Not Testing Edge Cases</h3>
+<p><strong>The trap:</strong></p>
+<p>Students write a validation rule and test only the happy path:</p>
+<pre><code class="language-python"># ✓ Tested:
+contact.update_phone(&quot;555-1234567&quot;)  # Valid, 12 chars with dashes
+
+# ❌ NOT TESTED:
+contact.update_phone(&quot;&quot;)  # Empty string? Crashes or passes?
+contact.update_phone(&quot;   &quot;)  # Spaces only? What happens?
+contact.update_phone(None)  # What if someone passes None?
+contact.update_phone(5551234567)  # What if it's a number, not a string?
+</code></pre>
+<p><strong>The fix:</strong></p>
+<p>"During the lab, walk students through a test checklist:</p>
+<ol>
+<li>Test a <strong>valid input</strong>. Does it update?</li>
+<li>Test an <strong>invalid input</strong>. Does it reject?</li>
+<li>Test <strong>edge cases</strong>: empty string, None, numbers, very long strings, special characters.</li>
+<li>After each test, check: did the data change when it shouldn't? Is the error message helpful?"</li>
+</ol>
+<p><strong>Demo checklist on the board:</strong></p>
+<pre><code>[ ] Valid input updates
+[ ] Invalid input rejected
+[ ] Empty string handled
+[ ] None handled
+[ ] Edge cases pass
+[ ] No crashes
+</code></pre>
+<hr>
+<h3 id="pitfall-8-confusing-return-false-with-method-failed">Pitfall 8: Confusing <code>return False</code> with "Method Failed"</h3>
+<p><strong>The trap:</strong></p>
+<p>Students sometimes think a <code>return False</code> means the method crashed:</p>
+<pre><code class="language-python"># ❌ WRONG THINKING: &quot;If it returns False, the program is broken&quot;
+result = contact.update_phone(phone)
+if not result:
+    print(&quot;ERROR: Method failed!&quot;)  # Not an error—just invalid input
+</code></pre>
+<p><strong>The fix:</strong></p>
+<p>"Return False just means 'validation didn't pass.' It's not an error—it's expected behavior for invalid input. Errors are when the method crashes (exception) or does something unexpected."</p>
+<p><strong>Teach the difference:</strong></p>
+<ul>
+<li><strong><code>return False</code></strong>: Normal response to invalid input. The method worked fine; it's just saying "no."</li>
+<li><strong>Exception</strong>: Unexpected problem. Something is seriously wrong.</li>
+<li><strong>Silent failure</strong>: Method doesn't return anything (returns <code>None</code>). Bad—the caller doesn't know what happened.</li>
+</ul>
+<hr>
+<h2 id="quick-check-questions-35-probes-for-understanding">Quick-Check Questions (3–5 Probes for Understanding)</h2>
+<p><strong>Ask these questions throughout or at the end to gauge understanding:</strong></p>
+<p><strong>Question 1 (Encapsulation):</strong>
+"Why should validation rules live inside the class method instead of in the menu loop?"</p>
+<p><strong>Expected answer:</strong> Centralized, reusable, maintainable, keeps UI clean.</p>
+<p><strong>Question 2 (Boolean returns):</strong>
+"What does <code>True</code> mean when a method returns it? What does <code>False</code> mean?"</p>
+<p><strong>Expected answer:</strong> <code>True</code> = operation succeeded, <code>False</code> = operation failed / input was invalid.</p>
+<p><strong>Question 3 (UI separation):</strong>
+"If I add validation to my <code>Contact</code> class, what does the menu loop NOT have to worry about?"</p>
+<p><strong>Expected answer:</strong> The menu loop doesn't need to know the specific validation rules; it just uses the boolean result.</p>
+<p><strong>Question 4 (State protection):</strong>
+"If I call <code>contact.update_phone('123')</code> (which is too short) and the method returns <code>False</code>, what happens to <code>contact.phone</code>?"</p>
+<p><strong>Expected answer:</strong> It doesn't change. The old value stays. The method doesn't modify it if validation fails.</p>
+<p><strong>Question 5 (ValueError preview):</strong>
+"We saw <code>raise ValueError(...)</code> in the demo. What does raising an error do?"</p>
+<p><strong>Expected answer:</strong> It stops the program with an error message, signaling that something is wrong. Later, we'll learn to catch these errors so the program doesn't stop.</p>
+<hr>
+<h2 id="wrap-up-notes-summary-reflection-prompts">Wrap-Up Notes (Summary + Reflection Prompts)</h2>
+<h3 id="summary">Summary</h3>
+<p><strong>Say (instructor recap):</strong></p>
+<p>"Today we learned <strong>encapsulation</strong>: putting data and the rules that protect it into the same unit—the class. We showed two patterns for validation:</p>
+<ol>
+<li>
+<p><strong>Boolean returns:</strong> Method returns <code>True</code> if valid, <code>False</code> if not. Simple and clear for the UI to handle.</p>
+</li>
+<li>
+<p><strong>Raising exceptions:</strong> Method raises <code>ValueError</code> if invalid. More forceful. (We'll catch these formally next module.)</p>
+</li>
+</ol>
+<p>The big takeaway: <strong>the class owns its data</strong>. The class decides what data is acceptable. The UI's job is to talk to the user and call the class methods. This separation keeps code clean, reusable, and maintainable.</p>
+<p>You added validation to at least one method. Your Contact Manager now rejects bad data instead of blindly accepting it. That's professionalism. That's software engineering."</p>
+<h3 id="reflection-prompts-optional-23-min">Reflection Prompts (Optional, 2–3 min)</h3>
+<p><strong>Ask learners to think or discuss:</strong></p>
+<ol>
+<li>
+<p><strong>"Think of a class you might write in a project. What's one validation rule it should have? Where would you put that rule?"</strong></p>
+</li>
+<li>
+<p><strong>"If you were working on a team, why might your teammates thank you for putting validation inside the class instead of in the menu?"</strong></p>
+</li>
+<li>
+<p><strong>"We rejected invalid data with a <code>return False</code>. Can you imagine a situation where you'd want to raise an exception instead? (Hint: think about a critical failure vs. a user input error.)"</strong></p>
+</li>
+</ol>
+<hr>
+<h2 id="facilitation-notes-instructor-tips-timing-extensions">Facilitation Notes (Instructor Tips, Timing, Extensions)</h2>
+<h3 id="timing-guidance">Timing Guidance</h3>
+<ul>
+<li><strong>0:00–0:05</strong> Opening Script (~5 min): Set the context. Pose the "where should guardrails live?" question.</li>
+<li><strong>0:05–0:15</strong> Concept Briefing (~10 min): Encapsulation, UI vs. core logic, boolean returns, then ValueError.</li>
+<li><strong>0:15–0:23</strong> Demo (~8 min): Show both patterns (boolean and exception) wired to a menu loop. Run live examples.</li>
+<li><strong>0:23–0:31</strong> Practice Exercise (~8 min): Simple BankAccount example, guided together.</li>
+<li><strong>0:31–1:00</strong> Lab (~29 min): Students implement validation on their Contact or simple class. Circulate. (~20 min solo work, ~5–7 min walkthrough, ~2 min final checks).</li>
+<li><strong>1:00</strong> Wrap-up (~1 min): Quick recap.</li>
+</ul>
+<p><strong>If running short:</strong> Skip the ValueError section; focus on boolean returns. Raise ValueError is a preview; students can learn full exception handling later.</p>
+<p><strong>If running long:</strong> Reduce demo time or shorten practice exercise. The lab is the core; ensure students get hands-on time.</p>
+<h3 id="common-facilitation-moves">Common Facilitation Moves</h3>
+<ol>
+<li>
+<p><strong>Spot-check during lab:</strong> Ask a student: "Show me where your validation rule is. Is it in the class or the menu?" Guide if needed.</p>
+</li>
+<li>
+<p><strong>Use a "pair walk":</strong> Have students briefly pair-program. "Turn to your neighbor. One of you share your <code>update_phone</code> method. Is it correct?"</p>
+</li>
+<li>
+<p><strong>Celebrate small wins:</strong> "I see someone's validation is working! Silently give them a thumbs up."</p>
+</li>
+<li>
+<p><strong>Redirect without criticizing:</strong> "That's a start. Let me show you a tweak..." (Avoid saying "wrong").</p>
+</li>
+<li>
+<p><strong>Model the thinking:</strong> When a student asks "How should I write the validation?", don't just give the answer. Ask back: "What condition would make a phone number invalid? Tell me the rule in English first."</p>
+</li>
+<li>
+<p><strong>Build confidence:</strong> For students struggling: "This is hard because you're learning real professional patterns. You're doing great. Here's a small hint..."</p>
+</li>
+</ol>
+<h3 id="extension-ideas-stay-in-basics-scope">Extension Ideas (Stay in Basics Scope)</h3>
+<ol>
+<li>
+<p><strong>Multiple validation rules:</strong> Add a length check <em>and</em> an "only digits/dashes/spaces" check. Create a method that returns a detailed error message about which rule failed.</p>
+</li>
+<li>
+<p><strong>Normalize on storage:</strong> Store the phone as digits-only (<code>"5551234567"</code>), but display with formatting (<code>"(555) 123-4567"</code>). This teaches the difference between storage format and display format.</p>
+</li>
+<li>
+<p><strong>Add a <code>validate_name</code> method:</strong> Similar pattern—check that name is not empty, is longer than 1 character, etc. Apply the same principle to other attributes.</p>
+</li>
+<li>
+<p><strong>Soft vs. hard fails:</strong> One method returns False for "nice" failures (user input error); another raises ValueError for "hard" failures (corrupted data). Discuss the difference with students.</p>
+</li>
+<li>
+<p><strong>Compare two patterns:</strong> Have students implement the same validation using boolean returns and another using raising ValueError. Discuss when to use each in a larger team project.</p>
+</li>
+<li>
+<p><strong>Bonus: Separate validation from update:</strong> Add a method like <code>is_valid_phone(phone_str)</code> that returns boolean without modifying anything. Use it to validate <em>before</em> calling <code>update_phone()</code>. This teaches the single-responsibility principle.</p>
+</li>
+<li>
+<p><strong>Real-world validation:</strong> Discuss formats like E.164 (international phone standard). Show how a real phone validator works (they can peek at a library like <code>phonenumbers</code>). Emphasize: "Real validation is complex; for this course, we keep it simple."</p>
+</li>
+</ol>
+<h3 id="technology-notes">Technology Notes</h3>
+<ul>
+<li><strong>Live coding:</strong> Type slowly. Narrate as you type so learners can follow. Pause for questions.</li>
+<li><strong>Error tolerance:</strong> If you mistype, fix it live. This is modeling real debugging. Say: "Oops, I made a typo. Let me fix that. Notice the error message? That's how Python tells us what went wrong."</li>
+<li><strong>Save/share code:</strong> Consider sharing your demo file with the class afterward (via LMS, Slack, email, or repo link). Label it <code>hour39_demo.py</code> so they can reference it later.</li>
+<li><strong>Breakpoints/print debugging:</strong> If code isn't working during demo, add <code>print()</code> statements to show what's happening. This models debugging technique.</li>
+</ul>
+<h3 id="addressing-common-struggles">Addressing Common Struggles</h3>
+<p><strong>Student says: "My validation code works, but it's really long. Is that okay?"</strong><br>
+Answer: "Great question! Yes, it's okay if it's clear and correct. As you learn more, you'll find ways to make it more concise. For now, clear and correct is more important than short."</p>
+<p><strong>Student says: "Why do we need to return True/False? Why not just update or not?"</strong><br>
+Answer: "Excellent question! The boolean return lets the UI know what happened. Did it work or not? The UI needs to know so it can tell the user. If we just silently update or don't, the user is confused."</p>
+<p><strong>Student says: "Can I use an <code>if</code>/<code>else</code> without <code>return</code>?"</strong><br>
+Answer: "Definitely. Here's an alternative..." (Show both patterns.) "Either way, the key is: validate first, then update."</p>
+<p><strong>Student says: "What if someone edits the file and changes the validation rules?"</strong><br>
+Answer: "Good thought! This is why we put validation <em>inside the class</em>. All the code that creates or updates contacts goes through the class. The validation is protected in one place. Later, you'll learn about access control (private attributes) to prevent direct edits."</p>
+<h3 id="instructor-reflection-questions-for-you-after-class">Instructor Reflection Questions (For You, After Class)</h3>
+<ol>
+<li>Did students understand that validation belongs in the class, not the menu?</li>
+<li>Did anyone successfully use the boolean return pattern to guard their data?</li>
+<li>Which students struggled with the boolean logic? Do they need a 1-on-1 check-in?</li>
+<li>Did the BankAccount practice example help, or would a different example have been clearer?</li>
+<li>Are students ready to move to exception handling and file I/O, or do they need more practice with validation patterns?</li>
+</ol>
+<hr>
+<h2 id="session-wrap-up-checklist">Session Wrap-Up Checklist</h2>
+<p>Before you dismiss the class:</p>
+<ul>
+<li>[ ] Did learners get their <code>update_phone</code> method working?</li>
+<li>[ ] Did at least 3–4 learners verbally confirm they understand the boolean return or exception pattern?</li>
+<li>[ ] Did you circulate and spot-check for the common pitfalls above?</li>
+<li>[ ] Did you reinforce the key message: "Validation lives in the class, not the menu"?</li>
+<li>[ ] Do learners know what's coming next (checkpoint + file I/O)?</li>
+</ul>
+<hr>
+<p><strong>End of Hour 39 Lecture Script</strong></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-notes" class="depth-2">Instructor Prep Notes</a></li>
+<li><a href="#opening-script-guardrails-for-our-data-5-minutes" class="depth-2">Opening Script: Guardrails for Our Data (~5 minutes)</a></li>
+<li><a href="#concept-briefing-encapsulation-and-business-logic-vs-ui" class="depth-2">Concept Briefing: Encapsulation and Business Logic vs. UI</a></li>
+<li><a href="#understanding-encapsulation" class="depth-3">Understanding Encapsulation</a></li>
+<li><a href="#separating-ui-from-core-logic" class="depth-3">Separating UI from Core Logic</a></li>
+<li><a href="#a-simple-validation-method-the-boolean-approach" class="depth-3">A Simple Validation Method: The Boolean Approach</a></li>
+<li><a href="#concept-defensive-programming-with-valueerror" class="depth-2">Concept: Defensive Programming with ValueError</a></li>
+<li><a href="#demo-wiring-validation-to-the-ui-8-minutes" class="depth-2">Demo: Wiring Validation to the UI (~8 minutes)</a></li>
+<li><a href="#practice-exercise-live-validation-8-minutes" class="depth-2">Practice Exercise: Live Validation (~8 minutes)</a></li>
+<li><a href="#hands-on-lab-add-validation-to-your-contact-manager-28-minutes" class="depth-2">Hands-On Lab: Add Validation to Your Contact Manager (~28 minutes)</a></li>
+<li><a href="#lab-overview-and-specification" class="depth-3">Lab Overview and Specification</a></li>
+<li><a href="#lab-checkpoints-measurable-criteria" class="depth-3">Lab Checkpoints (Measurable Criteria)</a></li>
+<li><a href="#lab-walkthrough-solution-minute-20" class="depth-3">Lab Walkthrough Solution (~Minute 20)</a></li>
+<li><a href="#circulation-notes-for-instructor" class="depth-3">Circulation Notes for Instructor</a></li>
+<li><a href="#troubleshooting-common-pitfalls" class="depth-2">Troubleshooting &amp; Common Pitfalls</a></li>
+<li><a href="#pitfall-1-validation-logic-lives-in-the-wrong-place" class="depth-3">Pitfall 1: Validation Logic Lives in the Wrong Place</a></li>
+<li><a href="#pitfall-2-forgetting-to-return-a-boolean" class="depth-3">Pitfall 2: Forgetting to Return a Boolean</a></li>
+<li><a href="#pitfall-3-modifying-the-data-even-when-validation-fails" class="depth-3">Pitfall 3: Modifying the Data Even When Validation Fails</a></li>
+<li><a href="#pitfall-4-writing-overly-strict-validation-rules" class="depth-3">Pitfall 4: Writing Overly Strict Validation Rules</a></li>
+<li><a href="#pitfall-5-exception-handling-overkill-valueerror-confusion" class="depth-3">Pitfall 5: Exception Handling Overkill (ValueError Confusion)</a></li>
+<li><a href="#pitfall-6-infinite-loops-in-the-menu" class="depth-3">Pitfall 6: Infinite Loops in the Menu</a></li>
+<li><a href="#pitfall-7-not-testing-edge-cases" class="depth-3">Pitfall 7: Not Testing Edge Cases</a></li>
+<li><a href="#pitfall-8-confusing-return-false-with-method-failed" class="depth-3">Pitfall 8: Confusing return False with &quot;Method Failed&quot;</a></li>
+<li><a href="#quick-check-questions-35-probes-for-understanding" class="depth-2">Quick-Check Questions (3–5 Probes for Understanding)</a></li>
+<li><a href="#wrap-up-notes-summary-reflection-prompts" class="depth-2">Wrap-Up Notes (Summary + Reflection Prompts)</a></li>
+<li><a href="#summary" class="depth-3">Summary</a></li>
+<li><a href="#reflection-prompts-optional-23-min" class="depth-3">Reflection Prompts (Optional, 2–3 min)</a></li>
+<li><a href="#facilitation-notes-instructor-tips-timing-extensions" class="depth-2">Facilitation Notes (Instructor Tips, Timing, Extensions)</a></li>
+<li><a href="#timing-guidance" class="depth-3">Timing Guidance</a></li>
+<li><a href="#common-facilitation-moves" class="depth-3">Common Facilitation Moves</a></li>
+<li><a href="#extension-ideas-stay-in-basics-scope" class="depth-3">Extension Ideas (Stay in Basics Scope)</a></li>
+<li><a href="#technology-notes" class="depth-3">Technology Notes</a></li>
+<li><a href="#addressing-common-struggles" class="depth-3">Addressing Common Struggles</a></li>
+<li><a href="#instructor-reflection-questions-for-you-after-class" class="depth-3">Instructor Reflection Questions (For You, After Class)</a></li>
+<li><a href="#session-wrap-up-checklist" class="depth-2">Session Wrap-Up Checklist</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day10_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day10_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

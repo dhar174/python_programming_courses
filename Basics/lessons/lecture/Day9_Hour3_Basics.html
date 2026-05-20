@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Functions with Collections (Day 9, Hour 3 – Course Hour 35) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="9">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day9_Hour3_Basics.md">
+
+    <link rel="prev" href="Day9_Hour2_Basics.html">
+    <link rel="next" href="Day9_Hour4_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="9" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-09/index.html">Day 9</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Functions with Collections (Day 9, Hour 3 – Course Hour 35)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 9</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day9_Hour4_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day9_Hour3_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 9</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 9, Course Hour 35 – Functions with collections<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="1-learning-outcomes">1. Learning Outcomes</h2>
+<p>By the end of this hour, you will be able to:</p>
+<ol>
+<li>Understand how to pass collections (lists, tuples, dicts) to functions and recognize that functions receive a reference to the original collection, not a copy.</li>
+<li>Recognize the difference between returning a new collection vs. mutating the original, and understand when each approach is appropriate.</li>
+<li>Build functions that aggregate or transform collection data, using iteration and conditional logic to process multiple items.</li>
+<li>Use function parameters and return values effectively with collections, ensuring proper documentation and clear function contracts.</li>
+<li>Apply best practices for collection handling in functions, including writing clear docstrings and avoiding common mutation pitfalls.</li>
+</ol>
+<hr>
+<h2 id="2-instructor-prep-and-delivery-note">2. Instructor Prep and Delivery Note</h2>
+<p><strong>Critical teaching points to emphasize:</strong>
+- Collections (lists, dictionaries) are passed by reference into functions. This is fundamentally different from how simple types like integers and strings behave.
+- Students must make an explicit decision for each function: "Do I mutate, or do I return?"
+- Docstrings are not optional when working with collections—they prevent silent bugs caused by unexpected mutations.</p>
+<p><strong>Setup checklist:</strong>
+- Open an empty editor file called <code>hour35_collections_demo.py</code> for live coding.
+- Open a second empty file called <code>hour35_normalize_lab.py</code> to distribute as the lab starter.
+- Verify that your Python interpreter is ready and your terminal is visible.
+- Have the runbook reference (Hour 35: Functions with collections) open as a backup reference.</p>
+<p><strong>Prerequisite knowledge check:</strong>
+- Students should be comfortable defining functions with parameters and return statements.
+- Students should be familiar with list iteration using both <code>for item in list:</code> and <code>for i in range(len(list)):</code>.
+- Students should understand <code>.strip()</code> and <code>.title()</code> string methods from earlier sessions.</p>
+<hr>
+<h2 id="3-opening-script-collections-and-function-references-3-minutes">3. Opening Script: Collections and Function References (~3 minutes)</h2>
+<p><strong>[Read aloud]</strong></p>
+<p>"Good morning. Over the last few hours, we've been passing simple values—numbers and strings—into functions. When you pass the number <code>5</code> into a function, or the string <code>"hello"</code>, Python doesn't worry about making a copy. It just passes the value, and if the function changes something internally, the outside world is unaffected.</p>
+<p>But today we're stepping into a different world: the world of collections. When you write a function that takes a list of 1,000 customer records, or a dictionary of settings, you face a choice that doesn't exist with simple types.</p>
+<p>Here's the key insight: Python doesn't make a copy of that 1,000-item list to hand to your function. That would waste memory. Instead, Python passes a <em>reference</em>—a direct link to the original list. Your function and your main code are looking at the <em>same</em> list.</p>
+<p>This means: if your function modifies that list, the original list changes. The list is 'mutated.' And that can be either exactly what you want, or a silent bug that destroys your program.</p>
+<p>By the end of this hour, you'll know how to make that choice deliberately, and how to write code that makes your intention crystal clear to the next person who reads it—which is often yourself, three months later."</p>
+<hr>
+<h2 id="4-conceptual-briefing-mutation-vs-return-a-decision-tree-12-minutes">4. Conceptual Briefing: Mutation vs. Return – A Decision Tree (~12 minutes)</h2>
+<p><strong>[Say:]</strong>
+"Let's talk about the two fundamental patterns for handling collections in functions."</p>
+<h3 id="41-pattern-1-mutating-the-collection-in-place">4.1 Pattern 1: Mutating the Collection In-Place</h3>
+<p><strong>[Narrate as you type:]</strong></p>
+<pre><code class="language-python"># hour35_collections_demo.py
+
+def empty_the_list(my_list):
+    &quot;&quot;&quot;
+    WARNING: This function modifies the original list in place.
+    Clears all items from the provided list.
+    &quot;&quot;&quot;
+    my_list.clear()
+
+groceries = [&quot;Milk&quot;, &quot;Eggs&quot;, &quot;Bread&quot;]
+print(&quot;Before function call:&quot;)
+print(f&quot;  groceries = {groceries}&quot;)
+
+empty_the_list(groceries)
+
+print(&quot;After function call:&quot;)
+print(f&quot;  groceries = {groceries}&quot;)
+</code></pre>
+<p><strong>[Expected output:]</strong></p>
+<pre><code>Before function call:
+  groceries = ['Milk', 'Eggs', 'Bread']
+After function call:
+  groceries = []
+</code></pre>
+<p><strong>[Continue speaking:]</strong></p>
+<p>"Notice what happened. The function received a reference to <code>groceries</code>. Inside the function, we called <code>.clear()</code> on that reference. Since we're working with the real list—not a copy—the original <code>groceries</code> list was completely emptied.</p>
+<p>This pattern is called <strong>in-place mutation</strong> or <strong>destructive mutation</strong>. It's fast and memory-efficient. But it has a big downside: if you weren't expecting the function to destroy your data, you're in trouble."</p>
+<h3 id="42-pattern-2-returning-a-new-collection">4.2 Pattern 2: Returning a New Collection</h3>
+<p><strong>[Say:]</strong>
+"The safer alternative is to leave the original list alone and return a brand-new list."</p>
+<p><strong>[Type and narrate:]</strong></p>
+<pre><code class="language-python">def keep_only_first_item(my_list):
+    &quot;&quot;&quot;
+    Returns a NEW list containing only the first item from my_list.
+    Does NOT modify my_list.
+    &quot;&quot;&quot;
+    new_list = []
+
+    if len(my_list) &gt; 0:
+        new_list.append(my_list[0])
+
+    return new_list
+
+groceries = [&quot;Milk&quot;, &quot;Eggs&quot;, &quot;Bread&quot;]
+print(&quot;Original before function call:&quot;)
+print(f&quot;  groceries = {groceries}&quot;)
+
+short_list = keep_only_first_item(groceries)
+
+print(&quot;Original after function call:&quot;)
+print(f&quot;  groceries = {groceries}&quot;)
+print(&quot;Returned list:&quot;)
+print(f&quot;  short_list = {short_list}&quot;)
+</code></pre>
+<p><strong>[Expected output:]</strong></p>
+<pre><code>Original before function call:
+  groceries = ['Milk', 'Eggs', 'Bread']
+Original after function call:
+  groceries = ['Milk', 'Eggs', 'Bread']
+Returned list:
+  short_list = ['Milk']
+</code></pre>
+<p><strong>[Continue:]</strong></p>
+<p>"This time, we created a brand-new empty list inside the function. We filled it with processed data, and then returned it. The original <code>groceries</code> list was never touched. It's completely safe.</p>
+<p>The cost? A tiny bit more memory (because we created a new list) and a few extra lines of code. But the payoff is huge: no surprises, no silent data destruction."</p>
+<h3 id="43-the-decision-when-to-use-each-pattern">4.3 The Decision: When to Use Each Pattern</h3>
+<p><strong>[Say:]</strong></p>
+<p>"So which pattern should you use?</p>
+<p><strong>Return a new collection</strong> if:
+- The function's job is to transform or filter data (like cleaning names, sorting records, or selecting specific items).
+- You want to keep the original data as a reference.
+- The list is reasonably small (under a million items).
+- You're writing code for readability and safety.</p>
+<p><strong>Mutate in-place</strong> if:
+- Your function's job is to sort or shuffle the existing list without extracting specific items.
+- Memory is extremely tight (processing millions of items).
+- You have explicitly documented the mutation in your docstring.
+- Everyone reading the code knows it's going to destroy the original.</p>
+<p>For a beginner, my advice is: <strong>default to returning a new collection</strong>. It's safer. Once you're comfortable, you can optimize by mutating when you're sure it's the right choice."</p>
+<h3 id="44-function-contracts-and-docstrings">4.4 Function Contracts and Docstrings</h3>
+<p><strong>[Say:]</strong></p>
+<p>"Here's the professional standard: whenever a function works with a collection, you must write a docstring that tells the reader whether the function mutates or returns. This is called a <strong>function contract</strong>—it's your promise to the rest of the code about what the function will and won't do."</p>
+<p><strong>[Type:]</strong></p>
+<pre><code class="language-python">def clean_list_inplace(my_list):
+    &quot;&quot;&quot;
+    MUTATES the provided list by removing empty strings.
+    Does not return anything (None).
+    &quot;&quot;&quot;
+    for i in range(len(my_list) - 1, -1, -1):
+        if my_list[i] == &quot;&quot;:
+            my_list.pop(i)
+
+def remove_empty_strings(my_list):
+    &quot;&quot;&quot;
+    Returns a NEW list with all empty strings removed.
+    Does NOT modify the original list.
+    &quot;&quot;&quot;
+    result = []
+    for item in my_list:
+        if item != &quot;&quot;:
+            result.append(item)
+    return result
+</code></pre>
+<p><strong>[Say:]</strong></p>
+<p>"Notice how the docstrings tell the story. The first function explicitly says it MUTATES. The second says it does NOT modify the original. When someone (including future you) reads these, there's zero confusion about what will happen."</p>
+<hr>
+<h2 id="5-live-demo-normalize-names-two-ways-15-minutes">5. Live Demo: Normalize Names – Two Ways (~15 minutes)</h2>
+<p><strong>[Say:]</strong></p>
+<p>"Let's work through a realistic data-cleaning scenario. Imagine you have a list of names from a form, but they're messy: uppercase, lowercase, extra spaces. We need to normalize them."</p>
+<p><strong>[Type slowly and narrate each step:]</strong></p>
+<pre><code class="language-python"># Raw data from a user form
+raw_names = [&quot;  alice smith&quot;, &quot;BOB  JONES&quot;, &quot; cHarLiE bRoWn &quot;]
+
+print(&quot;=&quot; * 50)
+print(&quot;APPROACH 1: Return a new list (Safer)&quot;)
+print(&quot;=&quot; * 50)
+
+def clean_names_return_new(name_list):
+    &quot;&quot;&quot;
+    Returns a NEW list of cleaned, title-cased names.
+    Original list is never modified.
+    &quot;&quot;&quot;
+    cleaned = []
+    for name in name_list:
+        # Strip whitespace, then title-case it
+        clean = name.strip().title()
+        cleaned.append(clean)
+
+    return cleaned
+
+print(f&quot;Original names (before): {raw_names}&quot;)
+cleaned_copy = clean_names_return_new(raw_names)
+print(f&quot;Returned new list: {cleaned_copy}&quot;)
+print(f&quot;Original names (after): {raw_names}&quot;)
+print(&quot;→ Notice: Original is unchanged!&quot;)
+
+print(&quot;\n&quot; + &quot;=&quot; * 50)
+print(&quot;APPROACH 2: Mutate in-place (Faster)&quot;)
+print(&quot;=&quot; * 50)
+
+def clean_names_inplace(name_list):
+    &quot;&quot;&quot;
+    MUTATES the list by cleaning all names in-place.
+    The original list is modified. No return value.
+    &quot;&quot;&quot;
+    for i in range(len(name_list)):
+        name_list[i] = name_list[i].strip().title()
+
+# Reset for second demo
+raw_names = [&quot;  alice smith&quot;, &quot;BOB  JONES&quot;, &quot; cHarLiE bRoWn &quot;]
+
+print(f&quot;Original names (before): {raw_names}&quot;)
+clean_names_inplace(raw_names)
+print(f&quot;Original names (after): {raw_names}&quot;)
+print(&quot;→ Notice: Original was modified!&quot;)
+
+print(&quot;\n&quot; + &quot;=&quot; * 50)
+print(&quot;Which approach is better?&quot;)
+print(&quot;=&quot; * 50)
+print(&quot;For most beginner use cases: Return a new list.&quot;)
+print(&quot;It's safer and easier to reason about.&quot;)
+print(&quot;When memory is critical: Mutate in-place.&quot;)
+</code></pre>
+<p><strong>[Expected output:]</strong></p>
+<pre><code>==================================================
+APPROACH 1: Return a new list (Safer)
+==================================================
+Original names (before): ['  alice smith', 'BOB  JONES', ' cHarLiE bRoWn ']
+Returned new list: ['Alice Smith', 'Bob Jones', 'Charlie Brown']
+Original names (after): ['  alice smith', 'BOB  JONES', ' cHarLiE bRoWn ']
+→ Notice: Original is unchanged!
+
+==================================================
+APPROACH 2: Mutate in-place (Faster)
+==================================================
+Original names (before): ['  alice smith', 'BOB  JONES', ' cHarLiE bRoWn ']
+Original names (after): ['Alice Smith', 'Bob Jones', 'Charlie Brown']
+→ Notice: Original was modified!
+
+==================================================
+Which approach is better?
+==================================================
+For most beginner use cases: Return a new list.
+It's safer and easier to reason about.
+When memory is critical: Mutate in-place.
+</code></pre>
+<p><strong>[Say:]</strong></p>
+<p>"Both approaches work. Both are valid Python. The choice depends on your context and your intent. In production data pipelines, returning a new list is the default because it prevents silent bugs. In-place mutation is an optimization for when you're absolutely sure you want to destroy the original."</p>
+<hr>
+<h2 id="6-practice-walkthrough-extracting-specific-items-8-minutes">6. Practice Walkthrough: Extracting Specific Items (~8 minutes)</h2>
+<p><strong>[Say:]</strong></p>
+<p>"Let's do a smaller, guided example together. I'm going to write a function that does something common: filtering a list to keep only items that match a condition."</p>
+<p><strong>[Type step by step, explaining each line:]</strong></p>
+<pre><code class="language-python"># A list of student scores
+scores = [45, 87, 92, 65, 78, 91, 55, 88]
+
+def get_passing_scores(score_list):
+    &quot;&quot;&quot;
+    Returns a NEW list containing only scores &gt;= 70.
+    Passing score is 70.
+    Original list is not modified.
+    &quot;&quot;&quot;
+    passing = []
+
+    for score in score_list:
+        if score &gt;= 70:
+            passing.append(score)
+
+    return passing
+
+print(&quot;All scores:&quot;, scores)
+result = get_passing_scores(scores)
+print(&quot;Passing scores only:&quot;, result)
+</code></pre>
+<p><strong>[Expected output:]</strong></p>
+<pre><code>All scores: [45, 87, 92, 65, 78, 91, 55, 88]
+Passing scores only: [87, 92, 78, 91, 88]
+</code></pre>
+<p><strong>[Say:]</strong></p>
+<p>"Notice three things:</p>
+<ol>
+<li>We created a brand-new empty list called <code>passing</code> inside the function.</li>
+<li>We looped through the original list, checking a condition, and only appending items that meet it.</li>
+<li>We returned the new list and captured it in a variable <code>result</code>.</li>
+</ol>
+<p>The original <code>scores</code> list is untouched. This is the pattern you'll use hundreds of times in Python."</p>
+<hr>
+<h2 id="7-lab-with-full-checkpoints-normalize-contacts-30-minutes">7. Lab with Full Checkpoints: Normalize Contacts (~30 minutes)</h2>
+<p><strong>[Say:]</strong></p>
+<p>"Now it's your turn. You're going to write a contact-cleaning function from scratch. Your task is realistic: you've received a messy list of contact names from a form, and you need to normalize them so they're consistent and professional-looking."</p>
+<h3 id="71-lab-specification">7.1 Lab Specification</h3>
+<p><strong>[Display or hand out:]</strong></p>
+<pre><code>TASK: Normalize Contacts
+
+You have a list of contact names that need cleaning:
+  [&quot;  sarah jones &quot;, &quot;MARK smith&quot;, &quot; tina turner  &quot;]
+
+Write a function called normalize_contacts(contacts) that:
+  1. Strips all leading and trailing whitespace from each name
+  2. Converts each name to title case (capitalize the first letter of each word)
+  3. Returns (or modifies in-place—your choice) the cleaned list
+
+Example output:
+  [&quot;Sarah Jones&quot;, &quot;Mark Smith&quot;, &quot;Tina Turner&quot;]
+
+Your function MUST:
+  - Have a docstring explaining whether you mutate or return
+  - Work correctly on the provided test data
+  - Be readable and follow the patterns we just showed
+
+Choose your approach:
+  Option A: Return a new list (safe, default)
+  Option B: Mutate in-place (fast, but destructive)
+  Write your choice in your docstring!
+</code></pre>
+<h3 id="72-checkpoint-breakdown-with-time-estimates">7.2 Checkpoint Breakdown with Time Estimates</h3>
+<p><strong>Checkpoint 1 (2 min):</strong> Set up your file and create the raw data list.</p>
+<pre><code class="language-python"># Create the raw data exactly as shown
+raw_contacts = [&quot;  sarah jones &quot;, &quot;MARK smith&quot;, &quot; tina turner  &quot;]
+print(&quot;Original:&quot;, raw_contacts)
+</code></pre>
+<p><strong>Checkpoint 2 (5 min):</strong> Write the function stub with a docstring.</p>
+<pre><code class="language-python">def normalize_contacts(contacts):
+    &quot;&quot;&quot;
+    [Your docstring here explaining your approach]
+    &quot;&quot;&quot;
+    pass
+</code></pre>
+<p><strong>Checkpoint 3 (8 min):</strong> Write the loop that processes each name.
+- Start with an empty list (if using "return new list" approach)
+- Loop through each name in contacts
+- For each name, apply <code>.strip().title()</code>
+- Either append to new list or reassign in the original list</p>
+<p><strong>Checkpoint 4 (5 min):</strong> Add the return statement (if using "return new list" approach) or verify in-place changes.
+- If returning: <code>return cleaned_list</code>
+- If mutating: No return needed, but double-check that the original list was updated</p>
+<p><strong>Checkpoint 5 (3 min):</strong> Call your function and capture/display the result.</p>
+<pre><code class="language-python"># If you returned a new list:
+cleaned = normalize_contacts(raw_contacts)
+print(&quot;Cleaned:&quot;, cleaned)
+
+# If you mutated in-place:
+normalize_contacts(raw_contacts)
+print(&quot;Cleaned:&quot;, raw_contacts)
+</code></pre>
+<p><strong>Checkpoint 6 (2 min):</strong> Verify the output is correct.
+- All names should have proper capitalization: "Sarah Jones", "Mark Smith", "Tina Turner"
+- No extra spaces before or after any name</p>
+<p><strong>Checkpoint 7 (5 min):</strong> (Stretch) Add a second test case to verify your function works generally.</p>
+<pre><code class="language-python">test_names = [&quot;  juan perez  &quot;, &quot;LISA ANDERSON&quot;, &quot;  mike wilson&quot;]
+result = normalize_contacts(test_names)
+print(&quot;Test result:&quot;, result)
+</code></pre>
+<h3 id="73-instructor-guidance-during-lab-time">7.3 Instructor Guidance During Lab Time</h3>
+<p><strong>Common mistakes to watch for:</strong></p>
+<ol>
+<li>
+<p><strong>Forgot to capture the return value:</strong> Students call <code>normalize_contacts(names)</code> but don't assign to a variable, then print the original raw names and wonder why nothing changed.
+   - <strong>Remediation:</strong> Ask "What did the function return? Where did you put it?"</p>
+</li>
+<li>
+<p><strong>Loop variable reassignment (mutation attempt with wrong pattern):</strong> 
+   <code>python
+   for name in contacts:
+       name = name.strip().title()  # This doesn't work!</code>
+   - This reassigns the loop variable <code>name</code> but doesn't update the list.
+   - <strong>Remediation:</strong> Show them <code>contacts[i] = ...</code> pattern or "create a new list and return it."</p>
+</li>
+<li>
+<p><strong>Missing or incorrect docstring:</strong> Remind them the docstring is not optional. It's the contract.</p>
+</li>
+</ol>
+<h3 id="74-walkthrough-solution-show-after-25-minutes">7.4 Walkthrough Solution (Show After 25 Minutes)</h3>
+<p><strong>[Say:] "Let me show you one complete solution. You might have taken a different approach, and that's fine—as long as it works."</strong></p>
+<pre><code class="language-python"># Hour 35: Normalize Contacts Lab Solution
+# Using the &quot;return new list&quot; approach (safest for beginners)
+
+def normalize_contacts(contacts):
+    &quot;&quot;&quot;
+    Returns a NEW list of normalized contact names.
+    Each name is stripped of whitespace and title-cased.
+    The original list is NOT modified.
+    &quot;&quot;&quot;
+    cleaned = []
+
+    for name in contacts:
+        # Strip whitespace from both ends, then title-case
+        normalized_name = name.strip().title()
+        cleaned.append(normalized_name)
+
+    return cleaned
+
+# Test data from the form (messy)
+raw_data = [&quot;  sarah jones &quot;, &quot;MARK smith&quot;, &quot; tina turner  &quot;]
+
+print(&quot;BEFORE NORMALIZATION:&quot;)
+print(f&quot;  {raw_data}&quot;)
+
+# Call the function and capture the result
+normalized_data = normalize_contacts(raw_data)
+
+print(&quot;\nAFTER NORMALIZATION:&quot;)
+print(f&quot;  {normalized_data}&quot;)
+
+print(&quot;\nWAS ORIGINAL MODIFIED?&quot;)
+print(f&quot;  Original: {raw_data}&quot;)
+print(f&quot;  → No, it's still messy. The function returned a new list.&quot;)
+</code></pre>
+<p><strong>[Expected output:]</strong></p>
+<pre><code>BEFORE NORMALIZATION:
+  ['  sarah jones ', 'MARK smith', ' tina turner  ']
+
+AFTER NORMALIZATION:
+  ['Sarah Jones', 'Mark Smith', 'Tina Turner']
+
+WAS ORIGINAL MODIFIED?
+  Original: ['  sarah jones ', 'MARK smith', ' tina turner  ']
+  → No, it's still messy. The function returned a new list.
+</code></pre>
+<p><strong>[Say:]</strong></p>
+<p>"This is the gold standard for data transformation functions. You take in messy data, you return clean data, and the original is left untouched. This pattern is used in every data science library, every web framework, and every real-world Python program."</p>
+<hr>
+<h2 id="8-troubleshooting-pitfalls-seven-common-mistakes">8. Troubleshooting Pitfalls: Seven Common Mistakes</h2>
+<p><strong>Pitfall 1: Forgetting to Capture the Return Value</strong></p>
+<p><strong>Problem:</strong> Student writes:</p>
+<pre><code class="language-python">normalize_contacts(names)
+print(names)
+</code></pre>
+<p>They expect <code>names</code> to be changed, but it's not—because the function returned a new list and they didn't capture it.</p>
+<p><strong>Remedy:</strong> "If your function returns something, you must assign it to a variable: <code>cleaned = normalize_contacts(names)</code>. Then print <code>cleaned</code>."</p>
+<hr>
+<p><strong>Pitfall 2: Trying to Mutate by Reassigning the Loop Variable</strong></p>
+<p><strong>Problem:</strong> Student writes:</p>
+<pre><code class="language-python">for name in contacts:
+    name = name.strip().title()  # This does NOT update the list!
+print(contacts)  # Still messy!
+</code></pre>
+<p><strong>Remedy:</strong> "When you reassign <code>name</code>, you're only changing the loop variable, not the list. To mutate, use indexing: <code>for i in range(len(contacts)): contacts[i] = contacts[i].strip().title()</code>"</p>
+<hr>
+<p><strong>Pitfall 3: Missing Docstring</strong></p>
+<p><strong>Problem:</strong> Function is ambiguous—does it mutate or return?</p>
+<p><strong>Remedy:</strong> Every collection function must have a docstring. It's the contract. Make it a habit now.</p>
+<hr>
+<p><strong>Pitfall 4: Mutating a List While Iterating Forward Over It</strong></p>
+<p><strong>Problem:</strong> Student removes or inserts items while using <code>for i in range(len(my_list))</code>.</p>
+<pre><code class="language-python">for i in range(len(contacts)):
+    if &quot;old&quot; in contacts[i]:
+        contacts.pop(i)  # This skips the next item!
+</code></pre>
+<p><strong>Remedy:</strong> If you must mutate while iterating, iterate backward: <code>for i in range(len(contacts) - 1, -1, -1):</code></p>
+<hr>
+<p><strong>Pitfall 5: Forgetting to Return the New List</strong></p>
+<p><strong>Problem:</strong> Student builds a new list but forgets the <code>return</code> statement.</p>
+<pre><code class="language-python">def clean_names(names):
+    cleaned = []
+    for name in names:
+        cleaned.append(name.strip().title())
+    # Oops, no return!
+
+result = clean_names(names)
+print(result)  # None!
+</code></pre>
+<p><strong>Remedy:</strong> "If you build a new list, always return it at the end."</p>
+<hr>
+<p><strong>Pitfall 6: Assuming Strings Are Mutable</strong></p>
+<p><strong>Problem:</strong> Student tries to mutate a string inside a function.</p>
+<pre><code class="language-python">def uppercase_it(s):
+    s[0] = &quot;X&quot;  # TypeError: 'str' object does not support item assignment
+</code></pre>
+<p><strong>Remedy:</strong> "Strings are immutable. You can't change them. You can only create new strings: <code>s = s.upper()</code>"</p>
+<hr>
+<p><strong>Pitfall 7: Modifying a Dictionary Inside a Function and Forgetting to Document It</strong></p>
+<p><strong>Problem:</strong> Function mutates a dictionary, but the docstring doesn't say so.</p>
+<pre><code class="language-python">def update_user(user_dict):
+    &quot;&quot;&quot;Updates the user's age.&quot;&quot;&quot;  # Not clear that the dict is mutated!
+    user_dict[&quot;age&quot;] = 30
+</code></pre>
+<p><strong>Remedy:</strong> "Always be explicit: 'MUTATES the provided dictionary by updating the age field.' or 'Returns a NEW dict with the age updated.'"</p>
+<hr>
+<h2 id="9-quick-check-questions-formative-assessment-5-minutes">9. Quick-Check Questions: Formative Assessment (~5 minutes)</h2>
+<p><strong>[After the lab, ask these questions. Allow students to discuss and respond.]</strong></p>
+<p><strong>Question 1:</strong> "When you pass a list into a function, does Python make a copy of the list, or does it pass a reference to the original?"</p>
+<p><strong>Expected answer:</strong> "It passes a reference. The function sees the same list you see."</p>
+<hr>
+<p><strong>Question 2:</strong> "If a function builds a new list and returns it, and you call the function but don't assign the result to a variable, what happens to the new list?"</p>
+<p><strong>Expected answer:</strong> "It gets thrown away. You have to capture it in a variable like <code>result = my_func(data)</code>."</p>
+<hr>
+<p><strong>Question 3:</strong> "What is the purpose of a docstring when working with collections?"</p>
+<p><strong>Expected answer:</strong> "To tell the reader whether the function mutates the original list or returns a new one. It's the contract between the function and whoever calls it."</p>
+<hr>
+<p><strong>Question 4:</strong> "You have a function that strips and title-cases names. Which approach is safer for beginners: returning a new list, or mutating in-place?"</p>
+<p><strong>Expected answer:</strong> "Returning a new list is safer because the original data is never touched. Less chance of accidental data loss."</p>
+<hr>
+<p><strong>Question 5:</strong> "You're iterating through a list and removing items. Should you iterate forward with <code>for i in range(len(my_list))</code> or backward with <code>for i in range(len(my_list) - 1, -1, -1)</code>?"</p>
+<p><strong>Expected answer:</strong> "Backward. If you iterate forward and remove items, you'll skip elements because the indices shift."</p>
+<hr>
+<h2 id="10-wrap-up-narrative-recap-and-preview-2-minutes">10. Wrap-Up Narrative: Recap and Preview (~2 minutes)</h2>
+<p><strong>[Read aloud, naturally, as a closing thought]</strong></p>
+<p>"Today was about making a critical choice: when you pass a collection into a function, you have the power to change it. That's powerful, but it requires discipline.</p>
+<p>Here's what we've learned:</p>
+<p><strong>One:</strong> Collections are passed by reference. The function receives a direct link to the original list or dictionary.</p>
+<p><strong>Two:</strong> You choose your strategy. Either mutate (change the original in-place), or return a new collection. There's no right answer for every situation, but beginners should favor returning a new collection because it's safer.</p>
+<p><strong>Three:</strong> Always use a docstring to make your intention crystal clear. Other programmers (or future you) will thank you.</p>
+<p><strong>Four:</strong> Watch out for common traps: forgetting to capture return values, trying to reassign loop variables when you mean to mutate the list, and removing items while iterating forward.</p>
+<p>Next hour, we're going to go even deeper. We'll learn about debugging functions, about writing tests to verify they work correctly, and about organizing your functions into libraries so you can reuse them forever.</p>
+<p>For now, practice the normalize_contacts pattern. Get comfortable with it. This is a pattern that appears in nearly every Python program ever written."</p>
+<hr>
+<h2 id="11-facilitation-notes-pacing-differentiation-and-extensions">11. Facilitation Notes: Pacing, Differentiation, and Extensions</h2>
+<h3 id="111-pacing-strategy">11.1 Pacing Strategy</h3>
+<ul>
+<li><strong>Opening script:</strong> 3 min (don't rush; the mental model matters)</li>
+<li><strong>Conceptual briefing:</strong> 12 min (be clear about mutation vs. return; use analogies if needed)</li>
+<li><strong>Live demo:</strong> 15 min (code slowly, explain each line, show both outputs)</li>
+<li><strong>Practice walkthrough:</strong> 8 min (guide them through the filtering example)</li>
+<li><strong>Lab:</strong> 30 min (let them struggle a little; that's learning)</li>
+<li><strong>Quick-check questions:</strong> 5 min</li>
+<li><strong>Wrap-up:</strong> 2 min</li>
+<li><strong>Buffer:</strong> 5 min (for questions, debugging, or deep dives)</li>
+</ul>
+<h3 id="112-differentiation">11.2 Differentiation</h3>
+<p><strong>For students who finish the lab early (Stretch):</strong>
+- Add a second test case to verify generalizability
+- Write both an in-place and return-new version, compare the docstrings
+- Write a function that filters the contacts list to only names containing a certain letter
+- Challenge: Write a function that sorts contacts by last name</p>
+<p><strong>For students who are struggling:</strong>
+- Pair them with a faster student for the lab portion
+- Provide a template with the loop structure and docstring already in place
+- Focus on understanding the mutation vs. return decision first; code patterns come second
+- Use the checkpoint approach: celebrate each small win</p>
+<h3 id="113-extensions-if-time-allows">11.3 Extensions (If Time Allows)</h3>
+<p><strong>Extension 1: Aggregation Pattern</strong>
+Show a function that combines multiple items from a list into a single value:</p>
+<pre><code class="language-python">def total_score(scores):
+    &quot;&quot;&quot;Returns the sum of all scores in the list.&quot;&quot;&quot;
+    total = 0
+    for score in scores:
+        total += score
+    return total
+</code></pre>
+<p><strong>Extension 2: Nested Collections</strong>
+A function that works with a list of dictionaries:</p>
+<pre><code class="language-python">def extract_names(contacts):
+    &quot;&quot;&quot;Returns a list of names extracted from a list of contact dicts.&quot;&quot;&quot;
+    names = []
+    for contact in contacts:
+        names.append(contact[&quot;name&quot;])
+    return names
+</code></pre>
+<p><strong>Extension 3: The <code>any()</code> and <code>all()</code> Built-ins</strong>
+Show how Python provides shortcuts for aggregating boolean conditions:</p>
+<pre><code class="language-python">all_passed = all(score &gt;= 70 for score in scores)
+</code></pre>
+<hr>
+<h2 id="12-assessment-and-differentiation-rubric">12. Assessment and Differentiation Rubric</h2>
+<h3 id="121-completion-based-rubric-normalize-contacts-lab">12.1 Completion-Based Rubric (Normalize Contacts Lab)</h3>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Proficient (✓)</th>
+<th>Developing (◐)</th>
+<th>Not Yet (✗)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data setup</strong></td>
+<td>Raw list correctly created</td>
+<td>List created but with errors</td>
+<td>List missing or incorrect</td>
+</tr>
+<tr>
+<td><strong>Function definition</strong></td>
+<td>Function named correctly, takes one parameter</td>
+<td>Function exists but parameter missing or named wrong</td>
+<td>Function not defined</td>
+</tr>
+<tr>
+<td><strong>Docstring</strong></td>
+<td>Clear, accurate description of mutation/return approach</td>
+<td>Docstring exists but unclear or incomplete</td>
+<td>Missing docstring</td>
+</tr>
+<tr>
+<td><strong>Processing logic</strong></td>
+<td>Correctly strips and title-cases all names using <code>.strip().title()</code></td>
+<td>Some names processed, but logic incomplete or wrong</td>
+<td>No processing or incorrect methods used</td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>All three names correctly formatted: "Sarah Jones", "Mark Smith", "Tina Turner"</td>
+<td>Output mostly correct but 1–2 names wrong</td>
+<td>Output incorrect or missing</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Function tested and verified to work</td>
+<td>Function called but output not verified</td>
+<td>Function not called</td>
+</tr>
+</tbody>
+</table>
+<h3 id="122-mastery-based-progression">12.2 Mastery-Based Progression</h3>
+<p><strong>Level 1: Basic Understanding</strong>
+- Student can identify whether a function mutates or returns based on reading code.
+- Student can write a function that returns a new list.</p>
+<p><strong>Level 2: Applied Understanding</strong>
+- Student can write either mutation or return functions with correct logic.
+- Student can write docstrings that explain the function's behavior.</p>
+<p><strong>Level 3: Advanced Reasoning</strong>
+- Student can explain when to use mutation vs. return based on performance and safety considerations.
+- Student can write both mutation and return versions and justify the choice.
+- Student can identify and debug common pitfalls in others' code.</p>
+<h3 id="123-differentiation-pathways">12.3 Differentiation Pathways</h3>
+<p><strong>Struggling students:</strong>
+- Provide function skeleton with comments
+- Use simpler data (3 names instead of larger lists)
+- Focus on understanding the mutation decision first
+- Celebrate partial progress</p>
+<p><strong>On-track students:</strong>
+- Use the standard lab as-is
+- Encourage both mutation and return solutions
+- Discuss the tradeoffs</p>
+<p><strong>Advanced students:</strong>
+- Ask them to write both versions and compare
+- Challenge them with nested structures (list of dicts)
+- Have them predict output before running code
+- Ask them to teach a struggling peer</p>
+<hr>
+<p><strong>End of Hour 35 Lecture Script</strong></p>
+<p><em>This script is complete and ready for verbatim classroom delivery. Modify timing as needed based on your classroom dynamics. The key is clarity on the mutation decision—students will carry this insight forward into every function they write.</em></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour2_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day9_Hour4_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#1-learning-outcomes" class="depth-2">1. Learning Outcomes</a></li>
+<li><a href="#2-instructor-prep-and-delivery-note" class="depth-2">2. Instructor Prep and Delivery Note</a></li>
+<li><a href="#3-opening-script-collections-and-function-references-3-minutes" class="depth-2">3. Opening Script: Collections and Function References (~3 minutes)</a></li>
+<li><a href="#4-conceptual-briefing-mutation-vs-return-a-decision-tree-12-minutes" class="depth-2">4. Conceptual Briefing: Mutation vs. Return – A Decision Tree (~12 minutes)</a></li>
+<li><a href="#41-pattern-1-mutating-the-collection-in-place" class="depth-3">4.1 Pattern 1: Mutating the Collection In-Place</a></li>
+<li><a href="#42-pattern-2-returning-a-new-collection" class="depth-3">4.2 Pattern 2: Returning a New Collection</a></li>
+<li><a href="#43-the-decision-when-to-use-each-pattern" class="depth-3">4.3 The Decision: When to Use Each Pattern</a></li>
+<li><a href="#44-function-contracts-and-docstrings" class="depth-3">4.4 Function Contracts and Docstrings</a></li>
+<li><a href="#5-live-demo-normalize-names-two-ways-15-minutes" class="depth-2">5. Live Demo: Normalize Names – Two Ways (~15 minutes)</a></li>
+<li><a href="#6-practice-walkthrough-extracting-specific-items-8-minutes" class="depth-2">6. Practice Walkthrough: Extracting Specific Items (~8 minutes)</a></li>
+<li><a href="#7-lab-with-full-checkpoints-normalize-contacts-30-minutes" class="depth-2">7. Lab with Full Checkpoints: Normalize Contacts (~30 minutes)</a></li>
+<li><a href="#71-lab-specification" class="depth-3">7.1 Lab Specification</a></li>
+<li><a href="#72-checkpoint-breakdown-with-time-estimates" class="depth-3">7.2 Checkpoint Breakdown with Time Estimates</a></li>
+<li><a href="#73-instructor-guidance-during-lab-time" class="depth-3">7.3 Instructor Guidance During Lab Time</a></li>
+<li><a href="#74-walkthrough-solution-show-after-25-minutes" class="depth-3">7.4 Walkthrough Solution (Show After 25 Minutes)</a></li>
+<li><a href="#8-troubleshooting-pitfalls-seven-common-mistakes" class="depth-2">8. Troubleshooting Pitfalls: Seven Common Mistakes</a></li>
+<li><a href="#9-quick-check-questions-formative-assessment-5-minutes" class="depth-2">9. Quick-Check Questions: Formative Assessment (~5 minutes)</a></li>
+<li><a href="#10-wrap-up-narrative-recap-and-preview-2-minutes" class="depth-2">10. Wrap-Up Narrative: Recap and Preview (~2 minutes)</a></li>
+<li><a href="#11-facilitation-notes-pacing-differentiation-and-extensions" class="depth-2">11. Facilitation Notes: Pacing, Differentiation, and Extensions</a></li>
+<li><a href="#111-pacing-strategy" class="depth-3">11.1 Pacing Strategy</a></li>
+<li><a href="#112-differentiation" class="depth-3">11.2 Differentiation</a></li>
+<li><a href="#113-extensions-if-time-allows" class="depth-3">11.3 Extensions (If Time Allows)</a></li>
+<li><a href="#12-assessment-and-differentiation-rubric" class="depth-2">12. Assessment and Differentiation Rubric</a></li>
+<li><a href="#121-completion-based-rubric-normalize-contacts-lab" class="depth-3">12.1 Completion-Based Rubric (Normalize Contacts Lab)</a></li>
+<li><a href="#122-mastery-based-progression" class="depth-3">12.2 Mastery-Based Progression</a></li>
+<li><a href="#123-differentiation-pathways" class="depth-3">12.3 Differentiation Pathways</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day9_Hour3_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day9_Hour3_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day9_Hour2_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day9_Hour4_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4, Hour 1: Lists Fundamentals (Course Hour 13) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="4">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day4_Hour1_Basics.md">
+
+    <link rel="prev" href="Day3_Hour4_Basics.html">
+    <link rel="next" href="Day4_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="4" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-04/index.html">Day 4</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 4, Hour 1: Lists Fundamentals (Course Hour 13)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 4</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day4_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 4</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 4, Course Hour 13 – Lists fundamentals<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on lists as an ordered, changeable collection. Stay within Basics scope. Do not drift into dictionaries, file handling, or function design. The key outcomes for this hour are list creation, indexing, slicing, mutation, <code>append()</code>, <code>remove()</code>, <code>pop()</code>, and membership checks with <code>in</code>.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>“By the end of this hour, you will be able to:
+1. Explain what a list is in plain beginner-friendly language.
+2. Create a list and print it.
+3. Access list items with indexing and look at portions of a list with slicing.
+4. Change a list by updating items and by using <code>append()</code>, <code>remove()</code>, and <code>pop()</code>.
+5. Check whether an item exists in a list using <code>in</code>.
+6. Build a small shopping-list program that starts with an empty list, adds five items, removes one chosen item, and prints the final list and item count.</p>
+<p>This is an important transition point in the course. Up to now, many of our programs have stored one value at a time. Lists let us store a whole collection of related values in one variable.”</p>
+<hr>
+<h2 id="1-agenda-timing-show-slide-read-quickly-2-minutes">1) Agenda + Timing (show slide / read quickly, ~2 minutes)</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Recap, transition into Session 4, and motivation for lists</li>
+<li><strong>0:05–0:15</strong> What lists are, why they matter, and list literal syntax</li>
+<li><strong>0:15–0:25</strong> Indexing, slicing, and the idea that lists are mutable</li>
+<li><strong>0:25–0:35</strong> Core operations: update, <code>append()</code>, <code>remove()</code>, <code>pop()</code>, and <code>in</code></li>
+<li><strong>0:35–0:45</strong> Live demo: build and modify a shopping list</li>
+<li><strong>0:45–0:57</strong> Guided lab: shopping-list program</li>
+<li><strong>0:57–1:00</strong> Debrief, recap, and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist-before-class">2) Instructor Setup Checklist (before class)</h2>
+<ul>
+<li>Open a clean file such as <code>hour13_lists_demo.py</code>.</li>
+<li>Have terminal and editor visible if possible so learners see both the code and the output.</li>
+<li>Prepare a few familiar item names ahead of time: <code>milk</code>, <code>bread</code>, <code>eggs</code>, <code>tea</code>, <code>rice</code>, <code>apples</code>, <code>soap</code>.</li>
+<li>Be ready to show one deliberate mistake: trying to remove an item that is not in the list.</li>
+<li>Be ready to show a second deliberate mistake: calling <code>pop()</code> with a value instead of an index.</li>
+<li>If some learners type slowly, have a starter file ready with comments only.</li>
+</ul>
+<p><strong>Say:</strong> “Please type with me today. Lists are much easier to understand when you build and change them yourself.”</p>
+<hr>
+<h2 id="3-opening-script-reconnect-to-earlier-learning-5-minutes">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</h2>
+<h3 id="31-quick-recap-of-the-path-so-far">3.1 Quick recap of the path so far</h3>
+<p><strong>Say:</strong>
+“Welcome back. Before today, we built the foundations of beginner Python. We learned how to print, store values in variables, work with numbers, work with strings, take input from users, compare values, format output, and read errors with a calmer mindset.</p>
+<p>That is already a lot of progress.</p>
+<p>But there is one limitation in most of the programs we have written so far: they usually work with one value at a time.</p>
+<p>For example, if I want to store one name, one variable works perfectly. If I want to store one age, one variable works perfectly. But what if I need five grocery items? Or seven grades? Or ten tasks? Or the names of every learner in the room?”</p>
+<h3 id="32-set-up-the-problem">3.2 Set up the problem</h3>
+<p><strong>Say:</strong>
+“If I try to solve that problem with separate variables, my code gets awkward very quickly.”</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">item_1 = &quot;milk&quot;
+item_2 = &quot;bread&quot;
+item_3 = &quot;eggs&quot;
+item_4 = &quot;tea&quot;
+item_5 = &quot;rice&quot;
+</code></pre>
+<p><strong>Say:</strong>
+“This is possible, but it is not a good long-term pattern. It is repetitive. It is harder to print neatly. It is harder to search. It is harder to update. And if I suddenly need six items instead of five, I have to create another variable.</p>
+<p>So today we learn a better tool: the list.”</p>
+<h3 id="33-motivation-in-plain-language">3.3 Motivation in plain language</h3>
+<p><strong>Say:</strong>
+“A list is one variable that can hold multiple related values in order.</p>
+<p>That word ‘order’ matters. Lists remember position.</p>
+<p>That word ‘related’ matters too. A list is a very natural choice when you have a group of similar things such as:
+- shopping items
+- grades
+- tasks
+- names
+- menu choices
+- words collected from a user</p>
+<p>If strings helped us work with one piece of text, lists help us work with many values together.”</p>
+<p><strong>Ask learners:</strong>
+- “Where might a shopping app use a list?”
+- “Where might a teacher use a list?”
+- “Where might you personally use a list in a small script?”</p>
+<p>Take two or three answers, then say:</p>
+<p>“Good. The goal is not just to memorize list syntax. The goal is to recognize when a collection belongs together.”</p>
+<hr>
+<h2 id="4-core-concept-delivery-what-a-list-is-and-how-it-looks-10-minutes">4) Core Concept Delivery: What a List Is and How It Looks (~10 minutes)</h2>
+<h3 id="41-beginner-friendly-definition">4.1 Beginner-friendly definition</h3>
+<p><strong>Say:</strong>
+“A list is an ordered collection of values.</p>
+<p>Let’s unpack that.
+- <strong>Collection</strong> means one variable can hold many items.
+- <strong>Ordered</strong> means each item has a position.
+- <strong>Changeable</strong> means we can update the list after it is created.</p>
+<p>That last idea is important. Later in the hour we will compare lists with strings. Strings are text values, and strings do not let us change one character in place. Lists do let us change items in place. That is why we say lists are mutable.”</p>
+<h3 id="42-basic-syntax">4.2 Basic syntax</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+print(fruits)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+“We create a list using square brackets. Inside the brackets, items are separated by commas.</p>
+<p>The variable name is <code>fruits</code>.
+The list contains three string items.
+When we print the list, Python shows us the whole structure.”</p>
+<h3 id="43-show-that-a-list-can-start-empty">4.3 Show that a list can start empty</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list = []
+print(shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“This is an empty list. It contains no items yet, but it is still a valid list.</p>
+<p>Empty lists are extremely common. Often, we create an empty list first and then add items as the program runs.”</p>
+<h3 id="44-keep-the-examples-simple-and-consistent">4.4 Keep the examples simple and consistent</h3>
+<p><strong>Say:</strong>
+“For beginners, it helps to keep lists consistent. If a list is meant to store grocery items, then use grocery-item strings. If a list is meant to store grades, then use numbers. Python technically allows mixed data in one list, but for now we want clarity more than cleverness.”</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">numbers = [10, 20, 30]
+print(numbers)
+</code></pre>
+<p>Then say:</p>
+<p>“You can store numbers in a list. You can store strings in a list. The main point is: the list keeps the items together in order.”</p>
+<h3 id="45-ask-for-prediction">4.5 Ask for prediction</h3>
+<p><strong>Ask learners:</strong>
+- “What do you think prints if I run <code>print(fruits)</code>?”
+- “What do you think prints if I run <code>print(shopping_list)</code>?”
+- “Why might an empty list still be useful?”</p>
+<p>Use the predictions to reinforce: empty list first, then grow it later.</p>
+<hr>
+<h2 id="5-indexing-and-slicing-lists-10-minutes">5) Indexing and Slicing Lists (~10 minutes)</h2>
+<h3 id="51-connect-lists-to-a-familiar-idea">5.1 Connect lists to a familiar idea</h3>
+<p><strong>Say:</strong>
+“If Day 2 felt comfortable, this next part should look familiar. Lists, like strings, use indexing. That means each item has a position number.</p>
+<p>And just like strings, Python starts counting at zero.”</p>
+<h3 id="52-indexing-example">5.2 Indexing example</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+print(fruits[0])
+print(fruits[1])
+print(fruits[2])
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+“Index <code>0</code> is the first item.
+Index <code>1</code> is the second item.
+Index <code>2</code> is the third item.</p>
+<p>This zero-based counting takes practice. It feels unusual at first, but it becomes normal very quickly.”</p>
+<p><strong>Ask learners:</strong>
+“What do you predict <code>fruits[1]</code> prints?”</p>
+<p>Pause, then run it.</p>
+<h3 id="53-negative-indexing">5.3 Negative indexing</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">print(fruits[-1])
+print(fruits[-2])
+</code></pre>
+<p><strong>Say:</strong>
+“Negative indexes count from the end.
+- <code>-1</code> means last item
+- <code>-2</code> means second-to-last item</p>
+<p>This is useful when you care more about the end than the beginning.”</p>
+<h3 id="54-slicing-example">5.4 Slicing example</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">letters = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;]
+print(letters[0:3])
+print(letters[1:4])
+print(letters[:2])
+print(letters[2:])
+</code></pre>
+<p><strong>Say:</strong>
+“Slicing works like it did with strings. The pattern is <code>start:end</code>, and the end position is not included.</p>
+<p>So <code>letters[0:3]</code> gives us index 0, index 1, and index 2.
+It stops before index 3.”</p>
+<h3 id="55-clarify-what-slicing-returns">5.5 Clarify what slicing returns</h3>
+<p><strong>Say:</strong>
+“One easy mistake is to think a slice returns one item. It does not. A slice returns a new list containing multiple items.</p>
+<p>That means:
+- indexing gives one item
+- slicing gives a list of items”</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">print(letters[2])
+print(letters[2:4])
+</code></pre>
+<h3 id="56-quick-practice-questions">5.6 Quick practice questions</h3>
+<p><strong>Ask learners:</strong>
+- “What is the first item in <code>fruits</code>?”
+- “What is the last item in <code>fruits</code>?”
+- “If I want the first two items, what slice would I use?”
+- “If I want everything from index 1 onward, what slice would I use?”</p>
+<p>Let learners answer aloud before you confirm.</p>
+<h3 id="57-gentle-warning-about-out-of-range-indexes">5.7 Gentle warning about out-of-range indexes</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># print(fruits[10])
+</code></pre>
+<p><strong>Say:</strong>
+“If I try to access an index that does not exist, Python raises an error. Today we only need to understand that positions must be valid. We do not need a deep exception-handling lesson here. Just remember: lists have boundaries.”</p>
+<hr>
+<h2 id="6-lists-are-mutable-changing-items-matters-7-minutes">6) Lists Are Mutable: Changing Items Matters (~7 minutes)</h2>
+<h3 id="61-explain-mutability-simply">6.1 Explain mutability simply</h3>
+<p><strong>Say:</strong>
+“Now we arrive at one of the most important ideas in today’s hour.</p>
+<p>Lists are mutable.</p>
+<p>That means we can change an existing list after it is created.</p>
+<p>This is different from strings. With strings, we can create a new string, but we do not replace one character in place using indexing. With lists, we absolutely can replace one item at a specific position.”</p>
+<h3 id="62-demonstrate-item-update">6.2 Demonstrate item update</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+print(fruits)
+
+fruits[1] = &quot;blueberry&quot;
+print(fruits)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+“We changed the second item from <code>banana</code> to <code>blueberry</code>.</p>
+<p>The list itself changed. That is the key idea.”</p>
+<h3 id="63-compare-gently-with-strings">6.3 Compare gently with strings</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">word = &quot;cat&quot;
+# word[0] = &quot;b&quot;
+</code></pre>
+<p><strong>Say:</strong>
+“If I try to change one character of a string in place, Python will not allow it. That is because strings are not mutable in that way.</p>
+<p>I do not want you to memorize the word ‘mutable’ as a fancy vocabulary term. I want you to connect it to a concrete idea:
+- a list can be changed after it is created
+- a string cannot be changed item-by-item that same way”</p>
+<h3 id="64-ask-a-concept-question">6.4 Ask a concept question</h3>
+<p><strong>Ask learners:</strong>
+“If I change <code>fruits[1]</code>, am I creating a completely different kind of structure, or am I updating the existing list?”</p>
+<p>Guide them to: “updating the existing list.”</p>
+<hr>
+<h2 id="7-core-list-operations-append-remove-pop-and-in-10-minutes">7) Core List Operations: <code>append()</code>, <code>remove()</code>, <code>pop()</code>, and <code>in</code> (~10 minutes)</h2>
+<h3 id="71-append-adds-to-the-end">7.1 <code>append()</code> adds to the end</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list = [&quot;milk&quot;, &quot;bread&quot;]
+print(shopping_list)
+
+shopping_list.append(&quot;eggs&quot;)
+print(shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“<code>append()</code> adds one item to the end of the list.</p>
+<p>This is one of the most common list methods beginners use. If your program collects items from a user one at a time, <code>append()</code> is often exactly what you need.”</p>
+<h3 id="72-remove-removes-by-value">7.2 <code>remove()</code> removes by value</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list.remove(&quot;bread&quot;)
+print(shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“<code>remove()</code> removes by value, not by position.</p>
+<p>That wording matters.
+If I say <code>shopping_list.remove("bread")</code>, Python searches for the item with that value and removes it.”</p>
+<h3 id="73-pop-removes-by-index">7.3 <code>pop()</code> removes by index</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]
+removed_item = shopping_list.pop(1)
+print(removed_item)
+print(shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“<code>pop()</code> usually works with a position. It removes the item at a given index.</p>
+<p>So now we have an important difference:
+- <code>remove()</code> uses a value
+- <code>pop()</code> uses an index”</p>
+<h3 id="74-show-pop-without-an-index">7.4 Show <code>pop()</code> without an index</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]
+last_item = shopping_list.pop()
+print(last_item)
+print(shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“If you do not give <code>pop()</code> an index, it removes the last item.</p>
+<p>That is useful when the last item is the one you want to take off.”</p>
+<h3 id="75-membership-test-with-in">7.5 Membership test with <code>in</code></h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]
+print(&quot;milk&quot; in shopping_list)
+print(&quot;tea&quot; in shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“The <code>in</code> operator answers a yes-or-no question: is this value present in the list?</p>
+<p>The result is <code>True</code> or <code>False</code>.</p>
+<p>That makes <code>in</code> very useful before removing an item.”</p>
+<h3 id="76-model-a-safe-removal-check">7.6 Model a safe removal check</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">item_to_remove = &quot;tea&quot;
+
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print(&quot;Item removed.&quot;)
+else:
+    print(&quot;That item is not in the list.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+“Notice what we are doing here. We are checking membership first. That helps us avoid a crash if the value is missing.</p>
+<p>The runbook for this hour specifically mentions a common pitfall: <code>remove()</code> on a missing item raises an error. We are not doing a full lesson on exceptions right now. A simple membership check is enough for this hour.”</p>
+<h3 id="77-deliberate-mistake-pop-with-a-value">7.7 Deliberate mistake: <code>pop()</code> with a value</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]
+# shopping_list.pop(&quot;bread&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+“This is wrong because <code>pop()</code> expects an index, not a value. If I want to remove by value, I use <code>remove()</code>. If I want to remove by position, I use <code>pop()</code>.”</p>
+<p><strong>Ask learners:</strong>
+- “Which method removes by value?”
+- “Which method removes by position?”
+- “Which method adds to the end?”</p>
+<hr>
+<h2 id="8-live-demo-shopping-list-build-and-update-10-minutes">8) Live Demo: Shopping List Build and Update (~10 minutes)</h2>
+<h3 id="81-frame-the-demo">8.1 Frame the demo</h3>
+<p><strong>Say:</strong>
+“Now let’s put the core list operations together in one realistic mini-example. I am going to build a shopping list, update it, remove items in two different ways, check for membership, and print the result after each step.</p>
+<p>As I type, I want you to keep asking yourself: what changed in the list?”</p>
+<h3 id="82-demo-code-part-1-start-empty-and-grow-the-list">8.2 Demo code, part 1: start empty and grow the list</h3>
+<p><strong>Type and narrate slowly:</strong></p>
+<pre><code class="language-python">shopping_list = []
+print(&quot;Starting list:&quot;, shopping_list)
+
+shopping_list.append(&quot;milk&quot;)
+print(&quot;After adding milk:&quot;, shopping_list)
+
+shopping_list.append(&quot;bread&quot;)
+print(&quot;After adding bread:&quot;, shopping_list)
+
+shopping_list.append(&quot;eggs&quot;)
+print(&quot;After adding eggs:&quot;, shopping_list)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+“Notice the pattern. We began with an empty list and used <code>append()</code> three times. That is the exact same pattern learners will use in the lab, except the values will come from user input.”</p>
+<h3 id="83-demo-code-part-2-update-an-item">8.3 Demo code, part 2: update an item</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">shopping_list[1] = &quot;whole grain bread&quot;
+print(&quot;After updating index 1:&quot;, shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“This line reminds us that lists are mutable. We can change one item directly by index.”</p>
+<h3 id="84-demo-code-part-3-membership-test-and-remove-by-value">8.4 Demo code, part 3: membership test and remove by value</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">item_to_remove = &quot;milk&quot;
+
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print(f&quot;Removed {item_to_remove}.&quot;)
+else:
+    print(f&quot;{item_to_remove} was not found.&quot;)
+
+print(&quot;Current list:&quot;, shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“This is the safer beginner pattern. Check membership first, then remove.”</p>
+<h3 id="85-demo-code-part-4-pop-the-last-item">8.5 Demo code, part 4: pop the last item</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">popped_item = shopping_list.pop()
+print(f&quot;Popped item: {popped_item}&quot;)
+print(&quot;Current list:&quot;, shopping_list)
+</code></pre>
+<p><strong>Say:</strong>
+“<code>pop()</code> not only removes an item. It also gives it back to us, so we can store it in a variable and print it.”</p>
+<h3 id="86-demo-code-part-5-final-list-and-count">8.6 Demo code, part 5: final list and count</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">print(&quot;Final shopping list:&quot;, shopping_list)
+print(f&quot;Item count: {len(shopping_list)}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+“<code>len()</code> tells us how many items are in the list. That is useful for summaries and clean output.”</p>
+<h3 id="87-ask-comprehension-questions">8.7 Ask comprehension questions</h3>
+<p><strong>Ask learners:</strong>
+- “What part of the code actually made the list longer?”
+- “What line changed an existing item?”
+- “Why did I use <code>in</code> before <code>remove()</code>?”
+- “What does <code>len(shopping_list)</code> measure?”</p>
+<h3 id="88-optional-quick-variation-if-time-permits">8.8 Optional quick variation if time permits</h3>
+<p>If the class is comfortable, add:</p>
+<pre><code class="language-python">print(shopping_list[0])
+print(shopping_list[:1])
+</code></pre>
+<p>Then say:</p>
+<p>“Notice the difference between one item and a slice containing items.”</p>
+<hr>
+<h2 id="9-guided-lab-shopping-list-program-12-minutes">9) Guided Lab: Shopping List Program (~12 minutes)</h2>
+<h3 id="91-introduce-the-lab-clearly">9.1 Introduce the lab clearly</h3>
+<p><strong>Say:</strong>
+“Now it is your turn. Your job is to build a shopping-list program that follows the Session 4 runbook exactly.</p>
+<p>Your program should:
+1. Start with an empty list.
+2. Ask the user for 5 shopping items, one at a time.
+3. Append each item to the list.
+4. Ask the user for one item to remove.
+5. Remove that item if it exists.
+6. Print the final list.
+7. Print the item count.”</p>
+<h3 id="92-put-the-lab-requirements-on-screen">9.2 Put the lab requirements on screen</h3>
+<pre><code class="language-text">Lab: Shopping List
+- Start with an empty list.
+- Ask the user for 5 items, one at a time.
+- Remove one chosen item.
+- Print the final list and item count.
+</code></pre>
+<h3 id="93-provide-a-beginner-friendly-starter-structure">9.3 Provide a beginner-friendly starter structure</h3>
+<p><strong>Type and leave it on screen:</strong></p>
+<pre><code class="language-python">shopping_list = []
+
+item = input(&quot;Enter shopping item 1: &quot;)
+shopping_list.append(item)
+
+item = input(&quot;Enter shopping item 2: &quot;)
+shopping_list.append(item)
+
+item = input(&quot;Enter shopping item 3: &quot;)
+shopping_list.append(item)
+
+item = input(&quot;Enter shopping item 4: &quot;)
+shopping_list.append(item)
+
+item = input(&quot;Enter shopping item 5: &quot;)
+shopping_list.append(item)
+
+print(&quot;Your shopping list is:&quot;, shopping_list)
+
+item_to_remove = input(&quot;Enter one item to remove: &quot;)
+
+if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+    print(f&quot;Removed {item_to_remove}.&quot;)
+else:
+    print(&quot;That item was not found.&quot;)
+
+print(&quot;Final shopping list:&quot;, shopping_list)
+print(f&quot;Item count: {len(shopping_list)}&quot;)
+</code></pre>
+<h3 id="94-explain-why-this-starter-is-intentionally-simple">9.4 Explain why this starter is intentionally simple</h3>
+<p><strong>Say:</strong>
+“This is not the shortest possible program. It is the clearest possible program for this point in the course.</p>
+<p>Later, loops will help us avoid repetition. Right now, repetition is acceptable if it helps you see the pattern clearly.</p>
+<p>Notice that I am not trying to be fancy. I am trying to be readable.”</p>
+<h3 id="95-prompt-learners-to-personalize">9.5 Prompt learners to personalize</h3>
+<p><strong>Say:</strong>
+“After you get the basic version working, you may personalize your test data. Use grocery items you actually buy. That makes it easier to reason about the output.”</p>
+<h3 id="96-instructor-circulation-prompts-during-lab-time">9.6 Instructor circulation prompts during lab time</h3>
+<p>As learners work, walk around and ask:
+- “Show me where the empty list is created.”
+- “Which line adds a new item?”
+- “How many times do you append?”
+- “What happens if the user tries to remove an item that is missing?”
+- “Where do you print the final count?”</p>
+<h3 id="97-if-learners-finish-early">9.7 If learners finish early</h3>
+<p>Offer these optional extensions, but emphasize they are optional:
+- allow the user to type <code>done</code> before five items are entered
+- print the list alphabetically using <code>sorted(shopping_list)</code>
+- print each item on its own line instead of printing the whole list object</p>
+<p>Be clear that these are extensions, not required outcomes.</p>
+<hr>
+<h2 id="10-common-pitfalls-and-how-to-coach-through-them-6-minutes">10) Common Pitfalls and How to Coach Through Them (~6 minutes)</h2>
+<h3 id="101-pitfall-remove-on-a-missing-item">10.1 Pitfall: <code>remove()</code> on a missing item</h3>
+<p><strong>Symptom:</strong> learner gets an error when the item is not in the list.</p>
+<p><strong>Coach with these words:</strong>
+“Read the message calmly. The program is telling you that the value you tried to remove is not present. Before removing, check with <code>in</code>.”</p>
+<p>Show again if needed:</p>
+<pre><code class="language-python">if item_to_remove in shopping_list:
+    shopping_list.remove(item_to_remove)
+else:
+    print(&quot;That item was not found.&quot;)
+</code></pre>
+<h3 id="102-pitfall-confusing-pop-with-remove">10.2 Pitfall: confusing <code>pop()</code> with <code>remove()</code></h3>
+<p><strong>Say:</strong>
+“This is one of today’s signature mistakes.
+- <code>remove("bread")</code> uses a value.
+- <code>pop(1)</code> uses a position.</p>
+<p>If a learner writes <code>pop("bread")</code>, pause and ask: ‘Are you giving Python a position or a value?’ Usually that question helps them self-correct.”</p>
+<h3 id="103-pitfall-forgetting-that-indexes-start-at-zero">10.3 Pitfall: forgetting that indexes start at zero</h3>
+<p><strong>Say:</strong>
+“If a learner thinks index 1 is the first item, bring them back to the phrase: ‘Python counts from zero.’ Have them print the list and label the positions out loud.”</p>
+<h3 id="104-pitfall-printing-too-early-and-thinking-the-list-is-wrong">10.4 Pitfall: printing too early and thinking the list is wrong</h3>
+<p><strong>Say:</strong>
+“Sometimes the list is fine, but the learner is printing it before the last update. Encourage them to print after each important change while debugging. Lists are easier to understand when you inspect them step by step.”</p>
+<h3 id="105-pitfall-confusing-one-item-with-the-full-list">10.5 Pitfall: confusing one item with the full list</h3>
+<p><strong>Say:</strong>
+“Beginners sometimes forget whether they are printing the whole list or just one item. Ask them: ‘Do you want the collection, or one element from the collection?’ That simple question often clears it up.”</p>
+<hr>
+<h2 id="11-debrief-and-share-out-4-minutes">11) Debrief and Share-Out (~4 minutes)</h2>
+<h3 id="111-bring-the-class-back-together">11.1 Bring the class back together</h3>
+<p><strong>Say:</strong>
+“Let’s pause and compare what we built. Even if your code is not perfect yet, you can still learn a lot from the structure.”</p>
+<h3 id="112-prompt-two-or-three-learners">11.2 Prompt two or three learners</h3>
+<p>Ask:
+- “Who used the membership check before removing?”
+- “Who can explain the difference between <code>remove()</code> and <code>pop()</code> in one sentence?”
+- “Who printed the final item count with <code>len()</code>?”</p>
+<h3 id="113-model-a-concise-explanation">11.3 Model a concise explanation</h3>
+<p><strong>Say:</strong>
+“A strong answer sounds like this:
+‘My program starts with an empty list, collects five items using <code>append()</code>, asks for one item to remove, checks whether the item exists, removes it if present, and then prints the final list and the number of items.’</p>
+<p>That explanation matters because it shows the learner understands the program, not just the syntax.”</p>
+<hr>
+<h2 id="12-recap-script-2-minutes">12) Recap Script (~2 minutes)</h2>
+<p><strong>Say:</strong>
+“Today we introduced one of the most useful structures in beginner Python: the list.</p>
+<p>We learned that:
+- a list stores multiple related values in one variable
+- lists keep their order
+- lists use indexing and slicing
+- lists are mutable, which means they can change
+- <code>append()</code> adds to the end
+- <code>remove()</code> removes by value
+- <code>pop()</code> removes by index, or the last item if no index is given
+- <code>in</code> checks whether an item exists in the list</p>
+<p>That is a lot of progress for one hour, and it gives us the foundation for the next step: processing list items with loops.”</p>
+<hr>
+<h2 id="13-exit-ticket-1-minute">13) Exit Ticket (~1 minute)</h2>
+<p>Ask learners to answer verbally, in chat, or on paper:</p>
+<ol>
+<li>Why can lists change after creation, but strings cannot change item-by-item the same way?</li>
+<li>What is the difference between <code>remove()</code> and <code>pop()</code>?</li>
+<li>If <code>shopping_list = ["milk", "bread", "eggs"]</code>, what does <code>"bread" in shopping_list</code> return?</li>
+<li>If you wanted to start collecting user items before you knew them, why might <code>[]</code> be a good first line of code?</li>
+</ol>
+<p><strong>Expected direction of answers:</strong>
+- lists are mutable
+- <code>remove()</code> uses a value, <code>pop()</code> uses an index
+- the membership test returns <code>True</code>
+- an empty list gives you a place to store items as they are entered</p>
+<hr>
+<h2 id="14-instructor-notes-for-the-transition-to-hour-14">14) Instructor Notes for the Transition to Hour 14</h2>
+<p><strong>Say:</strong>
+“Right now we know how to store many values together. In the next hour, we learn how to process every item in a list without writing repetitive code. That is where <code>for</code> loops enter the picture.”</p>
+<p>If learners seem shaky, reinforce these two lines before moving on:
+- “A list is a changeable collection.”
+- “<code>append()</code>, <code>remove()</code>, <code>pop()</code>, and <code>in</code> are the core tools from this hour.”</p>
+<hr>
+<h2 id="appendix-instructor-reinforcement-notes-for-hour-13">Appendix: Instructor Reinforcement Notes for Hour 13</h2>
+<h3 id="a-quick-board-plan-if-learners-need-one-more-visual-pass">A) Quick board plan if learners need one more visual pass</h3>
+<p>If the room needs a calmer visual explanation, draw this on the board:</p>
+<pre><code class="language-text">shopping_list = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]
+                 0        1        2
+</code></pre>
+<p>Then ask:
+- “Which item is at index 0?”
+- “Which item is at index 2?”
+- “If I change index 1, what changes?”
+- “If I call <code>pop(0)</code>, which item leaves the list?”</p>
+<p>This board sketch is helpful because it makes the list feel less abstract. Many beginners understand faster when they can point to a position with a finger.</p>
+<h3 id="b-short-extra-practice-prompts-you-can-use-verbally">B) Short extra practice prompts you can use verbally</h3>
+<p>If there are two or three extra minutes, ask learners to answer these without typing first:</p>
+<ol>
+<li>If <code>items = ["pen", "paper", "book"]</code>, what does <code>items[1]</code> return?</li>
+<li>What does <code>items[-1]</code> return?</li>
+<li>If you write <code>items.append("eraser")</code>, where does the new value go?</li>
+<li>If you write <code>items.remove("paper")</code>, are you removing by value or by position?</li>
+<li>If you write <code>items.pop(2)</code>, what kind of input does <code>pop()</code> expect?</li>
+</ol>
+<p>Then say:</p>
+<p>“Notice that each question is really checking one of four ideas: position, change, membership, or method choice. That is the heart of this hour.”</p>
+<h3 id="c-instructor-language-for-gentle-correction">C) Instructor language for gentle correction</h3>
+<p>When a learner makes a mistake, try short coaching lines like these:</p>
+<ul>
+<li>“Tell me whether you want one item or the whole list.”</li>
+<li>“Tell me whether you are removing by value or by position.”</li>
+<li>“Show me the line where the list actually changes.”</li>
+<li>“Print the list right after that line so we can see the result.”</li>
+<li>“If the item is missing, how could we check before removing?”</li>
+</ul>
+<p>These phrases are effective because they guide thinking without taking the keyboard away from the learner.</p>
+<h3 id="d-suggested-micro-debrief-question-set">D) Suggested micro-debrief question set</h3>
+<p>If you want a slightly longer closing conversation before Hour 14, use these prompts:</p>
+<ul>
+<li>“Why is an empty list a good starting point when you plan to collect user input?”</li>
+<li>“Why is <code>append()</code> so useful for beginner programs?”</li>
+<li>“Why might <code>in</code> be helpful before <code>remove()</code>?”</li>
+<li>“What is one real-world example where a list would be better than five separate variables?”</li>
+</ul>
+<p>A strong class debrief will keep the answers practical rather than overly theoretical.</p>
+<h3 id="e-final-teaching-reminder-to-yourself">E) Final teaching reminder to yourself</h3>
+<p>The hour succeeds if learners leave with this mental model:</p>
+<p>“A list is a changeable collection of values in order.”</p>
+<p>If they can say that, create one, add items, remove an item safely, and print the result, the hour has met its runbook goal.</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing-show-slide-read-quickly-2-minutes" class="depth-2">1) Agenda + Timing (show slide / read quickly, ~2 minutes)</a></li>
+<li><a href="#2-instructor-setup-checklist-before-class" class="depth-2">2) Instructor Setup Checklist (before class)</a></li>
+<li><a href="#3-opening-script-reconnect-to-earlier-learning-5-minutes" class="depth-2">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</a></li>
+<li><a href="#31-quick-recap-of-the-path-so-far" class="depth-3">3.1 Quick recap of the path so far</a></li>
+<li><a href="#32-set-up-the-problem" class="depth-3">3.2 Set up the problem</a></li>
+<li><a href="#33-motivation-in-plain-language" class="depth-3">3.3 Motivation in plain language</a></li>
+<li><a href="#4-core-concept-delivery-what-a-list-is-and-how-it-looks-10-minutes" class="depth-2">4) Core Concept Delivery: What a List Is and How It Looks (~10 minutes)</a></li>
+<li><a href="#41-beginner-friendly-definition" class="depth-3">4.1 Beginner-friendly definition</a></li>
+<li><a href="#42-basic-syntax" class="depth-3">4.2 Basic syntax</a></li>
+<li><a href="#43-show-that-a-list-can-start-empty" class="depth-3">4.3 Show that a list can start empty</a></li>
+<li><a href="#44-keep-the-examples-simple-and-consistent" class="depth-3">4.4 Keep the examples simple and consistent</a></li>
+<li><a href="#45-ask-for-prediction" class="depth-3">4.5 Ask for prediction</a></li>
+<li><a href="#5-indexing-and-slicing-lists-10-minutes" class="depth-2">5) Indexing and Slicing Lists (~10 minutes)</a></li>
+<li><a href="#51-connect-lists-to-a-familiar-idea" class="depth-3">5.1 Connect lists to a familiar idea</a></li>
+<li><a href="#52-indexing-example" class="depth-3">5.2 Indexing example</a></li>
+<li><a href="#53-negative-indexing" class="depth-3">5.3 Negative indexing</a></li>
+<li><a href="#54-slicing-example" class="depth-3">5.4 Slicing example</a></li>
+<li><a href="#55-clarify-what-slicing-returns" class="depth-3">5.5 Clarify what slicing returns</a></li>
+<li><a href="#56-quick-practice-questions" class="depth-3">5.6 Quick practice questions</a></li>
+<li><a href="#57-gentle-warning-about-out-of-range-indexes" class="depth-3">5.7 Gentle warning about out-of-range indexes</a></li>
+<li><a href="#6-lists-are-mutable-changing-items-matters-7-minutes" class="depth-2">6) Lists Are Mutable: Changing Items Matters (~7 minutes)</a></li>
+<li><a href="#61-explain-mutability-simply" class="depth-3">6.1 Explain mutability simply</a></li>
+<li><a href="#62-demonstrate-item-update" class="depth-3">6.2 Demonstrate item update</a></li>
+<li><a href="#63-compare-gently-with-strings" class="depth-3">6.3 Compare gently with strings</a></li>
+<li><a href="#64-ask-a-concept-question" class="depth-3">6.4 Ask a concept question</a></li>
+<li><a href="#7-core-list-operations-append-remove-pop-and-in-10-minutes" class="depth-2">7) Core List Operations: append(), remove(), pop(), and in (~10 minutes)</a></li>
+<li><a href="#71-append-adds-to-the-end" class="depth-3">7.1 append() adds to the end</a></li>
+<li><a href="#72-remove-removes-by-value" class="depth-3">7.2 remove() removes by value</a></li>
+<li><a href="#73-pop-removes-by-index" class="depth-3">7.3 pop() removes by index</a></li>
+<li><a href="#74-show-pop-without-an-index" class="depth-3">7.4 Show pop() without an index</a></li>
+<li><a href="#75-membership-test-with-in" class="depth-3">7.5 Membership test with in</a></li>
+<li><a href="#76-model-a-safe-removal-check" class="depth-3">7.6 Model a safe removal check</a></li>
+<li><a href="#77-deliberate-mistake-pop-with-a-value" class="depth-3">7.7 Deliberate mistake: pop() with a value</a></li>
+<li><a href="#8-live-demo-shopping-list-build-and-update-10-minutes" class="depth-2">8) Live Demo: Shopping List Build and Update (~10 minutes)</a></li>
+<li><a href="#81-frame-the-demo" class="depth-3">8.1 Frame the demo</a></li>
+<li><a href="#82-demo-code-part-1-start-empty-and-grow-the-list" class="depth-3">8.2 Demo code, part 1: start empty and grow the list</a></li>
+<li><a href="#83-demo-code-part-2-update-an-item" class="depth-3">8.3 Demo code, part 2: update an item</a></li>
+<li><a href="#84-demo-code-part-3-membership-test-and-remove-by-value" class="depth-3">8.4 Demo code, part 3: membership test and remove by value</a></li>
+<li><a href="#85-demo-code-part-4-pop-the-last-item" class="depth-3">8.5 Demo code, part 4: pop the last item</a></li>
+<li><a href="#86-demo-code-part-5-final-list-and-count" class="depth-3">8.6 Demo code, part 5: final list and count</a></li>
+<li><a href="#87-ask-comprehension-questions" class="depth-3">8.7 Ask comprehension questions</a></li>
+<li><a href="#88-optional-quick-variation-if-time-permits" class="depth-3">8.8 Optional quick variation if time permits</a></li>
+<li><a href="#9-guided-lab-shopping-list-program-12-minutes" class="depth-2">9) Guided Lab: Shopping List Program (~12 minutes)</a></li>
+<li><a href="#91-introduce-the-lab-clearly" class="depth-3">9.1 Introduce the lab clearly</a></li>
+<li><a href="#92-put-the-lab-requirements-on-screen" class="depth-3">9.2 Put the lab requirements on screen</a></li>
+<li><a href="#93-provide-a-beginner-friendly-starter-structure" class="depth-3">9.3 Provide a beginner-friendly starter structure</a></li>
+<li><a href="#94-explain-why-this-starter-is-intentionally-simple" class="depth-3">9.4 Explain why this starter is intentionally simple</a></li>
+<li><a href="#95-prompt-learners-to-personalize" class="depth-3">9.5 Prompt learners to personalize</a></li>
+<li><a href="#96-instructor-circulation-prompts-during-lab-time" class="depth-3">9.6 Instructor circulation prompts during lab time</a></li>
+<li><a href="#97-if-learners-finish-early" class="depth-3">9.7 If learners finish early</a></li>
+<li><a href="#10-common-pitfalls-and-how-to-coach-through-them-6-minutes" class="depth-2">10) Common Pitfalls and How to Coach Through Them (~6 minutes)</a></li>
+<li><a href="#101-pitfall-remove-on-a-missing-item" class="depth-3">10.1 Pitfall: remove() on a missing item</a></li>
+<li><a href="#102-pitfall-confusing-pop-with-remove" class="depth-3">10.2 Pitfall: confusing pop() with remove()</a></li>
+<li><a href="#103-pitfall-forgetting-that-indexes-start-at-zero" class="depth-3">10.3 Pitfall: forgetting that indexes start at zero</a></li>
+<li><a href="#104-pitfall-printing-too-early-and-thinking-the-list-is-wrong" class="depth-3">10.4 Pitfall: printing too early and thinking the list is wrong</a></li>
+<li><a href="#105-pitfall-confusing-one-item-with-the-full-list" class="depth-3">10.5 Pitfall: confusing one item with the full list</a></li>
+<li><a href="#11-debrief-and-share-out-4-minutes" class="depth-2">11) Debrief and Share-Out (~4 minutes)</a></li>
+<li><a href="#111-bring-the-class-back-together" class="depth-3">11.1 Bring the class back together</a></li>
+<li><a href="#112-prompt-two-or-three-learners" class="depth-3">11.2 Prompt two or three learners</a></li>
+<li><a href="#113-model-a-concise-explanation" class="depth-3">11.3 Model a concise explanation</a></li>
+<li><a href="#12-recap-script-2-minutes" class="depth-2">12) Recap Script (~2 minutes)</a></li>
+<li><a href="#13-exit-ticket-1-minute" class="depth-2">13) Exit Ticket (~1 minute)</a></li>
+<li><a href="#14-instructor-notes-for-the-transition-to-hour-14" class="depth-2">14) Instructor Notes for the Transition to Hour 14</a></li>
+<li><a href="#appendix-instructor-reinforcement-notes-for-hour-13" class="depth-2">Appendix: Instructor Reinforcement Notes for Hour 13</a></li>
+<li><a href="#a-quick-board-plan-if-learners-need-one-more-visual-pass" class="depth-3">A) Quick board plan if learners need one more visual pass</a></li>
+<li><a href="#b-short-extra-practice-prompts-you-can-use-verbally" class="depth-3">B) Short extra practice prompts you can use verbally</a></li>
+<li><a href="#c-instructor-language-for-gentle-correction" class="depth-3">C) Instructor language for gentle correction</a></li>
+<li><a href="#d-suggested-micro-debrief-question-set" class="depth-3">D) Suggested micro-debrief question set</a></li>
+<li><a href="#e-final-teaching-reminder-to-yourself" class="depth-3">E) Final teaching reminder to yourself</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day4_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day4_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day4_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5, Hour 1: Tuples + Unpacking (Course Hour 17) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day5_Hour1_Basics.md">
+
+    <link rel="prev" href="Day4_Hour4_Basics.html">
+    <link rel="next" href="Day5_Hour2_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="5" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 5, Hour 1: Tuples + Unpacking (Course Hour 17)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour2_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour1_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 5</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 5, Course Hour 17 – Tuples + unpacking<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on tuples: what they are, how they differ from lists, how immutability protects data, and how unpacking lets you pull values out cleanly. Stay within Basics scope — do not introduce named tuples, <code>collections.namedtuple</code>, or advanced destructuring. The key outcomes are creating tuples, understanding why they are immutable, unpacking tuple values into variables, and making a principled choice between tuple and list. The lab reinforces all of this in a concrete coordinate-tracking program.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Create a tuple and explain in plain language why it is different from a list.</li>
+<li>Demonstrate what immutability means by deliberately triggering a <code>TypeError</code> and reading its message.</li>
+<li>Unpack a tuple's values into named variables in one clean line.</li>
+<li>Explain when choosing a tuple over a list makes your code clearer and safer.</li>
+<li>Build a coordinate-tracking program that stores <code>(x, y)</code> points as tuples in a list, prints each point, and computes the minimum and maximum x values."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to Day 4 collections; introduce the problem tuples solve</li>
+<li><strong>0:05–0:18</strong> Core concept: what a tuple is, syntax, analogy, immutability</li>
+<li><strong>0:18–0:28</strong> Tuple unpacking: basic form, swap trick, ignoring values with <code>_</code></li>
+<li><strong>0:28–0:33</strong> Tuple vs list decision guide</li>
+<li><strong>0:33–0:43</strong> Live demo: coordinate pair, return from function, immutability error</li>
+<li><strong>0:43–0:57</strong> Guided lab: Coordinate Tracker</li>
+<li><strong>0:57–1:00</strong> Debrief, recap, and exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file called <code>hour17_tuples_demo.py</code> before class begins.</li>
+<li>Have a second file called <code>hour17_lab_coords.py</code> ready with empty comments only as a starter for learners who fall behind.</li>
+<li>Have the Python REPL ready in a terminal (type <code>python</code> or <code>python3</code>) for quick interactive experiments.</li>
+<li>Plan to show one deliberate <code>TypeError</code> by trying to assign to a tuple index.</li>
+<li>Plan to show the single-element trap: <code>(42)</code> is an integer, <code>(42,)</code> is a tuple.</li>
+<li>Confirm that <code>min()</code> and <code>max()</code> are covered in your learners' prior knowledge — they were introduced in Hour 14 (Day 4, Hour 2). Briefly remind learners if needed.</li>
+</ul>
+<p><strong>Say:</strong> "Please have your editor open and an empty file ready. This hour involves a lot of typing together. The real learning happens at your keyboard, not just by watching."</p>
+<hr>
+<h2 id="3-opening-script-reconnect-to-earlier-learning-5-minutes">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</h2>
+<h3 id="31-quick-recap-from-session-4">3.1 Quick recap from Session 4</h3>
+<p><strong>Say:</strong>
+"Welcome back. In Session 4 we covered lists. We built shopping-list programs, worked with loops that iterated over collections, and used core list methods like <code>append()</code>, <code>remove()</code>, and <code>pop()</code>.</p>
+<p>Lists gave us a very powerful tool: one variable that holds many related values in order, and that we can change whenever we need to.</p>
+<p>But here is a question worth pausing on: is it always a good idea for a collection to be changeable?</p>
+<p>Think about a GPS coordinate. A point in two-dimensional space — say, latitude and longitude, or an (x, y) pair on a grid — represents one fixed location. Once you record it, you do not expect it to change. If your program accidentally changed it, that would be a bug, not a feature.</p>
+<p>Today we learn a data structure that is designed to be <em>fixed</em>: the tuple."</p>
+<h3 id="32-motivating-the-need">3.2 Motivating the need</h3>
+<p><strong>Say:</strong>
+"Let me give you a few real-world situations where you want a small, fixed collection of related values:</p>
+<ul>
+<li>A point in 2D space: <code>(3, 7)</code> — an x and a y.</li>
+<li>A date: <code>(2024, 6, 15)</code> — a year, month, and day.</li>
+<li>An RGB colour: <code>(255, 128, 0)</code> — red, green, blue channels.</li>
+<li>The result of a measurement: <code>(34.5, 'celsius')</code> — a value and a unit.</li>
+</ul>
+<p>In each of these cases, the values are related to each other and should stay together. And in each case, you would not want your program to accidentally add an extra item or remove one. You want the structure to be locked.</p>
+<p>A tuple is exactly that: an ordered, fixed-size, immutable group of values."</p>
+<h3 id="33-set-expectations-for-the-hour">3.3 Set expectations for the hour</h3>
+<p><strong>Say:</strong>
+"In this hour, we will learn:
+- how to create a tuple
+- why tuples cannot be changed and why that is actually useful
+- how to pull values out of a tuple cleanly using a technique called unpacking
+- when to choose a tuple rather than a list
+- and how to build a small coordinate-tracking program using these ideas</p>
+<p>You already know most of what you need. Tuples use a lot of the same intuitions as lists. The big new idea today is immutability and why it helps."</p>
+<hr>
+<h2 id="4-concept-what-is-a-tuple">4) Concept: What Is a Tuple?</h2>
+<h3 id="41-beginner-friendly-definition">4.1 Beginner-friendly definition</h3>
+<p><strong>Say:</strong>
+"A tuple is an ordered, immutable collection of values.</p>
+<p>Let's take that one word at a time.</p>
+<ul>
+<li><strong>Ordered</strong> means the items have positions. First item, second item, third item. Same as a list.</li>
+<li><strong>Immutable</strong> means the tuple cannot be changed after it is created. You cannot add items. You cannot remove items. You cannot swap one item for another. Once a tuple exists, it stays exactly as it was made.</li>
+<li><strong>Collection</strong> means one variable holds multiple values.</li>
+</ul>
+<p>If a list is like a whiteboard that you can write on and erase as much as you want, a tuple is like a laminated card. You can read it, you can pass it around, but you cannot change what is written on it."</p>
+<h3 id="42-tuple-literal-syntax">4.2 Tuple literal syntax</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python"># A tuple with three values
+point = (3, 7)
+print(point)
+print(type(point))
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"We create a tuple using parentheses. Inside the parentheses, values are separated by commas.</p>
+<p>When we print <code>point</code>, Python shows us <code>(3, 7)</code>.
+When we check the type, Python tells us <code>&lt;class 'tuple'&gt;</code>.</p>
+<p>Notice that the parentheses appear in the output. Python uses them consistently to signal that this is a tuple, not a list."</p>
+<h3 id="43-tuples-with-more-than-two-values">4.3 Tuples with more than two values</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">date = (2024, 6, 15)
+colour = (255, 128, 0)
+measurement = (34.5, &quot;celsius&quot;)
+
+print(date)
+print(colour)
+print(measurement)
+</code></pre>
+<p><strong>Say:</strong>
+"Tuples can hold any number of values. They can also mix types — notice <code>measurement</code> holds a float and a string together. That is valid because a measurement is a pair of related but differently-typed values.</p>
+<p>However, for beginners, keep your tuples simple and focused. A tuple works best when it represents a single logical unit with a small, known number of parts."</p>
+<h3 id="44-indexing-into-a-tuple">4.4 Indexing into a tuple</h3>
+<p><strong>Say:</strong>
+"Because tuples are ordered, you can access individual items using index notation — exactly the same way you would with a list or a string."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = (3, 7)
+print(point[0])   # 3
+print(point[1])   # 7
+</code></pre>
+<p><strong>Ask learners:</strong>
+"What do you think <code>point[0]</code> prints? Call it out."</p>
+<p>Wait for answers, then run it.</p>
+<p><strong>Say:</strong>
+"Correct. Index zero gives us the first item, which is 3. Index one gives us the second item, which is 7.</p>
+<p>The indexing rules are the same as lists: counting starts at zero, negative indices count from the right."</p>
+<h3 id="45-the-critical-trap-the-single-element-tuple">4.5 The critical trap: the single-element tuple</h3>
+<p><strong>Say:</strong>
+"Before we go any further, I want to show you one trap that catches almost every beginner the first time they see it.</p>
+<p>How do you think we would write a tuple with just one value in it?"</p>
+<p>Pause for guesses.</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">not_a_tuple = (42)
+print(type(not_a_tuple))
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Look at the type. Python says <code>&lt;class 'int'&gt;</code>. This is an integer, not a tuple! Python sees <code>(42)</code> as ordinary parentheses around a number — the kind you use in a math expression. The parentheses do not automatically make something a tuple.</p>
+<p>So how do we create a single-element tuple? We add a trailing comma."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">actually_a_tuple = (42,)
+print(type(actually_a_tuple))
+print(actually_a_tuple)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Now Python says <code>&lt;class 'tuple'&gt;</code>. That trailing comma is what tells Python: this is a tuple with one element, not just parentheses around a value.</p>
+<p>This is one of the most common beginner mistakes with tuples. If your single-element tuple is behaving like an integer, check your comma.</p>
+<p>For today's lab, all our tuples have two values, so you will not hit this trap. But I want you to have seen it before you encounter it by accident."</p>
+<hr>
+<h2 id="5-immutability-why-tuples-cannot-change">5) Immutability: Why Tuples Cannot Change</h2>
+<h3 id="51-show-the-typeerror">5.1 Show the TypeError</h3>
+<p><strong>Say:</strong>
+"The defining feature of a tuple is that it is immutable. Let me show you exactly what that means in code."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = (3, 7)
+point[0] = 99   # attempt to change the first value
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Python raises a <code>TypeError</code>. Read the message with me: <code>'tuple' object does not support item assignment</code>.</p>
+<p>This is not a bug in your code that you need to fix — it is Python enforcing the rule. A tuple refuses to let you change any of its values after creation.</p>
+<p>Now, here is the key question: why is this useful? Why would we ever <em>want</em> a collection we cannot change?"</p>
+<h3 id="52-explain-the-value-of-immutability">5.2 Explain the value of immutability</h3>
+<p><strong>Say:</strong>
+"Immutability is a form of protection and communication.</p>
+<p>First, <strong>protection</strong>: if a coordinate should never change, making it a tuple means Python will stop you — or anyone else editing the code — from accidentally modifying it. If you store a GPS point as a list, nothing prevents a careless line of code from doing <code>coords[0] = 0.0</code> and silently corrupting your data. If you store it as a tuple, Python raises an error immediately, and the bug is caught early.</p>
+<p>Second, <strong>communication</strong>: when another programmer — or your future self — reads your code and sees a tuple, it sends a message. It says 'this group of values is meant to be fixed. Do not change it. Treat it as a record.'</p>
+<p>Lists say 'this collection will grow and change'. Tuples say 'these values belong together and should not be touched'.</p>
+<p>That distinction makes code easier to understand at a glance."</p>
+<h3 id="53-what-you-can-do-with-a-tuple">5.3 What you <em>can</em> do with a tuple</h3>
+<p><strong>Say:</strong>
+"Immutability does not mean useless. There is plenty you can do with a tuple.</p>
+<p>You can read any item by index. You can iterate over it with a for loop. You can check membership with <code>in</code>. You can pass it to a function. You can store it in a list. You can unpack its values into separate variables — and unpacking is one of the most powerful patterns you will learn today."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = (3, 7)
+
+# Reading
+print(point[0])
+
+# Membership check
+print(3 in point)
+
+# Iterating
+for value in point:
+    print(value)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"All of this works. The only thing that does not work is <em>changing</em> the tuple in place."</p>
+<hr>
+<h2 id="6-tuple-unpacking">6) Tuple Unpacking</h2>
+<h3 id="61-the-concept">6.1 The concept</h3>
+<p><strong>Say:</strong>
+"Tuple unpacking is one of my favourite Python features. It looks simple, but it turns out to be incredibly useful.</p>
+<p>The idea is this: instead of accessing tuple items by index — <code>point[0]</code>, <code>point[1]</code> — you can unpack all the values in one line and give each of them a name."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = (3, 7)
+x, y = point
+
+print(x)   # 3
+print(y)   # 7
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"In one line, <code>x, y = point</code>, Python takes the first value of <code>point</code> and assigns it to <code>x</code>, and takes the second value and assigns it to <code>y</code>.</p>
+<p>This is far more readable than:</p>
+<pre><code class="language-python">x = point[0]
+y = point[1]
+</code></pre>
+<p>With unpacking, the code <em>reads like natural language</em>. You can see immediately that <code>point</code> has two parts: an x-coordinate and a y-coordinate."</p>
+<h3 id="62-unpacking-must-match-the-count">6.2 Unpacking must match the count</h3>
+<p><strong>Say:</strong>
+"There is one important rule: the number of variables on the left must match the number of values in the tuple."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = (3, 7)
+x, y, z = point   # wrong! three names for two values
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Python raises a <code>ValueError</code>: <code>not enough values to unpack</code>. It expected three values but only found two.</p>
+<p>The same error occurs in reverse if you have too many values. Unpacking is strict — it requires an exact match."</p>
+<p>Fix the code:</p>
+<pre><code class="language-python">x, y = point   # back to the correct version
+</code></pre>
+<h3 id="63-unpacking-any-tuple">6.3 Unpacking any tuple</h3>
+<p><strong>Say:</strong>
+"Unpacking works with any tuple, not just two-element ones."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">date = (2024, 6, 15)
+year, month, day = date
+
+print(f&quot;Year: {year}&quot;)
+print(f&quot;Month: {month}&quot;)
+print(f&quot;Day: {day}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Now instead of <code>date[0]</code>, <code>date[1]</code>, <code>date[2]</code>, we have meaningful names: <code>year</code>, <code>month</code>, <code>day</code>. Anyone reading this code understands immediately what each value represents."</p>
+<h3 id="64-the-swap-trick">6.4 The swap trick</h3>
+<p><strong>Say:</strong>
+"Here is one of Python's most elegant patterns. Without a temporary variable, you can swap two variable values in one line using tuple unpacking."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">a = 10
+b = 20
+
+print(f&quot;Before: a={a}, b={b}&quot;)
+
+a, b = b, a   # swap
+
+print(f&quot;After:  a={a}, b={b}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"In most other languages you would need a third variable — <code>temp = a; a = b; b = temp</code>. In Python, <code>a, b = b, a</code> works because Python evaluates the right side first, creates a tuple <code>(20, 10)</code>, and then unpacks it into <code>a</code> and <code>b</code>.</p>
+<p>You do not need to fully understand the mechanics today. What matters is recognising the pattern and knowing it works."</p>
+<h3 id="65-ignoring-values-with">6.5 Ignoring values with <code>_</code></h3>
+<p><strong>Say:</strong>
+"Sometimes a tuple has more values than you care about in a particular moment. Python has a convention: use an underscore <code>_</code> as a variable name to signal 'I deliberately don't need this value'."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">measurement = (34.5, &quot;celsius&quot;)
+value, _ = measurement   # we only care about the number
+
+print(f&quot;Temperature: {value}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"The underscore is assigned the string <code>'celsius'</code>, but we are not planning to use it. Using <code>_</code> communicates to anyone reading the code: 'I know there is a second value here and I am intentionally ignoring it'. This is better than naming it something throwaway like <code>unused</code>."</p>
+<hr>
+<h2 id="7-when-to-use-a-tuple-vs-a-list">7) When to Use a Tuple vs a List</h2>
+<h3 id="71-the-core-distinction">7.1 The core distinction</h3>
+<p><strong>Say:</strong>
+"You now know two ordered collection types: lists and tuples. How do you choose between them?</p>
+<p>Here is the clearest way I can put it:</p>
+<ul>
+<li>Use a <strong>list</strong> when the collection is meant to grow, shrink, or change over time.</li>
+<li>Use a <strong>tuple</strong> when the collection represents a fixed record with a known, specific structure.</li>
+</ul>
+<p>Ask yourself: 'Does this collection need to be modified after I create it?' If yes, use a list. If no, think about whether a tuple is the better signal."</p>
+<h3 id="72-decision-guide">7.2 Decision guide</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Best choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shopping cart that items are added to and removed from</td>
+<td>List</td>
+<td>The collection changes</td>
+</tr>
+<tr>
+<td>All the tasks a user enters during a session</td>
+<td>List</td>
+<td>Grows over time</td>
+</tr>
+<tr>
+<td>An (x, y) coordinate that should never change</td>
+<td>Tuple</td>
+<td>Fixed record, immutability protects it</td>
+</tr>
+<tr>
+<td>A date like (year, month, day)</td>
+<td>Tuple</td>
+<td>Fixed structure, three known parts</td>
+</tr>
+<tr>
+<td>A series of test scores</td>
+<td>List</td>
+<td>May grow; order matters but content evolves</td>
+</tr>
+<tr>
+<td>RGB colour value: (255, 128, 0)</td>
+<td>Tuple</td>
+<td>Three fixed channels, never changes</td>
+</tr>
+<tr>
+<td>A collection of user messages</td>
+<td>List</td>
+<td>Grows as messages arrive</td>
+</tr>
+<tr>
+<td>A function returning two results</td>
+<td>Tuple</td>
+<td>Fixed pair; caller will unpack</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Say:</strong>
+"Notice that tuples show up naturally when a function needs to return multiple values. In Python, the conventional way to return two things from a function is to return them as a tuple. The caller then unpacks them. We will see this in the live demo."</p>
+<h3 id="73-keep-it-practical">7.3 Keep it practical</h3>
+<p><strong>Say:</strong>
+"For beginners, this rule of thumb covers most cases: if the collection is a bunch of things that accumulate — add, remove, append — use a list. If the collection is a small, structured record with a fixed number of named parts — an address, a coordinate, a date, a size — use a tuple.</p>
+<p>You will not always be certain which to choose. That is normal. As you write more programs, the right choice becomes more intuitive."</p>
+<hr>
+<h2 id="8-live-demo-coordinate-pairs">8) Live Demo: Coordinate Pairs</h2>
+<h3 id="81-overview">8.1 Overview</h3>
+<p><strong>Say:</strong>
+"Let me bring all of these ideas together in a live demo before we move into the lab. I am going to build a short program step by step. Please type along.</p>
+<p>We will:
+- create a pair of coordinates as a tuple
+- unpack the x and y values
+- show the immutability error
+- then simulate a function returning a tuple</p>
+<p>Open <code>hour17_tuples_demo.py</code>."</p>
+<h3 id="82-part-1-a-simple-coordinate">8.2 Part 1 — A simple coordinate</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python"># hour17_tuples_demo.py
+
+# --- Part 1: Create and read a coordinate tuple ---
+origin = (0, 0)
+home = (3, 7)
+destination = (-2, 5)
+
+print(f&quot;Origin:      {origin}&quot;)
+print(f&quot;Home:        {home}&quot;)
+print(f&quot;Destination: {destination}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Three coordinate tuples. Each one is a (x, y) pair. Python prints each pair with its parentheses intact, which is a visual reminder that these are tuples."</p>
+<h3 id="83-part-2-unpacking-coordinates">8.3 Part 2 — Unpacking coordinates</h3>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># --- Part 2: Unpack and use the values ---
+x, y = home
+print(f&quot;Home x-coordinate: {x}&quot;)
+print(f&quot;Home y-coordinate: {y}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Instead of writing <code>home[0]</code> and <code>home[1]</code>, we unpack into meaningful names. When we later use <code>x</code> and <code>y</code>, the intent is perfectly clear."</p>
+<h3 id="84-part-3-show-the-immutability-error">8.4 Part 3 — Show the immutability error</h3>
+<p><strong>Say:</strong>
+"Now I want to deliberately trigger the immutability error so you see the full picture."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># --- Part 3: Show immutability ---
+# This line will raise a TypeError — that is expected!
+home[0] = 10
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Read the message: <code>TypeError: 'tuple' object does not support item assignment</code>.</p>
+<p>If you ever see this error in your own code, your first question should be: 'Did I intend this to be mutable? Should it be a list instead?' If the answer is no — if the tuple genuinely should stay fixed — then the error is Python protecting you."</p>
+<p>Delete or comment out the failing line:</p>
+<pre><code class="language-python"># home[0] = 10  # intentional demo — do not run in lab
+</code></pre>
+<h3 id="85-part-4-a-function-that-returns-a-tuple">8.5 Part 4 — A function that returns a tuple</h3>
+<p><strong>Say:</strong>
+"Here is a common and very clean Python pattern: a function that returns two values as a tuple."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># --- Part 4: Function returning a tuple ---
+def get_midpoint(point_a: tuple[int, int], point_b: tuple[int, int]) -&gt; tuple[float, float]:
+    &quot;&quot;&quot;Return the midpoint between two (x, y) coordinates.&quot;&quot;&quot;
+    mid_x = (point_a[0] + point_b[0]) / 2
+    mid_y = (point_a[1] + point_b[1]) / 2
+    return (mid_x, mid_y)
+
+
+result = get_midpoint(home, destination)
+print(f&quot;Midpoint: {result}&quot;)
+
+mid_x, mid_y = get_midpoint(home, destination)
+print(f&quot;Mid x = {mid_x}, Mid y = {mid_y}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"The function returns a tuple <code>(mid_x, mid_y)</code>. We can use the return value in two ways:</p>
+<ol>
+<li>Keep the tuple whole: <code>result = get_midpoint(...)</code> — useful if we want to store it.</li>
+<li>Unpack immediately: <code>mid_x, mid_y = get_midpoint(...)</code> — useful if we want named variables straight away.</li>
+</ol>
+<p>Both forms are valid. Choose based on what makes the calling code most readable."</p>
+<h3 id="86-part-5-a-list-of-tuples">8.6 Part 5 — A list of tuples</h3>
+<p><strong>Say:</strong>
+"Our lab is built around a list of coordinate tuples. Let me show the pattern quickly so you can see it before you build it."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># --- Part 5: A list of coordinate tuples ---
+path = [
+    (0, 0),
+    (1, 3),
+    (4, 2),
+    (6, 8),
+    (5, 1),
+]
+
+for point in path:
+    x, y = point
+    print(f&quot;  x={x}, y={y}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Notice the structure: <code>path</code> is a list — it is mutable, it can grow or shrink. Each item inside the list is a tuple — each coordinate is fixed. This is a natural and very common pattern in Python: a mutable outer container of immutable records."</p>
+<hr>
+<h2 id="9-hands-on-lab-coordinate-tracker">9) Hands-on Lab: Coordinate Tracker</h2>
+<h3 id="91-lab-overview">9.1 Lab overview</h3>
+<p><strong>Say:</strong>
+"Now it is your turn. The lab task is called the Coordinate Tracker. You have 14 minutes to work through it, then we will walk through the solution together.</p>
+<p>This lab reinforces:
+- creating tuples
+- storing tuples in a list
+- iterating with a for loop and unpacking
+- using <code>min()</code> and <code>max()</code> on extracted values</p>
+<p>Open a new file called <code>hour17_lab_coords.py</code>."</p>
+<h3 id="92-lab-specification">9.2 Lab specification</h3>
+<p><strong>Display or read aloud:</strong></p>
+<hr>
+<p><strong>Lab: Coordinate Tracker</strong></p>
+<p><strong>Situation:</strong> You are tracking the positions of five sensors on a grid. Each sensor has an (x, y) location. Your program should record the positions and analyse them.</p>
+<p><strong>Your task:</strong></p>
+<ol>
+<li>
+<p>Create a list called <code>sensors</code> containing <strong>five (x, y) tuples</strong>. Use any integer values you like. Make them varied — use positive and negative numbers, different magnitudes. Example: <code>(3, 7)</code>, <code>(-1, 4)</code>, <code>(8, 2)</code>, <code>(0, -5)</code>, <code>(6, 3)</code>.</p>
+</li>
+<li>
+<p>Use a <strong>for loop</strong> to print each sensor's coordinates in this format:
+   <code>Sensor at x=3, y=7
+   Sensor at x=-1, y=4
+   ...</code></p>
+</li>
+<li>
+<p><strong>Extract all the x values</strong> from the sensor list into a new list called <code>x_values</code>. Use a for loop or a list comprehension (if you have seen those).</p>
+</li>
+<li>
+<p>Print the <strong>minimum x value</strong> and the <strong>maximum x value</strong> using <code>min()</code> and <code>max()</code>.</p>
+</li>
+</ol>
+<p><strong>Expected output shape (your numbers will differ):</strong></p>
+<pre><code>Sensor at x=3, y=7
+Sensor at x=-1, y=4
+Sensor at x=8, y=2
+Sensor at x=0, y=-5
+Sensor at x=6, y=3
+
+Minimum x: -1
+Maximum x: 8
+</code></pre>
+<p><strong>Starter hint if you are stuck:</strong></p>
+<pre><code class="language-python">sensors = [
+    (3, 7),
+    # add four more...
+]
+
+for point in sensors:
+    x, y = point   # unpack here
+    print(...)
+
+x_values = []
+for point in sensors:
+    x, y = point
+    x_values.append(x)
+
+print(f&quot;Minimum x: {min(x_values)}&quot;)
+print(f&quot;Maximum x: {max(x_values)}&quot;)
+</code></pre>
+<hr>
+<p>Give learners approximately 12–14 minutes of working time. Circulate the room. Watch for:
+- learners writing <code>[x, y]</code> instead of <code>(x, y)</code> for tuples
+- learners forgetting to append to <code>x_values</code>
+- learners trying to do <code>sensors[0, 1]</code> instead of <code>sensors[0][1]</code></p>
+<h3 id="93-walkthrough-solution">9.3 Walkthrough solution</h3>
+<p>After working time, say:</p>
+<p><strong>Say:</strong>
+"Let's walk through the solution together. I will type it from scratch so you can see the whole picture."</p>
+<p><strong>Type the full solution:</strong></p>
+<pre><code class="language-python"># hour17_lab_coords.py
+# Lab: Coordinate Tracker
+
+# Step 1 — Five sensor positions as (x, y) tuples in a list
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+# Step 2 — Print each sensor using tuple unpacking
+print(&quot;=== Sensor Positions ===&quot;)
+for point in sensors:
+    x, y = point
+    print(f&quot;Sensor at x={x}, y={y}&quot;)
+
+# Step 3 — Extract all x values
+x_values: list[int] = []
+for point in sensors:
+    x, y = point
+    x_values.append(x)
+
+# Step 4 — Compute min and max x
+print()
+print(f&quot;Minimum x: {min(x_values)}&quot;)
+print(f&quot;Maximum x: {max(x_values)}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Let's review what we did.</p>
+<p>Line by line:</p>
+<ul>
+<li><code>sensors</code> is a <strong>list</strong> because it is a collection that could grow or change. Each item inside it is a <strong>tuple</strong> because each coordinate is a fixed (x, y) record.</li>
+<li>In the first loop, <code>x, y = point</code> unpacks each tuple. We then format the output with an f-string.</li>
+<li>We build <code>x_values</code> by looping again and appending just the x value from each tuple.</li>
+<li>Finally, we call <code>min()</code> and <code>max()</code> on <code>x_values</code>.</li>
+</ul>
+<p>This is a clean and readable program. It makes the structure of the data very clear."</p>
+<h3 id="94-verify-correctness">9.4 Verify correctness</h3>
+<p><strong>Say:</strong>
+"Let's check the min and max manually. My x values are 3, -1, 8, 0, 6. The smallest is -1. The largest is 8. Python agrees. If your numbers are different, double-check your tuple values and your append loop."</p>
+<h3 id="95-discuss-design-decisions">9.5 Discuss design decisions</h3>
+<p><strong>Say:</strong>
+"Why did we put the sensors in a list rather than five separate variables?</p>
+<p>Because we want to iterate over them. If they were five separate variables, we could not write a for loop.</p>
+<p>Why is each sensor a tuple rather than a list?</p>
+<p>Because a coordinate is a fixed pair. It is a record, not something that grows. Using a tuple communicates that clearly and protects the data.</p>
+<p>This pattern — a list of tuples — is one you will use many times in real Python programs."</p>
+<hr>
+<h2 id="10-common-pitfalls">10) Common Pitfalls</h2>
+<h3 id="101-the-single-element-tuple-trap-revisited">10.1 The single-element tuple trap (revisited)</h3>
+<p><strong>Say:</strong>
+"We saw this earlier, but it is worth repeating because it is so common.</p>
+<p>If you write <code>value = (42)</code>, you get an integer, not a tuple. Python reads the parentheses as a math grouping expression.</p>
+<p>To make a single-element tuple, you must add a trailing comma: <code>value = (42,)</code>.</p>
+<p>Here is a quick test to build the reflex:"</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">a = (5)
+b = (5,)
+print(type(a))   # &lt;class 'int'&gt;
+print(type(b))   # &lt;class 'tuple'&gt;
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"The comma is what makes the tuple. Remember: comma first, parentheses optional."</p>
+<p><strong>Pause.</strong></p>
+<p>"Actually — here is a surprising fact you can verify. The parentheses in a tuple literal are technically optional in most contexts. What makes something a tuple is the commas, not the parentheses."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = 3, 7      # no parentheses!
+print(point)
+print(type(point))
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"Python sees <code>3, 7</code> as a tuple without parentheses. However, using parentheses is strongly preferred because it makes the intent explicit and the code easier to read. Always write <code>(3, 7)</code> in practice. But understanding that the comma is the mechanism helps when you are puzzled by a bug."</p>
+<h3 id="102-trying-to-modify-a-tuple">10.2 Trying to modify a tuple</h3>
+<p><strong>Say:</strong>
+"The second pitfall is trying to use list-style mutation on a tuple. These all fail with a <code>TypeError</code>:"</p>
+<p><strong>Type (but pause before running each):</strong></p>
+<pre><code class="language-python">coords = (3, 7)
+
+# All of these raise errors:
+coords[0] = 10          # TypeError: does not support item assignment
+coords.append(5)        # AttributeError: 'tuple' has no attribute 'append'
+coords.remove(3)        # AttributeError: 'tuple' has no attribute 'remove'
+</code></pre>
+<p><strong>Say:</strong>
+"Do not run all three at once — Python stops at the first error. Run each one individually to read its message.</p>
+<p>The key diagnosis: if you see a <code>TypeError</code> about item assignment or an <code>AttributeError</code> about a missing method like <code>append</code>, ask yourself whether you accidentally used a tuple where you meant a list."</p>
+<h3 id="103-over-parenthesising-and-confusing-tuples-with-grouped-expressions">10.3 Over-parenthesising and confusing tuples with grouped expressions</h3>
+<p><strong>Say:</strong>
+"A related trap is over-parenthesising and thinking you have a tuple when you do not.</p>
+<p>For example:"</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">result = (10 + 5)
+print(type(result))   # int, not tuple!
+</code></pre>
+<p><strong>Say:</strong>
+"This is just arithmetic in parentheses. Python evaluates <code>10 + 5</code> and assigns the integer <code>15</code>.</p>
+<p>If you meant a tuple, you need the comma: <code>result = (15,)</code>.</p>
+<p>The rule is simple: parentheses alone do not make a tuple. Commas make a tuple."</p>
+<h3 id="104-unpack-count-mismatch">10.4 Unpack count mismatch</h3>
+<p><strong>Say:</strong>
+"One more pitfall: forgetting to match the number of variables to the size of the tuple during unpacking."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">point = (3, 7, 5)      # three values
+x, y = point           # only two variables on the left
+</code></pre>
+<p><strong>Say:</strong>
+"This raises <code>ValueError: too many values to unpack</code>. Python expected to assign three values but only found two slots.</p>
+<p>The fix is simple: match the count, or use <code>_</code> to discard values you do not need."</p>
+<hr>
+<h2 id="11-optional-extension-distance-from-origin">11) Optional Extension: Distance from Origin</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> Offer this only if learners finish the lab early and there is time remaining. This stays within Basics scope — we only use the <code>math</code> module's <code>sqrt</code> function and the exponentiation operator <code>**</code>. Do not introduce complex math or trigonometry.</p>
+</blockquote>
+<p><strong>Say:</strong>
+"If you have finished the lab and want a stretch challenge, here it is.</p>
+<p>For each sensor in your coordinate tracker, calculate the distance from the origin <code>(0, 0)</code>.</p>
+<p>The formula is the Pythagorean theorem: distance = √(x² + y²)</p>
+<p>In Python, that is <code>(x**2 + y**2) ** 0.5</code>, or you can use <code>math.sqrt(x**2 + y**2)</code> after <code>import math</code>.</p>
+<p>Try adding a line to your loop that prints the distance for each sensor."</p>
+<p><strong>Full extension solution:</strong></p>
+<pre><code class="language-python">import math
+
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+print(&quot;=== Sensor Positions and Distances from Origin ===&quot;)
+for point in sensors:
+    x, y = point
+    distance = math.sqrt(x**2 + y**2)
+    print(f&quot;Sensor at x={x}, y={y}  |  Distance from origin: {distance:.2f}&quot;)
+</code></pre>
+<p>Run it.</p>
+<p><strong>Say:</strong>
+"The <code>:.2f</code> in the f-string rounds the distance to two decimal places.</p>
+<p><code>math.sqrt()</code> returns a float. For a point like <code>(3, 7)</code>, the distance is <code>√(9 + 49)</code> = <code>√58</code> ≈ <code>7.62</code>.</p>
+<p>This is a taste of how tuples connect naturally to geometric calculations in real programs."</p>
+<hr>
+<h2 id="12-debrief-recap-and-exit-ticket">12) Debrief, Recap, and Exit Ticket</h2>
+<h3 id="121-recap-the-key-ideas">12.1 Recap the key ideas</h3>
+<p><strong>Say:</strong>
+"We covered a lot of ground in one hour. Let me recap the five most important things to take away.</p>
+<p><strong>First:</strong> A tuple is an ordered, immutable collection. You create it with parentheses and commas: <code>(3, 7)</code>.</p>
+<p><strong>Second:</strong> Immutability is a feature, not a limitation. It tells other programmers — and Python itself — that these values are not meant to change. If you try to change them, Python raises a <code>TypeError</code> immediately.</p>
+<p><strong>Third:</strong> Tuple unpacking lets you assign the values of a tuple to named variables in one clean line: <code>x, y = point</code>. This is one of Python's most readable patterns.</p>
+<p><strong>Fourth:</strong> The single-element tuple trap: <code>(42)</code> is an int, <code>(42,)</code> is a tuple. The comma is what matters.</p>
+<p><strong>Fifth:</strong> Use a tuple when your data is a fixed record with known parts. Use a list when your collection grows and changes. A list of tuples — like our sensor list — is a natural and common combination."</p>
+<h3 id="122-connections-to-what-comes-next">12.2 Connections to what comes next</h3>
+<p><strong>Say:</strong>
+"In the next hours, we will see tuples appear again when we work with dictionaries — specifically, when we iterate over a dictionary's key-value pairs, we will unpack them as two-element tuples. So the unpacking pattern you just practised will keep paying off.</p>
+<p>You will also see tuples appear naturally when functions return multiple results. Returning a tuple is the idiomatic Python way to 'return two things at once'."</p>
+<h3 id="123-exit-ticket">12.3 Exit ticket</h3>
+<p><strong>Say:</strong>
+"Before we close, I want to give you one question to think about — either discuss it with a neighbour or just reflect for thirty seconds.</p>
+<p>Here is the question:</p>
+<p><strong>Why might you choose a tuple over a list?</strong></p>
+<p>Think about what you have learned this hour. Name at least two reasons."</p>
+<p>Give learners 60 seconds to think or discuss briefly, then collect a few answers.</p>
+<p><strong>Good answers to listen for:</strong>
+- "Because the data should not change — immutability protects it."
+- "Because the collection represents a fixed record with a known structure."
+- "Because it communicates intent — a reader knows the values are fixed."
+- "Because it is slightly more memory-efficient than a list for the same data." <em>(accept this if offered; do not prioritise it)</em></p>
+<p><strong>Say:</strong>
+"Those are excellent reasons. The most important one, in my view, is intent and communication. Tuples are a design choice. When you write a tuple, you are making a statement: 'these values belong together and they are not meant to change'. That kind of clarity makes programs easier to understand, maintain, and trust."</p>
+<h3 id="124-final-thought">12.4 Final thought</h3>
+<p><strong>Say:</strong>
+"Congratulations on completing Hour 17. You have added a new data structure to your toolbox, and — more importantly — you have started thinking about <em>why</em> to choose one data structure over another. That kind of thinking is what separates someone who knows Python syntax from someone who writes good Python programs.</p>
+<p>See you in Hour 18."</p>
+<hr>
+<h2 id="appendix-a-complete-demo-file">Appendix A: Complete Demo File</h2>
+<pre><code class="language-python"># hour17_tuples_demo.py
+# Day 5, Hour 1 — Tuples + Unpacking
+
+# --- Part 1: Create and read coordinate tuples ---
+origin = (0, 0)
+home = (3, 7)
+destination = (-2, 5)
+
+print(f&quot;Origin:      {origin}&quot;)
+print(f&quot;Home:        {home}&quot;)
+print(f&quot;Destination: {destination}&quot;)
+
+# --- Part 2: Unpack and use the values ---
+x, y = home
+print(f&quot;Home x-coordinate: {x}&quot;)
+print(f&quot;Home y-coordinate: {y}&quot;)
+
+# --- Part 3: Immutability (deliberate error — comment out before lab) ---
+# home[0] = 10  # TypeError: 'tuple' object does not support item assignment
+
+# --- Part 4: Function returning a tuple ---
+def get_midpoint(
+    point_a: tuple[int, int],
+    point_b: tuple[int, int],
+) -&gt; tuple[float, float]:
+    &quot;&quot;&quot;Return the midpoint between two (x, y) coordinates.&quot;&quot;&quot;
+    mid_x = (point_a[0] + point_b[0]) / 2
+    mid_y = (point_a[1] + point_b[1]) / 2
+    return (mid_x, mid_y)
+
+
+result = get_midpoint(home, destination)
+print(f&quot;Midpoint: {result}&quot;)
+
+mid_x, mid_y = get_midpoint(home, destination)
+print(f&quot;Mid x = {mid_x}, Mid y = {mid_y}&quot;)
+
+# --- Part 5: A list of coordinate tuples ---
+path = [
+    (0, 0),
+    (1, 3),
+    (4, 2),
+    (6, 8),
+    (5, 1),
+]
+
+print(&quot;\nPath coordinates:&quot;)
+for point in path:
+    x, y = point
+    print(f&quot;  x={x}, y={y}&quot;)
+</code></pre>
+<hr>
+<h2 id="appendix-b-complete-lab-solution">Appendix B: Complete Lab Solution</h2>
+<pre><code class="language-python"># hour17_lab_coords.py
+# Lab: Coordinate Tracker
+
+# Step 1 — Five sensor positions as (x, y) tuples in a list
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+# Step 2 — Print each sensor using tuple unpacking
+print(&quot;=== Sensor Positions ===&quot;)
+for point in sensors:
+    x, y = point
+    print(f&quot;Sensor at x={x}, y={y}&quot;)
+
+# Step 3 — Extract all x values into a separate list
+x_values: list[int] = []
+for point in sensors:
+    x, y = point
+    x_values.append(x)
+
+# Step 4 — Compute and display min and max x
+print()
+print(f&quot;Minimum x: {min(x_values)}&quot;)
+print(f&quot;Maximum x: {max(x_values)}&quot;)
+</code></pre>
+<hr>
+<h2 id="appendix-c-optional-extension-solution">Appendix C: Optional Extension Solution</h2>
+<pre><code class="language-python"># hour17_lab_coords_extension.py
+# Lab Extension: Distance from Origin
+import math
+
+sensors: list[tuple[int, int]] = [
+    (3, 7),
+    (-1, 4),
+    (8, 2),
+    (0, -5),
+    (6, 3),
+]
+
+print(&quot;=== Sensor Positions and Distances from Origin ===&quot;)
+for point in sensors:
+    x, y = point
+    distance = math.sqrt(x**2 + y**2)
+    print(f&quot;Sensor at x={x}, y={y}  |  Distance from origin: {distance:.2f}&quot;)
+
+x_values: list[int] = []
+for point in sensors:
+    x, _ = point
+    x_values.append(x)
+
+print()
+print(f&quot;Minimum x: {min(x_values)}&quot;)
+print(f&quot;Maximum x: {max(x_values)}&quot;)
+</code></pre>
+<hr>
+<h2 id="appendix-d-quick-reference-card-share-with-learners">Appendix D: Quick-Reference Card (share with learners)</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Syntax</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a tuple</td>
+<td><code>name = (val1, val2)</code></td>
+<td><code>point = (3, 7)</code></td>
+</tr>
+<tr>
+<td>Single-element tuple</td>
+<td><code>name = (val,)</code></td>
+<td><code>solo = (42,)</code></td>
+</tr>
+<tr>
+<td>Access by index</td>
+<td><code>name[i]</code></td>
+<td><code>point[0]</code> → <code>3</code></td>
+</tr>
+<tr>
+<td>Unpack two values</td>
+<td><code>a, b = name</code></td>
+<td><code>x, y = point</code></td>
+</tr>
+<tr>
+<td>Unpack, ignore one</td>
+<td><code>a, _ = name</code></td>
+<td><code>val, _ = measurement</code></td>
+</tr>
+<tr>
+<td>Swap two variables</td>
+<td><code>a, b = b, a</code></td>
+<td><code>x, y = y, x</code></td>
+</tr>
+<tr>
+<td>Check membership</td>
+<td><code>val in name</code></td>
+<td><code>3 in point</code> → <code>True</code></td>
+</tr>
+<tr>
+<td>Iterate over tuple</td>
+<td><code>for v in name:</code></td>
+<td><code>for v in point:</code></td>
+</tr>
+<tr>
+<td>List of tuples</td>
+<td><code>[(...), (...)]</code></td>
+<td><code>[(0,0),(1,3)]</code></td>
+</tr>
+<tr>
+<td>Immutability error</td>
+<td>attempt <code>name[i] = v</code></td>
+<td><code>TypeError</code></td>
+</tr>
+</tbody>
+</table>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour4_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour2_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-reconnect-to-earlier-learning-5-minutes" class="depth-2">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</a></li>
+<li><a href="#31-quick-recap-from-session-4" class="depth-3">3.1 Quick recap from Session 4</a></li>
+<li><a href="#32-motivating-the-need" class="depth-3">3.2 Motivating the need</a></li>
+<li><a href="#33-set-expectations-for-the-hour" class="depth-3">3.3 Set expectations for the hour</a></li>
+<li><a href="#4-concept-what-is-a-tuple" class="depth-2">4) Concept: What Is a Tuple?</a></li>
+<li><a href="#41-beginner-friendly-definition" class="depth-3">4.1 Beginner-friendly definition</a></li>
+<li><a href="#42-tuple-literal-syntax" class="depth-3">4.2 Tuple literal syntax</a></li>
+<li><a href="#43-tuples-with-more-than-two-values" class="depth-3">4.3 Tuples with more than two values</a></li>
+<li><a href="#44-indexing-into-a-tuple" class="depth-3">4.4 Indexing into a tuple</a></li>
+<li><a href="#45-the-critical-trap-the-single-element-tuple" class="depth-3">4.5 The critical trap: the single-element tuple</a></li>
+<li><a href="#5-immutability-why-tuples-cannot-change" class="depth-2">5) Immutability: Why Tuples Cannot Change</a></li>
+<li><a href="#51-show-the-typeerror" class="depth-3">5.1 Show the TypeError</a></li>
+<li><a href="#52-explain-the-value-of-immutability" class="depth-3">5.2 Explain the value of immutability</a></li>
+<li><a href="#53-what-you-can-do-with-a-tuple" class="depth-3">5.3 What you can do with a tuple</a></li>
+<li><a href="#6-tuple-unpacking" class="depth-2">6) Tuple Unpacking</a></li>
+<li><a href="#61-the-concept" class="depth-3">6.1 The concept</a></li>
+<li><a href="#62-unpacking-must-match-the-count" class="depth-3">6.2 Unpacking must match the count</a></li>
+<li><a href="#63-unpacking-any-tuple" class="depth-3">6.3 Unpacking any tuple</a></li>
+<li><a href="#64-the-swap-trick" class="depth-3">6.4 The swap trick</a></li>
+<li><a href="#65-ignoring-values-with" class="depth-3">6.5 Ignoring values with _</a></li>
+<li><a href="#7-when-to-use-a-tuple-vs-a-list" class="depth-2">7) When to Use a Tuple vs a List</a></li>
+<li><a href="#71-the-core-distinction" class="depth-3">7.1 The core distinction</a></li>
+<li><a href="#72-decision-guide" class="depth-3">7.2 Decision guide</a></li>
+<li><a href="#73-keep-it-practical" class="depth-3">7.3 Keep it practical</a></li>
+<li><a href="#8-live-demo-coordinate-pairs" class="depth-2">8) Live Demo: Coordinate Pairs</a></li>
+<li><a href="#81-overview" class="depth-3">8.1 Overview</a></li>
+<li><a href="#82-part-1-a-simple-coordinate" class="depth-3">8.2 Part 1 — A simple coordinate</a></li>
+<li><a href="#83-part-2-unpacking-coordinates" class="depth-3">8.3 Part 2 — Unpacking coordinates</a></li>
+<li><a href="#84-part-3-show-the-immutability-error" class="depth-3">8.4 Part 3 — Show the immutability error</a></li>
+<li><a href="#85-part-4-a-function-that-returns-a-tuple" class="depth-3">8.5 Part 4 — A function that returns a tuple</a></li>
+<li><a href="#86-part-5-a-list-of-tuples" class="depth-3">8.6 Part 5 — A list of tuples</a></li>
+<li><a href="#9-hands-on-lab-coordinate-tracker" class="depth-2">9) Hands-on Lab: Coordinate Tracker</a></li>
+<li><a href="#91-lab-overview" class="depth-3">9.1 Lab overview</a></li>
+<li><a href="#92-lab-specification" class="depth-3">9.2 Lab specification</a></li>
+<li><a href="#93-walkthrough-solution" class="depth-3">9.3 Walkthrough solution</a></li>
+<li><a href="#94-verify-correctness" class="depth-3">9.4 Verify correctness</a></li>
+<li><a href="#95-discuss-design-decisions" class="depth-3">9.5 Discuss design decisions</a></li>
+<li><a href="#10-common-pitfalls" class="depth-2">10) Common Pitfalls</a></li>
+<li><a href="#101-the-single-element-tuple-trap-revisited" class="depth-3">10.1 The single-element tuple trap (revisited)</a></li>
+<li><a href="#102-trying-to-modify-a-tuple" class="depth-3">10.2 Trying to modify a tuple</a></li>
+<li><a href="#103-over-parenthesising-and-confusing-tuples-with-grouped-expressions" class="depth-3">10.3 Over-parenthesising and confusing tuples with grouped expressions</a></li>
+<li><a href="#104-unpack-count-mismatch" class="depth-3">10.4 Unpack count mismatch</a></li>
+<li><a href="#11-optional-extension-distance-from-origin" class="depth-2">11) Optional Extension: Distance from Origin</a></li>
+<li><a href="#12-debrief-recap-and-exit-ticket" class="depth-2">12) Debrief, Recap, and Exit Ticket</a></li>
+<li><a href="#121-recap-the-key-ideas" class="depth-3">12.1 Recap the key ideas</a></li>
+<li><a href="#122-connections-to-what-comes-next" class="depth-3">12.2 Connections to what comes next</a></li>
+<li><a href="#123-exit-ticket" class="depth-3">12.3 Exit ticket</a></li>
+<li><a href="#124-final-thought" class="depth-3">12.4 Final thought</a></li>
+<li><a href="#appendix-a-complete-demo-file" class="depth-2">Appendix A: Complete Demo File</a></li>
+<li><a href="#appendix-b-complete-lab-solution" class="depth-2">Appendix B: Complete Lab Solution</a></li>
+<li><a href="#appendix-c-optional-extension-solution" class="depth-2">Appendix C: Optional Extension Solution</a></li>
+<li><a href="#appendix-d-quick-reference-card-share-with-learners" class="depth-2">Appendix D: Quick-Reference Card (share with learners)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour1_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day5_Hour1_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day4_Hour4_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day5_Hour2_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

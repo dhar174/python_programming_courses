@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 10, Hour 2: Collections of objects + searching (Course Hour 38) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="10">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day10_Hour2_Basics.md">
+
+    <link rel="prev" href="Day10_Hour1_Basics.html">
+    <link rel="next" href="Day10_Hour3_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="10" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-10/index.html">Day 10</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 10, Hour 2: Collections of objects + searching (Course Hour 38)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 10</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour3_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day10_Hour2_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 10</strong><br>
+<strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 10, Course Hour 38 – Collections of objects + searching<br>
+<strong>Duration:</strong> 60 minutes (including 30-minute guided lab with checkpoints)<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p><strong>Read aloud at the start of the hour (approximately 2–3 minutes):</strong></p>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li><strong>Search through collections of custom objects</strong> by looping through a list and comparing object attributes.</li>
+<li><strong>Update object fields (attributes) safely</strong> by modifying objects found within a list, without needing to 're-save' them.</li>
+<li><strong>Replace dictionary-based record keeping with object-based record keeping</strong>, writing cleaner, more maintainable code.</li>
+<li><strong>Combine loops, conditionals, and methods</strong> to build practical, menu-driven applications using object collections.</li>
+</ol>
+<p>These outcomes directly support your move from simple data structures to real-world object-oriented programming patterns. By the end of this hour, you'll understand that once you find an object in a list, you can modify it in place—the list sees the changes automatically."</p>
+<hr>
+<h2 id="instructor-prep-notes">Instructor Prep Notes</h2>
+<h3 id="setup-checklist-complete-before-class">Setup Checklist (Complete before class)</h3>
+<ul>
+<li><strong>Verify the <code>Contact</code> class is available</strong> from Day 10, Hour 1. Have it copied into a fresh editor window.</li>
+<li><strong>Open a blank file</strong> named <code>hour38_search_demo.py</code> in your editor, ready for live coding.</li>
+<li><strong>Test your code examples</strong> locally. Run through both the search demo and the full contact manager walkthrough solution to confirm they execute without errors.</li>
+<li><strong>Prepare 4–5 sample contacts</strong> (e.g., Alice, Bob, Charlie, Dana) mentally, so when you do live coding, you can populate the list quickly without typos.</li>
+<li><strong>Disable notifications</strong> on your workstation to avoid interruptions during live demo.</li>
+<li><strong>Arrange the lab instructions</strong> (section 7.2) in a visible location—either printed, in a second monitor window, or a tablet you can glance at.</li>
+<li><strong>Check the network/wifi</strong> if you plan to share your screen. Latency can make live coding appear choppy.</li>
+</ul>
+<h3 id="opening-commentary">Opening Commentary</h3>
+<p>"In the last hour, we created the <code>Contact</code> class—a blueprint for representing a single contact record with a name, phone number, and a <code>display()</code> method. We made a few objects and put them in a list. But today, we're asking the real question: how do we <strong>find</strong> a contact by name, and how do we <strong>update</strong> their phone number without manually digging through the entire list?</p>
+<p>This is exactly what real applications do. When you search your phone for 'Mom', it's looping through a list of contact objects and comparing the <code>name</code> attribute. Then it displays the match. If you edit the phone number, it updates the object in place. Today, we build that engine."</p>
+<hr>
+<h2 id="opening-script-dealing-with-many-objects-5-minutes">Opening Script: Dealing with many objects (~5 minutes)</h2>
+<p><strong>Say (read aloud, roughly 5 minutes):</strong></p>
+<p>"In the last hour, we created a single <code>Contact</code> blueprint and made a few contact objects. We even put them into a list and printed them out using our own <code>display()</code> method.</p>
+<p>But in a real application, you don't just print every record. You usually want to find <em>one specific record</em>—for example, searching for a contact by their name so you can see their phone number or update it.</p>
+<p>When dealing with a list of dictionaries, we had to check keys, like <code>if contact['name'] == search_term</code>. It worked, but it was error-prone: if you mistyped <code>'Name'</code> instead of <code>'name'</code>, your code would crash or silently fail.</p>
+<p>With objects, we use the exact same attribute name every time, because it's defined once in the class. When we combine loops with object attributes, the code becomes cleaner, more predictable, and easier to maintain.</p>
+<p>Here's what we're going to do today:
+1. First, we'll learn how to loop through a list of objects and compare their attributes to find a specific one.
+2. Then, we'll learn that once we've found an object, we can update its attributes <em>in place</em>—the list sees the change automatically.
+3. We'll wrap that logic into a reusable function.
+4. Finally, you'll rebuild your contact manager app using objects instead of dictionaries.</p>
+<p>Let's get started."</p>
+<hr>
+<h2 id="concept-briefing-looping-and-searching-by-attribute">Concept Briefing: Looping and Searching by Attribute</h2>
+<h3 id="why-searching-matters">Why Searching Matters</h3>
+<p><strong>Instructional point (1–2 minutes):</strong> 
+"Searching is one of the most common operations in programming. A contact app searches for a person. A todo list searches for a task. A store searches for a product by ID. The pattern is always the same: loop through a collection, check each item against your search criteria, and return the one that matches—or return <code>None</code> if nothing matches."</p>
+<h3 id="the-core-pattern">The Core Pattern</h3>
+<p><strong>Say (2–3 minutes):</strong></p>
+<p>"When we loop through a list of objects, the loop variable represents the <em>entire object</em>. If we want to check if it's the right object, we just look at its attributes using dot notation. Let me show you."</p>
+<p><strong>Type and narrate the first code block:</strong></p>
+<pre><code class="language-python"># hour38_search_demo.py
+
+class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+# Let's populate a directory
+directory = [
+    Contact(&quot;Alice&quot;, &quot;555-0101&quot;),
+    Contact(&quot;Bob&quot;, &quot;555-0202&quot;),
+    Contact(&quot;Charlie&quot;, &quot;555-0303&quot;)
+]
+
+# Searching for Bob
+query = &quot;bob&quot;
+found_contact = None
+
+for person in directory:
+    # Remember to normalize strings when comparing!
+    if person.name.lower() == query.lower():
+        found_contact = person
+        break
+
+if found_contact:
+    print(f&quot;Found them! Their phone is {found_contact.phone}&quot;)
+else:
+    print(&quot;Contact not found in directory.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Look at line 18: <code>if person.name.lower() == query.lower():</code>. Here's what's happening step by step:</p>
+<ol>
+<li><code>person</code> is a <code>Contact</code> object—the current item in the loop.</li>
+<li><code>person.name</code> accesses the <code>name</code> attribute of that object. It's just a string.</li>
+<li><code>.lower()</code> converts it to lowercase so we can compare case-insensitively. 'Bob' and 'bob' will match.</li>
+<li>We compare it to our query (also lowercased).</li>
+<li>If there's a match, we save the <em>entire object</em> into <code>found_contact</code> and <code>break</code> the loop.</li>
+</ol>
+<p>After the loop, we check if <code>found_contact</code> is still <code>None</code>. If it isn't, we found a match and can access its attributes. If it is, no match was found."</p>
+<h3 id="why-normalize-strings">Why Normalize Strings?</h3>
+<p><strong>Important teaching point (1 minute):</strong></p>
+<p>"Why <code>.lower()</code>? Because users type 'alice', 'Alice', 'ALICE'—all different strings to Python unless we normalize them first. By converting both sides to lowercase before comparing, we catch all variations. This is a best practice you'll use everywhere in real applications."</p>
+<hr>
+<h2 id="concept-updating-returned-objects-safely">Concept: Updating Returned Objects Safely</h2>
+<p><strong>Say (3–4 minutes):</strong></p>
+<p>"Now that we've found our object and stored it in <code>found_contact</code>, what if we want to change their phone number? Here's the magical part: because <code>found_contact</code> points to the <em>exact same object</em> that sits inside our list, any updates we make to <code>found_contact</code> will be permanent in the list too. We don't have to 'save' it back. The object itself is modified in memory."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python"># Assuming found_contact is Bob's object from the previous step
+if found_contact:
+    print(f&quot;Old phone: {found_contact.phone}&quot;)
+
+    # Updating the attribute directly
+    found_contact.phone = &quot;555-9999&quot;
+
+    print(f&quot;New phone: {found_contact.phone}&quot;)
+
+# To prove it changed in the main list:
+print(&quot;\nVerifying the main list was updated:&quot;)
+for p in directory:
+    print(f&quot;{p.name}: {p.phone}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Run this code. You'll see Bob's phone updated in the printout. We didn't have to do anything special—we just assigned a new value to the attribute. Python handles the memory management for us. This is called 'passing by reference': the variable <code>found_contact</code> and the object inside the list both point to the same data."</p>
+<hr>
+<h2 id="live-demo-a-searchcontact-function-10-minutes">Live Demo: A <code>search_contact</code> Function (~10 minutes)</h2>
+<p><strong>Say:</strong>
+"Instead of writing that loop out in our main code every time we need to search, let's wrap it in a reusable function that returns the object if found, or <code>None</code> if not. This is the foundation of real applications."</p>
+<p><strong>Type and narrate (with comments explaining each step):</strong></p>
+<pre><code class="language-python">def search_contact(contact_list, target_name):
+    &quot;&quot;&quot;
+    Search for a contact by name (case-insensitive).
+    Returns the Contact object if found, or None if not found.
+    &quot;&quot;&quot;
+    # Loop through the list of objects
+    for c in contact_list:
+        if c.name.lower() == target_name.lower():
+            return c  # Returns the actual object immediately
+
+    return None  # Return None if the loop finishes without finding a match
+
+# Testing the function
+search_result = search_contact(directory, &quot;Alice&quot;)
+
+if search_result:
+    print(f&quot;Found {search_result.name}. Updating phone...&quot;)
+    search_result.phone = &quot;555-8888&quot;
+else:
+    print(&quot;Not found.&quot;)
+
+# Test again with a contact that doesn't exist
+search_result2 = search_contact(directory, &quot;Eve&quot;)
+if search_result2:
+    print(f&quot;Found {search_result2.name}.&quot;)
+else:
+    print(&quot;Eve not found in directory.&quot;)
+</code></pre>
+<p><strong>Narrate as you run it:</strong>
+"Notice how clean our main logic becomes. We say 'search for Alice'. If the function gives us an object back, we update it. If it gives us <code>None</code>, we handle it gracefully. This pattern—search first, then operate—is used constantly in real software. And because the function encapsulates the loop, we don't have to repeat it everywhere."</p>
+<p><strong>Ask learners to predict output</strong> before you run it. This builds engagement and tests comprehension.</p>
+<hr>
+<h2 id="practice-exercise-searching-multiple-contacts-8-minutes">Practice Exercise: Searching Multiple Contacts (~8 minutes)</h2>
+<p><strong>Guided activity (have learners code along with you on their own machines):</strong></p>
+<p>"Let's practice one more time. I'm going to search for a few different contacts. You code along with me:</p>
+<pre><code class="language-python"># Let's try searching for different names
+names_to_find = [&quot;bob&quot;, &quot;Charlie&quot;, &quot;Nobody&quot;, &quot;alice&quot;]
+
+for search_name in names_to_find:
+    result = search_contact(directory, search_name)
+    if result:
+        print(f&quot;✓ Found: {result.name} -- {result.phone}&quot;)
+    else:
+        print(f&quot;✗ Not found: {search_name}&quot;)
+</code></pre>
+<p><strong>Ask:</strong>
+- What happens if we search for 'Nobody'?
+- Why does 'bob' (lowercase) match 'Bob' (capitalized)?
+- Where could we optimize this if we had 1 million contacts?</p>
+<p>This engages higher-order thinking without overwhelming Basics learners."</p>
+<hr>
+<h2 id="hands-on-lab-refactor-contact-manager-to-objects-30-minutes">Hands-on Lab: Refactor Contact Manager to Objects (30 minutes)</h2>
+<h3 id="lab-overview">Lab Overview</h3>
+<p><strong>Say:</strong>
+"It's time to bring it all together. You are going to take the menu-driven contact manager we practiced previously and upgrade its core engine from dictionaries to objects. This is the most important activity of the hour. You'll have approximately 30 minutes, and I'll circulate to help if you get stuck."</p>
+<h3 id="lab-specification">Lab Specification</h3>
+<p><strong>Display or share the following on screen and read aloud:</strong></p>
+<hr>
+<p><strong>Lab: Refactor Contact Manager to Objects</strong></p>
+<p><strong>Objective:</strong> Build a menu-driven contact manager where contacts are stored as objects (not dictionaries) and implement search and update functionality.</p>
+<p><strong>Requirements:</strong></p>
+<ol>
+<li>
+<p><strong>Class definition</strong> — At the top of your script, define a <code>Contact</code> class:
+   - <code>__init__</code> method accepting <code>name</code> and <code>phone</code>
+   - <code>display()</code> method returning a formatted string like <code>"Alice -- 555-0101"</code></p>
+</li>
+<li>
+<p><strong>Initialize storage</strong> — Create an empty list called <code>my_directory = []</code>.</p>
+</li>
+<li>
+<p><strong>Menu loop</strong> — Build a <code>while True:</code> loop that displays a menu:
+   <code>[1] Add
+   [2] List
+   [3] Search/Update
+   [4] Quit</code></p>
+</li>
+<li>
+<p><strong>Add feature</strong> — When user chooses [1]:
+   - Prompt for a name and phone number
+   - Create a new <code>Contact</code> object
+   - Append it to the list
+   - Print "Added successfully."</p>
+</li>
+<li>
+<p><strong>List feature</strong> — When user chooses [2]:
+   - Print a header like "--- Directory ---"
+   - Loop through the list and call <code>.display()</code> on each object
+   - Print each result</p>
+</li>
+<li>
+<p><strong>Search/Update feature</strong> — When user chooses [3]:
+   - Prompt for the name to search for
+   - Use a loop (or a separate <code>search_contact</code> function) to find the contact
+   - If found:</p>
+<ul>
+<li>Print the current phone number</li>
+<li>Ask if they want to update it: "New phone (or press enter to skip):"</li>
+<li>If they enter a phone number, update the object's <code>phone</code> attribute</li>
+<li>Print "Updated!"</li>
+<li>If not found:</li>
+<li>Print "Contact not found."</li>
+</ul>
+</li>
+<li>
+<p><strong>Quit feature</strong> — When user chooses [4]:
+   - Print a goodbye message and <code>break</code> from the loop</p>
+</li>
+<li>
+<p><strong>Invalid choice handling</strong> — For any other input, print "Invalid choice."</p>
+</li>
+</ol>
+<p><strong>Completion Checkpoints (verify these as you work):</strong>
+- [ ] The program starts and displays the menu
+- [ ] You can add a contact and it appears in the list
+- [ ] You can search for a contact by name (case-insensitive)
+- [ ] You can update a contact's phone number
+- [ ] The updated phone appears in the list
+- [ ] You can quit cleanly</p>
+<p><strong>Extension (if you finish early):</strong>
+- Allow duplicate names by adding an ID field (simple counter: contact 1, contact 2, etc.)
+- Implement a delete feature
+- Add a search that finds all contacts whose names <em>contain</em> a search term (use the <code>in</code> operator)</p>
+<hr>
+<h3 id="instructor-facilitation-during-lab">Instructor Facilitation During Lab</h3>
+<p><strong>What to watch for (circulate and spot-check):</strong></p>
+<ul>
+<li>
+<p><strong>Error 1:</strong> Learners comparing search string to the whole object (<code>if query == contact:</code>) instead of the attribute (<code>if query == contact.name:</code>). Remind them: "You're searching for a <em>name</em>, not a person."</p>
+</li>
+<li>
+<p><strong>Error 2:</strong> Learners forgetting to use <code>.lower()</code> when comparing. If 'Bob' doesn't match 'bob', ask: "What if I type 'bob' in all lowercase?"</p>
+</li>
+<li>
+<p><strong>Error 3:</strong> Learners not using the object reference correctly after finding it. Remind: "Once you have the object, you can change its attributes directly. You don't need to save it back to the list."</p>
+</li>
+<li>
+<p><strong>Error 4:</strong> Typos in the class definition. If they write <code>def display()</code> but call <code>.display</code> without parentheses, clarify that <code>display</code> is a method and needs <code>()</code>.</p>
+</li>
+</ul>
+<p><strong>Checkpoint discussions (every 10 minutes):</strong>
+- Minute 10: "Does your menu loop work? Can you add a contact?"
+- Minute 20: "Can you search and find a contact? Can you update their number?"
+- Minute 30: "Test one more time: add a new contact, find it by name, update it, list all contacts to verify."</p>
+<h3 id="walkthrough-solution">Walkthrough Solution</h3>
+<p><strong>After 20 minutes of lab time, display this solution (do not give it earlier—learners need struggle time):</strong></p>
+<pre><code class="language-python">class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def display(self):
+        return f&quot;{self.name} -- {self.phone}&quot;
+
+my_directory = []
+
+while True:
+    print(&quot;\n[1] Add  [2] List  [3] Search/Update  [4] Quit&quot;)
+    choice = input(&quot;&gt; &quot;)
+
+    if choice == '1':
+        n = input(&quot;Name: &quot;)
+        p = input(&quot;Phone: &quot;)
+        new_obj = Contact(n, p)
+        my_directory.append(new_obj)
+        print(&quot;Added successfully.&quot;)
+
+    elif choice == '2':
+        print(&quot;\n--- Directory ---&quot;)
+        if not my_directory:
+            print(&quot;(No contacts yet)&quot;)
+        else:
+            for c in my_directory:
+                print(c.display())
+
+    elif choice == '3':
+        target = input(&quot;Enter name to search: &quot;)
+        found_obj = None
+
+        for c in my_directory:
+            if c.name.lower() == target.lower():
+                found_obj = c
+                break
+
+        if found_obj:
+            print(f&quot;Found! Current phone: {found_obj.phone}&quot;)
+            new_p = input(&quot;New phone (or press enter to skip): &quot;)
+            if new_p.strip():  # If they typed something
+                found_obj.phone = new_p
+                print(&quot;Updated!&quot;)
+        else:
+            print(&quot;Contact not found.&quot;)
+
+    elif choice == '4':
+        print(&quot;Goodbye!&quot;)
+        break
+    else:
+        print(&quot;Invalid choice.&quot;)
+</code></pre>
+<p><strong>After showing the solution, say:</strong></p>
+<p>"By swapping dictionaries for objects, we established a clear, rigid structure for what a 'Contact' looks like. We don't have to worry about accidentally misspelling a dictionary key like <code>'Name'</code> vs <code>'name'</code> throughout our code, because the attributes belong to the class definition. The code is easier to read, maintain, and extend."</p>
+<hr>
+<h2 id="troubleshooting-common-pitfalls">Troubleshooting &amp; Common Pitfalls</h2>
+<h3 id="comparing-wrong-attribute">Comparing Wrong Attribute</h3>
+<p><strong>Symptom:</strong> Learner writes <code>if query == contact:</code> instead of <code>if query == contact.name:</code>.</p>
+<p><strong>Why it happens:</strong> Confusion between the object and its attributes.</p>
+<p><strong>Fix:</strong> Emphasize: "You're comparing a <em>string</em> (the query) to an <em>attribute</em> (which is a string). You can't compare a string to an entire object; you need the attribute."</p>
+<h3 id="string-comparison-case-sensitivity">String Comparison Case Sensitivity</h3>
+<p><strong>Symptom:</strong> Search for 'bob' doesn't find 'Bob'.</p>
+<p><strong>Why it happens:</strong> Python treats 'Bob' and 'bob' as different strings.</p>
+<p><strong>Fix:</strong> Always use <code>.lower()</code> on both sides when doing name searches. Practice this pattern repeatedly.</p>
+<h3 id="forgetting-the-break-statement">Forgetting the <code>break</code> Statement</h3>
+<p><strong>Symptom:</strong> Loop continues searching even after finding a match; may return the wrong contact or crash.</p>
+<p><strong>Why it happens:</strong> Learner forgets that without <code>break</code>, the loop continues. If there are duplicates, it might overwrite <code>found_contact</code>.</p>
+<p><strong>Fix:</strong> Trace through the loop with a debugger or print statements. Show that <code>break</code> stops the loop immediately.</p>
+<h3 id="not-updating-the-actual-object">Not Updating the Actual Object</h3>
+<p><strong>Symptom:</strong> Learner updates <code>found_obj.phone</code>, but the change doesn't persist when they list the directory again.</p>
+<p><strong>Why it happens:</strong> Misunderstanding of reference vs. copy. (This is usually not a Basics-level issue, but can occur.)</p>
+<p><strong>Fix:</strong> Show them that <code>found_obj</code> <em>is</em> the object in the list. Print the object's memory address to prove it's the same one: <code>print(id(found_obj))</code> vs <code>print(id(my_directory[0]))</code>.</p>
+<h3 id="empty-list-on-search">Empty List on Search</h3>
+<p><strong>Symptom:</strong> Learner searches for a contact in an empty directory and gets an unexpected result.</p>
+<p><strong>Why it happens:</strong> No error-handling for an empty list.</p>
+<p><strong>Fix:</strong> Add a simple check: <code>if not my_directory: print("Directory is empty."); continue</code>.</p>
+<hr>
+<h2 id="quick-check-questions-exit-ticket-5-minutes">Quick-Check Questions (Exit Ticket, ~5 minutes)</h2>
+<p><strong>Pose these questions to the class. Invite 2–3 learners to answer each one:</strong></p>
+<h3 id="question-1-attribute-access">Question 1: Attribute Access</h3>
+<p>"When we search through a list of <code>Contact</code> objects, how do we access the <code>name</code> attribute of the current object in the loop?"</p>
+<p><strong>Expected answer:</strong> "Using dot notation: <code>person.name</code> or <code>contact.name</code>."</p>
+<h3 id="question-2-string-normalization">Question 2: String Normalization</h3>
+<p>"Why do we use <code>.lower()</code> when comparing names?"</p>
+<p><strong>Expected answer:</strong> "So that 'Alice', 'alice', and 'ALICE' are all treated the same way. It makes the search case-insensitive."</p>
+<h3 id="question-3-object-reference">Question 3: Object Reference</h3>
+<p>"If we find a contact in the list and update their phone number, does the change persist in the list?"</p>
+<p><strong>Expected answer:</strong> "Yes, because the object in the list and the variable we're using both point to the same object in memory. We're modifying the actual object, not a copy."</p>
+<h3 id="question-4-design-thinking">Question 4: Design Thinking</h3>
+<p>"Why is it better to wrap the search logic in a function like <code>search_contact()</code> instead of writing the loop every time you need to search?"</p>
+<p><strong>Expected answer:</strong> "Because functions let us reuse code. If we discover a bug in the search logic, we fix it in one place, and all code that calls the function benefits."</p>
+<h3 id="question-5-architecture">Question 5: Architecture</h3>
+<p>"Why might using objects make code easier to maintain than using deeply nested dictionaries?"</p>
+<p><strong>Expected answer:</strong> "Objects provide a guaranteed structure (you define the blueprint once), you can bundle helper behaviors (like <code>display()</code>) right alongside the data, and using dot notation (<code>obj.name</code>) is cleaner and less error-prone than bracket notation (<code>dict['name']</code>)."</p>
+<hr>
+<h2 id="wrap-up-notes-summary-reflection">Wrap-Up Notes: Summary &amp; Reflection</h2>
+<p><strong>Recap (read aloud, ~2 minutes):</strong></p>
+<p>"Today, we explored one of the most powerful patterns in programming: searching through collections of objects. We learned that:</p>
+<ol>
+<li><strong>Looping through objects is intuitive:</strong> We iterate through a list and check each object's attributes.</li>
+<li><strong>String normalization matters:</strong> Using <code>.lower()</code> makes searches robust and user-friendly.</li>
+<li><strong>Objects can be updated in place:</strong> Once we find an object, we can modify its attributes without 'saving' them back.</li>
+<li><strong>Functions abstract complexity:</strong> By wrapping our search logic in a function, we write cleaner, more maintainable code.</li>
+</ol>
+<p>This hour represents a major milestone. You've moved from working with individual objects to collections of objects, and you've implemented realistic, practical features. The contact manager you built today is a scaled-down version of apps used in real software systems.</p>
+<p><strong>Reflection prompts for learners (pose to the class, allow think-pair-share time):</strong></p>
+<ul>
+<li>"What was the trickiest part of building the contact manager today, and how did you overcome it?"</li>
+<li>"If you had to add a 'delete contact' feature, where would you add it in your menu?"</li>
+<li>"What would happen if two people in your directory had the same name? How would you handle it?"</li>
+</ul>
+<hr>
+<h2 id="facilitation-notes-instructor-tips-timing">Facilitation Notes: Instructor Tips &amp; Timing</h2>
+<h3 id="pacing-tips">Pacing Tips</h3>
+<ul>
+<li><strong>0:00–0:05:</strong> Opening script + learning outcomes. Don't rush. This sets the motivation.</li>
+<li><strong>0:05–0:20:</strong> Concept briefing (both looping and updating). This is dense; allow time for questions.</li>
+<li><strong>0:20–0:30:</strong> Live demo. Do this slowly. Narrate each step. Let learners predict output.</li>
+<li><strong>0:30–0:05</strong> (into the lab): Hand out lab instructions and circulate immediately.</li>
+<li><strong>Lab time:</strong> Don't check in too early. Learners need 5–10 minutes to get oriented. Then start circulating every 3–5 minutes.</li>
+<li><strong>0:55–1:00:</strong> Recap, quick-check questions, and reflection.</li>
+</ul>
+<h3 id="contingency-plans">Contingency Plans</h3>
+<p><strong>If learners are ahead of pace:</strong>
+- Ask them to add a delete feature
+- Have them implement a search that finds all contacts whose name <em>contains</em> a substring
+- Invite them to add a 'sort by name' feature (using <code>sorted()</code>)</p>
+<p><strong>If learners are behind pace:</strong>
+- Shorten the walkthrough solution demo to focus on the key parts (search and update)
+- Provide a partial template for the menu loop and have them fill in the search logic
+- Focus on just the search and list features; defer update to a follow-up session if needed</p>
+<p><strong>If there are conceptual blocks:</strong>
+- Use a physical analogy: "The list is like a phonebook. When I search, I'm flipping through pages. When I find the page, I can write on it directly."
+- Use <code>print()</code> statements liberally to show what's happening at each step
+- Consider pairing learners who understand with those who don't</p>
+<h3 id="encouraging-debugging-habits">Encouraging Debugging Habits</h3>
+<p>"If your code doesn't work, don't panic. Add <code>print()</code> statements to show what's happening at each step. Print the value of <code>found_obj</code> after the loop. Print the contact's name and phone after you update it. These prints are your friends; they let you see inside the computer's memory."</p>
+<h3 id="extension-ideas-if-time-permits-or-for-homework">Extension Ideas (if time permits or for homework)</h3>
+<ol>
+<li><strong>Multi-field search:</strong> Allow searching by phone number, not just name.</li>
+<li><strong>Validation:</strong> Ensure phone numbers are a certain format (e.g., at least 10 digits).</li>
+<li><strong>Persistence:</strong> Save the directory to a text file when the program closes, and load it when the program starts.</li>
+<li><strong>Sorting:</strong> Display the directory sorted by name.</li>
+<li><strong>Duplicate handling:</strong> Add an ID field so multiple contacts can have the same name but be distinguished by ID.</li>
+</ol>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour1_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour3_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-notes" class="depth-2">Instructor Prep Notes</a></li>
+<li><a href="#setup-checklist-complete-before-class" class="depth-3">Setup Checklist (Complete before class)</a></li>
+<li><a href="#opening-commentary" class="depth-3">Opening Commentary</a></li>
+<li><a href="#opening-script-dealing-with-many-objects-5-minutes" class="depth-2">Opening Script: Dealing with many objects (~5 minutes)</a></li>
+<li><a href="#concept-briefing-looping-and-searching-by-attribute" class="depth-2">Concept Briefing: Looping and Searching by Attribute</a></li>
+<li><a href="#why-searching-matters" class="depth-3">Why Searching Matters</a></li>
+<li><a href="#the-core-pattern" class="depth-3">The Core Pattern</a></li>
+<li><a href="#why-normalize-strings" class="depth-3">Why Normalize Strings?</a></li>
+<li><a href="#concept-updating-returned-objects-safely" class="depth-2">Concept: Updating Returned Objects Safely</a></li>
+<li><a href="#live-demo-a-searchcontact-function-10-minutes" class="depth-2">Live Demo: A search_contact Function (~10 minutes)</a></li>
+<li><a href="#practice-exercise-searching-multiple-contacts-8-minutes" class="depth-2">Practice Exercise: Searching Multiple Contacts (~8 minutes)</a></li>
+<li><a href="#hands-on-lab-refactor-contact-manager-to-objects-30-minutes" class="depth-2">Hands-on Lab: Refactor Contact Manager to Objects (30 minutes)</a></li>
+<li><a href="#lab-overview" class="depth-3">Lab Overview</a></li>
+<li><a href="#lab-specification" class="depth-3">Lab Specification</a></li>
+<li><a href="#instructor-facilitation-during-lab" class="depth-3">Instructor Facilitation During Lab</a></li>
+<li><a href="#walkthrough-solution" class="depth-3">Walkthrough Solution</a></li>
+<li><a href="#troubleshooting-common-pitfalls" class="depth-2">Troubleshooting &amp; Common Pitfalls</a></li>
+<li><a href="#comparing-wrong-attribute" class="depth-3">Comparing Wrong Attribute</a></li>
+<li><a href="#string-comparison-case-sensitivity" class="depth-3">String Comparison Case Sensitivity</a></li>
+<li><a href="#forgetting-the-break-statement" class="depth-3">Forgetting the break Statement</a></li>
+<li><a href="#not-updating-the-actual-object" class="depth-3">Not Updating the Actual Object</a></li>
+<li><a href="#empty-list-on-search" class="depth-3">Empty List on Search</a></li>
+<li><a href="#quick-check-questions-exit-ticket-5-minutes" class="depth-2">Quick-Check Questions (Exit Ticket, ~5 minutes)</a></li>
+<li><a href="#question-1-attribute-access" class="depth-3">Question 1: Attribute Access</a></li>
+<li><a href="#question-2-string-normalization" class="depth-3">Question 2: String Normalization</a></li>
+<li><a href="#question-3-object-reference" class="depth-3">Question 3: Object Reference</a></li>
+<li><a href="#question-4-design-thinking" class="depth-3">Question 4: Design Thinking</a></li>
+<li><a href="#question-5-architecture" class="depth-3">Question 5: Architecture</a></li>
+<li><a href="#wrap-up-notes-summary-reflection" class="depth-2">Wrap-Up Notes: Summary &amp; Reflection</a></li>
+<li><a href="#facilitation-notes-instructor-tips-timing" class="depth-2">Facilitation Notes: Instructor Tips &amp; Timing</a></li>
+<li><a href="#pacing-tips" class="depth-3">Pacing Tips</a></li>
+<li><a href="#contingency-plans" class="depth-3">Contingency Plans</a></li>
+<li><a href="#encouraging-debugging-habits" class="depth-3">Encouraging Debugging Habits</a></li>
+<li><a href="#extension-ideas-if-time-permits-or-for-homework" class="depth-3">Extension Ideas (if time permits or for homework)</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day10_Hour2_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day10_Hour2_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day10_Hour1_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day10_Hour3_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

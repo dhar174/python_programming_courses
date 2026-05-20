@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5 Hour 4 Advanced: Record List UI with Treeview or Listbox, Selection Callbacks, and Safe Refresh | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day5_Hour4_Advanced.md">
+
+    <link rel="prev" href="Day5_Hour3_Advanced.html">
+    <link rel="next" href="Day6_Hour1_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="5" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 5 Hour 4 Advanced: Record List UI with Treeview or Listbox, Selection Callbacks, and Safe Refresh</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour1_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour4_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-delivery-context">Instructor delivery context</h2>
+<ul>
+<li>Audience: Advanced learners who already completed Day 5 Hour 3 forms and validation work.</li>
+<li>Hour alignment: This script is for Hour 20 in the Advanced runbook.</li>
+<li>Scope boundary for this hour:</li>
+<li>In scope: record list/table display, selection callback behavior, details pane updates, refresh safety, empty-state handling, and a tightly scoped optional search/filter extension.</li>
+<li>Out of scope: Day 6 architecture topics, broader testing frameworks, deployment, packaging, and backend persistence changes.</li>
+<li>Teaching posture: near-verbatim facilitation script with clear transitions, exact timing, mini-checkpoints, and observable pass/fail completion checks.</li>
+</ul>
+<h2 id="learning-outcomes-for-hour-20">Learning outcomes for Hour 20</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Display records in a list or table widget.</li>
+<li>React to user selection and show record details in a dedicated details area.</li>
+<li>Explain Listbox versus Treeview and select the right widget for a given UI need.</li>
+<li>Implement selection callbacks that do not fail when no row is selected.</li>
+<li>Refresh list data safely by following the exact sequence:
+   - clear existing rows or items
+   - repopulate from source
+   - handle selection state safely</li>
+<li>Verify that refreshing does not create stale or duplicate rows.</li>
+<li>Confirm empty-data states are rendered safely in both list and details areas.</li>
+<li>Describe what can go wrong if a refresh operation does not clear existing rows first.</li>
+</ol>
+<h2 id="required-talk-points-to-hit-explicitly">Required talk points to hit explicitly</h2>
+<ul>
+<li>Listbox vs Treeview and when each is appropriate.</li>
+<li>Selection callbacks and safe handling when selection is empty.</li>
+<li>Refreshing list content safely to avoid duplication and stale records.</li>
+<li>Live demo: Treeview shows records and selecting a row populates details pane.</li>
+<li>Hands-on lab: build list view for in-memory records, bind selection callback to details area, implement refresh with no duplicate/stale rows.</li>
+<li>Completion criteria:</li>
+<li>list loads records</li>
+<li>selecting shows details</li>
+<li>refreshing does not duplicate rows</li>
+<li>Common pitfalls:</li>
+<li>selection callback fails when no selection</li>
+<li>stale or duplicate rows after refresh</li>
+<li>Optional extension:</li>
+<li>simple search/filter field, only after core completion, and only in final 3 to 5 minutes.</li>
+<li>Quick check:</li>
+<li>what can go wrong if you refresh without clearing existing rows?</li>
+</ul>
+<h2 id="exact-60-minute-timing-plan">Exact 60-minute timing plan</h2>
+<ul>
+<li>Recap and transition: 4 minutes</li>
+<li>Concepts and talk points: 9 minutes</li>
+<li>Architecture and safety patterns: 8 minutes</li>
+<li>Live demo: 8 minutes</li>
+<li>Hands-on lab: 26 minutes</li>
+<li>Debrief and quick check: 5 minutes</li>
+</ul>
+<p>Arithmetic check: 4 + 9 + 8 + 8 + 26 + 5 = 60.</p>
+<h2 id="instructor-setup-checklist-before-class-starts">Instructor setup checklist before class starts</h2>
+<ul>
+<li>Open a working Tkinter project so you can code quickly without setup delay.</li>
+<li>Ensure you have an in-memory list of records ready in your editor.</li>
+<li>Ensure font size is readable for live coding.</li>
+<li>Keep a visible timer for segment discipline.</li>
+<li>Prepare to ask prediction questions before running code.</li>
+<li>Keep this hour tied to Day 5 continuity:</li>
+<li>We used forms and validation last hour.</li>
+<li>Now we add a record browser pattern around those forms.</li>
+<li>Do not re-teach deep validation internals from Hour 3.</li>
+<li>Keep terminology consistent:</li>
+<li>list area</li>
+<li>details pane</li>
+<li>selection callback</li>
+<li>refresh sequence</li>
+<li>empty state</li>
+<li>stale rows</li>
+<li>duplicate rows</li>
+</ul>
+<h2 id="segment-1-script-recap-and-transition-4-minutes">Segment 1 script: recap and transition (4 minutes)</h2>
+<h3 id="minute-0-to-1-opening">Minute 0 to 1 opening</h3>
+<p>Instructor says:</p>
+<p>Last hour we improved forms and validation feedback so users can enter data with fewer mistakes. That solved input quality, but a useful app also needs output visibility. Users need to see what already exists, select one item, and inspect details. In this hour, we complete that loop by building a record list UI.</p>
+<h3 id="minute-1-to-2-bridge-from-hour-3">Minute 1 to 2 bridge from Hour 3</h3>
+<p>Instructor says:</p>
+<p>Keep the continuity from Hour 3 simple: our form validates entries, and now this list view lets users browse existing records. We are not doing a deep validation redesign right now. We are focused on display, selection, and refresh safety.</p>
+<h3 id="minute-2-to-3-anchor-question">Minute 2 to 3 anchor question</h3>
+<p>Instructor asks:</p>
+<p>If you have ten records, what is the user supposed to do without a list view?</p>
+<p>Expected learner responses:</p>
+<ul>
+<li>They cannot tell what exists.</li>
+<li>They cannot choose one record to inspect.</li>
+<li>They may re-enter duplicates.</li>
+<li>The app feels incomplete.</li>
+</ul>
+<p>Instructor reinforces:</p>
+<p>Exactly. A record list is a usability feature and a correctness feature.</p>
+<h3 id="minute-3-to-4-preview-of-flow">Minute 3 to 4 preview of flow</h3>
+<p>Instructor says:</p>
+<p>Our flow this hour is simple and practical:
+- compare Listbox and Treeview
+- bind a selection callback
+- display selected record details
+- refresh safely with no stale or duplicate rows
+- verify empty and no-selection behavior with explicit acceptance checks</p>
+<h2 id="segment-2-script-concepts-and-talk-points-9-minutes">Segment 2 script: concepts and talk points (9 minutes)</h2>
+<h3 id="minute-4-to-7-listbox-vs-treeview">Minute 4 to 7 Listbox vs Treeview</h3>
+<p>Instructor says:</p>
+<p>Let us compare the two common widgets.</p>
+<p>Listbox is best when:
+- each row is a single string
+- display is simple
+- fields are compressed into one line
+- you do not need multiple explicit columns</p>
+<p>Treeview is best when:
+- records have multiple fields
+- table-like readability matters
+- users benefit from column structure
+- later you might add sorting, filtering, or richer row identity</p>
+<p>Instructor prompt:</p>
+<p>Given records with id, name, email, and status, which widget gives better clarity?</p>
+<p>Expected answer:
+- Treeview, because columns match fields directly.</p>
+<p>Instructor says:</p>
+<p>That is the default choice for this hour. We still mention Listbox because the design decision matters.</p>
+<h3 id="minute-7-to-10-selection-callbacks">Minute 7 to 10 selection callbacks</h3>
+<p>Instructor says:</p>
+<p>Displaying rows is not enough. The interface must react when the user selects a row. In Tkinter ttk Treeview, we bind the selection event and call a function.</p>
+<p>Instructor writes short concept snippet:</p>
+<pre><code class="language-python">self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_select)
+</code></pre>
+<p>Instructor says:</p>
+<p>The callback must handle three states safely:
+- one valid selection
+- no selection
+- selection points to a record that no longer exists in source data</p>
+<p>If we do not protect these states, the callback can crash or show stale details.</p>
+<h3 id="minute-10-to-13-refresh-safety-talk-point">Minute 10 to 13 refresh safety talk point</h3>
+<p>Instructor says:</p>
+<p>Refreshing is the most common source of duplicate rows in beginner UI code. The safe sequence is non-negotiable:</p>
+<ul>
+<li>clear existing rows or items</li>
+<li>repopulate from source</li>
+<li>handle selection state safely</li>
+</ul>
+<p>Write this sequence on screen and repeat it twice.</p>
+<p>Instructor says:</p>
+<p>If you skip the clear step, you may stack old rows and new rows together. If you skip selection handling, your details pane may show old values that no longer match the visible list.</p>
+<p>Instructor quick ask:</p>
+<p>What can go wrong if refresh runs three times without clearing?</p>
+<p>Expected answer:
+- each run can add copies, row count inflates, details may mismatch, UI becomes misleading.</p>
+<h2 id="segment-3-script-architecture-and-safety-patterns-8-minutes">Segment 3 script: architecture and safety patterns (8 minutes)</h2>
+<h3 id="minute-13-to-17-responsibility-boundaries-for-this-hour">Minute 13 to 17 responsibility boundaries for this hour</h3>
+<p>Instructor says:</p>
+<p>We keep boundaries practical, not theoretical.</p>
+<p>Data source responsibility:
+- provide a list of records
+- provide lookup by id</p>
+<p>UI responsibility:
+- render rows
+- capture selection
+- show details
+- refresh view safely
+- show fallback text for empty/no-selection states</p>
+<p>Instructor says:</p>
+<p>This is enough architecture for Hour 20. We are not doing Day 6 callback-spaghetti architecture deep dive today.</p>
+<h3 id="minute-17-to-19-no-selection-and-empty-data-safety-pattern">Minute 17 to 19 no-selection and empty-data safety pattern</h3>
+<p>Instructor says:</p>
+<p>Two acceptance checks are mandatory:</p>
+<p>No-selection acceptance check:
+- if nothing is selected, app throws no error
+- details pane shows fallback text</p>
+<p>Empty-data acceptance check:
+- list area renders empty state safely
+- details pane renders fallback safely
+- refresh with empty source does not crash</p>
+<p>Instructor asks:</p>
+<p>What fallback text is clear and user-friendly?</p>
+<p>Expected answer:
+- No record selected
+- No records available</p>
+<p>Instructor says:</p>
+<p>Yes. Clarity beats cleverness.</p>
+<h3 id="minute-19-to-21-repeated-refresh-safety-pattern">Minute 19 to 21 repeated-refresh safety pattern</h3>
+<p>Instructor says:</p>
+<p>We also require a repeated-refresh acceptance check:
+- run refresh three consecutive times
+- row count remains correct every time
+- no stale rows
+- no duplicate rows</p>
+<p>Instructor says:</p>
+<p>This check catches fragile refresh code quickly. We will use it in the lab pass/fail rubric.</p>
+<h2 id="segment-4-script-live-demo-8-minutes">Segment 4 script: live demo (8 minutes)</h2>
+<h3 id="demo-objective">Demo objective</h3>
+<p>Build a compact Treeview-based record browser where:
+- rows load from in-memory data
+- selection updates details pane
+- no-selection is safe
+- empty-data is safe
+- repeated refreshes do not duplicate rows</p>
+<h3 id="instructor-narration-before-coding">Instructor narration before coding</h3>
+<p>Instructor says:</p>
+<p>Watch for three patterns while I code:
+- binding selection callback
+- refresh sequence discipline
+- fallback behavior for no selection and no data</p>
+<h3 id="live-demo-code">Live demo code</h3>
+<pre><code class="language-python">from __future__ import annotations
+
+from dataclasses import dataclass
+import tkinter as tk
+from tkinter import ttk
+
+
+@dataclass(slots=True)
+class Record:
+    record_id: int
+    name: str
+    email: str
+    role: str
+
+
+class InMemoryRecordService:
+    def __init__(self) -&gt; None:
+        self._records: list[Record] = [
+            Record(1, &quot;Ada Lovelace&quot;, &quot;ada@example.com&quot;, &quot;Analyst&quot;),
+            Record(2, &quot;Grace Hopper&quot;, &quot;grace@example.com&quot;, &quot;Engineer&quot;),
+            Record(3, &quot;Katherine Johnson&quot;, &quot;katherine@example.com&quot;, &quot;Scientist&quot;),
+        ]
+
+    def list_records(self) -&gt; list[Record]:
+        return list(self._records)
+
+    def get_record_by_id(self, record_id: int) -&gt; Record | None:
+        for item in self._records:
+            if item.record_id == record_id:
+                return item
+        return None
+
+    def clear_all(self) -&gt; None:
+        self._records.clear()
+
+    def seed_default(self) -&gt; None:
+        self._records = [
+            Record(1, &quot;Ada Lovelace&quot;, &quot;ada@example.com&quot;, &quot;Analyst&quot;),
+            Record(2, &quot;Grace Hopper&quot;, &quot;grace@example.com&quot;, &quot;Engineer&quot;),
+            Record(3, &quot;Katherine Johnson&quot;, &quot;katherine@example.com&quot;, &quot;Scientist&quot;),
+        ]
+
+
+class RecordBrowserApp:
+    def __init__(self, root: tk.Tk, service: InMemoryRecordService) -&gt; None:
+        self.root = root
+        self.service = service
+
+        self.root.title(&quot;Hour 20 Record Browser&quot;)
+        self.root.geometry(&quot;980x420&quot;)
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
+
+        self.status_var = tk.StringVar(value=&quot;Ready&quot;)
+        self.detail_name = tk.StringVar(value=&quot;No record selected&quot;)
+        self.detail_email = tk.StringVar(value=&quot;-&quot;)
+        self.detail_role = tk.StringVar(value=&quot;-&quot;)
+        self.count_var = tk.StringVar(value=&quot;Rows: 0&quot;)
+
+        self._build_ui()
+        self.refresh_records()
+
+    def _build_ui(self) -&gt; None:
+        main = ttk.Frame(self.root, padding=12)
+        main.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+        main.columnconfigure(0, weight=3)
+        main.columnconfigure(1, weight=2)
+        main.rowconfigure(1, weight=1)
+
+        controls = ttk.Frame(main)
+        controls.grid(row=0, column=0, columnspan=2, sticky=&quot;ew&quot;, pady=(0, 10))
+        controls.columnconfigure(0, weight=1)
+
+        title = ttk.Label(controls, text=&quot;Records&quot;)
+        title.grid(row=0, column=0, sticky=&quot;w&quot;)
+
+        refresh_btn = ttk.Button(controls, text=&quot;Refresh&quot;, command=self.refresh_records)
+        refresh_btn.grid(row=0, column=1, padx=(8, 0))
+
+        clear_btn = ttk.Button(controls, text=&quot;Clear Source&quot;, command=self.clear_source_data)
+        clear_btn.grid(row=0, column=2, padx=(8, 0))
+
+        seed_btn = ttk.Button(controls, text=&quot;Seed Source&quot;, command=self.seed_source_data)
+        seed_btn.grid(row=0, column=3, padx=(8, 0))
+
+        count_label = ttk.Label(controls, textvariable=self.count_var)
+        count_label.grid(row=0, column=4, padx=(12, 0))
+
+        self.tree = ttk.Treeview(
+            main,
+            columns=(&quot;name&quot;, &quot;email&quot;, &quot;role&quot;),
+            show=&quot;headings&quot;,
+            selectmode=&quot;browse&quot;,
+            height=12,
+        )
+        self.tree.grid(row=1, column=0, sticky=&quot;nsew&quot;, padx=(0, 12))
+        self.tree.heading(&quot;name&quot;, text=&quot;Name&quot;)
+        self.tree.heading(&quot;email&quot;, text=&quot;Email&quot;)
+        self.tree.heading(&quot;role&quot;, text=&quot;Role&quot;)
+        self.tree.column(&quot;name&quot;, width=180, anchor=&quot;w&quot;)
+        self.tree.column(&quot;email&quot;, width=240, anchor=&quot;w&quot;)
+        self.tree.column(&quot;role&quot;, width=130, anchor=&quot;w&quot;)
+        self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_select)
+
+        details = ttk.LabelFrame(main, text=&quot;Details&quot;, padding=10)
+        details.grid(row=1, column=1, sticky=&quot;nsew&quot;)
+        details.columnconfigure(1, weight=1)
+
+        ttk.Label(details, text=&quot;Name&quot;).grid(row=0, column=0, sticky=&quot;w&quot;, pady=5)
+        ttk.Label(details, textvariable=self.detail_name).grid(row=0, column=1, sticky=&quot;w&quot;, pady=5)
+
+        ttk.Label(details, text=&quot;Email&quot;).grid(row=1, column=0, sticky=&quot;w&quot;, pady=5)
+        ttk.Label(details, textvariable=self.detail_email).grid(row=1, column=1, sticky=&quot;w&quot;, pady=5)
+
+        ttk.Label(details, text=&quot;Role&quot;).grid(row=2, column=0, sticky=&quot;w&quot;, pady=5)
+        ttk.Label(details, textvariable=self.detail_role).grid(row=2, column=1, sticky=&quot;w&quot;, pady=5)
+
+        status = ttk.Label(main, textvariable=self.status_var)
+        status.grid(row=2, column=0, columnspan=2, sticky=&quot;w&quot;, pady=(10, 0))
+
+    def clear_details(self, message: str = &quot;No record selected&quot;) -&gt; None:
+        self.detail_name.set(message)
+        self.detail_email.set(&quot;-&quot;)
+        self.detail_role.set(&quot;-&quot;)
+
+    def refresh_records(self) -&gt; None:
+        existing = self.tree.get_children()
+        if existing:
+            self.tree.delete(*existing)
+
+        records = self.service.list_records()
+
+        for item in records:
+            self.tree.insert(
+                &quot;&quot;,
+                &quot;end&quot;,
+                iid=str(item.record_id),
+                values=(item.name, item.email, item.role),
+            )
+
+        self.count_var.set(f&quot;Rows: {len(records)}&quot;)
+
+        if not records:
+            self.clear_details(&quot;No records available&quot;)
+            self.status_var.set(&quot;Refresh complete: 0 rows loaded&quot;)
+            return
+
+        selected = self.tree.selection()
+        if not selected:
+            self.clear_details(&quot;No record selected&quot;)
+            self.status_var.set(f&quot;Refresh complete: {len(records)} rows loaded&quot;)
+            return
+
+        selected_id_text = selected[0]
+        try:
+            selected_id = int(selected_id_text)
+        except ValueError:
+            self.clear_details(&quot;No record selected&quot;)
+            self.status_var.set(f&quot;Refresh complete: {len(records)} rows loaded&quot;)
+            return
+
+        record = self.service.get_record_by_id(selected_id)
+        if record is None:
+            self.clear_details(&quot;No record selected&quot;)
+            self.status_var.set(f&quot;Refresh complete: {len(records)} rows loaded&quot;)
+            return
+
+        self.show_details(record)
+        self.status_var.set(f&quot;Refresh complete: {len(records)} rows loaded&quot;)
+
+    def on_select(self, _event: tk.Event) -&gt; None:
+        selected_items = self.tree.selection()
+        if not selected_items:
+            self.clear_details(&quot;No record selected&quot;)
+            self.status_var.set(&quot;Selection cleared&quot;)
+            return
+
+        selected_id_text = selected_items[0]
+        try:
+            selected_id = int(selected_id_text)
+        except ValueError:
+            self.clear_details(&quot;No record selected&quot;)
+            self.status_var.set(&quot;Selection parse issue handled safely&quot;)
+            return
+
+        record = self.service.get_record_by_id(selected_id)
+        if record is None:
+            self.clear_details(&quot;No record selected&quot;)
+            self.status_var.set(&quot;Selected row no longer exists&quot;)
+            return
+
+        self.show_details(record)
+        self.status_var.set(f&quot;Selected id {record.record_id}&quot;)
+
+    def show_details(self, record: Record) -&gt; None:
+        self.detail_name.set(record.name)
+        self.detail_email.set(record.email)
+        self.detail_role.set(record.role)
+
+    def clear_source_data(self) -&gt; None:
+        self.service.clear_all()
+        self.refresh_records()
+
+    def seed_source_data(self) -&gt; None:
+        self.service.seed_default()
+        self.refresh_records()
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    service = InMemoryRecordService()
+    RecordBrowserApp(root, service)
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="demo-facilitation-script-by-minute">Demo facilitation script by minute</h3>
+<p>Minute 21 to 23:
+- Create dataclass Record and service list_records and get_record_by_id.
+- Say: service returns plain Python records, no widget knowledge.</p>
+<p>Minute 23 to 25:
+- Build Treeview and Details panel.
+- Say: Treeview gives column clarity for multi-field records.</p>
+<p>Minute 25 to 26:
+- Bind selection event.
+- Say: callback must survive empty selection state.</p>
+<p>Minute 26 to 28:
+- Implement refresh_records with strict sequence:
+  - clear existing rows
+  - repopulate from source
+  - handle selection state safely
+- Say this sequence aloud while typing.</p>
+<p>Minute 28 to 29:
+- Show no-selection fallback text by clicking empty area.
+- Confirm no error occurs.</p>
+<p>Minute 29:
+- Trigger repeated refresh manually three times.
+- Ask class to watch row count label.
+- Confirm row count remains stable, no duplicates, no stale rows.</p>
+<h3 id="demo-acceptance-checks-to-model-in-front-of-students">Demo acceptance checks to model in front of students</h3>
+<ul>
+<li>No-selection acceptance check:</li>
+<li>Action: ensure nothing selected.</li>
+<li>Expected: no exception, details pane shows fallback text.</li>
+<li>Empty-data acceptance check:</li>
+<li>Action: clear source then refresh.</li>
+<li>Expected: list empty, details fallback shows no records available, no exception.</li>
+<li>Repeated-refresh acceptance check:</li>
+<li>Action: refresh three consecutive times.</li>
+<li>Expected: row count unchanged and correct, no duplicate or stale rows.</li>
+</ul>
+<h2 id="segment-5-script-hands-on-lab-26-minutes">Segment 5 script: hands-on lab (26 minutes)</h2>
+<h3 id="lab-statement-for-learners">Lab statement for learners</h3>
+<p>Build a list-and-details interface using in-memory records where:
+- list area loads records
+- selecting a row shows details
+- refresh operation does not duplicate or stale rows
+- no-selection and empty-data states are safe</p>
+<p>You may use Treeview or Listbox. Treeview is recommended for multi-field records.</p>
+<h3 id="explicit-lab-technical-requirement">Explicit lab technical requirement</h3>
+<p>Your refresh function must follow this exact wording and sequence:
+- clear existing rows or items
+- repopulate from source
+- handle selection state safely</p>
+<h3 id="lab-mini-budget-with-minute-control">Lab mini-budget with minute control</h3>
+<ul>
+<li>Minute 29 to 33: scaffold UI layout</li>
+<li>Minute 33 to 39: load records into list area</li>
+<li>Minute 39 to 45: bind selection callback and details pane</li>
+<li>Minute 45 to 51: implement refresh safety and acceptance checks</li>
+<li>Minute 51 to 55: instructor circulation and focused fixes</li>
+<li>Optional extension only in final 3 to 5 minutes if core is complete</li>
+</ul>
+<h3 id="starter-scaffold-you-can-provide-verbally-or-paste-for-class">Starter scaffold you can provide verbally or paste for class</h3>
+<pre><code class="language-python">from __future__ import annotations
+
+from dataclasses import dataclass
+import tkinter as tk
+from tkinter import ttk
+
+
+@dataclass(slots=True)
+class Contact:
+    contact_id: int
+    name: str
+    email: str
+    city: str
+
+
+class ContactService:
+    def __init__(self) -&gt; None:
+        self._contacts: list[Contact] = [
+            Contact(1, &quot;Lin&quot;, &quot;lin@example.com&quot;, &quot;Boston&quot;),
+            Contact(2, &quot;Mina&quot;, &quot;mina@example.com&quot;, &quot;Austin&quot;),
+            Contact(3, &quot;Diego&quot;, &quot;diego@example.com&quot;, &quot;Seattle&quot;),
+        ]
+
+    def list_contacts(self) -&gt; list[Contact]:
+        return list(self._contacts)
+
+    def get_contact(self, contact_id: int) -&gt; Contact | None:
+        for item in self._contacts:
+            if item.contact_id == contact_id:
+                return item
+        return None
+
+
+class App:
+    def __init__(self, root: tk.Tk, service: ContactService) -&gt; None:
+        self.root = root
+        self.service = service
+
+        self.name_var = tk.StringVar(value=&quot;No record selected&quot;)
+        self.email_var = tk.StringVar(value=&quot;-&quot;)
+        self.city_var = tk.StringVar(value=&quot;-&quot;)
+
+        self._build_ui()
+        self.refresh_contacts()
+
+    def _build_ui(self) -&gt; None:
+        main = ttk.Frame(self.root, padding=10)
+        main.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+        main.columnconfigure(0, weight=3)
+        main.columnconfigure(1, weight=2)
+        main.rowconfigure(1, weight=1)
+
+        ttk.Button(main, text=&quot;Refresh&quot;, command=self.refresh_contacts).grid(
+            row=0, column=0, sticky=&quot;w&quot;, pady=(0, 8)
+        )
+
+        self.tree = ttk.Treeview(main, columns=(&quot;name&quot;, &quot;email&quot;, &quot;city&quot;), show=&quot;headings&quot;)
+        self.tree.grid(row=1, column=0, sticky=&quot;nsew&quot;, padx=(0, 10))
+        self.tree.heading(&quot;name&quot;, text=&quot;Name&quot;)
+        self.tree.heading(&quot;email&quot;, text=&quot;Email&quot;)
+        self.tree.heading(&quot;city&quot;, text=&quot;City&quot;)
+        self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_select)
+
+        details = ttk.LabelFrame(main, text=&quot;Details&quot;, padding=8)
+        details.grid(row=1, column=1, sticky=&quot;nsew&quot;)
+        details.columnconfigure(1, weight=1)
+
+        ttk.Label(details, text=&quot;Name&quot;).grid(row=0, column=0, sticky=&quot;w&quot;)
+        ttk.Label(details, textvariable=self.name_var).grid(row=0, column=1, sticky=&quot;w&quot;)
+        ttk.Label(details, text=&quot;Email&quot;).grid(row=1, column=0, sticky=&quot;w&quot;)
+        ttk.Label(details, textvariable=self.email_var).grid(row=1, column=1, sticky=&quot;w&quot;)
+        ttk.Label(details, text=&quot;City&quot;).grid(row=2, column=0, sticky=&quot;w&quot;)
+        ttk.Label(details, textvariable=self.city_var).grid(row=2, column=1, sticky=&quot;w&quot;)
+
+    def clear_details(self, message: str = &quot;No record selected&quot;) -&gt; None:
+        self.name_var.set(message)
+        self.email_var.set(&quot;-&quot;)
+        self.city_var.set(&quot;-&quot;)
+
+    def refresh_contacts(self) -&gt; None:
+        children = self.tree.get_children()
+        if children:
+            self.tree.delete(*children)
+
+        contacts = self.service.list_contacts()
+
+        for item in contacts:
+            self.tree.insert(
+                &quot;&quot;,
+                &quot;end&quot;,
+                iid=str(item.contact_id),
+                values=(item.name, item.email, item.city),
+            )
+
+        if not contacts:
+            self.clear_details(&quot;No records available&quot;)
+            return
+
+        self.clear_details(&quot;No record selected&quot;)
+
+    def on_select(self, _event: tk.Event) -&gt; None:
+        selected = self.tree.selection()
+        if not selected:
+            self.clear_details(&quot;No record selected&quot;)
+            return
+
+        try:
+            contact_id = int(selected[0])
+        except ValueError:
+            self.clear_details(&quot;No record selected&quot;)
+            return
+
+        contact = self.service.get_contact(contact_id)
+        if contact is None:
+            self.clear_details(&quot;No record selected&quot;)
+            return
+
+        self.name_var.set(contact.name)
+        self.email_var.set(contact.email)
+        self.city_var.set(contact.city)
+
+
+def main() -&gt; None:
+    root = tk.Tk()
+    root.title(&quot;Lab Starter&quot;)
+    root.geometry(&quot;900x380&quot;)
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
+    App(root, ContactService())
+    root.mainloop()
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3 id="lab-facilitation-script-near-verbatim">Lab facilitation script, near-verbatim</h3>
+<p>Minute 29 to 31:</p>
+<p>Instructor says:</p>
+<p>Start with your visual structure only. Do not jump to extra features. Build one frame for list area and one frame for details pane. Add the refresh button now so you keep workflow visible from the beginning.</p>
+<p>Minute 31 to 33:</p>
+<p>Instructor says:</p>
+<p>Set the details pane with default fallback text first. That way empty and no-selection states are already safe before callbacks are wired.</p>
+<p>Minute 33 to 36:</p>
+<p>Instructor says:</p>
+<p>Now populate your list from in-memory records. If you use Treeview, keep columns simple. If you use Listbox, display one clear summary line per record.</p>
+<p>Minute 36 to 39:</p>
+<p>Instructor says:</p>
+<p>Implement refresh sequence exactly in this order:
+- clear existing rows or items
+- repopulate from source
+- handle selection state safely</p>
+<p>If your order differs, correct it now before proceeding.</p>
+<p>Minute 39 to 42:</p>
+<p>Instructor says:</p>
+<p>Bind your selection event and fetch the selected record by id. Do not assume selection exists. Guard the empty case first, then process valid selection.</p>
+<p>Minute 42 to 45:</p>
+<p>Instructor says:</p>
+<p>Update details pane on valid selection. Keep fallback text for invalid or missing selection. This is where many crashes happen if guard logic is missing.</p>
+<p>Minute 45 to 48:</p>
+<p>Instructor says:</p>
+<p>Run acceptance checks:
+- no-selection acceptance check
+- empty-data acceptance check
+- repeated-refresh acceptance check with three consecutive refreshes</p>
+<p>Minute 48 to 51:</p>
+<p>Instructor says:</p>
+<p>If repeated refresh produces duplicates, inspect your clear step first. If details pane shows stale content after refresh, inspect your selection-state handling.</p>
+<p>Minute 51 to 55:</p>
+<p>Instructor says:</p>
+<p>Polish only after core completion criteria are fully green. If core is still unstable, spend this time on safety and clarity, not on visual styling.</p>
+<h3 id="lab-passfail-checks-for-instructor-circulation">Lab pass/fail checks for instructor circulation</h3>
+<p>Mark pass only when all core checks are true.</p>
+<p>Core check 1:
+- list loads records from source
+- pass evidence: visible rows match source count</p>
+<p>Core check 2:
+- selecting a row shows corresponding details
+- pass evidence: details values update correctly for at least two different selections</p>
+<p>Core check 3:
+- refreshing does not duplicate rows
+- pass evidence: after three consecutive refreshes, row count remains correct and stable</p>
+<p>Core check 4:
+- no-selection behavior is safe
+- pass evidence: no exception and fallback text is visible when nothing is selected</p>
+<p>Core check 5:
+- empty-data behavior is safe
+- pass evidence: with empty source, list shows zero rows and details pane shows safe fallback</p>
+<h3 id="common-pitfalls-and-correction-prompts">Common pitfalls and correction prompts</h3>
+<p>Pitfall:
+- selection callback fails when no selection exists</p>
+<p>Correction prompt:
+- Show me where you handle empty tuple from selection.</p>
+<p>Pitfall:
+- stale or duplicate rows after refresh</p>
+<p>Correction prompt:
+- Show me clear step before insert loop.</p>
+<p>Pitfall:
+- details pane still shows old record after source was emptied</p>
+<p>Correction prompt:
+- After refresh, where do you reset details fallback state.</p>
+<p>Pitfall:
+- row id parsing crash</p>
+<p>Correction prompt:
+- Where do you handle conversion failure safely.</p>
+<p>Pitfall:
+- logic order drift in refresh</p>
+<p>Correction prompt:
+- Say the sequence out loud and match your code order exactly.</p>
+<h3 id="optional-extension-policy-and-timebox">Optional extension policy and timebox</h3>
+<p>Optional extension is allowed only if all core checks are passing and only during final 3 to 5 minutes of lab time.</p>
+<p>Extension:
+- add simple search/filter field for in-memory records</p>
+<p>Guardrails:
+- do not rework architecture
+- do not add persistence
+- do not add unrelated features
+- do not break refresh sequence discipline</p>
+<p>Optional extension snippet for fast finishers:</p>
+<pre><code class="language-python">self.filter_var = tk.StringVar(value=&quot;&quot;)
+entry = ttk.Entry(controls, textvariable=self.filter_var, width=20)
+entry.grid(row=0, column=5, padx=(8, 0))
+ttk.Button(controls, text=&quot;Apply Filter&quot;, command=self.refresh_records).grid(row=0, column=6, padx=(8, 0))
+</code></pre>
+<pre><code class="language-python">def refresh_records(self) -&gt; None:
+    existing = self.tree.get_children()
+    if existing:
+        self.tree.delete(*existing)
+
+    query = self.filter_var.get().strip().lower()
+    records = self.service.list_records()
+
+    if query:
+        records = [
+            r for r in records
+            if query in r.name.lower() or query in r.email.lower() or query in r.role.lower()
+        ]
+
+    for item in records:
+        self.tree.insert(&quot;&quot;, &quot;end&quot;, iid=str(item.record_id), values=(item.name, item.email, item.role))
+
+    if not records:
+        self.clear_details(&quot;No records available&quot;)
+        return
+
+    self.clear_details(&quot;No record selected&quot;)
+</code></pre>
+<p>Instructor says:</p>
+<p>If you start this extension before your core checks pass, pause and return to core behavior first.</p>
+<h2 id="segment-6-script-debrief-and-quick-check-5-minutes">Segment 6 script: debrief and quick check (5 minutes)</h2>
+<h3 id="minute-55-to-57-group-debrief">Minute 55 to 57 group debrief</h3>
+<p>Instructor says:</p>
+<p>Today we completed the missing half of a usable GUI workflow. Forms let users create or edit records. List views let users browse existing records. Selection callbacks connect the two experiences.</p>
+<p>Instructor says:</p>
+<p>The strongest submissions are not the fanciest ones. The strongest submissions are stable under edge cases:
+- no selection
+- empty data
+- repeated refreshes</p>
+<h3 id="minute-57-to-59-quick-check-prompts">Minute 57 to 59 quick check prompts</h3>
+<p>Prompt 1:</p>
+<p>What can go wrong if you refresh without clearing existing rows?</p>
+<p>Expected answer:</p>
+<p>Rows can duplicate, stale records remain visible, row count becomes inaccurate, and details may no longer represent current source data.</p>
+<p>Prompt 2:</p>
+<p>What must happen when no row is selected?</p>
+<p>Expected answer:</p>
+<p>No error should occur, and details pane should show fallback text.</p>
+<p>Prompt 3:</p>
+<p>How do you confirm refresh safety quickly?</p>
+<p>Expected answer:</p>
+<p>Run refresh three consecutive times and verify row count remains correct with no duplicates or stale rows.</p>
+<h3 id="minute-59-to-60-close-and-handoff">Minute 59 to 60 close and handoff</h3>
+<p>Instructor says:</p>
+<p>Before we finish, verify your app meets the three core completion criteria:
+- list loads records
+- selecting shows details
+- refreshing does not duplicate rows</p>
+<p>Then verify both safety checks:
+- no-selection safe fallback
+- empty-data safe fallback</p>
+<p>If all are true, your Hour 20 objective is complete.</p>
+<h2 id="full-instructor-talk-track-reference">Full instructor talk track reference</h2>
+<p>Use this extended script when you want near-verbatim pacing support across the full hour.</p>
+<h3 id="opening-narrative">Opening narrative</h3>
+<p>Instructor says:</p>
+<p>Welcome to Hour 20. In this segment we build record list behavior that users depend on every day in real applications. We already practiced form inputs. Now we make records visible, selectable, and refreshable without instability. The skill target is not just to make rows appear once. The target is to make the interaction reliable under normal use and edge cases.</p>
+<p>Instructor says:</p>
+<p>When users click refresh, they trust the app to show current truth. If old rows remain mixed with new rows, the interface lies. If a no-selection state crashes callback logic, users lose trust immediately. So today is a quality and reliability hour, not only a widget hour.</p>
+<h3 id="concept-reinforcement-narrative">Concept reinforcement narrative</h3>
+<p>Instructor says:</p>
+<p>Treeview and Listbox are both valid tools. The right tool depends on your data shape and readability needs. If each row is one short label, Listbox is enough. If each row needs multiple visible fields, Treeview is usually better. For our records today, we want clear columns and deterministic selection identity, so Treeview is our default.</p>
+<p>Instructor says:</p>
+<p>The callback pattern is event driven. A selection event triggers function execution. The callback reads selection state, validates it, then updates details pane. That sounds simple, but the safety details matter:
+- selection may be empty
+- selected id may parse badly
+- selected id may no longer exist in source data
+- source data may be empty right now</p>
+<p>Instructor says:</p>
+<p>If your callback handles those states calmly, your app feels professional even when data changes quickly.</p>
+<h3 id="safety-pattern-reinforcement-narrative">Safety pattern reinforcement narrative</h3>
+<p>Instructor says:</p>
+<p>Say this with me:
+- clear existing rows
+- repopulate from source
+- handle selection state safely</p>
+<p>Repeat it again:
+- clear existing rows
+- repopulate from source
+- handle selection state safely</p>
+<p>Instructor says:</p>
+<p>This sequence protects your UI from duplication and stale rendering. It also protects your details pane from presenting mismatched information.</p>
+<p>Instructor says:</p>
+<p>One more requirement for this hour is repeated-refresh confidence. We do not stop at one click that happens to work. We test three consecutive refresh actions and confirm row count stability. That reveals hidden duplication quickly.</p>
+<h3 id="lab-coaching-narrative-for-mixed-learner-pace">Lab coaching narrative for mixed learner pace</h3>
+<p>Instructor says:</p>
+<p>If you are moving fast, do not rush into optional features yet. First prove your app survives the acceptance checks. If you are stuck, focus on one path:
+- render rows
+- bind selection
+- show details
+- pass safety checks</p>
+<p>Instructor says:</p>
+<p>When debugging callback failures, inspect from top to bottom:
+- is event bound
+- does selection exist
+- can selected id parse
+- can source resolve selected id
+- does details pane update on success
+- does fallback text update on failure</p>
+<p>Instructor says:</p>
+<p>When debugging duplicate rows:
+- inspect refresh function order
+- verify clear call runs before insertion
+- verify you are not inserting in both constructor and refresh unintentionally
+- verify refresh is not bound multiple times accidentally</p>
+<h3 id="rubric-language-for-learner-confidence">Rubric language for learner confidence</h3>
+<p>Instructor says:</p>
+<p>Passing this hour does not require a perfect visual design. Passing this hour requires stable behavior and correct flow. If your styling is simple but your selection and refresh logic are robust, that is a strong result.</p>
+<p>Instructor says:</p>
+<p>You can show mastery by demonstrating these five behaviors in under one minute:
+- load list
+- click a row and see details
+- clear selection and show fallback
+- refresh three times with stable row count
+- empty source and show safe empty state</p>
+<h3 id="verbal-checklist-before-class-exit">Verbal checklist before class exit</h3>
+<p>Instructor says:</p>
+<p>Do this quick final checklist in your own project:
+- My list loads records from in-memory source.
+- My selected row populates details pane.
+- My refresh follows clear then repopulate then selection-safe handling.
+- My no-selection state never crashes and shows fallback text.
+- My empty-data state never crashes and shows fallback text.
+- My three refresh test keeps correct row count with no duplicates.</p>
+<p>Instructor says:</p>
+<p>If all items are true, you achieved Hour 20 outcomes and are ready to carry this pattern into your larger application.</p>
+<h2 id="learner-facing-handout-text-you-can-read-aloud">Learner-facing handout text you can read aloud</h2>
+<p>Use this as a concise statement to keep students aligned.</p>
+<ul>
+<li>Build list and details behavior first.</li>
+<li>Keep refresh sequence strict.</li>
+<li>Protect callback against empty selection.</li>
+<li>Verify empty-data behavior.</li>
+<li>Verify repeated-refresh stability.</li>
+<li>Only add search/filter in final 3 to 5 minutes and only if core is fully stable.</li>
+</ul>
+<h2 id="troubleshooting-script-bank-for-instructor-use">Troubleshooting script bank for instructor use</h2>
+<h3 id="case-1-callback-raises-index-error">Case 1: callback raises index error</h3>
+<p>Instructor says:</p>
+<p>Your code is reading selected item zero before checking whether a selection exists. Add an early guard:
+- if not selected, show fallback and return.</p>
+<h3 id="case-2-duplicate-rows-after-refresh">Case 2: duplicate rows after refresh</h3>
+<p>Instructor says:</p>
+<p>Your clear call is missing or runs after inserts. Move clear to the top of refresh before any insertion loop.</p>
+<h3 id="case-3-details-pane-still-shows-old-data-after-source-emptied">Case 3: details pane still shows old data after source emptied</h3>
+<p>Instructor says:</p>
+<p>After repopulation, if list is empty, explicitly set details fallback text and return early.</p>
+<h3 id="case-4-selected-id-conversion-fails">Case 4: selected id conversion fails</h3>
+<p>Instructor says:</p>
+<p>Use a protected conversion path. If conversion fails, fallback and return safely.</p>
+<h3 id="case-5-row-count-keeps-growing-after-refresh">Case 5: row count keeps growing after refresh</h3>
+<p>Instructor says:</p>
+<p>Your refresh may be called repeatedly by multiple triggers or clear step may not target current widget children. Inspect clear logic and event binding duplicates.</p>
+<h3 id="case-6-learner-used-listbox-and-cannot-map-to-full-record">Case 6: learner used Listbox and cannot map to full record</h3>
+<p>Instructor says:</p>
+<p>Store id alongside display text or maintain a mapping dictionary from list index to record id. Then callback can resolve the selected record reliably.</p>
+<h2 id="advanced-facilitation-cues-for-strong-groups">Advanced facilitation cues for strong groups</h2>
+<ul>
+<li>Ask learners to explain why fallback text is a user experience feature, not just an error guard.</li>
+<li>Ask learners to predict behavior before each acceptance check.</li>
+<li>Ask learners to identify one line that enforces refresh safety and one line that enforces callback safety.</li>
+<li>Ask learners to describe how this pattern integrates with the Hour 3 form workflow.</li>
+<li>Ask learners to identify where stale state can enter and how their code removes it.</li>
+</ul>
+<h2 id="reinforcement-examples-for-concept-transfer">Reinforcement examples for concept transfer</h2>
+<p>Use these short scenario prompts to help transfer beyond the current app.</p>
+<p>Scenario A:
+- Inventory tool with columns item, location, quantity.
+- Ask: Treeview or Listbox and why.
+- Expected: Treeview for multi-column clarity.</p>
+<p>Scenario B:
+- Notes app with one title string per note.
+- Ask: Listbox acceptable.
+- Expected: yes, if one-line display is enough.</p>
+<p>Scenario C:
+- Source data becomes empty after user action.
+- Ask: what should details pane show.
+- Expected: safe empty fallback text.</p>
+<p>Scenario D:
+- User clicks refresh rapidly.
+- Ask: what verifies correctness.
+- Expected: repeated-refresh row count stability.</p>
+<p>Scenario E:
+- Selection disappears after refresh.
+- Ask: callback behavior.
+- Expected: no crash, fallback text displayed.</p>
+<h2 id="completion-rubric-for-grading-or-checkoff">Completion rubric for grading or checkoff</h2>
+<p>Use this rubric during final 5 minutes or after class.</p>
+<h3 id="required-criteria">Required criteria</h3>
+<p>Criterion 1:
+- list loads records
+- pass if visible row count matches source length</p>
+<p>Criterion 2:
+- selecting shows details
+- pass if two different selections correctly update details</p>
+<p>Criterion 3:
+- refreshing does not duplicate rows
+- pass if three consecutive refreshes preserve correct row count with no duplicates</p>
+<p>Criterion 4:
+- no-selection acceptance check
+- pass if no exception and fallback text shown</p>
+<p>Criterion 5:
+- empty-data acceptance check
+- pass if empty list and safe details fallback shown after source emptied and refresh executed</p>
+<h3 id="common-fail-signals">Common fail signals</h3>
+<ul>
+<li>callback assumes selection always exists</li>
+<li>refresh inserts without clearing</li>
+<li>details pane retains stale data after source change</li>
+<li>empty source triggers exception</li>
+<li>repeated refresh inflates row count</li>
+</ul>
+<h3 id="recovery-path-if-learner-fails-one-criterion">Recovery path if learner fails one criterion</h3>
+<ul>
+<li>isolate failing function</li>
+<li>run only one acceptance check at a time</li>
+<li>patch guard condition first</li>
+<li>rerun full five-criterion check</li>
+</ul>
+<h2 id="end-of-hour-reflection-prompts">End-of-hour reflection prompts</h2>
+<p>Ask one or two based on time.</p>
+<ul>
+<li>What changed in your code after you added no-selection guards?</li>
+<li>Where exactly do you clear old rows in refresh?</li>
+<li>How did you prove rows are not duplicated after repeated refreshes?</li>
+<li>What fallback messages did you choose and why?</li>
+<li>Why is a stable empty state important for user trust?</li>
+</ul>
+<h2 id="final-instructor-summary-paragraph">Final instructor summary paragraph</h2>
+<p>This hour establishes a practical desktop pattern that learners will reuse often: list records clearly, react to selection safely, and refresh without duplicating or staling the visible state. The key discipline is the refresh sequence and defensive callback handling. If learners can demonstrate stable behavior for no selection, empty data, and three consecutive refreshes with accurate row count, they have met Hour 20 outcomes in a way that is production-minded, user-friendly, and immediately transferable to larger GUI workflows.</p>
+<p>(agent_id: issue298-hour4-rewrite — use write_agent to send follow-up messages)</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour3_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour1_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-delivery-context" class="depth-2">Instructor delivery context</a></li>
+<li><a href="#learning-outcomes-for-hour-20" class="depth-2">Learning outcomes for Hour 20</a></li>
+<li><a href="#required-talk-points-to-hit-explicitly" class="depth-2">Required talk points to hit explicitly</a></li>
+<li><a href="#exact-60-minute-timing-plan" class="depth-2">Exact 60-minute timing plan</a></li>
+<li><a href="#instructor-setup-checklist-before-class-starts" class="depth-2">Instructor setup checklist before class starts</a></li>
+<li><a href="#segment-1-script-recap-and-transition-4-minutes" class="depth-2">Segment 1 script: recap and transition (4 minutes)</a></li>
+<li><a href="#minute-0-to-1-opening" class="depth-3">Minute 0 to 1 opening</a></li>
+<li><a href="#minute-1-to-2-bridge-from-hour-3" class="depth-3">Minute 1 to 2 bridge from Hour 3</a></li>
+<li><a href="#minute-2-to-3-anchor-question" class="depth-3">Minute 2 to 3 anchor question</a></li>
+<li><a href="#minute-3-to-4-preview-of-flow" class="depth-3">Minute 3 to 4 preview of flow</a></li>
+<li><a href="#segment-2-script-concepts-and-talk-points-9-minutes" class="depth-2">Segment 2 script: concepts and talk points (9 minutes)</a></li>
+<li><a href="#minute-4-to-7-listbox-vs-treeview" class="depth-3">Minute 4 to 7 Listbox vs Treeview</a></li>
+<li><a href="#minute-7-to-10-selection-callbacks" class="depth-3">Minute 7 to 10 selection callbacks</a></li>
+<li><a href="#minute-10-to-13-refresh-safety-talk-point" class="depth-3">Minute 10 to 13 refresh safety talk point</a></li>
+<li><a href="#segment-3-script-architecture-and-safety-patterns-8-minutes" class="depth-2">Segment 3 script: architecture and safety patterns (8 minutes)</a></li>
+<li><a href="#minute-13-to-17-responsibility-boundaries-for-this-hour" class="depth-3">Minute 13 to 17 responsibility boundaries for this hour</a></li>
+<li><a href="#minute-17-to-19-no-selection-and-empty-data-safety-pattern" class="depth-3">Minute 17 to 19 no-selection and empty-data safety pattern</a></li>
+<li><a href="#minute-19-to-21-repeated-refresh-safety-pattern" class="depth-3">Minute 19 to 21 repeated-refresh safety pattern</a></li>
+<li><a href="#segment-4-script-live-demo-8-minutes" class="depth-2">Segment 4 script: live demo (8 minutes)</a></li>
+<li><a href="#demo-objective" class="depth-3">Demo objective</a></li>
+<li><a href="#instructor-narration-before-coding" class="depth-3">Instructor narration before coding</a></li>
+<li><a href="#live-demo-code" class="depth-3">Live demo code</a></li>
+<li><a href="#demo-facilitation-script-by-minute" class="depth-3">Demo facilitation script by minute</a></li>
+<li><a href="#demo-acceptance-checks-to-model-in-front-of-students" class="depth-3">Demo acceptance checks to model in front of students</a></li>
+<li><a href="#segment-5-script-hands-on-lab-26-minutes" class="depth-2">Segment 5 script: hands-on lab (26 minutes)</a></li>
+<li><a href="#lab-statement-for-learners" class="depth-3">Lab statement for learners</a></li>
+<li><a href="#explicit-lab-technical-requirement" class="depth-3">Explicit lab technical requirement</a></li>
+<li><a href="#lab-mini-budget-with-minute-control" class="depth-3">Lab mini-budget with minute control</a></li>
+<li><a href="#starter-scaffold-you-can-provide-verbally-or-paste-for-class" class="depth-3">Starter scaffold you can provide verbally or paste for class</a></li>
+<li><a href="#lab-facilitation-script-near-verbatim" class="depth-3">Lab facilitation script, near-verbatim</a></li>
+<li><a href="#lab-passfail-checks-for-instructor-circulation" class="depth-3">Lab pass/fail checks for instructor circulation</a></li>
+<li><a href="#common-pitfalls-and-correction-prompts" class="depth-3">Common pitfalls and correction prompts</a></li>
+<li><a href="#optional-extension-policy-and-timebox" class="depth-3">Optional extension policy and timebox</a></li>
+<li><a href="#segment-6-script-debrief-and-quick-check-5-minutes" class="depth-2">Segment 6 script: debrief and quick check (5 minutes)</a></li>
+<li><a href="#minute-55-to-57-group-debrief" class="depth-3">Minute 55 to 57 group debrief</a></li>
+<li><a href="#minute-57-to-59-quick-check-prompts" class="depth-3">Minute 57 to 59 quick check prompts</a></li>
+<li><a href="#minute-59-to-60-close-and-handoff" class="depth-3">Minute 59 to 60 close and handoff</a></li>
+<li><a href="#full-instructor-talk-track-reference" class="depth-2">Full instructor talk track reference</a></li>
+<li><a href="#opening-narrative" class="depth-3">Opening narrative</a></li>
+<li><a href="#concept-reinforcement-narrative" class="depth-3">Concept reinforcement narrative</a></li>
+<li><a href="#safety-pattern-reinforcement-narrative" class="depth-3">Safety pattern reinforcement narrative</a></li>
+<li><a href="#lab-coaching-narrative-for-mixed-learner-pace" class="depth-3">Lab coaching narrative for mixed learner pace</a></li>
+<li><a href="#rubric-language-for-learner-confidence" class="depth-3">Rubric language for learner confidence</a></li>
+<li><a href="#verbal-checklist-before-class-exit" class="depth-3">Verbal checklist before class exit</a></li>
+<li><a href="#learner-facing-handout-text-you-can-read-aloud" class="depth-2">Learner-facing handout text you can read aloud</a></li>
+<li><a href="#troubleshooting-script-bank-for-instructor-use" class="depth-2">Troubleshooting script bank for instructor use</a></li>
+<li><a href="#case-1-callback-raises-index-error" class="depth-3">Case 1: callback raises index error</a></li>
+<li><a href="#case-2-duplicate-rows-after-refresh" class="depth-3">Case 2: duplicate rows after refresh</a></li>
+<li><a href="#case-3-details-pane-still-shows-old-data-after-source-emptied" class="depth-3">Case 3: details pane still shows old data after source emptied</a></li>
+<li><a href="#case-4-selected-id-conversion-fails" class="depth-3">Case 4: selected id conversion fails</a></li>
+<li><a href="#case-5-row-count-keeps-growing-after-refresh" class="depth-3">Case 5: row count keeps growing after refresh</a></li>
+<li><a href="#case-6-learner-used-listbox-and-cannot-map-to-full-record" class="depth-3">Case 6: learner used Listbox and cannot map to full record</a></li>
+<li><a href="#advanced-facilitation-cues-for-strong-groups" class="depth-2">Advanced facilitation cues for strong groups</a></li>
+<li><a href="#reinforcement-examples-for-concept-transfer" class="depth-2">Reinforcement examples for concept transfer</a></li>
+<li><a href="#completion-rubric-for-grading-or-checkoff" class="depth-2">Completion rubric for grading or checkoff</a></li>
+<li><a href="#required-criteria" class="depth-3">Required criteria</a></li>
+<li><a href="#common-fail-signals" class="depth-3">Common fail signals</a></li>
+<li><a href="#recovery-path-if-learner-fails-one-criterion" class="depth-3">Recovery path if learner fails one criterion</a></li>
+<li><a href="#end-of-hour-reflection-prompts" class="depth-2">End-of-hour reflection prompts</a></li>
+<li><a href="#final-instructor-summary-paragraph" class="depth-2">Final instructor summary paragraph</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour4_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day5_Hour4_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour3_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour1_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

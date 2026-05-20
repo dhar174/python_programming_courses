@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 5, Hour 4: Dictionary Iteration + Counting Pattern (Course Hour 20) | Basics Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="basics">
+    <meta name="lecture-day" content="5">
+    <meta name="lecture-hour" content="4">
+    <meta name="lecture-source" content="Basics/lessons/lecture/Day5_Hour4_Basics.md">
+
+    <link rel="prev" href="Day5_Hour3_Basics.html">
+    <link rel="next" href="Day6_Hour1_Basics.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="basics" data-day="5" data-hour="4">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Basics</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-05/index.html">Day 5</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 4</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Basics</span>
+                <h1 class="lecture-title">Day 5, Hour 4: Dictionary Iteration + Counting Pattern (Course Hour 20)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 5</span>
+                    <span class="lecture-meta-item">Hour 4</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour1_Basics.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day5_Hour4_Basics.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <p><strong>Python Programming Basics – Session 5</strong></p>
+<p><strong>Course:</strong> Python Programming (Basics)<br>
+<strong>Runbook alignment:</strong> Session 5, Course Hour 20 – Dictionary iteration + counting pattern<br>
+<strong>Duration:</strong> 60 minutes<br>
+<strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
+<strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
+<hr>
+<h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
+<blockquote>
+<p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 20 — the final hour of Session 5 and the capstone of our four-hour journey through Python's core data structures. Everything this hour builds directly on Hour 19 (dictionaries fundamentals). Learners already know how to create dictionaries, access values with bracket notation and <code>get()</code>, add and update entries, and remove keys. This hour adds the missing piece: <em>traversal</em>. We will walk through all three dictionary iteration methods — <code>keys()</code>, <code>values()</code>, and <code>items()</code> — and then develop the <strong>counting pattern</strong>, the single most practically useful dictionary idiom beginners will encounter. The word-frequency counter is the canonical demonstration of the counting pattern, and it is tangible enough that learners immediately see where it applies in real programs (log analysis, survey results, inventory tracking, analytics). Stay firmly within Basics scope: no <code>collections.Counter</code>, no <code>defaultdict</code>, no dictionary comprehensions. The goal is that every learner leaves this hour able to write a frequency counter from scratch and explain every line. The live demo is typed in front of the class — do not paste pre-written code. Every "Say:" block is written to be read nearly verbatim; adapt to your natural voice but do not skip the conceptual scaffolding — it is load-bearing.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Iterate through a dictionary's keys, values, and key-value pairs using <code>keys()</code>, <code>values()</code>, and <code>items()</code>, and choose the right method for the task at hand.</li>
+<li>Explain in plain language what <code>dict.items()</code> returns and why unpacking <code>for key, value in d.items()</code> is more readable than alternatives.</li>
+<li>Write a frequency-counting loop from scratch using the <code>d.get(word, 0) + 1</code> pattern, and explain step by step why this pattern handles both the 'first time we see a word' and the 'word already counted' cases in a single line.</li>
+<li>Sort and display dictionary results using <code>sorted(d.items())</code>, print aligned output with f-strings, and identify the most-frequent item without any library imports.</li>
+<li>Build a complete Word Counter program: read a sentence, split it into words, build a frequency dictionary, handle punctuation and capitalisation as optional extensions, and print a clean results table."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Reconnect to Hour 19 (dicts fundamentals); introduce the iteration question</li>
+<li><strong>0:05–0:15</strong> Dictionary iteration: <code>keys()</code>, <code>values()</code>, and <code>items()</code> — all three with examples and comparison</li>
+<li><strong>0:15–0:28</strong> The counting pattern — three progressive builds: blank dict → manual <code>if</code>-branch → elegant <code>get()</code> one-liner</li>
+<li><strong>0:28–0:35</strong> Sorting and displaying results — <code>sorted()</code>, aligned f-string output, finding the most common item</li>
+<li><strong>0:35–0:45</strong> Live demo: Word Frequency Counter — typed live from blank file</li>
+<li><strong>0:45–0:57</strong> Hands-on lab: Word Counter — guided with hints, full walkthrough solution</li>
+<li><strong>0:57–1:00</strong> Session 5 wrap-up, forward look to Session 6, exit ticket</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open two clean, blank files before class: <code>hour20_word_freq_demo.py</code> for the live demo and <code>hour20_lab_word_counter.py</code> as a guided starting shell for learners.</li>
+<li>Have a Python REPL terminal open alongside your editor — you will use it for quick interactive experiments in Sections 4 and 5.</li>
+<li>Prepare a short "starter sentence" of 12–15 words to type into the demo. Something concrete and slightly repetitive works best; for example: <code>"the quick brown fox jumps over the lazy dog and the fox"</code>. The repeated words make the counting effect immediately visible.</li>
+<li>This is the last instructional hour of Session 5. Plan a slightly longer debrief (3–5 minutes) to celebrate what learners have accomplished across all four hours today before the session ends.</li>
+<li>Confirm learners are comfortable with the <code>get()</code> method from Hour 19. If any learners missed Hour 19 or look uncertain, pair them with a neighbour during the lab — <code>get()</code> is the cornerstone of this hour.</li>
+<li>Have a whiteboard or screen annotation ready for Section 5 to draw the "before / after" state of a dictionary as each word is processed in the counting loop.</li>
+</ul>
+<p><strong>Say:</strong> "Open a fresh file called <code>hour20_word_freq_demo.py</code> and have your terminal ready. We are in the final hour of Day 5 and we are going to finish strong — because what we build today is one of the most genuinely useful patterns you will carry with you into every Python project you ever write."</p>
+<hr>
+<h2 id="3-opening-script-reconnect-to-earlier-learning-5-minutes">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</h2>
+<h3 id="31-quick-recap-from-hour-19">3.1 Quick recap from Hour 19</h3>
+<p><strong>Say:</strong>
+"Let's take a quick minute and make sure we are all standing on the same ground before we build on top of it. Last hour we met dictionaries. Who can remind me — in one sentence — what makes a dictionary different from a list?</p>
+<p>…</p>
+<p>Right. A list stores values in <em>order</em> and you access them by <em>position</em> — by index number. A dictionary stores values by <em>meaning</em> — by a key you choose. Instead of saying 'give me item at index 0', you say 'give me the value for this key'. That shift from position to meaning is what makes dictionaries so powerful.</p>
+<p>We also learned the most important safety rule: never use bare bracket notation <code>d[key]</code> on a key you are not certain exists, because Python will raise a <code>KeyError</code> and your program will crash. Instead, use <code>d.get(key)</code> or <code>d.get(key, some_default)</code> — which returns <code>None</code> or your default silently if the key is not present.</p>
+<p>Let's do a ten-second mental check: in your head, or by typing it out quickly — how do you create a dictionary with three entries? And how do you safely get the value for a key that might not be there? … Great. Hold all of that, because we are about to take dictionaries from <em>storage</em> to <em>action</em>."</p>
+<h3 id="32-the-iteration-gap">3.2 The iteration gap</h3>
+<p><strong>Say:</strong>
+"Here is the gap we filled in Hour 19: we could <em>create</em> a dictionary, <em>read</em> from it, <em>update</em> it, and <em>safely access</em> it. But here is something we haven't asked yet: what do you do when you need to look at <em>every entry</em> in a dictionary — not just one specific key, but all of them?</p>
+<p>Imagine you have a dictionary of fifty inventory items and their quantities. You want to print a full stock report. Or you have a dictionary of student names and scores and you want to find the highest scorer. Or — and this is where we are going today — you have a dictionary that is being <em>built up</em> as a program runs, one entry at a time, counting how many times each word appears in a text.</p>
+<p>To do any of those things, you need to <em>iterate</em> through a dictionary. You need a for-loop that walks through every key, every value, or every key-value pair in turn. That is precisely what we are going to learn in the first part of this hour — and then we are going to use that knowledge to build something genuinely impressive."</p>
+<hr>
+<h2 id="4-dictionary-iteration-methods">4) Dictionary Iteration Methods</h2>
+<h3 id="41-the-three-iteration-views">4.1 The three iteration views</h3>
+<p><strong>Say:</strong>
+"Python gives you three built-in methods for looking at a dictionary's contents in a loop. Think of them as three different <em>views</em> of the same data:</p>
+<ul>
+<li><code>dict.keys()</code> — gives you just the keys</li>
+<li><code>dict.values()</code> — gives you just the values</li>
+<li><code>dict.items()</code> — gives you key-value pairs together</li>
+</ul>
+<p>Let's look at each one. I'm going to type these in the REPL so you can see the output immediately."</p>
+<p>Type in the REPL:</p>
+<pre><code class="language-python">inventory = {
+    &quot;apples&quot;: 12,
+    &quot;bananas&quot;: 5,
+    &quot;oranges&quot;: 8,
+    &quot;pears&quot;: 3,
+    &quot;grapes&quot;: 20,
+}
+</code></pre>
+<p><strong>Say:</strong> "There is our dictionary from Hour 19. Now let's iterate with each of the three methods."</p>
+<h3 id="42-iterating-over-keys">4.2 Iterating over keys</h3>
+<p><strong>Say:</strong> "First — <code>keys()</code>. When you use a plain <code>for</code> loop on a dictionary without calling any method, Python iterates over the keys by default. But calling <code>.keys()</code> explicitly makes the intent obvious. Both of these are equivalent:"</p>
+<pre><code class="language-python"># Implicit key iteration (works, but intent is hidden)
+for item in inventory:
+    print(item)
+
+# Explicit key iteration (clearer)
+for item in inventory.keys():
+    print(item)
+</code></pre>
+<p><strong>Say:</strong>
+"Both loops print the same thing:</p>
+<pre><code>apples
+bananas
+oranges
+pears
+grapes
+</code></pre>
+<p><strong>[Ask learners]</strong> When would iterating over just the keys be useful? Think of a real example.</p>
+<p>… Good answers: printing a menu of available items, checking whether a key exists without caring about the value, building a sorted list of category names. If you only need the key, <code>keys()</code> is the right tool.</p>
+<p>One style note: when you see experienced Python developers write <code>for k in d:</code> without calling <code>.keys()</code>, they are using the default-iterates-over-keys behaviour. Both styles are correct. In teaching code I will usually write <code>.keys()</code> explicitly so the intent is visible to you."</p>
+<h3 id="43-iterating-over-values">4.3 Iterating over values</h3>
+<p><strong>Say:</strong> "Next — <code>values()</code>. Sometimes you genuinely do not care what the keys are. You just want to process all the values."</p>
+<pre><code class="language-python"># Sum all quantities without caring about which item they belong to
+total = 0
+for qty in inventory.values():
+    total += qty
+
+print(f&quot;Total items in stock: {total}&quot;)
+# Output: Total items in stock: 48
+</code></pre>
+<p><strong>Say:</strong>
+"That's clean and readable. We don't need the item names at all, so we don't ask for them.</p>
+<p><strong>[Ask learners]</strong> What other things might you do with just the values? … Find the average, the minimum, the maximum, collect them into a list for further analysis — yes, all of those are great use cases.</p>
+<p>A common mistake is trying to call <code>.values()</code> when you actually need both the key and the value — for example, if you want to print 'apples: 12'. In that situation, <code>values()</code> is the wrong choice. You need <code>items()</code>, which we are coming to next."</p>
+<h3 id="44-iterating-over-items-the-workhorse">4.4 Iterating over items — the workhorse</h3>
+<p><strong>Say:</strong>
+"The third method — <code>items()</code> — is the one you will use most often. It returns each entry as a <em>tuple</em> of <code>(key, value)</code>. And because we learned tuple unpacking in Hour 17, we can unpack that tuple right in the <code>for</code> loop header:"</p>
+<pre><code class="language-python">for item, qty in inventory.items():
+    print(f&quot;{item}: {qty}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Run that and you get:</p>
+<pre><code>apples: 12
+bananas: 5
+oranges: 8
+pears: 3
+grapes: 20
+</code></pre>
+<p>This is beautiful. The loop variable names <code>item</code> and <code>qty</code> are descriptive and chosen by you — they map directly onto the semantic meaning of your key and value. This is a pattern you will see in almost every real Python program that works with dictionaries.</p>
+<p>Let me show you the same loop without the unpacking trick, so you can see why unpacking is the preferred style:"</p>
+<pre><code class="language-python"># Without unpacking — verbose and less readable
+for pair in inventory.items():
+    print(f&quot;{pair[0]}: {pair[1]}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"That works exactly the same way, but <code>pair[0]</code> and <code>pair[1]</code> are far less expressive than <code>item</code> and <code>qty</code>. The unpacking form is not just aesthetic — it makes your code self-documenting. Always prefer <code>for key, value in d.items()</code> when you need both sides of the pair."</p>
+<h3 id="45-comparison-when-to-use-which">4.5 Comparison: when to use which</h3>
+<p><strong>Say:</strong>
+"Let me put all three methods side by side as a decision guide you can refer back to:"</p>
+<pre><code class="language-python">inventory = {&quot;apples&quot;: 12, &quot;bananas&quot;: 5, &quot;oranges&quot;: 8}
+
+# Use .keys() when you only need the keys
+print(&quot;Available items:&quot;)
+for item in inventory.keys():
+    print(f&quot;  - {item}&quot;)
+
+# Use .values() when you only need the values
+total = sum(inventory.values())
+print(f&quot;Total stock: {total}&quot;)
+
+# Use .items() when you need both — most common case
+print(&quot;\nFull inventory:&quot;)
+for item, qty in inventory.items():
+    print(f&quot;  {item:&lt;12} {qty:&gt;4}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Notice that last print. The <code>:&lt;12</code> and <code>:&gt;4</code> are <em>format specifiers</em> inside f-strings. <code>:&lt;12</code> means 'left-align in a field 12 characters wide', and <code>:&gt;4</code> means 'right-align in a field 4 characters wide'. This makes the output line up nicely in columns — we will use this again when we print the word frequency results.</p>
+<p>Output:</p>
+<pre><code>Full inventory:
+  apples        12
+  bananas         5
+  oranges         8
+</code></pre>
+<p><strong>[Ask learners]</strong> What does <code>dict.items()</code> actually return? Can you describe it in one sentence?</p>
+<p>… It returns a view of the dictionary as a sequence of <code>(key, value)</code> tuples. 'View' means it reflects the dictionary's current state — if you add or remove entries, the view updates automatically. For our purposes today, the important thing is: it gives you pairs you can unpack in a for-loop."</p>
+<hr>
+<h2 id="5-the-counting-pattern">5) The Counting Pattern</h2>
+<h3 id="51-the-problem-it-solves">5.1 The problem it solves</h3>
+<p><strong>Say:</strong>
+"Now we are going to build the counting pattern — and I want you to understand <em>why</em> it exists before we look at how it works.</p>
+<p>Here is a concrete scenario. I give you a sentence:</p>
+<pre><code>'the quick brown fox jumps over the lazy dog and the fox'
+</code></pre>
+<p>I want to know how many times each word appears. 'the' appears three times. 'fox' appears twice. Everything else appears once.</p>
+<p>How would you approach this? The natural data structure is a dictionary: the word is the key, and the count is the value. But here is the challenge — you cannot know in advance which words will appear. You have to <em>build</em> the dictionary as you go, word by word, and you have to handle two cases:</p>
+<ol>
+<li>You see a word for the <strong>first time</strong> — it is not yet in the dictionary. You need to add it with a count of 1.</li>
+<li>You see a word that is <strong>already in the dictionary</strong>. You need to increase its count by 1.</li>
+</ol>
+<p>Your loop has to decide, every iteration, which case it is in. Let's build up to the most elegant solution step by step."</p>
+<h3 id="52-step-1-the-manual-if-branch-approach">5.2 Step 1 — the manual if-branch approach</h3>
+<p><strong>Say:</strong>
+"The most literal translation of the two-case logic is a simple <code>if</code>-statement:"</p>
+<pre><code class="language-python">sentence = &quot;the quick brown fox jumps over the lazy dog and the fox&quot;
+words = sentence.split()   # split on spaces → list of word strings
+
+counts: dict[str, int] = {}   # start with an empty dictionary
+
+for word in words:
+    if word in counts:
+        # Word already seen — increment
+        counts[word] = counts[word] + 1
+    else:
+        # First time seeing this word — initialise to 1
+        counts[word] = 1
+
+print(counts)
+</code></pre>
+<p><strong>Say:</strong>
+"Let's trace through the first few iterations together. I will draw the state of the dictionary on the board as we go.</p>
+<ul>
+<li><code>word = 'the'</code> → not in <code>counts</code> → <code>counts = {'the': 1}</code></li>
+<li><code>word = 'quick'</code> → not in <code>counts</code> → <code>counts = {'the': 1, 'quick': 1}</code></li>
+<li><code>word = 'brown'</code> → not in <code>counts</code> → <code>counts = {'the': 1, 'quick': 1, 'brown': 1}</code></li>
+<li>(skip ahead…)</li>
+<li><code>word = 'the'</code> again → IS in <code>counts</code> → <code>counts['the']</code> becomes <code>1 + 1 = 2</code></li>
+<li><code>word = 'the'</code> a third time → IS in <code>counts</code> → <code>counts['the']</code> becomes <code>2 + 1 = 3</code></li>
+</ul>
+<p>The output will be:</p>
+<pre><code class="language-python">{'the': 3, 'quick': 1, 'brown': 1, 'fox': 2, 'jumps': 1,
+ 'over': 1, 'lazy': 1, 'dog': 1, 'and': 1}
+</code></pre>
+<p>This is <strong>completely correct</strong>. The <code>if word in counts</code> branch handles both cases perfectly. If you understand this version, you already understand the counting pattern conceptually. Keep it — it is not wrong.</p>
+<p>But Python has a one-liner that eliminates the <code>if</code>/<code>else</code> entirely, and once you see how it works, you will use it every time."</p>
+<h3 id="53-step-2-introducing-get-as-the-bridge">5.3 Step 2 — introducing <code>get()</code> as the bridge</h3>
+<p><strong>Say:</strong>
+"Recall from Hour 19: <code>d.get(key, default)</code> returns the value for <code>key</code> if it exists, or returns <code>default</code> if it does not — without raising a <code>KeyError</code>.</p>
+<p>Think about our two cases again:
+- First time seeing 'the': <code>counts.get('the', 0)</code> → returns <code>0</code> (the default)
+- Second time seeing 'the': <code>counts.get('the', 0)</code> → returns <code>1</code> (the stored value)</p>
+<p>In <em>both</em> cases, the expression <code>counts.get(word, 0) + 1</code> gives us the right new value:
+- First time: <code>0 + 1 = 1</code> ✓
+- Second time: <code>1 + 1 = 2</code> ✓
+- Third time: <code>2 + 1 = 3</code> ✓</p>
+<p>So we can collapse the <code>if</code>/<code>else</code> into a single assignment:"</p>
+<pre><code class="language-python">counts[word] = counts.get(word, 0) + 1
+</code></pre>
+<p><strong>Say:</strong>
+"Read this line aloud with me: 'Set <code>counts[word]</code> equal to whatever is currently in <code>counts</code> for this word — defaulting to zero if it's not there yet — plus one.'</p>
+<p>That's the whole pattern. It is one line, it handles both cases, and it is the standard Python idiom you will see in production code everywhere. Let's rewrite our counting loop using it:"</p>
+<h3 id="54-step-3-the-complete-elegant-version">5.4 Step 3 — the complete elegant version</h3>
+<pre><code class="language-python">sentence = &quot;the quick brown fox jumps over the lazy dog and the fox&quot;
+words = sentence.split()
+
+counts: dict[str, int] = {}
+
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+</code></pre>
+<p><strong>Say:</strong>
+"Four lines to build a complete word frequency counter. This is the counting pattern in its canonical form. Let me point out each piece:</p>
+<ol>
+<li><code>words = sentence.split()</code> — <code>str.split()</code> with no argument splits on any whitespace (spaces, tabs, newlines) and returns a list of strings.</li>
+<li><code>counts: dict[str, int] = {}</code> — we start with a completely empty dictionary. The type hint <code>dict[str, int]</code> is optional but communicates our intent: string keys, integer values.</li>
+<li><code>for word in words:</code> — iterate through every word in the list.</li>
+<li><code>counts[word] = counts.get(word, 0) + 1</code> — the counting idiom. </li>
+</ol>
+<p><strong>[Ask learners]</strong> What is the value of <code>counts.get('elephant', 0)</code> in this program? And why?</p>
+<p>… Zero — because 'elephant' is not a word in our sentence, so <code>get()</code> returns the default of 0. The dictionary does not get a new entry for 'elephant' from the <code>get()</code> call — <code>get()</code> only <em>reads</em>, it does not create. The new entry is only created if <code>elephant</code> actually appeared in the loop and we assigned <code>counts['elephant'] = 0 + 1</code>."</p>
+<h3 id="55-side-by-side-comparison-if-branch-vs-get-pattern">5.5 Side-by-side comparison: <code>if</code>-branch vs <code>get()</code> pattern</h3>
+<p><strong>Say:</strong>
+"Let me put both versions next to each other so you can decide which you prefer:"</p>
+<pre><code class="language-python"># Version 1: explicit if-branch (clear, verbose)
+for word in words:
+    if word in counts:
+        counts[word] = counts[word] + 1
+    else:
+        counts[word] = 1
+
+# Version 2: get() pattern (concise, idiomatic)
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+</code></pre>
+<p><strong>Say:</strong>
+"Both versions produce identical output. Version 1 is perfectly fine and many beginners find it easier to read initially because the two cases are spelled out explicitly. Version 2 is what you'll see in professional Python code. The runbook for this course lists both as acceptable for the lab completion criteria — so you are free to use either.</p>
+<p>My recommendation: understand Version 1 first so the logic is solid in your head, then adopt Version 2 once you feel confident. The <code>get()</code> pattern rewards you with fewer lines and fewer opportunities to introduce a typo."</p>
+<hr>
+<h2 id="6-sorting-and-displaying-results">6) Sorting and Displaying Results</h2>
+<h3 id="61-why-sorting-matters">6.1 Why sorting matters</h3>
+<p><strong>Say:</strong>
+"We now have a dictionary of word counts. But if we just <code>print(counts)</code>, the output is unsorted and potentially hard to read, especially for a large text. Let's look at how to produce useful, well-formatted output."</p>
+<h3 id="62-sorting-with-sortedditems">6.2 Sorting with <code>sorted(d.items())</code></h3>
+<p><strong>Say:</strong>
+"We cannot sort a dictionary in place — dictionaries in Python 3.7+ maintain insertion order, but they don't have a sort method like lists do. Instead, we sort the <em>items</em> of the dictionary into a list of tuples, and then iterate over that sorted list.</p>
+<p><code>sorted(d.items())</code> returns a list of <code>(key, value)</code> tuples sorted by key alphabetically:"</p>
+<pre><code class="language-python">sentence = &quot;the quick brown fox jumps over the lazy dog and the fox&quot;
+words = sentence.split()
+counts: dict[str, int] = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+# Sort alphabetically by word (the key)
+for word, count in sorted(counts.items()):
+    print(f&quot;{word}: {count}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>and: 1
+brown: 1
+dog: 1
+fox: 2
+jumps: 1
+lazy: 1
+over: 1
+quick: 1
+the: 3
+</code></pre>
+<p><strong>Say:</strong>
+"Clean and alphabetical. Notice that <code>sorted()</code> without any extra arguments sorts tuples by their first element — which is the key (the word). That gives us alphabetical order for free."</p>
+<h3 id="63-sorting-by-count-descending">6.3 Sorting by count (descending)</h3>
+<p><strong>Say:</strong>
+"What if we want to sort by <em>frequency</em> — most common word first? We use the <code>key</code> parameter of <code>sorted()</code> with a small function. Don't worry about the <code>lambda</code> syntax right now — just read it as 'sort using the second element of each pair, in reverse':"</p>
+<pre><code class="language-python"># Sort by count, highest first
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f&quot;{word}: {count}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>the: 3
+fox: 2
+quick: 1
+brown: 1
+jumps: 1
+over: 1
+lazy: 1
+dog: 1
+and: 1
+</code></pre>
+<p><strong>Say:</strong>
+"The most frequent word is at the top. If <code>lambda</code> looks mysterious right now, that is fine — we cover it properly in a later session. The pattern <code>key=lambda pair: pair[1]</code> simply means 'when comparing two pairs, use the second element — the count — as the sort key'. You can copy this pattern today without fully understanding every piece of it."</p>
+<h3 id="64-printing-aligned-output">6.4 Printing aligned output</h3>
+<p><strong>Say:</strong>
+"For a professional-looking report, we can use f-string format specifiers to align the columns:"</p>
+<pre><code class="language-python">print(f&quot;\n{'Word':&lt;15} {'Count':&gt;5}&quot;)
+print(&quot;-&quot; * 22)
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f&quot;{word:&lt;15} {count:&gt;5}&quot;)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>Word              Count
+----------------------
+the                   3
+fox                   2
+quick                 1
+brown                 1
+jumps                 1
+over                  1
+lazy                  1
+dog                   1
+and                   1
+</code></pre>
+<p><strong>Say:</strong>
+"The <code>:&lt;15</code> format specifier left-aligns the word in a field 15 characters wide. The <code>:&gt;5</code> right-aligns the count in a field 5 characters wide. Headers use the same specifiers so the columns line up perfectly. This is polish, not functionality — but learners who add this to their lab submission will have genuinely impressive output."</p>
+<h3 id="65-finding-the-most-common-item">6.5 Finding the most common item</h3>
+<p><strong>Say:</strong>
+"One more useful trick: finding the single most common word. We can use <code>max()</code> with the same key trick:"</p>
+<pre><code class="language-python">most_common_word = max(counts, key=counts.get)
+print(f&quot;Most common word: '{most_common_word}' ({counts[most_common_word]} times)&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"<code>max(counts, key=counts.get)</code> iterates over the keys of <code>counts</code> and finds the one whose associated value is the largest. It uses <code>counts.get</code> — note: no parentheses, we are passing the method itself as a function — as the comparison key. The result is the key with the highest count.</p>
+<p>This is an advanced-looking line that you can use without fully understanding its mechanics yet. File it away as a useful idiom: 'to find the key with the maximum value in a dictionary, use <code>max(d, key=d.get)</code>'."</p>
+<hr>
+<h2 id="7-live-demo-word-frequency-counter">7) Live Demo: Word Frequency Counter</h2>
+<h3 id="71-transition-to-the-demo">7.1 Transition to the demo</h3>
+<p><strong>Say:</strong>
+"Everything we have covered in the last twenty minutes comes together right now. We are going to type a complete word frequency counter from scratch — no pasting, no shortcuts. I want you to type along with me so your muscle memory builds. If you fall behind, don't panic — keep watching, and I will pause after each logical block.</p>
+<p>Open <code>hour20_word_freq_demo.py</code> if it isn't already open."</p>
+<h3 id="72-full-demo-type-live">7.2 Full demo — type live</h3>
+<p><strong>Say:</strong> "Let's start with the sentence and the basic counting loop. I will use <code>input()</code> so the user can provide their own text:"</p>
+<pre><code class="language-python"># hour20_word_freq_demo.py
+# Word Frequency Counter — live demo
+
+# Step 1: Get a sentence from the user
+sentence: str = input(&quot;Enter a sentence: &quot;)
+
+# Step 2: Split into words
+words: list[str] = sentence.split()
+
+# Step 3: Build a frequency dictionary
+counts: dict[str, int] = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+</code></pre>
+<p><strong>Say:</strong>
+"Three steps, and we already have a working frequency counter. Let's run it with our test sentence: <code>the quick brown fox jumps over the lazy dog and the fox</code></p>
+<p>Pause: what do you expect <code>counts</code> to look like? … Type your prediction. Now let's add output and run it."</p>
+<pre><code class="language-python"># Step 4: Display results sorted by frequency
+print(f&quot;\nWord frequency for: '{sentence}'&quot;)
+print(f&quot;Total words: {len(words)} | Unique words: {len(counts)}&quot;)
+print()
+print(f&quot;{'Word':&lt;15} {'Count':&gt;5}&quot;)
+print(&quot;-&quot; * 22)
+
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f&quot;{word:&lt;15} {count:&gt;5}&quot;)
+
+# Step 5: Most common word
+most_common = max(counts, key=counts.get)
+print()
+print(f&quot;Most common: '{most_common}' ({counts[most_common]} times)&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Run the program. Enter: <code>the quick brown fox jumps over the lazy dog and the fox</code></p>
+<p>Expected output:</p>
+<pre><code>Word frequency for: 'the quick brown fox jumps over the lazy dog and the fox'
+Total words: 12 | Unique words: 9
+
+Word              Count
+----------------------
+the                   3
+fox                   2
+and                   1
+brown                 1
+dog                   1
+jumps                 1
+lazy                  1
+over                  1
+quick                 1
+
+Most common: 'the' (3 times)
+</code></pre>
+<p><strong>[Ask learners]</strong> What happens if two words are tied for most common? … <code>max()</code> returns the first one it encounters in that case — whichever comes first in the dictionary's internal order. That is fine for our purposes.</p>
+<p>Now let's try a deliberately tricky input: <code>Hello hello HELLO world world</code></p>
+<p>What do you predict the output will be?</p>
+<p>… Run it. You get:</p>
+<pre><code>Hello                 1
+hello                 1
+HELLO                 1
+world                 2
+</code></pre>
+<p><strong>[Ask learners]</strong> Is that what we actually want? 'Hello', 'hello', and 'HELLO' are all three counted separately — because Python strings are case-sensitive. This is the case-inconsistency pitfall, and we will fix it in the extension section. For now, the program is <em>correct</em> by Python's rules, even if the output is not what a human reader might expect."</p>
+<hr>
+<h2 id="8-hands-on-lab-word-counter">8) Hands-on Lab: Word Counter</h2>
+<h3 id="81-lab-specification">8.1 Lab specification</h3>
+<p><strong>Say:</strong>
+"You are now going to build your own version of the Word Counter independently. Here is the specification. Open <code>hour20_lab_word_counter.py</code>."</p>
+<p><strong>Lab prompt (display on screen or dictate):</strong></p>
+<pre><code>Lab: Word Counter
+Write a Python program that:
+
+1. Prompts the user to enter a sentence (any length).
+2. Splits the sentence into individual words.
+3. Builds a frequency dictionary: each unique word maps to the
+   number of times it appears in the sentence.
+4. Prints each word and its count — one word per line.
+
+Minimum requirements:
+- Correct counts for all words.
+- Uses the `d.get(word, 0) + 1` pattern OR an if-check approach.
+- Iterates using `.items()` to print results.
+
+Optional extensions (if you finish early):
+- Normalize all words to lowercase before counting.
+- Strip trailing punctuation (period, comma, exclamation mark)
+  using str.replace().
+- Sort the output alphabetically or by frequency.
+- Print the most common word at the end.
+- Print the total word count and the unique word count.
+</code></pre>
+<h3 id="82-hints-to-offer-if-learners-are-stuck">8.2 Hints to offer if learners are stuck</h3>
+<p><strong>Say (if asked):</strong>
+"If you are not sure where to start, think about it in steps:
+1. Use <code>input()</code> to get the sentence.
+2. Use <code>.split()</code> to turn it into a list.
+3. Start with <code>counts = {}</code>.
+4. Write a for-loop over the words and apply the counting pattern.
+5. Write a second for-loop using <code>.items()</code> to print."</p>
+<p><strong>Starter shell (optional — write on board or paste into their file):</strong></p>
+<pre><code class="language-python"># hour20_lab_word_counter.py
+
+sentence = input(&quot;Enter a sentence: &quot;)
+words = sentence.split()
+counts = {}
+
+# TODO: build the frequency dictionary
+
+# TODO: print each word and its count
+</code></pre>
+<h3 id="83-circulate-and-observe">8.3 Circulate and observe</h3>
+<p><strong>Say:</strong>
+"You have 10–12 minutes. I will come around. When you finish the minimum requirements, try the optional extensions — they are genuinely interesting and not far out of reach."</p>
+<p><strong>While circulating, watch for:</strong>
+- Learners who iterate the list correctly but forget to start with <code>counts = {}</code>.
+- Learners who print <code>counts</code> directly instead of iterating with <code>.items()</code>.
+- Learners who try to modify the dictionary inside the iteration loop (see pitfalls section).
+- Learners who skip the <code>get()</code> pattern and use <code>counts[word] += 1</code> — this will raise a <code>KeyError</code> on the first encounter; redirect them to initialise with <code>0</code> first or use <code>get()</code>.</p>
+<h3 id="84-full-walkthrough-solution">8.4 Full walkthrough solution</h3>
+<p><strong>Say:</strong>
+"Let's walk through a complete solution. I'll build it from the minimum requirements up to the optional extensions so everyone can see the whole arc."</p>
+<p><strong>Minimum solution:</strong></p>
+<pre><code class="language-python"># hour20_lab_word_counter.py — minimum solution
+
+sentence: str = input(&quot;Enter a sentence: &quot;)
+words: list[str] = sentence.split()
+
+counts: dict[str, int] = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+for word, count in counts.items():
+    print(f&quot;{word}: {count}&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Seven lines including the blank one. If you got this working, you have fully met the lab requirements. Now let's look at each optional extension."</p>
+<p><strong>Extension 1 — lowercase normalization:</strong></p>
+<pre><code class="language-python">sentence: str = input(&quot;Enter a sentence: &quot;)
+words: list[str] = sentence.split()
+
+counts: dict[str, int] = {}
+for word in words:
+    word = word.lower()   # normalize before counting
+    counts[word] = counts.get(word, 0) + 1
+</code></pre>
+<p><strong>Say:</strong>
+"We apply <code>word.lower()</code> <em>before</em> the counting step. Now 'Hello', 'hello', and 'HELLO' all map to the same key <code>'hello'</code>. One line change, significant improvement in results."</p>
+<p><strong>Extension 2 — simple punctuation stripping:</strong></p>
+<pre><code class="language-python">for word in words:
+    word = word.lower()
+    word = word.replace(&quot;,&quot;, &quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;!&quot;, &quot;&quot;).replace(&quot;?&quot;, &quot;&quot;)
+    counts[word] = counts.get(word, 0) + 1
+</code></pre>
+<p><strong>Say:</strong>
+"We chain <code>str.replace()</code> calls to remove common punctuation characters. <code>replace(',', '')</code> replaces every comma in the string with an empty string — effectively deleting it. We handle period, exclamation mark, and question mark the same way.</p>
+<p>Note: this is a simple approach that works well for typical sentences. In later sessions we will see more powerful tools (like <code>str.strip()</code> for leading/trailing characters, and eventually regular expressions for advanced pattern matching). But for Basics scope, chaining <code>replace()</code> is perfectly acceptable and transparent.</p>
+<p>After stripping: <code>'hello,'</code> becomes <code>'hello'</code>, <code>'world!'</code> becomes <code>'world'</code>."</p>
+<p><strong>Full enhanced solution:</strong></p>
+<pre><code class="language-python"># hour20_lab_word_counter.py — full solution with extensions
+
+sentence: str = input(&quot;Enter a sentence: &quot;)
+words: list[str] = sentence.split()
+
+counts: dict[str, int] = {}
+for word in words:
+    # Normalize: lowercase and strip common punctuation
+    word = word.lower()
+    for punct in (&quot;,&quot;, &quot;.&quot;, &quot;!&quot;, &quot;?&quot;, &quot;;&quot;, &quot;:&quot;):
+        word = word.replace(punct, &quot;&quot;)
+    counts[word] = counts.get(word, 0) + 1
+
+print(f&quot;\nResults for: '{sentence}'&quot;)
+print(f&quot;Total words: {len(words)} | Unique words: {len(counts)}&quot;)
+print()
+print(f&quot;{'Word':&lt;15} {'Count':&gt;5}&quot;)
+print(&quot;-&quot; * 22)
+
+for word, count in sorted(counts.items(), key=lambda pair: pair[1], reverse=True):
+    print(f&quot;{word:&lt;15} {count:&gt;5}&quot;)
+
+if counts:
+    most_common = max(counts, key=counts.get)
+    print(f&quot;\nMost common: '{most_common}' ({counts[most_common]} times)&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"Notice one small refinement: we added <code>if counts:</code> before calling <code>max()</code>. If the user entered an empty string, <code>sentence.split()</code> returns an empty list, <code>counts</code> remains empty, and <code>max()</code> on an empty dictionary raises a <code>ValueError</code>. The <code>if counts:</code> guard prevents that crash gracefully.</p>
+<p><strong>[Ask learners]</strong> What does <code>if counts:</code> evaluate to when <code>counts</code> is empty?</p>
+<p>… An empty dictionary is falsy in Python — just like an empty list, empty string, and zero. So <code>if counts:</code> is <code>True</code> when the dictionary has at least one entry and <code>False</code> when it's empty. Clean and Pythonic."</p>
+<h3 id="85-design-discussion">8.5 Design discussion</h3>
+<p><strong>Say:</strong>
+"Take thirty seconds and think about this design choice: we normalize the word <em>inside</em> the counting loop, not before it. Could we have normalized all words first, before the loop?</p>
+<p>…</p>
+<p>Yes — we could do <code>words = [w.lower() for w in sentence.split()]</code> before the loop. But we haven't covered list comprehensions yet. The inside-the-loop approach is perfectly clear, step-by-step, and follows the principle of doing one thing at a time.</p>
+<p>Also notice that we used a <code>for punct in (...):</code> loop inside the counting loop to remove each punctuation character. That inner loop is simple and easy to extend — if you want to also remove brackets or quotes, you just add them to the tuple. When you learn more advanced tools later, you can revisit this code and refactor it. But for now, it is readable, correct, and handles real-world input."</p>
+<hr>
+<h2 id="9-common-pitfalls">9) Common Pitfalls</h2>
+<p><strong>Say:</strong>
+"Before we wrap up, let's name the three pitfalls I see most often with this pattern. These are the things to watch out for — both in your own code and when helping a classmate."</p>
+<h3 id="91-pitfall-1-punctuation-attached-to-words">9.1 Pitfall 1: punctuation attached to words</h3>
+<p><strong>Say:</strong>
+"The most common issue is punctuation that attaches itself to words. Python's <code>str.split()</code> splits on whitespace — but it does <em>not</em> strip punctuation from the individual tokens. So if your sentence is:</p>
+<pre><code>'Hello, world! The fox said: hello.'
+</code></pre>
+<p>then <code>split()</code> gives you <code>['Hello,', 'world!', 'The', 'fox', 'said:', 'hello.']</code>.</p>
+<p>Notice: <code>'Hello,'</code> (with a comma) and <code>'hello.'</code> (with a full stop) are treated as completely different words from each other and from <code>'Hello'</code>. Your count will show three separate entries instead of one.</p>
+<p><strong>Fix:</strong> Strip punctuation before or during the counting step, as we showed in the extension. The simple <code>replace()</code> chain handles the most common cases."</p>
+<pre><code class="language-python"># Demonstrating the problem
+sentence = &quot;Hello, world! Hello.&quot;
+words = sentence.split()
+print(words)
+# ['Hello,', 'world!', 'Hello.']
+
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+# {'Hello,': 1, 'world!': 1, 'Hello.': 1}
+# Three entries — not what we wanted.
+</code></pre>
+<h3 id="92-pitfall-2-case-inconsistency">9.2 Pitfall 2: case inconsistency</h3>
+<p><strong>Say:</strong>
+"As we saw during the demo, Python treats <code>'Hello'</code>, <code>'hello'</code>, and <code>'HELLO'</code> as three different strings. Dictionary keys are exact-match — case included. A word typed at the start of a sentence will have an uppercase first letter; the same word elsewhere will be lowercase.</p>
+<p><strong>Fix:</strong> Always normalize to lowercase with <code>word.lower()</code> before using the word as a dictionary key — unless you have a specific reason to preserve case (which is rare for word counting)."</p>
+<pre><code class="language-python"># Demonstrating the problem
+words = [&quot;The&quot;, &quot;fox&quot;, &quot;and&quot;, &quot;the&quot;, &quot;dog&quot;]
+counts = {}
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+print(counts)
+# {'The': 1, 'fox': 1, 'and': 1, 'the': 1, 'dog': 1}
+# 'The' and 'the' are separate — but they should be the same word.
+
+# The fix
+counts = {}
+for word in words:
+    counts[word.lower()] = counts.get(word.lower(), 0) + 1
+print(counts)
+# {'the': 2, 'fox': 1, 'and': 1, 'dog': 1}
+</code></pre>
+<h3 id="93-pitfall-3-modifying-a-dictionary-while-iterating-over-it">9.3 Pitfall 3: modifying a dictionary while iterating over it</h3>
+<p><strong>Say:</strong>
+"This is a classic Python trap that catches beginners off guard. If you try to add or remove keys from a dictionary inside a loop that is actively iterating over that dictionary, Python raises a <code>RuntimeError</code>:</p>
+<pre><code>RuntimeError: dictionary changed size during iteration
+</code></pre>
+<p>Here is an example that triggers the error:"</p>
+<pre><code class="language-python">counts = {&quot;apple&quot;: 3, &quot;banana&quot;: 1, &quot;cherry&quot;: 2}
+
+# BROKEN — do NOT do this
+for word, count in counts.items():
+    if count == 1:
+        del counts[word]   # RuntimeError!
+</code></pre>
+<p><strong>Say:</strong>
+"The fix is to collect the keys you want to remove <em>first</em>, and then delete them <em>after</em> the loop finishes:"</p>
+<pre><code class="language-python">counts = {&quot;apple&quot;: 3, &quot;banana&quot;: 1, &quot;cherry&quot;: 2}
+
+# CORRECT — collect first, delete after
+to_remove: list[str] = []
+for word in counts:
+    if counts[word] == 1:
+        to_remove.append(word)
+for word in to_remove:
+    del counts[word]
+
+print(counts)
+# {'apple': 3, 'cherry': 2}
+</code></pre>
+<p><strong>Say:</strong>
+"You won't run into this in today's lab — because we are only reading from the dictionary inside our loop, not modifying it. But keep it in mind for future programs where you might want to filter or clean a dictionary."</p>
+<hr>
+<h2 id="10-optional-extension-lowercase-punctuation-stripping">10) Optional Extension: Lowercase + Punctuation Stripping</h2>
+<p><strong>Say:</strong>
+"Let's look at the normalization extension one more time in a focused way, so the technique is crystal clear. This section is for learners who finished the lab early and want to level up their solution."</p>
+<h3 id="101-why-normalization-matters">10.1 Why normalization matters</h3>
+<p><strong>Say:</strong>
+"Consider analysing a real paragraph — say, a few sentences from a news article. You would encounter:
+- Sentence-starting capital letters: <code>'The'</code> vs <code>'the'</code>
+- Commas: <code>'apple,'</code> vs <code>'apple'</code>
+- Periods: <code>'dog.'</code> vs <code>'dog'</code>
+- Exclamation marks, question marks, colons
+- Possibly hyphens within compound words</p>
+<p>Without normalization, your frequency counter misses patterns that a human reader would naturally group together. Normalization is not fancy — it is just good data hygiene."</p>
+<h3 id="102-strlower-fixing-case">10.2 <code>str.lower()</code> — fixing case</h3>
+<pre><code class="language-python">word = &quot;Hello&quot;
+print(word.lower())    # 'hello'
+
+word = &quot;PYTHON&quot;
+print(word.lower())    # 'python'
+
+word = &quot;already lowercase&quot;
+print(word.lower())    # 'already lowercase' (no change)
+</code></pre>
+<p><strong>Say:</strong>
+"<code>str.lower()</code> returns a <em>new</em> string with all characters converted to lowercase. It does not modify the original string — strings in Python are immutable. You must assign the result back (e.g. <code>word = word.lower()</code>) or use it directly."</p>
+<h3 id="103-strreplace-removing-punctuation">10.3 <code>str.replace()</code> — removing punctuation</h3>
+<pre><code class="language-python">word = &quot;hello,&quot;
+clean = word.replace(&quot;,&quot;, &quot;&quot;)
+print(clean)    # 'hello'
+
+word = &quot;world!&quot;
+clean = word.replace(&quot;!&quot;, &quot;&quot;)
+print(clean)    # 'world'
+</code></pre>
+<p><strong>Say:</strong>
+"<code>str.replace(old, new)</code> returns a new string with every occurrence of <code>old</code> replaced by <code>new</code>. When <code>new</code> is an empty string, every occurrence of <code>old</code> is deleted.</p>
+<p>We can chain multiple <code>replace()</code> calls on a single line:"</p>
+<pre><code class="language-python">word = &quot;Hello,&quot;
+clean = word.lower().replace(&quot;,&quot;, &quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;!&quot;, &quot;&quot;).replace(&quot;?&quot;, &quot;&quot;)
+print(clean)    # 'hello'
+</code></pre>
+<p><strong>Say:</strong>
+"Read the chain from left to right: first lowercase, then remove comma, then remove period, then remove exclamation mark, then remove question mark. Each method call receives the output of the previous one."</p>
+<h3 id="104-before-and-after-seeing-the-difference">10.4 Before and after — seeing the difference</h3>
+<pre><code class="language-python">sentence = &quot;To be, or not to be: that is the question!&quot;
+print(&quot;BEFORE normalization:&quot;)
+words_raw = sentence.split()
+counts_raw: dict[str, int] = {}
+for word in words_raw:
+    counts_raw[word] = counts_raw.get(word, 0) + 1
+for w, c in sorted(counts_raw.items()):
+    print(f&quot;  {w!r}: {c}&quot;)
+
+print(&quot;\nAFTER normalization:&quot;)
+counts_clean: dict[str, int] = {}
+for word in words_raw:
+    word = word.lower()
+    for punct in (&quot;,&quot;, &quot;.&quot;, &quot;!&quot;, &quot;?&quot;, &quot;:&quot;):
+        word = word.replace(punct, &quot;&quot;)
+    counts_clean[word] = counts_clean.get(word, 0) + 1
+for w, c in sorted(counts_clean.items()):
+    print(f&quot;  {w!r}: {c}&quot;)
+</code></pre>
+<p><strong>Output — Before:</strong></p>
+<pre><code>  'To': 1
+  'be,': 1
+  'be:': 1
+  'is': 1
+  'not': 1
+  'or': 1
+  'question!': 1
+  'that': 1
+  'the': 1
+  'to': 1
+</code></pre>
+<p><strong>Output — After:</strong></p>
+<pre><code>  'be': 2
+  'is': 1
+  'not': 1
+  'or': 1
+  'question': 1
+  'that': 1
+  'the': 1
+  'to': 2
+</code></pre>
+<p><strong>Say:</strong>
+"Before normalization: 10 unique entries — 'To' and 'to' are separate, 'be,' and 'be:' are separate. After normalization: 8 unique entries — 'be' correctly counted 2 times, 'to' correctly counted 2 times. The result is far more meaningful.</p>
+<p>Notice <code>{w!r}</code> in the f-string — the <code>!r</code> conversion applies <code>repr()</code> to the value, which wraps strings in quotes and makes invisible characters visible. It is very useful for debugging string content. You don't need it in production output, but it is handy when checking whether punctuation was correctly stripped."</p>
+<hr>
+<h2 id="11-session-5-day-wrap-up">11) Session 5 Day Wrap-Up</h2>
+<h3 id="111-recap-of-all-four-hours">11.1 Recap of all four hours</h3>
+<p><strong>Say:</strong>
+"We have arrived at the end of Day 5 — Session 5 — and I want to take a moment to genuinely appreciate how much ground we covered today. This was a dense, important session.</p>
+<p><strong>Hour 17 — Tuples + Unpacking:</strong>
+We learned that a tuple is an ordered, immutable sequence — like a list that has been locked. You use tuples when the data should not change: coordinates, RGB colour values, function return values with multiple parts. We practised the unpacking pattern — <code>x, y = point</code> — which lets you assign all elements of a tuple to named variables in one clean line. You built a Coordinate Tracker and handled <code>ValueError</code> when a single-item tuple is accidentally written without its trailing comma.</p>
+<p><strong>Hour 18 — Sets: Uniqueness + Membership:</strong>
+We discovered the set — an unordered collection of unique values. Sets are Python's answer to 'have I seen this before?' questions and 'give me all the distinct things in this collection'. You saw how adding a duplicate to a set is silently ignored, how <code>in</code> checks on sets are fast, and how to convert a list to a set to strip duplicates in one step. You built the Unique Visitors program.</p>
+<p><strong>Hour 19 — Dictionary Fundamentals:</strong>
+We introduced the dictionary — the most powerful and flexible collection type in Python for associating meaning with data. You learned the key-value model, how to create dictionaries with literal syntax, how to read, add, and update entries, and — critically — how to access values safely with <code>get()</code> rather than risking a <code>KeyError</code>. You built an interactive Inventory Manager.</p>
+<p><strong>Hour 20 — Dictionary Iteration + Counting Pattern:</strong>
+This hour. We completed the dictionary picture by learning how to traverse all entries with <code>keys()</code>, <code>values()</code>, and <code>items()</code>. Then we built the counting pattern — <code>d.get(word, 0) + 1</code> — which is one of the most practically useful idioms in all of Python. We applied it to build a Word Frequency Counter from scratch, added sorted display, found the most common word, and learned to normalize text by converting to lowercase and stripping punctuation. You can now write a frequency counter from memory."</p>
+<h3 id="112-the-data-structures-map">11.2 The data structures map</h3>
+<p><strong>Say:</strong>
+"Step back for a second and look at the full picture of what you now know:</p>
+<table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Ordered?</th>
+<th>Unique values?</th>
+<th>Mutable?</th>
+<th>Key use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list</code></td>
+<td>✅ Yes</td>
+<td>No</td>
+<td>✅ Yes</td>
+<td>Ordered sequences, indexing</td>
+</tr>
+<tr>
+<td><code>tuple</code></td>
+<td>✅ Yes</td>
+<td>No</td>
+<td>❌ No</td>
+<td>Fixed records, unpacking</td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td>❌ No</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+<td>Uniqueness, membership</td>
+</tr>
+<tr>
+<td><code>dict</code></td>
+<td>✅ Yes*</td>
+<td>Keys only</td>
+<td>✅ Yes</td>
+<td>Key→value lookup, counting</td>
+</tr>
+</tbody>
+</table>
+<p>*Dictionaries maintain insertion order in Python 3.7+.</p>
+<p>You have the full toolkit. The question is no longer 'how do I use this structure?' but 'which structure should I reach for?' And that is <em>exactly</em> what Session 6 tackles."</p>
+<h3 id="113-forward-look-to-session-6">11.3 Forward look to Session 6</h3>
+<p><strong>Say:</strong>
+"In our next session — Session 6, Hours 21 through 24 — we are going to step back from individual structures and ask the big design question: <strong>when should I use a list? When should I use a set? When should I use a dictionary?</strong></p>
+<p>We will work through a Refactor Challenge where you first solve a problem using a list, and then improve it by switching to a more appropriate structure. We will also start looking at how structures nest inside each other — a list of dictionaries is one of the most common data shapes in real-world Python, and you will start using it to model more complex data.</p>
+<p>Session 6 is where everything clicks together. I am genuinely excited to see you there."</p>
+<h3 id="114-congratulatory-close">11.4 Congratulatory close</h3>
+<p><strong>Say:</strong>
+"Seriously — take a moment to recognise what you did today. You learned four distinct data structures, wrote four programs from scratch, handled edge cases, and built a word frequency counter that could run on a real piece of text. That is not beginner stuff disguised as beginner stuff — that is actual, practical Python programming skill.</p>
+<p>If any part of today felt hard: good. That means you were working in the zone where learning actually happens. If you want to consolidate, go home and type the Word Counter again from memory — no notes. Then run it on a paragraph of text you find interesting. See what the most common words are. That's real programming.</p>
+<p>Well done today. Save your files, and I'll see you at Session 6."</p>
+<hr>
+<h2 id="12-exit-ticket">12) Exit Ticket</h2>
+<p><strong>Display the following question and give learners 90 seconds to answer in writing or by typing:</strong></p>
+<p><strong>Question:</strong></p>
+<blockquote>
+<p>What does <code>dict.items()</code> produce, and why is it useful in a for-loop?</p>
+</blockquote>
+<p><strong>Expected answer (for instructor reference):</strong></p>
+<p><code>dict.items()</code> returns a view of the dictionary as a sequence of <code>(key, value)</code> tuples. In a for-loop, you can unpack each tuple into named variables — for example <code>for word, count in counts.items():</code> — which gives you access to both the key and the value on every iteration without any extra indexing. This makes it the standard way to process all entries of a dictionary when you need both pieces of information.</p>
+<p><strong>Bonus follow-up (ask verbally if time allows):</strong></p>
+<blockquote>
+<p>What is the difference between <code>d.get(key)</code> and <code>d[key]</code>?</p>
+</blockquote>
+<p><strong>Expected answer:</strong> <code>d[key]</code> raises a <code>KeyError</code> if the key is not in the dictionary. <code>d.get(key)</code> returns <code>None</code> silently if the key is absent. <code>d.get(key, default)</code> returns <code>default</code> instead of <code>None</code>. The <code>get()</code> form is safe for keys that may not be present; bracket notation is safe only when you are certain the key exists.</p>
+<hr>
+<p><em>End of Day 5, Hour 4 (Course Hour 20) — Dictionary Iteration + Counting Pattern</em><br>
+<em>Python Programming Basics – Session 5</em></p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour3_Basics.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour1_Basics.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-deliverable-script-use-largely-verbatim" class="depth-2">Instructor Deliverable Script (Use Largely Verbatim)</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-reconnect-to-earlier-learning-5-minutes" class="depth-2">3) Opening Script: Reconnect to Earlier Learning (~5 minutes)</a></li>
+<li><a href="#31-quick-recap-from-hour-19" class="depth-3">3.1 Quick recap from Hour 19</a></li>
+<li><a href="#32-the-iteration-gap" class="depth-3">3.2 The iteration gap</a></li>
+<li><a href="#4-dictionary-iteration-methods" class="depth-2">4) Dictionary Iteration Methods</a></li>
+<li><a href="#41-the-three-iteration-views" class="depth-3">4.1 The three iteration views</a></li>
+<li><a href="#42-iterating-over-keys" class="depth-3">4.2 Iterating over keys</a></li>
+<li><a href="#43-iterating-over-values" class="depth-3">4.3 Iterating over values</a></li>
+<li><a href="#44-iterating-over-items-the-workhorse" class="depth-3">4.4 Iterating over items — the workhorse</a></li>
+<li><a href="#45-comparison-when-to-use-which" class="depth-3">4.5 Comparison: when to use which</a></li>
+<li><a href="#5-the-counting-pattern" class="depth-2">5) The Counting Pattern</a></li>
+<li><a href="#51-the-problem-it-solves" class="depth-3">5.1 The problem it solves</a></li>
+<li><a href="#52-step-1-the-manual-if-branch-approach" class="depth-3">5.2 Step 1 — the manual if-branch approach</a></li>
+<li><a href="#53-step-2-introducing-get-as-the-bridge" class="depth-3">5.3 Step 2 — introducing get() as the bridge</a></li>
+<li><a href="#54-step-3-the-complete-elegant-version" class="depth-3">5.4 Step 3 — the complete elegant version</a></li>
+<li><a href="#55-side-by-side-comparison-if-branch-vs-get-pattern" class="depth-3">5.5 Side-by-side comparison: if-branch vs get() pattern</a></li>
+<li><a href="#6-sorting-and-displaying-results" class="depth-2">6) Sorting and Displaying Results</a></li>
+<li><a href="#61-why-sorting-matters" class="depth-3">6.1 Why sorting matters</a></li>
+<li><a href="#62-sorting-with-sortedditems" class="depth-3">6.2 Sorting with sorted(d.items())</a></li>
+<li><a href="#63-sorting-by-count-descending" class="depth-3">6.3 Sorting by count (descending)</a></li>
+<li><a href="#64-printing-aligned-output" class="depth-3">6.4 Printing aligned output</a></li>
+<li><a href="#65-finding-the-most-common-item" class="depth-3">6.5 Finding the most common item</a></li>
+<li><a href="#7-live-demo-word-frequency-counter" class="depth-2">7) Live Demo: Word Frequency Counter</a></li>
+<li><a href="#71-transition-to-the-demo" class="depth-3">7.1 Transition to the demo</a></li>
+<li><a href="#72-full-demo-type-live" class="depth-3">7.2 Full demo — type live</a></li>
+<li><a href="#8-hands-on-lab-word-counter" class="depth-2">8) Hands-on Lab: Word Counter</a></li>
+<li><a href="#81-lab-specification" class="depth-3">8.1 Lab specification</a></li>
+<li><a href="#82-hints-to-offer-if-learners-are-stuck" class="depth-3">8.2 Hints to offer if learners are stuck</a></li>
+<li><a href="#83-circulate-and-observe" class="depth-3">8.3 Circulate and observe</a></li>
+<li><a href="#84-full-walkthrough-solution" class="depth-3">8.4 Full walkthrough solution</a></li>
+<li><a href="#85-design-discussion" class="depth-3">8.5 Design discussion</a></li>
+<li><a href="#9-common-pitfalls" class="depth-2">9) Common Pitfalls</a></li>
+<li><a href="#91-pitfall-1-punctuation-attached-to-words" class="depth-3">9.1 Pitfall 1: punctuation attached to words</a></li>
+<li><a href="#92-pitfall-2-case-inconsistency" class="depth-3">9.2 Pitfall 2: case inconsistency</a></li>
+<li><a href="#93-pitfall-3-modifying-a-dictionary-while-iterating-over-it" class="depth-3">9.3 Pitfall 3: modifying a dictionary while iterating over it</a></li>
+<li><a href="#10-optional-extension-lowercase-punctuation-stripping" class="depth-2">10) Optional Extension: Lowercase + Punctuation Stripping</a></li>
+<li><a href="#101-why-normalization-matters" class="depth-3">10.1 Why normalization matters</a></li>
+<li><a href="#102-strlower-fixing-case" class="depth-3">10.2 str.lower() — fixing case</a></li>
+<li><a href="#103-strreplace-removing-punctuation" class="depth-3">10.3 str.replace() — removing punctuation</a></li>
+<li><a href="#104-before-and-after-seeing-the-difference" class="depth-3">10.4 Before and after — seeing the difference</a></li>
+<li><a href="#11-session-5-day-wrap-up" class="depth-2">11) Session 5 Day Wrap-Up</a></li>
+<li><a href="#111-recap-of-all-four-hours" class="depth-3">11.1 Recap of all four hours</a></li>
+<li><a href="#112-the-data-structures-map" class="depth-3">11.2 The data structures map</a></li>
+<li><a href="#113-forward-look-to-session-6" class="depth-3">11.3 Forward look to Session 6</a></li>
+<li><a href="#114-congratulatory-close" class="depth-3">11.4 Congratulatory close</a></li>
+<li><a href="#12-exit-ticket" class="depth-2">12) Exit Ticket</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day5_Hour4_Basics.md</span>
+                        <span class="lecture-chip">Basics</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Basics/lessons/lecture/Day5_Hour4_Basics.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day5_Hour3_Basics.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day6_Hour1_Basics.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

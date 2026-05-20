@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 7, Hour 2: SQLite CRUD with Parameterized Queries (Course Hour 26) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="7">
+    <meta name="lecture-hour" content="2">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day7_Hour2_Advanced.md">
+
+    <link rel="prev" href="Day7_Hour1_Advanced.html">
+    <link rel="next" href="Day7_Hour3_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="7" data-hour="2">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-07/index.html">Day 7</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 2</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 7, Hour 2: SQLite CRUD with Parameterized Queries (Course Hour 26)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 7</span>
+                    <span class="lecture-meta-item">Hour 2</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour3_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day7_Hour2_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course:</strong> Python Programming (Advanced)</li>
+<li><strong>Session:</strong> 7</li>
+<li><strong>Hour:</strong> 2 (Course Hour 26)</li>
+<li><strong>Runbook alignment:</strong> Session 7, Course Hour 26 – sqlite3 CRUD with parameterized queries</li>
+<li><strong>Duration:</strong> 60 minutes</li>
+<li><strong>Mode:</strong> Instructor-led + live coding + guided lab</li>
+<li><strong>Audience:</strong> Advanced Python learners ready to connect a repository design to a real SQLite database</li>
+</ul>
+<blockquote>
+<p><strong>Instructor note:</strong> This hour is the learners' first concrete SQLite implementation in the advanced sequence. Keep the conversation practical and specific. The targets are: open a database file with <code>sqlite3</code>, create a table safely with <code>CREATE TABLE IF NOT EXISTS</code>, and run safe CRUD operations using <code>?</code> parameter placeholders. Reinforce the runbook quality gate repeatedly: no SQL string concatenation, every write is committed, and update/delete must be ID-based. Keep ORMs out of scope. The point is confidence with the standard library and visibility into what the application is actually doing.</p>
+</blockquote>
+<hr>
+<h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
+<p>"By the end of this hour, you will be able to:</p>
+<ol>
+<li>Create and connect to an SQLite database file using Python's standard library.</li>
+<li>Create a table with <code>CREATE TABLE IF NOT EXISTS</code> so initialization is safe to repeat.</li>
+<li>Execute <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, and <code>DELETE</code> statements with parameterized queries.</li>
+<li>Explain why <code>?</code> placeholders are safer than building SQL with string formatting.</li>
+<li>Implement the first working SQLite repository methods for adding and listing records.</li>
+<li>Debug common early SQLite issues such as missing commits and incorrect database paths."</li>
+</ol>
+<hr>
+<h2 id="1-agenda-timing">1) Agenda + Timing</h2>
+<ul>
+<li><strong>0:00–0:05</strong> Recap: schema and repository from Hour 25</li>
+<li><strong>0:05–0:15</strong> <code>sqlite3</code> basics: connection, cursor, database file, commits</li>
+<li><strong>0:15–0:25</strong> Safe SQL: parameterized queries and why string formatting is dangerous</li>
+<li><strong>0:25–0:40</strong> Live demo: create database, create table, insert rows, list rows</li>
+<li><strong>0:40–0:50</strong> Live demo extension: raw update and delete examples</li>
+<li><strong>0:50–0:57</strong> Guided practice: implement <code>add()</code> and <code>list_all()</code> in a repository</li>
+<li><strong>0:57–1:00</strong> Checkpoint and recap</li>
+</ul>
+<hr>
+<h2 id="2-instructor-setup-checklist">2) Instructor Setup Checklist</h2>
+<ul>
+<li>Open a clean file named <code>hour26_sqlite_crud_demo.py</code>.</li>
+<li>Make sure a <code>data/</code> directory exists or be prepared to create it during the demo using <code>pathlib</code>.</li>
+<li>Be ready to explain that an SQLite database is just a file on disk.</li>
+<li>Be ready to deliberately show one unsafe SQL example <strong>without running untrusted data</strong>, purely for teaching contrast.</li>
+<li>Be ready to show what happens when you forget to commit a write.</li>
+<li>Be ready to print the database path so learners can see exactly which file they are writing to.</li>
+</ul>
+<p><strong>Say:</strong> "This hour is about making the persistence layer real. We are moving from design to execution, but we are going to do it in a disciplined way. Every database action should feel understandable, inspectable, and safe."</p>
+<hr>
+<h2 id="3-opening-script-from-design-to-a-real-database-5-minutes">3) Opening Script: From Design to a Real Database (~5 minutes)</h2>
+<p><strong>Say:</strong>
+"In the previous hour, we designed the shape of our persistence layer. We talked about objects, rows, columns, primary keys, and repository boundaries. That was intentionally conceptual.</p>
+<p>Now we make it concrete.</p>
+<p>Python ships with a database module called <code>sqlite3</code>. That matters because it means you can build a real data-driven application without installing anything extra. SQLite stores data in a normal file, which makes it excellent for local tools, prototypes, desktop apps, class projects, and many small-to-medium applications.</p>
+<p>This hour is about basic database mechanics done correctly. Our goals are modest but important:</p>
+<ul>
+<li>create the database file</li>
+<li>create the table</li>
+<li>insert records</li>
+<li>read records back</li>
+<li>and understand how update and delete fit into the same pattern</li>
+</ul>
+<p>The most important safety rule of the hour is this: if your SQL query includes data from the program, use placeholders. Do not build SQL by pasting values into strings."</p>
+<hr>
+<h2 id="4-sqlite3-fundamentals">4) sqlite3 Fundamentals</h2>
+<h3 id="41-explain-the-connection-object">4.1 Explain the connection object</h3>
+<p><strong>Say:</strong>
+"The first thing to understand is the connection. A connection represents an active link to a database file. In SQLite, if the file does not exist yet, SQLite can create it for you when you connect.</p>
+<p>That means connecting is often the moment where your database file comes into existence."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from pathlib import Path
+
+
+project_root = Path.cwd()
+data_dir = project_root / &quot;data&quot;
+data_dir.mkdir(exist_ok=True)
+
+db_path = data_dir / &quot;expenses.db&quot;
+print(f&quot;Database file: {db_path.resolve()}&quot;)
+
+with sqlite3.connect(db_path) as connection:
+    print(&quot;Connected successfully.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"This example shows several modern habits.</p>
+<ul>
+<li>We use <code>pathlib.Path</code> instead of raw string path manipulation.</li>
+<li>We make sure the directory exists before trying to create the database file.</li>
+<li>We use a connection context manager with <code>with</code>.</li>
+</ul>
+<p>That <code>with</code> block matters. When the block exits, any pending transaction is committed (or rolled back if an error occurred). For write operations, the context manager helps manage commits and rollbacks more safely, but in longer‑running applications you should still call <code>connection.close()</code> explicitly when you're truly done with the database."</p>
+<h3 id="42-explain-cursor-versus-connection">4.2 Explain cursor versus connection</h3>
+<p><strong>Say:</strong>
+"You will often hear about cursors. A cursor is the object you use to execute SQL statements and fetch results.</p>
+<p>In small <code>sqlite3</code> programs, you will commonly see either of these styles:</p>
+<ol>
+<li><code>connection.execute(...)</code> directly</li>
+<li><code>cursor = connection.cursor()</code> followed by <code>cursor.execute(...)</code></li>
+</ol>
+<p>Both are valid. For short examples, <code>connection.execute(...)</code> is often clean enough. When you want to fetch results or reuse the cursor, making it explicit can help readability."</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python">with sqlite3.connect(db_path) as connection:
+    cursor = connection.cursor()
+    cursor.execute(&quot;SELECT 1&quot;)
+    print(cursor.fetchone())
+</code></pre>
+<p><strong>Say:</strong>
+"This prints a tuple like <code>(1,)</code>. That tiny experiment proves the connection is alive and the basic execution path works."</p>
+<hr>
+<h2 id="5-creating-the-table-safely">5) Creating the Table Safely</h2>
+<h3 id="51-show-idempotent-table-creation">5.1 Show idempotent table creation</h3>
+<p><strong>Say:</strong>
+"The first real SQL in most applications is schema creation. We do not want startup to fail just because the table already exists, so we use <code>CREATE TABLE IF NOT EXISTS</code>."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">create_table_sql = &quot;&quot;&quot;
+CREATE TABLE IF NOT EXISTS expenses (
+    expense_id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    amount REAL NOT NULL,
+    category TEXT NOT NULL,
+    spent_on TEXT NOT NULL,
+    notes TEXT
+)
+&quot;&quot;&quot;
+
+with sqlite3.connect(db_path) as connection:
+    connection.execute(create_table_sql)
+
+print(&quot;Table ensured.&quot;)
+</code></pre>
+<p><strong>Say:</strong>
+"This is called idempotent initialization. If the table is missing, it gets created. If it already exists, the statement is safe to run again.</p>
+<p>That is a big engineering win because application startup should be dependable."</p>
+<h3 id="52-connect-table-design-back-to-the-domain-model">5.2 Connect table design back to the domain model</h3>
+<p><strong>Say:</strong>
+"Remember our Python dataclass used <code>date</code> for the spending date. The table stores <code>spent_on</code> as text. That is not inconsistency. That is translation across a boundary. We store the date as an ISO string because it is easy for SQLite to hold and easy for people to inspect."</p>
+<hr>
+<h2 id="6-parameterized-queries-the-safety-rule-of-the-hour">6) Parameterized Queries: The Safety Rule of the Hour</h2>
+<h3 id="61-show-the-unsafe-instinct">6.1 Show the unsafe instinct</h3>
+<p><strong>Say:</strong>
+"Let me show you the instinct we want to avoid. Beginners often try to do this:"</p>
+<p><strong>Type:</strong></p>
+<pre><code class="language-python"># Do not do this.
+user_title = &quot;Lunch&quot;
+unsafe_sql = f&quot;SELECT * FROM expenses WHERE title = '{user_title}'&quot;
+print(unsafe_sql)
+</code></pre>
+<p><strong>Say:</strong>
+"At first glance, that looks convenient. But it has two problems.</p>
+<p>First, it is brittle. Quotes inside the title can break the query.</p>
+<p>Second, and much more important, it opens the door to SQL injection if untrusted input is inserted into the SQL string. Even if you trust your own test data, building the habit of string-formatting SQL is a bad habit.</p>
+<p>The correct habit is parameterized SQL."</p>
+<h3 id="62-show-the-safe-pattern">6.2 Show the safe pattern</h3>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">safe_sql = &quot;SELECT * FROM expenses WHERE title = ?&quot;
+parameter = (&quot;Lunch&quot;,)
+
+with sqlite3.connect(db_path) as connection:
+    rows = connection.execute(safe_sql, parameter).fetchall()
+    print(rows)
+</code></pre>
+<p><strong>Say:</strong>
+"The SQL string stays fixed, and the values are passed separately.</p>
+<p>That question mark is not a text replacement marker in the string-formatting sense. It is a placeholder that tells <code>sqlite3</code>, 'here comes a value parameter.' The database driver handles quoting and escaping correctly.</p>
+<p>This is one of those rules I want you to internalize so deeply that unsafe SQL starts to feel physically uncomfortable."</p>
+<h3 id="63-read-the-runbook-quality-gate-aloud">6.3 Read the runbook quality gate aloud</h3>
+<p><strong>Say:</strong>
+"The runbook says it plainly: all SQL uses parameter placeholders, no string concatenation. I want that quality gate visible in every database file you write."</p>
+<hr>
+<h2 id="7-live-demo-part-1-insert-and-list-rows-15-minutes">7) Live Demo Part 1: Insert and List Rows (~15 minutes)</h2>
+<p><strong>Say:</strong>
+"Now let's build the first working slice of the repository. We will create the database, ensure the table exists, insert a couple of expenses, and list them back out. For this hour, seeing raw rows is acceptable. Next hour we will map them back into rich objects."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+class SQLiteExpenseRepository:
+    def __init__(self, db_path: Path) -&gt; None:
+        self.db_path = db_path
+
+    def init_db(self) -&gt; None:
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        create_table_sql = &quot;&quot;&quot;
+        CREATE TABLE IF NOT EXISTS expenses (
+            expense_id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            amount REAL NOT NULL,
+            category TEXT NOT NULL,
+            spent_on TEXT NOT NULL,
+            notes TEXT
+        )
+        &quot;&quot;&quot;
+        with sqlite3.connect(self.db_path) as connection:
+            connection.execute(create_table_sql)
+
+    def add(self, expense: NewExpense) -&gt; int:
+        insert_sql = &quot;&quot;&quot;
+        INSERT INTO expenses (title, amount, category, spent_on, notes)
+        VALUES (?, ?, ?, ?, ?)
+        &quot;&quot;&quot;
+        values = (
+            expense.title,
+            expense.amount,
+            expense.category,
+            expense.spent_on.isoformat(),
+            expense.notes,
+        )
+        with sqlite3.connect(self.db_path) as connection:
+            cursor = connection.execute(insert_sql, values)
+            return int(cursor.lastrowid)
+
+    def list_all_rows(self) -&gt; list[tuple]:
+        select_sql = &quot;&quot;&quot;
+        SELECT expense_id, title, amount, category, spent_on, notes
+        FROM expenses
+        ORDER BY expense_id
+        &quot;&quot;&quot;
+        with sqlite3.connect(self.db_path) as connection:
+            rows = connection.execute(select_sql).fetchall()
+        return rows
+
+
+repo = SQLiteExpenseRepository(Path(&quot;data&quot;) / &quot;expenses.db&quot;)
+repo.init_db()
+
+coffee_id = repo.add(
+    NewExpense(
+        title=&quot;Coffee beans&quot;,
+        amount=18.50,
+        category=&quot;Groceries&quot;,
+        spent_on=date(2026, 1, 13),
+        notes=&quot;Medium roast&quot;,
+    )
+)
+
+bus_id = repo.add(
+    NewExpense(
+        title=&quot;Bus pass&quot;,
+        amount=45.00,
+        category=&quot;Transportation&quot;,
+        spent_on=date(2026, 1, 14),
+    )
+)
+
+print(f&quot;Created expense IDs: {coffee_id}, {bus_id}&quot;)
+for row in repo.list_all_rows():
+    print(row)
+</code></pre>
+<h3 id="71-narration-points-while-live-coding">7.1 Narration points while live coding</h3>
+<p><strong>Say:</strong>
+"Notice the patterns we are repeating.</p>
+<ul>
+<li>The SQL statement is a normal multi-line string.</li>
+<li>The values are a separate tuple.</li>
+<li>Dates are converted to strings at the database boundary.</li>
+<li>We use <code>lastrowid</code> to capture the generated primary key.</li>
+<li>Listing rows returns tuples because SQLite does not know about our dataclasses yet.</li>
+</ul>
+<p>This is enough to prove the repository can store and retrieve real data."</p>
+<h3 id="72-pause-for-output-prediction">7.2 Pause for output prediction</h3>
+<p><strong>Ask:</strong>
+"Before I run this, what do you expect the listed rows to look like? Will <code>spent_on</code> come back as a <code>date</code> object or a string?"</p>
+<p>Wait for predictions.</p>
+<p><strong>Say after running:</strong>
+"Exactly — the row contains stored database values, so <code>spent_on</code> comes back as a string for now. That is fine. Next hour we will teach the repository how to map rows back into objects."</p>
+<hr>
+<h2 id="8-live-demo-part-2-raw-update-and-delete-examples-10-minutes">8) Live Demo Part 2: Raw UPDATE and DELETE Examples (~10 minutes)</h2>
+<p><strong>Say:</strong>
+"The runbook for this hour includes CRUD, so I want you to see update and delete as well. We will keep them simple and raw for now. The point is the query pattern."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">def rename_expense(db_path: Path, expense_id: int, new_title: str) -&gt; None:
+    update_sql = &quot;&quot;&quot;
+    UPDATE expenses
+    SET title = ?
+    WHERE expense_id = ?
+    &quot;&quot;&quot;
+    print(f&quot;Updating expense_id={expense_id}&quot;)
+    with sqlite3.connect(db_path) as connection:
+        connection.execute(update_sql, (new_title, expense_id))
+
+
+def delete_expense(db_path: Path, expense_id: int) -&gt; None:
+    delete_sql = &quot;DELETE FROM expenses WHERE expense_id = ?&quot;
+    print(f&quot;Deleting expense_id={expense_id}&quot;)
+    with sqlite3.connect(db_path) as connection:
+        connection.execute(delete_sql, (expense_id,))
+
+
+rename_expense(Path(&quot;data&quot;) / &quot;expenses.db&quot;, coffee_id, &quot;Coffee beans - large bag&quot;)
+for row in repo.list_all_rows():
+    print(row)
+
+delete_expense(Path(&quot;data&quot;) / &quot;expenses.db&quot;, bus_id)
+for row in repo.list_all_rows():
+    print(row)
+</code></pre>
+<p><strong>Say:</strong>
+"There are two habits I want you to notice.</p>
+<p>First, update and delete target the stable ID, not a descriptive field.</p>
+<p>Second, during early development, it is smart to print or log the target ID before executing the write. That matches the runbook quality gate and makes it easier to catch mistakes before you accidentally update the wrong row."</p>
+<h3 id="81-explain-rowcount-briefly">8.1 Explain rowcount briefly</h3>
+<p><strong>Say:</strong>
+"A practical debugging trick is to inspect <code>cursor.rowcount</code> after an update or delete. If it is zero, that often means the target ID did not exist. We will use that signal more formally in the next hour when we add error handling and row mapping."</p>
+<hr>
+<h2 id="9-common-pitfalls-to-teach-explicitly">9) Common Pitfalls to Teach Explicitly</h2>
+<h3 id="91-forgetting-commit">9.1 Forgetting commit</h3>
+<p><strong>Say:</strong>
+"One classic beginner mistake is forgetting to commit writes. In our examples, using <code>with sqlite3.connect(...) as connection:</code> helps because the connection context manager commits when the block exits successfully and rolls back if an exception occurs.</p>
+<p>If you write code without that pattern, you may run an insert, close the program, and then wonder why your row is missing."</p>
+<h3 id="92-path-confusion">9.2 Path confusion</h3>
+<p><strong>Say:</strong>
+"Another classic issue is path confusion. SQLite happily creates a new database file if the path points somewhere else. That means a typo in the file path can result in a perfectly valid but totally wrong empty database.</p>
+<p>This is why I strongly recommend printing <code>db_path.resolve()</code> during early development. If your query returns no data, first confirm you are looking at the file you think you are using."</p>
+<h3 id="93-unsafe-sql-habits">9.3 Unsafe SQL habits</h3>
+<p><strong>Say:</strong>
+"The third major pitfall is building SQL with f-strings or string concatenation. Even if the code seems to work during a demo, it is not the right pattern. Build safe habits now."</p>
+<h3 id="94-silent-updates-and-deletes">9.4 Silent updates and deletes</h3>
+<p><strong>Say:</strong>
+"Finally, do not assume an update or delete worked just because no exception was raised. Check the target ID. Check <code>rowcount</code>. Re-query the table. Practical debugging beats wishful thinking."</p>
+<hr>
+<h2 id="10-guided-practice-first-sqlite-integration-7-minutes">10) Guided Practice: First SQLite Integration (~7 minutes)</h2>
+<p><strong>Say:</strong>
+"Now you will build the first working SQLite slice yourself. Stay close to the pattern we just used. The goal is not originality. The goal is correctness."</p>
+<h3 id="101-practice-prompt">10.1 Practice prompt</h3>
+<p>Create a file that does the following:</p>
+<ol>
+<li>Uses <code>Path("data") / "tracker.db"</code> or a similarly named database file.</li>
+<li>Creates the parent directory if needed.</li>
+<li>Creates a table for your main record using <code>CREATE TABLE IF NOT EXISTS</code>.</li>
+<li>Implements <code>add()</code> using an <code>INSERT</code> statement with <code>?</code> placeholders.</li>
+<li>Implements <code>list_all()</code> or <code>list_all_rows()</code> using <code>SELECT</code>.</li>
+<li>Inserts at least two sample records and prints the results.</li>
+</ol>
+<h3 id="102-constraints-to-read-aloud">10.2 Constraints to read aloud</h3>
+<ul>
+<li>Do <strong>not</strong> use string formatting to insert values into SQL.</li>
+<li>Use a context manager for each database operation.</li>
+<li>Print the resolved database path at least once.</li>
+<li>If your domain uses dates, convert them to strings on the way into the database.</li>
+</ul>
+<h3 id="103-coaching-prompts-while-learners-work">10.3 Coaching prompts while learners work</h3>
+<ul>
+<li>"Where is your commit happening?"</li>
+<li>"Which query uses a placeholder, and where are the parameter values passed?"</li>
+<li>"If the table already exists, will your startup still work?"</li>
+<li>"How will you verify you are writing to the correct database file?"</li>
+</ul>
+<hr>
+<h2 id="11-checkpoint-discussion-3-minutes">11) Checkpoint Discussion (~3 minutes)</h2>
+<p><strong>Ask:</strong></p>
+<ol>
+<li>"What does the <code>?</code> placeholder do in <code>sqlite3</code>?"</li>
+<li>"Why is <code>CREATE TABLE IF NOT EXISTS</code> a good startup habit?"</li>
+<li>"What is the safest field to use in a <code>WHERE</code> clause for update and delete?"</li>
+<li>"If your insert appears to work but no row is there later, what is one thing you should check immediately?"</li>
+</ol>
+<h3 id="111-reinforcement-answers">11.1 Reinforcement answers</h3>
+<p><strong>Say:</strong>
+"A strong answer to the first question is: the placeholder keeps SQL structure separate from data values and lets the driver safely bind parameters.</p>
+<p>A strong answer to the fourth question is: check whether the write was committed and confirm the database path is the file you expected."</p>
+<hr>
+<h2 id="12-recap-script-3-minutes">12) Recap Script (~3 minutes)</h2>
+<p><strong>Say:</strong>
+"This hour turned our repository design into something real. We connected to an SQLite database file, created a table safely, inserted data with parameterized queries, listed rows back out, and looked at the basic shape of update and delete.</p>
+<p>More importantly, we built safe habits:</p>
+<ul>
+<li>use <code>pathlib</code></li>
+<li>use context managers</li>
+<li>use placeholders</li>
+<li>target stable IDs</li>
+<li>verify results instead of guessing</li>
+</ul>
+<p>In the next hour, we will take the next architectural step: instead of returning raw row tuples, we will map rows back into dataclass objects so the rest of the application can continue speaking the language of the domain."</p>
+<hr>
+<h2 id="13-exit-ticket">13) Exit Ticket</h2>
+<p>Ask learners to answer quickly in writing or verbally:</p>
+<ol>
+<li>Why is parameterized SQL safer than f-string SQL?</li>
+<li>What is one benefit of using a connection context manager?</li>
+<li>If you run <code>SELECT</code> and get an empty result unexpectedly, what is one debugging step you would try first?</li>
+</ol>
+<hr>
+<h2 id="14-optional-instructor-reference-runnable-end-of-hour-example">14) Optional Instructor Reference: Runnable End-of-Hour Example</h2>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+class SQLiteExpenseRepository:
+    def __init__(self, db_path: Path) -&gt; None:
+        self.db_path = db_path
+
+    def init_db(self) -&gt; None:
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(self.db_path) as connection:
+            connection.execute(
+                &quot;&quot;&quot;
+                CREATE TABLE IF NOT EXISTS expenses (
+                    expense_id INTEGER PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    category TEXT NOT NULL,
+                    spent_on TEXT NOT NULL,
+                    notes TEXT
+                )
+                &quot;&quot;&quot;
+            )
+
+    def add(self, expense: NewExpense) -&gt; int:
+        with sqlite3.connect(self.db_path) as connection:
+            cursor = connection.execute(
+                &quot;&quot;&quot;
+                INSERT INTO expenses (title, amount, category, spent_on, notes)
+                VALUES (?, ?, ?, ?, ?)
+                &quot;&quot;&quot;,
+                (
+                    expense.title,
+                    expense.amount,
+                    expense.category,
+                    expense.spent_on.isoformat(),
+                    expense.notes,
+                ),
+            )
+            return int(cursor.lastrowid)
+
+    def list_all_rows(self) -&gt; list[tuple]:
+        with sqlite3.connect(self.db_path) as connection:
+            return connection.execute(
+                &quot;&quot;&quot;
+                SELECT expense_id, title, amount, category, spent_on, notes
+                FROM expenses
+                ORDER BY expense_id
+                &quot;&quot;&quot;
+            ).fetchall()
+
+
+repo = SQLiteExpenseRepository(Path(&quot;data&quot;) / &quot;expenses.db&quot;)
+repo.init_db()
+repo.add(NewExpense(&quot;Coffee&quot;, 4.75, &quot;Food&quot;, date(2026, 1, 13)))
+repo.add(NewExpense(&quot;Notebook&quot;, 8.99, &quot;Office&quot;, date(2026, 1, 14), &quot;Project ideas&quot;))
+
+for row in repo.list_all_rows():
+    print(row)
+</code></pre>
+<hr>
+<h2 id="15-deepening-the-teaching-reading-sql-as-a-sentence">15) Deepening the Teaching: Reading SQL as a Sentence</h2>
+<p><strong>Say:</strong>
+"One practical teaching move that helps learners enormously is to read SQL aloud as if it were a sentence. A lot of learners freeze because SQL looks like a foreign language, but it becomes far less intimidating when we narrate it plainly."</p>
+<h3 id="151-model-the-reading-process">15.1 Model the reading process</h3>
+<p><strong>Put this on screen:</strong></p>
+<pre><code class="language-sql">SELECT expense_id, title, amount
+FROM expenses
+WHERE category = ?
+ORDER BY expense_id
+</code></pre>
+<p><strong>Say:</strong>
+"I read that as:</p>
+<ul>
+<li>select the <code>expense_id</code>, <code>title</code>, and <code>amount</code> columns</li>
+<li>from the <code>expenses</code> table</li>
+<li>only for rows whose category matches a parameter value</li>
+<li>order the results by <code>expense_id</code></li>
+</ul>
+<p>That is all. SQL is often more readable than people expect once it is spaced and spoken clearly."</p>
+<h3 id="152-connect-sql-readability-to-debugging">15.2 Connect SQL readability to debugging</h3>
+<p><strong>Say:</strong>
+"When a query is not working, read it line by line.</p>
+<ul>
+<li>Am I selecting the columns I think I am selecting?</li>
+<li>Am I querying the table I think I am querying?</li>
+<li>Is my <code>WHERE</code> clause correct?</li>
+<li>Did I pass the right number of parameters?</li>
+<li>Is the ordering or filter hiding what I expected to see?</li>
+</ul>
+<p>That habit prevents the common beginner move of staring at the whole query as one giant blob."</p>
+<hr>
+<h2 id="16-worked-example-add-a-search-query-safely">16) Worked Example: Add a Search Query Safely</h2>
+<p><strong>Say:</strong>
+"The runbook lists search as an optional extension, and it is a good one because it reinforces placeholders and result inspection without introducing too much new complexity."</p>
+<p><strong>Type and narrate:</strong></p>
+<pre><code class="language-python">from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class NewExpense:
+    title: str
+    amount: float
+    category: str
+    spent_on: date
+    notes: str | None = None
+
+
+class SQLiteExpenseRepository:
+    def __init__(self, db_path: Path) -&gt; None:
+        self.db_path = db_path
+
+    def init_db(self) -&gt; None:
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        with sqlite3.connect(self.db_path) as connection:
+            connection.execute(
+                &quot;&quot;&quot;
+                CREATE TABLE IF NOT EXISTS expenses (
+                    expense_id INTEGER PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    category TEXT NOT NULL,
+                    spent_on TEXT NOT NULL,
+                    notes TEXT
+                )
+                &quot;&quot;&quot;
+            )
+
+    def add(self, expense: NewExpense) -&gt; int:
+        with sqlite3.connect(self.db_path) as connection:
+            cursor = connection.execute(
+                &quot;&quot;&quot;
+                INSERT INTO expenses (title, amount, category, spent_on, notes)
+                VALUES (?, ?, ?, ?, ?)
+                &quot;&quot;&quot;,
+                (
+                    expense.title,
+                    expense.amount,
+                    expense.category,
+                    expense.spent_on.isoformat(),
+                    expense.notes,
+                ),
+            )
+            return int(cursor.lastrowid)
+
+    def search_by_category(self, category: str) -&gt; list[tuple]:
+        with sqlite3.connect(self.db_path) as connection:
+            rows = connection.execute(
+                &quot;&quot;&quot;
+                SELECT expense_id, title, amount, category, spent_on, notes
+                FROM expenses
+                WHERE category = ?
+                ORDER BY expense_id
+                &quot;&quot;&quot;,
+                (category,),
+            ).fetchall()
+        return rows
+</code></pre>
+<p><strong>Say:</strong>
+"This is deliberately simple. We are not using <code>LIKE</code> yet. We are just reinforcing the exact pattern:</p>
+<ul>
+<li>keep SQL fixed</li>
+<li>pass values separately</li>
+<li>fetch rows</li>
+<li>inspect the result</li>
+</ul>
+<p>If learners understand this version, adding a <code>LIKE ?</code> pattern later is much easier."</p>
+<h3 id="161-prediction-prompt">16.1 Prediction prompt</h3>
+<p><strong>Ask:</strong>
+"If I search for a category that does not exist, should this method return an exception or an empty list?"</p>
+<p>Guide them toward: an empty list is often appropriate for search results.</p>
+<p><strong>Say:</strong>
+"That distinction matters. Not every absence is an error. <code>get_by_id</code> missing a record may be exceptional. A search returning zero matches is often normal."</p>
+<hr>
+<h2 id="17-debugging-walkthrough-three-early-sqlite3-problems">17) Debugging Walkthrough: Three Early sqlite3 Problems</h2>
+<h3 id="171-problem-one-wrong-number-of-parameters">17.1 Problem one: wrong number of parameters</h3>
+<p><strong>Say:</strong>
+"A very common <code>sqlite3</code> error is a mismatch between placeholders and provided values. For example:"</p>
+<pre><code class="language-python">sql = &quot;INSERT INTO expenses (title, amount) VALUES (?, ?)&quot;
+values = (&quot;Coffee&quot;,)
+</code></pre>
+<p><strong>Say:</strong>
+"That will fail because there are two placeholders and only one value.</p>
+<p>The debugging approach is straightforward:</p>
+<ol>
+<li>Count the placeholders.</li>
+<li>Count the values in the tuple.</li>
+<li>Confirm the order matches the SQL columns.</li>
+</ol>
+<p>This sounds basic, but it solves a lot of real bugs."</p>
+<h3 id="172-problem-two-database-path-confusion">17.2 Problem two: database path confusion</h3>
+<p><strong>Say:</strong>
+"Another common issue is accidentally creating a second empty database in a different directory.</p>
+<p>The fix is practical, not magical:</p>
+<ul>
+<li>print <code>db_path.resolve()</code></li>
+<li>confirm the directory exists</li>
+<li>confirm the file timestamp changes when you expect it to</li>
+<li>if necessary, temporarily print row counts after inserts</li>
+</ul>
+<p>Do not debug invisible files by guesswork."</p>
+<h3 id="173-problem-three-forgetting-to-create-the-table-first">17.3 Problem three: forgetting to create the table first</h3>
+<p><strong>Say:</strong>
+"If learners see an error like 'no such table: expenses', the debugging question is not 'what obscure SQLite setting is wrong?' The first question is: did <code>init_db()</code> run before the insert? Did it run against the same database path?"</p>
+<h3 id="174-encourage-minimal-reproducible-checks">17.4 Encourage minimal reproducible checks</h3>
+<p><strong>Say:</strong>
+"When stuck, shrink the problem.</p>
+<ul>
+<li>connect</li>
+<li>run <code>SELECT 1</code></li>
+<li>run <code>CREATE TABLE IF NOT EXISTS</code></li>
+<li>run one insert</li>
+<li>run one select</li>
+</ul>
+<p>If those four steps work, the core pipeline is alive. Then you can add your application logic back in."</p>
+<hr>
+<h2 id="18-additional-guided-practice-option-crud-query-cards">18) Additional Guided Practice Option: CRUD Query Cards</h2>
+<p>If the group needs more repetition, put learners in pairs and assign each pair one query type.</p>
+<h3 id="181-pair-task">18.1 Pair task</h3>
+<p>Each pair writes one query and explains it:</p>
+<ul>
+<li>Pair 1: <code>INSERT</code></li>
+<li>Pair 2: <code>SELECT ... WHERE id = ?</code></li>
+<li>Pair 3: <code>UPDATE ... WHERE id = ?</code></li>
+<li>Pair 4: <code>DELETE ... WHERE id = ?</code></li>
+</ul>
+<p>Each pair must answer:</p>
+<ol>
+<li>What values are parameters?</li>
+<li>What should be returned or checked after execution?</li>
+<li>What is one mistake a beginner might make with this query?</li>
+</ol>
+<h3 id="182-debrief-script">18.2 Debrief script</h3>
+<p><strong>Say:</strong>
+"When you explain a query to another person, you expose whether you truly understand the structure. If a learner can explain where the placeholders go and why the <code>WHERE</code> clause matters, they are building the right mental model."</p>
+<hr>
+<h2 id="19-troubleshooting-script-you-can-use-verbatim">19) Troubleshooting Script You Can Use Verbatim</h2>
+<p><strong>Say:</strong>
+"If your code is not behaving the way you expect, here is the debugging order I want you to use:</p>
+<ol>
+<li>Confirm the database file path.</li>
+<li>Confirm <code>init_db()</code> has run.</li>
+<li>Print the SQL statement if necessary, but never by injecting values unsafely.</li>
+<li>Confirm the parameter tuple has the right number of values.</li>
+<li>Re-run the smallest possible query.</li>
+<li>Query the table again after a write to verify the result.</li>
+</ol>
+<p>That process is much stronger than random code changes."</p>
+<hr>
+<h2 id="20-short-debrief-extension-for-stronger-classes">20) Short Debrief Extension for Stronger Classes</h2>
+<p>If time allows, ask learners to compare these two repository method signatures:</p>
+<pre><code class="language-python">def list_all_rows(self) -&gt; list[tuple]:
+    ...
+</code></pre>
+<p>versus</p>
+<pre><code class="language-python">def list_all(self) -&gt; list[Expense]:
+    ...
+</code></pre>
+<p><strong>Ask:</strong>
+"Which one is easier for the rest of the application to use, and why?"</p>
+<p>Let them answer briefly.</p>
+<p><strong>Say:</strong>
+"That question points directly to the next hour. Today we proved the database integration works. Next we make the interface cleaner by converting storage rows back into model objects."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour1_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour3_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#0-learning-outcomes-read-aloud-2-minutes" class="depth-2">0) Learning Outcomes (read aloud, ~2 minutes)</a></li>
+<li><a href="#1-agenda-timing" class="depth-2">1) Agenda + Timing</a></li>
+<li><a href="#2-instructor-setup-checklist" class="depth-2">2) Instructor Setup Checklist</a></li>
+<li><a href="#3-opening-script-from-design-to-a-real-database-5-minutes" class="depth-2">3) Opening Script: From Design to a Real Database (~5 minutes)</a></li>
+<li><a href="#4-sqlite3-fundamentals" class="depth-2">4) sqlite3 Fundamentals</a></li>
+<li><a href="#41-explain-the-connection-object" class="depth-3">4.1 Explain the connection object</a></li>
+<li><a href="#42-explain-cursor-versus-connection" class="depth-3">4.2 Explain cursor versus connection</a></li>
+<li><a href="#5-creating-the-table-safely" class="depth-2">5) Creating the Table Safely</a></li>
+<li><a href="#51-show-idempotent-table-creation" class="depth-3">5.1 Show idempotent table creation</a></li>
+<li><a href="#52-connect-table-design-back-to-the-domain-model" class="depth-3">5.2 Connect table design back to the domain model</a></li>
+<li><a href="#6-parameterized-queries-the-safety-rule-of-the-hour" class="depth-2">6) Parameterized Queries: The Safety Rule of the Hour</a></li>
+<li><a href="#61-show-the-unsafe-instinct" class="depth-3">6.1 Show the unsafe instinct</a></li>
+<li><a href="#62-show-the-safe-pattern" class="depth-3">6.2 Show the safe pattern</a></li>
+<li><a href="#63-read-the-runbook-quality-gate-aloud" class="depth-3">6.3 Read the runbook quality gate aloud</a></li>
+<li><a href="#7-live-demo-part-1-insert-and-list-rows-15-minutes" class="depth-2">7) Live Demo Part 1: Insert and List Rows (~15 minutes)</a></li>
+<li><a href="#71-narration-points-while-live-coding" class="depth-3">7.1 Narration points while live coding</a></li>
+<li><a href="#72-pause-for-output-prediction" class="depth-3">7.2 Pause for output prediction</a></li>
+<li><a href="#8-live-demo-part-2-raw-update-and-delete-examples-10-minutes" class="depth-2">8) Live Demo Part 2: Raw UPDATE and DELETE Examples (~10 minutes)</a></li>
+<li><a href="#81-explain-rowcount-briefly" class="depth-3">8.1 Explain rowcount briefly</a></li>
+<li><a href="#9-common-pitfalls-to-teach-explicitly" class="depth-2">9) Common Pitfalls to Teach Explicitly</a></li>
+<li><a href="#91-forgetting-commit" class="depth-3">9.1 Forgetting commit</a></li>
+<li><a href="#92-path-confusion" class="depth-3">9.2 Path confusion</a></li>
+<li><a href="#93-unsafe-sql-habits" class="depth-3">9.3 Unsafe SQL habits</a></li>
+<li><a href="#94-silent-updates-and-deletes" class="depth-3">9.4 Silent updates and deletes</a></li>
+<li><a href="#10-guided-practice-first-sqlite-integration-7-minutes" class="depth-2">10) Guided Practice: First SQLite Integration (~7 minutes)</a></li>
+<li><a href="#101-practice-prompt" class="depth-3">10.1 Practice prompt</a></li>
+<li><a href="#102-constraints-to-read-aloud" class="depth-3">10.2 Constraints to read aloud</a></li>
+<li><a href="#103-coaching-prompts-while-learners-work" class="depth-3">10.3 Coaching prompts while learners work</a></li>
+<li><a href="#11-checkpoint-discussion-3-minutes" class="depth-2">11) Checkpoint Discussion (~3 minutes)</a></li>
+<li><a href="#111-reinforcement-answers" class="depth-3">11.1 Reinforcement answers</a></li>
+<li><a href="#12-recap-script-3-minutes" class="depth-2">12) Recap Script (~3 minutes)</a></li>
+<li><a href="#13-exit-ticket" class="depth-2">13) Exit Ticket</a></li>
+<li><a href="#14-optional-instructor-reference-runnable-end-of-hour-example" class="depth-2">14) Optional Instructor Reference: Runnable End-of-Hour Example</a></li>
+<li><a href="#15-deepening-the-teaching-reading-sql-as-a-sentence" class="depth-2">15) Deepening the Teaching: Reading SQL as a Sentence</a></li>
+<li><a href="#151-model-the-reading-process" class="depth-3">15.1 Model the reading process</a></li>
+<li><a href="#152-connect-sql-readability-to-debugging" class="depth-3">15.2 Connect SQL readability to debugging</a></li>
+<li><a href="#16-worked-example-add-a-search-query-safely" class="depth-2">16) Worked Example: Add a Search Query Safely</a></li>
+<li><a href="#161-prediction-prompt" class="depth-3">16.1 Prediction prompt</a></li>
+<li><a href="#17-debugging-walkthrough-three-early-sqlite3-problems" class="depth-2">17) Debugging Walkthrough: Three Early sqlite3 Problems</a></li>
+<li><a href="#171-problem-one-wrong-number-of-parameters" class="depth-3">17.1 Problem one: wrong number of parameters</a></li>
+<li><a href="#172-problem-two-database-path-confusion" class="depth-3">17.2 Problem two: database path confusion</a></li>
+<li><a href="#173-problem-three-forgetting-to-create-the-table-first" class="depth-3">17.3 Problem three: forgetting to create the table first</a></li>
+<li><a href="#174-encourage-minimal-reproducible-checks" class="depth-3">17.4 Encourage minimal reproducible checks</a></li>
+<li><a href="#18-additional-guided-practice-option-crud-query-cards" class="depth-2">18) Additional Guided Practice Option: CRUD Query Cards</a></li>
+<li><a href="#181-pair-task" class="depth-3">18.1 Pair task</a></li>
+<li><a href="#182-debrief-script" class="depth-3">18.2 Debrief script</a></li>
+<li><a href="#19-troubleshooting-script-you-can-use-verbatim" class="depth-2">19) Troubleshooting Script You Can Use Verbatim</a></li>
+<li><a href="#20-short-debrief-extension-for-stronger-classes" class="depth-2">20) Short Debrief Extension for Stronger Classes</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day7_Hour2_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day7_Hour2_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day7_Hour1_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day7_Hour3_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

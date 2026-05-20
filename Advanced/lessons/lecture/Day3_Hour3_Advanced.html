@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 3, Hour 3: Context Managers and Safer File Operations | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="3">
+    <meta name="lecture-hour" content="3">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day3_Hour3_Advanced.md">
+
+    <link rel="prev" href="Day3_Hour2_Advanced.html">
+    <link rel="next" href="Day3_Hour4_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="3" data-hour="3">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-03/index.html">Day 3</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 3</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 3, Hour 3: Context Managers and Safer File Operations</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 3</span>
+                    <span class="lecture-meta-item">Hour 3</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour4_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day3_Hour3_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 3, Hour 3 of 48, also Hour 11 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Using context managers consistently and saving JSON data with a write-temp-then-replace pattern so tracker files are less likely to be corrupted.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 3, Hour 11.</li>
+<li><strong>Prerequisites</strong>: Learners should have completed Day 3 Hour 1 and Day 3 Hour 2 or have an equivalent project shape: <code>project_root/src/tracker/</code> contains package code, the demo runs from the project root, and logging can write to <code>logs/app.log</code>.</li>
+<li><strong>Advanced trajectory</strong>: This hour stays on the PCAP-to-PCPP1 path. Learners are not building a database transaction system, cloud storage layer, full repository pattern, or production-grade crash recovery. The advanced step is learning a professional file-writing habit: write the new content somewhere temporary, close it, then replace the original.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner can implement <code>save_json_safe(path, data)</code>, save tracker-style JSON data to <code>data/tasks.json</code>, simulate a concrete failure, and explain why the original file is safer than it would be with a direct overwrite.</li>
+</ul>
+<p>Important instructor positioning:</p>
+<ul>
+<li>Continue the Day 3 execution convention. Source code lives in <code>src/tracker/</code>. Data can live in <code>data/tasks.json</code>. Logs can live in <code>logs/app.log</code>.</li>
+<li>Use consistent vocabulary: <code>Task</code>, <code>TaskService</code>, <code>to_dict()</code>, <code>data/tasks.json</code>, <code>logs/app.log</code>, and <code>src/tracker/</code>. If learners use different names, ask them to preserve the responsibilities rather than copy names mechanically.</li>
+<li>Keep the hour practical. We are not deep-diving into filesystem internals, <code>fsync</code>, database transactions, file locking APIs, advanced <code>tempfile</code> patterns, or cloud storage consistency.</li>
+<li>Be honest about the phrase <strong>atomic-ish</strong>. The write-temp-then-replace pattern protects against many application-level failures and exceptions before replacement. It is not a perfect guarantee against power loss, OS crashes, unusual filesystem behavior, or every network drive edge case.</li>
+<li>On Windows, mention that <code>Path.replace()</code> can fail if the destination file is open or locked by another process, such as an editor, preview pane, antivirus scanner, sync tool, or spreadsheet application.</li>
+<li>Make the failure simulation concrete. Do not say "raise after JSON starts to serialize" if the code uses one <code>json.dump()</code> call. Show a naive unsafe partial write separately, and use a safe helper with <code>simulate_failure=True</code> that raises after the temporary file is written but before replacement.</li>
+<li>Prefer simple cleanup. The reference helper removes the temporary file in the exception path with <code>tmp_path.unlink(missing_ok=True)</code> so students do not collect stale <code>.tmp</code> files during practice.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from logging</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect Day 3 Hour 2 logging to preventing damaged data before it happens</td>
+</tr>
+<tr>
+<td>Outcomes, setup, and vocabulary</td>
+<td style="text-align: right;">8 min</td>
+<td>Define context manager, resource cleanup, target path, temp path, replace, and atomic-ish save</td>
+</tr>
+<tr>
+<td>Concept briefing: <code>with</code>, paths, and direct-write risk</td>
+<td style="text-align: right;">10 min</td>
+<td>Explain why <code>with</code> matters beyond files and why direct overwrites can corrupt good data</td>
+</tr>
+<tr>
+<td>Live demo: write JSON to temp, then replace</td>
+<td style="text-align: right;">8 min</td>
+<td>Build and run <code>save_json_safe()</code> with <code>pathlib</code>, cleanup, failure simulation, and Windows notes</td>
+</tr>
+<tr>
+<td>Guided lab: safe save utility for tracker data</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners implement the helper, save tracker data, simulate failure, and verify file state</td>
+</tr>
+<tr>
+<td>Quick checks, pitfalls, and wrap-up</td>
+<td style="text-align: right;">4 min</td>
+<td>Confirm understanding, review common learner situations, and bridge to decorators</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 8 + 10 + 8 + 25 + 4. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten the concept examples rather than shrinking the student practice. The required outcome is practical: saves use <code>with</code> plus a temp-replace pattern, and the original file is not left half-written after the simulated failure.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain what a context manager does: setup on entry, cleanup on exit, including cleanup when an exception occurs.</li>
+<li>Use <code>with</code> consistently when writing files so file handles are closed predictably.</li>
+<li>Explain why context managers matter beyond ordinary files, including locks, connections, temporary resources, and other setup/cleanup pairs.</li>
+<li>Use <code>pathlib.Path</code> to build and inspect paths such as <code>data/tasks.json</code> without fragile string concatenation.</li>
+<li>Describe why opening a good JSON file directly in write mode can destroy it before new content is safely written.</li>
+<li>Implement <code>save_json_safe(path, data)</code> using a same-directory temporary file and <code>Path.replace()</code>.</li>
+<li>Use <code>json.dump(..., indent=2)</code> inside a <code>with</code> block and write a trailing newline for readable JSON output.</li>
+<li>Clean up temporary files if a write or pre-replace step fails.</li>
+<li>Simulate a failure and verify that the original target file still contains the previous valid data.</li>
+<li>Explain the honest caveat: write-temp-then-replace is safer than direct overwrite, but it is not a full durability guarantee against every possible machine or filesystem failure.</li>
+<li>Identify common pitfalls: overwriting a good file with bad data, assuming the working directory is stable, trying to dump custom objects directly, leaving stale <code>.tmp</code> files, and keeping the target file open in another program on Windows.</li>
+<li>Recognize that deeper integration into <code>TaskService</code> or a persistence layer is useful but optional today; the required lab can be completed as a standalone helper.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 3, Hour 11 visible. The required scope is context managers and safer file operations. The required lab is <code>save_json_safe(path, data)</code>, saving tracker data to JSON, simulating failure, and discussing what can go wrong without safe saves.</li>
+<li>Open the Day 3 Hour 2 logging lesson or your notes from it. The bridge sentence is: "Logging tells us what happened; safer file operations reduce the chance that a bad save damages data in the first place."</li>
+<li>Prepare a small working directory or demo folder with no important files in it. If you are demoing inside a learner project, use <code>data/tasks.json</code>, not a real production file.</li>
+<li>Decide how you will show file contents. In an editor, open <code>data/tasks.json</code>. In PowerShell, you can use:</li>
+</ul>
+<pre><code class="language-powershell">Get-Content data/tasks.json
+</code></pre>
+<ul>
+<li>Prepare this board note:</li>
+</ul>
+<pre><code class="language-text">Safe save pattern:
+1. Build target path.
+2. Build temp path in the same directory.
+3. Write JSON to temp with with.
+4. Close temp successfully.
+5. Replace target with temp.
+</code></pre>
+<ul>
+<li>Prepare a second board note:</li>
+</ul>
+<pre><code class="language-text">with manages cleanup.
+Temp-then-replace protects the good target.
+They solve different parts of the problem.
+</code></pre>
+<ul>
+<li>Prepare to demonstrate both paths:</li>
+<li>unsafe direct write that leaves <code>data/tasks.json</code> broken</li>
+<li>safe helper with <code>simulate_failure=True</code> that leaves the previous <code>data/tasks.json</code> untouched</li>
+<li>If using Windows, close any editor preview or file viewer that may lock <code>data/tasks.json</code> before calling <code>Path.replace()</code>. Tell learners that a locked destination can cause <code>PermissionError</code>.</li>
+<li>If a learner asks about <code>tempfile.NamedTemporaryFile</code>, acknowledge that it exists and is useful, but keep the class on the simple same-directory <code>.tmp</code> naming pattern today. That pattern is readable, testable, and enough for the runbook goal.</li>
+</ul>
+<hr>
+<h2 id="opening-bridge-from-logging-5-minutes">Opening Bridge from Logging (5 minutes)</h2>
+<h3 id="instructor-talk-track">Instructor talk track</h3>
+<p>"Welcome back. In the previous hour, we added logging and error reporting. We made the program better at telling developers what happened. A good log file can tell us that a save failed, which task was being processed, and what exception was raised."</p>
+<p>"That is useful, but logging does not undo damage. If a program corrupts <code>data/tasks.json</code>, a log entry may help us diagnose the problem, but the user's data may already be broken."</p>
+<p>Display:</p>
+<pre><code class="language-text">Logging tells us what happened.
+Safe file operations reduce the chance of corrupting data in the first place.
+</code></pre>
+<p>"That is today's bridge. Last hour was about visibility after events happen. This hour is about safer habits before and during file writes."</p>
+<p>"You have already used <code>with open(...)</code> in earlier Python work. Many learners remember the phrase 'it closes the file automatically.' That is true, but today we need a stronger mental model. A context manager is about reliable setup and reliable cleanup. Closing a file is one example. Releasing a lock, closing a network connection, cleaning up a temporary resource, or restoring a setting can all follow the same pattern."</p>
+<p>"Then we will combine that idea with a safer save pattern. The pattern is simple enough to remember: write the new JSON to a temporary file first. If that succeeds, replace the original. If something fails before replacement, the old file is still there."</p>
+<p>Pause and ask:</p>
+<p>"If your tracker already has a <code>data/tasks.json</code> file with good tasks in it, what is the worst thing that could happen if we open that file directly in write mode and then crash halfway through?"</p>
+<p>Take two or three answers. Guide learners toward "the original file may already be truncated or partly overwritten."</p>
+<p>"Exactly. We are not trying to make file saving scary. We are trying to make it responsible."</p>
+<h3 id="transition">Transition</h3>
+<p>"Let's name the vocabulary for this hour, then we will look at a concrete direct-write failure and a safer replacement pattern."</p>
+<hr>
+<h2 id="outcomes-setup-and-vocabulary-8-minutes">Outcomes, Setup, and Vocabulary (8 minutes)</h2>
+<h3 id="instructor-talk-track-2">Instructor talk track</h3>
+<p>"By the end of this hour, you should be able to write a helper like this and explain every line of it."</p>
+<p>Display:</p>
+<pre><code class="language-python">save_json_safe(&quot;data/tasks.json&quot;, tracker_data)
+</code></pre>
+<p>"The helper will accept a path and serializable data. Serializable means the data can be converted to JSON. A list of dictionaries is serializable. A dictionary containing strings, numbers, booleans, lists, and other dictionaries is serializable. A custom <code>Task</code> object is usually not serializable directly. For custom objects, use a method like <code>to_dict()</code> first."</p>
+<p>"Here is the vocabulary."</p>
+<p>"A <strong>context manager</strong> is an object used with <code>with</code>. It has entry behavior and exit behavior. For a file, entry means 'open the file and give me a file object.' Exit means 'close the file even if the block ends because of an exception.'"</p>
+<p>Display:</p>
+<pre><code class="language-python">with Path(&quot;data/tasks.json&quot;).open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    file.write(&quot;example&quot;)
+</code></pre>
+<p>"A <strong>target path</strong> is the file we ultimately want to update. In our tracker, that might be <code>data/tasks.json</code>."</p>
+<p>"A <strong>temporary path</strong> is a side file where we write the new content first. For <code>data/tasks.json</code>, our temp path will be <code>data/tasks.json.tmp</code>. For a target path with no suffix, such as <code>tasks</code>, our temp path will be <code>tasks.tmp</code>. That detail matters because suffix logic can surprise people."</p>
+<p>"A <strong>replace</strong> operation means the temp file becomes the real file. In <code>pathlib</code>, we can call <code>tmp_path.replace(target_path)</code>."</p>
+<p>"The phrase <strong>atomic-ish save</strong> means we are trying to make the visible update happen in a single replacement step after the data has already been written. It is safer than direct overwrite. But I want to be precise: this is not a promise against every power loss, OS crash, sync tool conflict, or unusual filesystem. We are not teaching full durability engineering today. We are teaching a better application-level habit."</p>
+<p>Display:</p>
+<pre><code class="language-text">Direct overwrite:
+    open real file in write mode -&gt; old content may be gone immediately
+
+Temp-then-replace:
+    write side file -&gt; replace real file only after success
+</code></pre>
+<p>"One more vocabulary phrase: <strong>working directory</strong>. Relative paths like <code>data/tasks.json</code> are interpreted relative to the process's current working directory, not necessarily the file where your code lives. In this course, we run from the project root. That makes <code>data/tasks.json</code>, <code>logs/app.log</code>, and <code>python -m src.tracker.demo</code> line up predictably. If you run from inside <code>src/tracker/</code>, those same relative paths can point somewhere else or fail."</p>
+<h3 id="instructor-check-for-understanding">Instructor check for understanding</h3>
+<p>Ask:</p>
+<p>"What does <code>with</code> help with: choosing the filename, closing the resource, or converting objects to JSON?"</p>
+<p>Expected answer:</p>
+<p>"Closing the resource or performing cleanup. It does not choose paths or serialize custom objects by itself."</p>
+<p>Ask:</p>
+<p>"If <code>Task</code> is a custom object, what do we usually need before JSON?"</p>
+<p>Expected answer:</p>
+<p>"Convert it to plain data, often with <code>to_dict()</code>."</p>
+<h3 id="transition-2">Transition</h3>
+<p>"Now let's make the risk visible. We will start with the unsafe version on purpose."</p>
+<hr>
+<h2 id="concept-briefing-with-paths-and-direct-write-risk-10-minutes">Concept Briefing: <code>with</code>, Paths, and Direct-Write Risk (10 minutes)</h2>
+<h3 id="part-1-what-with-gives-us">Part 1: What <code>with</code> gives us</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Many Python examples teach files like this."</p>
+<pre><code class="language-python">file = open(&quot;data/tasks.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;)
+file.write(&quot;example&quot;)
+file.close()
+</code></pre>
+<p>"That code depends on us reaching <code>file.close()</code>. If an exception happens before that line, cleanup becomes unreliable unless we write extra <code>try</code>/<code>finally</code> code. The <code>with</code> statement gives us a cleaner pattern."</p>
+<pre><code class="language-python">from pathlib import Path
+
+path = Path(&quot;data/tasks.json&quot;)
+
+with path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    file.write(&quot;example&quot;)
+</code></pre>
+<p>"When the block ends, Python asks the context manager to clean up. For a file object, that means close the file. That is true whether the block ends normally or because an exception was raised."</p>
+<p>"That idea shows up beyond ordinary files. We might use context managers for database connections, locks around shared resources, temporary directories, captured output, network sessions, or testing helpers that temporarily change state. The shared idea is not 'files are special.' The shared idea is 'enter a controlled context, do work, leave the context cleanly.'"</p>
+<p>Display:</p>
+<pre><code class="language-text">Context manager mental model:
+enter -&gt; work -&gt; exit cleanup
+</code></pre>
+<p>"However, <code>with</code> alone does not make direct overwrites safe. It closes the file handle, but if we opened the real target in write mode, the real target may already have been truncated."</p>
+<h3 id="part-2-why-direct-writes-can-corrupt-useful-data">Part 2: Why direct writes can corrupt useful data</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's imagine <code>data/tasks.json</code> currently contains good data."</p>
+<pre><code class="language-json">[
+  {
+    &quot;task_id&quot;: 1,
+    &quot;title&quot;: &quot;Draft project plan&quot;,
+    &quot;is_complete&quot;: false
+  }
+]
+</code></pre>
+<p>"Now we do this."</p>
+<pre><code class="language-python">from pathlib import Path
+
+target_path = Path(&quot;data/tasks.json&quot;)
+
+with target_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    file.write(&quot;[\n&quot;)
+    file.write('  {&quot;task_id&quot;: 2, &quot;title&quot;: &quot;Broken save&quot;')
+    raise RuntimeError(&quot;simulated crash during direct write&quot;)
+</code></pre>
+<p>"This is a deliberately unsafe demonstration. We open the real target path in write mode. On many systems, that truncates the file immediately. Then we write only part of the JSON and raise an exception. The result is not the old good file. The result may be a half-written file that is no longer valid JSON."</p>
+<p>"Notice the key point: using <code>with</code> did not prevent this corruption. The file is closed cleanly, but it is closed after we damaged the target. <code>with</code> solved cleanup. It did not solve the save strategy."</p>
+<h3 id="part-3-the-safer-pattern-in-plain-english">Part 3: The safer pattern in plain English</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The safer pattern changes which file is at risk during the write. Instead of writing directly to <code>data/tasks.json</code>, we write to <code>data/tasks.json.tmp</code>."</p>
+<p>Display:</p>
+<pre><code class="language-text">1. Make sure data/ exists.
+2. Write the complete JSON to data/tasks.json.tmp.
+3. Close the temp file.
+4. Replace data/tasks.json with data/tasks.json.tmp.
+</code></pre>
+<p>"If something fails while writing the temp file, the target file is still the old one. If something fails after the temp file is written but before replacement, the target file is still the old one. That is much better than destroying the target first and hoping the rest works."</p>
+<p>"This is why we want the temp file in the same directory. It keeps the operation simple and predictable. The original and the temp live beside each other. We are not scattering temporary output into a different unknown folder."</p>
+<h3 id="part-4-working-directory-warning">Part 4: Working directory warning</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"One common pitfall is assuming the working directory is stable. If we run from the project root, <code>Path('data/tasks.json')</code> means this."</p>
+<pre><code class="language-text">project_root/
+    data/
+        tasks.json
+</code></pre>
+<p>"If we run from a different directory, the same relative path can point somewhere else. That is why our course keeps saying: run package demos from the project root with <code>python -m src.tracker.demo</code> or, on Windows, <code>py -m src.tracker.demo</code>."</p>
+<p>"You can also print <code>Path.cwd()</code> while debugging path confusion. Do not leave noisy debug prints everywhere; use them as a temporary diagnostic."</p>
+<h3 id="transition-3">Transition</h3>
+<p>"Now I will code the helper. Watch the order: target path, temp path, write with <code>with</code>, optional simulated failure, replace, cleanup on exception."</p>
+<hr>
+<h2 id="live-demo-write-json-to-temp-then-replace-8-minutes">Live Demo: Write JSON to Temp, Then Replace (8 minutes)</h2>
+<h3 id="demo-framing">Demo framing</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"In the demo, I am going to use plain tracker-style dictionaries. If your project already has <code>Task</code> objects, you would call <code>task.to_dict()</code> first. I am keeping the demo focused on file safety, not rebuilding the service layer."</p>
+<p>"First, here is a small data set."</p>
+<pre><code class="language-python">tasks = [
+    {
+        &quot;task_id&quot;: 1,
+        &quot;title&quot;: &quot;Write logging summary&quot;,
+        &quot;is_complete&quot;: True,
+    },
+    {
+        &quot;task_id&quot;: 2,
+        &quot;title&quot;: &quot;Save tracker data safely&quot;,
+        &quot;is_complete&quot;: False,
+    },
+]
+</code></pre>
+<h3 id="live-code-the-helper">Live-code the helper</h3>
+<p>Type or display the following code:</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from typing import Any
+
+
+def save_json_safe(
+    path: str | Path,
+    data: Any,
+    *,
+    simulate_failure: bool = False,
+) -&gt; None:
+    target_path = Path(path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = target_path.with_name(f&quot;{target_path.name}.tmp&quot;)
+
+    try:
+        with tmp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+            json.dump(data, file, indent=2)
+            file.write(&quot;\n&quot;)
+
+        if simulate_failure:
+            raise RuntimeError(&quot;simulated failure before replace&quot;)
+
+        tmp_path.replace(target_path)
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
+</code></pre>
+<h3 id="narrate-each-important-line">Narrate each important line</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"<code>Path(path)</code> lets the caller pass either a string like <code>'data/tasks.json'</code> or an existing <code>Path</code> object."</p>
+<p>"<code>target_path.parent.mkdir(parents=True, exist_ok=True)</code> creates the destination directory if it does not already exist. If the target is just <code>'tasks.json'</code>, the parent is the current directory, represented by <code>.</code>. Calling <code>mkdir</code> with <code>exist_ok=True</code> is harmless there."</p>
+<p>"<code>tmp_path = target_path.with_name(f'{target_path.name}.tmp')</code> means the temp file sits in the same directory as the target. For <code>data/tasks.json</code>, this becomes <code>data/tasks.json.tmp</code>. For <code>tasks</code>, this becomes <code>tasks.tmp</code>. This avoids a common bug where suffix-based code behaves oddly for files with no suffix."</p>
+<p>"The <code>with</code> block writes the JSON and closes the temp file. Closing matters because we want the data finished before replacement."</p>
+<p>"The <code>simulate_failure</code> flag is only for teaching and testing. It raises after the temp file has been written but before <code>replace()</code>. That lets us prove the target remains safe if a failure happens before the final replacement."</p>
+<p>"<code>tmp_path.replace(target_path)</code> replaces the target with the temp file. On Windows, this can fail if the target is locked by another process. If a learner gets <code>PermissionError</code>, ask whether the JSON file is open in an editor preview, spreadsheet app, or sync tool."</p>
+<p>"The <code>except</code> block removes the temp file and then re-raises the exception. We do not silently hide save failures. We clean up and let the caller decide how to report or log the problem."</p>
+<h3 id="run-the-normal-save">Run the normal save</h3>
+<p>Type:</p>
+<pre><code class="language-python">save_json_safe(&quot;data/tasks.json&quot;, tasks)
+</code></pre>
+<p>Then show the file:</p>
+<pre><code class="language-powershell">Get-Content data/tasks.json
+</code></pre>
+<p>Expected content shape:</p>
+<pre><code class="language-json">[
+  {
+    &quot;task_id&quot;: 1,
+    &quot;title&quot;: &quot;Write logging summary&quot;,
+    &quot;is_complete&quot;: true
+  },
+  {
+    &quot;task_id&quot;: 2,
+    &quot;title&quot;: &quot;Save tracker data safely&quot;,
+    &quot;is_complete&quot;: false
+  }
+]
+</code></pre>
+<h3 id="run-the-simulated-failure">Run the simulated failure</h3>
+<p>Type:</p>
+<pre><code class="language-python">original_text = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+
+try:
+    save_json_safe(
+        &quot;data/tasks.json&quot;,
+        [{&quot;task_id&quot;: 999, &quot;title&quot;: &quot;This should not replace the file&quot;}],
+        simulate_failure=True,
+    )
+except RuntimeError as error:
+    print(f&quot;Caught expected failure: {error}&quot;)
+
+after_text = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+print(after_text == original_text)
+print(Path(&quot;data/tasks.json.tmp&quot;).exists())
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Caught expected failure: simulated failure before replace
+True
+False
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"The <code>True</code> tells us the original file content did not change. The <code>False</code> tells us the temp file was cleaned up. This is the concrete proof we wanted."</p>
+<p>"Now compare that with the unsafe partial-write demonstration. In the unsafe version, the target itself was the file being damaged. In the safe version, the target is not touched until the final replace step."</p>
+<h3 id="optional-demo-path-with-no-suffix">Optional demo: path with no suffix</h3>
+<p>If time permits, run:</p>
+<pre><code class="language-python">save_json_safe(&quot;tasks&quot;, {&quot;status&quot;: &quot;works without a suffix&quot;})
+print(Path(&quot;tasks&quot;).read_text(encoding=&quot;utf-8&quot;))
+Path(&quot;tasks&quot;).unlink(missing_ok=True)
+</code></pre>
+<p><strong>Instructor talk track</strong></p>
+<p>"This is a sanity check for our temp naming. The target <code>'tasks'</code> becomes temp <code>'tasks.tmp'</code>, not an empty or surprising path."</p>
+<h3 id="transition-4">Transition</h3>
+<p>"Now you will implement the helper yourself. The goal is not to memorize my exact variable names. The goal is to preserve the order of operations and prove the target stays safe."</p>
+<hr>
+<h2 id="guided-lab-safe-save-utility-for-tracker-data-25-minutes">Guided Lab: Safe Save Utility for Tracker Data (25 minutes)</h2>
+<h3 id="lab-purpose">Lab purpose</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Your lab is to build a safe save helper and use it with tracker-style data. This can be standalone today. If your service layer is ready, you may integrate it lightly. If your service layer is not ready, do not derail the hour by restructuring everything. Save a list of dictionaries first."</p>
+<p>"The required result is a helper that uses <code>with</code>, writes to a temp file, replaces only after success, and leaves no half-written target after a simulated failure."</p>
+<h3 id="student-prompt">Student prompt</h3>
+<p>Create or update a small file in your project, such as <code>src/tracker/storage.py</code> or a temporary demo module used only for this exercise. Implement:</p>
+<pre><code class="language-python">save_json_safe(path, data)
+</code></pre>
+<p>Then use it to save tracker data to:</p>
+<pre><code class="language-text">data/tasks.json
+</code></pre>
+<p>Your tracker data may come from:</p>
+<ul>
+<li>a list of plain dictionaries</li>
+<li>a list like <code>[task.to_dict() for task in service.list_tasks()]</code></li>
+<li>a small hard-coded sample if your service layer is not ready</li>
+</ul>
+<h3 id="lab-timing-checklist">Lab timing checklist</h3>
+<table>
+<thead>
+<tr>
+<th>Lab step</th>
+<th style="text-align: right;">Suggested time</th>
+<th>Done when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create sample tracker data</td>
+<td style="text-align: right;">4 min</td>
+<td>Learner has a list of dictionaries or data from <code>to_dict()</code></td>
+</tr>
+<tr>
+<td>Implement <code>save_json_safe()</code></td>
+<td style="text-align: right;">8 min</td>
+<td>Helper creates parent directory, temp path, <code>with</code> block, JSON dump, replace</td>
+</tr>
+<tr>
+<td>Run normal save</td>
+<td style="text-align: right;">4 min</td>
+<td><code>data/tasks.json</code> exists and contains readable JSON</td>
+</tr>
+<tr>
+<td>Simulate failure</td>
+<td style="text-align: right;">5 min</td>
+<td>Learner proves old target remains unchanged and temp is cleaned up</td>
+</tr>
+<tr>
+<td>Reflect and optionally integrate</td>
+<td style="text-align: right;">4 min</td>
+<td>Learner can explain the pattern; stretch learners connect it to <code>TaskService</code> or logging</td>
+</tr>
+</tbody>
+</table>
+<h3 id="starter-code">Starter code</h3>
+<p>Offer this if learners need scaffolding:</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from typing import Any
+
+
+def save_json_safe(
+    path: str | Path,
+    data: Any,
+    *,
+    simulate_failure: bool = False,
+) -&gt; None:
+    target_path = Path(path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = target_path.with_name(f&quot;{target_path.name}.tmp&quot;)
+
+    try:
+        with tmp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+            json.dump(data, file, indent=2)
+            file.write(&quot;\n&quot;)
+
+        if simulate_failure:
+            raise RuntimeError(&quot;simulated failure before replace&quot;)
+
+        tmp_path.replace(target_path)
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
+
+
+sample_tasks = [
+    {
+        &quot;task_id&quot;: 1,
+        &quot;title&quot;: &quot;Review logs/app.log&quot;,
+        &quot;is_complete&quot;: True,
+    },
+    {
+        &quot;task_id&quot;: 2,
+        &quot;title&quot;: &quot;Save data/tasks.json safely&quot;,
+        &quot;is_complete&quot;: False,
+    },
+]
+
+save_json_safe(&quot;data/tasks.json&quot;, sample_tasks)
+</code></pre>
+<h3 id="if-using-existing-taskservice">If using existing <code>TaskService</code></h3>
+<p>For learners who are ready, show this adaptation:</p>
+<pre><code class="language-python">tracker_data = [task.to_dict() for task in service.list_tasks()]
+save_json_safe(&quot;data/tasks.json&quot;, tracker_data)
+</code></pre>
+<p><strong>Instructor note</strong></p>
+<p>Keep this as an adaptation, not a requirement. Some learners may have <code>get_all_tasks()</code>, <code>list_items()</code>, or a property instead of <code>list_tasks()</code>. The concept is: convert domain objects to plain dictionaries before JSON.</p>
+<h3 id="concrete-unsafe-failure-simulation">Concrete unsafe failure simulation</h3>
+<p>Ask learners to create a known good file first:</p>
+<pre><code class="language-python">save_json_safe(
+    &quot;data/tasks.json&quot;,
+    [{&quot;task_id&quot;: 1, &quot;title&quot;: &quot;Original good task&quot;, &quot;is_complete&quot;: False}],
+)
+</code></pre>
+<p>Then show the unsafe direct-write example separately:</p>
+<pre><code class="language-python">from pathlib import Path
+
+target_path = Path(&quot;data/tasks.json&quot;)
+
+try:
+    with target_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+        file.write(&quot;[\n&quot;)
+        file.write('  {&quot;task_id&quot;: 2, &quot;title&quot;: &quot;Half-written task&quot;')
+        raise RuntimeError(&quot;simulated failure during direct write&quot;)
+except RuntimeError as error:
+    print(f&quot;Caught expected direct-write failure: {error}&quot;)
+
+print(target_path.read_text(encoding=&quot;utf-8&quot;))
+</code></pre>
+<p>Discuss:</p>
+<ul>
+<li>The target file was opened directly.</li>
+<li>The original good content was not protected.</li>
+<li>The file is now invalid or incomplete JSON.</li>
+<li>The <code>with</code> block closed the file, but closing a damaged file does not restore the previous content.</li>
+</ul>
+<p>Then reset the file to good data:</p>
+<pre><code class="language-python">save_json_safe(
+    &quot;data/tasks.json&quot;,
+    [{&quot;task_id&quot;: 1, &quot;title&quot;: &quot;Original good task&quot;, &quot;is_complete&quot;: False}],
+)
+</code></pre>
+<p>Now run the safe simulated failure:</p>
+<pre><code class="language-python">before = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+
+try:
+    save_json_safe(
+        &quot;data/tasks.json&quot;,
+        [{&quot;task_id&quot;: 3, &quot;title&quot;: &quot;Should not replace original&quot;}],
+        simulate_failure=True,
+    )
+except RuntimeError as error:
+    print(f&quot;Caught expected safe-save failure: {error}&quot;)
+
+after = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+print(before == after)
+print(Path(&quot;data/tasks.json.tmp&quot;).exists())
+</code></pre>
+<p>Expected result:</p>
+<pre><code class="language-text">Caught expected safe-save failure: simulated failure before replace
+True
+False
+</code></pre>
+<h3 id="completion-criteria">Completion criteria</h3>
+<p>Learners are done when:</p>
+<ul>
+<li><code>save_json_safe(path, data)</code> accepts a string or <code>Path</code>.</li>
+<li>The helper uses <code>Path(path)</code> and avoids fragile manual path concatenation.</li>
+<li>The parent directory is created with <code>mkdir(parents=True, exist_ok=True)</code>.</li>
+<li>The helper writes JSON to a temp file in the same directory as the target.</li>
+<li>The JSON write happens inside a <code>with</code> block.</li>
+<li>The helper replaces the target only after the temp write completes.</li>
+<li>The helper cleans up the temp file if an exception occurs before replacement.</li>
+<li>Normal save creates or updates <code>data/tasks.json</code>.</li>
+<li>Simulated failure leaves the original target content unchanged.</li>
+<li>The learner can answer: "What is one advantage of writing to a temp file first?"</li>
+</ul>
+<h3 id="common-learner-situations-and-coaching-responses">Common learner situations and coaching responses</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Coaching response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learner writes directly to <code>data/tasks.json</code></td>
+<td>Ask: "What file is at risk if an exception happens after the first write?" Then redirect to temp first.</td>
+</tr>
+<tr>
+<td>Learner uses <code>open()</code> without <code>with</code></td>
+<td>Ask them to rewrite it with a context manager. The goal is reliable cleanup without manual close calls.</td>
+</tr>
+<tr>
+<td>Learner dumps <code>Task</code> objects directly</td>
+<td>Remind them JSON understands plain data, not arbitrary Python objects. Use <code>to_dict()</code> first.</td>
+</tr>
+<tr>
+<td>Learner creates temp file in a different folder</td>
+<td>Keep it beside the target for today's pattern. It is easier to reason about and avoids cross-location confusion.</td>
+</tr>
+<tr>
+<td>Learner uses suffix logic that breaks for <code>tasks</code></td>
+<td>Suggest <code>target_path.with_name(f"{target_path.name}.tmp")</code>; it works for both <code>tasks.json</code> and <code>tasks</code>.</td>
+</tr>
+<tr>
+<td>Learner sees <code>PermissionError</code> on Windows</td>
+<td>Check whether the target is open or locked in another process. Close editor preview panes, spreadsheet views, or sync conflicts.</td>
+</tr>
+<tr>
+<td>Learner assumes <code>data/tasks.json</code> is always under the project root</td>
+<td>Ask them to print <code>Path.cwd()</code> and run from the project root with <code>python -m src.tracker.demo</code>.</td>
+</tr>
+<tr>
+<td>Learner wants to build a full persistence architecture</td>
+<td>Affirm the instinct, then keep the required lab standalone. Mark service-layer integration as stretch.</td>
+</tr>
+<tr>
+<td>Learner asks if this is perfectly atomic</td>
+<td>Use the honest caveat: it protects many application-level failures but not every power loss, OS crash, or filesystem edge case.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="stretch-options-if-learners-finish-early">Stretch options if learners finish early</h3>
+<p>Choose one, not all:</p>
+<ol>
+<li>Add a timestamped backup before replacement.</li>
+<li>Add a <code>load_json(path)</code> helper that returns an empty list if the file does not exist and raises a clear error for invalid JSON.</li>
+<li>Log successful saves and failed saves to <code>logs/app.log</code> using the previous hour's logging pattern.</li>
+<li>Connect <code>save_json_safe()</code> to a small <code>TaskService.save()</code> method while keeping object-to-dictionary conversion explicit.</li>
+</ol>
+<p>For the timestamped backup, use a simple pattern:</p>
+<pre><code class="language-python">from datetime import datetime
+from pathlib import Path
+import shutil
+
+
+def backup_existing_file(target_path: Path) -&gt; None:
+    if not target_path.exists():
+        return
+
+    timestamp = datetime.now().strftime(&quot;%Y%m%d_%H%M%S&quot;)
+    backup_path = target_path.with_name(
+        f&quot;{target_path.stem}_{timestamp}{target_path.suffix}.bak&quot;
+    )
+    shutil.copy2(target_path, backup_path)
+</code></pre>
+<p><strong>Instructor note</strong></p>
+<p>This extension should happen before <code>tmp_path.replace(target_path)</code>, after the temp write succeeds. Keep it optional. Do not let backup naming consume the main lab.</p>
+<hr>
+<h2 id="quick-checks-pitfalls-and-wrap-up-4-minutes">Quick Checks, Pitfalls, and Wrap-Up (4 minutes)</h2>
+<h3 id="quick-checks">Quick checks</h3>
+<p>Ask these aloud:</p>
+<ol>
+<li>"What is one advantage of writing to a temp file first?"</li>
+<li>"Does <code>with</code> alone prevent a target file from being half-overwritten?"</li>
+<li>"Why do we usually convert <code>Task</code> objects with <code>to_dict()</code> before JSON?"</li>
+<li>"What can cause <code>Path.replace()</code> to fail on Windows?"</li>
+</ol>
+<p>Expected answers:</p>
+<ol>
+<li>"If the write fails before replacement, the original good file can remain unchanged."</li>
+<li>"No. <code>with</code> closes the file, but it does not change the fact that direct write mode may have truncated the target."</li>
+<li>"JSON needs plain serializable data such as dictionaries, lists, strings, numbers, booleans, and <code>None</code>."</li>
+<li>"The destination file may be open or locked by another process, such as an editor previewing the JSON file."</li>
+</ol>
+<h3 id="common-pitfalls-to-restate">Common pitfalls to restate</h3>
+<ul>
+<li><strong>Overwriting a good file with bad data</strong>: Directly opening <code>data/tasks.json</code> in write mode puts the trusted file at risk immediately.</li>
+<li><strong>Assuming working directory is stable</strong>: Relative paths depend on where the process starts. For this course, run from the project root.</li>
+<li><strong>Thinking <code>with</code> solves every save problem</strong>: <code>with</code> handles cleanup; temp-then-replace handles the save strategy.</li>
+<li><strong>Leaving stale <code>.tmp</code> files</strong>: Clean up temp files in an exception path when the code stays readable.</li>
+<li><strong>Overstating atomicity</strong>: Say "atomic-ish" or "safer," not "impossible to corrupt under all conditions."</li>
+<li><strong>Over-integrating too soon</strong>: The helper can be standalone today. Deeper service-layer persistence is optional or a future step.</li>
+</ul>
+<h3 id="wrap-up-talk-track">Wrap-up talk track</h3>
+<p>"Today we added a small but professional habit. We did not build a database. We did not build a full storage architecture. We learned a safer way to write files that matter."</p>
+<p>"The two ideas are connected but different. <code>with</code> helps resources clean themselves up. The temp-then-replace pattern protects the target file from being the thing we damage while we are still generating new content."</p>
+<p>"If you remember one sentence, remember this:"</p>
+<pre><code class="language-text">Write the new file completely first; replace the old file only after success.
+</code></pre>
+<p>"In the next hour, we will move from file safety into decorators. Decorators let us wrap repeated behavior around functions, such as timing, validation, or simple authorization checks, without copying the same setup and cleanup logic everywhere. The same professional theme continues: keep repeated infrastructure behavior clean, visible, and reusable."</p>
+<hr>
+<h2 id="instructor-reference-solution">Instructor Reference Solution</h2>
+<p>Use this solution as the instructor's answer key. It is intentionally small and standalone. It can live in <code>src/tracker/storage.py</code>, a demo file, or a notebook cell for the lab. If placed inside a package module, keep imports consistent with the Day 3 package structure.</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from typing import Any
+
+
+def save_json_safe(
+    path: str | Path,
+    data: Any,
+    *,
+    simulate_failure: bool = False,
+) -&gt; None:
+    &quot;&quot;&quot;Save JSON data using a temp file and replace pattern.
+
+    The simulate_failure flag is for teaching and tests. It raises after the
+    temp file is written but before the target file is replaced.
+    &quot;&quot;&quot;
+    target_path = Path(path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = target_path.with_name(f&quot;{target_path.name}.tmp&quot;)
+
+    try:
+        with tmp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+            json.dump(data, file, indent=2)
+            file.write(&quot;\n&quot;)
+
+        if simulate_failure:
+            raise RuntimeError(&quot;simulated failure before replace&quot;)
+
+        tmp_path.replace(target_path)
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
+
+
+def demo() -&gt; None:
+    tasks = [
+        {
+            &quot;task_id&quot;: 1,
+            &quot;title&quot;: &quot;Review logs/app.log&quot;,
+            &quot;is_complete&quot;: True,
+        },
+        {
+            &quot;task_id&quot;: 2,
+            &quot;title&quot;: &quot;Save data/tasks.json safely&quot;,
+            &quot;is_complete&quot;: False,
+        },
+    ]
+
+    save_json_safe(&quot;data/tasks.json&quot;, tasks)
+    original_text = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+
+    try:
+        save_json_safe(
+            &quot;data/tasks.json&quot;,
+            [{&quot;task_id&quot;: 999, &quot;title&quot;: &quot;Should not replace the file&quot;}],
+            simulate_failure=True,
+        )
+    except RuntimeError as error:
+        print(f&quot;Caught expected failure: {error}&quot;)
+
+    after_text = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+    print(after_text == original_text)
+    print(Path(&quot;data/tasks.json.tmp&quot;).exists())
+
+    save_json_safe(&quot;tasks&quot;, {&quot;status&quot;: &quot;works without a suffix&quot;})
+    print(Path(&quot;tasks&quot;).read_text(encoding=&quot;utf-8&quot;))
+    Path(&quot;tasks&quot;).unlink(missing_ok=True)
+
+
+if __name__ == &quot;__main__&quot;:
+    demo()
+</code></pre>
+<p>Expected key results:</p>
+<ul>
+<li>A normal call to <code>save_json_safe("data/tasks.json", tasks)</code> creates readable JSON.</li>
+<li>A simulated failure raises <code>RuntimeError</code>, leaves <code>data/tasks.json</code> unchanged, and removes <code>data/tasks.json.tmp</code>.</li>
+<li>A call to <code>save_json_safe("tasks", {"status": "works without a suffix"})</code> works and uses a temp file named <code>tasks.tmp</code> internally.</li>
+</ul>
+<p>Reference explanation for the exit ticket:</p>
+<p>"Writing to a temp file first means the existing good file is not touched until the new content has been written successfully. If the write fails before replacement, the old file can remain intact instead of being left half-written."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour2_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour4_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-logging-5-minutes" class="depth-2">Opening Bridge from Logging (5 minutes)</a></li>
+<li><a href="#instructor-talk-track" class="depth-3">Instructor talk track</a></li>
+<li><a href="#transition" class="depth-3">Transition</a></li>
+<li><a href="#outcomes-setup-and-vocabulary-8-minutes" class="depth-2">Outcomes, Setup, and Vocabulary (8 minutes)</a></li>
+<li><a href="#instructor-talk-track-2" class="depth-3">Instructor talk track</a></li>
+<li><a href="#instructor-check-for-understanding" class="depth-3">Instructor check for understanding</a></li>
+<li><a href="#transition-2" class="depth-3">Transition</a></li>
+<li><a href="#concept-briefing-with-paths-and-direct-write-risk-10-minutes" class="depth-2">Concept Briefing: with, Paths, and Direct-Write Risk (10 minutes)</a></li>
+<li><a href="#part-1-what-with-gives-us" class="depth-3">Part 1: What with gives us</a></li>
+<li><a href="#part-2-why-direct-writes-can-corrupt-useful-data" class="depth-3">Part 2: Why direct writes can corrupt useful data</a></li>
+<li><a href="#part-3-the-safer-pattern-in-plain-english" class="depth-3">Part 3: The safer pattern in plain English</a></li>
+<li><a href="#part-4-working-directory-warning" class="depth-3">Part 4: Working directory warning</a></li>
+<li><a href="#transition-3" class="depth-3">Transition</a></li>
+<li><a href="#live-demo-write-json-to-temp-then-replace-8-minutes" class="depth-2">Live Demo: Write JSON to Temp, Then Replace (8 minutes)</a></li>
+<li><a href="#demo-framing" class="depth-3">Demo framing</a></li>
+<li><a href="#live-code-the-helper" class="depth-3">Live-code the helper</a></li>
+<li><a href="#narrate-each-important-line" class="depth-3">Narrate each important line</a></li>
+<li><a href="#run-the-normal-save" class="depth-3">Run the normal save</a></li>
+<li><a href="#run-the-simulated-failure" class="depth-3">Run the simulated failure</a></li>
+<li><a href="#optional-demo-path-with-no-suffix" class="depth-3">Optional demo: path with no suffix</a></li>
+<li><a href="#transition-4" class="depth-3">Transition</a></li>
+<li><a href="#guided-lab-safe-save-utility-for-tracker-data-25-minutes" class="depth-2">Guided Lab: Safe Save Utility for Tracker Data (25 minutes)</a></li>
+<li><a href="#lab-purpose" class="depth-3">Lab purpose</a></li>
+<li><a href="#student-prompt" class="depth-3">Student prompt</a></li>
+<li><a href="#lab-timing-checklist" class="depth-3">Lab timing checklist</a></li>
+<li><a href="#starter-code" class="depth-3">Starter code</a></li>
+<li><a href="#if-using-existing-taskservice" class="depth-3">If using existing TaskService</a></li>
+<li><a href="#concrete-unsafe-failure-simulation" class="depth-3">Concrete unsafe failure simulation</a></li>
+<li><a href="#completion-criteria" class="depth-3">Completion criteria</a></li>
+<li><a href="#common-learner-situations-and-coaching-responses" class="depth-3">Common learner situations and coaching responses</a></li>
+<li><a href="#stretch-options-if-learners-finish-early" class="depth-3">Stretch options if learners finish early</a></li>
+<li><a href="#quick-checks-pitfalls-and-wrap-up-4-minutes" class="depth-2">Quick Checks, Pitfalls, and Wrap-Up (4 minutes)</a></li>
+<li><a href="#quick-checks" class="depth-3">Quick checks</a></li>
+<li><a href="#common-pitfalls-to-restate" class="depth-3">Common pitfalls to restate</a></li>
+<li><a href="#wrap-up-talk-track" class="depth-3">Wrap-up talk track</a></li>
+<li><a href="#instructor-reference-solution" class="depth-2">Instructor Reference Solution</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day3_Hour3_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day3_Hour2_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day3_Hour4_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>

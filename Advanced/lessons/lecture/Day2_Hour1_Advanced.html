@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2, Hour 1: Pattern: Factory (Practical Creation + Validation) | Advanced Lecture</title>
+    <meta name="generator" content="scripts/generate_lecture_pages.py">
+    <meta name="lecture-module" content="advanced">
+    <meta name="lecture-day" content="2">
+    <meta name="lecture-hour" content="1">
+    <meta name="lecture-source" content="Advanced/lessons/lecture/Day2_Hour1_Advanced.md">
+
+    <link rel="prev" href="Day1_Hour4_Advanced.html">
+    <link rel="next" href="Day2_Hour2_Advanced.html">
+    <link rel="stylesheet" href="../../../slides/shared/lecture/lecture.css">
+    <script defer src="../../../slides/shared/lecture/lecture.js"></script>
+</head>
+<body class="lecture-page" data-page-kind="lecture" data-module="advanced" data-day="2" data-hour="1">
+    <a class="lecture-skip-link" href="#lecture-content">Skip to lecture content</a>
+    <div class="lecture-shell">
+        <nav class="lecture-breadcrumbs" aria-label="Breadcrumb">
+            <a href="../../../slides/index.html">Course materials</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/index.html">Advanced</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <a href="../slides/day-02/index.html">Day 2</a>
+            <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
+            <span aria-current="page">Hour 1</span>
+        </nav>
+        <header class="lecture-header">
+            <section class="lecture-hero">
+                <span class="lecture-kicker">Python Programming Advanced</span>
+                <h1 class="lecture-title">Day 2, Hour 1: Pattern: Factory (Practical Creation + Validation)</h1>
+                <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
+                <div class="lecture-meta" aria-label="Lecture metadata">
+                    <span class="lecture-meta-item">Day 2</span>
+                    <span class="lecture-meta-item">Hour 1</span>
+                    <span class="lecture-meta-item">Hourly lecture page</span>
+                </div>
+                <div class="lecture-actions">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour2_Advanced.html">Next lecture</a>
+                    <a class="lecture-button" data-variant="secondary" href="Day2_Hour1_Advanced.md">View source Markdown</a>
+                </div>
+            </section>
+            <aside class="lecture-panel" aria-label="Lecture controls">
+                <h2>Reading tools</h2>
+                <div class="lecture-theme-row">
+                    <label for="lecture-theme-select">Theme</label>
+                    <select id="lecture-theme-select" data-theme-toggle>
+                        <option value="auto">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
+                <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <ul class="lecture-shortcuts-list">
+                   <li><code>ArrowLeft</code> Previous lecture</li>
+                   <li><code>ArrowRight</code> Next lecture</li>
+                    <li><code>?</code> Shortcut help</li>
+                    <li><code>Home</code> Top of page</li>
+                    <li><code>End</code> Bottom of page</li>
+                </ul>
+            </aside>
+        </header>
+        <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
+            <article class="lecture-content" data-lecture-article>
+                <div class="lecture-prose">
+                    <h2 id="instructor-notes">Instructor Notes</h2>
+<ul>
+<li><strong>Course</strong>: Python Programming (Advanced)</li>
+<li><strong>Session</strong>: Day 2, Hour 1 of 48, also Hour 5 in the Advanced runbook sequence</li>
+<li><strong>Focus</strong>: Using a factory to centralize object creation, normalization, required-field validation, optional defaults, and value validation.</li>
+<li><strong>Source of truth</strong>: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code>, Session 2, Hour 5.</li>
+<li><strong>Prerequisites</strong>: Learners should be able to define classes, instantiate objects, use dictionaries, read simple tracebacks, write <code>try</code>/<code>except</code> blocks, and understand the Day 1 custom exception and validation concepts.</li>
+<li><strong>Advanced trajectory</strong>: This hour moves learners from PCAP-level class construction toward PCPP1-style design discipline. The goal is not merely to write another <code>__init__</code> method. The goal is to decide where object creation rules belong so that valid objects are produced consistently across an application.</li>
+<li><strong>Instructor goal</strong>: By the end of this hour, every learner has implemented a simple factory function or class method that creates a tracker-style model object from a dictionary, returns a fully valid object, or raises <code>ValidationError</code> with a clear message.</li>
+</ul>
+<hr>
+<h2 id="timing-overview">Timing Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Time</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opening bridge from Day 1 Hour 4</td>
+<td style="text-align: right;">5 min</td>
+<td>Connect composition/polymorphism design judgment to creation design judgment</td>
+</tr>
+<tr>
+<td>Outcomes, setup, and vocabulary</td>
+<td style="text-align: right;">5 min</td>
+<td>Define factory, raw input, normalized input, required field, optional default, and caller boundary</td>
+</tr>
+<tr>
+<td>Concept briefing: why factories</td>
+<td style="text-align: right;">10 min</td>
+<td>Explain consistent creation, fewer duplicated rules, clean constructors, and fully valid objects</td>
+</tr>
+<tr>
+<td>Live demo: <code>RecordFactory.from_dict()</code></td>
+<td style="text-align: right;">10 min</td>
+<td>Build and run a self-contained factory for hard-coded JSON-like dictionaries</td>
+</tr>
+<tr>
+<td>Guided lab: tracker factory implementation</td>
+<td style="text-align: right;">25 min</td>
+<td>Learners implement required-field checks, optional defaults, validation, and display of loaded objects</td>
+</tr>
+<tr>
+<td>Quick checks, completion criteria, and wrap-up</td>
+<td style="text-align: right;">5 min</td>
+<td>Verify understanding and preview the next design pattern hour</td>
+</tr>
+</tbody>
+</table>
+<p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the room needs more support, shorten the vocabulary section or the amount of instructor narration during the concept briefing, but do not make the required factory behavior optional. The runbook objective is that the factory creates valid objects or raises <code>ValidationError</code>.</p>
+<hr>
+<h2 id="learning-outcomes">Learning Outcomes</h2>
+<p>By the end of this hour, learners will be able to:</p>
+<ol>
+<li>Explain why a factory is useful when raw data comes from JSON, dictionaries, user input, files, APIs, or forms.</li>
+<li>Implement a simple factory class or factory function that creates a model object from a dictionary.</li>
+<li>Keep the model constructor simple while the factory handles raw input parsing and validation.</li>
+<li>Centralize required-field checks so missing required fields raise <code>ValidationError</code> instead of becoming silent <code>None</code> values.</li>
+<li>Apply defaults only to optional fields, not required fields.</li>
+<li>Normalize raw values such as whitespace, capitalization, and status labels before object creation.</li>
+<li>Validate allowed values such as status or priority before returning an object.</li>
+<li>Return fully valid objects from the factory or raise <code>ValidationError</code> before an invalid object escapes.</li>
+<li>Load two sample records from hard-coded dictionaries and print or display the resulting objects.</li>
+<li>Explain the main benefit of centralizing creation logic: consistent creation rules and fewer duplicated validation branches throughout the program.</li>
+</ol>
+<hr>
+<h2 id="instructor-prep-before-class">Instructor Prep Before Class</h2>
+<p>Before learners arrive, complete this checklist:</p>
+<ul>
+<li>Keep the runbook section for Session 2, Hour 5 visible. The required scope is Factory Pattern, practical creation plus validation, <code>RecordFactory.from_dict()</code> for JSON or dictionary input, missing-field errors, a lab that loads two hard-coded records, completion criteria, pitfalls, optional <code>from_user_input()</code>, and a quick check about centralized creation logic.</li>
+<li>Open the Day 1 Hour 4 expanded lecture if you want the teaching style nearby. Use it as a model for pacing and structure, not as a source of content. Today's topic is creation logic, not composition versus inheritance.</li>
+<li>Prepare a clean file for the live demo, such as <code>day2_hour1_factory_demo.py</code>, or be ready to create a notebook cell. The code in this script is self-contained and deterministic.</li>
+<li>Confirm the terminal command for the room. Use <code>python day2_hour1_factory_demo.py</code> if <code>python</code> works. If your environment uses <code>python3</code>, consistently show <code>python3 day2_hour1_factory_demo.py</code>.</li>
+<li>Prepare the following vocabulary on the board or in a shared note:</li>
+</ul>
+<pre><code class="language-text">Factory: code whose job is to create objects using consistent rules.
+Raw input: data before our program trusts it.
+Normalization: converting input into a consistent shape.
+Required field: data we must have; no silent default.
+Optional field: data that may safely receive a default.
+Caller boundary: the place where we catch and report validation errors.
+</code></pre>
+<ul>
+<li>Decide whether learners will work in their existing tracker project or in a new practice file. If their projects vary widely, ask them to create a simple <code>TaskRecord</code> or <code>TrackerRecord</code> model for this hour so the lab stays focused.</li>
+<li>Be ready to correct two common mistakes early. First, learners may put all parsing and validation into <code>__init__</code>, making the constructor noisy and hard to reuse. Second, learners may default a missing required field to an empty string, which hides a data problem instead of reporting it.</li>
+</ul>
+<p>Suggested board note before the session starts:</p>
+<pre><code class="language-text">Day 2 Hour 1 goals:
+1. Keep the model constructor simple.
+2. Put raw dict parsing in a factory.
+3. Required fields: validate, do not silently default.
+4. Optional fields: default intentionally.
+5. Factory returns a valid object or raises ValidationError.
+</code></pre>
+<hr>
+<h2 id="opening-bridge-from-day-1-hour-4-5-minutes">Opening Bridge from Day 1 Hour 4 (5 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Welcome back. At the end of Day 1, we practiced an important design habit: choosing the right relationship between objects. In Hour 4, we compared inheritance, composition, and polymorphism. The big lesson was that advanced Python is not about using the fanciest object-oriented feature every time. It is about putting responsibility in the right place."</p>
+<p>"Today we continue that same design theme, but we move from object relationships to object creation. Last time, we asked, 'Should this object inherit from another object, hold another object, or simply provide the method the caller expects?' Today we ask a different question: 'When raw data comes into our program, where should the rules for building a valid object live?'"</p>
+<p>"This matters because most real programs do not create objects from perfect hand-written values. A tracker application might receive a record from JSON, a form, a file, a command-line prompt, a database row, or an API response. That raw data may have extra whitespace. It may use uppercase where our program expects lowercase. It may omit required fields. It may use a status value our application does not recognize."</p>
+<p>"A beginner-friendly approach is often to put all of that logic directly into <code>__init__</code>. That works for a small example, but it can become a problem quickly. The constructor becomes a mix of storage, parsing, validation, defaulting, and error reporting. Other parts of the app may start duplicating small pieces of the same creation rules. One function strips whitespace. Another function forgets to strip whitespace. One route accepts <code>Done</code>, another route only accepts <code>done</code>. Bugs appear because object creation is inconsistent."</p>
+<p>"The Factory Pattern gives us a practical solution. A factory is code whose job is to create objects. In Python, that might be a class method like <code>RecordFactory.from_dict()</code>, a class method on the model itself like <code>Record.from_dict()</code>, or a standalone function like <code>create_record_from_dict()</code>. The form matters less than the responsibility. The factory receives raw input, applies the rules, and either returns a fully valid object or raises a clear exception."</p>
+<p>Pause and ask:</p>
+<p>"Think about your tracker or record project. If three different parts of the application need to create a task from dictionary-like data, what could go wrong if all three parts write their own parsing rules?"</p>
+<p>Take two or three answers. Listen for duplicated checks, inconsistent defaults, missing validation, and unclear errors. Then connect:</p>
+<p>"Exactly. Today's pattern is about reducing that risk. We are going to centralize creation logic so there is one reliable path from raw data to valid object."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's name the vocabulary, then we will build a small <code>RecordFactory.from_dict()</code> live. The demo will deliberately use hard-coded dictionaries so we can focus on the design pattern rather than file I/O or API details."</p>
+<hr>
+<h2 id="outcomes-setup-and-vocabulary-5-minutes">Outcomes, Setup, and Vocabulary (5 minutes)</h2>
+<p>Use this section to make the pattern concrete. Keep the language practical and connect every term to the live demo.</p>
+<p><strong>Instructor talk track</strong></p>
+<p>"By the end of this hour, you should be able to implement a simple factory and explain why it belongs in the design. We are not trying to memorize a design-pattern diagram. We are learning a professional habit: raw data should pass through one trusted creation path before the rest of the program uses it."</p>
+<p>"Here are the terms we will use."</p>
+<p>"First, <strong>factory</strong>. A factory is code whose responsibility is to create an object. A real-world factory takes raw materials and produces finished goods. A software factory takes raw input and produces an object our program can trust. In Python, a factory can be very small. It does not have to be a large framework or a complex hierarchy."</p>
+<p>"Second, <strong>raw input</strong>. Raw input is data before our program trusts it. A dictionary from JSON is raw input. A dictionary from a form is raw input. Strings typed by a user are raw input. Even if the data came from our own test case, the factory should treat it as something that must be checked."</p>
+<p>"Third, <strong>normalization</strong>. Normalization means converting input into a consistent shape. For example, the raw status might be <code>' DONE '</code>, but our program may store it as <code>'done'</code>. The raw title might have extra spaces, so we strip it. The raw priority might be <code>'High'</code>, so we store <code>'high'</code>. Normalization does not mean accepting anything. It means converting reasonable representations into our program's standard representation."</p>
+<p>"Fourth, <strong>required field</strong>. A required field is data we must have to create a meaningful object. In a tracker record, a title is required. An owner might be required. If a required field is missing, the factory should raise <code>ValidationError</code>. It should not quietly invent a required title like <code>'Untitled'</code> unless the product rule explicitly says that is allowed. For this hour, required fields must not receive silent defaults."</p>
+<p>"Fifth, <strong>optional field</strong>. An optional field is data that can safely use a default. Status is a good example. If the incoming dictionary does not include status, we may decide that a new record starts as <code>'todo'</code>. Estimate minutes might default to <code>0</code>. These defaults should be intentional and visible in the factory."</p>
+<p>"Sixth, <strong>caller boundary</strong>. This is the place where code calls the factory and decides what to do if validation fails. The factory raises <code>ValidationError</code>; the caller catches it and reports a clear message. That separation is important. The factory should not usually print the error itself. It should raise the error. The caller decides whether to print, log, show a UI message, or reject an API request."</p>
+<p>Point learners to the working pattern:</p>
+<pre><code class="language-text">raw dict -&gt; factory validates and normalizes -&gt; valid model object
+raw dict -&gt; factory finds problem -&gt; raises ValidationError
+</code></pre>
+<p>"That arrow is the core of today's hour."</p>
+<hr>
+<h2 id="concept-briefing-why-factories-10-minutes">Concept Briefing: Why Factories (10 minutes)</h2>
+<p><strong>Instructor talk track</strong></p>
+<p>"Let's start with the problem factories solve. Imagine we have a <code>TaskRecord</code> class. At minimum, a record might have a title, an owner, a status, a priority, and an estimate in minutes. The simplest constructor might look like this: <code>TaskRecord(title, owner, status, priority, estimate_minutes)</code>. That constructor is easy to understand. It takes values and stores values."</p>
+<p>"But real input usually does not arrive as five perfect arguments. It arrives as a dictionary like this:"</p>
+<pre><code class="language-python">{
+    &quot;title&quot;: &quot;  write tests  &quot;,
+    &quot;owner&quot;: &quot;maria&quot;,
+    &quot;status&quot;: &quot;IN_PROGRESS&quot;,
+    &quot;priority&quot;: &quot;High&quot;,
+}
+</code></pre>
+<p>"Notice the small problems. The title has extra whitespace. The status uses uppercase. The priority is capitalized. The estimate is missing. None of these is unusual. This is what raw input often looks like."</p>
+<p>"One option is to make the constructor handle all of it. The constructor could check if keys exist, strip strings, default missing values, validate status, convert estimate to an integer, and then store the final values. That seems convenient at first. But it has a cost: the constructor becomes responsible for too many things."</p>
+<p>"A clean constructor is usually about receiving already meaningful values and assigning them to the object. It may still protect core invariants, especially in production code, but we do not want it to become a raw-data parser for every possible source. Dictionary input, command-line input, web form input, database input, and user prompt input may all need slightly different parsing. If all of that goes into <code>__init__</code>, the constructor turns into a traffic jam."</p>
+<p>"A factory gives us a better place for that traffic. The factory can say, 'I know how to create a <code>TaskRecord</code> from a dictionary.' Another factory method could say, 'I know how to create a <code>TaskRecord</code> from user input.' The model constructor remains simple. The creation rules are centralized."</p>
+<p>Write or display:</p>
+<pre><code class="language-text">Constructor:
+    Store clean values on the object.
+
+Factory:
+    Accept raw input.
+    Check required fields.
+    Normalize values.
+    Apply optional defaults.
+    Validate allowed values.
+    Return a fully valid object or raise ValidationError.
+</code></pre>
+<p>"This split is a design decision. It is also a testing decision. A factory is easy to test because you can give it dictionaries and check whether it returns objects or raises errors. You can test missing title, missing owner, unknown status, invalid priority, and non-numeric estimate. The tests focus on creation rules without needing the rest of the app."</p>
+<p>"Now let's talk about the phrase <strong>fully valid object</strong>. This is one of the most important ideas today. A factory should not return an object that is half-created, missing required data, or waiting for someone else to fix it later. If the factory returns an object, the rest of the program should be able to use it with confidence. If the input cannot produce a valid object, the factory should stop and raise <code>ValidationError</code>."</p>
+<p>"That does not mean factories prevent all possible bugs. It means they establish a clear boundary. Before the factory, data is untrusted. After the factory returns, the object has passed the creation rules."</p>
+<p>Ask:</p>
+<p>"Which fields in a tracker record should be required? Which fields could reasonably have defaults?"</p>
+<p>Guide toward:</p>
+<ul>
+<li>Required: <code>title</code>, <code>owner</code></li>
+<li>Optional defaults: <code>status='todo'</code>, <code>priority='normal'</code>, <code>estimate_minutes=0</code></li>
+</ul>
+<p>"The exact product rule can vary. In one app, owner might be optional. In another, it is required. For today's lesson, we will require title and owner because we want to practice missing-field errors. The principle is what matters: required fields fail loudly; optional fields default intentionally."</p>
+<p>"Factories also reduce duplication. If every feature creates records through <code>RecordFactory.from_dict()</code>, then every feature gets the same whitespace handling, same status rules, same missing-field errors, and same defaults. When the business rule changes, we update one place. That is the central benefit of the pattern."</p>
+<p>"Finally, factories help us avoid a subtle pitfall: silent defaults that hide mistakes. A default is helpful when the missing value is truly optional. A default is dangerous when it covers up a required missing value. If the input lacks a title and our code silently uses an empty string, the error may not appear until much later, maybe when a report prints blank rows or a search feature behaves strangely. We want failure near the cause. Missing required field? Raise <code>ValidationError</code> right there."</p>
+<p><strong>Transition</strong></p>
+<p>"Let's build this now. We will create a simple model, then a <code>RecordFactory.from_dict()</code> method that takes a dictionary, validates it, normalizes it, applies optional defaults, and returns a valid object."</p>
+<hr>
+<h2 id="live-demo-recordfactoryfromdict-10-minutes">Live Demo: <code>RecordFactory.from_dict()</code> (10 minutes)</h2>
+<p>The live demo should be typed or revealed in small chunks. Keep the pace brisk. The goal is a credible 10-minute demo, not a full architecture lecture. Use one file and avoid external dependencies.</p>
+<h3 id="demo-step-1-define-a-local-exception-and-simple-model">Demo Step 1: Define a local exception and simple model</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"First, I want the exception to be local in this demo so the file is self-contained. Yesterday we talked about custom exceptions for validation. Today we will reuse that idea. Our exception is intentionally small."</p>
+<p>"Next, I will define the model. Notice what the constructor does and does not do. It stores clean values. It is not reading a dictionary. It is not deciding defaults. It is not stripping raw strings. That is the factory's job."</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when raw input cannot produce a valid record.&quot;&quot;&quot;
+
+
+class TaskRecord:
+    def __init__(
+        self,
+        title: str,
+        owner: str,
+        status: str,
+        priority: str,
+        estimate_minutes: int,
+    ) -&gt; None:
+        self.title = title
+        self.owner = owner
+        self.status = status
+        self.priority = priority
+        self.estimate_minutes = estimate_minutes
+
+    def __str__(self) -&gt; str:
+        return (
+            f&quot;{self.title} | owner={self.owner} | status={self.status} | &quot;
+            f&quot;priority={self.priority} | estimate={self.estimate_minutes}m&quot;
+        )
+</code></pre>
+<p>Say:</p>
+<p>"This constructor is deliberately boring. Boring constructors are often a good sign. They are easy to read, easy to instantiate in tests, and easy to reason about. The important creation rules are coming next."</p>
+<h3 id="demo-step-2-add-the-factory-skeleton">Demo Step 2: Add the factory skeleton</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now we create <code>RecordFactory</code>. A factory does not need instance state here, so we will use a <code>@classmethod</code>. You could also use <code>@staticmethod</code> or a standalone function. I am using <code>@classmethod</code> because it gives us a clean namespace: <code>RecordFactory.from_dict(data)</code> reads nicely."</p>
+<pre><code class="language-python">class RecordFactory:
+    REQUIRED_FIELDS = (&quot;title&quot;, &quot;owner&quot;)
+    ALLOWED_STATUSES = {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+    ALLOWED_PRIORITIES = {&quot;low&quot;, &quot;normal&quot;, &quot;high&quot;}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; TaskRecord:
+        &quot;&quot;&quot;Create a fully valid TaskRecord from JSON-like dictionary data.&quot;&quot;&quot;
+        # We will fill this in one rule at a time.
+        raise NotImplementedError
+</code></pre>
+<p>Ask:</p>
+<p>"Before I write the body, what should be the first thing this method checks?"</p>
+<p>Guide them to required fields. If someone says status or priority, affirm that those matter but remind them that missing required fields are the first gate.</p>
+<h3 id="demo-step-3-required-field-checks">Demo Step 3: Required-field checks</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"The first rule is required fields. Title and owner must be present. If either key is missing, the factory raises <code>ValidationError</code>. I am also checking for blank strings after stripping, because a string of spaces is not a meaningful title."</p>
+<pre><code class="language-python">class RecordFactory:
+    REQUIRED_FIELDS = (&quot;title&quot;, &quot;owner&quot;)
+    ALLOWED_STATUSES = {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+    ALLOWED_PRIORITIES = {&quot;low&quot;, &quot;normal&quot;, &quot;high&quot;}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; TaskRecord:
+        &quot;&quot;&quot;Create a fully valid TaskRecord from JSON-like dictionary data.&quot;&quot;&quot;
+        for field_name in cls.REQUIRED_FIELDS:
+            if field_name not in data:
+                raise ValidationError(f&quot;Missing required field: {field_name}&quot;)
+
+        raw_title = data[&quot;title&quot;]
+        raw_owner = data[&quot;owner&quot;]
+
+        if not isinstance(raw_title, str):
+            raise ValidationError(&quot;Field 'title' must be text&quot;)
+        if not isinstance(raw_owner, str):
+            raise ValidationError(&quot;Field 'owner' must be text&quot;)
+
+        title = raw_title.strip()
+        owner = raw_owner.strip().lower()
+
+        if not title:
+            raise ValidationError(&quot;Field 'title' cannot be blank&quot;)
+        if not owner:
+            raise ValidationError(&quot;Field 'owner' cannot be blank&quot;)
+
+        # More rules will be added next.
+        return TaskRecord(
+            title=title,
+            owner=owner,
+            status=&quot;todo&quot;,
+            priority=&quot;normal&quot;,
+            estimate_minutes=0,
+        )
+</code></pre>
+<p>Say:</p>
+<p>"At this point, the required fields are enforced. Notice that I did not write <code>data.get('title', 'Untitled')</code>. That would be a silent default for a required field. Today's rule is clear: required fields must be supplied."</p>
+<h3 id="demo-step-4-optional-defaults-normalization-and-value-validation">Demo Step 4: Optional defaults, normalization, and value validation</h3>
+<p><strong>Instructor talk track</strong></p>
+<p>"Now we add optional fields. Status, priority, and estimate can have defaults. But after defaulting, we still validate them. A default does not mean anything goes."</p>
+<pre><code class="language-python">class RecordFactory:
+    REQUIRED_FIELDS = (&quot;title&quot;, &quot;owner&quot;)
+    ALLOWED_STATUSES = {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+    ALLOWED_PRIORITIES = {&quot;low&quot;, &quot;normal&quot;, &quot;high&quot;}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; TaskRecord:
+        &quot;&quot;&quot;Create a fully valid TaskRecord from JSON-like dictionary data.&quot;&quot;&quot;
+        for field_name in cls.REQUIRED_FIELDS:
+            if field_name not in data:
+                raise ValidationError(f&quot;Missing required field: {field_name}&quot;)
+
+        raw_title = data[&quot;title&quot;]
+        raw_owner = data[&quot;owner&quot;]
+
+        if not isinstance(raw_title, str):
+            raise ValidationError(&quot;Field 'title' must be text&quot;)
+        if not isinstance(raw_owner, str):
+            raise ValidationError(&quot;Field 'owner' must be text&quot;)
+
+        title = raw_title.strip()
+        owner = raw_owner.strip().lower()
+
+        if not title:
+            raise ValidationError(&quot;Field 'title' cannot be blank&quot;)
+        if not owner:
+            raise ValidationError(&quot;Field 'owner' cannot be blank&quot;)
+
+        status = str(data.get(&quot;status&quot;, &quot;todo&quot;)).strip().lower()
+        priority = str(data.get(&quot;priority&quot;, &quot;normal&quot;)).strip().lower()
+
+        if status not in cls.ALLOWED_STATUSES:
+            allowed = &quot;, &quot;.join(sorted(cls.ALLOWED_STATUSES))
+            raise ValidationError(
+                f&quot;Invalid status '{status}'. Expected one of: {allowed}&quot;
+            )
+
+        if priority not in cls.ALLOWED_PRIORITIES:
+            allowed = &quot;, &quot;.join(sorted(cls.ALLOWED_PRIORITIES))
+            raise ValidationError(
+                f&quot;Invalid priority '{priority}'. Expected one of: {allowed}&quot;
+            )
+
+        try:
+            estimate_minutes = int(data.get(&quot;estimate_minutes&quot;, 0))
+        except (TypeError, ValueError) as error:
+            raise ValidationError(&quot;Field 'estimate_minutes' must be an integer&quot;) from error
+
+        if estimate_minutes &lt; 0:
+            raise ValidationError(&quot;Field 'estimate_minutes' cannot be negative&quot;)
+
+        return TaskRecord(
+            title=title,
+            owner=owner,
+            status=status,
+            priority=priority,
+            estimate_minutes=estimate_minutes,
+        )
+</code></pre>
+<p>Say:</p>
+<p>"Now the factory has the full creation pipeline: required checks, normalization, optional defaults, value validation, and object creation. If it returns a <code>TaskRecord</code>, that record is valid according to our rules."</p>
+<h3 id="demo-step-5-run-valid-and-invalid-hard-coded-dictionaries">Demo Step 5: Run valid and invalid hard-coded dictionaries</h3>
+<p>Now present the complete deterministic script. It should be copy/paste-able and runnable as one file.</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when raw input cannot produce a valid record.&quot;&quot;&quot;
+
+
+class TaskRecord:
+    def __init__(
+        self,
+        title: str,
+        owner: str,
+        status: str,
+        priority: str,
+        estimate_minutes: int,
+    ) -&gt; None:
+        self.title = title
+        self.owner = owner
+        self.status = status
+        self.priority = priority
+        self.estimate_minutes = estimate_minutes
+
+    def __str__(self) -&gt; str:
+        return (
+            f&quot;{self.title} | owner={self.owner} | status={self.status} | &quot;
+            f&quot;priority={self.priority} | estimate={self.estimate_minutes}m&quot;
+        )
+
+    def to_dict(self) -&gt; dict[str, object]:
+        &quot;&quot;&quot;Convert the custom object to plain data before JSON serialization.&quot;&quot;&quot;
+        return {
+            &quot;title&quot;: self.title,
+            &quot;owner&quot;: self.owner,
+            &quot;status&quot;: self.status,
+            &quot;priority&quot;: self.priority,
+            &quot;estimate_minutes&quot;: self.estimate_minutes,
+        }
+
+
+class RecordFactory:
+    REQUIRED_FIELDS = (&quot;title&quot;, &quot;owner&quot;)
+    ALLOWED_STATUSES = {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+    ALLOWED_PRIORITIES = {&quot;low&quot;, &quot;normal&quot;, &quot;high&quot;}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; TaskRecord:
+        &quot;&quot;&quot;Create a fully valid TaskRecord from JSON-like dictionary data.&quot;&quot;&quot;
+        for field_name in cls.REQUIRED_FIELDS:
+            if field_name not in data:
+                raise ValidationError(f&quot;Missing required field: {field_name}&quot;)
+
+        raw_title = data[&quot;title&quot;]
+        raw_owner = data[&quot;owner&quot;]
+
+        if not isinstance(raw_title, str):
+            raise ValidationError(&quot;Field 'title' must be text&quot;)
+        if not isinstance(raw_owner, str):
+            raise ValidationError(&quot;Field 'owner' must be text&quot;)
+
+        title = raw_title.strip()
+        owner = raw_owner.strip().lower()
+
+        if not title:
+            raise ValidationError(&quot;Field 'title' cannot be blank&quot;)
+        if not owner:
+            raise ValidationError(&quot;Field 'owner' cannot be blank&quot;)
+
+        status = str(data.get(&quot;status&quot;, &quot;todo&quot;)).strip().lower()
+        priority = str(data.get(&quot;priority&quot;, &quot;normal&quot;)).strip().lower()
+
+        if status not in cls.ALLOWED_STATUSES:
+            allowed = &quot;, &quot;.join(sorted(cls.ALLOWED_STATUSES))
+            raise ValidationError(
+                f&quot;Invalid status '{status}'. Expected one of: {allowed}&quot;
+            )
+
+        if priority not in cls.ALLOWED_PRIORITIES:
+            allowed = &quot;, &quot;.join(sorted(cls.ALLOWED_PRIORITIES))
+            raise ValidationError(
+                f&quot;Invalid priority '{priority}'. Expected one of: {allowed}&quot;
+            )
+
+        try:
+            estimate_minutes = int(data.get(&quot;estimate_minutes&quot;, 0))
+        except (TypeError, ValueError) as error:
+            raise ValidationError(&quot;Field 'estimate_minutes' must be an integer&quot;) from error
+
+        if estimate_minutes &lt; 0:
+            raise ValidationError(&quot;Field 'estimate_minutes' cannot be negative&quot;)
+
+        return TaskRecord(
+            title=title,
+            owner=owner,
+            status=status,
+            priority=priority,
+            estimate_minutes=estimate_minutes,
+        )
+
+
+def load_records(raw_records: list[dict[str, object]]) -&gt; list[TaskRecord]:
+    loaded_records: list[TaskRecord] = []
+
+    for index, raw_record in enumerate(raw_records, start=1):
+        try:
+            record = RecordFactory.from_dict(raw_record)
+        except ValidationError as error:
+            print(f&quot;Record {index} rejected: {error}&quot;)
+        else:
+            loaded_records.append(record)
+            print(f&quot;Record {index} loaded: {record}&quot;)
+
+    return loaded_records
+
+
+sample_records = [
+    {
+        &quot;title&quot;: &quot;  write factory tests  &quot;,
+        &quot;owner&quot;: &quot;MARIA&quot;,
+        &quot;status&quot;: &quot;IN_PROGRESS&quot;,
+        &quot;priority&quot;: &quot;High&quot;,
+        &quot;estimate_minutes&quot;: &quot;45&quot;,
+    },
+    {
+        &quot;title&quot;: &quot;Document validation rules&quot;,
+        &quot;owner&quot;: &quot;jamal&quot;,
+    },
+    {
+        &quot;title&quot;: &quot;Missing owner should fail&quot;,
+        &quot;status&quot;: &quot;todo&quot;,
+    },
+]
+
+records = load_records(sample_records)
+
+print()
+print(&quot;Display loaded records:&quot;)
+for record in records:
+    print(f&quot;- {record}&quot;)
+
+print()
+print(&quot;Plain data for serialization:&quot;)
+for record in records:
+    print(record.to_dict())
+</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Record 1 loaded: write factory tests | owner=maria | status=in_progress | priority=high | estimate=45m
+Record 2 loaded: Document validation rules | owner=jamal | status=todo | priority=normal | estimate=0m
+Record 3 rejected: Missing required field: owner
+
+Display loaded records:
+- write factory tests | owner=maria | status=in_progress | priority=high | estimate=45m
+- Document validation rules | owner=jamal | status=todo | priority=normal | estimate=0m
+
+Plain data for serialization:
+{'title': 'write factory tests', 'owner': 'maria', 'status': 'in_progress', 'priority': 'high', 'estimate_minutes': 45}
+{'title': 'Document validation rules', 'owner': 'jamal', 'status': 'todo', 'priority': 'normal', 'estimate_minutes': 0}
+</code></pre>
+<p><strong>Instructor emphasis</strong></p>
+<p>"Look carefully at where the error is caught. <code>RecordFactory.from_dict()</code> raises <code>ValidationError</code>. The caller boundary is <code>load_records()</code>, where we decide to print <code>Record 3 rejected</code>. That means the factory does not need to know whether the application is a terminal script, a web API, or a GUI. It simply enforces the creation rule."</p>
+<p>"Also notice the <code>to_dict()</code> method. This connects to one of today's pitfalls. If you later serialize records to JSON, do not assume that a custom object can be serialized directly. Convert custom objects to plain dictionaries first. The factory moves from plain input to custom object. A <code>to_dict()</code> method moves from custom object back to plain output."</p>
+<p>"This demo uses three dictionaries because it helps us show two successful loaded records and one missing-field failure. In the lab, the minimum requirement is two sample records from hard-coded dictionaries, and your factory must create valid objects or raise <code>ValidationError</code>."</p>
+<hr>
+<h2 id="guided-lab-tracker-factory-implementation-25-minutes">Guided Lab: Tracker Factory Implementation (25 minutes)</h2>
+<p>The lab is the center of this hour. Learners need time to type, make mistakes, read error messages, and repair their code. Keep the prompt focused. Do not expand into file loading, JSON parsing from disk, databases, or web requests unless learners finish the required work.</p>
+<h3 id="lab-goal">Lab Goal</h3>
+<p>Implement a factory that creates a tracker-style model object from a dictionary. The factory must:</p>
+<ul>
+<li>accept raw dictionary input,</li>
+<li>check required fields,</li>
+<li>normalize string fields,</li>
+<li>apply defaults only to optional fields,</li>
+<li>validate allowed values,</li>
+<li>return a fully valid object, or</li>
+<li>raise <code>ValidationError</code> with a clear message.</li>
+</ul>
+<p>Loaded objects must be printable or displayable.</p>
+<h3 id="learner-prompt">Learner Prompt</h3>
+<p><strong>Build a <code>TrackerRecord</code> or <code>TaskRecord</code> factory.</strong></p>
+<p>Create one Python file for this lab. You may use the names below or adapt them to your tracker project:</p>
+<ul>
+<li><code>ValidationError</code></li>
+<li><code>TrackerRecord</code></li>
+<li><code>RecordFactory</code></li>
+<li><code>RecordFactory.from_dict()</code></li>
+</ul>
+<p>Your model should have at least these fields:</p>
+<ul>
+<li><code>title</code> - required</li>
+<li><code>owner</code> - required</li>
+<li><code>status</code> - optional, default <code>"todo"</code></li>
+<li><code>priority</code> - optional, default <code>"normal"</code></li>
+</ul>
+<p>You may add <code>estimate_minutes</code>, <code>category</code>, <code>created_by</code>, or another tracker field if your project already uses one.</p>
+<h3 id="required-steps">Required Steps</h3>
+<ol>
+<li>Define <code>ValidationError</code> locally in the lab file.</li>
+<li>Define a simple model class such as <code>TrackerRecord</code>.</li>
+<li>Keep the model constructor simple. It should receive clean values and store them.</li>
+<li>Define <code>RecordFactory.from_dict(data)</code>.</li>
+<li>In the factory, check that required fields are present.</li>
+<li>Reject blank required fields after stripping whitespace.</li>
+<li>Normalize strings, such as trimming whitespace and converting status to lowercase.</li>
+<li>Apply defaults only for optional fields.</li>
+<li>Validate allowed values, such as status and priority.</li>
+<li>Create two valid hard-coded dictionaries and load them through the factory.</li>
+<li>Include one invalid hard-coded dictionary with a missing required field and show the caught <code>ValidationError</code>.</li>
+<li>Print or display the successfully loaded objects.</li>
+</ol>
+<h3 id="suggested-starter-code">Suggested Starter Code</h3>
+<p>Offer this if learners need a starting point. If the class is moving quickly, ask them to write it from scratch and keep this as a rescue scaffold.</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when raw input cannot produce a valid tracker record.&quot;&quot;&quot;
+
+
+class TrackerRecord:
+    def __init__(self, title: str, owner: str, status: str, priority: str) -&gt; None:
+        self.title = title
+        self.owner = owner
+        self.status = status
+        self.priority = priority
+
+    def __str__(self) -&gt; str:
+        return (
+            f&quot;{self.title} | owner={self.owner} | &quot;
+            f&quot;status={self.status} | priority={self.priority}&quot;
+        )
+
+
+class RecordFactory:
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; TrackerRecord:
+        # Add required-field checks.
+        # Add normalization.
+        # Add defaults for optional fields only.
+        # Add value validation.
+        # Return TrackerRecord(...)
+        raise NotImplementedError
+</code></pre>
+<p>Remind learners:</p>
+<p>"Do not leave <code>NotImplementedError</code> in the final lab. It is only a marker for where your implementation belongs."</p>
+<h3 id="instructor-circulation-plan">Instructor Circulation Plan</h3>
+<p>For the first five minutes, let learners attempt the structure. Watch for whether they understand the separation between constructor and factory. If someone immediately writes <code>def __init__(self, data):</code> and starts reading dictionary keys inside the constructor, pause and ask:</p>
+<p>"Which part of the code is responsible for raw dictionary parsing in today's pattern?"</p>
+<p>Guide them back to:</p>
+<pre><code class="language-python">record = RecordFactory.from_dict(raw_data)
+</code></pre>
+<p>For minutes five through fifteen, look for required-field handling. The most important check is not just <code>data.get("title")</code>; learners need to distinguish between missing and blank. A strong solution handles both:</p>
+<pre><code class="language-python">if &quot;title&quot; not in data:
+    raise ValidationError(&quot;Missing required field: title&quot;)
+
+raw_title = data[&quot;title&quot;]
+if not isinstance(raw_title, str):
+    raise ValidationError(&quot;Field 'title' must be text&quot;)
+
+title = raw_title.strip()
+if not title:
+    raise ValidationError(&quot;Field 'title' cannot be blank&quot;)
+</code></pre>
+<p>If a learner writes:</p>
+<pre><code class="language-python">title = data.get(&quot;title&quot;, &quot;Untitled&quot;)
+</code></pre>
+<p>say:</p>
+<p>"That is a useful pattern for optional fields, but title is required in this lab. If the source forgot to send a title, we want to know immediately. Silent defaults are one of today's pitfalls."</p>
+<p>For minutes fifteen through twenty, check normalization and allowed values. Learners should have something like:</p>
+<pre><code class="language-python">status = str(data.get(&quot;status&quot;, &quot;todo&quot;)).strip().lower()
+if status not in {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}:
+    raise ValidationError(f&quot;Invalid status: {status}&quot;)
+</code></pre>
+<p>If learners ask whether they can support <code>"in progress"</code> with a space, that is a good extension only after the required version works. The required lab can use exact allowed values after normalization.</p>
+<p>For the final five minutes, ensure everyone has hard-coded sample records and a caller boundary that catches errors:</p>
+<pre><code class="language-python">raw_records = [
+    {&quot;title&quot;: &quot;Fix login bug&quot;, &quot;owner&quot;: &quot;Ava&quot;, &quot;priority&quot;: &quot;high&quot;},
+    {&quot;title&quot;: &quot;Write release notes&quot;, &quot;owner&quot;: &quot;Noah&quot;, &quot;status&quot;: &quot;DONE&quot;},
+    {&quot;title&quot;: &quot;Missing owner example&quot;},
+]
+
+for raw_record in raw_records:
+    try:
+        record = RecordFactory.from_dict(raw_record)
+    except ValidationError as error:
+        print(f&quot;Rejected record: {error}&quot;)
+    else:
+        print(f&quot;Loaded record: {record}&quot;)
+</code></pre>
+<p>This satisfies the runbook: two sample records from hard-coded dictionaries are loaded, invalid input raises <code>ValidationError</code>, and loaded objects can be printed or displayed.</p>
+<h3 id="lab-completion-criteria">Lab Completion Criteria</h3>
+<p>A lab is complete when:</p>
+<ul>
+<li><code>RecordFactory.from_dict()</code> or an equivalent factory exists.</li>
+<li>The factory creates a model object from a dictionary.</li>
+<li>Required fields are checked before object creation.</li>
+<li>Missing required fields raise <code>ValidationError</code>.</li>
+<li>Blank required fields raise <code>ValidationError</code>.</li>
+<li>Optional fields use intentional defaults.</li>
+<li>Status, priority, or another meaningful value is validated.</li>
+<li>At least two hard-coded sample dictionaries produce printable/displayable objects.</li>
+<li>At least one invalid hard-coded dictionary is caught at the caller boundary and produces a clear error message.</li>
+<li>The model constructor remains simple and does not become the main raw-dictionary parser.</li>
+</ul>
+<h3 id="if-learners-finish-early">If Learners Finish Early</h3>
+<p>Ask fast finishers to strengthen the required solution before adding features:</p>
+<ol>
+<li>Add an <code>estimate_minutes</code> field with a default of <code>0</code>.</li>
+<li>Convert <code>estimate_minutes</code> to an integer in the factory.</li>
+<li>Reject negative estimates with <code>ValidationError</code>.</li>
+<li>Add a <code>to_dict()</code> method to the model so custom objects can be converted back to plain data before JSON serialization.</li>
+</ol>
+<p>Then offer the runbook's optional extension:</p>
+<pre><code class="language-python">@classmethod
+def from_user_input(
+    cls,
+    title: str,
+    owner: str,
+    status: str = &quot;todo&quot;,
+    priority: str = &quot;normal&quot;,
+):
+    raw_data = {
+        &quot;title&quot;: title,
+        &quot;owner&quot;: owner,
+        &quot;status&quot;: status,
+        &quot;priority&quot;: priority,
+    }
+    return cls.from_dict(raw_data)
+</code></pre>
+<p>Emphasize:</p>
+<p>"The optional <code>from_user_input()</code> method should reuse <code>from_dict()</code> rather than duplicate all the validation rules. If it copies and pastes the same checks, we have recreated the duplication problem the factory was meant to solve."</p>
+<hr>
+<h2 id="troubleshooting-guide">Troubleshooting Guide</h2>
+<p>Use this section while circulating or during a short pause if many learners hit the same issue.</p>
+<h3 id="problem-keyerror-appears-instead-of-validationerror">Problem: <code>KeyError</code> appears instead of <code>ValidationError</code></h3>
+<p>Likely cause: the code reads <code>data["owner"]</code> before checking whether <code>"owner"</code> exists.</p>
+<p>Coach with:</p>
+<p>"Read the traceback. Which line accessed the missing key? The factory should check required fields before indexing into the dictionary. We want a domain-specific error message, not a raw <code>KeyError</code>."</p>
+<p>Repair pattern:</p>
+<pre><code class="language-python">if &quot;owner&quot; not in data:
+    raise ValidationError(&quot;Missing required field: owner&quot;)
+
+raw_owner = data[&quot;owner&quot;]
+if not isinstance(raw_owner, str):
+    raise ValidationError(&quot;Field 'owner' must be text&quot;)
+
+owner = raw_owner.strip().lower()
+</code></pre>
+<h3 id="problem-missing-title-becomes-untitled">Problem: Missing title becomes <code>"Untitled"</code></h3>
+<p>Likely cause: the learner used <code>.get("title", "Untitled")</code> for a required field.</p>
+<p>Coach with:</p>
+<p>"Defaults are not bad. Silent defaults for required fields are bad. Is title required for a meaningful tracker record? If yes, the factory should raise an error when it is missing."</p>
+<p>Repair pattern:</p>
+<pre><code class="language-python">if &quot;title&quot; not in data:
+    raise ValidationError(&quot;Missing required field: title&quot;)
+</code></pre>
+<h3 id="problem-the-constructor-is-doing-all-the-parsing">Problem: The constructor is doing all the parsing</h3>
+<p>Likely cause: the learner wrote <code>TrackerRecord(data)</code> and put dictionary logic in <code>__init__</code>.</p>
+<p>Coach with:</p>
+<p>"That can work technically, but it misses today's design goal. The constructor should receive clean values. The factory should turn raw data into clean values."</p>
+<p>Repair pattern:</p>
+<pre><code class="language-python">record = TrackerRecord(
+    title=title,
+    owner=owner,
+    status=status,
+    priority=priority,
+)
+</code></pre>
+<h3 id="problem-objects-print-as-memory-addresses">Problem: Objects print as memory addresses</h3>
+<p>Likely cause: the learner did not define <code>__str__</code> or <code>__repr__</code>.</p>
+<p>Coach with:</p>
+<p>"The object may be valid, but it is not display-friendly yet. Add a simple <code>__str__</code> method so the completion criterion 'loaded objects can be printed/displayed' is easy to verify."</p>
+<p>Repair pattern:</p>
+<pre><code class="language-python">def __str__(self) -&gt; str:
+    return f&quot;{self.title} ({self.status}) assigned to {self.owner}&quot;
+</code></pre>
+<h3 id="problem-json-serialization-fails-for-custom-objects">Problem: JSON serialization fails for custom objects</h3>
+<p>Likely cause: the learner tries to serialize <code>TrackerRecord</code> instances directly.</p>
+<p>Coach with:</p>
+<p>"The factory converts plain data into custom objects. Serialization usually needs the reverse: convert custom objects back into plain data. Add a <code>to_dict()</code> method or build a list of dictionaries before serializing."</p>
+<p>Repair pattern:</p>
+<pre><code class="language-python">def to_dict(self) -&gt; dict[str, str]:
+    return {
+        &quot;title&quot;: self.title,
+        &quot;owner&quot;: self.owner,
+        &quot;status&quot;: self.status,
+        &quot;priority&quot;: self.priority,
+    }
+</code></pre>
+<h3 id="problem-invalid-status-is-accepted">Problem: Invalid status is accepted</h3>
+<p>Likely cause: the learner normalized the status but forgot to validate it against allowed values.</p>
+<p>Coach with:</p>
+<p>"Normalization makes values consistent. Validation decides whether the value is allowed. We need both."</p>
+<p>Repair pattern:</p>
+<pre><code class="language-python">allowed_statuses = {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+if status not in allowed_statuses:
+    raise ValidationError(f&quot;Invalid status: {status}&quot;)
+</code></pre>
+<hr>
+<h2 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h2>
+<h3 id="pitfall-1-treating-the-factory-as-unnecessary-ceremony">Pitfall 1: Treating the factory as unnecessary ceremony</h3>
+<p>Some learners will say, "Why not just call the class directly?" That is a fair question. Answer it in terms of duplicated rules:</p>
+<p>"If every call site already has clean values, direct construction is fine. But when raw dictionaries enter the program from multiple places, we need one trusted path. The factory is not ceremony when it prevents three different versions of the same validation rule."</p>
+<h3 id="pitfall-2-moving-messy-code-without-improving-responsibility">Pitfall 2: Moving messy code without improving responsibility</h3>
+<p>A learner may move all messy creation code into <code>RecordFactory</code> but still leave duplicated validation branches elsewhere. Remind them:</p>
+<p>"The factory should be the central creation path. If other parts of the program still create records from raw dictionaries manually, the duplication problem remains."</p>
+<h3 id="pitfall-3-silent-defaults-for-required-fields">Pitfall 3: Silent defaults for required fields</h3>
+<p>This is the major required pitfall from the runbook. Use strong language:</p>
+<p>"A silent default for a required field hides a mistake. If owner is required and owner is missing, do not invent an owner. Raise <code>ValidationError</code>."</p>
+<h3 id="pitfall-4-no-caller-boundary">Pitfall 4: No caller boundary</h3>
+<p>If a learner lets the program crash without catching <code>ValidationError</code>, the factory may still be correct, but the demo is incomplete. The runbook asks learners to show the error on missing fields. They should catch the error where records are loaded and print a clear message.</p>
+<h3 id="pitfall-5-serializing-custom-objects-directly">Pitfall 5: Serializing custom objects directly</h3>
+<p>This is the second required pitfall from the runbook. A <code>TaskRecord</code> is useful inside Python, but JSON and many storage layers need plain dictionaries, strings, numbers, lists, booleans, and <code>None</code>. When moving back out, use a conversion method such as <code>to_dict()</code>.</p>
+<h3 id="pitfall-6-confusing-normalization-with-validation">Pitfall 6: Confusing normalization with validation</h3>
+<p>Normalization:</p>
+<pre><code class="language-python">status = status.strip().lower()
+</code></pre>
+<p>Validation:</p>
+<pre><code class="language-python">if status not in {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}:
+    raise ValidationError(...)
+</code></pre>
+<p>Both are needed. Normalization without validation may accept nonsense. Validation without normalization may reject reasonable input such as <code>"DONE"</code>.</p>
+<hr>
+<h2 id="optional-extensions">Optional Extensions</h2>
+<p>Offer these only after the required factory works.</p>
+<ol>
+<li><strong><code>from_user_input()</code> factory</strong></li>
+</ol>
+<p>Add a factory method that accepts separate strings from a prompt or form and normalizes them by reusing <code>from_dict()</code>.</p>
+<p><code>python
+   @classmethod
+   def from_user_input(
+       cls,
+       title: str,
+       owner: str,
+       status: str = "todo",
+       priority: str = "normal",
+    ):
+        return cls.from_dict(
+           {
+               "title": title,
+               "owner": owner,
+               "status": status,
+               "priority": priority,
+           }
+       )</code></p>
+<p>Instructor note: The important design point is reuse. <code>from_user_input()</code> should not copy the required-field and allowed-value checks. It should route through the central factory logic.</p>
+<ol start="2">
+<li><strong>Input aliases</strong></li>
+</ol>
+<p>Support human-friendly status input such as <code>"in progress"</code> by translating it to <code>"in_progress"</code> before validation.</p>
+<ol start="3">
+<li><strong>Batch loading result summary</strong></li>
+</ol>
+<p>Count how many records loaded and how many were rejected, then print a summary.</p>
+<ol start="4">
+<li><strong>Plain-data export</strong></li>
+</ol>
+<p>Add <code>to_dict()</code> to the model and build <code>list[dict[str, object]]</code> from the loaded objects. This prepares learners for later persistence and serialization work.</p>
+<hr>
+<h2 id="quick-checks-completion-criteria-and-wrap-up-5-minutes">Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)</h2>
+<p>Use this final segment to verify the required concept before moving on.</p>
+<h3 id="quick-check-questions">Quick Check Questions</h3>
+<p>Ask:</p>
+<p>"What is the main benefit of centralizing creation logic in a factory?"</p>
+<p>Expected answer:</p>
+<p>"It gives the application one consistent place to check required fields, normalize input, apply optional defaults, validate values, and create valid objects. That reduces duplicated rules and inconsistent object creation."</p>
+<p>Ask:</p>
+<p>"Should a required field like title receive a silent default?"</p>
+<p>Expected answer:</p>
+<p>"No. If title is required and missing or blank, the factory should raise <code>ValidationError</code>. Defaults are for optional fields."</p>
+<p>Ask:</p>
+<p>"If the factory returns an object, what should the rest of the program be able to assume?"</p>
+<p>Expected answer:</p>
+<p>"The object is valid according to the factory's creation rules."</p>
+<p>Ask:</p>
+<p>"Where should the missing-field error be caught in our demo?"</p>
+<p>Expected answer:</p>
+<p>"At the caller boundary, such as the loop or function that is loading raw records. The factory raises <code>ValidationError</code>; the caller catches and reports it."</p>
+<h3 id="completion-criteria-for-the-hour">Completion Criteria for the Hour</h3>
+<p>Before ending, make sure learners can point to:</p>
+<ul>
+<li>a simple model constructor,</li>
+<li>a factory method or function,</li>
+<li>required-field checks,</li>
+<li>optional defaults,</li>
+<li>normalization,</li>
+<li>value validation,</li>
+<li><code>ValidationError</code> being raised for invalid input,</li>
+<li>at least two loaded records from hard-coded dictionaries,</li>
+<li>a caught missing-field error, and</li>
+<li>printed or displayed loaded objects.</li>
+</ul>
+<h3 id="wrap-up-talk-track">Wrap-Up Talk Track</h3>
+<p>"Today we learned the Factory Pattern in its most practical Python form. We did not build a complicated framework. We built a reliable creation path. Raw dictionaries came in. The factory checked required fields, normalized strings, applied defaults only where defaults were safe, validated allowed values, and then returned a model object."</p>
+<p>"The professional habit is this: do not let raw input leak all over your program. Decide where raw input becomes trusted object state. A factory is one clean way to make that boundary visible."</p>
+<p>"This connects directly to the PCPP1 trajectory. At the PCAP level, you can define a class and create an instance. At the PCPP1 level, you think about where responsibilities belong, how to reduce duplication, and how to make invalid states harder to represent. Factories help with all three."</p>
+<p>"Next hour, we will continue with another pattern that affects how behavior changes at runtime. Now that we can reliably create valid records, we can start asking how those records should be processed, displayed, filtered, or handled by interchangeable strategies."</p>
+<p>End with:</p>
+<p>"Exit ticket: in one sentence, explain why a factory is better than copying dictionary parsing code into three different parts of an application."</p>
+                </div>
+                <nav class="lecture-nav" aria-label="Lecture navigation">
+                    <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour4_Advanced.html">Previous lecture</a>
+                    <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour2_Advanced.html">Next lecture</a>
+                </nav>
+            </article>
+            <aside class="lecture-sidebar" aria-label="Lecture outline and tools">
+                <section class="lecture-panel">
+                    <h2>On this page</h2>
+                    <div data-lecture-toc>
+                        <ol class="lecture-toc-list">
+<li><a href="#instructor-notes" class="depth-2">Instructor Notes</a></li>
+<li><a href="#timing-overview" class="depth-2">Timing Overview</a></li>
+<li><a href="#learning-outcomes" class="depth-2">Learning Outcomes</a></li>
+<li><a href="#instructor-prep-before-class" class="depth-2">Instructor Prep Before Class</a></li>
+<li><a href="#opening-bridge-from-day-1-hour-4-5-minutes" class="depth-2">Opening Bridge from Day 1 Hour 4 (5 minutes)</a></li>
+<li><a href="#outcomes-setup-and-vocabulary-5-minutes" class="depth-2">Outcomes, Setup, and Vocabulary (5 minutes)</a></li>
+<li><a href="#concept-briefing-why-factories-10-minutes" class="depth-2">Concept Briefing: Why Factories (10 minutes)</a></li>
+<li><a href="#live-demo-recordfactoryfromdict-10-minutes" class="depth-2">Live Demo: RecordFactory.from_dict() (10 minutes)</a></li>
+<li><a href="#demo-step-1-define-a-local-exception-and-simple-model" class="depth-3">Demo Step 1: Define a local exception and simple model</a></li>
+<li><a href="#demo-step-2-add-the-factory-skeleton" class="depth-3">Demo Step 2: Add the factory skeleton</a></li>
+<li><a href="#demo-step-3-required-field-checks" class="depth-3">Demo Step 3: Required-field checks</a></li>
+<li><a href="#demo-step-4-optional-defaults-normalization-and-value-validation" class="depth-3">Demo Step 4: Optional defaults, normalization, and value validation</a></li>
+<li><a href="#demo-step-5-run-valid-and-invalid-hard-coded-dictionaries" class="depth-3">Demo Step 5: Run valid and invalid hard-coded dictionaries</a></li>
+<li><a href="#guided-lab-tracker-factory-implementation-25-minutes" class="depth-2">Guided Lab: Tracker Factory Implementation (25 minutes)</a></li>
+<li><a href="#lab-goal" class="depth-3">Lab Goal</a></li>
+<li><a href="#learner-prompt" class="depth-3">Learner Prompt</a></li>
+<li><a href="#required-steps" class="depth-3">Required Steps</a></li>
+<li><a href="#suggested-starter-code" class="depth-3">Suggested Starter Code</a></li>
+<li><a href="#instructor-circulation-plan" class="depth-3">Instructor Circulation Plan</a></li>
+<li><a href="#lab-completion-criteria" class="depth-3">Lab Completion Criteria</a></li>
+<li><a href="#if-learners-finish-early" class="depth-3">If Learners Finish Early</a></li>
+<li><a href="#troubleshooting-guide" class="depth-2">Troubleshooting Guide</a></li>
+<li><a href="#problem-keyerror-appears-instead-of-validationerror" class="depth-3">Problem: KeyError appears instead of ValidationError</a></li>
+<li><a href="#problem-missing-title-becomes-untitled" class="depth-3">Problem: Missing title becomes &quot;Untitled&quot;</a></li>
+<li><a href="#problem-the-constructor-is-doing-all-the-parsing" class="depth-3">Problem: The constructor is doing all the parsing</a></li>
+<li><a href="#problem-objects-print-as-memory-addresses" class="depth-3">Problem: Objects print as memory addresses</a></li>
+<li><a href="#problem-json-serialization-fails-for-custom-objects" class="depth-3">Problem: JSON serialization fails for custom objects</a></li>
+<li><a href="#problem-invalid-status-is-accepted" class="depth-3">Problem: Invalid status is accepted</a></li>
+<li><a href="#common-pitfalls-to-watch-for" class="depth-2">Common Pitfalls to Watch For</a></li>
+<li><a href="#pitfall-1-treating-the-factory-as-unnecessary-ceremony" class="depth-3">Pitfall 1: Treating the factory as unnecessary ceremony</a></li>
+<li><a href="#pitfall-2-moving-messy-code-without-improving-responsibility" class="depth-3">Pitfall 2: Moving messy code without improving responsibility</a></li>
+<li><a href="#pitfall-3-silent-defaults-for-required-fields" class="depth-3">Pitfall 3: Silent defaults for required fields</a></li>
+<li><a href="#pitfall-4-no-caller-boundary" class="depth-3">Pitfall 4: No caller boundary</a></li>
+<li><a href="#pitfall-5-serializing-custom-objects-directly" class="depth-3">Pitfall 5: Serializing custom objects directly</a></li>
+<li><a href="#pitfall-6-confusing-normalization-with-validation" class="depth-3">Pitfall 6: Confusing normalization with validation</a></li>
+<li><a href="#optional-extensions" class="depth-2">Optional Extensions</a></li>
+<li><a href="#quick-checks-completion-criteria-and-wrap-up-5-minutes" class="depth-2">Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)</a></li>
+<li><a href="#quick-check-questions" class="depth-3">Quick Check Questions</a></li>
+<li><a href="#completion-criteria-for-the-hour" class="depth-3">Completion Criteria for the Hour</a></li>
+<li><a href="#wrap-up-talk-track" class="depth-3">Wrap-Up Talk Track</a></li>
+</ol>
+                    </div>
+                </section>
+                <section class="lecture-panel">
+                    <h2>Session reference</h2>
+                    <div class="lecture-chip-list">
+                        <span class="lecture-chip">Day2_Hour1_Advanced.md</span>
+                        <span class="lecture-chip">Advanced</span>
+                    </div>
+                    <p class="lecture-status">Generated from <code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code>.</p>
+                </section>
+            </aside>
+        </main>
+        <footer class="lecture-nav" aria-label="Lecture footer navigation">
+            <a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="Day1_Hour4_Advanced.html">Previous lecture</a>
+            <a class="lecture-button" data-lecture-next data-variant="primary" rel="next" href="Day2_Hour2_Advanced.html">Next lecture</a>
+        </footer>
+    </div>
+</body>
+</html>
