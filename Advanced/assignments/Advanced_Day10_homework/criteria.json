@@ -63,6 +63,23 @@
         "Hour 40 | checkpoint result: api milestone ready"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 37/40 - Authenticity guardrail: API key logic uses real control flow",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; source = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); tree = ast.parse(source); funcs = [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]; env_calls = 0; gate_values = set(); status_constants = {n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, int)}; \nfor node in ast.walk(tree):\n    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):\n        owner = node.func.value; name = node.func.attr; \n        if name in ('getenv', 'get') and isinstance(owner, ast.Name) and owner.id in ('os', 'environ'):\n            env_calls += 1\n    if isinstance(node, ast.If):\n        values = {n.value for n in ast.walk(node) if isinstance(n, ast.Constant) and isinstance(n.value, int)}\n        gate_values.update(values)\nif_with_gate = all(code in gate_values for code in (401, 201)); env_literal = 'TRACKER_API_KEY' in source; print(f'guardrail_functions={len(funcs) >= 3}'); print(f'guardrail_conditionals={if_with_gate}'); print(f'guardrail_env_lookup={env_literal and env_calls >= 1}'); print(f'guardrail_status_literals={all(code in status_constants for code in (200, 201, 401))}')",
+        "advanced_day10.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_functions=True",
+        "guardrail_conditionals=True",
+        "guardrail_env_lookup=True",
+        "guardrail_status_literals=True"
+      ],
+      "points": 20
     }
   ]
 }

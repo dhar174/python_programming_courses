@@ -130,6 +130,68 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 | Advanced quizzes (HTML) | `Advanced/quizzes/Advanced_DayX_Quiz.html` | 12 |
 | Quiz answer exports | `Basics/quizzes/*_answers.json`, `Advanced/quizzes/*_answers.json` | 24 |
 
+#### Assignment Downloads & Quiz Links
+
+**Basics Assignments (.ipynb)**
+
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day1_homework.ipynb" download="Basics_Day1_homework.ipynb">Day 1</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day2_homework.ipynb" download="Basics_Day2_homework.ipynb">Day 2</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day3_homework.ipynb" download="Basics_Day3_homework.ipynb">Day 3</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day4_homework.ipynb" download="Basics_Day4_homework.ipynb">Day 4</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day5_homework.ipynb" download="Basics_Day5_homework.ipynb">Day 5</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day6_homework.ipynb" download="Basics_Day6_homework.ipynb">Day 6</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day7_homework.ipynb" download="Basics_Day7_homework.ipynb">Day 7</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day8_homework.ipynb" download="Basics_Day8_homework.ipynb">Day 8</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day9_homework.ipynb" download="Basics_Day9_homework.ipynb">Day 9</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day10_homework.ipynb" download="Basics_Day10_homework.ipynb">Day 10</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day11_homework.ipynb" download="Basics_Day11_homework.ipynb">Day 11</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day12_homework.ipynb" download="Basics_Day12_homework.ipynb">Day 12</a>
+
+**Basics Quizzes (.html — opens in browser)**
+
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day1_Quiz.html">Day 1</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day2_Quiz.html">Day 2</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day3_Quiz.html">Day 3</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day4_Quiz.html">Day 4</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day5_Quiz.html">Day 5</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day6_Quiz.html">Day 6</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day7_Quiz.html">Day 7</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day8_Quiz.html">Day 8</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day9_Quiz.html">Day 9</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day10_Quiz.html">Day 10</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day11_Quiz.html">Day 11</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Basics/quizzes/Basics_Day12_Quiz.html">Day 12</a>
+
+**Advanced Assignments (.ipynb)**
+
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day1_homework.ipynb" download="Advanced_Day1_homework.ipynb">Day 1</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day2_homework.ipynb" download="Advanced_Day2_homework.ipynb">Day 2</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day3_homework.ipynb" download="Advanced_Day3_homework.ipynb">Day 3</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day4_homework.ipynb" download="Advanced_Day4_homework.ipynb">Day 4</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day5_homework.ipynb" download="Advanced_Day5_homework.ipynb">Day 5</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day6_homework.ipynb" download="Advanced_Day6_homework.ipynb">Day 6</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day7_homework.ipynb" download="Advanced_Day7_homework.ipynb">Day 7</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day8_homework.ipynb" download="Advanced_Day8_homework.ipynb">Day 8</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day9_homework.ipynb" download="Advanced_Day9_homework.ipynb">Day 9</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day10_homework.ipynb" download="Advanced_Day10_homework.ipynb">Day 10</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day11_homework.ipynb" download="Advanced_Day11_homework.ipynb">Day 11</a>
+- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day12_homework.ipynb" download="Advanced_Day12_homework.ipynb">Day 12</a>
+
+**Advanced Quizzes (.html — opens in browser)**
+
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day1_Quiz.html">Day 1</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day2_Quiz.html">Day 2</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day3_Quiz.html">Day 3</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day4_Quiz.html">Day 4</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day5_Quiz.html">Day 5</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day6_Quiz.html">Day 6</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day7_Quiz.html">Day 7</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day8_Quiz.html">Day 8</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day9_Quiz.html">Day 9</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day10_Quiz.html">Day 10</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day11_Quiz.html">Day 11</a>
+- <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day12_Quiz.html">Day 12</a>
+
 Advanced sample submissions are present for all 12 days. Basics sample submissions are still missing for Days 2, 3, 4, 5, 6, and 8; see [#270](https://github.com/dhar174/python_programming_courses/issues/270). Slide and lesson-source remediation remains open under [#271](https://github.com/dhar174/python_programming_courses/issues/271).
 
 ---
@@ -160,6 +222,7 @@ Basics/assignments/Basics_DayX_homework/
 - All test outputs must be **deterministic** — no `datetime.now()`, no random seeds, no unseeded state
 - Converted script name should match the module-prefixed autograder contract (for example, `basics_day1.py` or `advanced_day12.py`)
 - Numeric precision must match `criteria.json` exactly (e.g., `85.50` not `85.5`)
+- Bundled `submissions/*_test_filled.ipynb` fixtures must remain **filled-in copies of the full daily homework notebook**; do not replace them with minimal print-only stubs.
 
 ### AI Agent Stack
 
