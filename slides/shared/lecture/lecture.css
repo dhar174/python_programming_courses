@@ -521,6 +521,7 @@ textarea:focus-visible,
 
 .lecture-sidebar {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-5);
   position: sticky;
   top: calc(var(--space-5) + 4px);
@@ -717,6 +718,20 @@ textarea:focus-visible,
   border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border));
   border-radius: var(--radius-xs);
   background: color-mix(in srgb, var(--surface-elevated) 84%, var(--accent) 16%);
+  /* Prevent long inline code (file paths, identifiers) from overflowing
+     narrow containers such as list items on mobile.
+     overflow-wrap:anywhere (not break-word) affects intrinsic min-content
+     sizing, which is what actually prevents grid items from growing to fit
+     unbreakable content. word-break:normal is preserved so we only break
+     where needed, not at every character. */
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Same containment for code inside the sidebar (e.g. .lecture-status cues) */
+.lecture-sidebar code {
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .lecture-prose pre {
@@ -849,6 +864,17 @@ textarea:focus-visible,
   font-size: var(--text-sm);
 }
 
+/* Defensive overflow-wrap for generated text in inline elements (slide titles,
+   file paths, session identifiers) that are not inside <code> tags. */
+.lecture-status-pill,
+.lecture-chip,
+.lecture-current-slide-link,
+.lecture-slide-cue-link,
+.lecture-toc-list a {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
 .lecture-status {
   color: var(--muted);
   font-size: var(--text-sm);
@@ -947,12 +973,28 @@ textarea:focus-visible,
 @media (max-width: 980px) {
   .lecture-header,
   .lecture-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* All direct children of stacked grid containers must opt out of the
+     auto min-content floor so none can recreate horizontal overflow. */
+  .lecture-header > *,
+  .lecture-layout > * {
+    min-width: 0;
   }
 
   .lecture-sidebar {
     position: static;
     order: -1;
+  }
+
+  /* Tables exceed min-content width on narrow viewports; make them scroll
+     rather than overflow the page. display:block enables overflow-x on the
+     table element while child tr/td retain their table-display roles. */
+  .lecture-prose table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
