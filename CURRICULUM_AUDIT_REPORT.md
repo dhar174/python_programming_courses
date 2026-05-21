@@ -3,16 +3,18 @@ This report provides a detailed log of how well the Lecture materials (Basics an
 
 ## Module: Basics
 **Target Certification Alignment:** PCEP (Entry-Level) with introduction to PCAP
-**Syllabus:** `python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md`
-**Runbook:** `Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`
+**Syllabus:** `Basics/python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md`
+**Runbook:** `Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`
 
 ### Comprehensive Qualitative Alignment Evaluation
 The Basics curriculum is explicitly designed to prepare learners for the **PCEP (Certified Entry-Level Python Programmer)** certification, while setting up a foundational trajectory for the PCAP. Based on the audit metrics below:
 - **Completeness of Assets:** All days have Quizzes and Assignments (Homework). Lectures are present for all hours.
-- **Outcome Fidelity:** A total of 11 explicit Learning Outcomes were parsed. The assignments match day-by-day mapping of these outcomes. The material consistently addresses fundamental Python syntax: loops, strings, math operators, logical evaluation, sets, lists, tuples, dictionaries.
-- **Certification Specifics:** Mentions of PCEP/PCAP alignment (0 markers found) reinforce that the materials purposefully adhere to the constraints defined in the `python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md` syllabus, explicitly declaring some advanced subjects 'Out of Scope'.
+- **Outcome Fidelity:** The Basics syllabus defines 6 high-level outcomes, and the Basics runbook defines 9 course-level outcomes. Beyond these module-level outcomes, per-hour outcomes are present throughout the lecture/runbook flow and are reflected in the daily lecture mappings and assignment progression.
+- **Certification Specifics:** Explicit PCEP/PCAP alignment markers are present (non-zero), including the dedicated certification alignment section in `Basics/python_basics_48_h_syllabus_12_x_4_h_pcep_pcap_aligned.md` and lecture-level markers such as “PCEP Aligned” in `Basics/lessons/lecture/Day7_Hour4_Basics.md`.
 
 ### Day-by-Day Detailed Log
+
+_Note: Several assignment notebooks do not expose a machine-readable “Topics Evaluated” metadata block. In those cases, topic validation is performed against runbook and lecture mappings shown in each day’s lecture section._
 
 #### Basics - Day 1
 - **Quiz:** `Present`
@@ -72,17 +74,17 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 4
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 4, Hour 1: Lists Fundamentals (Course Hour 13)
-  - **Hour 2:** Day 4, Hour 2: Boolean Expressions, Comparison Operators, and Logical Operators
-  - **Hour 3:** Day 4, Hour 3: If-Elif-Else Flow and Nested Conditions
-  - **Hour 4:** Day 4, Hour 4: Session Wrap-Up and Checkpoint 1 Assessment
+  - **Hour 2:** Day 4, Hour 2: Iterating lists with for-loops (gentle intro) (Course Hour 14)
+  - **Hour 3:** Day 4, Hour 3: Nested lists (table-like data) (Course Hour 15)
+  - **Hour 4:** Day 4, Hour 4: Checkpoint 2: Lists + string handling (Course Hour 16)
 
 #### Basics - Day 5
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 5, Hour 1: Tuples + Unpacking (Course Hour 17)
   - **Hour 2:** Day 5, Hour 2: Sets — Uniqueness + Membership (Course Hour 18)
@@ -92,7 +94,7 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 6
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 6, Hour 1: Choosing the Right Structure (Course Hour 21)
   - **Hour 2:** Day 6, Hour 2: Data-Structure Drill Circuit (Course Hour 22)
@@ -102,7 +104,7 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 7
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 7, Hour 1: Conditionals: if/elif/else and Boundaries (Course Hour 25)
   - **Hour 2:** Day 7, Hour 2: while Loops + Sentinel Patterns (Course Hour 26)
@@ -112,17 +114,17 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 8
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
-  - **Hour 1:** Day 8, Hour 1: For Loops and Iteration (Course Hour 29)
-  - **Hour 2:** While Loops and Loop Control (break, continue)
-  - **Hour 3:** Example: filter sales over $100
-  - **Hour 4:** Day 8, Hour 4: Session Wrap-Up and Checkpoint 2 (Course Hour 32)
+  - **Hour 1:** Day 8, Hour 1: Menu loops (CLI pattern) (Course Hour 29)
+  - **Hour 2:** Day 8, Hour 2: Input validation (Basics approach) (Course Hour 30)
+  - **Hour 3:** Day 8, Hour 3: Mini-project: CLI Contact Manager (in-memory) (Course Hour 31)
+  - **Hour 4:** Day 8, Hour 4: Checkpoint 4: Control flow assessment (Course Hour 32)
 
 #### Basics - Day 9
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 9, Hour 1: Functions: def, parameters, return (Course Hour 33)
   - **Hour 2:** Day 9, Hour 2: Scope + Common Function Mistakes (Course Hour 34)
@@ -132,7 +134,7 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 10
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 10, Hour 1: Introduction to Object-Oriented Programming – Classes, Objects, and the `self` Parameter
   - **Hour 2:** Day 10, Hour 2: Collections of objects + searching (Course Hour 38)
@@ -142,7 +144,7 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 11
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 11, Hour 1: Files — Reading and Writing Text
   - **Hour 2:** Day 11, Hour 2: JSON Persistence (Instructor Script)
@@ -152,7 +154,7 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 #### Basics - Day 12
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Session 12, Hour 1: Capstone Kickoff — Requirements & Scaffolding
   - **Hour 2:** Session 12, Hour 2: Capstone Build Sprint
@@ -161,8 +163,8 @@ The Basics curriculum is explicitly designed to prepare learners for the **PCEP 
 
 ## Module: Advanced
 **Target Certification Alignment:** PCAP (Associate) with trajectory towards PCPP1
-**Syllabus:** `python_advanced_48_h_syllabus_12_x_4_h_pcap_path_to_pcpp_1.md`
-**Runbook:** `Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`
+**Syllabus:** `Advanced/python_advanced_48_h_syllabus_12_x_4_h_pcap_path_to_pcpp_1.md`
+**Runbook:** `Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`
 
 ### Comprehensive Qualitative Alignment Evaluation
 The Advanced curriculum is positioned to directly address **PCAP (Certified Associate in Python Programming)** certification, with intentional design 'trajectory' markers pulling learners towards the more rigorous **PCPP1** standards. Based on the audit metrics:
@@ -193,7 +195,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 2
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 2, Hour 1: Pattern: Factory (Practical Creation + Validation)
     - *Alignment Marker:* Advanced trajectory: This hour moves learners from PCAP-level class construction toward PCPP1-style design discipline. The goal is not merely to write another `__init__` method. The goal is to decide where object creation rules belong so that valid objects are produced consistently across an application.
@@ -208,7 +210,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 3
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 3, Hour 1: Project Structure, Packages, Imports, and Config
     - *Alignment Marker:* Advanced trajectory: This hour stays on the PCAP-to-PCPP1 path. Learners are not publishing packages, creating a full packaging configuration, or managing dependency tooling yet. The advanced step is learning how project shape affects imports, execution, maintainability, and future GUI/API layers.
@@ -222,7 +224,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 4
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 4, Hour 1: HTTP Client Work – `requests` + JSON Contracts
     - *Alignment Marker:* Advanced trajectory: This hour moves from local application reliability into external-service reliability. Learners are not building a full API server yet; they are learning how a Python program responsibly consumes another service.
@@ -235,7 +237,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 5
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk
   - **Hour 2:** Day 5 Hour 2 Advanced — Tkinter Layout, Usability, and Resizing (Instructor Script)
@@ -249,7 +251,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 6
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 6 Hour 1 Advanced — CRUD Wiring in the GUI: Update and Delete Workflows
   - **Hour 2:** Day 6 Hour 2 Advanced — GUI Architecture: Controller Separation and Avoiding Callback Spaghetti
@@ -259,7 +261,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 7
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 7, Hour 1: From Objects to Tables — Schema Thinking + the Repository Idea (Course Hour 25)
   - **Hour 2:** Day 7, Hour 2: SQLite CRUD with Parameterized Queries (Course Hour 26)
@@ -269,7 +271,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 8
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 8, Hour 1: Optional ORM Slice or Deeper SQL Practice
   - **Hour 2:** Day 8, Hour 2: Integrate the Database into the App
@@ -279,7 +281,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 9
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 9, Hour 1: REST fundamentals + Flask app setup
     - *Outcomes:*
@@ -305,7 +307,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 10
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 10, Hour 1: API security basics: API key gate + safe storage
     - *Outcomes:*
@@ -331,7 +333,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 11
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 11, Hour 1: Pandas essentials: loading, cleaning, summarizing
     - *Outcomes:*
@@ -357,7 +359,7 @@ The Advanced curriculum is positioned to directly address **PCAP (Certified Asso
 #### Advanced - Day 12
 - **Quiz:** `Present`
 - **Assignment:** `Present`
-  - *Topics Evaluated:* No specific topics block found in notebook metadata.
+  - *Topics Evaluated:* No specific topics block found in notebook metadata; topics validated from runbook-aligned lecture mappings.
 - **Lectures:**
   - **Hour 1:** Day 12, Hour 1: Testing with pytest: unit tests for the service layer
     - *Outcomes:*
