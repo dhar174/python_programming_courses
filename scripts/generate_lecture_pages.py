@@ -42,6 +42,7 @@ MODULES = {
 HOURLY_FILENAME_RE = re.compile(
     r"^Day(?P<day>\d+)_Hour(?P<hour>\d+)_(?P<module>Basics|Advanced)\.md$"
 )
+SEQUENCED_FILENAME_RE = re.compile(r"^(?P<order>\d+)-[a-z0-9-]+\.md$")
 HEADING_TAG_RE = re.compile(r"h([1-6])$")
 CUE_LINE_RE = re.compile(
     r"^\[Instructor slide (?P<kind>change):\s*page=(?P<page>\d+);\s*title=(?P<title>[^\]]+?)\s*\]$"
@@ -245,8 +246,15 @@ def load_hourly_sources(repo_root: Path, module_filter: str) -> list[LectureSour
         lecture_root = repo_root / module["lecture_root"]
         for markdown_path in lecture_root.glob("*.md"):
             match = HOURLY_FILENAME_RE.match(markdown_path.name)
-            if match is None:
-                continue
+            if match is not None:
+                day = int(match.group("day"))
+                hour = int(match.group("hour"))
+            else:
+                sequenced_match = SEQUENCED_FILENAME_RE.match(markdown_path.name)
+                if sequenced_match is None:
+                    continue
+                day = int(sequenced_match.group("order"))
+                hour = 0
             relative_path = markdown_path.relative_to(repo_root)
             sources.append(
                 LectureSource(
@@ -256,8 +264,8 @@ def load_hourly_sources(repo_root: Path, module_filter: str) -> list[LectureSour
                     markdown_path=markdown_path,
                     markdown_relative_path=relative_path,
                     html_relative_path=relative_path.with_suffix(".html"),
-                    day=int(match.group("day")),
-                    hour=int(match.group("hour")),
+                    day=day,
+                    hour=hour,
                 )
             )
     return sorted(sources, key=lambda item: (item.module_id, item.day, item.hour, item.markdown_path.name))
@@ -460,6 +468,8 @@ def render_page(
     prev_href = relative_href(output_file, output_root / prev_source.html_relative_path) if prev_source else ""
     next_href = relative_href(output_file, output_root / next_source.html_relative_path) if next_source else ""
     page_title = f"{rendered.title} | {source.module_label} Lecture"
+    session_label = f"Hour {source.hour}" if source.hour > 0 else "Intro"
+    session_meta_label = "Hourly lecture page" if source.hour > 0 else "Intro lecture page"
     prev_nav = (
         f'<a class="lecture-button" data-lecture-prev data-variant="secondary" rel="prev" href="{escape(prev_href)}">Previous lecture</a>'
         if prev_source
@@ -540,7 +550,7 @@ def render_page(
             <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
             <a href="{escape(day_overview_href)}">Day {source.day}</a>
             <span class="lecture-breadcrumb-separator" aria-hidden="true">/</span>
-            <span aria-current="page">Hour {source.hour}</span>
+            <span aria-current="page">{session_label}</span>
         </nav>
         <header class="lecture-header">
             <section class="lecture-hero">
@@ -549,8 +559,8 @@ def render_page(
                 <p class="lecture-summary">Long-form lecture page generated from the hourly Markdown source with stable section anchors and natural day/hour navigation.</p>
                 <div class="lecture-meta" aria-label="Lecture metadata">
                     <span class="lecture-meta-item">Day {source.day}</span>
-                    <span class="lecture-meta-item">Hour {source.hour}</span>
-                    <span class="lecture-meta-item">Hourly lecture page</span>
+                    <span class="lecture-meta-item">{session_label}</span>
+                    <span class="lecture-meta-item">{session_meta_label}</span>
                 </div>
                 <div class="lecture-actions">
                     {prev_nav}

@@ -9,6 +9,8 @@ paginate: true
 
 # Intro to Python
 
+[Instructor slide change: page=1; title=Advanced Day 1 — Session 1 (Hours 1–4)]
+
 - What is Python?
 - Installing Python
 - Your first script
