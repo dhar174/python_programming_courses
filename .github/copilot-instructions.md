@@ -65,7 +65,7 @@ npx @marp-team/marp-cli Basics/lessons/filename.md -o output.pptx --pptx
 npx @marp-team/marp-cli -w -c .marprc.yml
 ```
 
-**Note**: No `package.json` exists - always use `npx` to run Marp CLI directly.
+**Note**: `package.json` exists (Marp metadata only) - use `npx` to run Marp CLI directly.
 
 ### Slide Validation
 
@@ -290,7 +290,7 @@ git branch -a
 
 ## Key Facts and Tips
 
-1. **No package.json**: Use `npx` to run Marp CLI directly
+1. **package.json present (no npm scripts)**: Use `npx` to run Marp CLI directly
 2. **Autograder paths**: All paths in `setup.json` are relative to the assignment's config directory
 3. **Deterministic outputs**: Assignment scripts must produce identical output on every run
 4. **IPython magics**: Avoid in notebooks - use Markdown code blocks instead

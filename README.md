@@ -94,7 +94,7 @@ All lesson content must align to the runbooks. Do not modify lesson files withou
 
 ### Quick Start: Building Slides Locally
 
-No `package.json` — use `npx` directly.
+`package.json` is present (Marp metadata only); run Marp CLI commands via `npx`.
 
 ```bash
 # Build Basics the same way the workflow does
@@ -192,7 +192,7 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 - <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day11_Quiz.html">Day 11</a>
 - <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day12_Quiz.html">Day 12</a>
 
-Advanced sample submissions are present for all 12 days. Basics sample submissions are still missing for Days 2, 3, 4, 5, 6, and 8; see [#270](https://github.com/dhar174/python_programming_courses/issues/270). Slide and lesson-source remediation remains open under [#271](https://github.com/dhar174/python_programming_courses/issues/271).
+Sample submission fixtures are present for all 12 days in both Basics and Advanced assignment directories. Tracker issues [#270](https://github.com/dhar174/python_programming_courses/issues/270) and [#271](https://github.com/dhar174/python_programming_courses/issues/271) are closed.
 
 ---
 

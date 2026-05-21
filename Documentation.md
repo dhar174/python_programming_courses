@@ -6,6 +6,8 @@ _Log of milestone status updates and key decisions. Future agents and contributo
 
 ## Milestone Status
 
+- **2026-05-21 — Remediation trackers closed and sample-submission coverage complete**: Basics and Advanced now both have sample submission fixtures for all 12 days, and tracker issues #269, #270, #271, and #272 are closed.
+
 - **2026-04-19 — Project inventory present; remediation open**: All 96 per-hour lecture files, 24 assignment notebooks, 24 HTML quizzes, and 24 `_answers.json` quiz export files are present. Lecture-depth remediation remains open under #269, Basics sample submissions for Days 2, 3, 4, 5, 6, and 8 remain open under #270, and slide/source remediation remains open under #271.
 
 - **2026-04-19 — Autograder pipeline present with validation gaps tracked**: `autograder.yml` can stage assignment submissions from Basics or Advanced directories, grades Basics HTML quizzes, and writes manual-dispatch results to timestamped `autograder-results-*` branches. Advanced quiz answer exports are present, but Advanced quiz grading and PR validation are not yet wired into the workflow. End-to-end Basics sample-submission coverage is still tracked under #270.

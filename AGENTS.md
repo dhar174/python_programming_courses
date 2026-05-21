@@ -145,7 +145,7 @@ The repository uses Marp (Markdown Presentation Ecosystem) to generate slides fr
 
 ### Installation
 
-Since `package.json` is not present in the repository, use `npx` to run Marp CLI directly:
+`package.json` is present (Marp metadata only), so use `npx` to run Marp CLI directly:
 
 ```bash
 npx @marp-team/marp-cli --version
