@@ -31,6 +31,7 @@ _Log of milestone status updates and key decisions. Future agents and contributo
 - **2026-04-19 — Documentation overhauled (Diátaxis framework)**: `README.md` rewritten with multi-audience sections (Learner / Instructor / Contributor), CI badges, and accurate repository contents. `Architecture.md` and `Plans.md` updated with real project content. `Architecture.md` now codifies the six guiding principles and constraint table.
 
 - **2026-05-07 — Status language tied to live trackers**: Completion claims must distinguish present files from open remediation work. Use #269 for lecture depth, #270 for Basics sample submissions, #271 for slide/source remediation, and #272 for documentation sync and tracker hygiene.
+- **2026-05-21 — Behavior-first guardrail grading convention**: For high-value authenticity checks, prefer `behavior_flags` in `criteria.json` (parsed as typed key/value outcomes) over brittle full-line `expected_stdout` literals. Keep output-contract checks where learner-facing labels are the intent, and use behavior checks for artifacts/control-flow validation.
 
 ## Autograder Workflow Review (2026-02-26)
 
