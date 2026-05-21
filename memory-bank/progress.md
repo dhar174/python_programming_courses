@@ -40,7 +40,7 @@
 - Session deck HTML under `Basics/lessons/slides/day-*/` and `Advanced/lessons/slides/day-*/` now exposes stable slide ids so lecture cues can deep-link to named anchors instead of relying only on numeric hashes.
 
 ## What is incomplete
-- Remaining non-#458 issue triage and closeout is still pending (#433, #436, #437, #439, #452), plus ambiguous issue #459.
+- Issue/PR closeout for #458 remains after the validated local rollout.
 - Third-party imports remain optional until a pinned, licensed source is selected.
 
 ## Validation status
@@ -62,9 +62,6 @@
 [2026-05-19] Issue #458 foundation landed locally: lecture shared assets, the Markdown-driven lecture generator, lecture HTML validator, and Pages publish integration now work together and pass generator plus staged publish validation.
 [2026-05-19] Issue #458 pilot review passed, the UX follow-up fixes landed, and the generator produced validated source-owned lecture HTML for all 96 hourly lectures plus matching `_site` output.
 [2026-05-20] Lecture-to-slide cue support landed locally: `scripts/generate_lecture_pages.py` now renders instructor slide-change callouts plus a persistent current-slide indicator from explicit Markdown cues, `scripts/sync_lecture_slide_cues.py` refreshes cue markers across the hourly lecture corpus, the session deck HTML exposes stable slide ids for deep links, and both source-owned and `_site` lecture validation passed after a cue-mapping fix for later-hour Advanced session decks.
-[2026-05-21] Issue audit against merged-on-main evidence closed the #458 rollout tranche/platform issues (#460-#475 except #459) as completed by PR #476; #459 and non-#458 open issues were left open due insufficient confidence.
-[2026-05-21] Follow-up audit pass closed issue #419 with high confidence based on merged PR #426 portal epic evidence on `main`.
-[2026-05-21] Re-audit confirmed no further high-confidence closures among the remaining open issues (#433, #436, #437, #439, #452, #459); all remain open pending explicit merged evidence.
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone
