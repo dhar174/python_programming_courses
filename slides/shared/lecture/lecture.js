@@ -188,19 +188,57 @@
     return current;
   }
 
-  function setCurrentHeading(currentHeading, tocLinks) {
+  function scrollCurrentTocLinkIntoView(currentLink) {
+    if (!currentLink) {
+      return;
+    }
+
+    const tocContainer = currentLink.closest("[data-lecture-toc]");
+    if (!tocContainer || tocContainer.scrollHeight <= tocContainer.clientHeight + 1) {
+      return;
+    }
+
+    const top = currentLink.offsetTop - tocContainer.offsetTop;
+    const bottom = top + currentLink.offsetHeight;
+    const viewTop = tocContainer.scrollTop;
+    const viewBottom = viewTop + tocContainer.clientHeight;
+    const margin = 10;
+
+    if (top < viewTop + margin) {
+      tocContainer.scrollTo({
+        top: Math.max(top - margin, 0),
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
+      return;
+    }
+
+    if (bottom > viewBottom - margin) {
+      tocContainer.scrollTo({
+        top: Math.max(bottom - tocContainer.clientHeight + margin, 0),
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
+    }
+  }
+
+  function setCurrentHeading(currentHeading, tocLinks, shouldScrollToc) {
     if (!currentHeading) {
       return;
     }
 
+    let currentLink = null;
     tocLinks.forEach(function (link) {
-      const isCurrent = link.dataset.targetId === currentHeading.id;
+        const isCurrent = link.dataset.targetId === currentHeading.id;
       if (isCurrent) {
         link.setAttribute("aria-current", "true");
+        currentLink = link;
       } else {
         link.removeAttribute("aria-current");
       }
     });
+
+    if (shouldScrollToc) {
+      scrollCurrentTocLinkIntoView(currentLink);
+    }
 
     const status = document.querySelector("[data-lecture-current-section]");
     if (status) {
@@ -279,11 +317,15 @@
     }
 
     let ticking = false;
+    let lastHeadingId = "";
     function refresh() {
       ticking = false;
       updateProgress();
       if (headings.length) {
-        setCurrentHeading(nearestHeading(headings), tocLinks);
+        const currentHeading = nearestHeading(headings);
+        const currentHeadingId = currentHeading ? currentHeading.id : "";
+        setCurrentHeading(currentHeading, tocLinks, currentHeadingId !== lastHeadingId);
+        lastHeadingId = currentHeadingId;
       }
       updateCurrentSlideCue(nearestSlideCue(slideCues), slideCues);
     }
