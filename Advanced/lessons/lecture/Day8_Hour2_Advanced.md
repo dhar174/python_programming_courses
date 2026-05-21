@@ -158,9 +158,9 @@ Your folders do not need to match this exactly, but your responsibilities should
 
 ---
 
-[Instructor slide change: page=29; title=Demo — Storage Swap With Minimal Drama]
-
 ## Section 3: Live Demo of the Storage Swap (10 minutes)
+
+[Instructor slide change: page=29; title=Demo — Storage Swap With Minimal Drama]
 
 ### Demo Setup
 
@@ -265,8 +265,6 @@ I also want you to see a failure. If I point to a missing or wrong database path
 ---
 
 ## Section 4: Guided Wiring Sprint (25 minutes)
-
-[Instructor slide change: page=30; title=Lab — Wire the Repository Under the Service]
 
 ### Lab Brief
 

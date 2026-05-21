@@ -203,8 +203,6 @@ This is a performance detail, but it's also useful to know: if the first check f
 
 ---
 
-[Instructor slide change: page=21; title=Demo: Age-Gating Eligibility Checker]
-
 ## 5. Live Demo: Comparisons and Logical Operators (10 minutes)
 
 **Set Up the Scenario**: "Let's build an age-gating system for an online service. We need to check:
@@ -212,6 +210,8 @@ This is a performance detail, but it's also useful to know: if the first check f
 2. Does the user have either a membership or have paid a fee?
 
 Let's code this live."
+
+[Instructor slide change: page=21; title=Demo: Age-Gating Eligibility Checker]
 
 ### Demo Code Part 1: Basic Comparisons
 
@@ -300,8 +300,6 @@ print(result)
 Give them 10 seconds to think, then reveal: `False` (because `not has_membership` is `False`).
 
 ---
-
-[Instructor slide change: page=23; title=Lab: Camp Eligibility Checker]
 
 ## 6. Practice Walkthrough: Guided Practice (7 minutes)
 
@@ -438,8 +436,6 @@ Test boundary values:
 - Age 17 (just above): should not be eligible
 
 ---
-
-[Instructor slide change: page=22; title=Common Pitfalls (Hour 14)]
 
 ## 8. Troubleshooting Pitfalls
 
@@ -619,6 +615,8 @@ Every "yes or no" question in software comes down to comparisons and boolean log
 2. **Real-world framing**: Always connect to reality. "Imagine you're the programmer for an airline checking if a passenger can board..."
 3. **Common mistake emphasis**: Spend extra time on `=` vs. `==`. Ask learners to write both on a piece of paper and explain the difference.
 4. **Breakout practice**: If possible, pair learners and have them verbally talk through a boolean expression before coding it.
+
+[Instructor slide change: page=22; title=Common Pitfalls (Hour 14)]
 
 ### Troubleshooting On the Fly
 

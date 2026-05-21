@@ -395,11 +395,11 @@ print(f"Total: ${round(total, 2)}")  # Display: $21.39
 
 ---
 
-[Instructor slide change: page=46; title=Demo: Mini Calculator]
-
 ## Part 3: Live Demo – Mini Calculator (5-10 minutes)
 
 **[Instructor cue: Share your screen and open VS Code or the Python environment]**
+
+[Instructor slide change: page=46; title=Demo: Mini Calculator]
 
 ### Demo Overview
 
@@ -602,8 +602,6 @@ Result: 3.33
 "Now it's your turn. You're going to build a **Tip Calculator**—a real, practical program that you could actually use at a restaurant. Let's walk through what you'll be building."
 
 ---
-
-[Instructor slide change: page=47; title=Lab: Tip Calculator]
 
 ## Part 4: Hands-On Lab – Tip Calculator (25-35 minutes)
 

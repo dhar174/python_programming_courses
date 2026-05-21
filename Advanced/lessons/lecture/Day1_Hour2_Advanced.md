@@ -534,8 +534,6 @@ class BadTask:
 
 ---
 
-[Instructor slide change: page=26; title=Lab: Domain Modeling]
-
 ## Guided Lab: Domain Modeling for a Tracker (25 minutes)
 
 **Instructor setup**
@@ -804,8 +802,6 @@ By the end of the lab, each learner should have:
 If learners finish only the sketch and one working class, that is enough for this hour. Do not push them into persistence, databases, APIs, or GUI work yet. Those topics have their own course moments.
 
 ---
-
-[Instructor slide change: page=27; title=Completion Criteria + Common Pitfalls — Hour 2]
 
 ## Common Pitfalls to Watch For
 

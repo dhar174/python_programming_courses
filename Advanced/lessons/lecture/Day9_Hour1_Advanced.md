@@ -154,8 +154,6 @@ if __name__ == "__main__":
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-[Instructor slide change: page=17; title=Lab: Flask Starter (Hour 33)]
-
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -190,12 +188,12 @@ Flask starter: learners create api/app.py, run the app, test /health in a browse
 - At least one error path returns the shared error contract.
 - Learner can explain GET vs POST and why 201 is used for create.
 
-[Instructor slide change: page=18; title=Common Pitfalls — Hour 33]
-
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=18; title=Common Pitfalls — Hour 33]
 
 ### Common pitfalls to watch for
 
@@ -222,8 +220,6 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add a tiny smoke test for /health using Flask test_client().
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
-
-[Instructor slide change: page=19; title=Quick Check — Hour 33]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

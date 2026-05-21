@@ -192,8 +192,6 @@ That makes mapping code easier to read and less likely to break from accidental 
 
 ---
 
-[Instructor slide change: page=26; title=Demo: Complete CRUD with Mapped Objects]
-
 ## 6) Live Demo Part 1: A Repository That Returns Expense Objects (~15 minutes)
 
 **Say:**
@@ -466,8 +464,6 @@ class ExpenseService:
 
 ---
 
-[Instructor slide change: page=28; title=Common Pitfalls (Hour 27)]
-
 ## 9) Common Pitfalls to Surface Explicitly
 
 ### 9.1 Mismatched column ordering
@@ -491,8 +487,6 @@ class ExpenseService:
 "If you repeat mapping code in three methods, you now have three places to fix when the schema changes. Centralize it."
 
 ---
-
-[Instructor slide change: page=27; title=Lab: Finish Repo CRUD]
 
 ## 10) Guided Practice: Finish CRUD with Mapped Objects (~7 minutes)
 
@@ -552,8 +546,6 @@ The deeper lesson is architectural: the repository protects the rest of the code
 Next hour we will harden the database layer further by looking at transactions, integrity constraints, and safe initialization patterns so startup and multi-step writes behave predictably."
 
 ---
-
-[Instructor slide change: page=29; title=Quick Check]
 
 ## 13) Exit Ticket
 

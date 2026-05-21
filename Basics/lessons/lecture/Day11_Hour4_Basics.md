@@ -206,8 +206,6 @@ Say:
 
 “Notice these are all predictable in user-facing CLI apps. That is why they are first-class catches for today.”
 
-[Instructor slide change: page=41; title=Demo — Hardened CLI Tool]
-
 ### 6) Common pitfalls to call out before demo (1 minute)
 
 Say this directly:
@@ -220,6 +218,8 @@ Say this directly:
 Use:
 
 “Now let’s harden a tiny script with two fragile points: numeric input and JSON file loading. We will make it resilient while keeping exception handling specific.”
+
+[Instructor slide change: page=41; title=Demo — Hardened CLI Tool]
 
 ## Live demo (5–10 minutes): numeric input + JSON loading with friendly errors
 
@@ -376,8 +376,6 @@ Say:
 Then connect to lab:
 
 “Now you will take a fragile starter program and add this same resilience.”
-
-[Instructor slide change: page=42; title=Lab — Harden Your Program]
 
 ## Hands-on lab (25–35 minutes): Harden your program
 
@@ -972,8 +970,6 @@ Prompt:
 “If your code handles only `FileNotFoundError` and `JSONDecodeError`, what happens to a typo bug?”
 
 Expected response: It still surfaces, which helps debugging.
-
-[Instructor slide change: page=43; title=Common Pitfalls + Quick Check (Hour 44)]
 
 ## Quick check / exit ticket (required by runbook)
 

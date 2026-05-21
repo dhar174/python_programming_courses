@@ -141,9 +141,9 @@ Notice what stays the same across both options: the service layer still matters,
 
 ---
 
-[Instructor slide change: page=15; title=Demo Track A — Tiny SQLAlchemy Slice]
-
 ## Section 3: Live Demo (10 minutes)
+
+[Instructor slide change: page=15; title=Demo Track A — Tiny SQLAlchemy Slice]
 
 ### Demo Track A: Tiny SQLAlchemy Slice
 
@@ -248,8 +248,6 @@ Which demo felt clearer to you? Which one felt faster to write? Which one would 
 That question usually produces better thinking than, "Which one is more advanced?"
 
 ---
-
-[Instructor slide change: page=18; title=Lab — Choose One Depth Path]
 
 ## Section 4: Guided Build and Lab Coaching (25 minutes)
 

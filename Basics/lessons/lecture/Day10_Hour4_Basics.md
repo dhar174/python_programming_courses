@@ -55,8 +55,6 @@ The checkpoint project is intentionally small so learners can focus on organizat
 
 7. **Stretch goals** for faster learners (delete/update features, input validation examples, display formatting) that stay within Basics scope and do not require file I/O.
 
-[Instructor slide change: page=36; title=Checkpoint 5 Lab Requirements]
-
 ### Conceptual foundation for teaching this checkpoint:
 
 Frame the checkpoint as **graduation from procedural scripts to structured applications**. Learners have learned functions, loops, and basic OOP pieces independently. Now they integrate these into one coherent system. Success means:
@@ -366,6 +364,8 @@ Wait for hands, then say:
 ## Hands-on checkpoint lab (40 minutes)
 
 This is the exact lab statement. Read aloud and leave it projected.
+
+[Instructor slide change: page=36; title=Checkpoint 5 Lab Requirements]
 
 ### Checkpoint lab requirements (must include these exactly)
 

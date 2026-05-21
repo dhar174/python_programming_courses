@@ -595,8 +595,6 @@ How to run extension safely:
 - Debrief reasoning process.
 - Avoid introducing advanced tooling.
 
-[Instructor slide change: page=34; title=Final Exit Ticket]
-
 ## Quick check and exit ticket, required for every learner
 
 This quick check is mandatory and must be individual, not only group-wide.
@@ -1076,5 +1074,3 @@ This model also mirrors real-world expectations. In practical software contexts,
 ## End-of-script reminder
 
 Keep this as a final-assessment facilitation script. Do not drift into a regular instruction hour. Protect the timeline, capture evidence, and ensure each learner leaves with one clear strength and one clear next-practice target.
-
-(agent_id: issue339-hour4-rewrite — use write_agent to send follow-up messages)

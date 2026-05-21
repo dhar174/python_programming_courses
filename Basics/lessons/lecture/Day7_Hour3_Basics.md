@@ -317,8 +317,6 @@ Keep nesting to two levels when possible. Three or more levels become hard to re
 
 ---
 
-[Instructor slide change: page=32; title=Demo — Multiplication Table]
-
 ## 7) Live Coding Demo: Multiplication Table (~10 minutes)
 
 ### 7.1 Announce the demo
@@ -401,8 +399,6 @@ Output starts with:
 This is wrong because we wanted 1-10, not 0-9. The fix is to use range(1, 11)."
 
 ---
-
-[Instructor slide change: page=33; title=Lab — Multiplication Table]
 
 ## 8) Guided Lab: Multiplication Table (~25 minutes)
 
@@ -518,8 +514,6 @@ The fix for all of these: plan your loops carefully, test with small values, and
 These patterns apply to many problems: processing lists, generating sequences, building tables, and more."
 
 ---
-
-[Instructor slide change: page=35; title=Quick Check — Hour 27]
 
 ## 10) Exit Ticket (~3 minutes)
 

@@ -110,8 +110,6 @@ Narrate the reasoning:
 
 If you can do that sequence reliably, you have already demonstrated most of the milestone. If you cannot do it, the sequence tells you exactly where to look next: initialization, add flow, search path, restart persistence, update logic, or delete logic.
 
-[Instructor slide change: page=47; title=Fast-Grade Demo Workflow]
-
 ### What the Demo Should Not Depend On
 
 **[Instructor speaks:]**
@@ -297,8 +295,6 @@ Next session we move up a level and expose our application through a REST API us
 
 ---
 
-[Instructor slide change: page=45; title=Required Deliverables — Checkpoint 4]
-
 ## Instructor-Ready Deep Dive: Running Checkpoint 4 as a Fast, Fair Milestone
 
 This section expands the checkpoint into a full instructor script. The purpose of this hour is not to add new features. The purpose is to prove that the application has reached a stable, data-driven milestone.
@@ -385,6 +381,8 @@ def run_checkpoint_smoke_test() -> None:
 **[Instructor speaks:]**
 
 This kind of script does not replace the app demo, but it is excellent for debugging. If the script fails, the GUI is probably not the first place to look. If the script passes and the GUI fails, then the issue is likely UI state, selected ID handling, or refresh logic.
+
+[Instructor slide change: page=46; title=Checkpoint Rubric — Plain Language]
 
 ## Lab prompt
 

@@ -417,8 +417,6 @@ except Exception:
 
 ---
 
-[Instructor slide change: page=35; title=Lab: Validation + Exceptions]
-
 ## Guided Lab: Validation and Exceptions (25 minutes)
 
 The lab is required practice, not an optional extension. Learners may continue the model they designed in Hour 2 or use the task tracker model from the demo. The minimum required scope is one validated property, two custom exception classes, one service function that raises a domain exception, and caller code that handles expected errors with user-friendly messages.
@@ -587,8 +585,6 @@ Missing item failure:
 "If your `except` block says `except Exception`, narrow it. Catch `ValidationError` or `NotFoundError`. If there are two expected failures, use two `except` blocks. That helps future readers know exactly what the caller is prepared to handle."
 
 ---
-
-[Instructor slide change: page=36; title=Completion Criteria + Common Pitfalls — Hour 3]
 
 ## Troubleshooting Guide
 

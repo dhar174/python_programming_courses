@@ -260,8 +260,6 @@ General guideline: prefer flat if/elif chains when possible. Use nesting only wh
 
 ---
 
-[Instructor slide change: page=10; title=Demo — Shipping Calculator (Correct Version)]
-
 ## 7) Live Coding Demo: Shipping Calculator (~10 minutes)
 
 ### 7.1 Announce the demo
@@ -380,8 +378,6 @@ Both approaches work. Choose the one that matches how you think about the proble
 
 ---
 
-[Instructor slide change: page=12; title=Lab — Shipping Calculator]
-
 ## 8) Guided Lab: Shipping Calculator (~25 minutes)
 
 ### 8.1 Announce the lab
@@ -498,8 +494,6 @@ The fix for all of these: write the conditions carefully, test at boundaries, an
 These are not advanced concepts, but they require precision. The difference between `<` and `<=` is one character in your code, but it can mean a 10% price difference for your customer."
 
 ---
-
-[Instructor slide change: page=14; title=Quick Check — Hour 25]
 
 ## 10) Exit Ticket (~3 minutes)
 

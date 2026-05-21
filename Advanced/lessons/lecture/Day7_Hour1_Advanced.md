@@ -476,8 +476,6 @@ The runbook warns us specifically about trying to store nested objects without a
 
 ---
 
-[Instructor slide change: page=11; title=Lab: Design Schema + Interface]
-
 ## 10) Guided Practice: Schema Draft + Repository Contract (~10 minutes)
 
 **Say:**
@@ -544,8 +542,6 @@ That is the conceptual foundation for the next several hours. In the next hour, 
 If today felt less flashy than a demo-heavy hour, that is okay. Good persistence code begins with good thinking. Schema design is part of programming, not paperwork."
 
 ---
-
-[Instructor slide change: page=13; title=Quick Check]
 
 ## 13) Exit Ticket
 

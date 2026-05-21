@@ -373,8 +373,6 @@ print(account.balance)               # Still 0
 
 ---
 
-[Instructor slide change: page=28; title=Lab — Add Validation to Your Contact Manager]
-
 ## Hands-On Lab: Add Validation to Your Contact Manager (~28 minutes)
 
 **Say:**

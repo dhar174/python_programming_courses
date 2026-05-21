@@ -51,8 +51,6 @@ By the end of this hour, learners will be able to:
 - This hour adds or strengthens the outer layer: API behavior, client integration, analytics, tests, packaging, or final delivery.
 - The class norm is still: make one small change, run it, observe the result, then continue.
 
-[Instructor slide change: page=44; title=Final Demo: Minimum Capstone Deliverables]
-
 ## Capstone Demo Rubric and Rotation Setup (8-12 minutes)
 
 **[Instructor speaks:]**

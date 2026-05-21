@@ -161,8 +161,6 @@ def test_blank_title_raises_validation_error(service):
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-[Instructor slide change: page=16; title=Lab: Write the First Real Test Suite (Hour 45)]
-
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -198,12 +196,12 @@ Add tests: create at least five tests for service/repository logic, including tw
 - Tests use isolated data such as tmp_path.
 - pytest runs without requiring the GUI or live Flask server.
 
-[Instructor slide change: page=17; title=Common Pitfalls (Hour 45)]
-
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=17; title=Common Pitfalls (Hour 45)]
 
 ### Common pitfalls to watch for
 
@@ -231,8 +229,6 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add tests for serializer functions from the API hours.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
-
-[Instructor slide change: page=18; title=Quick Check (Hour 45)]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

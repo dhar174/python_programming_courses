@@ -384,8 +384,6 @@ You might also see:
 
 ---
 
-[Instructor slide change: page=50; title=The 6-Step Debugging Process]
-
 ## Section 4: Print-Debugging Strategies (8-10 minutes)
 
 ### The Power of Print Statements
@@ -622,8 +620,6 @@ python my_script.py
 
 ---
 
-[Instructor slide change: page=54; title=Demo: Systematic Break-and-Fix]
-
 ## Section 6: Live Demo – Break and Fix (5-10 minutes)
 
 ### Demo Script: Deliberate Debugging
@@ -753,8 +749,6 @@ print(f"Average score: {average:.1f}")
 **Once you verify it works, set `DEBUG = False` to hide the debug output.**
 
 ---
-
-[Instructor slide change: page=55; title=Lab: Debugging Drill]
 
 ## Section 7: Hands-On Lab – Debugging Drill (25-35 minutes)
 

@@ -61,8 +61,6 @@
 
 ---
 
-[Instructor slide change: page=22; title=Lab: Drill Circuit]
-
 ## 3) Opening Script: Why a Drill Circuit Matters (~5 minutes)
 
 ### 3.1 Reconnect to Hour 21
@@ -535,8 +533,6 @@ That kind of explanation shows structure awareness, not just code copying."
 
 ---
 
-[Instructor slide change: page=24; title=Quick Check — Hour 22]
-
 ## 12) Recap + Exit Ticket (~5 minutes)
 
 ### 12.1 Recap the four patterns
@@ -550,6 +546,8 @@ That kind of explanation shows structure awareness, not just code copying."
 - tuple for fixed records and unpacking
 
 These are not random exercises. They are the building blocks of many real Python programs."
+
+[Instructor slide change: page=24; title=Quick Check — Hour 22]
 
 ### 12.2 Exit ticket
 

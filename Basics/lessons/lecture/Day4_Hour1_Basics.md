@@ -479,8 +479,6 @@ shopping_list = ["milk", "bread", "eggs"]
 
 ---
 
-[Instructor slide change: page=13; title=Demo: Build a Shopping List Step by Step]
-
 ## 8) Live Demo: Shopping List Build and Update (~10 minutes)
 
 ### 8.1 Frame the demo
@@ -489,6 +487,8 @@ shopping_list = ["milk", "bread", "eggs"]
 “Now let’s put the core list operations together in one realistic mini-example. I am going to build a shopping list, update it, remove items in two different ways, check for membership, and print the result after each step.
 
 As I type, I want you to keep asking yourself: what changed in the list?”
+
+[Instructor slide change: page=13; title=Demo: Build a Shopping List Step by Step]
 
 ### 8.2 Demo code, part 1: start empty and grow the list
 
@@ -591,8 +591,6 @@ Then say:
 “Notice the difference between one item and a slice containing items.”
 
 ---
-
-[Instructor slide change: page=14; title=Lab: Shopping List Program]
 
 ## 9) Guided Lab: Shopping List Program (~12 minutes)
 

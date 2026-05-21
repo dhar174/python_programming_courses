@@ -35,10 +35,14 @@ STOPWORDS = {
 }
 ANCHOR_PATTERNS = (
     ("learning_outcomes", re.compile(r"\b(learning outcomes|outcomes)\b", re.IGNORECASE)),
-    ("demo_start", re.compile(r"\b(live demo|demo|worked example)\b", re.IGNORECASE)),
-    ("lab_start", re.compile(r"\b(lab|hands on|hands-on|guided practice|checkpoint|rotation|drill circuit)\b", re.IGNORECASE)),
-    ("quick_check", re.compile(r"\b(quick check|exit ticket|check for understanding)\b", re.IGNORECASE)),
-    ("pitfalls", re.compile(r"\b(common pitfalls|troubleshooting|debugging)\b", re.IGNORECASE)),
+    ("demo_start", re.compile(r"^(?:\d+(?:\.\d+)?\s*)?(?:live demo|demo|worked example)\b", re.IGNORECASE)),
+    ("lab_start", re.compile(r"^(?:\d+(?:\.\d+)?\s*)?(?:hands[ -]?on lab|lab exercise|guided practice|checkpoint|rotation|drill circuit|lab prompt)\b", re.IGNORECASE)),
+    ("quick_check", re.compile(r"^(?:\d+(?:\.\d+)?\s*)?(?:quick check|exit ticket|check for understanding)\b", re.IGNORECASE)),
+    ("pitfalls", re.compile(r"^(?:\d+(?:\.\d+)?\s*)?(?:common pitfalls|troubleshooting|debugging)\b", re.IGNORECASE)),
+)
+PREP_SECTION_RE = re.compile(
+    r"\b(instructor prep|prep notes|setup(?:\s*&\s*materials)?|materials needed|instructor setup|preparation)\b",
+    re.IGNORECASE,
 )
 
 
@@ -183,15 +187,18 @@ def deck_path_for_lecture(repo_root: Path, lecture_path: Path, day: int) -> Path
     return repo_root / module_name / "lessons" / "slides" / day_dir / f"{day_dir}-session-{day}.html"
 
 
-def heading_targets(lines: list[str]) -> list[tuple[int, int, str, str | None]]:
-    targets: list[tuple[int, int, str, str | None]] = []
+def heading_targets(lines: list[str]) -> list[tuple[int, int, str, str | None, str | None]]:
+    targets: list[tuple[int, int, str, str | None, str | None]] = []
+    current_section: str | None = None
     for index, line in enumerate(lines):
         match = HEADING_RE.match(line)
         if match is None:
             continue
         level = len(match.group("level"))
         title = match.group("title").strip()
-        targets.append((index, level, title, classify_anchor(title)))
+        if level == 2:
+            current_section = title
+        targets.append((index, level, title, classify_anchor(title), current_section))
     return targets
 
 
@@ -243,7 +250,7 @@ def update_lecture(lecture_path: Path, repo_root: Path, *, write: bool) -> tuple
 
     lines = clean_existing_cues(lecture_path.read_text(encoding="utf-8").splitlines())
     headings = heading_targets(lines)
-    first_major_heading = next((index for index, level, _, _ in headings if level == 2), None)
+    first_major_heading = next((index for index, level, _, _, _ in headings if level == 2), None)
     if first_major_heading is None and headings:
         first_major_heading = headings[0][0]
     if first_major_heading is None:
@@ -258,6 +265,8 @@ def update_lecture(lecture_path: Path, repo_root: Path, *, write: bool) -> tuple
         nonlocal last_page
         if anchor_type in inserted_anchors or slide is None:
             return
+        if last_page is not None and slide.page < last_page:
+            return
         if last_page == slide.page:
             inserted_anchors.add(anchor_type)
             return
@@ -267,8 +276,10 @@ def update_lecture(lecture_path: Path, repo_root: Path, *, write: bool) -> tuple
 
     add_cue(first_major_heading, "hour_start", anchor_slides.get("hour_start", first_slide))
 
-    for line_index, _, _, anchor_type in headings:
+    for line_index, _, _, anchor_type, current_section in headings:
         if anchor_type is None or anchor_type not in allowed:
+            continue
+        if current_section and PREP_SECTION_RE.search(current_section):
             continue
         add_cue(line_index, anchor_type, anchor_slides.get(anchor_type))
 

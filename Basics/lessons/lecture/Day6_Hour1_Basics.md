@@ -456,8 +456,6 @@ So the structure is chosen by the job, not by our personal favorite."
 
 ---
 
-[Instructor slide change: page=8; title=Demo: Duplicate Detection — List First, Then Set]
-
 ## 7) Live Demo 1: Duplicate Detection and Membership — List First, Then Set (~10 minutes)
 
 ### 7.1 Frame the demo
@@ -593,8 +591,6 @@ print(f"Result: {phone}")
 That safety habit will matter again in Hour 24 when learners do their checkpoint assessment."
 
 ---
-
-[Instructor slide change: page=12; title=Lab: Refactor Challenge]
 
 ## 9) Guided Lab: Refactor Challenge (~13 minutes)
 
@@ -733,8 +729,6 @@ That kind of explanation shows real understanding."
 
 ---
 
-[Instructor slide change: page=14; title=Quick Check — Hour 21]
-
 ## 11) Recap + Exit Ticket (~2 minutes)
 
 ### 11.1 Recap the hour in plain language
@@ -749,6 +743,8 @@ We reviewed the four core structures:
 - dictionaries for lookup by key
 
 And we practiced moving from ‘it works’ to ‘it fits.’"
+
+[Instructor slide change: page=14; title=Quick Check — Hour 21]
 
 ### 11.2 Exit ticket
 

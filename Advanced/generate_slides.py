@@ -496,7 +496,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 const decodedHash = decodeURIComponent(hash);
                 const slideById = document.getElementById(decodedHash);
                 if (slideById) {{
-                    const byIdIndex = slides.indexOf(slideById);
+                    const byIdIndex = Array.from(slides).indexOf(slideById);
                     if (byIdIndex >= 0) {{
                         goToSlide(byIdIndex);
                         return;
@@ -731,7 +731,7 @@ class MarkdownSlideParser:
         slug = re.sub(r'[^a-z0-9]+', '-', ascii_text).strip('-') or f"slide-{index}"
         fingerprint = ' | '.join(part for part in (title, subtitle, content_text) if part).strip() or f"slide-{index}"
         digest = hashlib.sha1(fingerprint.encode('utf-8')).hexdigest()[:8]
-        return f"{slug}-{digest}"
+        return f"{slug}-{index}-{digest}"
     
     def render_html(self):
         """Render complete HTML document"""

@@ -77,7 +77,7 @@
                     <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
                 </div>
                 <div class="lecture-prose">
-                    <aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="14" data-slide-title="Hour 26: `sqlite3` CRUD with Parameterized Queries" data-slide-anchor="hour-26-sqlite3-crud-with-parameterized-queries-96ff7ca6"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 14</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#hour-26-sqlite3-crud-with-parameterized-queries-96ff7ca6" data-slide-deck-link>Slide 14: Hour 26: `sqlite3` CRUD with Parameterized Queries</a></div></aside>
+                    <aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="14" data-slide-title="Hour 26: `sqlite3` CRUD with Parameterized Queries" data-slide-anchor="hour-26-sqlite3-crud-with-parameterized-queries-14-96ff7ca6"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 14</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#hour-26-sqlite3-crud-with-parameterized-queries-14-96ff7ca6" data-slide-deck-link>Slide 14: Hour 26: `sqlite3` CRUD with Parameterized Queries</a></div></aside>
 
 <h2 id="instructor-notes">Instructor Notes</h2>
 <ul>
@@ -93,7 +93,7 @@
 <p><strong>Instructor note:</strong> This hour is the learners' first concrete SQLite implementation in the advanced sequence. Keep the conversation practical and specific. The targets are: open a database file with <code>sqlite3</code>, create a table safely with <code>CREATE TABLE IF NOT EXISTS</code>, and run safe CRUD operations using <code>?</code> parameter placeholders. Reinforce the runbook quality gate repeatedly: no SQL string concatenation, every write is committed, and update/delete must be ID-based. Keep ORMs out of scope. The point is confidence with the standard library and visibility into what the application is actually doing.</p>
 </blockquote>
 <hr>
-<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="15" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-bb1d9ec4"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 15</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#learning-outcomes-bb1d9ec4" data-slide-deck-link>Slide 15: Learning Outcomes</a></div></aside>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="15" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-15-bb1d9ec4"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 15</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#learning-outcomes-15-bb1d9ec4" data-slide-deck-link>Slide 15: Learning Outcomes</a></div></aside>
 
 <h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
 <p>"By the end of this hour, you will be able to:</p>
@@ -251,8 +251,6 @@ with sqlite3.connect(db_path) as connection:
 <p><strong>Say:</strong>
 "The runbook says it plainly: all SQL uses parameter placeholders, no string concatenation. I want that quality gate visible in every database file you write."</p>
 <hr>
-<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="18" data-slide-title="Demo: First SQLite Repository Methods" data-slide-anchor="demo-first-sqlite-repository-methods-5970a7fc"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 18</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#demo-first-sqlite-repository-methods-5970a7fc" data-slide-deck-link>Slide 18: Demo: First SQLite Repository Methods</a></div></aside>
-
 <h2 id="7-live-demo-part-1-insert-and-list-rows-15-minutes">7) Live Demo Part 1: Insert and List Rows (~15 minutes)</h2>
 <p><strong>Say:</strong>
 "Now let's build the first working slice of the repository. We will create the database, ensure the table exists, insert a couple of expenses, and list them back out. For this hour, seeing raw rows is acceptable. Next hour we will map them back into rich objects."</p>
@@ -402,8 +400,6 @@ for row in repo.list_all_rows():
 <p><strong>Say:</strong>
 "A practical debugging trick is to inspect <code>cursor.rowcount</code> after an update or delete. If it is zero, that often means the target ID did not exist. We will use that signal more formally in the next hour when we add error handling and row mapping."</p>
 <hr>
-<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="20" data-slide-title="Common Pitfalls (Hour 26)" data-slide-anchor="common-pitfalls-hour-26-9de05463"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 20</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#common-pitfalls-hour-26-9de05463" data-slide-deck-link>Slide 20: Common Pitfalls (Hour 26)</a></div></aside>
-
 <h2 id="9-common-pitfalls-to-teach-explicitly">9) Common Pitfalls to Teach Explicitly</h2>
 <h3 id="91-forgetting-commit">9.1 Forgetting commit</h3>
 <p><strong>Say:</strong>
@@ -420,8 +416,6 @@ for row in repo.list_all_rows():
 <p><strong>Say:</strong>
 "Finally, do not assume an update or delete worked just because no exception was raised. Check the target ID. Check <code>rowcount</code>. Re-query the table. Practical debugging beats wishful thinking."</p>
 <hr>
-<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="19" data-slide-title="Lab: First SQLite Integration" data-slide-anchor="lab-first-sqlite-integration-02a324ea"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 19</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#lab-first-sqlite-integration-02a324ea" data-slide-deck-link>Slide 19: Lab: First SQLite Integration</a></div></aside>
-
 <h2 id="10-guided-practice-first-sqlite-integration-7-minutes">10) Guided Practice: First SQLite Integration (~7 minutes)</h2>
 <p><strong>Say:</strong>
 "Now you will build the first working SQLite slice yourself. Stay close to the pattern we just used. The goal is not originality. The goal is correctness."</p>
@@ -476,8 +470,6 @@ for row in repo.list_all_rows():
 </ul>
 <p>In the next hour, we will take the next architectural step: instead of returning raw row tuples, we will map rows back into dataclass objects so the rest of the application can continue speaking the language of the domain."</p>
 <hr>
-<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="21" data-slide-title="Quick Check" data-slide-anchor="quick-check-b701800d"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 21</strong><a class="lecture-slide-cue-link" href="../slides/day-07/day-07-session-7.html#quick-check-b701800d" data-slide-deck-link>Slide 21: Quick Check</a></div></aside>
-
 <h2 id="13-exit-ticket">13) Exit Ticket</h2>
 <p>Ask learners to answer quickly in writing or verbally:</p>
 <ol>

@@ -361,8 +361,6 @@ Run once with an existing title and once with a missing title.
 
 ---
 
-[Instructor slide change: page=32; title=Lab: Book Library Tracker]
-
 ## 9) Guided Lab: Build Your Own Tracker Version (~19 minutes)
 
 ### 9.1 Lab framing
@@ -498,8 +496,6 @@ That kind of explanation shows design understanding, not just code copying."
 
 ---
 
-[Instructor slide change: page=34; title=Quick Check — Hour 23]
-
 ## 11) Recap + Exit Ticket (~5 minutes)
 
 ### 11.1 Recap the main lessons
@@ -514,6 +510,8 @@ We used:
 - a simple search pattern to find one matching record
 
 That is a very real slice of application-building."
+
+[Instructor slide change: page=34; title=Quick Check — Hour 23]
 
 ### 11.2 Exit ticket
 

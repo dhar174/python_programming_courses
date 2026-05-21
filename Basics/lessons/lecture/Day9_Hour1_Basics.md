@@ -193,8 +193,6 @@ This is different from `print()`. If I had written `print(result)` instead of `r
 
 ---
 
-[Instructor slide change: page=10; title=Demo: Refactoring a Calculator]
-
 ## 6. Live Demo 1: Building a Basic Greeter (~13 minutes)
 
 **Instructor narration and live coding:**
@@ -381,8 +379,6 @@ This is how professional code is structured. Functions are your building blocks.
 
 ---
 
-[Instructor slide change: page=11; title=Lab: Refactor Contact Manager (Hour 33)]
-
 ## 8. Guided Lab: Refactor Contact Manager (~13 minutes)
 
 ### 8.1 Lab Overview
@@ -508,8 +504,6 @@ main()
 This structure is much more testable, readable, and maintainable. If you need to debug the search logic, you know exactly where to look: the `search_contact()` function."
 
 ---
-
-[Instructor slide change: page=12; title=Common Pitfalls (Hour 33)]
 
 ## 9. Troubleshooting Pitfalls and Instructor Cues
 

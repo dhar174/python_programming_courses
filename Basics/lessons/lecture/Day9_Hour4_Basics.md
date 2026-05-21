@@ -235,9 +235,9 @@ project_folder/
 
 The key principle: separable concerns live in separate files. `main.py` orchestrates; `utils.py` provides reusable helpers. This mirrors professional practice.
 
-[Instructor slide change: page=40; title=Demo: Standard Library Imports]
-
 ## 6. Live Demo: Standard Library Imports and Custom Module Demo (17 minutes)
+
+[Instructor slide change: page=40; title=Demo: Standard Library Imports]
 
 ### Demo 1: Standard Library Imports (5 minutes)
 
@@ -361,8 +361,6 @@ print(f"New balance:     {format_money(new_balance)}")
 ```
 
 **Teaching Point**: Run both files to show the integrated workflow. Emphasize that `main.py` is the user-facing script; `utils.py` contains the reusable functions. This structure is exactly what the lab will produce.
-
-[Instructor slide change: page=42; title=Lab: Build utils.py (Hour 36)]
 
 ## 7. Lab Specification and Walkthrough: Building and Using utils.py (25 minutes)
 
@@ -593,8 +591,6 @@ Students who finish early can extend the lab:
 1. **Add a `menu_choice()` function to `utils.py`**: Creates a simple menu and returns the user's choice as an integer.
 2. **Create a second module**: Extract formatting functions into `formatters.py` and import from there.
 3. **Add more functions**: Implement `get_positive_number()`, `percent_of()`, or `compound_interest()` in `utils.py`.
-
-[Instructor slide change: page=43; title=Common Pitfalls (Hour 36)]
 
 ## 8. Troubleshooting: Common Import Pitfalls and Fixes (Reference Material for Instructors)
 

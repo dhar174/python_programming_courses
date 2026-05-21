@@ -180,8 +180,6 @@ Temp-then-replace:
 
 "One more vocabulary phrase: **working directory**. Relative paths like `data/tasks.json` are interpreted relative to the process's current working directory, not necessarily the file where your code lives. In this course, we run from the project root. That makes `data/tasks.json`, `logs/app.log`, and `python -m src.tracker.demo` line up predictably. If you run from inside `src/tracker/`, those same relative paths can point somewhere else or fail."
 
-[Instructor slide change: page=35; title=Completion Criteria and Quick Check (Hour 11)]
-
 ### Instructor check for understanding
 
 Ask:
@@ -480,8 +478,6 @@ Path("tasks").unlink(missing_ok=True)
 "Now you will implement the helper yourself. The goal is not to memorize my exact variable names. The goal is to preserve the order of operations and prove the target stays safe."
 
 ---
-
-[Instructor slide change: page=34; title=Lab: Safe Save Utility for Tracker Data]
 
 ## Guided Lab: Safe Save Utility for Tracker Data (25 minutes)
 

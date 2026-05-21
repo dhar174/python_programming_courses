@@ -433,8 +433,6 @@ Task(task_id=101, title='Write tests', status='open', priority=2)
 
 "Now we can see the split clearly. `print(task)` is user-friendly. `repr(task)` and list output are developer-friendly."
 
-[Instructor slide change: page=35; title=Lab: Make Your Model Pleasant to Work With]
-
 ### Step 4: Add hints to a couple methods and checkpoint-prep `to_dict()`
 
 **Instructor talk track**

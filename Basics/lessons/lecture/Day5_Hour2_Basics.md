@@ -503,8 +503,6 @@ This is the pattern you will use in the lab. Collect data into a set, do your se
 
 ---
 
-[Instructor slide change: page=26; title=Demo: List of Names → Set]
-
 ## 9) Live Demo: List of Names → Set
 
 **Say:**
@@ -603,8 +601,6 @@ Here is the full picture of what we just built:
 That is the complete pattern for uniqueness and membership in Python. Now let's build it from scratch in the lab."
 
 ---
-
-[Instructor slide change: page=27; title=Lab: Unique Visitors]
 
 ## 10) Hands-on Lab: Unique Visitors
 
@@ -753,8 +749,6 @@ Both patterns are valid. The list-then-convert pattern is more common and more g
 
 ---
 
-[Instructor slide change: page=28; title=Common Pitfalls (Hour 18)]
-
 ## 11) Common Pitfalls
 
 ### 11.1 Expecting order to be preserved
@@ -888,8 +882,6 @@ print(f"Morning only            : {sorted(morning_only)}")
 
 ---
 
-[Instructor slide change: page=29; title=Quick Check]
-
 ## 13) Debrief, Recap, and Exit Ticket
 
 ### 13.1 Concept recap
@@ -938,6 +930,8 @@ You will not always get this perfect — that is fine. Learning to notice these 
 "Next hour — Hour 19 — we are going to meet the last and arguably most powerful built-in data structure: the dictionary. Dictionaries let you associate a *key* with a *value*, like a real-world dictionary that associates a word with its definition. We will see how dictionaries extend what we can do with data well beyond lists, tuples, and sets.
 
 Before we get there, take 30 seconds to answer the exit ticket."
+
+[Instructor slide change: page=29; title=Quick Check]
 
 ### 13.4 Exit ticket
 

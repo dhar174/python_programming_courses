@@ -730,8 +730,6 @@ Bob,Analyst,37.5,$45.00,$1687.50
 
 ---
 
-[Instructor slide change: page=38; title=Demo: Sentence Statistics]
-
 ## Section 6: Live Demo – Word Count and Rebuild (5-10 minutes)
 
 ### Demo Script: Sentence Statistics
@@ -854,8 +852,6 @@ Longest word: 'Hello' (5 characters)
 
 ---
 
-[Instructor slide change: page=39; title=Lab: Sentence Analyzer]
-
 ## Section 7: Hands-On Lab – Sentence Stats (25-35 minutes)
 
 ### Lab Overview
@@ -970,8 +966,6 @@ Your solution must:
 - ✅ Use `.join()` to create both transformations (piped and hyphenated)
 - ✅ Display output in a clear, formatted way
 - ✅ Run without errors
-
-[Instructor slide change: page=41; title=Common Pitfalls (Hour 11)]
 
 ### Common Pitfalls to Watch For
 

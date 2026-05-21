@@ -267,8 +267,6 @@ What would break if I moved the SQL into the button callback? The answer is not 
 
 ## Section 4: Guided Implementation Sprint (25 minutes)
 
-[Instructor slide change: page=40; title=Lab — Practical Search Feature]
-
 ### Lab Brief
 
 **[Instructor speaks:]**

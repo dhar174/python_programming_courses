@@ -51,8 +51,6 @@ Revisit these anchors before class begins:
 - **Front-load clarity.** Spend the first 15 minutes ensuring learners understand the rubric, the task, and the testing strategy.
 - **Protect coding time.** Do not spend 45+ minutes introducing; aim for 25–35 minutes of uninterrupted work.
 
-[Instructor slide change: page=37; title=What This Checkpoint Tests]
-
 ### 2.3 Checkpoint Task Summary
 
 **Name:** Simple Contacts (In Memory)  
@@ -324,6 +322,8 @@ You can adjust the format. You can use different labels. But the idea is: a pers
 
 ## 7. Lab with Checkpoints (45–60 minutes total work time)
 
+[Instructor slide change: page=39; title=Checkpoint Build Order]
+
 ### 7.1 Checkpoint 1: Dictionary Created (Target: 5 minutes into work time)
 
 **What learners should have:**
@@ -396,8 +396,6 @@ Remember: a simple, correct program is better than a half-finished fancy program
 "You have about five to ten minutes left. Make sure you have tested an existing name and a missing name. That missing-name test is the most important. If your program is missing that test, run it now before you save."
 
 ---
-
-[Instructor slide change: page=43; title=Common Pitfalls — Hour 24]
 
 ## 8. Troubleshooting Pitfalls
 

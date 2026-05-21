@@ -27,8 +27,6 @@ Keep scope strictly inside Hour 24 checkpoint facilitation. Do not teach new per
 
 Contract alignment note: this script preserves canonical Hour 24 language and the canonical demo sequence used across Day 6 artifacts. The milestone wording remains consistent with the runbook phrase “Checkpoint 3: GUI milestone demo,” and the required short demo path remains exactly “add -> list -> update -> delete -> restart -> load.” If you adapt local classroom phrasing, keep those two anchors unchanged so rubric evidence remains comparable across sections and instructors.
 
-[Instructor slide change: page=49; title=Checkpoint Overview]
-
 ## What success looks like in this checkpoint hour
 
 At the end of this hour, you should be able to answer yes to the following operational questions for each learner or team submission:
@@ -103,8 +101,6 @@ Reinforce:
 - Stable IDs must remain stable after restart and load.
 - Validation must exist in service or core, not only in button handlers.
 - Typical error paths must not crash.
-
-[Instructor slide change: page=51; title=Canonical Demo Sequence]
 
 ### Minute 8 to 14: demo protocol and fairness protocol
 
@@ -196,8 +192,6 @@ Always include:
 - One highest priority fix.
 - One concrete next action within 30 minutes of independent work.
 
-[Instructor slide change: page=58; title=Closing Quick Check]
-
 ### Minute 57 to 60: quick check and close
 
 Ask every learner:
@@ -246,6 +240,8 @@ Purpose:
 - Set shared expectation for acceptable evidence.
 - Reduce ambiguity.
 - Lower anxiety through concrete demonstration.
+
+[Instructor slide change: page=49; title=Checkpoint Overview]
 
 ### Hands on lab coverage, 25 to 35 minutes
 
@@ -1095,5 +1091,3 @@ Phase 5, close:
 This hour is successful when learners leave with clear truth about their current software quality and a concrete path forward. Your consistency is more important than speed, and your evidence discipline is more important than presentation polish. Keep the milestone language canonical, keep the demo sequence canonical, enforce the gates, and coach with precision.
 
 End of Hour 24 checkpoint facilitation script.
-
-(agent_id: issue299-hour4-rewrite — use write_agent to send follow-up messages)

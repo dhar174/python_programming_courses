@@ -85,8 +85,6 @@ Use these prompts to keep the class active:
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
 
-[Instructor slide change: page=37; title=Fast-Grade Demo Sequence]
-
 ## Instructor Model Demo (15-25 minutes)
 
 **[Instructor speaks:]**
@@ -147,8 +145,6 @@ Suggested instructor circulation questions:
 
 ## Stabilization and Demo Queue (40-55 minutes)
 
-[Instructor slide change: page=36; title=What the Checkpoint Must Prove]
-
 ### Lab prompt
 
 Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone demos or fast-grade checks. Each learner should be ready to show Flask CRUD, SQLite persistence, consistent JSON errors, API-key gate for writes, and optionally a Python client.
@@ -169,12 +165,12 @@ Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone de
 - Security gate works for missing/wrong/correct keys.
 - Student can point to separation between routes and service logic.
 
-[Instructor slide change: page=40; title=Common Pitfalls and Exit Ticket — Hour 40]
-
 ## Reflection, Quick Checks, and Exit Ticket (55-60 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=40; title=Common Pitfalls and Exit Ticket — Hour 40]
 
 ### Common pitfalls to watch for
 

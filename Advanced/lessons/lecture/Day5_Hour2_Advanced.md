@@ -529,8 +529,6 @@ Close demo with explicit criteria mapping:
 
 “We now have readable alignment and acceptable resizing behavior. This is the same target you will apply in lab.”
 
-[Instructor slide change: page=23; title=Lab: Refactor a Rough Layout (Hour 18)]
-
 ## Segment 5 — 26 min hands-on lab
 
 Facilitation goal: convert observed refactor pattern into independent execution and diagnosis skill.
@@ -973,5 +971,3 @@ If all are true, this hour is complete and aligned.
 ## Final spoken close
 
 “Strong work. You now have a repeatable method for Tkinter layout quality: frame structure, alignment rhythm, and resize behavior contracts. Keep this process close. It will save you time every time a UI grows. Next session can build on this foundation, but for now your win condition is clear and met when your interface is readable, aligned, and stable under resize tests.”
-
-(agent_id: issue296-hour2-finaldraft — use write_agent to send follow-up messages)

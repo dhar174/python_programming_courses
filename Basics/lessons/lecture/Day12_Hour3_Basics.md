@@ -821,5 +821,3 @@ For instructor and student clarity, keep this simple pass card visible:
 - Allowed after freeze: wording and formatting only unless critical bug.
 
 This card closes the loop between instruction, lab behavior, and auditable completion.
-
-(agent_id: issue337-hour3-rewrite — use write_agent to send follow-up messages)

@@ -94,9 +94,9 @@ This assessment combines all fundamentals from Day 1 and Day 2 (Hours 1–7) int
 
 ---
 
-[Instructor slide change: page=44; title=Demo Walk-Through]
-
 ## Live Coding Demo
+
+[Instructor slide change: page=44; title=Demo Walk-Through]
 
 ### Demo: Walk through the Simple Receipt Generator solution step-by-step
 

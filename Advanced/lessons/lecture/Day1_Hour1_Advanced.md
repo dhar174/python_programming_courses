@@ -462,8 +462,6 @@ git push
 
 ---
 
-[Instructor slide change: page=15; title=Lab: Environment + Baseline Diagnostic]
-
 ## Guided Practice Lab: Setup and Diagnostic (25 minutes)
 
 Read the lab prompt aloud, then keep it visible. Learners should work in their own lab environment while you circulate.

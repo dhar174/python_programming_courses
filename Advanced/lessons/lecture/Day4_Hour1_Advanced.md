@@ -268,9 +268,9 @@ The benefit is not just less typing. The benefit is consistency. When you later 
 
 ---
 
-[Instructor slide change: page=14; title=Demo: Full Wrapper Function]
-
 ## Section 4: Live Demo – Public API Consumer with a Wrapper Function (8 minutes)
+
+[Instructor slide change: page=14; title=Demo: Full Wrapper Function]
 
 ### Demo Setup
 
@@ -406,8 +406,6 @@ Watch for students copying the code without understanding why each `except` exis
 If students answer those questions correctly, they are moving beyond syntax into design thinking.
 
 ---
-
-[Instructor slide change: page=16; title=Lab: API Consumer (26 min)]
 
 ## Section 5: Hands-On Lab – API Consumer with Failure-Branch Checks (26 minutes)
 

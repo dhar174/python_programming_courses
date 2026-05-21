@@ -168,8 +168,6 @@ def delete_record(record_id: int):
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-[Instructor slide change: page=27; title=Lab: CRUD API (Hour 34)]
-
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -204,12 +202,12 @@ Build CRUD API: implement /records and /records/<id> endpoints backed by the exi
 - POST returns 201; missing records return 404; invalid payloads return 400.
 - The service/repository layer remains reusable outside Flask.
 
-[Instructor slide change: page=28; title=Common Pitfalls — Hour 34]
-
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=28; title=Common Pitfalls — Hour 34]
 
 ### Common pitfalls to watch for
 
@@ -237,8 +235,6 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add a route-level smoke test for the create/list cycle.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
-
-[Instructor slide change: page=29; title=Quick Check — Hour 34]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

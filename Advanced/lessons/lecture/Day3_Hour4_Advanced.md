@@ -566,8 +566,6 @@ def ensure_non_empty_title(title: str) -> None:
 
 ---
 
-[Instructor slide change: page=45; title=Lab: Timing Decorator in the Tracker Project]
-
 ## Guided Lab: Timing Decorator in the Tracker Project (26 minutes)
 
 ### Lab purpose

@@ -574,8 +574,6 @@ Plain data for serialization:
 
 ---
 
-[Instructor slide change: page=16; title=Lab: Tracker Factory Implementation]
-
 ## Guided Lab: Tracker Factory Implementation (25 minutes)
 
 The lab is the center of this hour. Learners need time to type, make mistakes, read error messages, and repair their code. Keep the prompt focused. Do not expand into file loading, JSON parsing from disk, databases, or web requests unless learners finish the required work.

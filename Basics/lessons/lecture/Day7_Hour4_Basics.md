@@ -257,8 +257,6 @@ print(f'Average: {average:.2f}')  # Output: 16.00 (two decimal places)
 
 ---
 
-[Instructor slide change: page=42; title=Demo — Number Statistics Program]
-
 ## 4. Live Coding Demo
 
 ### Setup (1 minute)
@@ -266,6 +264,8 @@ print(f'Average: {average:.2f}')  # Output: 16.00 (two decimal places)
 **Say:**
 
 "I'm going to write a program that processes a list of numbers and computes statistics using all four patterns. Watch how I build it step by step, then you'll do the same in the lab."
+
+[Instructor slide change: page=42; title=Demo — Number Statistics Program]
 
 ### Demo Code: Number Statistics Program
 
@@ -336,8 +336,6 @@ Average: 16.00
 *Pause for student input. Expected answer: "Because we already used `numbers[0]` for min/max initialization."*
 
 ---
-
-[Instructor slide change: page=43; title=Lab — Number Statistics]
 
 ## 5. Guided Lab with 3 Explicit Checkpoints
 
@@ -521,8 +519,6 @@ average = total / count  # Doesn't include first number!
   - Start the loop at `numbers[0]` instead of `numbers[1:]`
 
 ---
-
-[Instructor slide change: page=45; title=Quick Check — Hour 28]
 
 ## 8. Exit Ticket & Quick-Check Questions
 

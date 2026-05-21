@@ -452,8 +452,6 @@ Right—Python will give you an `IndentationError`. Consistency is key.
 
 ---
 
-[Instructor slide change: page=21; title=Demo: 5 Common Mistakes]
-
 ## Section 4: Live Demo – Common Mistakes and How to Read Errors (5-10 minutes)
 
 ### The Safe Space for Errors
@@ -690,6 +688,8 @@ Let me give you a **process** for reading error messages. Use this every time yo
 
 ---
 
+[Instructor slide change: page=21; title=Demo: 5 Common Mistakes]
+
 ### Demo Recap
 
 **[Instructor speaks:]**
@@ -705,8 +705,6 @@ In the last 10 minutes, we deliberately made five common mistakes:
 You'll make all of these errors (and more) as you learn. That's normal. The difference now is **you know how to read the feedback and fix it**.
 
 ---
-
-[Instructor slide change: page=22; title=Lab: Greeter]
 
 ## Section 5: Hands-On Lab – Greeter Program (25-35 minutes)
 
@@ -981,8 +979,6 @@ While students are working, circulate and watch for:
 
 ---
 
-[Instructor slide change: page=25; title=Quick Check]
-
 ## Section 6: Debrief & Exit Ticket (5 minutes)
 
 ### Group Debrief
@@ -1032,6 +1028,8 @@ Let me recap what we covered this hour:
 **[Key mindset shift]:** You are now comfortable making mistakes, reading errors, and fixing them. That's huge!
 
 ---
+
+[Instructor slide change: page=25; title=Quick Check]
 
 ### Exit Ticket: Quick Check
 

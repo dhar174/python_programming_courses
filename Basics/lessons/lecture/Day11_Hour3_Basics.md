@@ -394,8 +394,6 @@ Ask:
 
 ---
 
-[Instructor slide change: page=32; title=Lab — Data Folder and Deterministic Discovery]
-
 ## Hands-on lab (25–35 min): data folder + deterministic discovery
 
 ### Lab framing for learners
@@ -557,6 +555,8 @@ Stretch quality indicators:
 - Uses `encoding="utf-8"` and consistent output formatting.
 
 ---
+
+[Instructor slide change: page=33; title=Common Pitfalls + Quick Check (Hour 43)]
 
 ## Common pitfalls and instructor interventions
 
@@ -819,8 +819,6 @@ Expected idea:
 - Adjust base directory once (for example `Path(__file__).resolve().parent.parent`) and keep the rest unchanged.
 
 ---
-
-[Instructor slide change: page=33; title=Common Pitfalls + Quick Check (Hour 43)]
 
 ## Quick-check / exit ticket
 

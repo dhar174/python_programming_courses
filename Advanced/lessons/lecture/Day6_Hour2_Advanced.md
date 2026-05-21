@@ -463,8 +463,6 @@ At the end, scroll through the new class and point out that the code now reads l
 
 **Say:** “That list of methods tells the story of the app. Good structure often looks like clear storytelling.”
 
-[Instructor slide change: page=32; title=Lab: Refactor Without Breaking Behavior]
-
 ### 15) Practice lab script
 
 Read or paste this to learners:

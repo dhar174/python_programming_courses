@@ -164,8 +164,6 @@ That reminder saves a lot of confusion later."
 
 ---
 
-[Instructor slide change: page=34; title=Demo: Hardening the DB Layer]
-
 ## 6) Live Demo Part 1: An Idempotent init_db() Function (~15 minutes)
 
 **Say:**
@@ -384,8 +382,6 @@ This is the beginning of dependency wiring. It is simple, explicit, and testable
 
 ---
 
-[Instructor slide change: page=36; title=Common Pitfalls (Hour 28)]
-
 ## 9) Common Pitfalls to Surface Explicitly
 
 ### 9.1 Schema drift and manual edits
@@ -409,8 +405,6 @@ This is the beginning of dependency wiring. It is simple, explicit, and testable
 "A transaction strategy is not real until you have seen the failure path. Deliberately trigger one safe error during development and confirm the rollback behavior."
 
 ---
-
-[Instructor slide change: page=35; title=Lab: Hardening Sprint]
 
 ## 10) Guided Practice: Harden Your Database Layer (~7 minutes)
 
@@ -466,8 +460,6 @@ A strong answer to the third question is: database constraints protect stored da
 At this point, learners should have a persistence layer that is not just a demo but a solid foundation for the next phase of the course, where the service layer and user-facing application features rely on it more heavily."
 
 ---
-
-[Instructor slide change: page=37; title=Quick Check]
 
 ## 13) Exit Ticket
 

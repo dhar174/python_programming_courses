@@ -449,8 +449,6 @@ You will not always be certain which to choose. That is normal. As you write mor
 
 ---
 
-[Instructor slide change: page=13; title=Demo: Coordinate Pairs]
-
 ## 8) Live Demo: Coordinate Pairs
 
 ### 8.1 Overview
@@ -591,8 +589,6 @@ Run it.
 "Notice the structure: `path` is a list — it is mutable, it can grow or shrink. Each item inside the list is a tuple — each coordinate is fixed. This is a natural and very common pattern in Python: a mutable outer container of immutable records."
 
 ---
-
-[Instructor slide change: page=14; title=Lab: Coordinate Tracker]
 
 ## 9) Hands-on Lab: Coordinate Tracker
 
@@ -748,8 +744,6 @@ This pattern — a list of tuples — is one you will use many times in real Pyt
 
 ---
 
-[Instructor slide change: page=15; title=Common Pitfalls (Hour 17)]
-
 ## 10) Common Pitfalls
 
 ### 10.1 The single-element tuple trap (revisited)
@@ -901,8 +895,6 @@ This is a taste of how tuples connect naturally to geometric calculations in rea
 
 ---
 
-[Instructor slide change: page=16; title=Quick Check]
-
 ## 12) Debrief, Recap, and Exit Ticket
 
 ### 12.1 Recap the key ideas
@@ -926,6 +918,8 @@ This is a taste of how tuples connect naturally to geometric calculations in rea
 "In the next hours, we will see tuples appear again when we work with dictionaries — specifically, when we iterate over a dictionary's key-value pairs, we will unpack them as two-element tuples. So the unpacking pattern you just practised will keep paying off.
 
 You will also see tuples appear naturally when functions return multiple results. Returning a tuple is the idiomatic Python way to 'return two things at once'."
+
+[Instructor slide change: page=16; title=Quick Check]
 
 ### 12.3 Exit ticket
 

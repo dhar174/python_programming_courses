@@ -386,17 +386,17 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide" id="advanced-day-12-session-12-hours-4548-e69fa0c7" data-slide-number="1">
+        <section class="slide title-slide" id="advanced-day-12-session-12-hours-4548-1-e69fa0c7" data-slide-number="1">
             <h1>Advanced Day 12 — Session 12 (Hours 45–48)</h1>
             <div class="subtitle">Python Programming (Advanced) • Testing, Packaging, and Final Delivery</div>
         </section>
 
-        <section class="slide" id="session-12-overview-0743afea" data-slide-number="2">
+        <section class="slide" id="session-12-overview-2-0743afea" data-slide-number="2">
             <h1>Session 12 Overview</h1>
             
         </section>
 
-        <section class="slide" id="topics-covered-today-574ea0d4" data-slide-number="3">
+        <section class="slide" id="topics-covered-today-3-574ea0d4" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
   <li>Hour 45 — Unit tests for the service layer with pytest</li>
@@ -415,7 +415,7 @@
 <p><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 12, Hours 45–48</code></p>
         </section>
 
-        <section class="slide" id="session-12-outcomes-67d999cb" data-slide-number="4">
+        <section class="slide" id="session-12-outcomes-4-67d999cb" data-slide-number="4">
             <h1>Session 12 Outcomes</h1>
             <p>By the end of today, learners will be able to:</p>
 <ul>
@@ -428,12 +428,12 @@
 </ul>
         </section>
 
-        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="5">
+        <section class="slide" id="scope-guardrails-for-today-5-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide" id="in-scope-c02a7578" data-slide-number="6">
+        <section class="slide" id="in-scope-6-c02a7578" data-slide-number="6">
             <h1>In Scope</h1>
             <ul>
   <li>Service-layer and repository unit tests with pytest fixtures and <code>tmp_path</code></li>
@@ -444,7 +444,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="not-yet-fcda4edc" data-slide-number="7">
+        <section class="slide" id="not-yet-7-fcda4edc" data-slide-number="7">
             <h1>Not Yet</h1>
             <ul>
   <li>Testing Flask routes exhaustively (service-layer tests are the priority here)</li>
@@ -454,17 +454,17 @@
 </ul>
         </section>
 
-        <section class="slide" id="hour-45-unit-tests-for-the-service-layer-66d777e0" data-slide-number="8">
+        <section class="slide" id="hour-45-unit-tests-for-the-service-layer-8-66d777e0" data-slide-number="8">
             <h1>Hour 45 — Unit Tests for the Service Layer</h1>
             
         </section>
 
-        <section class="slide" id="session-12-hour-45-f42eb549" data-slide-number="9">
+        <section class="slide" id="session-12-hour-45-9-f42eb549" data-slide-number="9">
             <h1>Session 12, Hour 45</h1>
             
         </section>
 
-        <section class="slide" id="hour-45-learning-outcomes-ba0f20e4" data-slide-number="10">
+        <section class="slide" id="hour-45-learning-outcomes-10-ba0f20e4" data-slide-number="10">
             <h1>Hour 45 Learning Outcomes</h1>
             <p>By the end of this hour, learners will be able to:</p>
 <ul>
@@ -479,7 +479,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="why-testing-fits-here-47e9721a" data-slide-number="11">
+        <section class="slide" id="why-testing-fits-here-11-47e9721a" data-slide-number="11">
             <h1>Why Testing Fits Here</h1>
             <p>The capstone now has enough stable structure to test meaningfully.</p>
 <ul>
@@ -493,7 +493,7 @@
 <blockquote>— `Advanced/lessons/lecture/Day12_Hour1_Advanced.md` → `## Opening Script`</blockquote>
         </section>
 
-        <section class="slide" id="unittest-pytest-bridge-a3963caa" data-slide-number="12">
+        <section class="slide" id="unittest-pytest-bridge-12-a3963caa" data-slide-number="12">
             <h1>unittest → pytest Bridge</h1>
             <p>If you have seen <code>unittest</code> before, here is the direct mapping:</p>
 <table>
@@ -530,7 +530,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="fixture-tmp-path-pattern-fc792882" data-slide-number="13">
+        <section class="slide" id="fixture-tmp-path-pattern-13-fc792882" data-slide-number="13">
             <h1>Fixture + tmp_path Pattern</h1>
             <pre data-lang="python"><code>import pytest
 from tracker.repository import SQLiteTrackerRepository
@@ -552,7 +552,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="demo-happy-path-test-2f39ec3d" data-slide-number="14">
+        <section class="slide" id="demo-happy-path-test-14-2f39ec3d" data-slide-number="14">
             <h1>Demo: Happy-Path Test</h1>
             <pre data-lang="python"><code>def test_create_and_get_record(service):
     created = service.create_record(
@@ -574,7 +574,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="demo-sad-path-test-f4fe4d2b" data-slide-number="15">
+        <section class="slide" id="demo-sad-path-test-15-f4fe4d2b" data-slide-number="15">
             <h1>Demo: Sad-Path Test</h1>
             <pre data-lang="python"><code>def test_blank_title_raises_validation_error(service):
     with pytest.raises(ValidationError):
@@ -593,7 +593,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="lab-write-the-first-real-test-suite-hour-45-3e7d0eb3" data-slide-number="16">
+        <section class="slide" id="lab-write-the-first-real-test-suite-hour-45-16-3e7d0eb3" data-slide-number="16">
             <h1>Lab: Write the First Real Test Suite (Hour 45)</h1>
             <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Tasks</h3>
@@ -611,7 +611,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-45-9086be17" data-slide-number="17">
+        <section class="slide" id="common-pitfalls-hour-45-17-9086be17" data-slide-number="17">
             <h1>Common Pitfalls (Hour 45)</h1>
             <p><strong>⚠️</strong> Testing UI callbacks or Flask routes instead of core service logic</p>
 <p><strong>⚠️</strong> One test that checks too many behaviors at once — split into focused tests</p>
@@ -624,7 +624,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="quick-check-hour-45-6c2561b3" data-slide-number="18">
+        <section class="slide" id="quick-check-hour-45-18-6c2561b3" data-slide-number="18">
             <h1>Quick Check (Hour 45)</h1>
             <p><strong>Question:</strong> What should a well-written unit test avoid in order to stay fast and safe to refactor?</p>
 <ul>
@@ -637,17 +637,17 @@ def service(tmp_path):
 <blockquote>Options B, C, and D are all recommended pytest patterns.</blockquote>
         </section>
 
-        <section class="slide" id="hour-46-coverage-edge-cases-and-integration-2d13a58f" data-slide-number="19">
+        <section class="slide" id="hour-46-coverage-edge-cases-and-integration-19-2d13a58f" data-slide-number="19">
             <h1>Hour 46 — Coverage, Edge Cases, and Integration</h1>
             
         </section>
 
-        <section class="slide" id="session-12-hour-46-0b0f3103" data-slide-number="20">
+        <section class="slide" id="session-12-hour-46-20-0b0f3103" data-slide-number="20">
             <h1>Session 12, Hour 46</h1>
             
         </section>
 
-        <section class="slide" id="hour-46-learning-outcomes-cb462dec" data-slide-number="21">
+        <section class="slide" id="hour-46-learning-outcomes-21-cb462dec" data-slide-number="21">
             <h1>Hour 46 Learning Outcomes</h1>
             <p>By the end of this hour, learners will be able to:</p>
 <ul>
@@ -662,7 +662,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="coverage-flashlight-not-scorecard-6ba4830b" data-slide-number="22">
+        <section class="slide" id="coverage-flashlight-not-scorecard-22-6ba4830b" data-slide-number="22">
             <h1>Coverage: Flashlight, Not Scorecard</h1>
             <p>Coverage tells us <strong>what code executed</strong> during tests.</p>
 <ul>
@@ -678,7 +678,7 @@ def service(tmp_path):
 </ul>
         </section>
 
-        <section class="slide" id="running-coverage-3ba9ed13" data-slide-number="23">
+        <section class="slide" id="running-coverage-23-3ba9ed13" data-slide-number="23">
             <h1>Running Coverage</h1>
             <pre data-lang="bash"><code>pip install pytest-cov
 pytest --cov=tracker --cov-report=term-missing -q</code></pre>
@@ -694,7 +694,7 @@ pytest --cov=tracker --cov-report=term-missing -q</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="high-value-edge-case-candidates-10350670" data-slide-number="24">
+        <section class="slide" id="high-value-edge-case-candidates-24-10350670" data-slide-number="24">
             <h1>High-Value Edge-Case Candidates</h1>
             <table>
 <thead>
@@ -732,7 +732,7 @@ pytest --cov=tracker --cov-report=term-missing -q</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="demo-not-found-edge-case-32726d0a" data-slide-number="25">
+        <section class="slide" id="demo-not-found-edge-case-25-32726d0a" data-slide-number="25">
             <h1>Demo: Not-Found Edge Case</h1>
             <pre data-lang="python"><code>from tracker.service import NotFoundError
 
@@ -742,7 +742,7 @@ def test_missing_record_raises(service):
 <p>The underscore separator in <code>999_999</code> is valid Python 3 — it improves readability of large integers.</p>
         </section>
 
-        <section class="slide" id="demo-integration-test-persistence-across-instances-c4cd0ed9" data-slide-number="26">
+        <section class="slide" id="demo-integration-test-persistence-across-instances-26-c4cd0ed9" data-slide-number="26">
             <h1>Demo: Integration Test — Persistence Across Instances</h1>
             <pre data-lang="python"><code>def test_record_persists_across_service_instances(tmp_path):
     db_path = tmp_path / &quot;tracker.db&quot;
@@ -763,7 +763,7 @@ def test_missing_record_raises(service):
 </ul>
         </section>
 
-        <section class="slide" id="lab-harden-the-suite-hour-46-4be3b180" data-slide-number="27">
+        <section class="slide" id="lab-harden-the-suite-hour-46-27-4be3b180" data-slide-number="27">
             <h1>Lab: Harden the Suite (Hour 46)</h1>
             <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Tasks</h3>
@@ -781,7 +781,7 @@ def test_missing_record_raises(service):
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-46-85d14eb9" data-slide-number="28">
+        <section class="slide" id="common-pitfalls-hour-46-28-85d14eb9" data-slide-number="28">
             <h1>Common Pitfalls (Hour 46)</h1>
             <p><strong>⚠️</strong> Chasing 100% with tests that <code>assert True</code> or check only that code executed</p>
 <p><strong>⚠️</strong> Turning an integration test into a full end-to-end workflow — keep it narrow</p>
@@ -794,7 +794,7 @@ def test_missing_record_raises(service):
 </ul>
         </section>
 
-        <section class="slide" id="quick-check-hour-46-bf3d667b" data-slide-number="29">
+        <section class="slide" id="quick-check-hour-46-29-bf3d667b" data-slide-number="29">
             <h1>Quick Check (Hour 46)</h1>
             <p><strong>Question:</strong> A coverage report shows 92% line coverage. How can the remaining gaps still contain a real bug?</p>
 <blockquote>**Discussion points:**</blockquote>
@@ -804,17 +804,17 @@ def test_missing_record_raises(service):
 <blockquote>- Risk-driven testing beats coverage-score maximizing every time</blockquote>
         </section>
 
-        <section class="slide" id="hour-47-packaging-and-delivery-42f057a2" data-slide-number="30">
+        <section class="slide" id="hour-47-packaging-and-delivery-30-42f057a2" data-slide-number="30">
             <h1>Hour 47 — Packaging and Delivery</h1>
             
         </section>
 
-        <section class="slide" id="session-12-hour-47-44bcd67f" data-slide-number="31">
+        <section class="slide" id="session-12-hour-47-31-44bcd67f" data-slide-number="31">
             <h1>Session 12, Hour 47</h1>
             
         </section>
 
-        <section class="slide" id="hour-47-learning-outcomes-073c85a1" data-slide-number="32">
+        <section class="slide" id="hour-47-learning-outcomes-32-073c85a1" data-slide-number="32">
             <h1>Hour 47 Learning Outcomes</h1>
             <p>By the end of this hour, learners will be able to:</p>
 <ul>
@@ -829,7 +829,7 @@ def test_missing_record_raises(service):
 </ul>
         </section>
 
-        <section class="slide" id="what-shipping-really-means-6f5677d8" data-slide-number="33">
+        <section class="slide" id="what-shipping-really-means-33-6f5677d8" data-slide-number="33">
             <h1>What Shipping Really Means</h1>
             <p>A project ships when <strong>another person</strong> can:</p>
 <ol>
@@ -845,7 +845,7 @@ def test_missing_record_raises(service):
 <blockquote>— `Advanced/lessons/lecture/Day12_Hour3_Advanced.md` → `### Talk points`</blockquote>
         </section>
 
-        <section class="slide" id="minimum-deliverable-recipe-c1673bdc" data-slide-number="34">
+        <section class="slide" id="minimum-deliverable-recipe-34-c1673bdc" data-slide-number="34">
             <h1>Minimum Deliverable Recipe</h1>
             <p>Every capstone submission needs these files:</p>
 <table>
@@ -884,7 +884,7 @@ def test_missing_record_raises(service):
 </ul>
         </section>
 
-        <section class="slide" id="demo-readme-quickstart-sequence-d67b2704" data-slide-number="35">
+        <section class="slide" id="demo-readme-quickstart-sequence-35-d67b2704" data-slide-number="35">
             <h1>Demo: README Quickstart Sequence</h1>
             <pre data-lang="text"><code># 1. Create and activate a virtual environment
 python -m venv .venv
@@ -912,7 +912,7 @@ pytest -q</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="generating-dependency-files-2f78f6fc" data-slide-number="36">
+        <section class="slide" id="generating-dependency-files-36-2f78f6fc" data-slide-number="36">
             <h1>Generating Dependency Files</h1>
             <pre data-lang="bash"><code># Capture all installed packages from the active venv
 pip freeze &gt; requirements.txt
@@ -929,7 +929,7 @@ pytest-cov</code></pre>
 DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</code></pre>
         </section>
 
-        <section class="slide" id="packaging-quality-gate-51785d55" data-slide-number="37">
+        <section class="slide" id="packaging-quality-gate-37-51785d55" data-slide-number="37">
             <h1>Packaging Quality Gate</h1>
             <p>Before the lab, evaluate the capstone against this checklist:</p>
 <table>
@@ -964,7 +964,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 </table>
         </section>
 
-        <section class="slide" id="lab-make-the-project-shareable-hour-47-b40e6c96" data-slide-number="38">
+        <section class="slide" id="lab-make-the-project-shareable-hour-47-38-b40e6c96" data-slide-number="38">
             <h1>Lab: Make the Project Shareable (Hour 47)</h1>
             <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Tasks</h3>
@@ -982,7 +982,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-47-ac2422d2" data-slide-number="39">
+        <section class="slide" id="common-pitfalls-hour-47-39-ac2422d2" data-slide-number="39">
             <h1>Common Pitfalls (Hour 47)</h1>
             <p><strong>⚠️</strong> Missing a dependency in <code>requirements.txt</code> that happens to be installed globally</p>
 <p><strong>⚠️</strong> Committing a <code>.env</code> file or credentials — document variable names, never commit values</p>
@@ -995,7 +995,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 </ul>
         </section>
 
-        <section class="slide" id="quick-check-hour-47-dd5043be" data-slide-number="40">
+        <section class="slide" id="quick-check-hour-47-40-dd5043be" data-slide-number="40">
             <h1>Quick Check (Hour 47)</h1>
             <p><strong>Question:</strong> What does a fresh-run test reveal that &quot;it works on my machine&quot; usually hides?</p>
 <blockquote>**Discussion points:**</blockquote>
@@ -1005,17 +1005,17 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 <blockquote>- IDE-specific configuration that does not survive a new clone</blockquote>
         </section>
 
-        <section class="slide" id="hour-48-final-demo-review-and-retrospective-22d46d42" data-slide-number="41">
+        <section class="slide" id="hour-48-final-demo-review-and-retrospective-41-22d46d42" data-slide-number="41">
             <h1>Hour 48 — Final Demo, Review, and Retrospective</h1>
             
         </section>
 
-        <section class="slide" id="session-12-hour-48-74ba92b6" data-slide-number="42">
+        <section class="slide" id="session-12-hour-48-42-74ba92b6" data-slide-number="42">
             <h1>Session 12, Hour 48</h1>
             
         </section>
 
-        <section class="slide" id="hour-48-learning-outcomes-d8c73ea4" data-slide-number="43">
+        <section class="slide" id="hour-48-learning-outcomes-43-d8c73ea4" data-slide-number="43">
             <h1>Hour 48 Learning Outcomes</h1>
             <p>By the end of this hour, learners will be able to:</p>
 <ul>
@@ -1030,7 +1030,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 </ul>
         </section>
 
-        <section class="slide" id="final-demo-minimum-capstone-deliverables-763416ff" data-slide-number="44">
+        <section class="slide" id="final-demo-minimum-capstone-deliverables-44-763416ff" data-slide-number="44">
             <h1>Final Demo: Minimum Capstone Deliverables</h1>
             <p>Every demo should show evidence across all six layers:</p>
 <table>
@@ -1072,7 +1072,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 <blockquote>— `Advanced/lessons/lecture/Day12_Hour4_Advanced.md` → `### Talk points`</blockquote>
         </section>
 
-        <section class="slide" id="strong-demo-flow-acf91bf4" data-slide-number="45">
+        <section class="slide" id="strong-demo-flow-45-acf91bf4" data-slide-number="45">
             <h1>Strong Demo Flow</h1>
             <p>Six steps — target 3–5 minutes total:</p>
 <ol>
@@ -1089,7 +1089,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 </ul>
         </section>
 
-        <section class="slide" id="reviewer-prompts-during-demos-2988f89f" data-slide-number="46">
+        <section class="slide" id="reviewer-prompts-during-demos-46-2988f89f" data-slide-number="46">
             <h1>Reviewer Prompts During Demos</h1>
             <p>Expect questions like these:</p>
 <ul>
@@ -1108,7 +1108,7 @@ DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</cod
 </ul>
         </section>
 
-        <section class="slide" id="certification-style-code-reading-c230fe5a" data-slide-number="47">
+        <section class="slide" id="certification-style-code-reading-47-c230fe5a" data-slide-number="47">
             <h1>Certification-Style Code Reading</h1>
             <pre data-lang="python"><code>def choose_label(status: str) -&gt; str:
     if status in {&quot;done&quot;, &quot;closed&quot;}:
@@ -1128,7 +1128,7 @@ print(choose_label(&quot;closed&quot;))   # ?</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="certification-style-code-reading-answers-91493941" data-slide-number="48">
+        <section class="slide" id="certification-style-code-reading-answers-48-91493941" data-slide-number="48">
             <h1>Certification-Style Code Reading — Answers</h1>
             <pre data-lang="python"><code>print(choose_label(&quot;done&quot;))     # complete
 print(choose_label(&quot;open&quot;))     # in progress
@@ -1143,7 +1143,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="retrospective-prompts-04d8424d" data-slide-number="49">
+        <section class="slide" id="retrospective-prompts-49-04d8424d" data-slide-number="49">
             <h1>Retrospective Prompts</h1>
             <p>Ask yourself or a study partner:</p>
 <ul>
@@ -1160,7 +1160,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="next-step-planning-template-a27ba36b" data-slide-number="50">
+        <section class="slide" id="next-step-planning-template-50-a27ba36b" data-slide-number="50">
             <h1>Next-Step Planning Template</h1>
             <p>Write down four things before leaving today:</p>
 <table>
@@ -1195,7 +1195,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-48-63ac01f2" data-slide-number="51">
+        <section class="slide" id="common-pitfalls-hour-48-51-63ac01f2" data-slide-number="51">
             <h1>Common Pitfalls (Hour 48)</h1>
             <p><strong>⚠️</strong> Trying to add or fix features during the final hour — stabilize and communicate what already works</p>
 <p><strong>⚠️</strong> Demo overrun because setup was not rehearsed from the README beforehand</p>
@@ -1208,7 +1208,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="quick-check-hour-48-fa7b8b6f" data-slide-number="52">
+        <section class="slide" id="quick-check-hour-48-52-fa7b8b6f" data-slide-number="52">
             <h1>Quick Check (Hour 48)</h1>
             <p><strong>Question:</strong> What makes a final demo convincing even when the project is not perfect?</p>
 <blockquote>**Answer discussion:**</blockquote>
@@ -1219,12 +1219,12 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 <blockquote>- A specific next improvement named — not just &quot;make it better&quot;</blockquote>
         </section>
 
-        <section class="slide" id="session-12-summary-fedf5de9" data-slide-number="53">
+        <section class="slide" id="session-12-summary-53-fedf5de9" data-slide-number="53">
             <h1>Session 12 Summary</h1>
             
         </section>
 
-        <section class="slide" id="what-we-built-and-proved-today-4210bf5b" data-slide-number="54">
+        <section class="slide" id="what-we-built-and-proved-today-54-4210bf5b" data-slide-number="54">
             <h1>What We Built and Proved Today</h1>
             <table>
 <thead>
@@ -1261,7 +1261,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 <p>Quality supports confidence. Packaging supports handoff. The demo proves understanding.</p>
         </section>
 
-        <section class="slide" id="course-wrap-up-what-you-can-now-do-39391cbc" data-slide-number="55">
+        <section class="slide" id="course-wrap-up-what-you-can-now-do-55-39391cbc" data-slide-number="55">
             <h1>Course Wrap-Up — What You Can Now Do</h1>
             <p>After 48 hours across 12 sessions, you can:</p>
 <ul>
@@ -1276,7 +1276,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 <blockquote>The goal was never to memorize syntax. It was to build systems that communicate clearly.</blockquote>
         </section>
 
-        <section class="slide" id="the-capstone-architecture-in-full-a9f8a697" data-slide-number="56">
+        <section class="slide" id="the-capstone-architecture-in-full-56-a9f8a697" data-slide-number="56">
             <h1>The Capstone Architecture in Full</h1>
             <pre data-lang="text"><code>advanced_tracker/
 ├── tracker/           &lt;- domain model, service, repository
@@ -1295,7 +1295,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 <p>Every layer has a single job. Every boundary is testable independently.</p>
         </section>
 
-        <section class="slide" id="post-course-practice-plan-d1fa5c87" data-slide-number="57">
+        <section class="slide" id="post-course-practice-plan-57-d1fa5c87" data-slide-number="57">
             <h1>Post-Course Practice Plan</h1>
             <p>Keep the capstone alive with one deliberate improvement per week:</p>
 <ul>
@@ -1309,7 +1309,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
 <p>Predict the output of short Python snippets — before running — and explain the branch taken.</p>
         </section>
 
-        <section class="slide" id="final-exit-ticket-adf2ae8e" data-slide-number="58">
+        <section class="slide" id="final-exit-ticket-58-adf2ae8e" data-slide-number="58">
             <h1>Final Exit Ticket</h1>
             <p>Before you leave today, write one sentence for each prompt:</p>
 <ol>
@@ -1448,7 +1448,7 @@ print(choose_label(&quot;closed&quot;))   # complete</code></pre>
             const decodedHash = decodeURIComponent(hash);
             const slideById = document.getElementById(decodedHash);
             if (slideById) {
-                const byIdIndex = slides.indexOf(slideById);
+                const byIdIndex = Array.from(slides).indexOf(slideById);
                 if (byIdIndex >= 0) {
                     currentSlide = byIdIndex;
                 }

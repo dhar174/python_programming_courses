@@ -315,13 +315,13 @@ Transition line:
 
 “Let’s implement the complete pattern end to end.”
 
-[Instructor slide change: page=30; title=Demo: validate_and_save and Inline Error Application]
-
 ## Segment 4 (8 minutes): Live demo (required elements included)
 
 Demo objective:
 
 Build a form flow that validates before save, surfaces errors clearly, highlights first invalid field through focus + inline message, normalizes input before validation, and requires Save button disable/enable behavior.
+
+[Instructor slide change: page=30; title=Demo: validate_and_save and Inline Error Application]
 
 ### 4.1 Demo code (runnable)
 
@@ -637,8 +637,6 @@ Run these in front of class:
 Instructor line after test steps:
 
 “If your class implementation does not pass these five checks, it is not complete yet.”
-
-[Instructor slide change: page=31; title=Lab: Add Validation Behavior (Hour 19)]
 
 ## Segment 5 (26 minutes): Hands-on lab (required 25-35, set to 26)
 
@@ -1100,5 +1098,3 @@ Bridge sentence to next hour:
   - Good validation message vs bad validation message
 
 This completes Hour 19 delivery with strict runbook alignment and explicit, testable validation behavior.
-
-(agent_id: issue297-hour3-rewrite — use write_agent to send follow-up messages)

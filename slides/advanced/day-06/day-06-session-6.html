@@ -386,17 +386,17 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide" id="advanced-day-6-session-6-hours-2124-79fab100" data-slide-number="1">
+        <section class="slide title-slide" id="advanced-day-6-session-6-hours-2124-1-79fab100" data-slide-number="1">
             <h1>Advanced Day 6 — Session 6 (Hours 21–24)</h1>
             <div class="subtitle">Python Programming (Advanced) • GUI CRUD Wiring, Architecture, and Milestone Readiness</div>
         </section>
 
-        <section class="slide" id="session-6-overview-f60d92f6" data-slide-number="2">
+        <section class="slide" id="session-6-overview-2-f60d92f6" data-slide-number="2">
             <h1>Session 6 Overview</h1>
             
         </section>
 
-        <section class="slide" id="topics-covered-today-46add289" data-slide-number="3">
+        <section class="slide" id="topics-covered-today-3-46add289" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
   <li>Hour 21 — CRUD wiring: update and delete workflows in the GUI</li>
@@ -406,7 +406,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="session-goal-e5876c5d" data-slide-number="4">
+        <section class="slide" id="session-goal-4-e5876c5d" data-slide-number="4">
             <h1>Session Goal</h1>
             <p>Turn a promising interface into a <strong>trustworthy mini-application</strong>.</p>
 <p>Keep stable IDs as the bridge between UI state and domain operations.</p>
@@ -419,12 +419,12 @@
 </ul>
         </section>
 
-        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="5">
+        <section class="slide" id="scope-guardrails-for-today-5-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide" id="in-scope-3be9548f" data-slide-number="6">
+        <section class="slide" id="in-scope-6-3be9548f" data-slide-number="6">
             <h1>In Scope</h1>
             <ul>
   <li>Update and delete wired to stable record IDs</li>
@@ -435,7 +435,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="not-yet-299e44c6" data-slide-number="7">
+        <section class="slide" id="not-yet-7-299e44c6" data-slide-number="7">
             <h1>Not Yet</h1>
             <ul>
   <li>SQLite or any database backend (Session 7)</li>
@@ -445,12 +445,12 @@
 </ul>
         </section>
 
-        <section class="slide" id="hour-21-update-and-delete-workflows-00e9aaf2" data-slide-number="8">
+        <section class="slide" id="hour-21-update-and-delete-workflows-8-00e9aaf2" data-slide-number="8">
             <h1>Hour 21 — Update and Delete Workflows</h1>
             
         </section>
 
-        <section class="slide" id="learning-outcomes-1ad5f233" data-slide-number="9">
+        <section class="slide" id="learning-outcomes-9-1ad5f233" data-slide-number="9">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Implement <strong>select → load → edit → save update</strong> workflow</li>
@@ -465,7 +465,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="why-update-delete-are-harder-than-add-0ccd5b92" data-slide-number="10">
+        <section class="slide" id="why-update-delete-are-harder-than-add-10-0ccd5b92" data-slide-number="10">
             <h1>Why Update/Delete Are Harder Than Add</h1>
             <table>
 <thead>
@@ -504,7 +504,7 @@
 </ul>
         </section>
 
-        <section class="slide" id="stable-ids-the-core-design-choice-82653ba0" data-slide-number="11">
+        <section class="slide" id="stable-ids-the-core-design-choice-11-82653ba0" data-slide-number="11">
             <h1>Stable IDs: The Core Design Choice</h1>
             <p>A stable ID is created <strong>once</strong>, when the record is created.</p>
 <ul>
@@ -525,7 +525,7 @@ item_id = str(uuid4())  # e.g. &quot;3f2b1c4e-...&quot;</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="domain-model-trackeritem-trackerservice-51658ed7" data-slide-number="12">
+        <section class="slide" id="domain-model-trackeritem-trackerservice-12-51658ed7" data-slide-number="12">
             <h1>Domain Model: TrackerItem + TrackerService</h1>
             <pre data-lang="python"><code>from dataclasses import dataclass
 from uuid import uuid4
@@ -559,7 +559,7 @@ class TrackerItem:
 </ul>
         </section>
 
-        <section class="slide" id="selection-handler-capturing-the-stable-id-04c21503" data-slide-number="13">
+        <section class="slide" id="selection-handler-capturing-the-stable-id-13-04c21503" data-slide-number="13">
             <h1>Selection Handler: Capturing the Stable ID</h1>
             <pre data-lang="python"><code>def on_item_selected(self, event=None):
     selection = self.tree.selection()
@@ -590,7 +590,7 @@ class TrackerItem:
 </ul>
         </section>
 
-        <section class="slide" id="update-handler-5566428b" data-slide-number="14">
+        <section class="slide" id="update-handler-14-5566428b" data-slide-number="14">
             <h1>Update Handler</h1>
             <pre data-lang="python"><code>def on_update(self):
     if self.selected_item_id is None:
@@ -624,7 +624,7 @@ class TrackerItem:
 </ul>
         </section>
 
-        <section class="slide" id="delete-flow-and-confirmation-1462112f" data-slide-number="15">
+        <section class="slide" id="delete-flow-and-confirmation-15-1462112f" data-slide-number="15">
             <h1>Delete Flow and Confirmation</h1>
             <p>The delete checklist — always follow this order:</p>
 <ol>
@@ -649,7 +649,7 @@ if not confirmed:
 </ul>
         </section>
 
-        <section class="slide" id="delete-handler-64e2bec1" data-slide-number="16">
+        <section class="slide" id="delete-handler-16-64e2bec1" data-slide-number="16">
             <h1>Delete Handler</h1>
             <pre data-lang="python"><code>def on_delete(self):
     if self.selected_item_id is None:
@@ -685,7 +685,7 @@ if not confirmed:
 </ul>
         </section>
 
-        <section class="slide" id="refresh-pattern-one-source-of-truth-aedbd064" data-slide-number="17">
+        <section class="slide" id="refresh-pattern-one-source-of-truth-17-aedbd064" data-slide-number="17">
             <h1>Refresh Pattern: One Source of Truth</h1>
             <p>Rebuild the list from the service layer every time data changes:</p>
 <pre data-lang="python"><code>def refresh_items(self, selected_item_id=None):
@@ -708,7 +708,7 @@ if not confirmed:
 </ul>
         </section>
 
-        <section class="slide" id="lab-gui-update-delete-round-trip-510af3f9" data-slide-number="18">
+        <section class="slide" id="lab-gui-update-delete-round-trip-18-510af3f9" data-slide-number="18">
             <h1>Lab: GUI Update/Delete Round Trip</h1>
             <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Tasks</h3>
@@ -731,7 +731,7 @@ if not confirmed:
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-21-0a8cfadb" data-slide-number="19">
+        <section class="slide" id="common-pitfalls-hour-21-19-0a8cfadb" data-slide-number="19">
             <h1>Common Pitfalls — Hour 21</h1>
             <p><strong>⚠️</strong> <strong>Using list index as the record ID</strong> — breaks after insert, delete, or sort</p>
 <p><strong>⚠️</strong> <strong>Mutating stale widget state</strong> — always reload from the service after any change</p>
@@ -740,19 +740,19 @@ if not confirmed:
 <p><strong>⚠️</strong> <strong>Suppressing <code>NotFoundError</code></strong> — stale IDs are a design signal, not noise</p>
         </section>
 
-        <section class="slide" id="quick-check-3b75577a" data-slide-number="20">
+        <section class="slide" id="quick-check-20-3b75577a" data-slide-number="20">
             <h1>Quick Check</h1>
             <blockquote>Why is a stable ID better than relying on a visual row index?</blockquote>
 <p>Expected answer: row positions change after insertions, deletes, and re-sorts.</p>
 <p>An ID created once at record creation survives all of those events.</p>
         </section>
 
-        <section class="slide" id="hour-22-gui-architecture-and-controller-separation-17bb4f65" data-slide-number="21">
+        <section class="slide" id="hour-22-gui-architecture-and-controller-separation-21-17bb4f65" data-slide-number="21">
             <h1>Hour 22 — GUI Architecture and Controller Separation</h1>
             
         </section>
 
-        <section class="slide" id="learning-outcomes-47bca827" data-slide-number="22">
+        <section class="slide" id="learning-outcomes-22-47bca827" data-slide-number="22">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Recognize the symptoms of callback spaghetti</li>
@@ -768,7 +768,7 @@ if not confirmed:
 </ul>
         </section>
 
-        <section class="slide" id="what-callback-spaghetti-looks-like-054982a4" data-slide-number="23">
+        <section class="slide" id="what-callback-spaghetti-looks-like-23-054982a4" data-slide-number="23">
             <h1>What Callback Spaghetti Looks Like</h1>
             <p>Common symptoms in a growing GUI codebase:</p>
 <ul>
@@ -789,7 +789,7 @@ if not confirmed:
 </ul>
         </section>
 
-        <section class="slide" id="before-global-state-mess-9c5f73b8" data-slide-number="24">
+        <section class="slide" id="before-global-state-mess-24-9c5f73b8" data-slide-number="24">
             <h1>Before: Global-State Mess</h1>
             <pre data-lang="python"><code>service = TrackerService()
 selected_item_id = None       # global — shared, unmanaged
@@ -816,7 +816,7 @@ def delete_item():
 </ul>
         </section>
 
-        <section class="slide" id="target-architecture-14c5be74" data-slide-number="25">
+        <section class="slide" id="target-architecture-25-14c5be74" data-slide-number="25">
             <h1>Target Architecture</h1>
             <pre data-lang="text"><code>main.py
   └── assembles TrackerApp(root, service)
@@ -842,7 +842,7 @@ core/exceptions.py</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="trackerapp-class-shell-635eaa84" data-slide-number="26">
+        <section class="slide" id="trackerapp-class-shell-26-635eaa84" data-slide-number="26">
             <h1>TrackerApp: Class Shell</h1>
             <pre data-lang="python"><code>import tkinter as tk
 from tkinter import ttk, messagebox
@@ -874,7 +874,7 @@ class TrackerApp:
 </ul>
         </section>
 
-        <section class="slide" id="build-ui-widget-construction-in-one-place-9c86f7cc" data-slide-number="27">
+        <section class="slide" id="build-ui-widget-construction-in-one-place-27-9c86f7cc" data-slide-number="27">
             <h1>build_ui(): Widget Construction in One Place</h1>
             <pre data-lang="python"><code>def build_ui(self) -&gt; None:
     f = ttk.Frame(self.root, padding=12)
@@ -908,7 +908,7 @@ class TrackerApp:
 </ul>
         </section>
 
-        <section class="slide" id="thin-callbacks-get-form-data-on-add-98b7ce2b" data-slide-number="28">
+        <section class="slide" id="thin-callbacks-get-form-data-on-add-28-98b7ce2b" data-slide-number="28">
             <h1>Thin Callbacks: get_form_data + on_add</h1>
             <p>Extract repeated form-reading into <strong>one</strong> helper:</p>
 <pre data-lang="python"><code>def get_form_data(self) -&gt; dict[str, str]:
@@ -936,7 +936,7 @@ class TrackerApp:
 </ul>
         </section>
 
-        <section class="slide" id="state-management-selection-and-status-29c50b15" data-slide-number="29">
+        <section class="slide" id="state-management-selection-and-status-29-29c50b15" data-slide-number="29">
             <h1>State Management: Selection and Status</h1>
             <p><strong>Keep</strong> cleanly named app state on <code>self</code>:</p>
 <ul>
@@ -960,7 +960,7 @@ class TrackerApp:
 </ul>
         </section>
 
-        <section class="slide" id="module-boundaries-and-import-direction-20fde2f8" data-slide-number="30">
+        <section class="slide" id="module-boundaries-and-import-direction-30-20fde2f8" data-slide-number="30">
             <h1>Module Boundaries and Import Direction</h1>
             <pre data-lang="text"><code>main.py          assembles dependencies
   ↓ imports
@@ -982,7 +982,7 @@ core/models.py   no imports from ui or service</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="refactor-strategy-move-one-piece-at-a-time-45a68378" data-slide-number="31">
+        <section class="slide" id="refactor-strategy-move-one-piece-at-a-time-31-45a68378" data-slide-number="31">
             <h1>Refactor Strategy: Move One Piece at a Time</h1>
             <p>Safe sequence — never rewrite the whole GUI from scratch:</p>
 <ol>
@@ -1003,7 +1003,7 @@ core/models.py   no imports from ui or service</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="lab-refactor-without-breaking-behavior-3fb29ba4" data-slide-number="32">
+        <section class="slide" id="lab-refactor-without-breaking-behavior-32-3fb29ba4" data-slide-number="32">
             <h1>Lab: Refactor Without Breaking Behavior</h1>
             <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Required Tasks</h3>
@@ -1026,7 +1026,7 @@ core/models.py   no imports from ui or service</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-22-bec5cb50" data-slide-number="33">
+        <section class="slide" id="common-pitfalls-hour-22-33-bec5cb50" data-slide-number="33">
             <h1>Common Pitfalls — Hour 22</h1>
             <p><strong>⚠️</strong> <strong>Over-refactoring midstream</strong> — move one thing, test, then move the next</p>
 <p><strong>⚠️</strong> <strong>Callback spaghetti inside a class</strong> — a class wrapper does not fix scattered logic</p>
@@ -1035,19 +1035,19 @@ core/models.py   no imports from ui or service</code></pre>
 <p><strong>⚠️</strong> <strong>Giant <code>build_ui()</code> method</strong> — extract <code>build_form()</code>, <code>build_buttons()</code>, <code>build_list()</code></p>
         </section>
 
-        <section class="slide" id="quick-check-ea226bc3" data-slide-number="34">
+        <section class="slide" id="quick-check-34-ea226bc3" data-slide-number="34">
             <h1>Quick Check</h1>
             <blockquote>What is one sign that your GUI code needs refactoring?</blockquote>
 <p>Strong answer: *&quot;If adding one button requires editing five scattered globals or functions,</p>
 <p>the structure is the problem.&quot;*</p>
         </section>
 
-        <section class="slide" id="hour-23-persistence-and-polish-sprint-70e0fe13" data-slide-number="35">
+        <section class="slide" id="hour-23-persistence-and-polish-sprint-35-70e0fe13" data-slide-number="35">
             <h1>Hour 23 — Persistence and Polish Sprint</h1>
             
         </section>
 
-        <section class="slide" id="learning-outcomes-c173d4d4" data-slide-number="36">
+        <section class="slide" id="learning-outcomes-36-c173d4d4" data-slide-number="36">
             <h1>Learning Outcomes</h1>
             <ul>
   <li>Load tracker data from JSON when the app starts</li>
@@ -1063,7 +1063,7 @@ core/models.py   no imports from ui or service</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="why-json-now-not-sqlite-2f4200b5" data-slide-number="37">
+        <section class="slide" id="why-json-now-not-sqlite-37-2f4200b5" data-slide-number="37">
             <h1>Why JSON Now, Not SQLite</h1>
             <table>
 <thead>
@@ -1113,7 +1113,7 @@ core/models.py   no imports from ui or service</code></pre>
 </ul>
         </section>
 
-        <section class="slide" id="service-side-json-persistence-61a45214" data-slide-number="38">
+        <section class="slide" id="service-side-json-persistence-38-61a45214" data-slide-number="38">
             <h1>Service-Side JSON Persistence</h1>
             <pre data-lang="python"><code>from __future__ import annotations
 import json
@@ -1153,7 +1153,7 @@ class TrackerService:
 </ul>
         </section>
 
-        <section class="slide" id="load-on-startup-1f0282c3" data-slide-number="39">
+        <section class="slide" id="load-on-startup-39-1f0282c3" data-slide-number="39">
             <h1>Load on Startup</h1>
             <pre data-lang="python"><code>from pathlib import Path
 from tkinter import messagebox
@@ -1189,7 +1189,7 @@ class TrackerApp:
 </ul>
         </section>
 
-        <section class="slide" id="persist-changes-helper-5e470026" data-slide-number="40">
+        <section class="slide" id="persist-changes-helper-40-5e470026" data-slide-number="40">
             <h1>persist_changes() Helper</h1>
             <p>Use a <strong>single</strong> helper so all three callbacks call the same save logic:</p>
 <pre data-lang="python"><code>def persist_changes(self) -&gt; bool:
@@ -1216,7 +1216,7 @@ class TrackerApp:
 </ul>
         </section>
 
-        <section class="slide" id="crud-callbacks-with-persistence-hooks-5812ecb4" data-slide-number="41">
+        <section class="slide" id="crud-callbacks-with-persistence-hooks-41-5812ecb4" data-slide-number="41">
             <h1>CRUD Callbacks With Persistence Hooks</h1>
             <pre data-lang="python"><code>def on_add(self):
     try:
@@ -1263,7 +1263,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="graceful-json-error-handling-eaf85c5e" data-slide-number="42">
+        <section class="slide" id="graceful-json-error-handling-42-eaf85c5e" data-slide-number="42">
             <h1>Graceful JSON Error Handling</h1>
             <p>Three failure scenarios the app must survive:</p>
 <table>
@@ -1303,7 +1303,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="optional-jsontrackerstore-for-stronger-separation-0ade1f47" data-slide-number="43">
+        <section class="slide" id="optional-jsontrackerstore-for-stronger-separation-43-0ade1f47" data-slide-number="43">
             <h1>Optional: JsonTrackerStore for Stronger Separation</h1>
             <p>If the class is moving quickly, show a dedicated storage helper:</p>
 <pre data-lang="python"><code>class JsonTrackerStore:
@@ -1329,7 +1329,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="usability-polish-menu-and-keyboard-shortcut-cf46d78f" data-slide-number="44">
+        <section class="slide" id="usability-polish-menu-and-keyboard-shortcut-44-cf46d78f" data-slide-number="44">
             <h1>Usability Polish: Menu and Keyboard Shortcut</h1>
             <p>Polish is <strong>not</strong> decoration — it teaches users what the app is doing.</p>
 <pre data-lang="python"><code>def build_menu(self) -&gt; None:
@@ -1358,7 +1358,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="lab-mini-project-sprint-c8434e6c" data-slide-number="45">
+        <section class="slide" id="lab-mini-project-sprint-45-c8434e6c" data-slide-number="45">
             <h1>Lab: Mini-Project Sprint</h1>
             <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Required Tasks</h3>
@@ -1388,7 +1388,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="common-pitfalls-hour-23-7569330b" data-slide-number="46">
+        <section class="slide" id="common-pitfalls-hour-23-46-7569330b" data-slide-number="46">
             <h1>Common Pitfalls — Hour 23</h1>
             <p><strong>⚠️</strong> <strong>Saving after add, but forgetting update/delete</strong> — persistence is inconsistent</p>
 <p><strong>⚠️</strong> <strong>Crashing on malformed JSON</strong> — always wrap <code>json.loads</code> in exception handling</p>
@@ -1397,19 +1397,19 @@ def on_delete(self):
 <p><strong>⚠️</strong> <strong>Polishing visuals before save/load actually works</strong> — a stylish app that loses data is a failed milestone</p>
         </section>
 
-        <section class="slide" id="quick-check-edb618f0" data-slide-number="47">
+        <section class="slide" id="quick-check-47-edb618f0" data-slide-number="47">
             <h1>Quick Check</h1>
             <blockquote>Why must save happen after **update** and **delete**, not only after add?</blockquote>
 <p>Strong answer: *&quot;The JSON file must reflect the current source of truth.</p>
 <p>Forgetting to save after update or delete creates a mismatch between what the user sees and what persists after restart.&quot;*</p>
         </section>
 
-        <section class="slide" id="hour-24-checkpoint-3-gui-milestone-demo-4858dabb" data-slide-number="48">
+        <section class="slide" id="hour-24-checkpoint-3-gui-milestone-demo-48-4858dabb" data-slide-number="48">
             <h1>Hour 24 — Checkpoint 3: GUI Milestone Demo</h1>
             
         </section>
 
-        <section class="slide" id="checkpoint-overview-f28745ac" data-slide-number="49">
+        <section class="slide" id="checkpoint-overview-49-f28745ac" data-slide-number="49">
             <h1>Checkpoint Overview</h1>
             <p><strong>Expected outcome</strong> — a working GUI CRUD app wired to the service layer.</p>
 <p>Grading focus (four pillars):</p>
@@ -1430,7 +1430,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="instructor-stance-for-this-hour-04c43236" data-slide-number="50">
+        <section class="slide" id="instructor-stance-for-this-hour-50-04c43236" data-slide-number="50">
             <h1>Instructor Stance for This Hour</h1>
             <p>Use a <strong>coaching evaluator</strong> stance — rigorous on evidence, calm on process.</p>
 <p>Opening language to read:</p>
@@ -1450,7 +1450,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="canonical-demo-sequence-d8e9e3b7" data-slide-number="51">
+        <section class="slide" id="canonical-demo-sequence-51-d8e9e3b7" data-slide-number="51">
             <h1>Canonical Demo Sequence</h1>
             <p>Prompt every learner with the same script:</p>
 <blockquote>&quot;Please run the canonical Hour 24 sequence now: **add → list → update → delete → restart → load**.&quot;</blockquote>
@@ -1473,7 +1473,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="must-pass-gates-cefff69a" data-slide-number="52">
+        <section class="slide" id="must-pass-gates-52-cefff69a" data-slide-number="52">
             <h1>Must-Pass Gates</h1>
             <h3>Gate 1 — Stable Identity for Update and Delete</h3>
 <p>Update and delete must target stable IDs, not row index, <strong>including after restart and load</strong>.</p>
@@ -1493,7 +1493,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="checkpoint-timing-crosswalk-aade0dc2" data-slide-number="53">
+        <section class="slide" id="checkpoint-timing-crosswalk-53-aade0dc2" data-slide-number="53">
             <h1>Checkpoint Timing Crosswalk</h1>
             <table>
 <thead>
@@ -1533,7 +1533,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="checkpoint-rubric-9a4a8655" data-slide-number="54">
+        <section class="slide" id="checkpoint-rubric-54-9a4a8655" data-slide-number="54">
             <h1>Checkpoint Rubric</h1>
             <table>
 <thead>
@@ -1587,7 +1587,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="scoring-decision-matrix-e5f9ff7b" data-slide-number="55">
+        <section class="slide" id="scoring-decision-matrix-55-e5f9ff7b" data-slide-number="55">
             <h1>Scoring Decision Matrix</h1>
             <table>
 <thead>
@@ -1621,7 +1621,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="triage-playbooks-for-common-blockers-568393e1" data-slide-number="56">
+        <section class="slide" id="triage-playbooks-for-common-blockers-56-568393e1" data-slide-number="56">
             <h1>Triage Playbooks for Common Blockers</h1>
             <h3>Blocker 1 — Wrong row updates after insert or reload</h3>
 <p>Questions: &quot;What uniquely identifies a record in your model?&quot; / &quot;Where is that value stored in the UI list?&quot;</p>
@@ -1641,7 +1641,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="lab-demo-prep-sprint-4f54d5af" data-slide-number="57">
+        <section class="slide" id="lab-demo-prep-sprint-57-4f54d5af" data-slide-number="57">
             <h1>Lab: Demo Prep Sprint</h1>
             <p><strong>Time — 25–35 minutes (rolling checkpoint checks during this window)</strong></p>
 <h3>Learner Tasks</h3>
@@ -1665,7 +1665,7 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="closing-quick-check-5ab9dc50" data-slide-number="58">
+        <section class="slide" id="closing-quick-check-58-5ab9dc50" data-slide-number="58">
             <h1>Closing Quick Check</h1>
             <p>Ask every learner before the session ends:</p>
 <blockquote>**&quot;If you had one more hour, what would you improve first in your GUI?&quot;**</blockquote>
@@ -1684,12 +1684,12 @@ def on_delete(self):
 </ul>
         </section>
 
-        <section class="slide" id="session-6-summary-what-we-built-cc533717" data-slide-number="59">
+        <section class="slide" id="session-6-summary-what-we-built-59-cc533717" data-slide-number="59">
             <h1>Session 6 Summary — What We Built</h1>
             
         </section>
 
-        <section class="slide" id="four-hours-one-cohesive-story-98fe9a0e" data-slide-number="60">
+        <section class="slide" id="four-hours-one-cohesive-story-60-98fe9a0e" data-slide-number="60">
             <h1>Four Hours, One Cohesive Story</h1>
             <table>
 <thead>
@@ -1724,7 +1724,7 @@ def on_delete(self):
 </table>
         </section>
 
-        <section class="slide" id="scope-guardrails-confirmed-a8636f83" data-slide-number="61">
+        <section class="slide" id="scope-guardrails-confirmed-61-a8636f83" data-slide-number="61">
             <h1>Scope Guardrails — Confirmed</h1>
             <p><span class="check">✓</span> Stable CRUD path through the service layer</p>
 <p><span class="check">✓</span> JSON persistence for this milestone</p>
@@ -1734,12 +1734,12 @@ def on_delete(self):
 <p><span class="cross">✗</span> Not required — heavy visual theming or production authentication</p>
         </section>
 
-        <section class="slide" id="what-s-next-session-7-hours-2528-05062ffe" data-slide-number="62">
+        <section class="slide" id="what-s-next-session-7-hours-2528-62-05062ffe" data-slide-number="62">
             <h1>What&#x27;s Next — Session 7 (Hours 25–28)</h1>
             
         </section>
 
-        <section class="slide" id="from-objects-to-tables-b0a743b3" data-slide-number="63">
+        <section class="slide" id="from-objects-to-tables-63-b0a743b3" data-slide-number="63">
             <h1>From Objects to Tables</h1>
             <ul>
   <li><strong>SQLite CRUD</strong> with the <code>sqlite3</code> module</li>
@@ -1882,7 +1882,7 @@ def on_delete(self):
             const decodedHash = decodeURIComponent(hash);
             const slideById = document.getElementById(decodedHash);
             if (slideById) {
-                const byIdIndex = slides.indexOf(slideById);
+                const byIdIndex = Array.from(slides).indexOf(slideById);
                 if (byIdIndex >= 0) {
                     currentSlide = byIdIndex;
                 }

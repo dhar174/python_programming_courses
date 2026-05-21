@@ -494,8 +494,6 @@ Trigger or simulate a `NotFoundError`. One easy classroom trick is to manually a
 
 **Say:** “We did not crash. We told the user what happened, refreshed, and got the app back to a known good state.”
 
-[Instructor slide change: page=18; title=Lab: GUI Update/Delete Round Trip]
-
 ### 10) Guided practice prompt
 
 After the demo, transition clearly.

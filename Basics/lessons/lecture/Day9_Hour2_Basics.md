@@ -333,8 +333,6 @@ append_to_list_correct("B")  # Output: ['B']  <- Fresh list!
 
 ---
 
-[Instructor slide change: page=22; title=Lab: Calculator Functions (Hour 34)]
-
 ## Guided Lab: Calculator Functions (~14 minutes)
 
 ### Lab Overview

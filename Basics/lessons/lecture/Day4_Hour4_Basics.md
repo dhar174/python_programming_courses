@@ -71,8 +71,6 @@ Let's dive in. You've got this."
 
 ---
 
-[Instructor slide change: page=35; title=What Checkpoint 1 Measures]
-
 ## 4. Conceptual Briefing: What Checkpoint 1 Measures (8 minutes)
 
 ### The Big Picture
@@ -262,6 +260,8 @@ Let a learner provide the code, then confirm it's correct.
 
 **Lab Duration**: 45–60 minutes total *(30 min active lab time)*  
 **Objective**: Build a complete receipt generator that integrates input, calculations, and formatted output.
+
+[Instructor slide change: page=40; title=Checkpoint 1 Pitfalls]
 
 ### Lab Prompt: Receipt Generator
 

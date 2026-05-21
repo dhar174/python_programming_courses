@@ -235,8 +235,6 @@ This engages higher-order thinking without overwhelming Basics learners."
 
 ---
 
-[Instructor slide change: page=19; title=Lab — Refactor Contact Manager to Objects]
-
 ## Hands-on Lab: Refactor Contact Manager to Objects (30 minutes)
 
 ### Lab Overview
@@ -439,8 +437,6 @@ while True:
 **Fix:** Add a simple check: `if not my_directory: print("Directory is empty."); continue`.
 
 ---
-
-[Instructor slide change: page=21; title=Quick Check — Hour 38]
 
 ## Quick-Check Questions (Exit Ticket, ~5 minutes)
 

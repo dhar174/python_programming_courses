@@ -143,12 +143,12 @@ This principle applies to all persistent state: lists, dictionaries, counters, f
 
 ---
 
-[Instructor slide change: page=9; title=Demo: Inventory Tracker]
-
 ## Section 5: Live Demo (15–25 minutes)
 
 **Say:**
 "Let's build a complete, working menu application together. I'll demonstrate the full pattern: infinite loop, menu display, input routing, and persistent state. Please type along in your editor—this builds muscle memory."
+
+[Instructor slide change: page=9; title=Demo: Inventory Tracker]
 
 ### Demo: Inventory Tracker
 
@@ -286,8 +286,6 @@ while True:
 
 ---
 
-[Instructor slide change: page=11; title=Lab: Build a Menu Application]
-
 ## Section 7: Lab with Checkpoints (30 minutes)
 
 **Say:**
@@ -359,8 +357,6 @@ else:
 ```
 
 ---
-
-[Instructor slide change: page=12; title=Common Pitfalls (Hour 29)]
 
 ## Section 8: Troubleshooting Pitfalls
 

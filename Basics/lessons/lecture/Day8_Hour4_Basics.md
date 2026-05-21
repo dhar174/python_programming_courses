@@ -209,8 +209,6 @@ Turn to someone next to you. What would we need to add to make this a full check
 
 ---
 
-[Instructor slide change: page=42; title=Lab: Checkpoint 2 — Task Management System]
-
 ## 7) CHECKPOINT 2 LAB (~30–45 minutes, Independent Work with Circulation)
 
 ### 7.1 Lab Overview

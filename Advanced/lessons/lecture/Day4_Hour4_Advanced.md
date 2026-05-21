@@ -54,8 +54,6 @@ By the end of this hour, you will be able to:
 
 ---
 
-[Instructor slide change: page=39; title=What Checkpoint 2 Proves]
-
 ## Section 1: Checkpoint Framing and Grading Focus (5 minutes)
 
 ### What This Checkpoint Proves
@@ -350,9 +348,9 @@ That is exactly why this checkpoint is called persistence-ready, not persistence
 
 ---
 
-[Instructor slide change: page=45; title=Demo: Save → Restart → Load]
-
 ## Section 4: Live Demo – Save -> Restart -> Load (6 minutes)
+
+[Instructor slide change: page=45; title=Demo: Save → Restart → Load]
 
 ### Demo Goal
 
@@ -483,6 +481,8 @@ Required elements:
 - custom exceptions still used
 - demo script showing save -> restart -> load
 - handling of invalid JSON with `JSONDecodeError`
+
+[Instructor slide change: page=46; title=Checkpoint Evidence Checklist]
 
 ### Checkpoint Build Mini-Budget
 

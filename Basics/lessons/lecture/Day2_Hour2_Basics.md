@@ -180,9 +180,9 @@ result = (user_input
 
 ---
 
-[Instructor slide change: page=23; title=Demo: Email Validation Helper]
-
 ## ## Live Coding Demo
+
+[Instructor slide change: page=23; title=Demo: Email Validation Helper]
 
 ### Demo Scenario: Email Validation Helper
 *Duration: 8 minutes*
@@ -232,8 +232,6 @@ Total dots: 2
 - Ask: "What if we wanted to replace 'doe' with 'smith'?" (show `.replace()`)
 
 ---
-
-[Instructor slide change: page=24; title=Lab: Text Sanitizer]
 
 ## ## Guided Lab: Text Sanitizer
 

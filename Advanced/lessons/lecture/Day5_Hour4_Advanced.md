@@ -260,9 +260,9 @@ Instructor says:
 
 This check catches fragile refresh code quickly. We will use it in the lab pass/fail rubric.
 
-[Instructor slide change: page=38; title=Demo: Treeview Record Browser — Setup and Wiring]
-
 ## Segment 4 script: live demo (8 minutes)
+
+[Instructor slide change: page=38; title=Demo: Treeview Record Browser — Setup and Wiring]
 
 ### Demo objective
 
@@ -545,8 +545,6 @@ Minute 29:
 - Repeated-refresh acceptance check:
   - Action: refresh three consecutive times.
   - Expected: row count unchanged and correct, no duplicate or stale rows.
-
-[Instructor slide change: page=40; title=Lab: Build List-and-Details UI (Hour 20)]
 
 ## Segment 5 script: hands-on lab (26 minutes)
 
@@ -1198,5 +1196,3 @@ Ask one or two based on time.
 ## Final instructor summary paragraph
 
 This hour establishes a practical desktop pattern that learners will reuse often: list records clearly, react to selection safely, and refresh without duplicating or staling the visible state. The key discipline is the refresh sequence and defensive callback handling. If learners can demonstrate stable behavior for no selection, empty data, and three consecutive refreshes with accurate row count, they have met Hour 20 outcomes in a way that is production-minded, user-friendly, and immediately transferable to larger GUI workflows.
-
-(agent_id: issue298-hour4-rewrite — use write_agent to send follow-up messages)

@@ -750,8 +750,6 @@ Quick summary of the four gotchas:
 
 ---
 
-[Instructor slide change: page=27; title=Demo: Professional Tip Calculator]
-
 ## Section 5: Live Demo – Tip Calculator Upgrade (5-10 minutes)
 
 ### Demo Script: Making Output Professional
@@ -857,8 +855,6 @@ Thank you!
 The aligned version is more complex, so **don't worry if you don't use alignment in your lab today**. Just getting comfortable with `.2f` for money is the main goal.
 
 ---
-
-[Instructor slide change: page=28; title=Lab: Upgrade Tip Calculator]
 
 ## Section 6: Hands-On Lab – Upgrade Tip Calculator (25-35 minutes)
 
@@ -968,8 +964,6 @@ Your solution must:
 - ✅ Include a separator line (e.g., dashes)
 - ✅ Run without errors
 - ✅ Handle both integer and decimal inputs correctly
-
-[Instructor slide change: page=29; title=Common Pitfalls (Hour 10)]
 
 ### Common Pitfalls to Watch For
 

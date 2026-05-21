@@ -450,8 +450,6 @@ Show one quick feature such as Ctrl+S, About dialog, or a status bar.
 
 Read or paste the following:
 
-[Instructor slide change: page=45; title=Lab: Mini-Project Sprint]
-
 #### Lab: GUI Milestone Sprint — Persistence and Polish
 
 Bring your tracker to a checkpoint-ready state.

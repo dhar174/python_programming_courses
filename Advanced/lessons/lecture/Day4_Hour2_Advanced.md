@@ -202,8 +202,6 @@ I want to model careful language here. If we demo `hashlib.sha256`, that does **
 
 If students ask about production password storage, the accurate answer is that real systems use stronger, purpose-built password hashing approaches and broader security design practices. But those are beyond this lesson.
 
-[Instructor slide change: page=25; title=Demo: Environment Variable + Gated Admin Action]
-
 ### `sha256` Demo for Comparison-Only Use
 
 **[Instructor speaks:]**
@@ -247,6 +245,8 @@ Say this plainly: in this course hour, `sha256` is a **concept demo for comparis
 ---
 
 ## Section 4: Live Demo – Environment Variables + Gated Admin Action (10 minutes)
+
+[Instructor slide change: page=25; title=Demo: Environment Variable + Gated Admin Action]
 
 ### Demo Goal
 
@@ -364,8 +364,6 @@ Set the required environment variables before running admin actions.
 These questions make the demo about reasoning, not imitation.
 
 ---
-
-[Instructor slide change: page=26; title=Lab: Secure-ish Configuration (18 min)]
 
 ## Section 5: Hands-On Lab – Secure-ish Configuration (18 minutes)
 

@@ -467,8 +467,6 @@ Do not let this optional extension consume lab time. If the room is moving slowl
 
 ---
 
-[Instructor slide change: page=44; title=Lab: Refactor a Branching Feature]
-
 ## Guided Lab: Refactor a Branching Feature (25 minutes)
 
 **Lab framing**
@@ -743,8 +741,6 @@ There is a class for the title line, a class for the owner line, a class for the
 "This is overengineering. Advanced design does not mean every line gets its own class. A class should own a meaningful responsibility. In this lab, one formatter class per output variation is enough."
 
 ---
-
-[Instructor slide change: page=45; title=Completion Criteria + Common Pitfalls — Hour 4]
 
 ## Common Pitfalls to Watch For
 

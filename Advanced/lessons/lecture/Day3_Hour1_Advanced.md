@@ -111,8 +111,6 @@ Do not run package modules as loose files.
 
 ---
 
-[Instructor slide change: page=15; title=Lab: Restructure Your Tracker]
-
 ## Opening Bridge from Checkpoint 1 (5 minutes)
 
 **Instructor talk track**

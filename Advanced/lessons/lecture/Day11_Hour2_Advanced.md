@@ -140,8 +140,6 @@ plt.close(fig)
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-[Instructor slide change: page=16; title=Lab — Analytics Starter (Hour 41)]
-
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -177,12 +175,12 @@ Generate charts: create one or two plots from the dataset, save them into report
 - Axes and titles are readable.
 - Script can be rerun without manual plotting steps.
 
-[Instructor slide change: page=17; title=Common Pitfalls — Hour 41]
-
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=17; title=Common Pitfalls — Hour 41]
 
 ### Common pitfalls to watch for
 
@@ -210,8 +208,6 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Create a chart function that accepts a DataFrame and output path.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
-
-[Instructor slide change: page=18; title=Quick Check — Hour 41]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

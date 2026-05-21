@@ -426,8 +426,6 @@ for record in filter_records(records, starts_with_a):
 
 ---
 
-[Instructor slide change: page=26; title=Lab: Menu-Selected Strategies]
-
 ## Guided Lab: Menu-Selected Strategies (25 minutes)
 
 ### Lab prompt for students

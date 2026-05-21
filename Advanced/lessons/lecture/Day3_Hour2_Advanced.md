@@ -350,8 +350,6 @@ logger.error("Failed to create task from demo input", exc_info=True)
 
 ---
 
-[Instructor slide change: page=22; title=Logging Config: `config.py` and `demo.py`]
-
 ## Live Demo: Add Logging to `TaskService` (10 minutes)
 
 ### Demo framing
@@ -608,8 +606,6 @@ Affirm:
 "Exactly. Useful logs are specific, readable, and placed where a developer can find them."
 
 ---
-
-[Instructor slide change: page=25; title=Lab: Add Practical Logging]
 
 ## Guided Lab: Add Practical Logging (25 minutes)
 

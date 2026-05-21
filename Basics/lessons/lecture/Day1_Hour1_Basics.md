@@ -248,8 +248,6 @@ A script file is a text file containing multiple Python statements saved with a 
 
 **[Key distinction]:** The REPL is for **exploring**. Scripts are for **building**.
 
-[Instructor slide change: page=10; title=Lab: Environment Check + First Run]
-
 ### Where Files Live in the Lab
 
 **[Instructor speaks:]**
@@ -295,9 +293,9 @@ python_basics/          ← Your main course folder
 
 ---
 
-[Instructor slide change: page=9; title=Demo: Environment Setup]
-
 ## Section 5: Live Demo (5-10 minutes)
+
+[Instructor slide change: page=9; title=Demo: Environment Setup]
 
 ### Demo Script: Your First Python Experience
 
@@ -653,9 +651,9 @@ Based on years of teaching this course, here are the most common issues beginner
 
 ---
 
-[Instructor slide change: page=13; title=Quick Check]
-
 ## Section 8: Exit Ticket & Looking Ahead (5 minutes)
+
+[Instructor slide change: page=13; title=Quick Check]
 
 ### Quick Check Question
 

@@ -379,8 +379,6 @@ You just demonstrated both required resilience conditions in a deterministic way
 
 ---
 
-[Instructor slide change: page=22; title=Lab — JSON Contacts App]
-
 ## Transition into lab (what to say)
 
 “Now you’ll implement the same persistence lifecycle in your own mini app: load at startup, modify data, save after changes, survive missing/corrupted files. If you don’t have a previous app ready, you’ll use today’s fallback starter so everyone can complete the hour.”
@@ -615,6 +613,8 @@ Note: The runbook specifically requires no crash when file missing. This script 
 
 ---
 
+[Instructor slide change: page=23; title=Common Pitfalls + Quick Check (Hour 42)]
+
 ## Common pitfalls to watch for (and fixes)
 
 ### Pitfall 1: Trying to dump custom object directly
@@ -816,8 +816,6 @@ Ask these short checks while teaching:
 Look for conceptual clarity, not memorized wording.
 
 ---
-
-[Instructor slide change: page=23; title=Common Pitfalls + Quick Check (Hour 42)]
 
 ## Exit ticket (required quick check)
 

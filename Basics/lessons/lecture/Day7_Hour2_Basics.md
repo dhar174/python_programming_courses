@@ -294,8 +294,6 @@ Document your sentinel clearly in the prompt so users know how to stop."
 
 ---
 
-[Instructor slide change: page=22; title=Demo — Password Prompt with Retry Limit]
-
 ## 7) Live Coding Demo: Password Prompt (~10 minutes)
 
 ### 7.1 Announce the demo
@@ -395,8 +393,6 @@ while attempts < max_attempts:
 Now if the user succeeds on attempt 1, attempts never increments, and the final check does not work correctly. Always increment at the top of the loop so the counter is accurate every iteration."
 
 ---
-
-[Instructor slide change: page=23; title=Lab — Password Prompt]
 
 ## 8) Guided Lab: Password Prompt (~25 minutes)
 
@@ -518,8 +514,6 @@ The fix for all of these: plan your loop carefully, update the counter consisten
 While loops are flexible and powerful, but they require careful logic. In Hour 3, we will learn for loops, which are better suited for 'repeat exactly N times' scenarios."
 
 ---
-
-[Instructor slide change: page=25; title=Quick Check — Hour 26]
 
 ## 10) Exit Ticket (~3 minutes)
 

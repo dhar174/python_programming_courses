@@ -510,8 +510,6 @@ For this course, your keys will almost always be strings. Integer keys come up i
 
 ---
 
-[Instructor slide change: page=39; title=Demo: Inventory Dictionary]
-
 ## 10) Live Demo: Inventory Dictionary
 
 *[Open `hour19_dict_demo.py` in your editor and type everything below live — do not paste it. Narrate every line as you type.]*
@@ -631,8 +629,6 @@ for item, qty in inventory.items():
 "Beautiful. We loop through a dictionary of incoming stock, check whether each item already exists, update if it does, and add it fresh if it does not. The complete inventory is printed at the end. This is a realistic pattern — think of a warehouse system receiving a shipment file. Now you build something similar yourself."
 
 ---
-
-[Instructor slide change: page=40; title=Lab: Inventory Manager]
 
 ## 11) Hands-on Lab: Inventory Manager
 
@@ -762,8 +758,6 @@ Third, the `get()` call stores `None` in `current_qty` if the key is missing, an
 These are real concerns in production code. For this lab, we are keeping it simple — we trust the user to enter a positive integer. But notice how quickly requirements grow. A real inventory system would need: input validation, the ability to subtract stock, a loop to handle multiple updates, saving to a file, and so on. The dictionary is just one piece of that system. Today we are building the foundation."
 
 ---
-
-[Instructor slide change: page=41; title=Common Pitfalls (Hour 19)]
 
 ## 12) Common Pitfalls
 
@@ -904,8 +898,6 @@ for item in sorted(inventory):
 
 ---
 
-[Instructor slide change: page=42; title=Quick Check]
-
 ## 14) Debrief, Recap, and Exit Ticket
 
 ### 14.1 Concept recap (read aloud)
@@ -937,6 +929,8 @@ for item in sorted(inventory):
 - **Item** — a single key-value pair
 - **KeyError** — the exception raised when you access a missing key with bracket notation
 - **`get()`** — the safe access method that returns `None` (or a default) instead of raising `KeyError`"
+
+[Instructor slide change: page=42; title=Quick Check]
 
 ### 14.3 Exit ticket
 

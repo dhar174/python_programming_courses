@@ -275,8 +275,6 @@ while True:
 
 ---
 
-[Instructor slide change: page=21; title=Lab: Grade Entry System]
-
 ## Section 7: Lab with Full Checkpoints
 
 **Lab Duration: ~20 minutes (with built-in checkpoints)**
@@ -408,8 +406,6 @@ else:
 - Celebrate completion of Checkpoint 4.
 
 ---
-
-[Instructor slide change: page=22; title=Common Pitfalls (Hour 30)]
 
 ## Section 8: Troubleshooting Pitfalls
 

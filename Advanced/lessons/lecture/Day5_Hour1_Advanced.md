@@ -310,9 +310,9 @@ That second rule is important. You can use `pack()` in one frame and `grid()` in
 
 ---
 
-[Instructor slide change: page=12; title=Demo: Service First — ContactService]
-
 ## Section 4: Live Demo (8 minutes)
+
+[Instructor slide change: page=12; title=Demo: Service First — ContactService]
 
 ### Demo Framing
 
@@ -505,8 +505,6 @@ Use these questions during or immediately after the demo:
 - Why is a short message box acceptable, but a long sleep inside the callback is not?
 
 ---
-
-[Instructor slide change: page=15; title=Lab: Hello GUI and Add Form (Hour 17)]
 
 ## Section 5: Hands-On Lab (26 minutes)
 
@@ -716,6 +714,8 @@ Use these prompts while walking the room:
 - If the user enters good data, what message appears?
 - What line starts the event loop?
 - Are all widgets in this same parent using the same layout manager?
+
+[Instructor slide change: page=16; title=Common Pitfalls (Hour 17)]
 
 ### Common Pitfalls During the Lab
 

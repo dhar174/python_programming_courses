@@ -492,8 +492,6 @@ This is an advanced-looking line that you can use without fully understanding it
 
 ---
 
-[Instructor slide change: page=51; title=Demo: Word Frequency Counter]
-
 ## 7) Live Demo: Word Frequency Counter
 
 ### 7.1 Transition to the demo
@@ -587,8 +585,6 @@ world                 2
 **[Ask learners]** Is that what we actually want? 'Hello', 'hello', and 'HELLO' are all three counted separately — because Python strings are case-sensitive. This is the case-inconsistency pitfall, and we will fix it in the extension section. For now, the program is *correct* by Python's rules, even if the output is not what a human reader might expect."
 
 ---
-
-[Instructor slide change: page=52; title=Lab: Word Counter]
 
 ## 8) Hands-on Lab: Word Counter
 
@@ -762,8 +758,6 @@ Yes — we could do `words = [w.lower() for w in sentence.split()]` before the l
 Also notice that we used a `for punct in (...):` loop inside the counting loop to remove each punctuation character. That inner loop is simple and easy to extend — if you want to also remove brackets or quotes, you just add them to the tuple. When you learn more advanced tools later, you can revisit this code and refactor it. But for now, it is readable, correct, and handles real-world input."
 
 ---
-
-[Instructor slide change: page=53; title=Common Pitfalls (Hour 20)]
 
 ## 9) Common Pitfalls
 
@@ -1038,8 +1032,6 @@ If any part of today felt hard: good. That means you were working in the zone wh
 Well done today. Save your files, and I'll see you at Session 6."
 
 ---
-
-[Instructor slide change: page=54; title=Quick Check]
 
 ## 12) Exit Ticket
 

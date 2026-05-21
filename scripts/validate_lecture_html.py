@@ -92,8 +92,6 @@ class LectureHtmlParser(HTMLParser):
                 self.fragment_refs.append(fragment)
                 if "lecture-skip-link" in classes:
                     self.skip_targets.append(fragment)
-            if "lecture-skip-link" in classes and href.startswith("#") and len(href) > 1:
-                self.skip_targets.append(href[1:])
             if "prev" in rels or "data-lecture-prev" in attr_map:
                 self.prev_hooks += 1
             if "next" in rels or "data-lecture-next" in attr_map:

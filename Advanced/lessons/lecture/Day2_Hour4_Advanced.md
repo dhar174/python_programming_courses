@@ -82,8 +82,6 @@ models/helper + service CRUD + exceptions + to_dict() + runnable demo.
 
 ---
 
-[Instructor slide change: page=42; title=Checkpoint 1 Rubric]
-
 ## Opening Bridge and Checkpoint Framing (5 minutes)
 
 ### Instructor talk track
@@ -162,8 +160,6 @@ Transition:
 "Now I will show the grading demo. I will keep it short because your work time is the priority."
 
 ---
-
-[Instructor slide change: page=43; title=Demo: Checkpoint Fast Grading Demo]
 
 ## Fast Grading Demo (5 minutes)
 
@@ -364,6 +360,8 @@ Transition:
 "Now you will build or finish your own Core Tracker Library. I will circulate with the checklist. When your demo passes, call me over."
 
 ---
+
+[Instructor slide change: page=42; title=Checkpoint 1 Rubric]
 
 ## Checkpoint Build and Grade Lab (40 minutes)
 

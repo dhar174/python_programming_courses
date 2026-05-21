@@ -154,8 +154,6 @@ def save_directly_through_service() -> None:
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
-[Instructor slide change: page=32; title=Hour 39 Lab — Integration Sprint]
-
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -196,6 +194,8 @@ Integration sprint: choose A) modify GUI to call the API for CRUD, or B) keep GU
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
 
+[Instructor slide change: page=33; title=Common Pitfalls and Exit Ticket — Hour 39]
+
 ### Common pitfalls to watch for
 
 - Two schemas: name in GUI, title in API, item_name in database.
@@ -222,8 +222,6 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add a small sync button that reloads data from the API.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
-
-[Instructor slide change: page=33; title=Common Pitfalls and Exit Ticket — Hour 39]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

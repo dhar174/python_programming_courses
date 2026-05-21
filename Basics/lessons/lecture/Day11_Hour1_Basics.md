@@ -298,8 +298,6 @@ Keep this short; main lab uses line-based flow.
 
 ---
 
-[Instructor slide change: page=11; title=Lab — Save and Load Text]
-
 ## Hands-on Lab (25–35 min)
 
 ## Lab Title
@@ -624,8 +622,6 @@ Instead, coach with micro-prompts:
 - Next 15–20 minutes independent.
 - Final 5–7 minutes spot checks and debrief.
 
-[Instructor slide change: page=13; title=Quick Check (Hour 41)]
-
 ### Minutes 50–60: Quick check + recap
 
 - Exit ticket question on `with`.
@@ -705,6 +701,8 @@ with open(report_path, "w", encoding="utf-8") as f:
 Again, optional only.
 
 ---
+
+[Instructor slide change: page=13; title=Quick Check (Hour 41)]
 
 ## Quick Check / Exit Ticket (Required)
 
