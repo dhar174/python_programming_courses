@@ -4,7 +4,7 @@
 # Active Context
 
 ## Current objective
-Issue #458's hourly lecture HTML rollout is implemented locally: all 96 lecture Markdown files now have generated HTML companions plus a shared generator, validator, and publish pipeline. The remaining follow-through is issue/PR closeout rather than additional platform work.
+Issue #458 lecture HTML rollout closeout is complete for high-confidence candidates: tranche/platform sub-issues plus #419 were closed with merged-on-main evidence (PR #476 / PR #426). Remaining open issues (#433, #436, #437, #439, #452, #459) are intentionally kept open due insufficient confidence.
 
 ## Why it matters now
 Lecture Markdown is now a first-class published surface alongside slide decks. The new pipeline needs to preserve content fidelity while making lecture pages reachable from the existing portal/day-overview flow and safe for GitHub Pages hosting.
@@ -81,8 +81,8 @@ Lecture Markdown is now a first-class published surface alongside slide decks. T
 3. `_site/` — staged Pages artifact produced by CI, including `_site/index.html`, `_site/slides/basics/`, `_site/slides/advanced/`, and `_site/slides/shared/portal/`
 
 ## Next recommended steps
-1. Open or update the implementation PR for the #458 rollout and link the generator, validator, workflow, shared assets, and generated lecture HTML outputs.
-2. Close the #458 pilot/tranche issues with the validated generator-first rollout evidence.
+1. Manually resolve remaining open issue #459 (`01-intro-to-python.md`) because the referenced `Advanced/lessons/lecture/01-intro-to-python.html` artifact is not present and could not be auto-closed with high confidence.
+2. Triage remaining non-#458 open issues (#433, #436, #437, #439, #452) with targeted evidence before any additional closures.
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal baseline
