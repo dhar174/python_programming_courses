@@ -1,5 +1,7 @@
 # Session 12, Hour 2: Capstone Build Sprint
 
+[Instructor slide change: page=15; title=Hour 46: Build Sprint]
+
 ## Hour Intent and Instructor Framing
 
 This hour is a **build sprint**, not a polish hour and not a final assessment hour. Your job is to coach students through completing a working MVP with full CRUD and reliable persistence. Keep the class anchored in Basics scope: clear functions, clean menu flow, predictable JSON read/write, and practical debugging discipline.
@@ -1206,6 +1208,8 @@ Suggested debrief script:
 > “Today’s sprint measured engineering discipline: build order, test cycle, and persistence reliability. If your app can mutate data and survive restart, you built a real foundation.”
 
 ---
+
+[Instructor slide change: page=22; title=Exit Ticket]
 
 ## Quick Check / Exit Ticket (Required Prompt)
 

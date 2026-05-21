@@ -6,6 +6,10 @@
 
 ---
 
+[Instructor slide change: page=33; title=Hour 16: Checkpoint 1 — Receipt Generator]
+
+[Instructor slide change: page=34; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 After this instructional hour, learners will be able to:
@@ -66,6 +70,8 @@ This is open-book. You can reference your notes, ask for hints, and use what you
 Let's dive in. You've got this."
 
 ---
+
+[Instructor slide change: page=35; title=What Checkpoint 1 Measures]
 
 ## 4. Conceptual Briefing: What Checkpoint 1 Measures (8 minutes)
 

@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,8 +71,15 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
-                    <h2 id="instructor-notes">Instructor Notes</h2>
+                    <aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="18" data-slide-title="Hour 2: Designing Classes from Requirements" data-slide-anchor="hour-2-designing-classes-from-requirements-be01c170"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 18</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#hour-2-designing-classes-from-requirements-be01c170" data-slide-deck-link>Slide 18: Hour 2: Designing Classes from Requirements</a></div></aside>
+
+<h2 id="instructor-notes">Instructor Notes</h2>
 <ul>
 <li><strong>Course</strong>: Python Programming (Advanced)</li>
 <li><strong>Session</strong>: Day 1, Hour 2 of 48</li>
@@ -127,6 +139,8 @@
 </table>
 <p>This is a one-hour plan. If the room needs more support, protect the 25-minute guided lab. Shorten the concept briefing before shortening learner practice. Do not allow the live demo to grow into a full application build; the target is design thinking, not feature completion.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="19" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-53e1dbba"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 19</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#learning-outcomes-53e1dbba" data-slide-deck-link>Slide 19: Learning Outcomes</a></div></aside>
+
 <h2 id="learning-outcomes">Learning Outcomes</h2>
 <p>By the end of this hour, learners will be able to:</p>
 <ol>
@@ -295,6 +309,8 @@ Does not:
 <p><strong>Transition to code</strong></p>
 <p>"Now let's turn that sketch into a small deterministic Python demo. Deterministic means the output is predictable every time. There will be no <code>input()</code> in this demo. We want code that can be run in class, copied by learners, and later tested."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="23" data-slide-title="Demo: Task + Project Classes" data-slide-anchor="demo-task-project-classes-73d88dff"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 23</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#demo-task-project-classes-73d88dff" data-slide-deck-link>Slide 23: Demo: Task + Project Classes</a></div></aside>
+
 <h2 id="live-demo-tracker-domain-model-and-service-function-10-minutes">Live Demo: Tracker Domain Model and Service Function (10 minutes)</h2>
 <p><strong>Instructor action cue</strong></p>
 <p>Create a file named <code>day1_hour2_tracker_demo.py</code>. Use the same command later when running it:</p>
@@ -488,6 +504,8 @@ class BadTask:
 <p>"This looks convenient in a tiny script, but it creates hidden costs. I cannot create a <code>BadTask</code> in an automated test without pretending to type at the terminal. I cannot reuse it in a web app without rewriting it. I cannot mark it complete silently if another part of the program needs that. The model has become tangled with the UI."</p>
 <p>"The better pattern is: collect input elsewhere, pass clean values into the model, let the model enforce business rules, and let the caller decide how to display results."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="26" data-slide-title="Lab: Domain Modeling" data-slide-anchor="lab-domain-modeling-61f0de22"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 26</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#lab-domain-modeling-61f0de22" data-slide-deck-link>Slide 26: Lab: Domain Modeling</a></div></aside>
+
 <h2 id="guided-lab-domain-modeling-for-a-tracker-25-minutes">Guided Lab: Domain Modeling for a Tracker (25 minutes)</h2>
 <p><strong>Instructor setup</strong></p>
 <p>"Now you will design your own tracker domain. You do not need to build a complete application. Your goal is to practice the design process. By the end of the lab, you should have a short requirements list, 3 to 5 candidate classes, and at least one working class with a behavior method."</p>
@@ -679,6 +697,8 @@ Function: performs an action or coordinates objects.
 </ol>
 <p>If learners finish only the sketch and one working class, that is enough for this hour. Do not push them into persistence, databases, APIs, or GUI work yet. Those topics have their own course moments.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="27" data-slide-title="Completion Criteria + Common Pitfalls — Hour 2" data-slide-anchor="completion-criteria-common-pitfalls-hour-2-e62a13e2"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 27</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#completion-criteria-common-pitfalls-hour-2-e62a13e2" data-slide-deck-link>Slide 27: Completion Criteria + Common Pitfalls — Hour 2</a></div></aside>
+
 <h2 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h2>
 <h3 id="pitfall-1-putting-io-inside-domain-objects">Pitfall 1: Putting I/O Inside Domain Objects</h3>
 <p>The most important correction for this hour is keeping I/O out of domain models.</p>

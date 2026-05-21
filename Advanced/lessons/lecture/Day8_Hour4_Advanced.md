@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=42; title=Hour 32 — Checkpoint 4: Data-Driven App Milestone]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Frame the checkpoint and rubric: 10 minutes  
@@ -11,6 +13,8 @@
 - Showcase, reflection, and exit ticket: 10 minutes
 
 ---
+
+[Instructor slide change: page=43; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -105,6 +109,8 @@ Narrate the reasoning:
 **[Instructor speaks:]**
 
 If you can do that sequence reliably, you have already demonstrated most of the milestone. If you cannot do it, the sequence tells you exactly where to look next: initialization, add flow, search path, restart persistence, update logic, or delete logic.
+
+[Instructor slide change: page=47; title=Fast-Grade Demo Workflow]
 
 ### What the Demo Should Not Depend On
 
@@ -290,6 +296,8 @@ Ask learners to answer briefly:
 Next session we move up a level and expose our application through a REST API using Flask. Because you stabilized your repository and service layer today, that next step will be dramatically easier than it would have been a week ago.
 
 ---
+
+[Instructor slide change: page=45; title=Required Deliverables — Checkpoint 4]
 
 ## Instructor-Ready Deep Dive: Running Checkpoint 4 as a Fast, Fair Milestone
 

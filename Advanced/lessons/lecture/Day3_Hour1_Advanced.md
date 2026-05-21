@@ -1,5 +1,7 @@
 # Day 3, Hour 1: Project Structure, Packages, Imports, and Config
 
+[Instructor slide change: page=8; title=Hour 9: Project Structure, Packages, Imports, and Config]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -33,6 +35,8 @@ Important instructor positioning:
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 12 + 10 + 25 + 3. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten examples in the concept briefing rather than shrinking the restructure practice. The required outcome is practical: the project still runs after restructure, and imports are clean and consistent.
 
 ---
+
+[Instructor slide change: page=9; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -106,6 +110,8 @@ Do not run package modules as loose files.
 ```
 
 ---
+
+[Instructor slide change: page=15; title=Lab: Restructure Your Tracker]
 
 ## Opening Bridge from Checkpoint 1 (5 minutes)
 

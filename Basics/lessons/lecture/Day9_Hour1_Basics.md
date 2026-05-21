@@ -10,11 +10,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 33: Functions — def, parameters, return]
+
 ## 0. Instructor Note: Context and Approach
 
 > This document is written as a read-aloud teaching guide. Emphasize why we need functions (code reuse and clarity), how we pass data into them, and crucially, how we get data back out using `return`. Differentiate strongly between `return` and `print()`. By the end of this hour, learners should understand that functions are the bridge between procedural scripts and organized, testable code. Functions represent a paradigm shift: from thinking "write a script that does X" to thinking "break X into reusable pieces, test each piece, and assemble them into a whole program."
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 1. Learning Outcomes
 
@@ -188,6 +192,8 @@ print(bigger_answer)  # Prints 30
 This is different from `print()`. If I had written `print(result)` instead of `return result`, the human would see '20' on the screen, but the program itself couldn't use that value. The variable `answer` would be undefined. But with `return`, the program gets the value, and we can use it anywhere."
 
 ---
+
+[Instructor slide change: page=10; title=Demo: Refactoring a Calculator]
 
 ## 6. Live Demo 1: Building a Basic Greeter (~13 minutes)
 
@@ -375,6 +381,8 @@ This is how professional code is structured. Functions are your building blocks.
 
 ---
 
+[Instructor slide change: page=11; title=Lab: Refactor Contact Manager (Hour 33)]
+
 ## 8. Guided Lab: Refactor Contact Manager (~13 minutes)
 
 ### 8.1 Lab Overview
@@ -500,6 +508,8 @@ main()
 This structure is much more testable, readable, and maintainable. If you need to debug the search logic, you know exactly where to look: the `search_contact()` function."
 
 ---
+
+[Instructor slide change: page=12; title=Common Pitfalls (Hour 33)]
 
 ## 9. Troubleshooting Pitfalls and Instructor Cues
 
@@ -702,6 +712,8 @@ For now, make sure you practice writing a few functions on your own. The best wa
 3. **Add `return`:** `def add(a, b): return a + b` and assign the result to a variable.
 4. **Combine:** `def search(contact_list, query): return query in contact_list` and use the returned boolean in an `if` statement.
 5. **Refactor existing code:** Take their Contact Manager from earlier and break it into functions.
+
+[Instructor slide change: page=13; title=Quick Check (Hour 33)]
 
 ### Exit Ticket / Formative Assessment
 

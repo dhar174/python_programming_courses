@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=15; title=Hour 22: Data-Structure Drill Circuit]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 22. The purpose of this hour is fluency through structured repetition. Learners already know the core structures from Session 5 and just practiced structure choice in Hour 21. This hour should feel energetic, practical, and supportive. It is a drill circuit, not a high-stakes assessment. The runbook names four short tasks: list filtering, set uniqueness, dictionary counting, and tuple unpacking. Keep reinforcing a simple rhythm at every station: **read the prompt, choose the right structure, build the smallest working version, test with tiny data, then improve output if time remains**. Stay within Basics scope. Do not require comprehensions, lambdas, advanced sorting, nested dictionaries, or clever shortcuts. The goal is steady confidence, not speed for speed’s sake. Every **Say:** block is written to be read nearly verbatim; adapt naturally, but keep the supportive tone and practical guidance.
 
 ---
+
+[Instructor slide change: page=16; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -56,6 +60,8 @@
 **Say:** "This hour is about repetition with purpose. You do not need perfect code on the first try. You do need to choose a sensible structure, write the smallest working version you can, and test before you trust your result."
 
 ---
+
+[Instructor slide change: page=22; title=Lab: Drill Circuit]
 
 ## 3) Opening Script: Why a Drill Circuit Matters (~5 minutes)
 
@@ -228,6 +234,8 @@ Completion criteria
 
 **Say:**
 "If your result is empty, check the `if` condition. If your program crashes, check indentation and colons first."
+
+[Instructor slide change: page=23; title=Common Pitfalls — Hour 22]
 
 ### 6.6 Common pitfalls
 
@@ -526,6 +534,8 @@ That kind of explanation shows structure awareness, not just code copying."
 "I also want to normalize something important: if you made a mistake today and then corrected it, that is progress. Some of the best learning in programming comes from noticing, ‘Oh, I used the wrong structure there,’ or ‘I forgot to test a tiny case.’"
 
 ---
+
+[Instructor slide change: page=24; title=Quick Check — Hour 22]
 
 ## 12) Recap + Exit Ticket (~5 minutes)
 

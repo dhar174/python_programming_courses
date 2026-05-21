@@ -1,5 +1,9 @@
 # Day 10, Hour 1: Introduction to Object-Oriented Programming – Classes, Objects, and the `self` Parameter
 
+[Instructor slide change: page=4; title=Hour 37: Intro to OOP — Classes, Objects, and `self`]
+
+[Instructor slide change: page=5; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 By the end of this hour, students will be able to:
@@ -41,12 +45,16 @@ Before teaching this hour, ensure students are comfortable with:
 - Access to Python IDE (VS Code, PyCharm, or Thonny) or cloud-based Python (Replit, Google Colab).
 - Blank starter files for the practice walkthrough and lab exercise provided in advance.
 
+[Instructor slide change: page=12; title=Common Pitfalls — Hour 37]
+
 ### Common Pitfalls to Watch For
 1. **Forgetting the `self` parameter** – Students often write `def __init__(name):` instead of `def __init__(self, name):`.
 2. **Confusing class attributes with instance attributes** – Emphasize that each object has its own copy of attributes.
 3. **Not calling methods correctly** – Students may try `Contact.display()` instead of `contact.display()` (forgetting the instance).
 4. **Treating `__init__` as optional** – Reinforce that `__init__` is the standard way to initialize objects (though not strictly mandatory).
 5. **Misunderstanding `self`** – Students sometimes think `self` is a keyword like `def`; clarify it is just a variable name by convention.
+
+[Instructor slide change: page=11; title=Lab — BankAccount Class]
 
 ### Timing Breakdown (25–35 minutes for lab)
 - **Opening & Context** (2 min)
@@ -376,6 +384,8 @@ rect.info()  # Calls area() and perimeter() internally
 ```
 
 ---
+
+[Instructor slide change: page=10; title=Live Demo — Contact Class]
 
 ## 5. Live Demo with Contact Class
 

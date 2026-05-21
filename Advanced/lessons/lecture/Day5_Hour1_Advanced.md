@@ -1,5 +1,7 @@
 # Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk
 
+[Instructor slide change: page=8; title=Hour 17: GUI Fundamentals with Tkinter and ttk]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -40,6 +42,8 @@
 **Total arithmetic:** 4 + 9 + 8 + 8 + 26 + 5 = 60 minutes exactly.
 
 ---
+
+[Instructor slide change: page=9; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -306,6 +310,8 @@ That second rule is important. You can use `pack()` in one frame and `grid()` in
 
 ---
 
+[Instructor slide change: page=12; title=Demo: Service First — ContactService]
+
 ## Section 4: Live Demo (8 minutes)
 
 ### Demo Framing
@@ -499,6 +505,8 @@ Use these questions during or immediately after the demo:
 - Why is a short message box acceptable, but a long sleep inside the callback is not?
 
 ---
+
+[Instructor slide change: page=15; title=Lab: Hello GUI and Add Form (Hour 17)]
 
 ## Section 5: Hands-On Lab (26 minutes)
 

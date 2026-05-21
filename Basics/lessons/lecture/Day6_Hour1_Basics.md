@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 21: Choosing the Right Structure]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 21. This hour is about judgment, not memorizing a new method. Learners already know the core structures — list, tuple, set, and dictionary — from Session 5. Now they need help making good choices. Stay firmly within Basics scope. Do not drift into performance benchmarking, Big O notation, data modeling theory, custom classes, or advanced nested structures. The key instructional move is comparison: take a real task, show a possible solution, then show a clearer structure choice and explain why it fits better. Keep reinforcing a short decision checklist: **Do I need order? Do I need duplicates? Do I need lookup by key? Is this a fixed record? Will the collection change?** The guided lab is a refactor challenge, so learners must do more than produce working code — they must explain at least one tradeoff. Every **Say:** block is written to be read nearly verbatim. Adapt naturally, but keep the explanations intact because they do the heavy teaching work.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -452,6 +456,8 @@ So the structure is chosen by the job, not by our personal favorite."
 
 ---
 
+[Instructor slide change: page=8; title=Demo: Duplicate Detection — List First, Then Set]
+
 ## 7) Live Demo 1: Duplicate Detection and Membership — List First, Then Set (~10 minutes)
 
 ### 7.1 Frame the demo
@@ -588,6 +594,8 @@ That safety habit will matter again in Hour 24 when learners do their checkpoint
 
 ---
 
+[Instructor slide change: page=12; title=Lab: Refactor Challenge]
+
 ## 9) Guided Lab: Refactor Challenge (~13 minutes)
 
 ### 9.1 Lab framing
@@ -653,6 +661,8 @@ Completion criteria
 - In Part B, ask yourself whether the main job is scanning every item or looking up by key.
 - For safe dictionary access, think back to `get()` from Session 5.
 - If your first version works, that is good. Refactoring is the second step, not a sign that the first step was worthless."
+
+[Instructor slide change: page=13; title=Common Pitfalls — Hour 21]
 
 ### 9.5 Common pitfalls to circulate for
 
@@ -723,6 +733,8 @@ That kind of explanation shows real understanding."
 
 ---
 
+[Instructor slide change: page=14; title=Quick Check — Hour 21]
+
 ## 11) Recap + Exit Ticket (~2 minutes)
 
 ### 11.1 Recap the hour in plain language
@@ -775,4 +787,3 @@ Ask learners to answer aloud, on paper, or in chat:
 
 **Say:**
 "One last teaching point: choosing the right structure does not mean choosing the fanciest structure. If a simple list solves the actual problem clearly, that is a good choice. Overengineering is not sophistication. The goal is fit."
-

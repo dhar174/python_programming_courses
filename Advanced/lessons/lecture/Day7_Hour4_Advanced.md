@@ -1,5 +1,7 @@
 # Day 7, Hour 4: Transactions, Integrity, and Initialization Patterns (Course Hour 28)
 
+[Instructor slide change: page=30; title=Hour 28: Transactions, Integrity, and `init_db()`]
+
 ## Instructor Notes
 
 - **Course:** Python Programming (Advanced)
@@ -10,6 +12,8 @@
 > **Instructor note:** This hour hardens the database layer. Keep it practical: grouped writes should succeed together or fail together, initialization should be safe to run every startup, and the database should enforce a small set of meaningful integrity rules. Do not let the session drift into heavy relational theory. Mention foreign keys lightly and accurately: SQLite supports them, but they require `PRAGMA foreign_keys = ON` per connection. The high-value outcomes are idempotent `init_db()`, sensible constraints, and a clear transaction example using a connection context manager. Learners should leave feeling that their persistence layer is no longer a fragile demo but the beginning of a dependable application component.
 
 ---
+
+[Instructor slide change: page=31; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -159,6 +163,8 @@ PRAGMA foreign_keys = ON
 That reminder saves a lot of confusion later."
 
 ---
+
+[Instructor slide change: page=34; title=Demo: Hardening the DB Layer]
 
 ## 6) Live Demo Part 1: An Idempotent init_db() Function (~15 minutes)
 
@@ -378,6 +384,8 @@ This is the beginning of dependency wiring. It is simple, explicit, and testable
 
 ---
 
+[Instructor slide change: page=36; title=Common Pitfalls (Hour 28)]
+
 ## 9) Common Pitfalls to Surface Explicitly
 
 ### 9.1 Schema drift and manual edits
@@ -401,6 +409,8 @@ This is the beginning of dependency wiring. It is simple, explicit, and testable
 "A transaction strategy is not real until you have seen the failure path. Deliberately trigger one safe error during development and confirm the rollback behavior."
 
 ---
+
+[Instructor slide change: page=35; title=Lab: Hardening Sprint]
 
 ## 10) Guided Practice: Harden Your Database Layer (~7 minutes)
 
@@ -456,6 +466,8 @@ A strong answer to the third question is: database constraints protect stored da
 At this point, learners should have a persistence layer that is not just a demo but a solid foundation for the next phase of the course, where the service layer and user-facing application features rely on it more heavily."
 
 ---
+
+[Instructor slide change: page=37; title=Quick Check]
 
 ## 13) Exit Ticket
 

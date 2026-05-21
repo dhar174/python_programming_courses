@@ -386,435 +386,846 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-8-session-8-hours-2932-2ebda4a1" data-slide-number="1">
             <h1>Advanced Day 8 — Session 8 (Hours 29–32)</h1>
             <div class="subtitle">Python Programming (Advanced) • Data-Driven App Integration and Checkpoint 4</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-8-overview-d9af85d4" data-slide-number="2">
             <h1>Session 8 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-8c193c9c" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 29: Deeper SQL practice, with ORM exposure as an optional extension</li>
-  <li>Hour 30: Plug the SQLite repository into the app</li>
-  <li>Hour 31: Search/filter + pagination patterns</li>
-  <li>Hour 32: Checkpoint 4 data-driven app milestone</li>
+  <li>Hour 29 — Deeper SQL practice; ORM exposure as an optional extension</li>
+  <li>Hour 30 — Plug the SQLite repository into the app</li>
+  <li>Hour 31 — Search, filter, and pagination patterns</li>
+  <li>Hour 32 — Checkpoint 4: data-driven app milestone</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Day goal</h1>
+        <section class="slide" id="day-goal-8d3257f1" data-slide-number="4">
+            <h1>Day Goal</h1>
             <ul>
   <li>Make SQLite the actual source of truth</li>
-  <li>Add practical search</li>
-  <li>Prove persistence end to end</li>
+  <li>Add practical search backed by the repository</li>
+  <li>Prove persistence end-to-end</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 8 overview (Hours 29–32); Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Opening Script --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis</h1>
-            <ul>
-  <li>Default to deeper SQL practice for the required build path</li>
-  <li>Treat ORM as optional exposure, not mandatory scope</li>
-  <li>Keep the service contract stable during the storage swap</li>
-  <li>Apply stable ordering before slicing pages</li>
-  <li>Prove persistence-backed behavior at the checkpoint</li>
-</ul>
-<h3>Canonical quiz/contracts to recognize</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>Hour 29 | chosen path: deeper SQL practice</code></li>
-  <li><code>Hour 30 | repository plugged in: yes</code></li>
-  <li><code>Hour 31 | search term: report</code></li>
-  <li><code>Hour 32 | db path: data/tracker.db</code></li>
+  <li><code>Advanced/lessons/lecture/Day8_Hour1_Advanced.md</code> → <code># Day 8, Hour 1: Optional ORM Slice or Deeper SQL Practice</code></li>
+  <li><code>Advanced/lessons/lecture/Day8_Hour2_Advanced.md</code> → <code># Day 8, Hour 2: Integrate the Database into the App</code></li>
+  <li><code>Advanced/lessons/lecture/Day8_Hour3_Advanced.md</code> → <code># Day 8, Hour 3: Search, Filter, and Pagination Patterns</code></li>
+  <li><code>Advanced/lessons/lecture/Day8_Hour4_Advanced.md</code> → <code># Day 8, Hour 4: Checkpoint 4 - Data-Driven App Milestone</code></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/assignments/Advanced_Day8_homework.ipynb — Part 1 through Part 4; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 29 through Hour 32 canonical contract questions --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Timing Overview; Day8_Hour4_Advanced.md — Opening Script --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 29: Deeper SQL Practice First, ORM Optional</h1>
+        <section class="slide" id="session-8-outcomes-4f390c1a" data-slide-number="5">
+            <h1>Session 8 Outcomes</h1>
+            <p>By the end of today, learners will be able to:</p>
+<ul>
+  <li>Choose between ORM exposure and deeper SQL practice with clear tradeoff reasoning</li>
+  <li>Swap storage backends without changing the service contract or UI</li>
+  <li>Add a practical, safe search feature backed by parameterized SQL</li>
+  <li>Prove persistence across restarts with a structured fast-grade demo</li>
+  <li>Explain where each responsibility — model, service, repository, interface — lives</li>
+</ul>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Learning Outcomes; Day8_Hour2_Advanced.md — Learning Outcomes; Day8_Hour3_Advanced.md — Learning Outcomes; Day8_Hour4_Advanced.md — Learning Outcomes --&gt;</p>
+        </section>
+
+        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="6">
+            <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="in-scope-737acd99" data-slide-number="7">
+            <h1>In Scope</h1>
+            <ul>
+  <li>Deeper SQL summary queries with <code>GROUP BY</code> and <code>COUNT(*)</code></li>
+  <li>Optional tiny SQLAlchemy slice (one model, one session, one query)</li>
+  <li>Storage swap keeping the service contract stable</li>
+  <li>Parameterized <code>LIKE</code> search and <code>LIMIT</code>/<code>OFFSET</code> pagination</li>
+  <li>Checkpoint 4 milestone: persistence, CRUD, search, and architecture review</li>
+</ul>
+        </section>
+
+        <section class="slide" id="not-yet-ebf2b062" data-slide-number="8">
+            <h1>Not Yet</h1>
+            <ul>
+  <li>Migration frameworks or schema-generation tools</li>
+  <li>Lazy loading, advanced ORM relationships, or session lifecycle deep dives</li>
+  <li>Cursor-based pagination or dynamic search ranking</li>
+  <li>Production authentication or multi-user access patterns</li>
+  <li>Advanced joins or second table requirements (stretch only)</li>
+</ul>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Scope Guardrails; Day8_Hour4_Advanced.md — Clarify the Deliverables --&gt;</p>
+        </section>
+
+        <section class="slide" id="hour-29-optional-orm-slice-or-deeper-sql-practice-8fc1f04e" data-slide-number="9">
+            <h1>Hour 29 — Optional ORM Slice or Deeper SQL Practice</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-e7f2940f" data-slide-number="10">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Explain what an ORM does in plain language</li>
-  <li>Compare ORM convenience vs SQL transparency</li>
-  <li>Implement one practical extension safely</li>
-  <li>Stay within the course scope</li>
+  <li>Explain in plain language what an ORM is and what problem it solves</li>
+  <li>Compare ORM convenience vs raw SQL transparency without treating either as &quot;the one right answer&quot;</li>
+  <li>Implement one practical extension to the SQLite-backed tracker app</li>
+  <li>Describe the tradeoff between convenience and transparency when choosing a data-access layer</li>
 </ul>
 <h3>Default class path</h3>
 <ul>
-  <li><strong>Required</strong>: deeper SQL practice</li>
-  <li><strong>Optional extension</strong>: tiny SQLAlchemy slice if the environment supports it</li>
+  <li><strong>Required for all cohorts</strong> — deeper SQL practice</li>
+  <li><strong>Optional extension</strong> — tiny SQLAlchemy slice, only if the environment supports package installs cleanly</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 29: Optional ORM slice (SQLAlchemy) OR deeper SQL practice; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 1: Hour 29 - Deeper SQL practice (required) with ORM as an optional extension; Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Learning Outcomes for This Hour; Instructor Prep Notes --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>The Real Tradeoff</h1>
-            <h3>ORM advantages</h3>
+        <section class="slide" id="why-this-hour-exists-182a2c67" data-slide-number="11">
+            <h1>Why This Hour Exists</h1>
+            <p>The architecture from Day 7 does the translation work manually:</p>
 <ul>
-  <li>Less repetitive mapping code</li>
-  <li>Object-style query API</li>
-  <li>Useful abstraction for common patterns</li>
+  <li>hand-written SQL statements</li>
+  <li>manual row-to-object mapping</li>
+  <li>explicit commits and connection management</li>
 </ul>
-<h3>ORM disadvantages</h3>
-<ul>
-  <li>Extra dependency</li>
-  <li>More abstraction to debug</li>
-  <li>Hidden SQL can slow learning if the basics are still shaky</li>
-</ul>
-<h3>SQL advantages</h3>
-<ul>
-  <li>Transparent</li>
-  <li>Portable</li>
-  <li>Great for small apps and practical summaries</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour1_Advanced.md — What an ORM Does; What Raw SQL Gives You; The Real Comparison --&gt;</p>
+<p><strong>Today&#x27;s question</strong> — is there a tool that automates that mapping, and when does using it help vs hurt?</p>
+<blockquote>&quot;Abstraction is only helpful when it reduces confusion more than it adds confusion.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Day8_Hour1_Advanced.md` → `## Section 5: Key Takeaway Script`</blockquote>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Section 1: Reconnect to Yesterday&#x27;s Momentum; Why This Hour Matters --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo Path A vs Path B</h1>
-            <h3>Path A — tiny ORM exposure</h3>
+        <section class="slide" id="what-an-orm-does-9f23434f" data-slide-number="12">
+            <h1>What an ORM Does</h1>
+            <p>An ORM (Object-Relational Mapper) helps Python objects and relational tables speak to each other.</p>
+<p><strong>Typical ORM features:</strong></p>
 <ul>
-  <li>One model class</li>
-  <li>One session</li>
-  <li>One query</li>
+  <li>Python classes that correspond to tables</li>
+  <li>Fields on those classes that correspond to columns</li>
+  <li>A session or unit-of-work object for database interaction</li>
+  <li>Query methods that generate SQL under the hood</li>
+  <li>Declarative metadata close to the model definition</li>
 </ul>
-<h3>Path B — deeper SQL practice</h3>
-<ul>
-  <li><code>GROUP BY</code></li>
-  <li><code>COUNT(*)</code></li>
-  <li>Summary queries that answer real app questions</li>
-</ul>
-<p><strong>Recommendation</strong>: finish one path well; do not split your hour in half and complete neither.</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab (choose one); Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Message to Learners; Live Demo --&gt;</p>
+<p><strong>The cost:</strong> a new abstraction layer. If it is not understood, debugging becomes harder, not easier.</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — What an ORM Does --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: SQL Summary Query</h1>
-            <pre data-lang="python"><code>def summarize_by_status(db_path: str) -&gt; list[tuple[str, int]]:
+        <section class="slide" id="raw-sql-vs-orm-the-honest-comparison-dce63de8" data-slide-number="13">
+            <h1>Raw SQL vs ORM — The Honest Comparison</h1>
+            <table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>ORM</th>
+<th>Raw SQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mapping boilerplate</td>
+<td>Less</td>
+<td>More</td>
+</tr>
+<tr>
+<td>Dependency footprint</td>
+<td>Heavier</td>
+<td>Lightweight</td>
+</tr>
+<tr>
+<td>Query transparency</td>
+<td>Hidden</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>Portability</td>
+<td>Framework-tied</td>
+<td>Cross-language</td>
+</tr>
+<tr>
+<td>Debug difficulty</td>
+<td>Higher</td>
+<td>Lower</td>
+</tr>
+<tr>
+<td>Fit for small apps</td>
+<td>Optional</td>
+<td>Excellent</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key message</strong> — both are modern; both are useful. The right question is: &quot;What helps this project and this team right now?&quot;</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — What Raw SQL Gives You; The Real Comparison --&gt;</p>
+        </section>
+
+        <section class="slide" id="two-architecture-paths-same-core-structure-9021192d" data-slide-number="14">
+            <h1>Two Architecture Paths — Same Core Structure</h1>
+            <pre data-lang="text"><code>Option A (ORM):
+  UI/API  -&gt;  Service  -&gt;  ORM model/session  -&gt;  SQLite
+
+Option B (Raw SQL):
+  UI/API  -&gt;  Service  -&gt;  SQL repository      -&gt;  SQLite</code></pre>
+<p><strong>What stays the same across both paths:</strong></p>
+<ul>
+  <li>the service layer</li>
+  <li>the repository abstraction</li>
+  <li>SQLite as the source of truth</li>
+</ul>
+<p><strong>The architectural continuity is what protects us from chaos.</strong></p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Whiteboard Comparison; Section 2: Core Concept Walkthrough --&gt;</p>
+        </section>
+
+        <section class="slide" id="demo-track-a-tiny-sqlalchemy-slice-d23e3ce9" data-slide-number="15">
+            <h1>Demo Track A — Tiny SQLAlchemy Slice</h1>
+            <pre data-lang="python"><code>from sqlalchemy import create_engine, Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
+
+class Base(DeclarativeBase):
+    pass
+
+class RecordRow(Base):
+    __tablename__ = &quot;records&quot;
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String)
+    category: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String)
+
+engine = create_engine(&quot;sqlite:///data/tracker.db&quot;)
+with Session(engine) as session:
+    rows = session.query(RecordRow).all()
+    for row in rows:
+        print(row.id, row.title, row.status)</code></pre>
+<p>The class acts as a table description. The <code>Session</code> is the entry point for database work.</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Demo Track A: Tiny SQLAlchemy Slice --&gt;</p>
+        </section>
+
+        <section class="slide" id="demo-track-b-sql-summary-queries-11f49cb7" data-slide-number="16">
+            <h1>Demo Track B — SQL Summary Queries</h1>
+            <pre data-lang="python"><code>import sqlite3
+
+def summarize_by_status(db_path: str) -&gt; list[tuple[str, int]]:
     query = &quot;&quot;&quot;
         SELECT status, COUNT(*) AS total
         FROM records
         GROUP BY status
         ORDER BY total DESC, status ASC
-    &quot;&quot;&quot;</code></pre>
-<h3>Why this path fits today</h3>
-<ul>
-  <li>No extra package install</li>
-  <li>Learners still see real SQL</li>
-  <li>The database answers the question directly</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Demo Track B: Deeper SQL Practice --&gt;</p>
+    &quot;&quot;&quot;
+    with sqlite3.connect(db_path) as connection:
+        cursor = connection.execute(query)
+        return cursor.fetchall()
+
+for status, total in summarize_by_status(&quot;data/tracker.db&quot;):
+    print(f&quot;{status}: {total}&quot;)</code></pre>
+<p><strong>Why this path fits today</strong> — no extra package, transparent SQL, database does the counting.</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Demo Track B: Deeper SQL Practice --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Choose One Depth Path</h1>
+        <section class="slide" id="extending-the-sql-path-category-summary-e2bb76b7" data-slide-number="17">
+            <h1>Extending the SQL Path — Category Summary</h1>
+            <pre data-lang="python"><code>def summarize_category_for_status(
+    db_path: str, status: str
+) -&gt; list[tuple[str, int]]:
+    query = &quot;&quot;&quot;
+        SELECT category, COUNT(*) AS total
+        FROM records
+        WHERE status = ?
+        GROUP BY category
+        ORDER BY total DESC, category ASC
+    &quot;&quot;&quot;
+    with sqlite3.connect(db_path) as connection:
+        cursor = connection.execute(query, (status,))
+        return cursor.fetchall()</code></pre>
+<p>Parameterized, practical, and answers a question a stakeholder might actually ask.</p>
+<blockquote>Where should this live — repo, service, or a separate reporting helper?</blockquote>
+<blockquote>A bad answer is putting it inside a GUI callback.</blockquote>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Section 4: Guided Build; Path B: SQL Mini-Lab --&gt;</p>
+        </section>
+
+        <section class="slide" id="lab-choose-one-depth-path-920e86a0" data-slide-number="18">
+            <h1>Lab — Choose One Depth Path</h1>
             <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Required baseline</h3>
-<ul>
-  <li>Complete the deeper SQL path first</li>
-  <li>Add one safe summary or reporting query</li>
-  <li>Explain one ORM tradeoff even if you stay with SQL</li>
-</ul>
-<h3>Completion Criteria</h3>
-<p><span class="check">✓</span> One path completed cleanly</p>
-<p><span class="check">✓</span> Tradeoffs explained at a high level</p>
-<p><span class="check">✓</span> Query or ORM slice remains small and readable</p>
-<p><span class="check">✓</span> App stability is preserved</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Completion criteria (Hour 29); Advanced/assignments/Advanced_Day8_homework.ipynb — Part 1: Hour 29 --&gt;</p>
+<h3>Path B (required for all) — SQL Mini-Lab</h3>
+<ol>
+  <li>Add one grouped summary query to the repository or reporting helper</li>
+  <li>Print a useful summary (e.g. records by status or by category)</li>
+  <li>Keep the query parameterized if it accepts user input</li>
+  <li>Add small output proving the query works</li>
+</ol>
+<h3>Path A (optional if environment allows) — ORM Mini-Lab</h3>
+<ol>
+  <li>Install SQLAlchemy only if lab policy confirms package support</li>
+  <li>Define one model class matching the <code>records</code> table</li>
+  <li>Open a session, list rows, explain the mapping</li>
+  <li>Write one advantage and one disadvantage in your notes</li>
+</ol>
+<p><strong>Canonical quiz cue</strong> — <code>Hour 29 | chosen path: deeper SQL practice</code></p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Lab Brief; Day8_Hour1_Advanced.md — Path A and Path B --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 29)</h1>
-            <p><strong>⚠️</strong> Adding ORM complexity before understanding the query shape</p>
-<p><strong>⚠️</strong> Switching approaches midstream</p>
-<p><strong>⚠️</strong> Treating “more abstraction” as “automatically better”</p>
-<p><strong>⚠️</strong> Letting this hour derail the milestone path</p>
+        <section class="slide" id="common-pitfalls-hour-29-794e7339" data-slide-number="19">
+            <h1>Common Pitfalls — Hour 29</h1>
+            <p><strong>⚠️</strong> Installing a package without confirming environment support</p>
+<p><strong>⚠️</strong> Switching architecture mid-course because the abstraction looked exciting</p>
+<p><strong>⚠️</strong> Building SQL with string concatenation instead of parameters</p>
+<p><strong>⚠️</strong> Putting summary queries directly in a GUI callback or Flask route</p>
+<p><strong>⚠️</strong> Treating &quot;more abstraction&quot; as automatically more advanced</p>
+<h3>Quick Check</h3>
+<ol>
+  <li>Name one advantage of an ORM.</li>
+  <li>Name one disadvantage of an ORM.</li>
+  <li>If you stayed with SQL, what new question can your database answer now?</li>
+</ol>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Common Pitfalls; Exit Ticket --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What is one advantage and one disadvantage of an ORM?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 29 explanation --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 30: Integrate the DB into the App</h1>
+        <section class="slide" id="hour-30-integrate-the-database-into-the-app-ffdea2d8" data-slide-number="20">
+            <h1>Hour 30 — Integrate the Database into the App</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-3580babc" data-slide-number="21">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Swap storage without rewriting the whole app</li>
-  <li>Keep the service contract stable</li>
-  <li>Use beginner-friendly dependency injection</li>
-  <li>Avoid two conflicting sources of truth</li>
+  <li>Explain why the service layer should depend on behavior, not storage implementation</li>
+  <li>Replace in-memory or JSON persistence with a SQLite-backed repository</li>
+  <li>Identify what should and should not change when a storage backend is swapped</li>
+  <li>Use dependency injection in a practical, beginner-friendly way</li>
+  <li>Verify persistence across restarts without creating two conflicting sources of truth</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 30: Integrate DB into the app; Advanced/lessons/lecture/Day8_Hour2_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Same Service Contract, New Storage Engine</h1>
-            <h3>Stable pieces</h3>
+        <section class="slide" id="the-one-big-idea-16110071" data-slide-number="22">
+            <h1>The One Big Idea</h1>
+            <blockquote>The service layer should depend on what the repository **can do**, not on **how** it does it.</blockquote>
+<p>The service should be able to say:</p>
+<ul>
+  <li>add a record</li>
+  <li>list records</li>
+  <li>get a record by id</li>
+  <li>update a record</li>
+  <li>delete a record</li>
+  <li>search records</li>
+</ul>
+<p>Whether the repository stores data in a list, a JSON file, or a SQLite table is a <strong>separate concern.</strong></p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Section 1: The One Big Idea --&gt;</p>
+        </section>
+
+        <section class="slide" id="what-stays-stable-what-changes-62defa30" data-slide-number="23">
+            <h1>What Stays Stable, What Changes</h1>
+            <h3>Stays the same</h3>
 <ul>
   <li>Model classes</li>
-  <li>Validation logic</li>
-  <li>Service method names</li>
-  <li>UI callbacks / routes</li>
+  <li>Service method names and signatures</li>
+  <li>Validation logic and exceptions</li>
+  <li>UI callbacks and API routes</li>
 </ul>
-<h3>Pieces that change</h3>
+<h3>Changes freely</h3>
 <ul>
-  <li>Repository implementation</li>
-  <li>SQL statements</li>
-  <li>Row mapping</li>
-  <li><code>init_db()</code> and connection setup</li>
+  <li>Repository implementation details</li>
+  <li>Connection setup and management</li>
+  <li>SQL statements and row mapping</li>
+  <li>Initialization steps like <code>init_db()</code></li>
 </ul>
-<blockquote>The service should depend on what the repo can do, not how it stores data.</blockquote>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour2_Advanced.md — The One Big Idea; What Should Stay Stable --&gt;</p>
+<p><strong>Insight</strong> — learners are not rebuilding the whole app. They are replacing one layer.</p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — What Should Stay Stable --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Beginner-Friendly Dependency Injection</h1>
-            <pre data-lang="python"><code>repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)
+        <section class="slide" id="dependency-injection-the-right-pattern-f2997ca6" data-slide-number="24">
+            <h1>Dependency Injection — The Right Pattern</h1>
+            <pre data-lang="python"><code># Preferred: inject the repo so the service stays swappable
+repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)
 service = TrackerService(repo=repo)</code></pre>
-<h3>Avoid</h3>
-<pre data-lang="python"><code>class TrackerService:
+<pre data-lang="python"><code># Avoid: service creates its own repo — harder to test and swap
+class TrackerService:
     def __init__(self):
         self.repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)</code></pre>
-<h3>Why</h3>
+<p><strong>Benefits of the preferred pattern:</strong></p>
 <ul>
-  <li>Easier to test</li>
-  <li>Easier to swap storage</li>
-  <li>Cleaner architecture</li>
+  <li>Easier to test with a stub or in-memory repo</li>
+  <li>Easier to switch persistence backends</li>
+  <li>The wiring choice is visible at the entry point</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour2_Advanced.md — Dependency Injection Without the Jargon Overload --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Dependency Injection Without the Jargon Overload --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="recommended-project-layout-16bbd0d7" data-slide-number="25">
+            <h1>Recommended Project Layout</h1>
+            <pre data-lang="text"><code>src/
+  tracker/
+    models.py
+    exceptions.py
+    services.py
+    repositories/
+      base.py
+      json_repo.py
+      sqlite_repo.py
+    db.py
+gui/
+  app.py
+data/
+  tracker.db
+tests/</code></pre>
+<p>Folders do not need to match exactly. <strong>Responsibilities must.</strong> The service imports the repository contract; the GUI or API builds the service with the repository instance.</p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Recommended Structure --&gt;</p>
+        </section>
+
+        <section class="slide" id="sqlitetrackerrepository-init-db-and-add-8987c640" data-slide-number="26">
+            <h1>SQLiteTrackerRepository — init_db and add</h1>
+            <pre data-lang="python"><code>class SQLiteTrackerRepository:
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+
+    def init_db(self) -&gt; None:
+        query = &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                category TEXT NOT NULL,
+                status TEXT NOT NULL CHECK (status IN (&#x27;open&#x27;, &#x27;done&#x27;)),
+                priority INTEGER NOT NULL DEFAULT 3,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+        &quot;&quot;&quot;
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            conn.execute(query)
+            conn.commit()
+
+    def add(self, record: Record) -&gt; Record:
+        query = &quot;INSERT INTO records (title, category, status) VALUES (?, ?, ?)&quot;
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            cursor = conn.execute(query, (record.title, record.category, record.status))
+            conn.commit()
+            record.id = cursor.lastrowid
+        return record</code></pre>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Demo Setup; Full Integration Walkthrough --&gt;</p>
+        </section>
+
+        <section class="slide" id="sqlitetrackerrepository-list-all-and-wiring-bf462803" data-slide-number="27">
+            <h1>SQLiteTrackerRepository — list_all and wiring</h1>
+            <pre data-lang="python"><code>    def list_all(self) -&gt; list[Record]:
+        query = &quot;SELECT id, title, category, status FROM records ORDER BY id ASC&quot;
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(query).fetchall()
+        return [Record.from_row(row) for row in rows]</code></pre>
+<pre data-lang="python"><code># Application entry point
+def build_service() -&gt; TrackerService:
+    repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)
+    repo.init_db()
+    return TrackerService(repo=repo)</code></pre>
+<p><strong>The exciting part is not that SQLite exists. The exciting part is that the UI barely changed.</strong></p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Demo Setup; Demo Debrief --&gt;</p>
+        </section>
+
+        <section class="slide" id="one-source-of-truth-fe2ea624" data-slide-number="28">
             <h1>One Source of Truth</h1>
             <h3>Once SQLite is live</h3>
 <ul>
-  <li>SQLite is the live persistence layer</li>
-  <li>JSON can become export/import, not parallel truth</li>
+  <li>SQLite is the <strong>only</strong> live persistence layer</li>
+  <li>JSON can become export/import, never a parallel truth</li>
 </ul>
-<h3>Danger pattern</h3>
-<ul>
-  <li>GUI writes to JSON</li>
-  <li>Search reads from SQLite</li>
-  <li>Nobody knows which state is current</li>
-</ul>
-<p><strong>Quiz/homework cue</strong>: <code>Hour 30 | repository plugged in: yes</code></p>
-<p>&lt;!-- Sources: Advanced/assignments/Advanced_Day8_homework.ipynb — Part 2: Hour 30; Advanced/lessons/lecture/Day8_Hour2_Advanced.md — The Risk of Two Sources of Truth; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 30 canonical contract --&gt;</p>
+<h3>Danger pattern to eliminate</h3>
+<pre data-lang="text"><code>GUI  --writes--&gt;  JSON file
+Search  --reads--&gt;  SQLite
+Nobody knows which state is current</code></pre>
+<p><strong>Say this explicitly to the class</strong> — &quot;Once SQLite becomes your source of truth, stop treating JSON as live storage.&quot;</p>
+<p><strong>Canonical quiz cue</strong> — <code>Hour 30 | repository plugged in: yes</code></p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — The Risk of Two Sources of Truth --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Storage Swap With Minimal Drama</h1>
+        <section class="slide" id="demo-storage-swap-with-minimal-drama-12967c90" data-slide-number="29">
+            <h1>Demo — Storage Swap With Minimal Drama</h1>
             <h3>Demo flow</h3>
 <ol>
-  <li>Build the repo</li>
-  <li>Call <code>repo.init_db()</code></li>
+  <li>Build the SQLite repository</li>
+  <li>Call <code>repo.init_db()</code> at startup</li>
   <li>Construct the service with that repo</li>
-  <li>Launch the app</li>
-  <li>Show that add/list/update/delete still work</li>
-  <li>Restart and verify persistence</li>
+  <li>Launch the app and confirm add/list/update/delete still work</li>
+  <li>Close the app completely</li>
+  <li>Reopen and verify the record still exists</li>
 </ol>
-<h3>Success condition</h3>
+<h3>Common integration bugs to watch for</h3>
 <ul>
-  <li>UI changes very little</li>
-  <li>Storage changes a lot</li>
+  <li>Method mismatch (<code>list_all()</code> vs <code>list_records()</code>)</li>
+  <li>Forgetting <code>commit()</code> after inserts, updates, or deletes</li>
+  <li>Mapping rows into dicts when the service expects model objects</li>
+  <li>Initializing the service before the schema exists</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: service = TrackerService(repo=SQLiteRepo(...)); Show UI still works after swap; Advanced/lessons/lecture/Day8_Hour2_Advanced.md — Live Demo of the Storage Swap --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Demo; Common Integration Bugs --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Wire the Repository Under the Service</h1>
+        <section class="slide" id="lab-wire-the-repository-under-the-service-1007a4ba" data-slide-number="30">
+            <h1>Lab — Wire the Repository Under the Service</h1>
             <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Replace JSON/in-memory persistence with SQLite</li>
-  <li>Keep the service layer interface stable</li>
-  <li>Confirm CRUD works after the swap</li>
-  <li>Remove confusion about live storage</li>
-</ul>
+<h3>Required tasks</h3>
+<ol>
+  <li>Confirm the SQLite repository implements all methods the service expects</li>
+  <li>Add <code>init_db()</code> to the startup entry point</li>
+  <li>Update the entry point to construct the service with the SQLite repository</li>
+  <li>Remove or disable the old JSON-as-primary-storage workflow</li>
+  <li>Prove add, list, update, and delete still work</li>
+  <li>Prove persistence survives a full restart</li>
+</ol>
 <h3>Completion Criteria</h3>
 <p><span class="check">✓</span> App persists via SQLite</p>
-<p><span class="check">✓</span> UI/API still functions</p>
+<p><span class="check">✓</span> UI/API still functions unchanged</p>
 <p><span class="check">✓</span> One source of truth is clear</p>
 <p><span class="check">✓</span> Restart behavior is verified</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Wire it up; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 2: Hour 30 --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Lab Brief; Required Tasks --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 30)</h1>
-            <p><strong>⚠️</strong> UI calling <code>sqlite3</code> directly</p>
-<p><strong>⚠️</strong> JSON and SQLite both acting “live”</p>
-<p><strong>⚠️</strong> Forgetting to refresh after DB writes</p>
-<p><strong>⚠️</strong> Rebuilding more layers than necessary</p>
+        <section class="slide" id="common-pitfalls-hour-30-792fd8c5" data-slide-number="31">
+            <h1>Common Pitfalls — Hour 30</h1>
+            <p><strong>⚠️</strong> UI calling <code>sqlite3</code> directly instead of going through the service</p>
+<p><strong>⚠️</strong> JSON and SQLite both acting as &quot;live&quot; storage simultaneously</p>
+<p><strong>⚠️</strong> Forgetting to refresh the UI list after database writes</p>
+<p><strong>⚠️</strong> Rebuilding every class when only the repository implementation should change</p>
+<p><strong>⚠️</strong> Pointing the GUI at one database file and tests at another</p>
+<h3>Quick Check</h3>
+<ol>
+  <li>What interface stayed the same when you swapped storage?</li>
+  <li>Why is it risky to keep JSON and SQLite as simultaneous live sources of truth?</li>
+  <li>What part of the integration felt most fragile?</li>
+</ol>
+<p>&lt;!-- Sources: Day8_Hour2_Advanced.md — Common Integration Bugs; Exit Ticket --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What interface stayed the same when you swapped storage?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 30 explanation --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 31: Search, Filter, and Pagination</h1>
+        <section class="slide" id="hour-31-search-filter-and-pagination-patterns-6bcfa4f0" data-slide-number="32">
+            <h1>Hour 31 — Search, Filter, and Pagination Patterns</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-4109fe2c" data-slide-number="33">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Add a practical search feature</li>
-  <li>Use parameterized <code>LIKE</code> safely</li>
-  <li>Understand <code>LIMIT</code> and <code>OFFSET</code></li>
-  <li>Keep paging logic in the repository layer</li>
-  <li>Preserve stable ordering across pages</li>
+  <li>Add a practical search feature to a SQLite-backed application</li>
+  <li>Use parameterized <code>LIKE</code> queries safely</li>
+  <li>Explain the purpose of <code>LIMIT</code> and <code>OFFSET</code> in basic pagination</li>
+  <li>Keep search and pagination logic in the repository layer</li>
+  <li>Recognize common usability and correctness issues when data sets grow</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 31: Search/filter + pagination patterns; Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Search vs Filter</h1>
-            <h3>Search</h3>
+        <section class="slide" id="why-search-matters-b902fc6f" data-slide-number="34">
+            <h1>Why Search Matters</h1>
+            <p>An app stops feeling like a toy when users can find what they need.</p>
 <ul>
-  <li>Partial text match</li>
-  <li>e.g. title contains <code>&quot;invoice&quot;</code></li>
+  <li>A task tracker with 300 records cannot just display everything</li>
+  <li>Users want the app to answer a question quickly and safely</li>
+  <li>Search and pagination are not glamorous, but they create trust</li>
 </ul>
-<h3>Filter</h3>
-<ul>
-  <li>Narrow by exact or controlled value</li>
-  <li>e.g. status equals <code>&quot;open&quot;</code></li>
-</ul>
-<h3>Practical method shape</h3>
-<pre data-lang="python"><code>def search(term: str = &quot;&quot;, status: str | None = None,
-           limit: int = 20, offset: int = 0) -&gt; list[Record]:
+<h3>The design lens for this hour</h3>
+<blockquote>A user wants all items in &quot;billing&quot; that are still &quot;open.&quot;</blockquote>
+<blockquote>They do not want to scroll forever.</blockquote>
+<p><strong>Search is partly a UI feature, but the real correctness lives in the repository.</strong></p>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Section 1: Why Search Matters; The Real User Story --&gt;</p>
+        </section>
+
+        <section class="slide" id="search-vs-filter-know-the-difference-6dd0c99d" data-slide-number="35">
+            <h1>Search vs Filter — Know the Difference</h1>
+            <table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search</td>
+<td>Partial text match</td>
+<td>title contains <code>invoice</code></td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>Exact or constrained value</td>
+<td>status equals <code>open</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Clean combined repository method signature</h3>
+<pre data-lang="python"><code>def search(
+    self,
+    term: str = &quot;&quot;,
+    status: str | None = None,
+    category: str | None = None,
+    limit: int = 20,
+    offset: int = 0,
+) -&gt; list[Record]:
     ...</code></pre>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Filtering vs Searching --&gt;</p>
+<p>Combining search and filter in one method is normal and clean.</p>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Filtering vs Searching --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Safe `LIKE` + Stable Pagination</h1>
-            <pre data-lang="python"><code>wildcard = f&quot;%{term.strip().lower()}%&quot;
+        <section class="slide" id="safe-like-the-right-and-wrong-way-8aeff8f6" data-slide-number="36">
+            <h1>Safe LIKE — The Right and Wrong Way</h1>
+            <pre data-lang="python"><code># WRONG: string concatenation — never do this
+query = f&quot;SELECT * FROM records WHERE title LIKE &#x27;%{term}%&#x27;&quot;</code></pre>
+<pre data-lang="python"><code># CORRECT: wildcard in the parameter value, not the SQL structure
+wildcard = f&quot;%{search_term.strip().lower()}%&quot;
 query = &quot;&quot;&quot;
-    SELECT id, title, category, status
+    SELECT id, title, category, status, priority, created_at
     FROM records
     WHERE lower(title) LIKE ?
+       OR lower(category) LIKE ?
     ORDER BY id ASC
-    LIMIT ? OFFSET ?
-&quot;&quot;&quot;</code></pre>
-<h3>Rules to keep</h3>
-<ul>
-  <li>Add <code>%</code> to the <strong>parameter value</strong></li>
-  <li>Normalize case for a friendlier search</li>
-  <li>Sort before paginating</li>
-</ul>
-<p><strong>Quiz/homework cue</strong>: <code>Hour 31 | search term: report</code></p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Safe Search with <code>LIKE</code>; Why Pagination Exists; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 3: Hour 31; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 31 canonical contract --&gt;</p>
+&quot;&quot;&quot;
+rows = connection.execute(query, (wildcard, wildcard)).fetchall()</code></pre>
+<p><strong>Two rules to remember:</strong></p>
+<ol>
+  <li>Add <code>%</code> to the <strong>parameter value</strong>, never into the SQL string</li>
+  <li>Normalize case so the search feels forgiving to users</li>
+</ol>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Safe Search with LIKE --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Search Repository + Optional UI Hook</h1>
-            <h3>Demo flow</h3>
+        <section class="slide" id="limit-and-offset-practical-pagination-18b7cdb8" data-slide-number="37">
+            <h1>LIMIT and OFFSET — Practical Pagination</h1>
+            <pre data-lang="sql"><code>SELECT id, title, category, status, priority, created_at
+FROM records
+ORDER BY id ASC
+LIMIT 20 OFFSET 40;</code></pre>
 <ul>
-  <li>Add <code>search_records(term, status, limit, offset)</code></li>
-  <li>Reset page to zero on a new search</li>
-  <li>Add optional Next/Prev buttons</li>
-  <li>Repopulate the visible table from fresh results</li>
+  <li><code>LIMIT 20</code> — give me 20 rows</li>
+  <li><code>OFFSET 40</code> — skip the first 40 rows (i.e. show page 3 of 20)</li>
 </ul>
-<h3>Usability guardrails</h3>
+<p><strong>What &quot;practical&quot; means in this course:</strong></p>
 <ul>
-  <li>Empty result sets are valid</li>
-  <li>Clear stale rows before repopulating</li>
-  <li>Do not hand-build SQL with user values</li>
+  <li>one search box, maybe one status filter</li>
+  <li>page size of 10 or 20</li>
+  <li>optional Next/Prev controls</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: repo.search(q, limit, offset); Demo: next/prev buttons in UI (optional); Advanced/lessons/lecture/Day8_Hour3_Advanced.md — Live Demo --&gt;</p>
+<p><strong>Critical rule</strong> — always add <code>ORDER BY</code> before <code>LIMIT</code>/<code>OFFSET</code>. Pagination without deterministic ordering creates duplicates and missing rows.</p>
+<p><strong>Canonical quiz cue</strong> — <code>Hour 31 | search term: report</code></p>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Why Pagination Exists --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Practical Search Feature</h1>
+        <section class="slide" id="full-repository-search-method-b98b93dc" data-slide-number="38">
+            <h1>Full Repository Search Method</h1>
+            <pre data-lang="python"><code>def search(self, term: str = &quot;&quot;, status: str | None = None,
+           category: str | None = None,
+           limit: int = 20, offset: int = 0) -&gt; list[Record]:
+    conditions: list[str] = []
+    parameters: list[object] = []
+    clean_term = term.strip().lower()
+    if clean_term:
+        wildcard = f&quot;%{clean_term}%&quot;
+        conditions.append(&quot;(lower(title) LIKE ? OR lower(category) LIKE ?)&quot;)
+        parameters.extend([wildcard, wildcard])
+    if status:
+        conditions.append(&quot;status = ?&quot;)
+        parameters.append(status)
+    if category:
+        conditions.append(&quot;category = ?&quot;)
+        parameters.append(category)
+    where_clause = (&quot;WHERE &quot; + &quot; AND &quot;.join(conditions)) if conditions else &quot;&quot;
+    query = f&quot;&quot;&quot;
+        SELECT id, title, category, status, priority, created_at
+        FROM records {where_clause}
+        ORDER BY id ASC LIMIT ? OFFSET ?
+    &quot;&quot;&quot;
+    parameters.extend([limit, offset])
+    with closing(sqlite3.connect(self.db_path)) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(query, tuple(parameters)).fetchall()
+    return [Record.from_row(row) for row in rows]</code></pre>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Repository Search Method; Deep Dive: Repository-Owned Safe Search --&gt;</p>
+        </section>
+
+        <section class="slide" id="optional-ui-hook-page-state-in-the-interface-578b5798" data-slide-number="39">
+            <h1>Optional UI Hook — Page State in the Interface</h1>
+            <pre data-lang="python"><code>def on_search(self):
+    term = self.search_var.get()
+    status = self.status_var.get() or None
+    self.current_offset = 0   # always reset on new search
+    records = self.service.search_records(
+        term=term, status=status, limit=20, offset=0
+    )
+    self.populate_table(records)
+
+def on_next_page(self):
+    self.current_offset += 20
+    records = self.service.search_records(
+        term=self.search_var.get(),
+        status=self.status_var.get() or None,
+        limit=20,
+        offset=self.current_offset,
+    )
+    self.populate_table(records)</code></pre>
+<p><strong>The separation</strong> — page state lives in the UI; query logic lives in the repo. The same search can later work from a CLI or a Flask route.</p>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Optional UI Hook --&gt;</p>
+        </section>
+
+        <section class="slide" id="lab-practical-search-feature-9807be3d" data-slide-number="40">
+            <h1>Lab — Practical Search Feature</h1>
             <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Add a search box or script input</li>
-  <li>Implement a repository search method</li>
-  <li>Optional: add paging with limit 20 and Next/Prev</li>
-  <li>Keep results predictable with stable ordering</li>
-</ul>
+<h3>Recommended sequence</h3>
+<ol>
+  <li>Start in the repo with a hard-coded search term in a small test script</li>
+  <li>Confirm the query returns expected rows</li>
+  <li>Move the method into the service layer</li>
+  <li>Connect the search term from the GUI or script input</li>
+  <li>Add pagination only after search is correct</li>
+</ol>
 <h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Repository search method uses parameterized SQL</p>
 <p><span class="check">✓</span> Search returns correct results</p>
-<p><span class="check">✓</span> No SQL injection risk</p>
-<p><span class="check">✓</span> Paging does not reorder records unpredictably</p>
-<p><span class="check">✓</span> Empty search results behave cleanly</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Search feature; Advanced/assignments/Advanced_Day8_homework.ipynb — Part 3: Hour 31 --&gt;</p>
+<p><span class="check">✓</span> Pagination uses stable <code>ORDER BY</code></p>
+<p><span class="check">✓</span> A new search resets the offset to 0</p>
+<p><span class="check">✓</span> Empty result sets are handled cleanly</p>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Lab Brief; Suggested Lab Sequence --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 31)</h1>
-            <p><strong>⚠️</strong> Building SQL with string concatenation</p>
-<p><strong>⚠️</strong> Forgetting wildcards in <code>LIKE</code></p>
-<p><strong>⚠️</strong> Paginating unsorted results</p>
-<p><strong>⚠️</strong> Leaving stale UI rows after search</p>
+        <section class="slide" id="common-pitfalls-hour-31-a4e4ee11" data-slide-number="41">
+            <h1>Common Pitfalls — Hour 31</h1>
+            <p><strong>⚠️</strong> Putting SQL in the button callback instead of the repository</p>
+<p><strong>⚠️</strong> Building SQL with string concatenation from user input</p>
+<p><strong>⚠️</strong> Forgetting wildcards — <code>%</code> must be in the parameter value</p>
+<p><strong>⚠️</strong> Paginating unsorted results — produces duplicates and missing rows</p>
+<p><strong>⚠️</strong> Offset increasing forever without reset when a new search starts</p>
+<p><strong>⚠️</strong> UI not clearing stale rows before displaying new results</p>
+<h3>Quick Check</h3>
+<ol>
+  <li>Where should <code>%</code> be added — in the SQL string or the parameter value?</li>
+  <li>Why should paginated queries always have a stable <code>ORDER BY</code>?</li>
+  <li>What should the interface show when a search returns zero rows?</li>
+</ol>
+<p>&lt;!-- Sources: Day8_Hour3_Advanced.md — Common Bugs; Exit Ticket --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Where should wildcard <code>%</code> be added: in the SQL string or the parameter value?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 31 explanation --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 32: Checkpoint 4 — Data-Driven App Milestone</h1>
+        <section class="slide" id="hour-32-checkpoint-4-data-driven-app-milestone-56a6bde9" data-slide-number="42">
+            <h1>Hour 32 — Checkpoint 4: Data-Driven App Milestone</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Required deliverables</h1>
+        <section class="slide" id="learning-outcomes-8c4ee4ce" data-slide-number="43">
+            <h1>Learning Outcomes</h1>
             <ul>
-  <li>SQLite repo with CRUD</li>
-  <li><code>init_db()</code> on startup</li>
-  <li>Database as source of truth</li>
-  <li>Basic search feature</li>
-  <li>Demo proving persistence across restarts</li>
+  <li>Demonstrate a SQLite-backed app that persists data across restarts</li>
+  <li>Show clean CRUD behavior using the database as the true source of truth</li>
+  <li>Explain where search logic and initialization logic live in the project</li>
+  <li>Identify and fix common milestone bugs: schema mismatches and incorrect IDs</li>
+  <li>Evaluate your own work against a checkpoint rubric focused on correctness, architecture, persistence, and professional habits</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 32: Checkpoint 4: Data-driven app milestone; Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Clarify the Deliverables --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Fast-Grade Demo Workflow</h1>
-            <ol>
-  <li>Launch the app</li>
-  <li>Create a record</li>
-  <li>Search for it</li>
-  <li>Close the app</li>
-  <li>Reopen the app</li>
-  <li>Confirm the record still exists</li>
-  <li>Update it</li>
-  <li>Delete it</li>
+        <section class="slide" id="what-this-hour-is-and-isn-t-9092e1ee" data-slide-number="44">
+            <h1>What This Hour Is — and Isn&#x27;t</h1>
+            <p><strong>This is a proving hour, not a new-feature hour.</strong></p>
+<p>We are validating that the architecture from the last several sessions can survive contact with reality.</p>
+<h3>Instructor is looking for four things</h3>
+<ol>
+  <li>SQLite is truly the source of truth</li>
+  <li>CRUD operations work reliably</li>
+  <li>Search works at a practical level</li>
+  <li>Code organization still makes sense under pressure</li>
 </ol>
-<h3>Why this works</h3>
-<ul>
-  <li>It reveals path issues fast</li>
-  <li>It reveals stale in-memory state fast</li>
-  <li>It proves SQLite is really live</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Show the Fast-Grade Workflow --&gt;</p>
+<blockquote>&quot;If your app is a little plain but stable, that is better than a flashy app that crashes. Stability is the priority.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Day8_Hour4_Advanced.md` → `## Section 1: Framing the Milestone`</blockquote>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Opening Script --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="required-deliverables-checkpoint-4-7034adf1" data-slide-number="45">
+            <h1>Required Deliverables — Checkpoint 4</h1>
+            <table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite repository</td>
+<td>Full CRUD — create, read/list, update, delete</td>
+</tr>
+<tr>
+<td>Database initialization</td>
+<td><code>init_db()</code> runs on startup; safe to repeat</td>
+</tr>
+<tr>
+<td>Source of truth</td>
+<td>App reads and writes exclusively through SQLite</td>
+</tr>
+<tr>
+<td>Basic search</td>
+<td>Parameterized LIKE, returns correct results</td>
+</tr>
+<tr>
+<td>Persistence proof</td>
+<td>Record survives full close-and-reopen cycle</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stretch goal (not required)</strong> — a second table or join, safely separated from the core architecture.</p>
+<p><strong>Canonical quiz cue</strong> — <code>Hour 32 | db path: data/tracker.db</code></p>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Clarify the Deliverables --&gt;</p>
+        </section>
+
+        <section class="slide" id="checkpoint-rubric-plain-language-febed664" data-slide-number="46">
+            <h1>Checkpoint Rubric — Plain Language</h1>
+            <table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Meets</strong></td>
+<td>Core CRUD works; restart persistence proved; search works; SQL is parameterized; learner can explain the architecture</td>
+</tr>
+<tr>
+<td><strong>Approaching</strong></td>
+<td>Some workflows work but restart proof, search, or ID handling is unreliable</td>
+</tr>
+<tr>
+<td><strong>Needs revision</strong></td>
+<td>App still relies on in-memory or JSON state as live storage, or crashes during core workflows</td>
+</tr>
+<tr>
+<td><strong>Exceeds</strong></td>
+<td>Stable core milestone plus a clear smoke test or demo script; any extension safely separated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Correctness · Architecture · Error handling · Persistence · Professional habits</strong></p>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Connect to the Rubric; Rubric Language for Instructor Use --&gt;</p>
+        </section>
+
+        <section class="slide" id="fast-grade-demo-workflow-615c8afe" data-slide-number="47">
+            <h1>Fast-Grade Demo Workflow</h1>
+            <p>This short sequence proves most of the milestone:</p>
+<ol>
+  <li>Launch the app — confirm <code>init_db()</code> runs without manual setup</li>
+  <li>Create a record — note the database ID</li>
+  <li>List records — confirm the new record appears</li>
+  <li>Search for the record by keyword</li>
+  <li>Close the app completely</li>
+  <li>Reopen the app</li>
+  <li>Confirm the record survived restart</li>
+  <li>Update the record by database ID</li>
+  <li>Delete the record by database ID</li>
+  <li>Search again — confirm the deleted record is gone</li>
+</ol>
+<p><strong>If you can do this reliably, you have demonstrated most of the milestone.</strong></p>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Show the Fast-Grade Workflow; Fast-Grade Mindset --&gt;</p>
+        </section>
+
+        <section class="slide" id="validation-checklist-80bd1d05" data-slide-number="48">
             <h1>Validation Checklist</h1>
             <pre data-lang="text"><code>[ ] Database file exists in the expected path
-[ ] init_db runs safely on startup
+[ ] init_db runs safely on startup (idempotent)
 [ ] Add creates a new row in SQLite
 [ ] List reads from SQLite, not stale in-memory data
 [ ] Search returns expected results
@@ -822,67 +1233,138 @@ query = &quot;&quot;&quot;
 [ ] Delete removes the intended record
 [ ] Restart proves persistence
 [ ] Common errors do not crash the app</code></pre>
-<p><strong>Quiz/homework cue</strong>: <code>Hour 32 | db path: data/tracker.db</code></p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Validation Checklist for Learners; Advanced/quizzes/Advanced_Day8_Quiz.html — Hour 32 canonical contract --&gt;</p>
+<p><strong>Work in this order</strong> — init → create/list → search → update/delete → restart → error handling</p>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Validation Checklist for Learners; Recommended Work Sequence --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Common Failure Modes to Triage</h1>
+        <section class="slide" id="smoke-test-script-verify-before-the-demo-b9006d93" data-slide-number="49">
+            <h1>Smoke Test Script — Verify Before the Demo</h1>
+            <pre data-lang="python"><code>from pathlib import Path
+
+def run_checkpoint_smoke_test() -&gt; None:
+    repo = SQLiteRecordRepository(Path(&quot;data/checkpoint_tracker.db&quot;))
+    repo.init_db()
+    service = RecordService(repo=repo)
+
+    created = service.add_record(&quot;Checkpoint persistence proof&quot;, category=&quot;demo&quot;)
+    print(f&quot;Created: {created.record_id} {created.title}&quot;)
+
+    matches = service.search_records(&quot;persistence&quot;, limit=10, offset=0)
+    print(f&quot;Search matches after create: {len(matches)}&quot;)
+
+    updated = service.mark_done(created.record_id)
+    print(f&quot;Updated: {updated.record_id} {updated.status}&quot;)
+
+    service.delete_record(created.record_id)
+    after_delete = service.search_records(&quot;persistence&quot;, limit=10, offset=0)
+    print(f&quot;Search matches after delete: {len(after_delete)}&quot;)</code></pre>
+<p>If the script fails, the GUI is probably not the first place to look.</p>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Fast-Grade Reference Script --&gt;</p>
+        </section>
+
+        <section class="slide" id="common-failure-modes-how-to-triage-a9f9f4f1" data-slide-number="50">
+            <h1>Common Failure Modes — How to Triage</h1>
             <h3>Data disappears after restart</h3>
 <ul>
-  <li>Check commit behavior</li>
-  <li>Check DB path</li>
-  <li>Check whether the UI still reads cached objects</li>
+  <li>No <code>commit()</code> after write operations</li>
+  <li>Writing to one DB path and reading from another</li>
+  <li>UI still rendering cached Python objects instead of re-querying</li>
 </ul>
-<h3>Wrong record changes</h3>
+<h3>Wrong record changes on update or delete</h3>
 <ul>
-  <li>Print the target ID</li>
-  <li>Verify the <code>WHERE</code> clause</li>
-  <li>Check stale selected state</li>
+  <li>Using list index instead of stable database ID</li>
+  <li>Wrong <code>WHERE</code> clause</li>
+  <li>Stale selected ID in the UI state</li>
 </ul>
-<h3>Search returns odd results</h3>
+<h3>Search returns strange results</h3>
 <ul>
-  <li>Test the repo method by itself first</li>
-  <li>Check wildcard placement</li>
-  <li>Check row clearing in the UI</li>
+  <li>Wildcard placement errors (<code>%</code> in SQL, not parameter)</li>
+  <li>Forgetting to normalize case</li>
+  <li>Stale UI rows not cleared before repopulating</li>
+  <li>SQL assembled incorrectly (conditions joined with wrong operator)</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Coaching Notes for Common Failure Modes --&gt;</p>
+<h3>Schema mismatch crash</h3>
+<ul>
+  <li>Code expects a column the table does not have</li>
+  <li>Model changed but <code>init_db()</code> was not updated</li>
+  <li>Old database file from earlier experiments still in use</li>
+</ul>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Coaching Notes for Common Failure Modes --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Session 8 Wrap-Up</h1>
+        <section class="slide" id="professional-habits-commit-as-you-go-76a7d139" data-slide-number="51">
+            <h1>Professional Habits — Commit as You Go</h1>
+            <p>When something significant works, commit it immediately:</p>
+<pre data-lang="text"><code>feat: wire sqlite repo into tracker service
+fix: use stable record id for update and delete
+feat: add search query to sqlite repository
+fix: reset pagination offset on new search
+chore: remove json as parallel persistence path</code></pre>
+<p><strong>Small commits make it easier to recover from mistakes.</strong></p>
+<h3>Mini-architecture checks during build time</h3>
+<ul>
+  <li>Point to the repository in your project</li>
+  <li>Explain where validation lives</li>
+  <li>Explain how restart persistence is proved</li>
+  <li>Explain why JSON is no longer the live source of truth</li>
+</ul>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Encourage Professional Habits; Mini-Conferences During Build Time --&gt;</p>
+        </section>
+
+        <section class="slide" id="showcase-and-reflection-3582c0c1" data-slide-number="52">
+            <h1>Showcase and Reflection</h1>
+            <h3>Demo format (keep each showcase under 2 minutes)</h3>
+<ol>
+  <li>Show the app running from a clean launch</li>
+  <li>Create a record</li>
+  <li>Search for it</li>
+  <li>Restart and prove persistence</li>
+  <li>Explain one design decision</li>
+</ol>
+<h3>Reflection prompts</h3>
+<ul>
+  <li>What bug cost you the most time today?</li>
+  <li>What design choice saved you time today?</li>
+  <li>What feels stable now that did not feel stable yesterday?</li>
+  <li>If a teammate joined your project tonight, what would confuse them first?</li>
+</ul>
+<blockquote>&quot;Checkpoint hours show you the difference between understanding a concept and operationalizing a concept.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Day8_Hour4_Advanced.md` → `## Section 4: Showcase and Reflection`</blockquote>
+<p>&lt;!-- Sources: Day8_Hour4_Advanced.md — Demo Format; Reflection Prompts --&gt;</p>
+        </section>
+
+        <section class="slide" id="session-8-summary-and-what-s-next-34cf2dfc" data-slide-number="53">
+            <h1>Session 8 Summary and What&#x27;s Next</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>What Success Looks Like</h1>
+        <section class="slide" id="what-success-looks-like-today-13cd6817" data-slide-number="54">
+            <h1>What Success Looks Like Today</h1>
             <ul>
-  <li>SQLite is now the real source of truth</li>
-  <li>Storage swaps did not break the service contract</li>
-  <li>Search is practical and safe</li>
-  <li>The checkpoint demo is honest and repeatable</li>
+  <li>SQLite is now the real and only source of truth</li>
+  <li>The storage swap preserved the service contract and the UI</li>
+  <li>Search is practical, safe, and parameterized</li>
+  <li>The checkpoint demo is honest, repeatable, and architecture-backed</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Scope Guardrails</h1>
-            <p><span class="check">✓</span> Stable milestone first</p>
-<p><span class="check">✓</span> Practical search and persistence</p>
-<p><span class="check">✓</span> Small optional ORM exposure only if environment allows</p>
-<p><span class="check">✓</span> Clear repo/service/UI boundaries</p>
-<p><span class="cross">✗</span> Not required: fancy joins, migrations, or advanced ORM topics</p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour1_Advanced.md — Scope Guardrails; Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Stability is the priority --&gt;</p>
+        <section class="slide" id="scope-guardrails-held-all-session-24f675da" data-slide-number="55">
+            <h1>Scope Guardrails — Held All Session</h1>
+            <p><span class="check">✓</span> Stable milestone before novelty</p>
+<p><span class="check">✓</span> Practical search and persistence over extra features</p>
+<p><span class="check">✓</span> ORM treated as optional exposure, not mandatory scope</p>
+<p><span class="check">✓</span> Clear repo / service / interface responsibility boundaries</p>
+<p><span class="cross">✗</span> No migrations, no fancy joins, no advanced ORM topics required</p>
         </section>
 
-        <section class="slide">
-            <h1>Thank You!</h1>
-            <p>Next milestone after Day 8:</p>
-<ul>
-  <li>refine architecture</li>
-  <li>expand data features carefully</li>
-  <li>keep reliability ahead of novelty</li>
+        <section class="slide" id="what-comes-next-40b14e82" data-slide-number="56">
+            <h1>What Comes Next</h1>
+            <ul>
+  <li>Session 9 — expose the service through a REST API (Flask)</li>
+  <li>The stable repository and service layer from today make that step dramatically easier</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day8_Hour4_Advanced.md — Opening Script; Reflection and exit ticket framing --&gt;</p>
+<p>&lt;!-- Sources: Day8_Hour1_Advanced.md — Scope Guardrails; Day8_Hour4_Advanced.md — Transition Forward --&gt;</p>
         </section>
     </div>
     
@@ -927,7 +1409,11 @@ query = &quot;&quot;&quot;
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1000,17 +1486,24 @@ query = &quot;&quot;&quot;
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

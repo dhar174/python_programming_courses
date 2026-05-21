@@ -6,6 +6,8 @@
 
 ---
 
+[Instructor slide change: page=15; title=Hour 6: String Methods — Normalize, Search, Replace]
+
 ## Learning Outcomes
 
 By the end of this hour, students will be able to:
@@ -178,6 +180,8 @@ result = (user_input
 
 ---
 
+[Instructor slide change: page=23; title=Demo: Email Validation Helper]
+
 ## ## Live Coding Demo
 
 ### Demo Scenario: Email Validation Helper
@@ -228,6 +232,8 @@ Total dots: 2
 - Ask: "What if we wanted to replace 'doe' with 'smith'?" (show `.replace()`)
 
 ---
+
+[Instructor slide change: page=24; title=Lab: Text Sanitizer]
 
 ## ## Guided Lab: Text Sanitizer
 
@@ -326,6 +332,8 @@ print(text_sanitizer("  CAT  cat  CAT  ", "cat"))     # ("cat cat cat", 3)
 | **1: Normalization** | Correctly uses `.strip()` and `.lower()` with assignment | 10 |
 | **2: Multiple Spaces** | Handles consecutive spaces correctly; explains the approach | 10 |
 | **3: Keyword Detection** | Returns both cleaned string and keyword count as tuple | 10 |
+
+[Instructor slide change: page=27; title=Quick Check (Hour 6)]
 
 ### Exit Ticket (See Section 8)
 - Students complete a quick 3-question exit ticket

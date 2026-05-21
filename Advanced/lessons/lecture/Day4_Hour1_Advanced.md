@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=8; title=Hour 13: HTTP Client Work + JSON Contracts]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -35,6 +37,8 @@ Important instructor positioning:
 This one-hour plan totals exactly 60 minutes: 4 + 9 + 10 + 8 + 26 + 3 = 60. The hands-on lab is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the concept discussion runs long, shorten the demo narration rather than reducing the student practice, because the lab is where learners prove they can handle success, timeout, 404, 500, and invalid JSON cases.
 
 ---
+
+[Instructor slide change: page=9; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -264,6 +268,8 @@ The benefit is not just less typing. The benefit is consistency. When you later 
 
 ---
 
+[Instructor slide change: page=14; title=Demo: Full Wrapper Function]
+
 ## Section 4: Live Demo – Public API Consumer with a Wrapper Function (8 minutes)
 
 ### Demo Setup
@@ -401,6 +407,8 @@ If students answer those questions correctly, they are moving beyond syntax into
 
 ---
 
+[Instructor slide change: page=16; title=Lab: API Consumer (26 min)]
+
 ## Section 5: Hands-On Lab – API Consumer with Failure-Branch Checks (26 minutes)
 
 ### Lab Framing
@@ -518,6 +526,8 @@ If a student is stuck, reduce the problem:
 - then add one `except` block at a time
 
 That sequencing helps anxious learners regain momentum.
+
+[Instructor slide change: page=17; title=Common Pitfalls (Hour 13)]
 
 ### Common Pitfalls to Watch For
 

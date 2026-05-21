@@ -1,5 +1,7 @@
 # Day 11, Hour 2: JSON Persistence (Instructor Script)
 
+[Instructor slide change: page=14; title=Hour 42: JSON Persistence]
+
 ## Instructor intent for this hour
 
 This hour is where learners move from “my program works while it is running” to “my program remembers things tomorrow.” Keep repeating that idea. Most beginners can build menu loops and simple CRUD logic by now, but many still think in temporary memory. This lesson makes persistence concrete, practical, and safe.
@@ -15,6 +17,8 @@ Your goals in this hour are tightly aligned to the runbook:
 Keep the tone practical and confidence-building. We are not teaching databases, advanced serialization frameworks, or architecture patterns. We are teaching a reliable Basics-level persistence workflow that learners can use immediately in their own small projects.
 
 ---
+
+[Instructor slide change: page=15; title=Learning Outcomes]
 
 ## Outcomes (state these clearly at the start)
 
@@ -223,6 +227,8 @@ Have learners repeat this flow aloud once. It helps retention.
 
 ---
 
+[Instructor slide change: page=21; title=Demo — JSON Persistence Mini App]
+
 ## Live demo (5–10 min): required runbook demo + object mapping
 
 This demo is deterministic and classroom-safe. It includes:
@@ -372,6 +378,8 @@ Expected:
 You just demonstrated both required resilience conditions in a deterministic way.
 
 ---
+
+[Instructor slide change: page=22; title=Lab — JSON Contacts App]
 
 ## Transition into lab (what to say)
 
@@ -808,6 +816,8 @@ Ask these short checks while teaching:
 Look for conceptual clarity, not memorized wording.
 
 ---
+
+[Instructor slide change: page=23; title=Common Pitfalls + Quick Check (Hour 42)]
 
 ## Exit ticket (required quick check)
 

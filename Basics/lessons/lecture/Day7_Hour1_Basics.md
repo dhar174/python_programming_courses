@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 25: Conditionals — if/elif/else and Boundaries]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on conditional logic: writing clear if/elif/else statements, handling boundary values correctly, ordering conditions properly, and choosing between nested and flat branching. Stay within Basics scope — do not introduce match/case statements (Python 3.10+), ternary operators, or advanced pattern matching. The key outcomes are writing readable boolean expressions, handling edge cases at boundaries, and debugging common condition-ordering mistakes. The lab reinforces all of this in a shipping calculator with tiered pricing rules.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -256,6 +260,8 @@ General guideline: prefer flat if/elif chains when possible. Use nesting only wh
 
 ---
 
+[Instructor slide change: page=10; title=Demo — Shipping Calculator (Correct Version)]
+
 ## 7) Live Coding Demo: Shipping Calculator (~10 minutes)
 
 ### 7.1 Announce the demo
@@ -374,6 +380,8 @@ Both approaches work. Choose the one that matches how you think about the proble
 
 ---
 
+[Instructor slide change: page=12; title=Lab — Shipping Calculator]
+
 ## 8) Guided Lab: Shipping Calculator (~25 minutes)
 
 ### 8.1 Announce the lab
@@ -434,6 +442,8 @@ This treats exactly 5 pounds as medium, and exactly 10 as heavy. Is that what th
 - "If the first condition is True, do the other conditions get checked?"
 - "How could you test whether your boundaries are correct?"
 
+[Instructor slide change: page=13; title=Common Pitfalls — Hour 25]
+
 ### 8.3 Debugging support
 
 If a student is stuck:
@@ -488,6 +498,8 @@ The fix for all of these: write the conditions carefully, test at boundaries, an
 These are not advanced concepts, but they require precision. The difference between `<` and `<=` is one character in your code, but it can mean a 10% price difference for your customer."
 
 ---
+
+[Instructor slide change: page=14; title=Quick Check — Hour 25]
 
 ## 10) Exit Ticket (~3 minutes)
 

@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 10, Hour 38
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=16; title=Hour 38: Consuming Your Own API]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -14,6 +16,8 @@
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
 | 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+
+[Instructor slide change: page=17; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -81,6 +85,8 @@ Use these prompts to keep the class active:
 - "What should happen if the input is missing, malformed, or points to a record that does not exist?"
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
+
+[Instructor slide change: page=20; title=Demo: `TrackerApiError` and `TrackerApiClient` Dataclass]
 
 ## Live Demo (17-35 minutes)
 
@@ -219,6 +225,8 @@ class TrackerApiClient:
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
+[Instructor slide change: page=23; title=Hour 38 Lab — Build the Client Module]
+
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -285,6 +293,8 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add retry only for safe GET requests and discuss the tradeoff.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
+
+[Instructor slide change: page=24; title=Common Pitfalls and Exit Ticket — Hour 38]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 9, Hour 35
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=30; title=Hour 35 — Serialization + Validation]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -14,6 +16,8 @@
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
 | 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+
+[Instructor slide change: page=31; title=Hour 35 Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -81,6 +85,8 @@ Use these prompts to keep the class active:
 - "What should happen if the input is missing, malformed, or points to a record that does not exist?"
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
+
+[Instructor slide change: page=33; title=Demo: parse_record_payload]
 
 ## Live Demo (17-35 minutes)
 
@@ -157,6 +163,8 @@ def record_to_response(record) -> dict:
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
+[Instructor slide change: page=37; title=Lab: Clean API Contracts (Hour 35)]
+
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -191,6 +199,8 @@ Clean API contracts: create api/serializers.py or a similarly named module, rout
 - Validation messages are helpful without exposing stack traces.
 - Routes become shorter because parsing and serialization are reusable.
 
+[Instructor slide change: page=38; title=Common Pitfalls — Hour 35]
+
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
@@ -222,6 +232,8 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add pytest tests for parse_record_payload without starting Flask.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
+
+[Instructor slide change: page=39; title=Quick Check — Hour 35]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

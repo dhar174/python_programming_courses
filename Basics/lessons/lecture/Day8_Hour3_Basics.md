@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=24; title=Hour 31: Loop Patterns — Searching, Filtering, Aggregating]
+
+[Instructor slide change: page=25; title=Learning Outcomes]
+
 ## 1) Learning Outcomes
 
 **By the end of this hour, students will be able to:**
@@ -294,6 +298,8 @@ print(f"Students who passed: {pass_count}")
 
 ---
 
+[Instructor slide change: page=33; title=Lab: Grade Analysis]
+
 ## 7) Lab with Full Checkpoints (~30 minutes)
 
 **Checkpoint 1: Linear Search (~ 4 minutes)**
@@ -408,6 +414,8 @@ print(f"Honor roll average (>= 85): {honor_roll_average(students, 85):.2f}")
 - Checkpoint 7: Monitor for correct combining of filter logic + aggregation
 
 ---
+
+[Instructor slide change: page=34; title=Common Pitfalls (Hour 31)]
 
 ## 8) Troubleshooting Pitfalls
 

@@ -6,6 +6,10 @@
 
 ---
 
+[Instructor slide change: page=24; title=Hour 15: If / Elif / Else Flow and Nested Conditions]
+
+[Instructor slide change: page=25; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 After this instructional hour, learners will be able to:
@@ -273,6 +277,8 @@ if age >= 18 and has_license:
 
 ---
 
+[Instructor slide change: page=30; title=Demo: Shipping Cost Calculator with Boundaries]
+
 ## 5. Live Demo: Shipping Cost Calculator with If/Elif/Else (11 minutes)
 
 **Scenario**: "We're building a shipping cost calculator. The rule is:
@@ -384,6 +390,8 @@ print(f"Final: ${final_cost}")
 Give learners 10 seconds, then reveal: `Final: $5` (because is_member is False, so no discount).
 
 ---
+
+[Instructor slide change: page=31; title=Guided Practice: Grade Assignment]
 
 ## 6. Guided Practice Walkthrough (8 minutes)
 

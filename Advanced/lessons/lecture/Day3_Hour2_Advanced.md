@@ -1,5 +1,7 @@
 # Day 3, Hour 2: Logging and Error Reporting (Practical)
 
+[Instructor slide change: page=18; title=Hour 10: Logging and Error Reporting (Practical)]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -35,6 +37,8 @@ Important instructor positioning:
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten instructor narration in the concept briefing rather than shrinking student practice. The required outcome is practical: `logs/app.log` exists, contains useful entries, and users still see friendly messages instead of raw stack traces.
 
 ---
+
+[Instructor slide change: page=19; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -346,6 +350,8 @@ logger.error("Failed to create task from demo input", exc_info=True)
 
 ---
 
+[Instructor slide change: page=22; title=Logging Config: `config.py` and `demo.py`]
+
 ## Live Demo: Add Logging to `TaskService` (10 minutes)
 
 ### Demo framing
@@ -602,6 +608,8 @@ Affirm:
 "Exactly. Useful logs are specific, readable, and placed where a developer can find them."
 
 ---
+
+[Instructor slide change: page=25; title=Lab: Add Practical Logging]
 
 ## Guided Lab: Add Practical Logging (25 minutes)
 

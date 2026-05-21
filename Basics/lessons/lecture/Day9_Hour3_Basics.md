@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=25; title=Hour 35: Functions with Collections]
+
+[Instructor slide change: page=26; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 By the end of this hour, you will be able to:
@@ -205,6 +209,8 @@ def remove_empty_strings(my_list):
 
 ---
 
+[Instructor slide change: page=31; title=Demo: Filtering a Collection]
+
 ## 5. Live Demo: Normalize Names – Two Ways (~15 minutes)
 
 **[Say:]**
@@ -347,6 +353,8 @@ Passing scores only: [87, 92, 78, 91, 88]
 The original `scores` list is untouched. This is the pattern you'll use hundreds of times in Python."
 
 ---
+
+[Instructor slide change: page=32; title=Lab: Normalize Contacts (Hour 35)]
 
 ## 7. Lab with Full Checkpoints: Normalize Contacts (~30 minutes)
 
@@ -508,6 +516,8 @@ WAS ORIGINAL MODIFIED?
 "This is the gold standard for data transformation functions. You take in messy data, you return clean data, and the original is left untouched. This pattern is used in every data science library, every web framework, and every real-world Python program."
 
 ---
+
+[Instructor slide change: page=33; title=Common Pitfalls (Hour 35)]
 
 ## 8. Troubleshooting Pitfalls: Seven Common Mistakes
 

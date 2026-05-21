@@ -386,65 +386,44 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="basics-day-6-session-6-hours-2124-804539df" data-slide-number="1">
             <h1>Basics Day 6 — Session 6 (Hours 21–24)</h1>
-            <div class="subtitle">Python Programming (Basic) • Data Structure Selection &amp; Mini-Projects</div>
+            <div class="subtitle">Python Programming (Basic) • Choosing Structures, Drills, Tracker &amp; Checkpoint</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-6-overview-f60d92f6" data-slide-number="2">
             <h1>Session 6 Overview</h1>
+            
+        </section>
+
+        <section class="slide" id="topics-covered-today-2ccb43cb" data-slide-number="3">
+            <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 21: Choosing the right structure — list vs set vs dict</li>
+  <li>Hour 21: Choosing the right structure — list, tuple, set, dict</li>
   <li>Hour 22: Data-structure drill circuit (guided practice)</li>
-  <li>Hour 23: Mini-project: In-memory tracker</li>
-  <li>Hour 24: Checkpoint 3: Data structures assessment</li>
+  <li>Hour 23: Mini-project — in-memory book tracker</li>
+  <li>Hour 24: Checkpoint 3 — data structures assessment</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-21-choosing-the-right-structure-5790adf5" data-slide-number="4">
             <h1>Hour 21: Choosing the Right Structure</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-d2d211be" data-slide-number="5">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Select list vs set vs dict based on task requirements</li>
-  <li>Refactor an approach using a better-fitting structure</li>
-  <li>Explain tradeoffs between structures in terms of readability and simplicity</li>
-  <li>Apply a decision checklist: order, duplicates, key lookup, mutability</li>
+  <li>Explain in plain language what problem each core structure solves best</li>
+  <li>Choose list vs set based on whether order and duplicates matter</li>
+  <li>Choose list vs dictionary based on whether key lookup matters</li>
+  <li>Explain when a tuple fits better than a list for a small, fixed record</li>
+  <li>Refactor a working solution to a better-fitting structure and explain one tradeoff</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>The Structure-Choice Problem</h1>
-            <h3>What We&#x27;ve Covered So Far</h3>
-<p>By the end of Session 5, you learned:</p>
-<ul>
-  <li><strong>Lists</strong> — ordered, mutable sequences</li>
-  <li><strong>Tuples</strong> — ordered, immutable sequences (fixed records)</li>
-  <li><strong>Sets</strong> — unordered collections of unique items</li>
-  <li><strong>Dictionaries</strong> — key-value mappings for fast lookup</li>
-</ul>
-<h3>Today&#x27;s Shift</h3>
-<p>From knowing <strong>what</strong> each structure is → choosing <strong>when</strong> to use each structure</p>
-<blockquote>💡 Good programmers ask: &quot;What structure makes this simpler, clearer, and safer?&quot;</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Decision Checklist</h1>
-            <h3>Five Key Questions</h3>
-<ol>
-  <li><strong>Does order matter?</strong> → List or Tuple</li>
-  <li><strong>Can duplicates happen?</strong> → If unwanted, use Set</li>
-  <li><strong>Do I need to look something up by a key?</strong> → Dictionary</li>
-  <li><strong>Is this a fixed record with a small number of parts?</strong> → Tuple</li>
-  <li><strong>Will the collection change over time?</strong> → List (mutable) or Set (mutable)</li>
-</ol>
-        </section>
-
-        <section class="slide">
-            <h1>Comparing Structures: Quick Reference</h1>
+        <section class="slide" id="the-four-core-structures-319402d0" data-slide-number="6">
+            <h1>The Four Core Structures</h1>
             <table>
 <thead>
 <tr>
@@ -457,920 +436,681 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>List</strong></td>
-<td>✅ Yes</td>
-<td>✅ Yes</td>
-<td>✅ Yes</td>
-<td>Sequences, ordered collections</td>
+<td>List</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Allowed</td>
+<td>sequences that change</td>
 </tr>
 <tr>
-<td><strong>Tuple</strong></td>
-<td>✅ Yes</td>
-<td>❌ No</td>
-<td>✅ Yes</td>
-<td>Fixed records (coordinates, dates)</td>
+<td>Tuple</td>
+<td>Yes</td>
+<td>No</td>
+<td>Allowed</td>
+<td>small fixed records</td>
 </tr>
 <tr>
-<td><strong>Set</strong></td>
-<td>❌ No</td>
-<td>✅ Yes</td>
-<td>❌ No</td>
-<td>Removing duplicates, membership tests</td>
+<td>Set</td>
+<td>No</td>
+<td>Yes</td>
+<td>Not allowed</td>
+<td>uniqueness and membership</td>
 </tr>
 <tr>
-<td><strong>Dict</strong></td>
-<td>✅ Insertion order*</td>
-<td>✅ Yes</td>
-<td>❌ No (keys)</td>
-<td>Lookup by name/ID, key-value pairs</td>
+<td>Dictionary</td>
+<td>Insertion order</td>
+<td>Yes</td>
+<td>Keys must be unique</td>
+<td>lookup by key</td>
 </tr>
 </tbody>
 </table>
-<p><em>Python 3.7+ maintains insertion order for dicts.</em></p>
+<blockquote>Source: Day6_Hour1_Basics.md §4.5 — one-minute comparison table</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Example 1: Checking for Duplicates</h1>
-            <h3>The Task</h3>
-<p>You have a list of email addresses and need to identify if any are duplicates.</p>
-<h3>Approach 1: Using a List</h3>
-<pre data-lang="python"><code>emails = [&quot;alice@example.com&quot;, &quot;bob@example.com&quot;, &quot;alice@example.com&quot;]
-
-# Check for duplicates by counting
-for email in emails:
-    if emails.count(email) &gt; 1:
-        print(f&quot;{email} is duplicated!&quot;)</code></pre>
-<p><strong>Problem:</strong> <code>count()</code> scans the entire list for each email — inefficient and harder to read.</p>
+        <section class="slide" id="decision-checklist-82d3eade" data-slide-number="7">
+            <h1>Decision Checklist</h1>
+            <h3>Five Questions Before You Choose</h3>
+<ol>
+  <li><strong>Does order matter?</strong> — Yes → List or Tuple</li>
+  <li><strong>Are duplicates allowed?</strong> — No → Set</li>
+  <li><strong>Do I need lookup by a meaningful key?</strong> — Yes → Dictionary</li>
+  <li><strong>Is this one small fixed record?</strong> — Yes → Tuple</li>
+  <li><strong>Will this collection change over time?</strong> — No → Tuple; Yes → List / Set / Dict</li>
+</ol>
+<blockquote>Source: Day6_Hour1_Basics.md §5.6 — decision checklist</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Example 1: Better Approach with Set</h1>
-            <h3>Approach 2: Using a Set</h3>
-<pre data-lang="python"><code>emails = [&quot;alice@example.com&quot;, &quot;bob@example.com&quot;, &quot;alice@example.com&quot;]
+        <section class="slide" id="demo-duplicate-detection-list-first-then-set-18f5455b" data-slide-number="8">
+            <h1>Demo: Duplicate Detection — List First, Then Set</h1>
+            <pre data-lang="python"><code>usernames = [&quot;ava&quot;, &quot;liam&quot;, &quot;ava&quot;, &quot;mia&quot;, &quot;liam&quot;, &quot;noah&quot;]
+seen = []
 
-# Convert to set to see unique items
-unique_emails = set(emails)
+for username in usernames:
+    if username in seen:
+        print(f&quot;Duplicate found: {username}&quot;)
+    else:
+        seen.append(username)
+        print(f&quot;New user: {username}&quot;)
 
-if len(emails) != len(unique_emails):
-    print(&quot;Duplicates found!&quot;)
-    print(f&quot;Original: {len(emails)}, Unique: {len(unique_emails)}&quot;)</code></pre>
-<p><strong>Better because:</strong></p>
+print(f&quot;Seen users: {seen}&quot;)</code></pre>
+<h3>Why consider a refactor?</h3>
 <ul>
-  <li>Clearer intent: &quot;I care about uniqueness&quot;</li>
-  <li>Simpler logic</li>
-  <li>More efficient for large lists</li>
+  <li>Are we using the order in <code>seen</code> for anything? No.</li>
+  <li>Do we want duplicates in <code>seen</code>? No.</li>
+  <li>Are we mainly using <code>in</code> for membership? Yes.</li>
 </ul>
+<blockquote>Source: Day6_Hour1_Basics.md §7.2–§7.4</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Example 2: Looking Up Phone Numbers</h1>
-            <h3>The Task</h3>
-<p>Store contacts and look up phone numbers by name.</p>
-<h3>Approach 1: Using a List of Tuples</h3>
-<pre data-lang="python"><code>contacts = [
-    (&quot;Alice&quot;, &quot;555-1234&quot;),
-    (&quot;Bob&quot;, &quot;555-5678&quot;),
-    (&quot;Charlie&quot;, &quot;555-9012&quot;)
+        <section class="slide" id="refactored-set-expresses-the-intent-d533e23e" data-slide-number="9">
+            <h1>Refactored: Set Expresses the Intent</h1>
+            <pre data-lang="python"><code>usernames = [&quot;ava&quot;, &quot;liam&quot;, &quot;ava&quot;, &quot;mia&quot;, &quot;liam&quot;, &quot;noah&quot;]
+seen: set[str] = set()
+
+for username in usernames:
+    if username in seen:
+        print(f&quot;Duplicate found: {username}&quot;)
+    else:
+        seen.add(username)
+        print(f&quot;New user: {username}&quot;)
+
+print(f&quot;Seen users: {seen}&quot;)</code></pre>
+<p><strong>Same behavior — better structure choice.</strong> The set now expresses the rule of uniqueness directly.</p>
+<blockquote>Source: Day6_Hour1_Basics.md §7.4</blockquote>
+        </section>
+
+        <section class="slide" id="demo-phone-lookup-list-first-then-dictionary-1756dfac" data-slide-number="10">
+            <h1>Demo: Phone Lookup — List First, Then Dictionary</h1>
+            <pre data-lang="python"><code>contacts: list[tuple[str, str]] = [
+    (&quot;Ava&quot;, &quot;555-0111&quot;),
+    (&quot;Liam&quot;, &quot;555-0222&quot;),
+    (&quot;Mia&quot;, &quot;555-0333&quot;),
 ]
 
-# Lookup by name
-name = &quot;Bob&quot;
-for contact_name, phone in contacts:
-    if contact_name == name:
-        print(f&quot;{name}: {phone}&quot;)
-        break</code></pre>
-<p><strong>Problem:</strong> Have to loop through every contact until found.</p>
+search_name: str = input(&quot;Enter a contact name: &quot;)
+found_phone = None
+
+for name, phone in contacts:
+    if name == search_name:
+        found_phone = phone
+        break
+
+if found_phone is None:
+    print(&quot;Contact not found&quot;)
+else:
+    print(f&quot;{search_name}: {found_phone}&quot;)</code></pre>
+<p><strong>Problem:</strong> The task is lookup by name — but we loop every time.</p>
+<blockquote>Source: Day6_Hour1_Basics.md §8.1</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Example 2: Better Approach with Dictionary</h1>
-            <h3>Approach 2: Using a Dictionary</h3>
-<pre data-lang="python"><code>contacts = {
-    &quot;Alice&quot;: &quot;555-1234&quot;,
-    &quot;Bob&quot;: &quot;555-5678&quot;,
-    &quot;Charlie&quot;: &quot;555-9012&quot;
+        <section class="slide" id="refactored-dictionary-makes-lookup-direct-1cdff909" data-slide-number="11">
+            <h1>Refactored: Dictionary Makes Lookup Direct</h1>
+            <pre data-lang="python"><code>contacts: dict[str, str] = {
+    &quot;Ava&quot;: &quot;555-0111&quot;,
+    &quot;Liam&quot;: &quot;555-0222&quot;,
+    &quot;Mia&quot;: &quot;555-0333&quot;,
 }
 
-# Direct lookup by name
-name = &quot;Bob&quot;
-if name in contacts:
-    print(f&quot;{name}: {contacts[name]}&quot;)
-else:
-    print(f&quot;{name} not found&quot;)</code></pre>
-<p><strong>Better because:</strong></p>
-<ul>
-  <li>Direct lookup by key (no loop needed)</li>
-  <li>Clear mapping: name → phone</li>
-  <li>Easier to extend (add/remove/update)</li>
-</ul>
+search_name: str = input(&quot;Enter a contact name: &quot;)
+phone: str = contacts.get(search_name, &quot;Contact not found&quot;)
+print(f&quot;Result: {phone}&quot;)</code></pre>
+<p><strong>One line, clear meaning, safe missing-key handling with <code>get()</code>.</strong></p>
+<blockquote>Source: Day6_Hour1_Basics.md §8.3–§8.4</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Tradeoffs to Consider</h1>
-            <h3>Simplicity vs Power</h3>
-<ul>
-  <li><strong>Don&#x27;t overengineer:</strong> If a simple list works and is readable, use it</li>
-  <li><strong>Don&#x27;t underengineer:</strong> If you&#x27;re looping repeatedly to find items, consider a dict</li>
-</ul>
-<h3>Readability</h3>
-<ul>
-  <li>Choose the structure that makes your intent clearest to other programmers</li>
-  <li>A dict says &quot;I&#x27;m mapping keys to values&quot;</li>
-  <li>A set says &quot;I care about uniqueness&quot;</li>
-</ul>
-<h3>Performance (Basic-level awareness)</h3>
-<ul>
-  <li>Lists: Good for small collections and sequential access</li>
-  <li>Sets: Fast membership testing (<code>item in set</code>)</li>
-  <li>Dicts: Fast lookup by key</li>
-</ul>
-<blockquote>⚠️ **Basics Scope:** We&#x27;re not doing performance benchmarking or Big O analysis — just building intuition.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Membership Lookup — List vs Set</h1>
-            <h3>Scenario</h3>
-<p>Check if a visitor is on a VIP list.</p>
-<pre data-lang="python"><code># Using a list
-vip_list = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Diana&quot;, &quot;Eve&quot;]
-
-if &quot;Charlie&quot; in vip_list:
-    print(&quot;VIP found in list!&quot;)
-
-# Using a set
-vip_set = {&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Diana&quot;, &quot;Eve&quot;}
-
-if &quot;Charlie&quot; in vip_set:
-    print(&quot;VIP found in set!&quot;)</code></pre>
-<h3>Key Insight</h3>
-<p>Both work! For small collections, either is fine. For hundreds or thousands of items, sets are faster for membership tests — but that&#x27;s not the point today. The point is <strong>clarity of intent.</strong></p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="lab-refactor-challenge-bd20b244" data-slide-number="12">
             <h1>Lab: Refactor Challenge</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Given a small problem, first solve it using a list, then refactor to use a better structure (set or dict) and explain why the refactor improves the solution.</p>
-<p><strong>Problem:</strong> Check for duplicate names in a list of students.</p>
-<pre data-lang="python"><code>students = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Alice&quot;, &quot;Diana&quot;, &quot;Bob&quot;]
-
-# Step 1: Solve using a list (hint: use .count() or nested loops)
-
-# Step 2: Refactor using a set
-
-# Step 3: Write a comment explaining at least one tradeoff</code></pre>
+            <p><strong>Time: 13 minutes</strong></p>
+<h3>Part A — Duplicate Checker</h3>
+<pre data-lang="python"><code>raw_names = [&quot;Ana&quot;, &quot;Ben&quot;, &quot;Ana&quot;, &quot;Chris&quot;, &quot;Ben&quot;, &quot;Dana&quot;]</code></pre>
+<ol>
+  <li>Build a list-based version using <code>seen_names</code> to report duplicates</li>
+  <li>Refactor to use a set instead</li>
+  <li>Print the final unique names</li>
+  <li>Add a comment explaining why the set version is a better fit</li>
+</ol>
+<h3>Part B — Score Lookup</h3>
+<pre data-lang="python"><code>score_pairs = [(&quot;Ava&quot;, 91), (&quot;Liam&quot;, 88), (&quot;Mia&quot;, 95)]</code></pre>
+<ol>
+  <li>Search the list of tuples for one student name</li>
+  <li>Refactor to use a dictionary; use safe access</li>
+  <li>Add a comment explaining the tradeoff</li>
+</ol>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Both parts run without crashing</p>
+<p><span class="check">✓</span> Dictionary version handles a missing name safely</p>
+<p><span class="check">✓</span> Explanation mentions at least one tradeoff: order, duplicates, or key lookup</p>
+<blockquote>Source: Day6_Hour1_Basics.md §9.2–§9.3</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Completion Criteria</h1>
-            <h3>You Must:</h3>
-<p><span class="check">✓</span> Produce a working list-based solution</p>
-<p><span class="check">✓</span> Produce a working set-based refactor</p>
-<p><span class="check">✓</span> Write an explanation that includes at least one tradeoff (e.g., readability, simplicity, efficiency)</p>
-<h3>Example Explanation</h3>
-<blockquote>&quot;The list approach uses `.count()` which works but scans the list repeatedly. The set approach converts the list to a set and compares lengths. This is clearer because it directly expresses the concept of &#x27;uniqueness.&#x27; The tradeoff is that we lose the order information, but for this task, order doesn&#x27;t matter.&quot;</blockquote>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-21-4ba80381" data-slide-number="13">
             <h1>Common Pitfalls — Hour 21</h1>
-            <h3>Pitfall 1: Overengineering</h3>
-<pre data-lang="python"><code># Overkill: using a dict when a list is simplest
-items = {&quot;item1&quot;: &quot;milk&quot;, &quot;item2&quot;: &quot;bread&quot;, &quot;item3&quot;: &quot;eggs&quot;}
-
-# Better: just use a list if you don&#x27;t need key-based lookup
-items = [&quot;milk&quot;, &quot;bread&quot;, &quot;eggs&quot;]</code></pre>
-<h3>Pitfall 2: Choosing the wrong structure for lookup</h3>
-<pre data-lang="python"><code># Inefficient: looping through a list to find an item repeatedly
-# Better: use a dict if you need frequent lookups by key</code></pre>
+            <p><strong>⚠️</strong> Empty set written as <code>{}</code> accidentally creates a dictionary — use <code>set()</code> instead</p>
+<p><strong>⚠️</strong> Using <code>append()</code> on a set — sets use <code>add()</code></p>
+<p><strong>⚠️</strong> Refactoring the structure but forgetting to change the method calls</p>
+<p><strong>⚠️</strong> Assuming the set will print in the same order as the original list</p>
+<p><strong>⚠️</strong> Explaining only that one version is &quot;better&quot; without saying <em>why</em></p>
+<blockquote>Source: Day6_Hour1_Basics.md §9.5</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions — Hour 21</h1>
-            <h3>Add a Feature</h3>
-<ul>
-  <li>Add a search or filter feature to your refactored solution</li>
-  <li>Example: Find all students whose names start with a certain letter</li>
-</ul>
-<h3>Stay in Basics Scope</h3>
-<p><span class="check">✓</span> Use basic loops and conditionals</p>
-<p><span class="cross">✗</span> Don&#x27;t use list comprehensions (Advanced topic)</p>
-<p><span class="cross">✗</span> Don&#x27;t use lambda functions or advanced filtering</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-21-434af55c" data-slide-number="14">
             <h1>Quick Check — Hour 21</h1>
-            <p><strong>Exit Ticket Question:</strong> If you need fast lookup by name, which structure fits best?</p>
-<p><strong>Model Answer:</strong> &quot;A dictionary is the best fit because it allows direct lookup by key (the name) without needing to loop through all items. This makes the code clearer and more efficient.&quot;</p>
-<p><strong>Recap:</strong></p>
-<ul>
-  <li>Use lists for ordered sequences</li>
-  <li>Use sets for removing duplicates or membership testing</li>
-  <li>Use dicts for key-value lookups</li>
-  <li>Choose the structure that makes your intent clearest</li>
-</ul>
+            <p><strong>Question:</strong> If I need to check whether a name has already been seen, and order doesn&#x27;t matter, which structure is the better fit — a list or a set?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-22-data-structure-drill-circuit-6959d3bb" data-slide-number="15">
             <h1>Hour 22: Data-Structure Drill Circuit</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-9c192fbf" data-slide-number="16">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Practice with lists, tuples, sets, and dicts in short timed tasks</li>
-  <li>Apply the right structure to solve focused problems</li>
-  <li>Complete coding tasks under time constraints</li>
-  <li>Explain solutions verbally to reinforce understanding</li>
+  <li>Complete short practice tasks using lists, tuples, sets, and dicts with increasing confidence</li>
+  <li>Recognize the core pattern behind each structure quickly</li>
+  <li>Test small pieces of code with sample values before deciding a task is finished</li>
+  <li>Explain verbally why a given structure fits a specific short problem</li>
+  <li>Share one working solution and describe one mistake you corrected</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>The Circuit Format</h1>
-            <h3>What Is a Drill Circuit?</h3>
-<p>A rotation through 4 coding stations — 12 minutes per station:</p>
+        <section class="slide" id="circuit-format-4706ade0" data-slide-number="17">
+            <h1>Circuit Format</h1>
+            <h3>Four Stations — Work Through Them in Order</h3>
 <ol>
-  <li><strong>Station 1:</strong> Filter numbers &gt; 10 (list)</li>
-  <li><strong>Station 2:</strong> Unique emails (set)</li>
-  <li><strong>Station 3:</strong> Word frequency (dict)</li>
-  <li><strong>Station 4:</strong> Coordinates unpacking (tuple)</li>
+  <li><strong>Station 1:</strong> Filter numbers &gt; 10 — list pattern</li>
+  <li><strong>Station 2:</strong> Unique emails — set pattern</li>
+  <li><strong>Station 3:</strong> Word frequency — dictionary pattern</li>
+  <li><strong>Station 4:</strong> Coordinates unpacking — tuple pattern</li>
 </ol>
-<h3>Goal</h3>
-<p>Finish at least 3 of 4 stations with working code. At the end, share one solution verbally with the class.</p>
+<h3>Success Target</h3>
+<p>Complete at least <strong>three of four</strong> stations. At each station: code runs, output matches the prompt, and you can explain why the structure fits.</p>
+<blockquote>Source: Day6_Hour2_Basics.md §4.1–§4.2</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Circuit Goals and Mindset</h1>
-            <h3>Finish Before Optimizing</h3>
-<ul>
-  <li>Get a working solution first</li>
-  <li>Then improve if time allows</li>
-  <li>Don&#x27;t get stuck perfecting Station 1 — move on!</li>
-</ul>
-<h3>Test with Small Examples</h3>
-<ul>
-  <li>Run your code with 2-3 test inputs</li>
-  <li>Make sure it produces the expected output</li>
-  <li>Fix bugs before moving to the next station</li>
-</ul>
-<h3>No Collaboration During Stations</h3>
-<p>Work independently during the 12-minute rotations. Share and discuss during the 5-minute debrief at the end.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Station 1 Example (Quick Walkthrough)</h1>
-            <h3>Task: Filter Numbers &gt; 10</h3>
-<p>Given a list of numbers, create a new list containing only numbers greater than 10.</p>
-<pre data-lang="python"><code>numbers = [5, 12, 3, 18, 7, 21, 9, 15]
-
-# Create a new list with only numbers &gt; 10
-filtered = []
-for num in numbers:
-    if num &gt; 10:
-        filtered.append(num)
-
-print(filtered)   # [12, 18, 21, 15]</code></pre>
-<h3>Expected Output</h3>
-<p><code>[12, 18, 21, 15]</code></p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="station-1-filter-numbers-10-list-8bcbf097" data-slide-number="18">
             <h1>Station 1: Filter Numbers &gt; 10 (List)</h1>
-            <h3>Task (12 minutes)</h3>
-<p>Given this list of numbers, create a new list containing only numbers greater than 10.</p>
-<pre data-lang="python"><code>numbers = [5, 12, 3, 18, 7, 21, 9, 15, 2, 25, 8, 30]
+            <pre data-lang="python"><code>numbers = [4, 11, 9, 15, 22, 3, 10, 18]
+filtered: list[int] = []
 
-# Your code here:
-# 1. Create an empty list
-# 2. Loop through numbers
-# 3. If number &gt; 10, add it to the new list
-# 4. Print the result</code></pre>
-<p><strong>Expected Output:</strong> <code>[12, 18, 21, 15, 25, 30]</code></p>
-        </section>
+for number in numbers:
+    if number &gt; 10:
+        filtered.append(number)
 
-        <section class="slide">
-            <h1>Station 2: Unique Emails (Set)</h1>
-            <h3>Task (12 minutes)</h3>
-<p>Given a list of email addresses (with duplicates), print only the unique emails.</p>
-<pre data-lang="python"><code>emails = [
-    &quot;alice@example.com&quot;,
-    &quot;bob@example.com&quot;,
-    &quot;alice@example.com&quot;,
-    &quot;charlie@example.com&quot;,
-    &quot;bob@example.com&quot;,
-    &quot;diana@example.com&quot;
-]
-
-# Your code here:
-# 1. Convert the list to a set
-# 2. Print the unique emails (order doesn&#x27;t matter)</code></pre>
-<p><strong>Expected Output:</strong> A set or list with 4 unique emails (order may vary).</p>
-        </section>
-
-        <section class="slide">
-            <h1>Station 3: Word Frequency (Dict)</h1>
-            <h3>Task (12 minutes)</h3>
-<p>Given a list of words, count how many times each word appears.</p>
-<pre data-lang="python"><code>words = [&quot;apple&quot;, &quot;banana&quot;, &quot;apple&quot;, &quot;orange&quot;, &quot;banana&quot;, &quot;apple&quot;]
-
-# Your code here:
-# 1. Create an empty dictionary
-# 2. Loop through words
-# 3. If word is in dict, increment count; otherwise, set count to 1
-# 4. Print the dictionary</code></pre>
-<p><strong>Expected Output:</strong> <code>{&#x27;apple&#x27;: 3, &#x27;banana&#x27;: 2, &#x27;orange&#x27;: 1}</code></p>
-        </section>
-
-        <section class="slide">
-            <h1>Station 4: Coordinates Unpacking (Tuple)</h1>
-            <h3>Task (12 minutes)</h3>
-<p>Given a list of (x, y) coordinate tuples, print each coordinate and calculate the total distance from the origin (0, 0).</p>
-<pre data-lang="python"><code>coordinates = [(2, 3), (5, 1), (3, 4), (1, 2)]
-
-# Your code here:
-# 1. Loop through coordinates
-# 2. Unpack each tuple into x and y
-# 3. Print x and y
-# 4. Calculate distance: sqrt(x*x + y*y) — use math.sqrt
-# 5. Sum all distances and print total
-
-import math</code></pre>
-<p><strong>Expected Output:</strong> Print each coordinate and a total distance sum.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Circuit Debrief (5 minutes after stations)</h1>
-            <h3>Share-Out Questions</h3>
+print(filtered)</code></pre>
+<h3>Tasks</h3>
 <ol>
-  <li>Which station was easiest? Which was hardest?</li>
-  <li>Which data structure felt most natural for its task?</li>
-  <li>Did anyone find a different approach? Share it!</li>
+  <li>Create a new list containing only numbers greater than 10</li>
+  <li>Print the filtered list</li>
+  <li>Print how many numbers made it into the filtered list (<code>len()</code>)</li>
 </ol>
-<h3>One Solution Verbally</h3>
-<p>Each learner (or a few volunteers) explains one station solution to the class in 1-2 minutes.</p>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Second list contains only values above 10</p>
+<p><span class="check">✓</span> Output shows filtered values and count</p>
+<blockquote>Source: Day6_Hour2_Basics.md §6.1–§6.4</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Completion Criteria — Hour 22</h1>
-            <h3>You Must:</h3>
-<p><span class="check">✓</span> Complete at least 3 of 4 stations with working code</p>
-<p><span class="check">✓</span> Produce correct output for the stations you completed</p>
-<p><span class="check">✓</span> Explain one solution verbally during the debrief</p>
-<h3>Success Markers</h3>
-<ul>
-  <li>Code runs without errors</li>
-  <li>Output matches expected format</li>
-  <li>Can articulate why you chose that structure</li>
-</ul>
+        <section class="slide" id="station-2-unique-emails-set-c2990d3f" data-slide-number="19">
+            <h1>Station 2: Unique Emails (Set)</h1>
+            <pre data-lang="python"><code>emails = [
+    &quot;ana@example.com&quot;,
+    &quot;ben@example.com&quot;,
+    &quot;ana@example.com&quot;,
+    &quot;chris@example.com&quot;,
+    &quot;ben@example.com&quot;,
+    &quot;dana@example.com&quot;,
+]</code></pre>
+<h3>Tasks</h3>
+<ol>
+  <li>Convert the list into a set of unique email addresses</li>
+  <li>Print the unique emails</li>
+  <li>Print the original count and the unique count</li>
+  <li>Add a short comment explaining why a set fits this task</li>
+</ol>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Set created from the list successfully</p>
+<p><span class="check">✓</span> Program prints the unique collection and both counts</p>
+<p><span class="check">✓</span> Comment explains that the set removes duplicates automatically</p>
+<blockquote>Source: Day6_Hour2_Basics.md §7.1–§7.4</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="station-3-word-frequency-dictionary-a4230758" data-slide-number="20">
+            <h1>Station 3: Word Frequency (Dictionary)</h1>
+            <pre data-lang="python"><code>words = [&quot;red&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;red&quot;]
+counts: dict[str, int] = {}
+
+for word in words:
+    counts[word] = counts.get(word, 0) + 1
+
+print(counts)
+for word, count in counts.items():
+    print(f&quot;{word}: {count}&quot;)</code></pre>
+<h3>Tasks</h3>
+<ol>
+  <li>Build a dictionary counting how many times each word appears</li>
+  <li>Print the dictionary</li>
+  <li>Print each word and count on its own line</li>
+  <li>Add a comment explaining why a dictionary fits better than a list</li>
+</ol>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Correct frequency dictionary built</p>
+<p><span class="check">✓</span> Loop through <code>items()</code> to print each word with its count</p>
+<blockquote>Source: Day6_Hour2_Basics.md §8.1–§8.4</blockquote>
+        </section>
+
+        <section class="slide" id="station-4-coordinates-unpacking-tuple-7b7fb2c8" data-slide-number="21">
+            <h1>Station 4: Coordinates Unpacking (Tuple)</h1>
+            <pre data-lang="python"><code>points = [(2, 3), (5, 8), (1, 4), (7, 2)]
+largest_x = None
+
+for x, y in points:
+    print(f&quot;Point at x={x}, y={y}&quot;)
+    if largest_x is None or x &gt; largest_x:
+        largest_x = x
+
+print(f&quot;Largest x value: {largest_x}&quot;)</code></pre>
+<h3>Tasks</h3>
+<ol>
+  <li>Loop through the points</li>
+  <li>Unpack each tuple into <code>x</code> and <code>y</code></li>
+  <li>Print each point in a sentence</li>
+  <li>Track and print the largest <code>x</code> value</li>
+</ol>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Each tuple unpacked into <code>x</code> and <code>y</code></p>
+<p><span class="check">✓</span> Sentence printed for each point</p>
+<p><span class="check">✓</span> Largest <code>x</code> value reported correctly</p>
+<blockquote>Source: Day6_Hour2_Basics.md §9.1–§9.4</blockquote>
+        </section>
+
+        <section class="slide" id="lab-drill-circuit-512acfac" data-slide-number="22">
+            <h1>Lab: Drill Circuit</h1>
+            <p><strong>Time: ~36 minutes (8–9 minutes per station)</strong></p>
+<h3>Your Goal</h3>
+<p>Work through all four stations in order. Use this rhythm at every station:</p>
+<ol>
+  <li>Read the prompt — choose the right structure</li>
+  <li>Build the smallest working version you can</li>
+  <li>Test with tiny data</li>
+  <li>Improve output if time remains</li>
+</ol>
+<h3>If You Finish Early</h3>
+<p>Print numbers one per line with a label; add a sorted station-2 result with <code>sorted()</code>; ask the user for a color in station 3 and print its count using <code>get()</code></p>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> At least three stations completed with working, tested code</p>
+<p><span class="check">✓</span> Can explain verbally why each structure was chosen</p>
+<blockquote>Source: Day6_Hour2_Basics.md §4.1–§4.3, §6–§9</blockquote>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-22-0cad078b" data-slide-number="23">
             <h1>Common Pitfalls — Hour 22</h1>
-            <h3>Pitfall 1: Rushing and Creating Syntax Errors</h3>
-<pre data-lang="python"><code># Example: Forgetting colons or indentation
-for num in numbers
-    if num &gt; 10   # Missing colon</code></pre>
-<p><strong>Fix:</strong> Slow down, test often, read error messages carefully.</p>
-<h3>Pitfall 2: Not Testing with Small Examples</h3>
-<p>Don&#x27;t wait until the end to run your code — test after each step!</p>
+            <p><strong>⚠️</strong> Station 1 — appending to the original list instead of the result list</p>
+<p><strong>⚠️</strong> Station 2 — creating <code>{}</code> and making an empty dictionary instead of a set</p>
+<p><strong>⚠️</strong> Station 2 — expecting the set to preserve the original order</p>
+<p><strong>⚠️</strong> Station 3 — using <code>counts[word] += 1</code> before the key exists (KeyError)</p>
+<p><strong>⚠️</strong> Station 3 — forgetting <code>.items()</code> when printing both word and count</p>
+<p><strong>⚠️</strong> Station 4 — writing <code>for point in points:</code> and forgetting to unpack</p>
+<blockquote>Source: Day6_Hour2_Basics.md §6.6, §7.6, §8.6, §9.6</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions — Hour 22</h1>
-            <h3>Add an Extra Station (if time allows)</h3>
-<p><strong>Station 5:</strong> Nested list table formatting</p>
-<p>Given a list of lists representing rows, print each row as a formatted table.</p>
-<pre data-lang="python"><code>table = [
-    [&quot;Name&quot;, &quot;Age&quot;, &quot;City&quot;],
-    [&quot;Alice&quot;, &quot;25&quot;, &quot;NYC&quot;],
-    [&quot;Bob&quot;, &quot;30&quot;, &quot;LA&quot;]
-]
-
-# Format and print as a table</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Use loops and string formatting — no pandas or external libraries.</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-22-7b623638" data-slide-number="24">
             <h1>Quick Check — Hour 22</h1>
-            <p><strong>Exit Ticket Question:</strong> Name one thing you&#x27;ll use dicts for in real work.</p>
-<p><strong>Example Answers:</strong></p>
-<ul>
-  <li>&quot;Mapping user IDs to user profiles&quot;</li>
-  <li>&quot;Counting occurrences of items (like word frequency)&quot;</li>
-  <li>&quot;Storing configuration settings as key-value pairs&quot;</li>
-</ul>
-<p><strong>Recap:</strong></p>
-<ul>
-  <li>Practiced lists, tuples, sets, and dicts in focused tasks</li>
-  <li>Completed at least 3 of 4 stations</li>
-  <li>Explained solutions verbally to solidify understanding</li>
-</ul>
+            <p><strong>Question:</strong> What does this line do, and why is it better than <code>counts[word] += 1</code>?</p>
+<pre data-lang="python"><code>counts[word] = counts.get(word, 0) + 1</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-23-mini-project-in-memory-tracker-5165c79e" data-slide-number="25">
             <h1>Hour 23: Mini-Project — In-Memory Tracker</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-a6e18d91" data-slide-number="26">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Combine data structures into a coherent mini application</li>
-  <li>Practice clean output and user-friendly updates</li>
-  <li>Choose between list of dicts or dict of dicts for storage</li>
-  <li>Build a menu-driven program with add, list, and search features</li>
+  <li>Explain why a list of dictionaries fits a small in-memory tracker with multiple records</li>
+  <li>Build a tracker that stores records, adds a new record, lists all records, and searches</li>
+  <li>Read and write record fields using clear dictionary keys</li>
+  <li>Loop through a list of records and format output cleanly with f-strings</li>
+  <li>Describe one reason for choosing this storage model</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Mini-Project Overview</h1>
-            <h3>What We&#x27;re Building</h3>
-<p>A small in-memory tracker application with:</p>
-<ul>
-  <li><strong>Add:</strong> Add a new record</li>
-  <li><strong>List:</strong> Display all records</li>
-  <li><strong>Search:</strong> Find a record by a key (name, title, etc.)</li>
-</ul>
-<h3>Storage Model Options</h3>
-<ul>
-  <li><strong>List of dicts:</strong> <code>[{&quot;name&quot;: &quot;Alice&quot;, &quot;phone&quot;: &quot;555-1234&quot;}, {...}]</code></li>
-  <li><strong>Dict of dicts:</strong> <code>{&quot;Alice&quot;: {&quot;phone&quot;: &quot;555-1234&quot;, &quot;email&quot;: &quot;...&quot;}, ...}</code></li>
-</ul>
-<h3>No File I/O Yet</h3>
-<p>All data is stored in memory (variables) — it disappears when the program ends. We&#x27;ll add persistence in a later session.</p>
+        <section class="slide" id="choosing-the-storage-model-74146097" data-slide-number="27">
+            <h1>Choosing the Storage Model</h1>
+            <h3>Option 1: Plain list of strings</h3>
+<pre data-lang="python"><code>books = [&quot;Dune&quot;, &quot;1984&quot;, &quot;The Hobbit&quot;]</code></pre>
+<p>Simple, but stores only one piece of information per book.</p>
+<h3>Option 2: Dictionary from title to author</h3>
+<pre data-lang="python"><code>books = {&quot;Dune&quot;: &quot;Frank Herbert&quot;, &quot;1984&quot;: &quot;George Orwell&quot;}</code></pre>
+<p>Better for lookup by title, but where does genre go?</p>
+<h3>Option 3: List of dictionaries ✅</h3>
+<pre data-lang="python"><code>books = [
+    {&quot;title&quot;: &quot;Dune&quot;, &quot;author&quot;: &quot;Frank Herbert&quot;, &quot;genre&quot;: &quot;Science Fiction&quot;},
+    {&quot;title&quot;: &quot;1984&quot;, &quot;author&quot;: &quot;George Orwell&quot;, &quot;genre&quot;: &quot;Dystopian&quot;},
+]</code></pre>
+<p>Each book is one record with named fields; the outer list holds many records in order.</p>
+<blockquote>Source: Day6_Hour3_Basics.md §4.1–§4.3</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Project Choices</h1>
-            <h3>Pick One (or propose your own):</h3>
-<p><strong>A) Expense Tracker</strong></p>
-<ul>
-  <li>Add expenses: <code>{date, amount, category}</code></li>
-  <li>List all expenses</li>
-  <li>Search by category</li>
-</ul>
-<p><strong>B) Contact List</strong></p>
-<ul>
-  <li>Add contacts: <code>{name, phone, email}</code></li>
-  <li>List all contacts</li>
-  <li>Search by name</li>
-</ul>
-<p><strong>C) Book Library</strong></p>
-<ul>
-  <li>Add books: <code>{title, author, year}</code></li>
-  <li>List all books</li>
-  <li>Search by title or author</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Requirements: Minimum Features</h1>
-            <h3>Must Include:</h3>
+        <section class="slide" id="starter-data-and-program-shape-67bef655" data-slide-number="28">
+            <h1>Starter Data and Program Shape</h1>
+            <pre data-lang="python"><code>books: list[dict[str, str]] = [
+    {&quot;title&quot;: &quot;Dune&quot;, &quot;author&quot;: &quot;Frank Herbert&quot;, &quot;genre&quot;: &quot;Science Fiction&quot;},
+    {&quot;title&quot;: &quot;1984&quot;, &quot;author&quot;: &quot;George Orwell&quot;, &quot;genre&quot;: &quot;Dystopian&quot;},
+    {&quot;title&quot;: &quot;The Hobbit&quot;, &quot;author&quot;: &quot;J.R.R. Tolkien&quot;, &quot;genre&quot;: &quot;Fantasy&quot;},
+]</code></pre>
+<h3>Three Required Features</h3>
 <ol>
-  <li><strong>Add</strong> — add a new record to the collection</li>
-  <li><strong>List</strong> — display all records in a readable format</li>
-  <li><strong>Search</strong> — find and display a specific record</li>
+  <li><strong>Add</strong> a book</li>
+  <li><strong>List</strong> all books</li>
+  <li><strong>Search</strong> for a book by title</li>
 </ol>
-<h3>Must Use:</h3>
-<ul>
-  <li>At least one <strong>dictionary</strong> to store key-value pairs</li>
-  <li>At least one <strong>list</strong> to hold multiple records (if using list of dicts)</li>
-</ul>
-<h3>Optional (but recommended):</h3>
-<ul>
-  <li>A menu loop that lets the user choose actions</li>
-  <li>Input validation (e.g., don&#x27;t add empty names)</li>
-</ul>
+<p><strong>Design rule:</strong> outer structure = list (holds many records); inner structure = dictionary (holds one record&#x27;s named fields)</p>
+<blockquote>Source: Day6_Hour3_Basics.md §5.1–§5.2</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Scaffolding a Menu and Add Feature</h1>
-            <h3>Step 1: Menu Structure</h3>
-<pre data-lang="python"><code>def main():
-    contacts = []  # Storage: list of dicts
+        <section class="slide" id="add-feature-aba21bef" data-slide-number="29">
+            <h1>Add Feature</h1>
+            <pre data-lang="python"><code>new_title: str = input(&quot;Enter a book title: &quot;)
+new_author: str = input(&quot;Enter the author: &quot;)
+new_genre: str = input(&quot;Enter the genre: &quot;)
 
-    while True:
-        print(&quot;\n--- Contact Tracker ---&quot;)
-        print(&quot;1. Add Contact&quot;)
-        print(&quot;2. List Contacts&quot;)
-        print(&quot;3. Search Contact&quot;)
-        print(&quot;4. Quit&quot;)
+new_book: dict[str, str] = {
+    &quot;title&quot;: new_title,
+    &quot;author&quot;: new_author,
+    &quot;genre&quot;: new_genre,
+}
 
-        choice = input(&quot;Choose an option: &quot;)
-
-        if choice == &quot;1&quot;:
-            add_contact(contacts)
-        elif choice == &quot;2&quot;:
-            list_contacts(contacts)
-        elif choice == &quot;3&quot;:
-            search_contact(contacts)
-        elif choice == &quot;4&quot;:
-            print(&quot;Goodbye!&quot;)
-            break
-        else:
-            print(&quot;Invalid choice. Try again.&quot;)</code></pre>
+books.append(new_book)
+print(&quot;Book added.&quot;)</code></pre>
+<p><strong>Structure:</strong> ask for values → build one dictionary → append to the outer list</p>
+<blockquote>Source: Day6_Hour3_Basics.md §6.2–§6.3</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Add Feature</h1>
-            <h3>Step 2: Add Function</h3>
-<pre data-lang="python"><code>def add_contact(contacts):
-    name = input(&quot;Enter name: &quot;)
-    phone = input(&quot;Enter phone: &quot;)
-    email = input(&quot;Enter email: &quot;)
-
-    contact = {&quot;name&quot;: name, &quot;phone&quot;: phone, &quot;email&quot;: email}
-    contacts.append(contact)
-
-    print(f&quot;Added contact: {name}&quot;)</code></pre>
-<h3>Key Points</h3>
+        <section class="slide" id="list-feature-user-friendly-output-3edf548f" data-slide-number="30">
+            <h1>List Feature — User-Friendly Output</h1>
+            <pre data-lang="python"><code>print(&quot;\nLibrary books:&quot;)
+for book in books:
+    print(f&quot;- {book[&#x27;title&#x27;]} by {book[&#x27;author&#x27;]} ({book[&#x27;genre&#x27;]})&quot;)</code></pre>
+<h3>Debug output vs. user-friendly output</h3>
 <ul>
-  <li>Collect input from user</li>
-  <li>Store in a dictionary</li>
-  <li>Append to the list</li>
-  <li>Give feedback to the user</li>
+  <li><strong>Debug:</strong> <code>print(books)</code> — prints raw list of dicts; useful for inspecting</li>
+  <li><strong>User-friendly:</strong> loop with f-string — readable by a person</li>
 </ul>
+<p><strong>Habit:</strong> move from debug printing to formatted output as the final step.</p>
+<blockquote>Source: Day6_Hour3_Basics.md §7.2–§7.3</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Mini-Project (30 minutes)</h1>
-            <h3>Instructions</h3>
-<p>Choose one of the three project options (Expense Tracker, Contact List, or Book Library) and implement:</p>
+        <section class="slide" id="search-feature-dda51fe3" data-slide-number="31">
+            <h1>Search Feature</h1>
+            <pre data-lang="python"><code>search_title: str = input(&quot;\nEnter a title to search for: &quot;)
+found: bool = False
+
+for book in books:
+    if book[&quot;title&quot;].lower() == search_title.lower():
+        print(&quot;Found book:&quot;)
+        print(f&quot;  Title:  {book[&#x27;title&#x27;]}&quot;)
+        print(f&quot;  Author: {book[&#x27;author&#x27;]}&quot;)
+        print(f&quot;  Genre:  {book[&#x27;genre&#x27;]}&quot;)
+        found = True
+        break
+
+if not found:
+    print(&quot;Book not found.&quot;)</code></pre>
+<p><strong>Key details:</strong> <code>.lower()</code> on both sides (case-insensitive); <code>found</code> flag for the not-found message; <code>break</code> once found.</p>
+<blockquote>Source: Day6_Hour3_Basics.md §8.3–§8.5</blockquote>
+        </section>
+
+        <section class="slide" id="lab-book-library-tracker-08550d6f" data-slide-number="32">
+            <h1>Lab: Book Library Tracker</h1>
+            <p><strong>Time: 19 minutes</strong></p>
+<h3>Task</h3>
+<p>Build a small Python program that stores books using a <strong>list of dictionaries</strong>.</p>
+<p>Each book record must include <code>title</code>, <code>author</code>, and <code>genre</code>. Your program must:</p>
 <ol>
-  <li><strong>Add feature</strong> — collect input and store in your data structure</li>
-  <li><strong>List feature</strong> — print all records in a readable format</li>
-  <li><strong>Search feature</strong> — find a record by name/title/category</li>
+  <li>Start with at least <strong>three</strong> books already in the list</li>
+  <li>Ask the user for one new book and add it</li>
+  <li>Print all books in a clean, readable format</li>
+  <li>Ask the user for a title to search — print the matching book or &quot;Book not found.&quot;</li>
 </ol>
-<h3>Starter Template</h3>
-<pre data-lang="python"><code>def main():
-    # Choose your storage model:
-    records = []  # List of dicts, OR
-    # records = {}  # Dict of dicts
-
-    while True:
-        # Menu here
-        pass
-
-def add_record(records):
-    # Your code here
-    pass
-
-def list_records(records):
-    # Your code here
-    pass
-
-def search_records(records):
-    # Your code here
-    pass
-
-if __name__ == &quot;__main__&quot;:
-    main()</code></pre>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Uses at least one list and one dictionary meaningfully</p>
+<p><span class="check">✓</span> Starts with at least three records</p>
+<p><span class="check">✓</span> Adds a new record correctly with <code>append()</code></p>
+<p><span class="check">✓</span> Lists all records with formatted output (not raw <code>print(books)</code>)</p>
+<p><span class="check">✓</span> Search works for both found and not-found cases</p>
+<blockquote>Source: Day6_Hour3_Basics.md §9.2–§9.3</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Completion Criteria — Hour 23</h1>
-            <h3>You Must:</h3>
-<p><span class="check">✓</span> Implement all three minimum features: add, list, search</p>
-<p><span class="check">✓</span> Use at least one dict and one list meaningfully</p>
-<p><span class="check">✓</span> Produce clear, readable output (not raw dict printing)</p>
-<p><span class="check">✓</span> Handle basic cases (e.g., search returns &quot;not found&quot; if missing)</p>
-<h3>Example Good Output</h3>
-<pre><code>--- Contact List ---
-1. Alice - 555-1234
-2. Bob - 555-5678</code></pre>
-<h3>Example Bad Output</h3>
-<pre><code>[{&#x27;name&#x27;: &#x27;Alice&#x27;, &#x27;phone&#x27;: &#x27;555-1234&#x27;}, {&#x27;name&#x27;: &#x27;Bob&#x27;, &#x27;phone&#x27;: &#x27;555-5678&#x27;}]</code></pre>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-23-94a54ad1" data-slide-number="33">
             <h1>Common Pitfalls — Hour 23</h1>
-            <h3>Pitfall 1: Messy Global Variables</h3>
-<pre data-lang="python"><code># Bad: using global variables everywhere
-contacts = []
-
-def add_contact():
-    global contacts
-    # ...</code></pre>
-<p><strong>Better:</strong> Pass the data structure as a parameter to functions.</p>
-<h3>Pitfall 2: Hard-to-Read Printing</h3>
-<pre data-lang="python"><code># Bad: printing raw dictionaries
-print(contacts)
-
-# Better: format nicely
-for contact in contacts:
-    print(f&quot;{contact[&#x27;name&#x27;]} - {contact[&#x27;phone&#x27;]}&quot;)</code></pre>
+            <p><strong>⚠️</strong> Storing each new book as a list instead of a dictionary</p>
+<p><strong>⚠️</strong> Using different key names in different records (<code>name</code> in one, <code>title</code> in another)</p>
+<p><strong>⚠️</strong> Printing the raw list and thinking the formatting requirement is complete</p>
+<p><strong>⚠️</strong> Forgetting to set or check the <code>found</code> flag in the search logic</p>
+<p><strong>⚠️</strong> Comparing titles without normalizing case and assuming search is broken</p>
+<p><strong>⚠️</strong> Creating the new book dictionary but forgetting to append it to <code>books</code></p>
+<blockquote>Source: Day6_Hour3_Basics.md §9.6</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions — Hour 23</h1>
-            <h3>Add More Features (Stay in Basics Scope)</h3>
-<ul>
-  <li><strong>Update:</strong> Modify an existing record</li>
-  <li><strong>Delete:</strong> Remove a record by name</li>
-  <li><strong>Sort:</strong> Display records in alphabetical order</li>
-</ul>
-<h3>Example: Sort Contacts</h3>
-<pre data-lang="python"><code>def list_contacts(contacts):
-    # Advanced topic preview: sorting a list of dicts. 
-    # For basics, you might just display unsorted or use simpler lists.
-    sorted_contacts = sorted(contacts, key=lambda c: c[&#x27;name&#x27;])
-    for contact in sorted_contacts:
-        print(f&quot;{contact[&#x27;name&#x27;]} - {contact[&#x27;phone&#x27;]}&quot;)</code></pre>
-<blockquote>⚠️ **Note:** Using `lambda` here is an Advanced topic — for Basics, you can use a simple loop to find min/max or just display unsorted.</blockquote>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-23-030ff29a" data-slide-number="34">
             <h1>Quick Check — Hour 23</h1>
-            <p><strong>Exit Ticket Question:</strong> What data structure did you choose and why?</p>
-<p><strong>Example Answers:</strong></p>
-<ul>
-  <li>&quot;I used a list of dicts because each contact is a record with multiple fields, and I want to keep them in order.&quot;</li>
-  <li>&quot;I used a dict of dicts because I want fast lookup by name as the key.&quot;</li>
-</ul>
-<p><strong>Recap:</strong></p>
-<ul>
-  <li>Built a mini in-memory tracker app</li>
-  <li>Combined dicts and lists to store structured data</li>
-  <li>Practiced clean output and basic menu-driven programs</li>
-</ul>
+            <p><strong>Question:</strong> Why is a list of dictionaries a good fit for this tracker?</p>
+<p><strong>Expected answer:</strong> &quot;I used a list of dictionaries because I had many books, and each book had multiple named fields. The list lets me store many records, and the dictionary makes each record readable.&quot;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-24-checkpoint-3-data-structures-assessment-02534083" data-slide-number="35">
             <h1>Hour 24: Checkpoint 3 — Data Structures Assessment</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-a3592255" data-slide-number="36">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Demonstrate confident use of core data structures and iteration</li>
-  <li>Build a working program that meets a rubric</li>
-  <li>Handle missing keys safely (no KeyError)</li>
-  <li>Produce clear, formatted output</li>
+  <li>Demonstrate confident use of a dictionary for real-world data storage</li>
+  <li>Apply safe dictionary access patterns (<code>get()</code> or <code>in</code> checks) to avoid KeyError crashes</li>
+  <li>Format and display structured data clearly and readably</li>
+  <li>Test programs systematically — check both successful searches and failure cases</li>
+  <li>Reflect on data-structure selection and explain why a dictionary fits this task</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Checkpoint 3 Overview</h1>
-            <h3>What Is Checkpoint 3?</h3>
-<p>A timed assessment (45-60 minutes) where you build a simple application from scratch to demonstrate mastery of:</p>
-<ul>
-  <li>Lists, tuples, sets, and dictionaries</li>
-  <li>Iteration with <code>for</code> loops</li>
-  <li>Safe key access (<code>dict.get()</code> or <code>if key in dict</code>)</li>
-  <li>Clear output formatting</li>
-</ul>
-<h3>Optional Quiz (10 minutes)</h3>
-<p>After the lab, you may take a short multiple-choice quiz on data structures.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Assessment Task: Simple Contacts (In-Memory)</h1>
-            <h3>Requirements</h3>
-<p>Build a contacts program that:</p>
+        <section class="slide" id="what-this-checkpoint-tests-e542a925" data-slide-number="37">
+            <h1>What This Checkpoint Tests</h1>
+            <h3>Five Skills</h3>
 <ol>
-  <li>Stores contacts as name → phone in a <strong>dictionary</strong></li>
-  <li>Adds at least <strong>5 contacts</strong> (hardcoded or via input)</li>
-  <li><strong>Search by name</strong> — print phone if found, message if not found</li>
-  <li><strong>List all contacts</strong> — print all names and phones (sorted optional)</li>
+  <li><strong>Can you choose the right data structure?</strong> — A dictionary is the answer: given a name, find a phone</li>
+  <li><strong>Can you create and populate a structure cleanly?</strong> — Five contacts, five lines</li>
+  <li><strong>Can you print data in a form a human can read?</strong> — Not just <code>print(contacts)</code></li>
+  <li><strong>Can you accept and handle user input?</strong> — The <code>input()</code> function</li>
+  <li><strong>Can you handle the case where something is missing?</strong> — No KeyError; respond gracefully</li>
 </ol>
-<h3>No File I/O</h3>
-<p>All data is in memory (variables) — no reading/writing files.</p>
+<blockquote>Source: Day6_Hour4_Basics.md §3.2</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Rubric and Success Criteria</h1>
-            <h3>You Must:</h3>
-<p><span class="check">✓</span> <strong>Search works</strong> for both existing and missing names</p>
-<p><span class="check">✓</span> <strong>Clear output</strong> — not raw dict printing</p>
-<p><span class="check">✓</span> <strong>No KeyError</strong> — handle missing keys gracefully</p>
-<p><span class="check">✓</span> Code runs without syntax errors</p>
-<h3>Example Success</h3>
-<pre><code>Search for: Alice
-Alice: 555-1234
-
-Search for: Zoe
-Zoe not found.
-
-All Contacts:
-  Alice: 555-1234
-  Bob: 555-5678
-  Charlie: 555-9012</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: How to Test with 2-3 Example Inputs</h1>
-            <h3>Step 1: Add Test Contacts</h3>
-<pre data-lang="python"><code>contacts = {
-    &quot;Alice&quot;: &quot;555-1234&quot;,
-    &quot;Bob&quot;: &quot;555-5678&quot;,
-    &quot;Charlie&quot;: &quot;555-9012&quot;
-}</code></pre>
-<h3>Step 2: Test Search Function</h3>
-<pre data-lang="python"><code>def search_contact(contacts, name):
-    if name in contacts:
-        print(f&quot;{name}: {contacts[name]}&quot;)
-    else:
-        print(f&quot;{name} not found.&quot;)
-
-# Test with existing name
-search_contact(contacts, &quot;Alice&quot;)   # Should print: Alice: 555-1234
-
-# Test with missing name
-search_contact(contacts, &quot;Zoe&quot;)     # Should print: Zoe not found.</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Safe Key Access</h1>
-            <h3>Method 1: Check with `in`</h3>
-<pre data-lang="python"><code>name = &quot;Alice&quot;
-if name in contacts:
-    print(contacts[name])
+        <section class="slide" id="safe-key-access-two-patterns-27b2e29e" data-slide-number="38">
+            <h1>Safe Key Access — Two Patterns</h1>
+            <h3>Pattern 1: Check First with `in`</h3>
+<pre data-lang="python"><code>search_name = input(&quot;Enter name: &quot;)
+if search_name in contacts:
+    print(contacts[search_name])
 else:
-    print(&quot;Not found&quot;)</code></pre>
-<h3>Method 2: Use `dict.get()`</h3>
-<pre data-lang="python"><code>name = &quot;Alice&quot;
-phone = contacts.get(name, &quot;Not found&quot;)
+    print(&quot;Contact not found.&quot;)</code></pre>
+<h3>Pattern 2: Use `get()` with a Default</h3>
+<pre data-lang="python"><code>search_name = input(&quot;Enter name: &quot;)
+phone = contacts.get(search_name, &quot;Contact not found.&quot;)
 print(phone)</code></pre>
-<p>Both methods avoid <code>KeyError</code> when the key doesn&#x27;t exist.</p>
+<p><strong>Both patterns are safe.</strong> If a searched name is missing, your program must not crash.</p>
+<blockquote>Source: Day6_Hour4_Basics.md §4.2</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Checkpoint 3 (45-60 minutes)</h1>
-            <h3>Task</h3>
-<p>Build the Simple Contacts program following the rubric:</p>
-<pre data-lang="python"><code># Step 1: Create a dictionary with at least 5 contacts
+        <section class="slide" id="checkpoint-build-order-a9519129" data-slide-number="39">
+            <h1>Checkpoint Build Order</h1>
+            <h3>Step-by-Step Approach</h3>
+<pre data-lang="python"><code># Step 1: Create the dictionary with five starting contacts
 contacts = {
-    &quot;Alice&quot;: &quot;555-1234&quot;,
-    # Add 4 more...
+    &#x27;Alice&#x27;: &#x27;555-1234&#x27;,
+    &#x27;Bob&#x27;: &#x27;555-5678&#x27;,
+    &#x27;Carol&#x27;: &#x27;555-9999&#x27;,
+    &#x27;Diana&#x27;: &#x27;555-4444&#x27;,
+    &#x27;Eve&#x27;: &#x27;555-5555&#x27;
 }
 
-# Step 2: Implement search function
-def search_contact(contacts, name):
-    # Your code here
-    pass
+# Step 2: Display all contacts (loop with .items())
 
-# Step 3: Implement list function
-def list_contacts(contacts):
-    # Your code here
-    pass
+# Step 3: Ask the user for a name to search
 
-# Step 4: Test with 2-3 searches
-search_contact(contacts, &quot;Alice&quot;)
-search_contact(contacts, &quot;Zoe&quot;)
+# Step 4: Search safely (in check or .get())
 
-# Step 5: List all contacts
-list_contacts(contacts)</code></pre>
+# Step 5: Test — one name that exists, one that does not</code></pre>
+<blockquote>Source: Day6_Hour4_Basics.md §6.1</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Completion Criteria — Hour 24</h1>
-            <h3>Required:</h3>
-<p><span class="check">✓</span> Search works for existing names</p>
-<p><span class="check">✓</span> Search handles missing names gracefully (no KeyError)</p>
-<p><span class="check">✓</span> List displays all contacts with clear formatting</p>
-<p><span class="check">✓</span> At least 5 contacts stored in the dictionary</p>
-<h3>Bonus (Optional):</h3>
-<p><span class="check">✓</span> Sorted output (alphabetically by name)</p>
-<p><span class="check">✓</span> Case-insensitive search (e.g., &quot;alice&quot; finds &quot;Alice&quot;)</p>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 24</h1>
-            <h3>Pitfall 1: Forgetting to Normalize Case</h3>
-<pre data-lang="python"><code># Problem: &quot;alice&quot; doesn&#x27;t match &quot;Alice&quot;
-if name in contacts:
-    # Won&#x27;t find if case differs</code></pre>
-<p><strong>Fix:</strong> Normalize to lowercase for searching:</p>
-<pre data-lang="python"><code>name = name.lower()
-# Store all keys in lowercase, or use .get() with case handling</code></pre>
-<h3>Pitfall 2: Printing Dict Directly</h3>
-<pre data-lang="python"><code># Bad: raw dict output
-print(contacts)
-
-# Better: formatted loop
-for name, phone in contacts.items():
-    print(f&quot;{name}: {phone}&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 24</h1>
-            <h3>Allow Partial Match Search</h3>
-<p>Search for contacts where the search term is a substring of the name:</p>
-<pre data-lang="python"><code>def search_partial(contacts, keyword):
-    results = []
-    lowered_keyword = keyword.lower()
-    for name in contacts:
-        if lowered_keyword in name.lower():
-            results.append(name)
-            
-    if results:
-        for name in results:
-            print(f&quot;{name}: {contacts[name]}&quot;)
-    else:
-        print(&quot;No matches found.&quot;)</code></pre>
-<p><strong>Stay in Basics Scope:</strong> This version stays in Basics scope by using a simple loop instead of a list comprehension.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Quiz (10 minutes)</h1>
-            <h3>Sample Questions</h3>
-<p><strong>Q1:</strong> What&#x27;s the difference between <code>dict.get(key)</code> and <code>dict[key]</code>?</p>
-<p><strong>A:</strong> <code>dict.get(key)</code> returns <code>None</code> (or a default) if the key doesn&#x27;t exist; <code>dict[key]</code> raises <code>KeyError</code> if the key is missing.</p>
-<p><strong>Q2:</strong> Which structure removes duplicates automatically?</p>
-<p><strong>A:</strong> Set</p>
-<p><strong>Q3:</strong> Which structure is best for ordered, fixed records like coordinates?</p>
-<p><strong>A:</strong> Tuple</p>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check — Hour 24</h1>
-            <p><strong>Exit Ticket Question:</strong> What&#x27;s the difference between <code>dict.get()</code> and <code>dict[key]</code>?</p>
-<p><strong>Model Answer:</strong> &quot;<code>dict[key]</code> will raise a KeyError if the key doesn&#x27;t exist. <code>dict.get(key)</code> returns <code>None</code> by default (or a custom default value) if the key is missing, making it safer for handling optional keys.&quot;</p>
-<p><strong>Recap:</strong></p>
+        <section class="slide" id="checkpoint-task-simple-contacts-in-memory-6d703b08" data-slide-number="40">
+            <h1>Checkpoint Task: Simple Contacts (In Memory)</h1>
+            <p><strong>Name:</strong> Simple Contacts (In Memory)</p>
+<h3>Minimum Features</h3>
 <ul>
-  <li>Completed Checkpoint 3: Simple Contacts program</li>
-  <li>Demonstrated safe key access and clear output</li>
-  <li>Practiced data structure selection and iteration</li>
+  <li>Create a dictionary with at least <strong>5 contacts</strong> (name → phone)</li>
+  <li><strong>Display all contacts</strong> in readable format — one per line with labels</li>
+  <li><strong>Accept user input</strong> to search for a contact by name</li>
+  <li>Return the phone number if contact exists; print a <strong>friendly message</strong> if not</li>
+  <li><strong>Critical:</strong> Handle missing keys safely — no KeyError crash</li>
+</ul>
+<h3>Readable Output Example</h3>
+<pre data-lang="text"><code>— All Contacts —
+Alice: 555-1234
+Bob: 555-5678
+Carol: 555-9999
+Diana: 555-4444
+Eve: 555-5555</code></pre>
+<blockquote>Source: Day6_Hour4_Basics.md §2.3, §6.2</blockquote>
+        </section>
+
+        <section class="slide" id="test-plan-for-the-checkpoint-3f1498a7" data-slide-number="41">
+            <h1>Test Plan for the Checkpoint</h1>
+            <pre data-lang="text"><code>Test 1: Display all contacts
+  Expected: All 5 contacts printed clearly, one per line
+
+Test 2: Search for a contact that exists
+  Example: Search for &quot;Alice&quot;
+  Expected: Print Alice&#x27;s phone number
+
+Test 3: Search for a contact that does NOT exist
+  Example: Search for &quot;Zzzzzz&quot;
+  Expected: Print &quot;Contact not found&quot; — no crash
+
+Test 4 (optional): Case sensitivity
+  Example: Search for &quot;alice&quot; when stored as &quot;Alice&quot;
+  Expected: Either finds it or reports not found</code></pre>
+<blockquote>Source: Day6_Hour4_Basics.md §5.2</blockquote>
+        </section>
+
+        <section class="slide" id="lab-checkpoint-3-3ff111d4" data-slide-number="42">
+            <h1>Lab: Checkpoint 3</h1>
+            <p><strong>Time: 25–35 minutes of uninterrupted work</strong></p>
+<h3>Task</h3>
+<p>Build the Simple Contacts program following the build order above.</p>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Dictionary created with at least 5 entries</p>
+<p><span class="check">✓</span> Loop printing contacts one per line (not raw dictionary dump)</p>
+<p><span class="check">✓</span> Safe search code — either <code>in</code> check or <code>.get()</code></p>
+<p><span class="check">✓</span> At least one test run with a name that exists</p>
+<p><span class="check">✓</span> At least one test run with a name that does not exist</p>
+<p><span class="check">✓</span> Friendly message for missing contacts — no crash</p>
+<blockquote>Source: Day6_Hour4_Basics.md §7.1–§7.3</blockquote>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-24-62692a73" data-slide-number="43">
+            <h1>Common Pitfalls — Hour 24</h1>
+            <p><strong>⚠️</strong> Bare bracket access <code>contacts[search_name]</code> without a safety check — causes KeyError</p>
+<p><strong>⚠️</strong> Printing <code>print(contacts)</code> as final output instead of a formatted loop</p>
+<p><strong>⚠️</strong> Swapping key and value in <code>.items()</code> loop — <code>for phone, name in contacts.items():</code></p>
+<p><strong>⚠️</strong> Testing only the success case and never checking a missing name</p>
+<p><strong>⚠️</strong> Case sensitivity confusion — &quot;Alice&quot; and &quot;alice&quot; are different keys</p>
+<p><strong>⚠️</strong> Adding extra features before the minimum requirements work</p>
+<blockquote>Source: Day6_Hour4_Basics.md §8.1–§8.6</blockquote>
+        </section>
+
+        <section class="slide" id="quick-check-hour-24-c31171ca" data-slide-number="44">
+            <h1>Quick Check — Hour 24</h1>
+            <p><strong>Question:</strong> What is the difference between <code>contacts[search_name]</code> and <code>contacts.get(search_name, &quot;Not found&quot;)</code>?</p>
+<p><strong>Expected answer:</strong> &quot;<code>contacts[search_name]</code> raises a KeyError if the key is missing. <code>contacts.get(search_name, &#x27;Not found&#x27;)</code> returns the default value instead of crashing, making it safe for user-provided input.&quot;</p>
+        </section>
+
+        <section class="slide" id="session-6-wrap-up-8fc0ea90" data-slide-number="45">
+            <h1>Session 6 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide" id="what-we-covered-today-3fbeb528" data-slide-number="46">
+            <h1>What We Covered Today</h1>
+            <h3>Hour 21 — Choosing the Right Structure</h3>
+<ul>
+  <li>Decision checklist: order, duplicates, key lookup, fixed records, mutability</li>
+  <li>Refactor challenge: list → set, list-of-tuples → dictionary</li>
+</ul>
+<h3>Hour 22 — Drill Circuit</h3>
+<ul>
+  <li>Four patterns: list filtering, set uniqueness, dictionary counting, tuple unpacking</li>
+  <li>Testing rhythm: start small, test first, explain your choice</li>
+</ul>
+<h3>Hour 23 — Mini-Project</h3>
+<ul>
+  <li>List of dictionaries as storage model</li>
+  <li>Add, list, and search features with clean formatted output</li>
+</ul>
+<h3>Hour 24 — Checkpoint 3</h3>
+<ul>
+  <li>Dictionary-based contacts program</li>
+  <li>Safe key access: <code>in</code> check and <code>get()</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrail-reminder-c87d72c0" data-slide-number="47">
             <h1>Scope Guardrail Reminder</h1>
             <h3>Stay in Basics Scope</h3>
-<p><span class="check">✓</span> Core data structures: list, tuple, set, dict</p>
-<p><span class="check">✓</span> Basic iteration with <code>for</code> and <code>while</code></p>
-<p><span class="check">✓</span> Simple functions and imports</p>
-<p><span class="check">✓</span> Basic input/output and string formatting</p>
+<p><span class="check">✓</span> Core structures: list, tuple, set, dictionary</p>
+<p><span class="check">✓</span> Safe key access: <code>in</code> check, <code>get()</code> with default</p>
+<p><span class="check">✓</span> Formatted output using f-strings and loops</p>
+<p><span class="check">✓</span> Simple in-memory storage (no file I/O yet)</p>
 <h3>Not Yet (Advanced Topics)</h3>
-<p><span class="cross">✗</span> Named tuples or collections module</p>
-<p><span class="cross">✗</span> Performance analysis / Big O notation</p>
-<p><span class="cross">✗</span> Advanced data modeling or custom classes</p>
-<p><span class="cross">✗</span> List comprehensions (introduced later)</p>
-<p><span class="cross">✗</span> Lambda functions or decorators</p>
+<p><span class="cross">✗</span> List comprehensions</p>
+<p><span class="cross">✗</span> Lambda functions</p>
+<p><span class="cross">✗</span> Big O notation or performance analysis</p>
+<p><span class="cross">✗</span> Custom classes or data modeling</p>
+<p><span class="cross">✗</span> Nested dictionaries beyond list-of-dicts</p>
+<p><span class="cross">✗</span> External packages or databases</p>
         </section>
 
-        <section class="slide">
-            <h1>Session 6 Wrap-Up</h1>
-            <h3>What We Covered Today</h3>
+        <section class="slide" id="next-session-preview-dce91532" data-slide-number="48">
+            <h1>Next Session Preview</h1>
+            <h3>Session 7 (Hours 25–28)</h3>
 <ul>
-  <li><strong>Hour 21:</strong> Choosing the right structure based on task requirements</li>
-  <li><strong>Hour 22:</strong> Drill circuit with lists, tuples, sets, and dicts</li>
-  <li><strong>Hour 23:</strong> Mini-project combining data structures into an app</li>
-  <li><strong>Hour 24:</strong> Checkpoint 3 assessment with Simple Contacts</li>
+  <li>Hour 25: Conditionals in depth — <code>if/elif/else</code>, boundaries, compound conditions</li>
+  <li>Hour 26: Defining and calling functions</li>
+  <li>Hour 27: Parameters, return values, and scope</li>
+  <li>Hour 28: Checkpoint 4 — functions + data structures</li>
 </ul>
-<h3>Key Takeaways</h3>
-<ul>
-  <li>Decision checklist: order, duplicates, key lookup, mutability</li>
-  <li>Practice refactoring to better-fitting structures</li>
-  <li>Build mini-projects to integrate multiple structures</li>
-  <li>Handle edge cases safely (no KeyError)</li>
-</ul>
+<h3>Coming Skills</h3>
+<p>Writing reusable functions and structuring programs with clean logic flow</p>
         </section>
 
-        <section class="slide">
-            <h1>Homework and Practice</h1>
-            <h3>Practice Tasks</h3>
-<ol>
-  <li><strong>Refactor Exercise:</strong> Take a program you wrote earlier and identify one place where a different data structure would be clearer.</li>
-  <li><strong>Extend Mini-Project:</strong> Add an update or delete feature to your tracker app.</li>
-  <li><strong>Word Counter:</strong> Write a program that counts word frequency in a sentence using a dictionary.</li>
-</ol>
-<h3>Preparation for Session 7</h3>
-<ul>
-  <li>Review conditionals (<code>if/elif/else</code>) from earlier sessions</li>
-  <li>Think about how to validate user input</li>
-  <li>Practice writing functions that return values</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Next Session Preview: Session 7 (Hours 25–28)</h1>
-            <h3>Topics Coming Up</h3>
-<ul>
-  <li><strong>Hour 25:</strong> Conditionals — <code>if/elif/else</code> and boundaries</li>
-  <li><strong>Hour 26:</strong> Functions — defining, calling, returning values</li>
-  <li><strong>Hour 27:</strong> Function parameters and scope</li>
-  <li><strong>Hour 28:</strong> Checkpoint 4 — Functions + data structures</li>
-</ul>
-<h3>Get Ready To:</h3>
-<ul>
-  <li>Write reusable functions</li>
-  <li>Structure programs with clear logic flow</li>
-  <li>Combine functions with data structures</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="questions-c954ccd7" data-slide-number="49">
             <h1>Questions?</h1>
-            <p><strong>Session 6 Complete!</strong></p>
-<p>You&#x27;ve mastered:</p>
+            <p><strong>Remember:</strong></p>
 <ul>
-  <li>Choosing the right data structure for the job</li>
-  <li>Refactoring to improve clarity and simplicity</li>
-  <li>Building mini-projects with multiple structures</li>
-  <li>Demonstrating proficiency in Checkpoint 3</li>
+  <li>Choose structures based on the job, not your favorite</li>
+  <li>Always test both the success path and the failure path</li>
+  <li>User-friendly output is not optional — it is a programming habit</li>
+  <li>Safe key access prevents crashes in real programs</li>
 </ul>
-<p><strong>Keep practicing — see you in Session 7!</strong></p>
+        </section>
+
+        <section class="slide" id="thank-you-515d5c08" data-slide-number="50">
+            <h1>Thank You!</h1>
+            <p>See you in Session 7!</p>
         </section>
     </div>
     
@@ -1415,7 +1155,11 @@ for name, phone in contacts.items():
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1488,17 +1232,24 @@ for name, phone in contacts.items():
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

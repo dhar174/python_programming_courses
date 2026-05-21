@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=43; title=Hour 20: Dictionary Iteration + Counting Pattern]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 20 — the final hour of Session 5 and the capstone of our four-hour journey through Python's core data structures. Everything this hour builds directly on Hour 19 (dictionaries fundamentals). Learners already know how to create dictionaries, access values with bracket notation and `get()`, add and update entries, and remove keys. This hour adds the missing piece: *traversal*. We will walk through all three dictionary iteration methods — `keys()`, `values()`, and `items()` — and then develop the **counting pattern**, the single most practically useful dictionary idiom beginners will encounter. The word-frequency counter is the canonical demonstration of the counting pattern, and it is tangible enough that learners immediately see where it applies in real programs (log analysis, survey results, inventory tracking, analytics). Stay firmly within Basics scope: no `collections.Counter`, no `defaultdict`, no dictionary comprehensions. The goal is that every learner leaves this hour able to write a frequency counter from scratch and explain every line. The live demo is typed in front of the class — do not paste pre-written code. Every "Say:" block is written to be read nearly verbatim; adapt to your natural voice but do not skip the conceptual scaffolding — it is load-bearing.
 
 ---
+
+[Instructor slide change: page=44; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -488,6 +492,8 @@ This is an advanced-looking line that you can use without fully understanding it
 
 ---
 
+[Instructor slide change: page=51; title=Demo: Word Frequency Counter]
+
 ## 7) Live Demo: Word Frequency Counter
 
 ### 7.1 Transition to the demo
@@ -581,6 +587,8 @@ world                 2
 **[Ask learners]** Is that what we actually want? 'Hello', 'hello', and 'HELLO' are all three counted separately — because Python strings are case-sensitive. This is the case-inconsistency pitfall, and we will fix it in the extension section. For now, the program is *correct* by Python's rules, even if the output is not what a human reader might expect."
 
 ---
+
+[Instructor slide change: page=52; title=Lab: Word Counter]
 
 ## 8) Hands-on Lab: Word Counter
 
@@ -754,6 +762,8 @@ Yes — we could do `words = [w.lower() for w in sentence.split()]` before the l
 Also notice that we used a `for punct in (...):` loop inside the counting loop to remove each punctuation character. That inner loop is simple and easy to extend — if you want to also remove brackets or quotes, you just add them to the tuple. When you learn more advanced tools later, you can revisit this code and refactor it. But for now, it is readable, correct, and handles real-world input."
 
 ---
+
+[Instructor slide change: page=53; title=Common Pitfalls (Hour 20)]
 
 ## 9) Common Pitfalls
 
@@ -1028,6 +1038,8 @@ If any part of today felt hard: good. That means you were working in the zone wh
 Well done today. Save your files, and I'll see you at Session 6."
 
 ---
+
+[Instructor slide change: page=54; title=Quick Check]
 
 ## 12) Exit Ticket
 

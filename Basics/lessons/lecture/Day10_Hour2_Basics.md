@@ -9,6 +9,10 @@
 
 ---
 
+[Instructor slide change: page=14; title=Hour 38: Collections of Objects + Searching]
+
+[Instructor slide change: page=15; title=Learning Outcomes]
+
 ## Learning Outcomes
 
 **Read aloud at the start of the hour (approximately 2–3 minutes):**
@@ -231,6 +235,8 @@ This engages higher-order thinking without overwhelming Basics learners."
 
 ---
 
+[Instructor slide change: page=19; title=Lab — Refactor Contact Manager to Objects]
+
 ## Hands-on Lab: Refactor Contact Manager to Objects (30 minutes)
 
 ### Lab Overview
@@ -388,6 +394,8 @@ while True:
 
 ---
 
+[Instructor slide change: page=20; title=Common Pitfalls — Hour 38]
+
 ## Troubleshooting & Common Pitfalls
 
 ### Comparing Wrong Attribute
@@ -431,6 +439,8 @@ while True:
 **Fix:** Add a simple check: `if not my_directory: print("Directory is empty."); continue`.
 
 ---
+
+[Instructor slide change: page=21; title=Quick Check — Hour 38]
 
 ## Quick-Check Questions (Exit Ticket, ~5 minutes)
 

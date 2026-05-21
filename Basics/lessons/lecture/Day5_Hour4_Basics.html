@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,6 +71,11 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
                     <p><strong>Python Programming Basics – Session 5</strong></p>
 <p><strong>Course:</strong> Python Programming (Basics)<br>
@@ -74,11 +84,15 @@
 <strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
 <strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="43" data-slide-title="Hour 20: Dictionary Iteration + Counting Pattern" data-slide-anchor="hour-20-dictionary-iteration-counting-pattern-077bb0c5"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 43</strong><a class="lecture-slide-cue-link" href="../slides/day-05/day-05-session-5.html#hour-20-dictionary-iteration-counting-pattern-077bb0c5" data-slide-deck-link>Slide 43: Hour 20: Dictionary Iteration + Counting Pattern</a></div></aside>
+
 <h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
 <blockquote>
 <p><strong>Instructor note:</strong> This document is a detailed read-aloud teaching guide for Course Hour 20 — the final hour of Session 5 and the capstone of our four-hour journey through Python's core data structures. Everything this hour builds directly on Hour 19 (dictionaries fundamentals). Learners already know how to create dictionaries, access values with bracket notation and <code>get()</code>, add and update entries, and remove keys. This hour adds the missing piece: <em>traversal</em>. We will walk through all three dictionary iteration methods — <code>keys()</code>, <code>values()</code>, and <code>items()</code> — and then develop the <strong>counting pattern</strong>, the single most practically useful dictionary idiom beginners will encounter. The word-frequency counter is the canonical demonstration of the counting pattern, and it is tangible enough that learners immediately see where it applies in real programs (log analysis, survey results, inventory tracking, analytics). Stay firmly within Basics scope: no <code>collections.Counter</code>, no <code>defaultdict</code>, no dictionary comprehensions. The goal is that every learner leaves this hour able to write a frequency counter from scratch and explain every line. The live demo is typed in front of the class — do not paste pre-written code. Every "Say:" block is written to be read nearly verbatim; adapt to your natural voice but do not skip the conceptual scaffolding — it is load-bearing.</p>
 </blockquote>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="44" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-41437851"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 44</strong><a class="lecture-slide-cue-link" href="../slides/day-05/day-05-session-5.html#learning-outcomes-41437851" data-slide-deck-link>Slide 44: Learning Outcomes</a></div></aside>
+
 <h2 id="0-learning-outcomes-read-aloud-2-minutes">0) Learning Outcomes (read aloud, ~2 minutes)</h2>
 <p>"By the end of this hour, you will be able to:</p>
 <ol>
@@ -419,6 +433,8 @@ print(f&quot;Most common word: '{most_common_word}' ({counts[most_common_word]} 
 "<code>max(counts, key=counts.get)</code> iterates over the keys of <code>counts</code> and finds the one whose associated value is the largest. It uses <code>counts.get</code> — note: no parentheses, we are passing the method itself as a function — as the comparison key. The result is the key with the highest count.</p>
 <p>This is an advanced-looking line that you can use without fully understanding its mechanics yet. File it away as a useful idiom: 'to find the key with the maximum value in a dictionary, use <code>max(d, key=d.get)</code>'."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="51" data-slide-title="Demo: Word Frequency Counter" data-slide-anchor="demo-word-frequency-counter-a1766350"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 51</strong><a class="lecture-slide-cue-link" href="../slides/day-05/day-05-session-5.html#demo-word-frequency-counter-a1766350" data-slide-deck-link>Slide 51: Demo: Word Frequency Counter</a></div></aside>
+
 <h2 id="7-live-demo-word-frequency-counter">7) Live Demo: Word Frequency Counter</h2>
 <h3 id="71-transition-to-the-demo">7.1 Transition to the demo</h3>
 <p><strong>Say:</strong>
@@ -489,6 +505,8 @@ world                 2
 </code></pre>
 <p><strong>[Ask learners]</strong> Is that what we actually want? 'Hello', 'hello', and 'HELLO' are all three counted separately — because Python strings are case-sensitive. This is the case-inconsistency pitfall, and we will fix it in the extension section. For now, the program is <em>correct</em> by Python's rules, even if the output is not what a human reader might expect."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="52" data-slide-title="Lab: Word Counter" data-slide-anchor="lab-word-counter-1ee001f1"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 52</strong><a class="lecture-slide-cue-link" href="../slides/day-05/day-05-session-5.html#lab-word-counter-1ee001f1" data-slide-deck-link>Slide 52: Lab: Word Counter</a></div></aside>
+
 <h2 id="8-hands-on-lab-word-counter">8) Hands-on Lab: Word Counter</h2>
 <h3 id="81-lab-specification">8.1 Lab specification</h3>
 <p><strong>Say:</strong>
@@ -620,6 +638,8 @@ if counts:
 <p>Yes — we could do <code>words = [w.lower() for w in sentence.split()]</code> before the loop. But we haven't covered list comprehensions yet. The inside-the-loop approach is perfectly clear, step-by-step, and follows the principle of doing one thing at a time.</p>
 <p>Also notice that we used a <code>for punct in (...):</code> loop inside the counting loop to remove each punctuation character. That inner loop is simple and easy to extend — if you want to also remove brackets or quotes, you just add them to the tuple. When you learn more advanced tools later, you can revisit this code and refactor it. But for now, it is readable, correct, and handles real-world input."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="53" data-slide-title="Common Pitfalls (Hour 20)" data-slide-anchor="common-pitfalls-hour-20-ce909a56"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 53</strong><a class="lecture-slide-cue-link" href="../slides/day-05/day-05-session-5.html#common-pitfalls-hour-20-ce909a56" data-slide-deck-link>Slide 53: Common Pitfalls (Hour 20)</a></div></aside>
+
 <h2 id="9-common-pitfalls">9) Common Pitfalls</h2>
 <p><strong>Say:</strong>
 "Before we wrap up, let's name the three pitfalls I see most often with this pattern. These are the things to watch out for — both in your own code and when helping a classmate."</p>
@@ -853,6 +873,8 @@ This hour. We completed the dictionary picture by learning how to traverse all e
 <p>If any part of today felt hard: good. That means you were working in the zone where learning actually happens. If you want to consolidate, go home and type the Word Counter again from memory — no notes. Then run it on a paragraph of text you find interesting. See what the most common words are. That's real programming.</p>
 <p>Well done today. Save your files, and I'll see you at Session 6."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="54" data-slide-title="Quick Check" data-slide-anchor="quick-check-146a87a5"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 54</strong><a class="lecture-slide-cue-link" href="../slides/day-05/day-05-session-5.html#quick-check-146a87a5" data-slide-deck-link>Slide 54: Quick Check</a></div></aside>
+
 <h2 id="12-exit-ticket">12) Exit Ticket</h2>
 <p><strong>Display the following question and give learners 90 seconds to answer in writing or by typing:</strong></p>
 <p><strong>Question:</strong></p>

@@ -5,6 +5,10 @@
 **Duration:** 60 minutes  
 **Target:** 25+ students, beginner level
 
+[Instructor slide change: page=36; title=Hour 28: Loop Patterns — Counters, Accumulators, Min/Max]
+
+[Instructor slide change: page=37; title=Learning Outcomes]
+
 ## Learning Outcomes
 
 By the end of this hour, students will be able to:
@@ -253,6 +257,8 @@ print(f'Average: {average:.2f}')  # Output: 16.00 (two decimal places)
 
 ---
 
+[Instructor slide change: page=42; title=Demo — Number Statistics Program]
+
 ## 4. Live Coding Demo
 
 ### Setup (1 minute)
@@ -330,6 +336,8 @@ Average: 16.00
 *Pause for student input. Expected answer: "Because we already used `numbers[0]` for min/max initialization."*
 
 ---
+
+[Instructor slide change: page=43; title=Lab — Number Statistics]
 
 ## 5. Guided Lab with 3 Explicit Checkpoints
 
@@ -412,6 +420,8 @@ numbers = [12, 8, 25, 9, 18, 14, 22]
 - Run each student's program and verify output matches expected result.
 - Say: "Compare your output to the expected result. Do they match?"
 - Celebrate completion: "Excellent! You've built a complete statistics program using all four loop patterns."
+
+[Instructor slide change: page=44; title=Common Pitfalls — Hour 28]
 
 ### Troubleshooting Hints
 
@@ -511,6 +521,8 @@ average = total / count  # Doesn't include first number!
   - Start the loop at `numbers[0]` instead of `numbers[1:]`
 
 ---
+
+[Instructor slide change: page=45; title=Quick Check — Hour 28]
 
 ## 8. Exit Ticket & Quick-Check Questions
 

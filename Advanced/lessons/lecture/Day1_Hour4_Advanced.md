@@ -1,5 +1,7 @@
 # Day 1, Hour 4: Composition vs Inheritance and Polymorphism
 
+[Instructor slide change: page=37; title=Hour 4: Composition vs Inheritance + Polymorphism]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -26,6 +28,8 @@
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays within the runbook's required 25-35 minute lab range. If the room needs support, protect the guided lab. Shorten the vocabulary discussion before shortening learner practice. Do not make composition, inheritance choice, or polymorphism optional; those are the required objectives for this hour.
 
 ---
+
+[Instructor slide change: page=38; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -222,6 +226,8 @@ Respond:
 "Now we will start from a working but branching exporter. Then we will refactor in small steps. Watch for three things: the before-state branch, the two classes with the same method name, and the composed runner that stores a formatter object."
 
 ---
+
+[Instructor slide change: page=41; title=Demo: Polymorphic Formatter Classes]
 
 ## Live Demo: Refactor Report Export Branching (10 minutes)
 
@@ -460,6 +466,8 @@ Day 1 Tracker: 7 of 10 complete
 Do not let this optional extension consume lab time. If the room is moving slowly, skip the third formatter and proceed to the lab.
 
 ---
+
+[Instructor slide change: page=44; title=Lab: Refactor a Branching Feature]
 
 ## Guided Lab: Refactor a Branching Feature (25 minutes)
 
@@ -735,6 +743,8 @@ There is a class for the title line, a class for the owner line, a class for the
 "This is overengineering. Advanced design does not mean every line gets its own class. A class should own a meaningful responsibility. In this lab, one formatter class per output variation is enough."
 
 ---
+
+[Instructor slide change: page=45; title=Completion Criteria + Common Pitfalls — Hour 4]
 
 ## Common Pitfalls to Watch For
 

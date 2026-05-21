@@ -63,6 +63,8 @@ class LectureHtmlParser(HTMLParser):
         self.prev_hooks = 0
         self.next_hooks = 0
         self.remote_assets: list[str] = []
+        self.slide_cue_count = 0
+        self.slide_cue_link_count = 0
 
     @property
     def title_text(self) -> str:
@@ -96,6 +98,8 @@ class LectureHtmlParser(HTMLParser):
                 self.prev_hooks += 1
             if "next" in rels or "data-lecture-next" in attr_map:
                 self.next_hooks += 1
+            if "data-slide-deck-link" in attr_map and href:
+                self.slide_cue_link_count += 1
         elif tag == "link":
             href = attr_map.get("href", "").strip()
             rels = {part.lower() for part in attr_map.get("rel", "").split()}
@@ -123,6 +127,9 @@ class LectureHtmlParser(HTMLParser):
             data = attr_map.get("data", "").strip()
             if data and is_remote_url(data):
                 self.remote_assets.append(f"<object data=\"{data}\">")
+        elif tag == "aside":
+            if "data-slide-cue" in attr_map:
+                self.slide_cue_count += 1
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
@@ -201,6 +208,12 @@ def validate_file(path: Path) -> list[str]:
         errors.append("missing next-lecture navigation hook")
     if parser.remote_assets:
         errors.append("remote runtime/static asset refs found: " + ", ".join(parser.remote_assets))
+    if parser.slide_cue_count == 0:
+        errors.append("missing instructor slide cues")
+    elif parser.slide_cue_link_count < parser.slide_cue_count:
+        errors.append(
+            "one or more instructor slide cues are missing deep links into the session deck"
+        )
 
     unsafe_runtime_hits = [
         label for label, pattern in UNSAFE_RUNTIME_PATTERNS.items() if pattern.search(html_text)

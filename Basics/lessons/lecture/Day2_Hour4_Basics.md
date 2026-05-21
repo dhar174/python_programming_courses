@@ -9,6 +9,8 @@
 
 ---
 
+[Instructor slide change: page=40; title=Hour 8: Checkpoint 1 — Fundamentals Mini-Assessment]
+
 ## Learning Outcomes
 
 By the end of this hour, learners will:
@@ -64,6 +66,8 @@ Let's start. Open a new file called `checkpoint1_receipt.py` and keep your notes
 
 ## Core Concepts
 
+[Instructor slide change: page=42; title=Checkpoint Format]
+
 ### Checkpoint purpose
 
 This assessment combines all fundamentals from Day 1 and Day 2 (Hours 1–7) into a single working program. It tests:
@@ -89,6 +93,8 @@ This assessment combines all fundamentals from Day 1 and Day 2 (Hours 1–7) int
 5. **Debugging as learning:** Errors during implementation are normal and reveal understanding.
 
 ---
+
+[Instructor slide change: page=44; title=Demo Walk-Through]
 
 ## Live Coding Demo
 

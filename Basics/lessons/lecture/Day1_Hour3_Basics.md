@@ -1,4 +1,7 @@
 # Day 1, Hour 3: Variables + Basic Types
+
+[Instructor slide change: page=26; title=Hour 3: Variables + Basic Types]
+
 ## Python Basics Course - Lecture Script
 
 **Session:** Day 1 (Session 1), Hour 3 of 4  
@@ -290,6 +293,8 @@ Alright, let's see all of this in action with a live demo.
 
 ---
 
+[Instructor slide change: page=33; title=Demo: Profile Card]
+
 ## Section 3: Live Demo – Building a Profile Card
 ### Timing: 5-10 minutes
 
@@ -425,6 +430,8 @@ So the key takeaway from this demo: variables let us store information and reuse
 Now it's your turn! You're going to build your own profile card in the lab.
 
 ---
+
+[Instructor slide change: page=34; title=Lab: Profile Card]
 
 ## Section 4: Hands-on Lab – Profile Card
 ### Timing: 25-35 minutes
@@ -641,6 +648,8 @@ Did anyone run into other issues? [Allow 1-2 students to share.]
 
 ---
 
+[Instructor slide change: page=38; title=Quick Check]
+
 ## Section 6: Wrap-up & Quick Check / Exit Ticket
 ### Timing: 3-5 minutes
 
@@ -833,4 +842,3 @@ print("Type of likes_python:", type(likes_python))
 
 **Prepared for:** Python Basics Course, Day 1, Session 1  
 **Next Hour:** Hour 4 - Numbers + Operators
-

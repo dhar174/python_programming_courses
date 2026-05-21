@@ -1,5 +1,9 @@
 # While Loops and Loop Control (break, continue)
 
+[Instructor slide change: page=14; title=Hour 30: While Loops and Loop Control]
+
+[Instructor slide change: page=15; title=Learning Outcomes]
+
 ## Section 0: Learning Outcomes
 
 By the end of this hour, students will be able to:
@@ -61,7 +65,8 @@ By the end of this hour, students will be able to:
 
 **Say:** "Welcome back! In the last hour, we explored menu loops and how to build interactive loops that repeat until a user makes a specific choice. Today, we're diving deeper into loop control. Specifically, we're learning about \while\ loops and two powerful statements that let us exit or skip iterations: \reak\ and \continue\.
 
-You might be wondering: didn't we already learn for loops? Yes. So why \while\? Here's the key difference: a \or\ loop is perfect when you know in advance how many times to repeat—like iterating over a list or a range. A \while\ loop is perfect when you don't know how many iterations you'll need. You only know the condition that keeps the loop alive.
+You might be wondering: didn't we already learn for loops? Yes. So why \while\? Here's the key difference: a \
+or\ loop is perfect when you know in advance how many times to repeat—like iterating over a list or a range. A \while\ loop is perfect when you don't know how many iterations you'll need. You only know the condition that keeps the loop alive.
 
 Think about real-world examples. An ATM asks 'Do you want another transaction?' and loops until you say no. A password prompt loops until you enter the correct password. A game loops until the player chooses to quit. In all these cases, you can't say 'I'll ask exactly 5 times'—you loop based on a condition.
 
@@ -270,6 +275,8 @@ while True:
 
 ---
 
+[Instructor slide change: page=21; title=Lab: Grade Entry System]
+
 ## Section 7: Lab with Full Checkpoints
 
 **Lab Duration: ~20 minutes (with built-in checkpoints)**
@@ -402,6 +409,8 @@ else:
 
 ---
 
+[Instructor slide change: page=22; title=Common Pitfalls (Hour 30)]
+
 ## Section 8: Troubleshooting Pitfalls
 
 **Pitfall 1: Infinite Loop Due to Unchanging Condition**
@@ -441,7 +450,8 @@ if condition:
     break  # Error! break can only be used inside a loop
 \\\
 
-**The Fix:** Always use \reak\ and \continue\ only inside \while\ or \or\ loops.
+**The Fix:** Always use \reak\ and \continue\ only inside \while\ or \
+or\ loops.
 
 ---
 
@@ -501,9 +511,11 @@ while True:
 
 **Ask students these questions to gauge understanding. Allow 1–2 minutes per question.**
 
-**Q1:** What is the key difference between a \or\ loop and a \while\ loop?
+**Q1:** What is the key difference between a \
+or\ loop and a \while\ loop?
 
-**Answer:** A \or\ loop runs a fixed number of times (usually iterating over a sequence). A \while\ loop runs as long as a condition is True, and the number of iterations is unknown until the condition becomes False.
+**Answer:** A \
+or\ loop runs a fixed number of times (usually iterating over a sequence). A \while\ loop runs as long as a condition is True, and the number of iterations is unknown until the condition becomes False.
 
 ---
 

@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=25; title=Hour 23: Mini-Project — In-Memory Tracker]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 23. This hour is about synthesis. Learners should combine the data-structure ideas from Session 5 and the first half of Session 6 into one coherent mini application that runs completely in memory. Stay firmly within Basics scope: no file I/O, no classes, no external packages, and no advanced menu-loop architecture. The runbook allows several themes. For consistency and clarity, this script uses a **Book Library Tracker** built as a **list of dictionaries**. That model is pedagogically strong because each book is one record with named fields, and the outer list stores many records in order. Learners will add a record, list all records, and search records. Keep the project approachable. The point is not architectural perfection. The point is helping learners feel how multiple small skills fit together into a useful program. Every **Say:** block is written to be read nearly verbatim; adapt naturally, but keep the conceptual scaffolding and encouragement.
 
 ---
+
+[Instructor slide change: page=26; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -357,6 +361,8 @@ Run once with an existing title and once with a missing title.
 
 ---
 
+[Instructor slide change: page=32; title=Lab: Book Library Tracker]
+
 ## 9) Guided Lab: Build Your Own Tracker Version (~19 minutes)
 
 ### 9.1 Lab framing
@@ -418,6 +424,8 @@ That order keeps the project manageable."
 - When listing books, loop through the list.
 - When searching, compare the user input to `book['title']`.
 - If your code is getting tangled, comment out the last part and get one feature working at a time."
+
+[Instructor slide change: page=33; title=Common Pitfalls — Hour 23]
 
 ### 9.6 Common pitfalls to watch for
 
@@ -489,6 +497,8 @@ That kind of explanation shows design understanding, not just code copying."
 "If you completed add and list but your search is still shaky, that is still useful progress. Make a note of exactly where the search logic got confusing. That gives you a clear practice target."
 
 ---
+
+[Instructor slide change: page=34; title=Quick Check — Hour 23]
 
 ## 11) Recap + Exit Ticket (~5 minutes)
 

@@ -19,6 +19,7 @@
 - [x] Copilot setup-steps workflow upgraded from stub to real Python bootstrap with `nbconvert` smoke check
 - [x] Issue #458 foundation platform implemented: shared lecture assets, lecture generator, lecture validator, and Pages workflow/publish integration
 - [x] Issue #458 lecture rollout generated all 96 hourly lecture HTML pages across Basics and Advanced
+- [x] Lecture-to-slide cues rolled out across all 96 hourly lecture Markdown and HTML pairs, with stable deck anchors and persistent current-slide UI
 
 ## What works
 - Repo-wide instructions, memory-bank scaffolding, and specialist agents exist.
@@ -35,6 +36,8 @@
 - `scripts/validate_lecture_html.py` now enforces lecture-page structure, navigation, hash-target integrity, and offline-safe runtime/asset constraints.
 - The Pages workflow now installs pinned `Markdown`, generates lecture HTML into `_site`, validates it, and then runs the staged manifest/publish contract checks.
 - Source-owned hourly lecture HTML now exists beside the lecture Markdown files in `Basics/lessons/lecture/` and `Advanced/lessons/lecture/`.
+- Hourly lecture Markdown now carries explicit `[Instructor slide change: page=...; title=...]` markers, and the generated lecture HTML renders linked slide-change callouts plus a persistent current-slide indicator.
+- Session deck HTML under `Basics/lessons/slides/day-*/` and `Advanced/lessons/slides/day-*/` now exposes stable slide ids so lecture cues can deep-link to named anchors instead of relying only on numeric hashes.
 
 ## What is incomplete
 - Issue/PR closeout for #458 remains after the validated local rollout.
@@ -46,8 +49,11 @@
 - Portal manifest: `python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json`
 - Portal publish contract: `python scripts/check_portal_publish.py --repo-root . --site-root _site`
 - Day overview freshness: `python scripts/generate_day_overviews.py --check`
+- Cue sync: `python scripts/sync_lecture_slide_cues.py`
 - Lecture generator: `python scripts/generate_lecture_pages.py --repo-root . --output-root _site`
+- Lecture generator (source-owned HTML): `python scripts/generate_lecture_pages.py --repo-root .`
 - Lecture validation: `python scripts/validate_lecture_html.py _site`
+- Lecture validation (source-owned HTML): `python scripts/validate_lecture_html.py Basics/lessons/lecture Advanced/lessons/lecture`
 
 ## Last meaningful update
 [2026-05-17] Copilot setup-steps workflow hardened from placeholder stub into a real bootstrap for Copilot agent sessions
@@ -55,6 +61,7 @@
 [2026-05-19] PR #456 notebook remediation repaired the reviewed `*_test_filled.ipynb` fixtures so they again preserve the base notebook structure, use real exercise implementations instead of placeholder output stubs, restore the Advanced Day 8 authenticity guardrail, and still satisfy the touched assignments' existing grading criteria.
 [2026-05-19] Issue #458 foundation landed locally: lecture shared assets, the Markdown-driven lecture generator, lecture HTML validator, and Pages publish integration now work together and pass generator plus staged publish validation.
 [2026-05-19] Issue #458 pilot review passed, the UX follow-up fixes landed, and the generator produced validated source-owned lecture HTML for all 96 hourly lectures plus matching `_site` output.
+[2026-05-20] Lecture-to-slide cue support landed locally: `scripts/generate_lecture_pages.py` now renders instructor slide-change callouts plus a persistent current-slide indicator from explicit Markdown cues, `scripts/sync_lecture_slide_cues.py` refreshes cue markers across the hourly lecture corpus, the session deck HTML exposes stable slide ids for deep links, and both source-owned and `_site` lecture validation passed after a cue-mapping fix for later-hour Advanced session decks.
 <!-- repo-agent-bootstrap:managed:end -->
 
 ## Portal rollout milestone

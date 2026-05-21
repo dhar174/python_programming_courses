@@ -386,27 +386,26 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-4-session-4-hours-1316-0f48e11f" data-slide-number="1">
             <h1>Advanced Day 4 — Session 4 (Hours 13–16)</h1>
-            <div class="subtitle">Python Programming (Advanced) • HTTP Clients, Security Habits, Capstone Planning, and Checkpoint 2</div>
+            <div class="subtitle">Python Programming (Advanced) • HTTP Clients, Security Habits, Capstone Planning, and Checkpoint 2 (Persistence-Ready Core)</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-4-overview-d7e483d3" data-slide-number="2">
             <h1>Session 4 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-8b06d0de" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 13: HTTP client work: <code>requests</code> + JSON contracts</li>
+  <li>Hour 13: HTTP client work — <code>requests</code> + JSON contracts</li>
   <li>Hour 14: Security basics — environment variables, safe secrets habits, and hashing concepts</li>
   <li>Hour 15: Capstone planning workshop — scope, milestones, and delivery path</li>
   <li>Hour 16: Checkpoint 2 — persistence-ready core + JSON save/load</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 4 overview</code></li>
   <li><code>Advanced/lessons/lecture/Day4_Hour1_Advanced.md</code> → <code># Day 4, Hour 1: HTTP Client Work – requests + JSON Contracts</code></li>
   <li><code>Advanced/lessons/lecture/Day4_Hour2_Advanced.md</code> → <code># Day 4, Hour 2: Security Basics – Environment Variables, Safe Secrets Habits, and Hashing Concepts</code></li>
   <li><code>Advanced/lessons/lecture/Day4_Hour3_Advanced.md</code> → <code># Day 4, Hour 3: Capstone Planning Workshop – Scope, Milestones, and Delivery Path</code></li>
@@ -414,236 +413,261 @@
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-4-outcomes-012c6d1c" data-slide-number="4">
             <h1>Session 4 Outcomes</h1>
             <ul>
-  <li>Treat outside data as untrusted until checked</li>
-  <li>Keep secrets out of source control</li>
-  <li>Choose a realistic capstone path</li>
-  <li>Deliver a persistence-ready core that can survive restart</li>
+  <li>Build a reliable HTTP client that handles timeouts, 4xx, 5xx, and invalid JSON</li>
+  <li>Keep secrets out of source code using environment variables and <code>.env.example</code></li>
+  <li>Lock a realistic capstone MVP and choose a delivery path before building further</li>
+  <li>Deliver a persistence-ready core that survives restart with logging and safe save/load</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="in-scope-2661488d" data-slide-number="6">
             <h1>In Scope</h1>
             <ul>
-  <li>HTTP client fundamentals</li>
-  <li>JSON contract validation</li>
-  <li>Environment-variable habits</li>
-  <li>Concept-level hashing discussion</li>
-  <li>Capstone MVP planning</li>
-  <li>JSON persistence checkpoint</li>
+  <li>HTTP <code>GET</code> requests — timeout, <code>raise_for_status()</code>, JSON contract checks</li>
+  <li>Environment-variable secret hygiene and hashing concept demo</li>
+  <li>Capstone MVP scope — milestones, delivery path, README skeleton</li>
+  <li>JSON persistence — safe-save pattern, <code>to_dict</code> / <code>from_dict</code>, file logging</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="not-yet-f9ce9708" data-slide-number="7">
             <h1>Not Yet</h1>
             <ul>
-  <li>Production auth systems</li>
-  <li>Full deployment workflows</li>
-  <li>Enterprise schema tooling</li>
-  <li>Database integration beyond persistence-ready design</li>
+  <li>Full OAuth / JWT / production authentication systems</li>
+  <li>Flask or other API server frameworks</li>
+  <li>Enterprise schema validation tooling</li>
+  <li>Database integration beyond a persistence-ready architecture</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-13-http-client-work-json-contracts-6675e041" data-slide-number="8">
             <h1>Hour 13: HTTP Client Work + JSON Contracts</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-186bd9aa" data-slide-number="9">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Send a <code>GET</code> request with <code>requests</code></li>
-  <li>Always set a timeout</li>
-  <li>Use <code>raise_for_status()</code></li>
-  <li>Validate the JSON shape before trusting it</li>
+  <li>Explain the difference between an HTTP client and an API server</li>
+  <li>Send a <code>GET</code> request with a timeout using <code>requests</code></li>
+  <li>Use <code>raise_for_status()</code> to surface HTTP errors cleanly</li>
+  <li>Validate required JSON keys and types before using the data</li>
+  <li>Write a wrapper function so request logic lives in one place</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Big Shift for This Hour</h1>
+        <section class="slide" id="the-mental-shift-outside-data-is-untrusted-896ab180" data-slide-number="10">
+            <h1>The Mental Shift: Outside Data Is Untrusted</h1>
             <ul>
-  <li>Up to now, most data has lived inside our program</li>
-  <li>Today the program talks to something outside itself</li>
-  <li>Outside data may be:</li>
-  <li style="margin-left: 30px;">slow</li>
-  <li style="margin-left: 30px;">missing</li>
-  <li style="margin-left: 30px;">malformed</li>
-  <li style="margin-left: 30px;">structurally different from what we expected</li>
+  <li>Up to now, most data has lived inside the program</li>
+  <li>Today the program talks to a service outside itself</li>
+  <li>Outside data may be late, missing, malformed, or structurally unexpected</li>
+  <li>Professional code behaves predictably when the world gets messy</li>
 </ul>
+<h3>Framing Rule</h3>
+<p><strong>Outside data is untrusted until we check it.</strong></p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 1: Recap &amp; Transition from Session 3`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="http-client-fundamentals-f0e8df8d" data-slide-number="11">
             <h1>HTTP Client Fundamentals</h1>
             <ul>
-  <li>Client sends request</li>
-  <li>Server sends response</li>
+  <li>A client sends a request; a server answers</li>
+  <li>Request parts: method, URL, optional params / headers / body</li>
+  <li>Response parts: status code, headers, body (often JSON)</li>
+  <li><code>GET</code> — give me data; <code>POST</code> — accept this data or create something</li>
 </ul>
-<h3>High-Level Pieces</h3>
-<ul>
-  <li>method</li>
-  <li>URL</li>
-  <li>optional params/headers/body</li>
-  <li>status code</li>
-  <li>response body</li>
-</ul>
-<h3>Today</h3>
-<ul>
-  <li>mainly <code>GET</code></li>
-  <li>JSON responses</li>
-</ul>
+<pre data-lang="python"><code>import requests
+
+response = requests.get(&quot;https://example.com/api/items&quot;, timeout=5)
+print(response.status_code)  # 200, 404, 500, etc.
+print(response.text)          # raw body</code></pre>
+<p>This is approachable — but not yet robust. Timeout, status checks, and JSON validation still needed.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 2: HTTP Client Fundamentals`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Reliability Habits</h1>
-            <ul>
-  <li><strong>Always set a timeout</strong></li>
-  <li>Prefer <code>raise_for_status()</code></li>
-  <li>Catch failure categories cleanly:</li>
-  <li style="margin-left: 30px;">timeout</li>
-  <li style="margin-left: 30px;">connection problem</li>
-  <li style="margin-left: 30px;">HTTP error</li>
-  <li style="margin-left: 30px;">invalid JSON</li>
-  <li style="margin-left: 30px;">contract mismatch</li>
-</ul>
-        </section>
+        <section class="slide" id="timeout-and-raise-for-status-ff4a0452" data-slide-number="12">
+            <h1>Timeout and `raise_for_status()`</h1>
+            <pre data-lang="python"><code># Single overall timeout — never hang forever
+requests.get(url, timeout=5)
 
-        <section class="slide">
-            <h1>JSON Is a Contract</h1>
-            <h3>Check the Minimum Shape You Need</h3>
-<ul>
-  <li>payload type</li>
-  <li>required keys</li>
-  <li>expected value types</li>
-</ul>
+# Separate connect + read timeout
+requests.get(url, timeout=(3, 10))</code></pre>
 <pre data-lang="python"><code>response = requests.get(url, timeout=5)
-response.raise_for_status()
+response.raise_for_status()   # HTTPError on 4xx / 5xx
 data = response.json()</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Small Wrapper Function</h1>
-            <pre data-lang="python"><code>def fetch_task(url: str) -&gt; dict:
-    response = requests.get(url, timeout=5)
-    response.raise_for_status()
-    data = response.json()
-    if not isinstance(data, dict) or &quot;title&quot; not in data:
-        raise ValueError(&quot;Response contract mismatch&quot;)
-    return data</code></pre>
 <ul>
-  <li>Centralize request behavior</li>
-  <li>Avoid copy/paste request logic everywhere</li>
+  <li>Without a timeout, a slow server freezes the program indefinitely</li>
+  <li><code>raise_for_status()</code> keeps happy-path code clean and pushes failures into exception handlers</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 3: JSON Contracts, Timeouts, and Status Codes`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: API Consumer</h1>
-            <p><strong>Time: 15–25 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Send a <code>GET</code> request to a sample endpoint</li>
-  <li>Use <code>timeout=...</code></li>
-  <li>Call <code>raise_for_status()</code></li>
-  <li>Parse JSON</li>
-  <li>Validate required keys before use</li>
-  <li>Show a friendly failure message for one error case</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 13)</h1>
-            <p><span class="check">✓</span> Request uses a timeout</p>
-<p><span class="check">✓</span> Happy path parses JSON safely</p>
-<p><span class="check">✓</span> Failure handling is intentional</p>
-<p><span class="check">✓</span> Contract validation happens before downstream use</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 13)</h1>
+        <section class="slide" id="json-is-a-contract-52af7183" data-slide-number="13">
+            <h1>JSON Is a Contract</h1>
             <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> client call that reads JSON safely and prints labeled checks</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> check status codes and JSON keys</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> assuming every response has the shape you want</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 13 | request url: https://api.example.test/tasks</code></li>
+  <li>Beginners assume the response matches exactly what they imagined</li>
+  <li>APIs change; fields go missing; types drift from <code>int</code> to <code>str</code></li>
+  <li>Define the minimum contract required before trusting the data</li>
 </ul>
-<h3>Source Alignment</h3>
+<pre data-lang="python"><code>class APIContractError(Exception):
+    &quot;&quot;&quot;Raised when API data does not match the expected shape.&quot;&quot;&quot;
+
+
+def validate_post_contract(payload: dict) -&gt; None:
+    required: dict = {&quot;id&quot;: int, &quot;title&quot;: str, &quot;body&quot;: str}
+    for field, expected_type in required.items():
+        if field not in payload:
+            raise APIContractError(f&quot;Missing required field: {field}&quot;)
+        if not isinstance(payload[field], expected_type):
+            raise APIContractError(
+                f&quot;&#x27;{field}&#x27; expected {expected_type.__name__}, &quot;
+                f&quot;got {type(payload[field]).__name__}&quot;
+            )</code></pre>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 3 and Section 4`</blockquote>
+        </section>
+
+        <section class="slide" id="demo-full-wrapper-function-9779a63e" data-slide-number="14">
+            <h1>Demo: Full Wrapper Function</h1>
+            <pre data-lang="python"><code>def fetch_post(post_id: int) -&gt; dict | None:
+    url = f&quot;https://jsonplaceholder.typicode.com/posts/{post_id}&quot;
+    try:
+        response = requests.get(url, timeout=(3, 10))
+        response.raise_for_status()
+        data = response.json()
+        if not isinstance(data, dict):
+            raise APIContractError(&quot;Expected a JSON object&quot;)
+        validate_post_contract(data)
+        return data
+    except requests.Timeout:
+        logger.error(&quot;The service timed out.&quot;)
+    except requests.ConnectionError:
+        logger.error(&quot;The service appears unreachable.&quot;)
+    except requests.HTTPError as err:
+        logger.error(&quot;HTTP error: %s&quot;, err.response.status_code)
+    except requests.exceptions.JSONDecodeError:
+        logger.error(&quot;The service returned invalid JSON.&quot;)
+    except APIContractError as err:
+        logger.error(&quot;JSON contract not satisfied: %s&quot;, err)
+    return None</code></pre>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 4: Live Demo`</blockquote>
+        </section>
+
+        <section class="slide" id="friendly-failure-categories-294df828" data-slide-number="15">
+            <h1>Friendly Failure Categories</h1>
+            <ul>
+  <li><strong>Timeout</strong> — &quot;The service took too long to respond.&quot;</li>
+  <li><strong>Connection problem</strong> — &quot;The service may be unreachable.&quot;</li>
+  <li><strong>HTTP error</strong> — &quot;The service returned an error.&quot;</li>
+  <li><strong>Invalid JSON</strong> — &quot;The service returned unreadable data.&quot;</li>
+  <li><strong>Contract mismatch</strong> — &quot;The response did not match expectations.&quot;</li>
+</ul>
+<h3>Two Audiences, Two Channels</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day4_homework.ipynb</code> → <code>## Part 1: Hour 13 - HTTP client work</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day4_Quiz.html</code> → <code>QUIZ_DATA</code> questions 1–5</li>
+  <li>User sees a calm, plain-language message</li>
+  <li>Log file captures the full technical detail for developers</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 3: Friendly Failure Categories`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="lab-api-consumer-26-min-a74c4e0e" data-slide-number="16">
+            <h1>Lab: API Consumer (26 min)</h1>
+            <h3>Tasks</h3>
+<ul>
+  <li>Call an HTTP endpoint with <code>timeout=...</code> on every request</li>
+  <li>Parse JSON and print selected fields in a user-friendly format</li>
+  <li>Use <code>raise_for_status()</code> and validate required keys before downstream use</li>
+  <li>Handle at least: timeout, connection failure, 404, 500, invalid JSON, contract mismatch</li>
+  <li>Keep all request logic in one wrapper function — no copy/paste</li>
+</ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Happy path parses and prints cleanly</li>
+  <li>Client never hangs indefinitely</li>
+  <li>Each failure category produces a friendly message, not a raw traceback</li>
+</ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 5: Hands-On Lab`</blockquote>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-13-5ba0d32f" data-slide-number="17">
             <h1>Common Pitfalls (Hour 13)</h1>
-            <p><strong>⚠️</strong> No timeout</p>
-<p><strong>⚠️</strong> Parsing JSON before checking status</p>
-<p><strong>⚠️</strong> Trusting missing keys blindly</p>
-<p><strong>⚠️</strong> Returning raw error noise to end users</p>
+            <ul>
+  <li>No timeout — program may hang forever waiting for a slow server</li>
+  <li>Calling <code>.json()</code> before confirming the status code is acceptable</li>
+  <li>Accessing <code>data[&quot;title&quot;]</code> without first confirming <code>data</code> is a dictionary</li>
+  <li>One broad <code>except Exception:</code> at the top masking the real error category</li>
+  <li>Logging raw exception traces directly to users instead of developer logs</li>
+  <li>Duplicating <code>requests.get(...)</code> logic in multiple places instead of a wrapper</li>
+</ul>
+<p><strong>Quick Check:</strong> Why is &quot;the server returned valid JSON&quot; not the same as &quot;the response satisfies our contract&quot;?</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour1_Advanced.md` → `## Section 5: Common Pitfalls`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Why is &quot;the service returned valid JSON&quot; not the same as &quot;the response matches our contract&quot;?</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 14: Security Basics</h1>
+        <section class="slide" id="hour-14-security-basics-secrets-env-vars-and-hashing-417c60e3" data-slide-number="18">
+            <h1>Hour 14: Security Basics — Secrets, Env Vars, and Hashing</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-23f4740b" data-slide-number="19">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Explain why secrets should not live in source files</li>
-  <li>Load sensitive values from environment variables</li>
-  <li>Distinguish hashing from encryption conceptually</li>
-  <li>Keep this hour in appropriate scope</li>
+  <li>Explain why secrets must not be hard-coded in source files or commits</li>
+  <li>Load secrets from environment variables with a helper that fails early on missing values</li>
+  <li>Create <code>.env.example</code> with placeholder values and update <code>.gitignore</code> accordingly</li>
+  <li>Describe hashing vs encryption at a conceptual level and keep scope honest</li>
+  <li>Gate an admin action on configuration rather than a hard-coded literal</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Security Mindset Reset</h1>
+        <section class="slide" id="security-is-about-habits-not-heroics-0c1532a2" data-slide-number="20">
+            <h1>Security Is About Habits, Not Heroics</h1>
             <ul>
-  <li>We are teaching <strong>habits</strong>, not full security engineering</li>
-  <li>Good boundaries matter</li>
+  <li>This hour prevents very common, very avoidable mistakes — not everything</li>
+  <li>The scope boundary is intentional and important</li>
 </ul>
 <h3>Not This Hour</h3>
 <ul>
-  <li>OAuth</li>
-  <li>JWT flows</li>
-  <li>production identity systems</li>
+  <li>OAuth, JWT, OIDC, or production identity systems</li>
+  <li>Full cryptographic design</li>
 </ul>
 <h3>This Hour</h3>
 <ul>
-  <li>secret hygiene</li>
-  <li>env vars</li>
-  <li><code>.env.example</code></li>
-  <li>hashing concept demo</li>
+  <li>Where sensitive values live and how they move</li>
+  <li>Environment variable loading pattern</li>
+  <li>Concept-level hashing demonstration with honest scope labeling</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 1: Recap &amp; Security Mindset Reset`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hard-coded-secrets-are-a-trap-eec75a1b" data-slide-number="21">
             <h1>Hard-Coded Secrets Are a Trap</h1>
-            <pre data-lang="python"><code>ADMIN_KEY = &quot;super-secret-real-key&quot;</code></pre>
-<h3>Problems</h3>
+            <pre data-lang="python"><code># Do not do this
+ADMIN_KEY = &quot;super-secret-real-key&quot;</code></pre>
+<h3>Why This Fails in Practice</h3>
 <ol>
-  <li>Secrets end up in version control</li>
-  <li>Rotation becomes painful</li>
-  <li>Unsafe sharing habits spread</li>
-  <li>Commit history keeps the mistake around</li>
+  <li>Secrets get committed to version control — deleting the line later leaves history</li>
+  <li>Secrets spread through screenshots, code reviews, and copy/paste</li>
+  <li>Rotation requires a code change and redeploy, not just a config update</li>
+  <li>Unsafe habits spread across the team</li>
 </ol>
+<h3>The Safe Pattern</h3>
+<pre data-lang="python"><code>import os
+
+api_key = os.environ.get(&quot;APP_API_KEY&quot;)</code></pre>
+<p>Code declares what it needs; the environment supplies the actual value at runtime.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 2: Core Concepts`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Environment Variable Pattern</h1>
+        <section class="slide" id="get-required-env-helper-65a3cfd6" data-slide-number="22">
+            <h1>`get_required_env()` Helper</h1>
             <pre data-lang="python"><code>import os
 
 
@@ -653,40 +677,41 @@ def get_required_env(name: str) -&gt; str:
         raise RuntimeError(f&quot;Missing required environment variable: {name}&quot;)
     return value</code></pre>
 <ul>
-  <li>Code names what it needs</li>
-  <li>Environment supplies the real value</li>
+  <li>Fails loudly when a required variable is absent</li>
+  <li>Silently receiving <code>None</code> and stumbling later is harder to debug</li>
+  <li>Use this in any admin or API-enabled script</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 2: Environment Variables as a Simple, Practical Pattern`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>`.env.example` vs `.env`</h1>
-            <pre data-lang="env"><code>APP_API_KEY=your-api-key-here
+        <section class="slide" id="env-example-template-and-gitignore-b733db30" data-slide-number="23">
+            <h1>`.env.example` Template and `.gitignore`</h1>
+            <pre><code># .env.example — safe to commit, placeholders only, never real values
+APP_API_KEY=your-api-key-here
 APP_ADMIN_KEY=replace-with-local-admin-key
 APP_ENV=development</code></pre>
+<pre><code># .gitignore — exclude local secret files
+.env
+.env.local
+.env.development
+.env.production
+!.env.example
+secrets.json</code></pre>
 <ul>
-  <li><code>.env.example</code> may be committed</li>
-  <li><code>.env</code> should usually be ignored</li>
-  <li>placeholders only — never real secrets</li>
+  <li><code>.env.example</code> documents required names for collaborators</li>
+  <li><code>.env</code> is local configuration — never commit it</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 2: .env.example File`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hashing-vs-encryption-f2284d8c" data-slide-number="24">
             <h1>Hashing vs Encryption</h1>
             <ul>
-  <li><strong>Encryption</strong> is meant to be reversible with the right key</li>
-  <li><strong>Hashing</strong> is meant to be one-way</li>
+  <li><strong>Encryption</strong> is designed to be reversible with the right key</li>
+  <li><strong>Hashing</strong> is one-way — no key &quot;decrypts&quot; a digest back to the original</li>
+  <li>Common pattern: hash a new input, compare its digest to a stored digest</li>
 </ul>
-<h3>Classroom-Safe Demo Idea</h3>
-<ul>
-  <li>compute a digest</li>
-  <li>compare digests</li>
-  <li>do <strong>not</strong> claim this solves production auth</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Gated Admin Action</h1>
-            <pre data-lang="python"><code>import hashlib
+<pre data-lang="python"><code>import hashlib
 import secrets
 
 
@@ -694,405 +719,513 @@ def sha256_digest(value: str) -&gt; str:
     return hashlib.sha256(value.encode(&quot;utf-8&quot;)).hexdigest()
 
 
-authorized = secrets.compare_digest(
-    sha256_digest(expected_key),
+# Safe constant-time comparison (avoids timing side-channels)
+match = secrets.compare_digest(
     sha256_digest(provided_key),
+    sha256_digest(expected_key),
 )</code></pre>
+<p><strong>Scope note:</strong> this demo illustrates the one-way concept — it is not a production password system.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 3: Hashing vs Encryption – High-Level Only`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Secure-ish Configuration</h1>
-            <p><strong>Time: 18–25 minutes</strong></p>
-<h3>Tasks</h3>
+        <section class="slide" id="demo-environment-variable-gated-admin-action-a4ee1b0f" data-slide-number="25">
+            <h1>Demo: Environment Variable + Gated Admin Action</h1>
+            <pre data-lang="python"><code>import hashlib, logging, os, secrets
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format=&quot;%(asctime)s %(levelname)s %(message)s&quot;)
+
+
+def run_admin_action(provided_key: str) -&gt; None:
+    expected_key = get_required_env(&quot;APP_ADMIN_KEY&quot;)
+    if not secrets.compare_digest(
+        sha256_digest(provided_key),
+        sha256_digest(expected_key),
+    ):
+        logger.warning(&quot;Admin action denied due to invalid key.&quot;)
+        print(&quot;Admin action denied.&quot;)
+        return
+    logger.info(&quot;Admin action approved.&quot;)
+    print(&quot;Admin action completed.&quot;)</code></pre>
 <ul>
-  <li>Read one required value from the environment</li>
-  <li>Add a <code>.env.example</code> template plan</li>
-  <li>Add <code>.gitignore</code> guidance for local secret files</li>
-  <li>Gate one admin action using configuration, not a hard-coded literal</li>
+  <li><code>get_required_env()</code> fails early if the variable is absent</li>
+  <li>User sees &quot;denied / completed&quot;; log captures the event for audit</li>
+  <li>Never log the actual secret value — log the event, not the credential</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 4: Live Demo`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Completion Criteria (Hour 14)</h1>
-            <p><span class="check">✓</span> Secret value is not hard-coded in the source</p>
-<p><span class="check">✓</span> Missing env var fails clearly</p>
-<p><span class="check">✓</span> Learner can explain hashing vs encryption at a high level</p>
-<p><span class="check">✓</span> Scope stays disciplined and honest</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 14)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> secure config pattern that separates secrets from code</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> read secrets from env vars, store only hashes when appropriate</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> checking secrets into source control</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 14 | secret source: environment variable</code></li>
-</ul>
-<h3>Source Alignment</h3>
+        <section class="slide" id="lab-secure-ish-configuration-18-min-2f5e22e0" data-slide-number="26">
+            <h1>Lab: Secure-ish Configuration (18 min)</h1>
+            <h3>Tasks</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day4_homework.ipynb</code> → <code>## Part 2: Hour 14 - Security basics</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day4_Quiz.html</code> → <code>QUIZ_DATA</code> questions 6–10</li>
+  <li>Read a required value from an environment variable using <code>get_required_env()</code></li>
+  <li>Gate one admin-only action on that value — no hard-coded literals anywhere</li>
+  <li>Create <code>.env.example</code> with placeholder values only</li>
+  <li>Update <code>.gitignore</code> to exclude <code>.env</code> and similar local files</li>
+  <li>Add a README note explaining that env vars must be set before running admin actions</li>
+  <li>Log whether the admin action was approved or denied</li>
 </ul>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>No secret value appears in source code or commit history</li>
+  <li>Missing env var fails clearly and early with a useful message</li>
+  <li><code>.env.example</code> is committed; <code>.env</code> is ignored</li>
+</ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 5: Hands-On Lab`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-14-968a0d8c" data-slide-number="27">
             <h1>Common Pitfalls (Hour 14)</h1>
-            <p><strong>⚠️</strong> Real secrets in demo files</p>
-<p><strong>⚠️</strong> Committing <code>.env</code></p>
-<p><strong>⚠️</strong> Treating hashing and encryption as synonyms</p>
-<p><strong>⚠️</strong> Promising production-grade security from a classroom-safe example</p>
+            <h3>Security Habit Checklist — ask before every privileged action</h3>
+<ol>
+  <li>Is this value sensitive or just general configuration?</li>
+  <li>Does it appear anywhere in source, screenshots, or commit history?</li>
+  <li>Can the value rotate tomorrow without a code change?</li>
+  <li>Are required variable names documented in README or <code>.env.example</code>?</li>
+  <li>Are local secret files excluded by <code>.gitignore</code>?</li>
+</ol>
+<ul>
+  <li>Real secrets visible in demo or example files</li>
+  <li>Committing <code>.env</code> because <code>.gitignore</code> was not updated in time</li>
+  <li>Printing secret values to &quot;prove the load worked&quot; — use downstream behavior instead</li>
+  <li>Treating hashing and encryption as interchangeable terms</li>
+  <li>Assuming a classroom <code>sha256</code> demo equals a production password system</li>
+  <li>Scope drift toward OAuth or JWT before foundational habits are solid</li>
+</ul>
+<p><strong>Quick Check:</strong> Why is <code>.env.example</code> safe to commit when <code>.env</code> is not?</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour2_Advanced.md` → `## Section 5: Common Pitfalls`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Why is a <code>.env.example</code> helpful even though it contains no real secret values?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-15-capstone-planning-workshop-c8c5f621" data-slide-number="28">
             <h1>Hour 15: Capstone Planning Workshop</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-b9bf6ddb" data-slide-number="29">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Lock an MVP scope</li>
-  <li>Choose a delivery path</li>
-  <li>Break the project into milestones</li>
-  <li>Define &quot;done&quot; before the build gets bigger</li>
+  <li>Lock a realistic capstone MVP rather than an aspirational wish list</li>
+  <li>Break the project into six milestones with explicit definitions of done</li>
+  <li>Choose GUI-first or API-first and justify that choice in writing</li>
+  <li>Create a README skeleton and a one-page plan before building further</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-this-workshop-is-really-for-6c06ae3a" data-slide-number="30">
             <h1>What This Workshop Is Really For</h1>
             <ul>
-  <li>Replace vague enthusiasm with a delivery plan</li>
-  <li>Protect the project from scope drift</li>
-  <li>Decide what proves value earliest</li>
+  <li>Replace vague enthusiasm with a concrete delivery plan</li>
+  <li>A smaller finished MVP beats a large idea that never stabilizes</li>
+  <li>Planning protects creativity from chaos — it does not shrink it</li>
 </ul>
-<h3>Strong Planning Questions</h3>
-<ul>
-  <li>Who is the user?</li>
-  <li>What is the primary workflow?</li>
-  <li>What is the smallest useful version?</li>
-</ul>
+<h3>Driving Question</h3>
+<p>&quot;What is the smallest version that still proves the core value?&quot;</p>
+<h3>Opening Prompt</h3>
+<p>In one sentence: what should your capstone help a user do?</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 1: Reframe the Capstone`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Recommended Milestone Path</h1>
+        <section class="slide" id="recommended-milestone-sequence-3d5d2522" data-slide-number="31">
+            <h1>Recommended Milestone Sequence</h1>
             <ol>
-  <li>Core</li>
-  <li>Persistence</li>
-  <li>UI</li>
-  <li>Analytics</li>
-  <li>Tests</li>
-  <li>Package</li>
+  <li><strong>Core</strong> — business rules that work without a GUI</li>
+  <li><strong>Persistence</strong> — state survives restart; corrupted storage is handled</li>
+  <li><strong>UI</strong> — primary workflow through the chosen surface</li>
+  <li><strong>Analytics</strong> — at least one meaningful derived insight from real data</li>
+  <li><strong>Tests</strong> — repeatable checks for core rules and failure paths</li>
+  <li><strong>Package</strong> — coherent layout, usable README, repeatable entry point</li>
 </ol>
-<ul>
-  <li>Do not jump to a flashy shell around unstable logic</li>
-</ul>
+<p>Do not jump to UI or analytics before the core and persistence are solid — a GUI only hides instability temporarily.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 2: Milestones and Definition of Done`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Definition of Done Examples</h1>
-            <h3>Core</h3>
-<ul>
-  <li>service logic works in isolation</li>
-</ul>
-<h3>Persistence</h3>
-<ul>
-  <li>data survives restart</li>
-</ul>
-<h3>UI</h3>
-<ul>
-  <li>primary workflow works through the chosen surface</li>
-</ul>
-<h3>Tests</h3>
-<ul>
-  <li>major business rules and failure paths have repeatable checks</li>
-</ul>
+        <section class="slide" id="definition-of-done-for-each-milestone-aacb5561" data-slide-number="32">
+            <h1>Definition of Done for Each Milestone</h1>
+            <table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Done When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core</td>
+<td>Service logic works correctly in isolation</td>
+</tr>
+<tr>
+<td>Persistence</td>
+<td>Data survives restart; corrupted storage is handled</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>User completes the primary workflow via chosen interface</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td>At least one useful insight is computed from project data</td>
+</tr>
+<tr>
+<td>Tests</td>
+<td>Key business rules and failure paths have repeatable checks</td>
+</tr>
+<tr>
+<td>Package</td>
+<td>Coherent layout, README, and repeatable run command exist</td>
+</tr>
+</tbody>
+</table>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 2: Milestones and Definition of Done`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Delivery Path Decision</h1>
+        <section class="slide" id="delivery-path-gui-first-vs-api-first-b399278f" data-slide-number="33">
+            <h1>Delivery Path: GUI-First vs API-First</h1>
             <h3>GUI-First</h3>
 <ul>
-  <li>tangible demo quickly</li>
-  <li>risk: logic hides in callbacks</li>
+  <li>Best for human-operator tools, tracker dashboards, data-entry apps</li>
+  <li>Tangible demo early; easy for non-technical audiences</li>
+  <li>Risk: logic hides in callbacks; tests get postponed</li>
 </ul>
 <h3>API-First</h3>
 <ul>
-  <li>clearer service boundaries</li>
-  <li>risk: less visually exciting at first</li>
+  <li>Best for automation backends, multi-client systems, integration projects</li>
+  <li>Clear service boundaries; easier to test logic directly</li>
+  <li>Risk: less visually exciting early; may under-document usage</li>
 </ul>
-<h3>Non-Negotiable</h3>
-<ul>
-  <li>core logic still lives in reusable services</li>
-</ul>
+<h3>Non-Negotiable for Either Path</h3>
+<p>Core logic must live in reusable services — never inside the interface layer.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 3: Choosing a Delivery Path`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo Artifact Shape</h1>
+        <section class="slide" id="sample-project-structure-and-readme-skeleton-1f1637fc" data-slide-number="34">
+            <h1>Sample Project Structure and README Skeleton</h1>
             <pre data-lang="text"><code>capstone_project/
-├── README.md
+├── README.md           # Project goal, MVP, setup (placeholder), run (placeholder)
 ├── src/
+│   └── task_tracker/
+│       ├── __init__.py
+│       ├── models.py       # domain data
+│       ├── services.py     # business rules
+│       ├── persistence.py  # save/load
+│       └── ui.py           # interface layer
 ├── tests/
-└── data/</code></pre>
-<h3>README Needs</h3>
-<ul>
-  <li>project goal</li>
-  <li>MVP features</li>
-  <li>setup steps</li>
-  <li>run steps</li>
-</ul>
+│   └── test_services.py
+└── data/
+    └── sample_data.json</code></pre>
+<p>Write the README <strong>now</strong> — Project Goal, MVP Features, Planned Milestones, Setup / Run / Testing placeholders.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 4: Live Demo – Folder Structure`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Workshop: One-Page Capstone Plan</h1>
-            <p><strong>Time: 20 minutes</strong></p>
-<h3>Include</h3>
-<ul>
-  <li>chosen domain</li>
-  <li>primary user workflow</li>
-  <li>GUI-first or API-first decision</li>
-  <li>milestone list</li>
-  <li>persistence plan</li>
-  <li>key risks</li>
-  <li>test targets</li>
-</ul>
+        <section class="slide" id="one-page-plan-template-workshop-26-min-4c87d609" data-slide-number="35">
+            <h1>One-Page Plan Template + Workshop (26 min)</h1>
+            <pre data-lang="markdown"><code>## Project Goal — what user problem does this solve?
+## MVP Scope — Feature 1 / Feature 2 / Feature 3
+## Data Model — main entity, important fields, relationships
+## Delivery Path — GUI-first or API-first + one-sentence justification
+## Persistence Plan — JSON save/load now; database-ready later
+## Analytics Idea — one useful summary or derived insight
+## Test Plan — core rules to test + error cases to test
+## Risks — biggest scope risk / biggest technical risk
+## Stretch Goals — preserved ambition, clearly not MVP</code></pre>
+<p>Mini-budget: goal (3 min) → model (4 min) → path (3 min) → persistence (4 min) → analytics (3 min) → tests (4 min) → README skeleton (3 min) → stretch/risks (2 min)</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 5: Hands-On Workshop`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Completion Criteria (Hour 15)</h1>
-            <p><span class="check">✓</span> Scope is realistic</p>
-<p><span class="check">✓</span> Delivery path is chosen and justified</p>
-<p><span class="check">✓</span> Milestones are sequenced clearly</p>
-<p><span class="check">✓</span> README skeleton or plan notes exist</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 15)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> milestone plan with one domain, one interface, and staged deliverables</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> keep scope narrow enough to finish</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> trying to build every optional feature before core CRUD is stable</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 15 | chosen domain: tracker</code></li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/assignments/Advanced_Day4_homework.ipynb</code> → <code>## Part 3: Hour 15 - Capstone planning workshop</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day4_Quiz.html</code> → <code>QUIZ_DATA</code> questions 11–15</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-15-4f1e237b" data-slide-number="36">
             <h1>Common Pitfalls (Hour 15)</h1>
-            <p><strong>⚠️</strong> Wish-list scope instead of MVP scope</p>
-<p><strong>⚠️</strong> README postponed until the final hour</p>
-<p><strong>⚠️</strong> UI selected before the core is stable</p>
-<p><strong>⚠️</strong> No persistence or test plan in the roadmap</p>
+            <ul>
+  <li>Scope is a wish list rather than a realistic MVP for the course timeline</li>
+  <li>No plan for persistence — data loss is discovered late</li>
+  <li>No plan for testing — bugs accumulate in silence</li>
+  <li>UI chosen before core logic exists — building a shell around unstable logic</li>
+  <li>README postponed until the final session</li>
+  <li>Stretch goals mixed into MVP so everything becomes mandatory</li>
+  <li>Plan contains no concrete verbs — &quot;analytics dashboard&quot; is not an action</li>
+</ul>
+<p><strong>Quick Check:</strong> Which milestone do students most often jump to too early, and what instability does that risk hiding?</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour3_Advanced.md` → `## Section 5: Common Pitfalls`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Which milestone do students most often try to jump to too early, and why is that risky?</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 16: Checkpoint 2 — Persistence-Ready Core</h1>
+        <section class="slide" id="hour-16-checkpoint-2-persistence-ready-core-json-save-load-efb21333" data-slide-number="37">
+            <h1>Hour 16: Checkpoint 2 — Persistence-Ready Core + JSON Save/Load</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-953b14cb" data-slide-number="38">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Separate domain, service, and persistence responsibilities</li>
-  <li>Save JSON using a safe-save pattern</li>
-  <li>Load saved state back into application objects</li>
-  <li>Handle missing files, invalid JSON, and validation failures cleanly</li>
+  <li>Organize the application as a package under <code>src/</code> with clear responsibility layers</li>
+  <li>Save state using a safe-save pattern — write temp file first, then replace atomically</li>
+  <li>Load JSON back into application objects and restore state across runs</li>
+  <li>Handle missing files, invalid JSON, and validation failures with custom exceptions</li>
+  <li>Configure logging to a file so all persistence events are captured for debugging</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-checkpoint-2-proves-e858d8e4" data-slide-number="39">
             <h1>What Checkpoint 2 Proves</h1>
             <ul>
-  <li>The core survives beyond one run</li>
-  <li>The package layout under <code>src/</code> is intentional</li>
-  <li>State can be saved and restored</li>
-  <li>Logging captures meaningful persistence events</li>
-  <li>Custom exceptions still communicate domain and persistence issues</li>
+  <li>The core survives beyond one run — state persists reliably</li>
+  <li>The <code>src/</code> package layout separates domain, service, and persistence concerns</li>
+  <li>Save and load failures are handled intentionally — not silently swallowed</li>
+  <li>Logging captures meaningful events: save, load, missing file, invalid data, failures</li>
+  <li>Custom exceptions still communicate domain and persistence problems clearly</li>
 </ul>
+<h3>Grading Focus</h3>
+<p><strong>Correctness, structure, error handling, and logging.</strong> A small clean solution scores higher than a large fragile one.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 1: Checkpoint Framing and Grading Focus`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Sample Persistence-Ready Layout</h1>
+        <section class="slide" id="persistence-ready-package-layout-08553f2a" data-slide-number="40">
+            <h1>Persistence-Ready Package Layout</h1>
             <pre data-lang="text"><code>project_root/
-├── demo_persistence.py
-├── logs/app.log
-├── data/state.json
-└── src/reading_tracker/
-    ├── errors.py
-    ├── logging_config.py
-    ├── models.py
-    ├── persistence.py
-    └── services.py</code></pre>
+├── demo_persistence.py     # clear demonstration entry point
+├── logs/
+│   └── app.log
+├── data/
+│   └── state.json
+└── src/
+    └── reading_tracker/
+        ├── __init__.py
+        ├── errors.py           # custom exceptions
+        ├── logging_config.py   # file logging setup
+        ├── models.py           # domain data + to_dict/from_dict
+        ├── persistence.py      # JSON save/load
+        └── services.py         # business rules</code></pre>
+<p>Future database integration only requires changing <code>persistence.py</code> — the rest stays the same.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 2: Persistence-Ready Architecture`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Separation of Concerns</h1>
-            <ul>
-  <li><strong>models.py</strong> → structured domain data</li>
-  <li><strong>services.py</strong> → business rules</li>
-  <li><strong>persistence.py</strong> → JSON save/load</li>
-  <li><strong>errors.py</strong> → custom exceptions</li>
-  <li><strong>logging_config.py</strong> → file logging setup</li>
-</ul>
-<h3>Why It Matters</h3>
+        <section class="slide" id="domain-model-with-serialization-923b3104" data-slide-number="41">
+            <h1>Domain Model with Serialization</h1>
+            <pre data-lang="python"><code>from dataclasses import asdict, dataclass, field
+
+
+@dataclass(slots=True)
+class Book:
+    title: str
+    author: str
+    pages_read: int = 0
+
+
+@dataclass(slots=True)
+class ReadingState:
+    books: list[Book] = field(default_factory=list)
+
+    def to_dict(self) -&gt; dict:
+        return {&quot;books&quot;: [asdict(book) for book in self.books]}
+
+    @classmethod
+    def from_dict(cls, data: dict) -&gt; &quot;ReadingState&quot;:
+        return cls(books=[Book(**b) for b in data.get(&quot;books&quot;, [])])</code></pre>
+<p>JSON understands dicts, lists, strings, and numbers — not arbitrary Python objects by magic.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 2: Example Domain Model`</blockquote>
+        </section>
+
+        <section class="slide" id="custom-exceptions-file-logging-491f4e1b" data-slide-number="42">
+            <h1>Custom Exceptions + File Logging</h1>
+            <pre data-lang="python"><code>class AppError(Exception):
+    &quot;&quot;&quot;Base application error.&quot;&quot;&quot;
+
+class ValidationError(AppError):
+    &quot;&quot;&quot;Raised when domain validation fails.&quot;&quot;&quot;
+
+class PersistenceError(AppError):
+    &quot;&quot;&quot;Raised when save/load operations fail.&quot;&quot;&quot;</code></pre>
+<pre data-lang="python"><code>def configure_logging() -&gt; None:
+    log_dir = Path(&quot;logs&quot;)
+    log_dir.mkdir(exist_ok=True)
+    logging.basicConfig(
+        filename=log_dir / &quot;app.log&quot;,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )</code></pre>
+<p>Log events: save started / succeeded, load started, file missing, invalid JSON, validation failed.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 3: Safe JSON Save/Load, Logging, and Exception Strategy`</blockquote>
+        </section>
+
+        <section class="slide" id="safe-save-pattern-ab8cdc03" data-slide-number="43">
+            <h1>Safe-Save Pattern</h1>
+            <pre data-lang="python"><code>def save(self, state: ReadingState) -&gt; None:
+    self.path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = self.path.with_suffix(self.path.suffix + &quot;.tmp&quot;)
+    try:
+        with temp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+            json.dump(state.to_dict(), f, indent=2)
+        temp_path.replace(self.path)          # atomic replacement
+        logger.info(&quot;State saved to %s&quot;, self.path)
+    except OSError as error:
+        logger.exception(&quot;Failed to save state&quot;)
+        raise PersistenceError(&quot;Could not save application state&quot;) from error</code></pre>
 <ul>
-  <li>JSON today</li>
-  <li>database later</li>
-  <li>less rewiring when storage changes</li>
+  <li>Writing to <code>.tmp</code> first then replacing ensures the last good save is never partially overwritten</li>
+  <li>A crash mid-write leaves the original file intact</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 3: Safe Save Pattern with pathlib`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Safe Save + Load Shape</h1>
-            <pre data-lang="python"><code>class PersistenceError(Exception):
-    pass
+        <section class="slide" id="safe-load-pattern-0965034d" data-slide-number="44">
+            <h1>Safe Load Pattern</h1>
+            <pre data-lang="python"><code>def load(self) -&gt; ReadingState:
+    if not self.path.exists():
+        logger.info(&quot;State file missing; starting with default state&quot;)
+        return ReadingState()
+    try:
+        with self.path.open(&quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+            raw_data = json.load(f)
+    except json.JSONDecodeError as error:
+        logger.exception(&quot;State file contains invalid JSON&quot;)
+        raise PersistenceError(&quot;State file is corrupted&quot;) from error
+    except OSError as error:
+        raise PersistenceError(&quot;Could not load application state&quot;) from error
+    if not isinstance(raw_data, dict):
+        raise PersistenceError(&quot;State file must be a JSON object&quot;)
+    try:
+        return ReadingState.from_dict(raw_data)
+    except (TypeError, KeyError, ValueError) as error:
+        logger.exception(&quot;State data failed validation&quot;)
+        raise PersistenceError(&quot;State data structure was invalid&quot;) from error</code></pre>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 3: Safe JSON Save/Load`</blockquote>
+        </section>
 
+        <section class="slide" id="demo-save-restart-load-4b4ecee8" data-slide-number="45">
+            <h1>Demo: Save → Restart → Load</h1>
+            <pre data-lang="python"><code>store = JSONStateStore(Path(&quot;data/state.json&quot;))
+initial_state = store.load()            # missing file → default state
+service = ReadingService(initial_state)
+service.add_book(Book(&quot;Deep Work&quot;, &quot;Cal Newport&quot;, pages_read=25))
+service.add_book(Book(&quot;Clean Code&quot;, &quot;Robert C. Martin&quot;, pages_read=10))
+store.save(service.state)
+print(&quot;State saved. Simulating restart...&quot;)
 
-class JSONStateStore:
-    def save(self, state):
-        ...
+restarted_store = JSONStateStore(Path(&quot;data/state.json&quot;))
+reloaded = restarted_store.load()
+restarted_service = ReadingService(reloaded)
+for book in restarted_service.list_books():
+    print(f&quot;- {book.title} by {book.author} ({book.pages_read} pages read)&quot;)</code></pre>
+<p>The second instance reconstructs state from disk — that is the checkpoint proof.</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 4: Live Demo – Save -&gt; Restart -&gt; Load`</blockquote>
+        </section>
 
-    def load(self):
-        ...</code></pre>
+        <section class="slide" id="checkpoint-evidence-checklist-689aaa3a" data-slide-number="46">
+            <h1>Checkpoint Evidence Checklist</h1>
+            <table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>State persists across runs</td>
+<td>Save → restart → load shows same records</td>
+</tr>
+<tr>
+<td>Missing file handled</td>
+<td>First run produces default state, not a crash</td>
+</tr>
+<tr>
+<td>Invalid JSON handled</td>
+<td><code>JSONDecodeError</code> caught; meaningful log entry present</td>
+</tr>
+<tr>
+<td>Validation failure handled</td>
+<td>Corrupt data raises <code>PersistenceError</code> cleanly</td>
+</tr>
+<tr>
+<td>Logs are meaningful</td>
+<td>Open <code>app.log</code> — save / load / failure entries visible</td>
+</tr>
+<tr>
+<td>Separation of concerns</td>
+<td>Name the one module that would change if JSON became a DB</td>
+</tr>
+</tbody>
+</table>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 5: Evidence Checklist`</blockquote>
+        </section>
+
+        <section class="slide" id="hands-on-checkpoint-build-26-min-a71f161b" data-slide-number="47">
+            <h1>Hands-On Checkpoint Build (26 min)</h1>
+            <h3>Mini-Budget</h3>
 <ul>
-  <li>save started</li>
-  <li>save succeeded</li>
-  <li>load started</li>
-  <li>file missing handled</li>
-  <li>invalid JSON handled</li>
+  <li>4 min — confirm <code>src/</code> package layout; identify model, service, persistence, errors, logging modules</li>
+  <li>4 min — add or review <code>to_dict()</code> / <code>from_dict()</code> so JSON receives plain dicts and lists</li>
+  <li>5 min — implement save/load with safe-save temp file and missing-file path</li>
+  <li>4 min — add file logging; verify save/load events produce meaningful entries</li>
+  <li>4 min — add <code>JSONDecodeError</code> and validation failure handling using custom exceptions</li>
+  <li>3 min — run save → restart → load; inspect the saved JSON file directly</li>
+  <li>2 min — write one reflection: what design decision would you change if starting over?</li>
 </ul>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 5: Checkpoint Build Mini-Budget`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo Workflow</h1>
-            <h3>Save → Restart → Load</h3>
-<ol>
-  <li>Create a few records</li>
-  <li>Save to JSON safely</li>
-  <li>Recreate the service/store</li>
-  <li>Load state back in</li>
-  <li>Confirm records still exist</li>
-</ol>
-        </section>
-
-        <section class="slide">
-            <h1>Hands-On Checkpoint Build</h1>
-            <p><strong>Time: 15–25 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Organize or confirm package layout</li>
-  <li>Add a persistence layer</li>
-  <li>Implement safe save behavior</li>
-  <li>Load JSON back into objects</li>
-  <li>Log the key events</li>
-  <li>Demonstrate one failure case and one happy path</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 16)</h1>
-            <p><span class="check">✓</span> Core state round-trips through JSON</p>
-<p><span class="check">✓</span> Save path is safer than direct overwrite</p>
-<p><span class="check">✓</span> Load handles missing/bad files intentionally</p>
-<p><span class="check">✓</span> The project is visibly more persistence-ready than it was yesterday</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 16)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> core app that can add records and round-trip them through JSON</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> checkpoint save/load before expanding the interface</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> delaying persistence checks until after major UI work</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 16 | checkpoint model: Task</code></li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/assignments/Advanced_Day4_homework.ipynb</code> → <code>## Part 4: Hour 16 - Checkpoint 2</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day4_Quiz.html</code> → <code>QUIZ_DATA</code> questions 16–20</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-16-a040a73b" data-slide-number="48">
             <h1>Common Pitfalls (Hour 16)</h1>
-            <p><strong>⚠️</strong> Dumping JSON logic everywhere instead of using a persistence layer</p>
-<p><strong>⚠️</strong> Direct overwrite with no safety net</p>
-<p><strong>⚠️</strong> Treating file absence as a crash-only situation</p>
-<p><strong>⚠️</strong> Adding more features before proving save/load works</p>
+            <ul>
+  <li>Dumping raw Python objects to JSON without <code>to_dict()</code> serialization</li>
+  <li>Overwriting the final file directly instead of writing to a temp file first</li>
+  <li>Not catching <code>json.JSONDecodeError</code> specifically — bare <code>except:</code> hides the root cause</li>
+  <li>Logging only to the console, not to a file</li>
+  <li>Persistence code leaking into the service layer — save/load belongs in <code>persistence.py</code></li>
+  <li>Demoing a happy path without proving save → restart → load</li>
+  <li>Ignoring missing-file behavior — first-run must work cleanly</li>
+</ul>
+<p><strong>Quick Check:</strong> If the app works in memory but loses all data after restart, which milestone is still incomplete?</p>
+<blockquote>Source: `Advanced/lessons/lecture/Day4_Hour4_Advanced.md` → `## Section 5: Common Pitfalls`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> If the app works beautifully in memory but loses state after restart, what milestone is still incomplete?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="session-4-wrap-up-eb84d67f" data-slide-number="49">
             <h1>Session 4 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>What We Locked In Today</h1>
+        <section class="slide" id="what-we-built-today-d76f8a9c" data-slide-number="50">
+            <h1>What We Built Today</h1>
             <ul>
-  <li>Reliable HTTP client habits</li>
-  <li>Safer secret/config practices</li>
-  <li>A concrete capstone roadmap</li>
-  <li>Persistence-ready core architecture</li>
+  <li>A reliable HTTP client wrapper with timeouts, status handling, and JSON contract checks</li>
+  <li>Safer configuration using environment variables and <code>.env.example</code> hygiene</li>
+  <li>A concrete one-page capstone plan with milestones, delivery path, and README skeleton</li>
+  <li>A persistence-ready core that can save, restart, load, and log meaningful events</li>
 </ul>
-<h3>Key Rule</h3>
-<p><strong>Trustworthy software plans for failure, scope, and restart behavior.</strong></p>
+<h3>Key Session 4 Rule</h3>
+<p><strong>Trustworthy software plans for failures, scope drift, and restart behavior before they happen.</strong></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="day-4-homework-study-checklist-bdde0444" data-slide-number="51">
             <h1>Day 4 Homework / Study Checklist</h1>
             <ul>
-  <li>Re-run the HTTP wrapper with a failure case in mind</li>
-  <li>Remove any hard-coded secret from demo code</li>
-  <li>Finalize the one-page capstone plan</li>
-  <li>Test save -&gt; load round-trip behavior</li>
-  <li>Match the canonical output labels expected by the notebook</li>
+  <li>Re-run the HTTP wrapper with at least one real failure case triggered</li>
+  <li>Remove any hard-coded secret from demo or capstone code</li>
+  <li>Finalize the one-page capstone plan with stretch goals clearly separated</li>
+  <li>Verify save → restart → load round-trip for the capstone core</li>
+  <li>Confirm <code>app.log</code> contains meaningful save, load, and error entries</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day4_homework.ipynb</code> → <code>## Submission Checklist</code></li>
+  <li><code>Advanced/assignments/Advanced_Day4_homework.ipynb</code> → <code>## Reflection and Submission Checklist</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Next Step Framing</h1>
-            <h3>After Session 4</h3>
+        <section class="slide" id="next-session-preview-add9c459" data-slide-number="52">
+            <h1>Next Session Preview</h1>
+            <h3>Session 5 (Hours 17–20)</h3>
 <ul>
-  <li>keep the core stable</li>
-  <li>preserve scope discipline</li>
-  <li>carry forward logging and safe-save habits</li>
-  <li>use the capstone plan as the default decision filter</li>
+  <li>Tkinter GUI fundamentals — widgets, layout managers, and event loop</li>
+  <li>Connecting a service layer to a GUI without mixing business logic into callbacks</li>
+  <li>Building a GUI-first workflow for the capstone tracker</li>
+  <li>Testing service logic independent of the interface layer</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="thank-you-871421b6" data-slide-number="53">
             <h1>Thank You!</h1>
             <p>Validate outside data.</p>
 <p>Keep secrets out of source.</p>
-<p>Plan the MVP.</p>
-<p>Prove persistence before expanding.</p>
+<p>Plan the MVP before building.</p>
+<p>Prove persistence before expanding the interface.</p>
         </section>
     </div>
     
@@ -1137,7 +1270,11 @@ class JSONStateStore:
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1210,17 +1347,24 @@ class JSONStateStore:
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

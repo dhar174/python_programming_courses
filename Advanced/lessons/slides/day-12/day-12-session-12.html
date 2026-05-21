@@ -386,567 +386,941 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-12-session-12-hours-4548-e69fa0c7" data-slide-number="1">
             <h1>Advanced Day 12 — Session 12 (Hours 45–48)</h1>
             <div class="subtitle">Python Programming (Advanced) • Testing, Packaging, and Final Delivery</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-12-overview-0743afea" data-slide-number="2">
             <h1>Session 12 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-574ea0d4" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 45: testing with pytest for the service layer</li>
-  <li>Hour 46: coverage, edge cases, and a lightweight integration test</li>
-  <li>Hour 47: packaging and delivery</li>
-  <li>Hour 48: final capstone demo, certification-style review, and retrospective</li>
+  <li>Hour 45 — Unit tests for the service layer with pytest</li>
+  <li>Hour 46 — Coverage, edge cases, and a lightweight integration test</li>
+  <li>Hour 47 — Packaging and delivery: requirements, entry point, fresh-run test</li>
+  <li>Hour 48 — Final capstone demo, certification-style review, and retrospective</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code># Day 12, Hour 1: Testing with pytest: unit tests for the service layer</code></li>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code># Day 12, Hour 2: Coverage, edge cases, and a lightweight integration test</code></li>
+  <li><code>Advanced/lessons/lecture/Day12_Hour3_Advanced.md</code> → <code># Day 12, Hour 3: Packaging and delivery: requirements, runnable app, optional executable</code></li>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code># Day 12, Hour 4: Final capstone demo, certification-style review, and retrospective</code></li>
+</ul>
+<p>Runbook source of truth for all four hours:</p>
+<p><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 12, Hours 45–48</code></p>
+        </section>
+
+        <section class="slide" id="session-12-outcomes-67d999cb" data-slide-number="4">
+            <h1>Session 12 Outcomes</h1>
+            <p>By the end of today, learners will be able to:</p>
+<ul>
+  <li>Write focused pytest unit tests for service-layer logic using fixtures and plain <code>assert</code></li>
+  <li>Measure test coverage and identify high-value missing branches</li>
+  <li>Add edge-case and integration-style tests that prove real layer boundaries</li>
+  <li>Produce a runnable deliverable with a clear README and dependency files</li>
+  <li>Deliver a concise, evidence-based final capstone demo</li>
+  <li>Name one concrete next-step practice goal after the course</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Day Goal</h1>
-            <ul>
-  <li>Finish the capstone with quality, delivery confidence, and explanation clarity</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Alignment Sources</h1>
-            <ul>
-  <li>Runbook: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → Session 12 overview; Hours 45–48</li>
-  <li>Lecture: <code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> through <code>Day12_Hour4_Advanced.md</code></li>
-  <li>Homework: <code>Advanced/assignments/Advanced_Day12_homework.ipynb</code></li>
-  <li>Quiz: <code>Advanced/quizzes/Advanced_Day12_Quiz.html</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Session Theme</h1>
-            <ul>
-  <li>Quality supports confidence</li>
-  <li>Packaging supports handoff</li>
-  <li>The final demo should show a system, not random features</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Session Success Criteria</h1>
-            <ul>
-  <li>Core service behavior is covered by pytest tests</li>
-  <li>Coverage is used as a guide, not a vanity metric</li>
-  <li>README + requirements support a fresh-run test</li>
-  <li>Final demos show architecture, persistence, analytics, and growth</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
-            <ul>
-  <li>Prioritize service-layer and repository-confidence tests over UI testing</li>
-  <li>Do not chase 100% coverage blindly</li>
-  <li>Package the runnable source release before optional executables</li>
-  <li>Final demos should be concise, stable, and explainable</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 45: Testing with pytest</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
+        <section class="slide" id="in-scope-c02a7578" data-slide-number="6">
+            <h1>In Scope</h1>
             <ul>
-  <li>Write focused service-layer unit tests</li>
-  <li>Use fixtures and plain <code>assert</code></li>
-  <li>Cover success and failure paths</li>
-  <li>Explain why UI testing is not the priority here</li>
+  <li>Service-layer and repository unit tests with pytest fixtures and <code>tmp_path</code></li>
+  <li>Coverage as a risk guide — not a vanity metric</li>
+  <li><code>README.md</code>, <code>requirements.txt</code>, <code>requirements-dev.txt</code>, and entry points</li>
+  <li>Timeboxed final capstone demo with architecture explanation</li>
+  <li>Certification-style code-reading review</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="not-yet-fcda4edc" data-slide-number="7">
+            <h1>Not Yet</h1>
+            <ul>
+  <li>Testing Flask routes exhaustively (service-layer tests are the priority here)</li>
+  <li>Chasing 100% coverage as a goal</li>
+  <li>Production wheels, PyInstaller executables, or full CI/CD pipelines</li>
+  <li>OAuth, advanced ORMs, or features outside the capstone scope</li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-45-unit-tests-for-the-service-layer-66d777e0" data-slide-number="8">
+            <h1>Hour 45 — Unit Tests for the Service Layer</h1>
+            
+        </section>
+
+        <section class="slide" id="session-12-hour-45-f42eb549" data-slide-number="9">
+            <h1>Session 12, Hour 45</h1>
+            
+        </section>
+
+        <section class="slide" id="hour-45-learning-outcomes-ba0f20e4" data-slide-number="10">
+            <h1>Hour 45 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Write unit tests for core service logic using pytest</li>
+  <li>Use <code>pytest.fixture</code> and <code>tmp_path</code> for shared setup and isolated databases</li>
+  <li>Assert both happy paths and expected exceptions with <code>pytest.raises</code></li>
+  <li>Run <code>pytest -q</code> and read failures as feedback, not judgment</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code>## Learning Outcomes</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="why-testing-fits-here-47e9721a" data-slide-number="11">
             <h1>Why Testing Fits Here</h1>
-            <ul>
-  <li>The capstone now has enough structure to test meaningfully</li>
-  <li>Service logic and exception patterns are stable enough to protect</li>
-  <li>Testing now reinforces quality instead of chasing a moving target</li>
+            <p>The capstone now has enough stable structure to test meaningfully.</p>
+<ul>
+  <li>Service logic and exception patterns are established enough to protect</li>
+  <li>Tests protect behavior while we make final changes and packaging decisions</li>
+  <li>Running <code>pytest -q</code> before each session gives a clean, trustworthy baseline</li>
+  <li>A failing test is information, not an accusation</li>
+</ul>
+<blockquote>&quot;Make one small change, run it, observe the result, then continue.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day12_Hour1_Advanced.md` → `## Opening Script`</blockquote>
+        </section>
+
+        <section class="slide" id="unittest-pytest-bridge-a3963caa" data-slide-number="12">
+            <h1>unittest → pytest Bridge</h1>
+            <p>If you have seen <code>unittest</code> before, here is the direct mapping:</p>
+<table>
+<thead>
+<tr>
+<th>unittest habit</th>
+<th>pytest equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>class TestThing(unittest.TestCase)</code></td>
+<td>Plain <code>def test_thing():</code> functions</td>
+</tr>
+<tr>
+<td><code>self.assertEqual(actual, expected)</code></td>
+<td><code>assert actual == expected</code></td>
+</tr>
+<tr>
+<td><code>setUp()</code> / <code>tearDown()</code></td>
+<td>Fixtures that return prepared objects</td>
+</tr>
+<tr>
+<td><code>python -m unittest</code></td>
+<td><code>pytest -q</code></td>
+</tr>
+</tbody>
+</table>
+<p>pytest does not ask you to forget Arrange → Act → Assert.</p>
+<p>It just lets the test read like ordinary Python.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code>### unittest to pytest bridge</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Framing</h1>
-            <ul>
-  <li>Tests are fast feedback</li>
-  <li>Tests are not punishment</li>
+        <section class="slide" id="fixture-tmp-path-pattern-fc792882" data-slide-number="13">
+            <h1>Fixture + tmp_path Pattern</h1>
+            <pre data-lang="python"><code>import pytest
+from tracker.repository import SQLiteTrackerRepository
+from tracker.service import TrackerService, ValidationError
+
+@pytest.fixture
+def service(tmp_path):
+    repo = SQLiteTrackerRepository(str(tmp_path / &quot;test_tracker.db&quot;))
+    repo.init_db()
+    return TrackerService(repo=repo)</code></pre>
+<ul>
+  <li><code>tmp_path</code> is a built-in pytest fixture — a fresh isolated directory per test run</li>
+  <li>No shared databases — every test starts with a clean slate</li>
+  <li><code>init_db()</code> creates the schema before any assertion runs</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>pytest Basics</h1>
-            <ul>
-  <li>Plain test functions stay readable</li>
-  <li>Arrange → Act → Assert is enough structure</li>
-  <li>Fixtures reduce repeated setup</li>
+        <section class="slide" id="demo-happy-path-test-2f39ec3d" data-slide-number="14">
+            <h1>Demo: Happy-Path Test</h1>
+            <pre data-lang="python"><code>def test_create_and_get_record(service):
+    created = service.create_record(
+        {&quot;title&quot;: &quot;Demo&quot;, &quot;category&quot;: &quot;Lab&quot;, &quot;status&quot;: &quot;open&quot;}
+    )
+    loaded = service.get_record(created.id)
+    assert loaded.title == &quot;Demo&quot;
+    assert loaded.category == &quot;Lab&quot;
+    assert loaded.status == &quot;open&quot;</code></pre>
+<h3>Arrange — Act — Assert</h3>
+<ul>
+  <li><strong>Arrange</strong> — fixture built a clean service with an isolated database</li>
+  <li><strong>Act</strong> — call <code>create_record</code>, then <code>get_record</code></li>
+  <li><strong>Assert</strong> — each field matches exactly what was stored</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-sad-path-test-f4fe4d2b" data-slide-number="15">
+            <h1>Demo: Sad-Path Test</h1>
+            <pre data-lang="python"><code>def test_blank_title_raises_validation_error(service):
+    with pytest.raises(ValidationError):
+        service.create_record(
+            {&quot;title&quot;: &quot;   &quot;, &quot;category&quot;: &quot;Lab&quot;, &quot;status&quot;: &quot;open&quot;}
+        )</code></pre>
+<ul>
+  <li><code>pytest.raises</code> is the correct pattern for asserting expected exceptions</li>
+  <li>Do <strong>not</strong> catch the exception in the test body — that hides the failure</li>
   <li>Negative tests matter as much as happy paths</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Fixture + Test Pattern</h1>
-            <pre data-lang="python"><code>@pytest.fixture
-def service():
-    repo = InMemoryTrackerRepository()
-    return TrackerService(repo=repo)
-
-def test_add_and_get_record(service):
-    created = service.add_record(&quot;Write report&quot;, &quot;ops&quot;, &quot;open&quot;)
-    fetched = service.get_record(created.id)
-    assert fetched.title == &quot;Write report&quot;</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Negative Test Pattern</h1>
-            <pre data-lang="python"><code>def test_add_record_rejects_empty_title(service):
-    with pytest.raises(ValidationError):
-        service.add_record(&quot;&quot;, &quot;ops&quot;, &quot;open&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Teaching point</h1>
-            <ul>
-  <li>Good tests protect behaviors learners actually care about</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Write the First Real Test Suite</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+<blockquote>Every feature is incomplete until the sad path is also specified and tested.</blockquote>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Create a test file such as <code>tests/test_service.py</code></li>
-  <li>Add at least five tests</li>
-  <li>Include at least two negative tests</li>
-  <li>Run pytest and confirm the suite passes</li>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
 </ul>
+        </section>
+
+        <section class="slide" id="lab-write-the-first-real-test-suite-hour-45-3e7d0eb3" data-slide-number="16">
+            <h1>Lab: Write the First Real Test Suite (Hour 45)</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Create <code>tests/test_service.py</code></li>
+  <li>Write at least five tests — include at least two negative tests</li>
+  <li>Use <code>tmp_path</code> so every test runs with an isolated database</li>
+  <li>Run <code>pytest -q</code> — confirm all tests pass</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Test names communicate the behavior clearly</li>
-  <li>The suite focuses on logic, not UI callbacks</li>
+  <li>Test names communicate the behavior being checked</li>
+  <li>Exceptions are asserted with <code>pytest.raises</code>, not caught and swallowed</li>
+  <li>Tests run without the GUI, Flask server, or shared production state</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-45-9086be17" data-slide-number="17">
             <h1>Common Pitfalls (Hour 45)</h1>
-            <p><strong>⚠️</strong> Testing UI callbacks directly</p>
-<p><strong>⚠️</strong> One test checking too many behaviors</p>
-<p><strong>⚠️</strong> Shared mutable state without reset</p>
-<p><strong>⚠️</strong> Happy-path-only thinking</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 45)</h1>
-            <ul>
-  <li>Homework goal: a small pytest suite for core service-layer rules</li>
-  <li>Best practice: focused unit tests around behavior and validation</li>
-  <li>Pitfall to avoid: testing private implementation details</li>
-  <li>Quiz-ready anchor: <code>Hour 45 | test runner: pytest</code></li>
+            <p><strong>⚠️</strong> Testing UI callbacks or Flask routes instead of core service logic</p>
+<p><strong>⚠️</strong> One test that checks too many behaviors at once — split into focused tests</p>
+<p><strong>⚠️</strong> Shared mutable state — one test passes, the next fails unpredictably</p>
+<p><strong>⚠️</strong> Catching exceptions in the test body instead of asserting them with <code>pytest.raises</code></p>
+<p><strong>⚠️</strong> Happy-path-only thinking — missing records and invalid input are equally important</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour1_Advanced.md</code> → <code>### Common pitfalls to watch for</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What should a strong unit test avoid if you want refactors to stay safe?</p>
+        <section class="slide" id="quick-check-hour-45-6c2561b3" data-slide-number="18">
+            <h1>Quick Check (Hour 45)</h1>
+            <p><strong>Question:</strong> What should a well-written unit test avoid in order to stay fast and safe to refactor?</p>
+<ul>
+  <li>A — A real database shared between all tests</li>
+  <li>B — Plain <code>assert</code> statements</li>
+  <li>C — A <code>pytest.fixture</code> for setup</li>
+  <li>D — Checking a sad path with <code>pytest.raises</code></li>
+</ul>
+<blockquote>**Answer: A** — shared real databases make tests order-dependent and slow.</blockquote>
+<blockquote>Options B, C, and D are all recommended pytest patterns.</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Hour 46: Coverage + Edge Cases + Integration</h1>
+        <section class="slide" id="hour-46-coverage-edge-cases-and-integration-2d13a58f" data-slide-number="19">
+            <h1>Hour 46 — Coverage, Edge Cases, and Integration</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Run a basic coverage report</li>
-  <li>Find high-value gaps</li>
-  <li>Add edge-case tests</li>
-  <li>Prove one meaningful boundary with an integration-style test</li>
+        <section class="slide" id="session-12-hour-46-0b0f3103" data-slide-number="20">
+            <h1>Session 12, Hour 46</h1>
+            
+        </section>
+
+        <section class="slide" id="hour-46-learning-outcomes-cb462dec" data-slide-number="21">
+            <h1>Hour 46 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Run a test coverage report and interpret it responsibly</li>
+  <li>Choose high-value edge cases based on risk, not uncovered line counts</li>
+  <li>Write one integration-style test that exercises service and repository together</li>
+  <li>Explain why high coverage can still leave real bugs uncovered</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Coverage with Perspective</h1>
-            <ul>
-  <li>Coverage shows which lines executed</li>
-  <li>Coverage does <strong>not</strong> prove the tests are meaningful</li>
-  <li>Use it as a flashlight, not a scorecard</li>
+        <section class="slide" id="coverage-flashlight-not-scorecard-6ba4830b" data-slide-number="22">
+            <h1>Coverage: Flashlight, Not Scorecard</h1>
+            <p>Coverage tells us <strong>what code executed</strong> during tests.</p>
+<ul>
+  <li>A line that ran is not a line that is necessarily correct</li>
+  <li>A test that touches a line without a meaningful assertion adds false confidence</li>
+  <li>Chasing 100% produces low-value tests that slow down future refactoring</li>
+</ul>
+<h3>The right question to ask</h3>
+<p>Which uncovered branch is most likely to contain a real bug based on risk and past failures?</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code>### Talk points</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Smart question</h1>
-            <ul>
-  <li>Which uncovered branch is most likely to matter in a real bug?</li>
+        <section class="slide" id="running-coverage-3ba9ed13" data-slide-number="23">
+            <h1>Running Coverage</h1>
+            <pre data-lang="bash"><code>pip install pytest-cov
+pytest --cov=tracker --cov-report=term-missing -q</code></pre>
+<h3>Reading the report</h3>
+<ul>
+  <li>The <code>Miss</code> column shows line numbers that never executed during tests</li>
+  <li>Focus on logic branches — conditions, error paths, and edge inputs</li>
+  <li>Ignore boilerplate lines and generated glue code</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code>### Demo steps</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Coverage Commands</h1>
-            <pre data-lang="bash"><code>coverage run -m pytest
-coverage report -m</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Great edge-case candidates</h1>
-            <ul>
-  <li>missing record</li>
-  <li>invalid input</li>
-  <li>empty search result</li>
-  <li>auth helper failure</li>
-  <li>duplicate ID assumptions</li>
+        <section class="slide" id="high-value-edge-case-candidates-10350670" data-slide-number="24">
+            <h1>High-Value Edge-Case Candidates</h1>
+            <table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Record not found — <code>NotFoundError</code></td>
+<td>Most real queries involve unknown or deleted IDs</td>
+</tr>
+<tr>
+<td>Blank or whitespace-only title</td>
+<td>Validation must catch invisible bad input</td>
+</tr>
+<tr>
+<td>Invalid status value</td>
+<td>Enum-style rules fail silently without a check</td>
+</tr>
+<tr>
+<td>Persistence across two service instances</td>
+<td>Proves SQLite actually committed the row</td>
+</tr>
+<tr>
+<td>Duplicate or boundary IDs</td>
+<td>Integer overflow and off-by-one are common bugs</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code>### Demo steps</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Lightweight Integration Test</h1>
-            <pre data-lang="python"><code>def test_service_and_sqlite_repo_work_together(tmp_path):
+        <section class="slide" id="demo-not-found-edge-case-32726d0a" data-slide-number="25">
+            <h1>Demo: Not-Found Edge Case</h1>
+            <pre data-lang="python"><code>from tracker.service import NotFoundError
+
+def test_missing_record_raises(service):
+    with pytest.raises(NotFoundError):
+        service.get_record(999_999)</code></pre>
+<p>The underscore separator in <code>999_999</code> is valid Python 3 — it improves readability of large integers.</p>
+        </section>
+
+        <section class="slide" id="demo-integration-test-persistence-across-instances-c4cd0ed9" data-slide-number="26">
+            <h1>Demo: Integration Test — Persistence Across Instances</h1>
+            <pre data-lang="python"><code>def test_record_persists_across_service_instances(tmp_path):
     db_path = tmp_path / &quot;tracker.db&quot;
-    repo = SQLiteTrackerRepository(str(db_path))
-    repo.init_db()
-    service = TrackerService(repo=repo)
+    first_svc = build_test_service(db_path)
+    created = first_svc.create_record(
+        {&quot;title&quot;: &quot;Persist me&quot;, &quot;category&quot;: &quot;Lab&quot;, &quot;status&quot;: &quot;open&quot;}
+    )
 
-    created = service.add_record(&quot;Ship deck&quot;, &quot;training&quot;, &quot;open&quot;)
-    fetched = service.get_record(created.id)
+    second_svc = build_test_service(db_path)
+    loaded = second_svc.get_record(created.id)
 
-    assert fetched.title == &quot;Ship deck&quot;</code></pre>
+    assert loaded.title == &quot;Persist me&quot;
+    assert loaded.status == &quot;open&quot;</code></pre>
+<p>This test exercises the service <strong>and</strong> repository boundary with a real SQLite file — not a mock.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Harden the Suite</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+        <section class="slide" id="lab-harden-the-suite-hour-46-4be3b180" data-slide-number="27">
+            <h1>Lab: Harden the Suite (Hour 46)</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Run coverage</li>
-  <li>Identify at least two valuable missing branches</li>
-  <li>Add two tests for those branches</li>
-  <li>Add one integration-style test</li>
-</ul>
+<ol>
+  <li>Run <code>pytest --cov=tracker --cov-report=term-missing -q</code></li>
+  <li>Identify at least two uncovered branches that carry real risk</li>
+  <li>Write two targeted tests for those branches</li>
+  <li>Write one integration-style test using a real <code>tmp_path</code> SQLite database</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Coverage changes testing priorities intelligently</li>
-  <li>Integration proves a real boundary, not a giant workflow</li>
+  <li>Coverage improves in risk-informed, meaningful areas</li>
+  <li>At least one integration-style test passes</li>
+  <li>Edge cases include not-found and at least one validation boundary</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-46-85d14eb9" data-slide-number="28">
             <h1>Common Pitfalls (Hour 46)</h1>
-            <p><strong>⚠️</strong> Chasing 100% blindly</p>
-<p><strong>⚠️</strong> Executing code without useful assertions</p>
-<p><strong>⚠️</strong> Turning one integration test into an end-to-end maze</p>
-<p><strong>⚠️</strong> Adding coverage numbers without discussing risk</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 46)</h1>
-            <ul>
-  <li>Homework goal: a tighter test suite with edge-case and integration confidence</li>
-  <li>Best practice: add edge cases and one lightweight integration test after unit tests pass</li>
-  <li>Pitfall to avoid: chasing a number instead of meaningful scenarios</li>
-  <li>Quiz-ready anchor: <code>Hour 46 | coverage target: service layer</code></li>
+            <p><strong>⚠️</strong> Chasing 100% with tests that <code>assert True</code> or check only that code executed</p>
+<p><strong>⚠️</strong> Turning an integration test into a full end-to-end workflow — keep it narrow</p>
+<p><strong>⚠️</strong> Ignoring nondeterministic values such as timestamps and auto-generated IDs</p>
+<p><strong>⚠️</strong> Using production database files in tests instead of <code>tmp_path</code></p>
+<p><strong>⚠️</strong> Testing Flask route internals when a pure-function unit test would be simpler</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour2_Advanced.md</code> → <code>### Common pitfalls to watch for</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: How can high coverage still miss real bugs?</p>
+        <section class="slide" id="quick-check-hour-46-bf3d667b" data-slide-number="29">
+            <h1>Quick Check (Hour 46)</h1>
+            <p><strong>Question:</strong> A coverage report shows 92% line coverage. How can the remaining gaps still contain a real bug?</p>
+<blockquote>**Discussion points:**</blockquote>
+<blockquote>- Covered lines may have no meaningful assertion — code ran but nothing was checked</blockquote>
+<blockquote>- Branches inside covered lines may not all be exercised</blockquote>
+<blockquote>- Integration failures at layer boundaries are invisible to unit-level coverage</blockquote>
+<blockquote>- Risk-driven testing beats coverage-score maximizing every time</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Hour 47: Packaging and Delivery</h1>
+        <section class="slide" id="hour-47-packaging-and-delivery-42f057a2" data-slide-number="30">
+            <h1>Hour 47 — Packaging and Delivery</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Explain the difference between “runs here” and “ships”</li>
-  <li>Refine <code>README.md</code>, <code>requirements.txt</code>, and <code>requirements-dev.txt</code></li>
-  <li>Perform a fresh-run smoke test</li>
-  <li>Identify hidden dependency or path assumptions</li>
-</ul>
+        <section class="slide" id="session-12-hour-47-44bcd67f" data-slide-number="31">
+            <h1>Session 12, Hour 47</h1>
+            
         </section>
 
-        <section class="slide">
-            <h1>What Shipping Really Means</h1>
-            <ul>
-  <li>Repeatable install</li>
-  <li>Repeatable run</li>
-  <li>Honest documentation</li>
-  <li>Clear entry point</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Course minimum</h1>
-            <ul>
-  <li>A runnable source release</li>
-  <li>Optional packaging extras only if time permits</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Deliverable Recipe</h1>
-            <ul>
-  <li><code>README.md</code> with exact setup + run steps</li>
-  <li><code>requirements.txt</code> for runtime dependencies</li>
-  <li><code>requirements-dev.txt</code> for dev tooling</li>
-  <li><code>.gitignore</code> for environment and build outputs</li>
-  <li>one verified entry point</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Fresh-Run Sequence</h1>
-            <pre data-lang="bash"><code>python -m venv .venv
-.venv\Scripts\activate
-python -m pip install -r requirements.txt
-python -m pytest
-python api/app.py</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Teaching point</h1>
-            <ul>
-  <li>If the steps are not written clearly, the deliverable is weaker than it looks</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Make the Project Shareable</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+        <section class="slide" id="hour-47-learning-outcomes-073c85a1" data-slide-number="32">
+            <h1>Hour 47 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
 <ul>
-  <li>Update <code>README.md</code></li>
-  <li>Verify runtime and dev dependencies</li>
-  <li>Check <code>.gitignore</code></li>
-  <li>Perform a fresh-run smoke test</li>
-  <li>Fix one missing setup step if discovered</li>
+  <li>Explain the difference between &quot;it runs on my machine&quot; and &quot;it ships&quot;</li>
+  <li>Produce <code>requirements.txt</code> and <code>requirements-dev.txt</code> from the current environment</li>
+  <li>Document required environment variables without committing secret values</li>
+  <li>Perform a fresh-run smoke test and fix one missing step if discovered</li>
 </ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour3_Advanced.md</code> → <code>## Learning Outcomes</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="what-shipping-really-means-6f5677d8" data-slide-number="33">
+            <h1>What Shipping Really Means</h1>
+            <p>A project ships when <strong>another person</strong> can:</p>
+<ol>
+  <li>Clone or copy the source code</li>
+  <li>Follow the README without asking for hidden steps</li>
+  <li>Install dependencies from <code>requirements.txt</code></li>
+  <li>Set documented environment variables</li>
+  <li>Run the app with one clear command</li>
+  <li>Run the test suite and see it pass</li>
+</ol>
+<blockquote>&quot;Shipping means someone else can run it without guessing.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day12_Hour3_Advanced.md` → `### Talk points`</blockquote>
+        </section>
+
+        <section class="slide" id="minimum-deliverable-recipe-c1673bdc" data-slide-number="34">
+            <h1>Minimum Deliverable Recipe</h1>
+            <p>Every capstone submission needs these files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>README.md</code></td>
+<td>Setup, run, test, and artifact steps</td>
+</tr>
+<tr>
+<td><code>requirements.txt</code></td>
+<td>Runtime dependencies — pinned or recorded</td>
+</tr>
+<tr>
+<td><code>requirements-dev.txt</code></td>
+<td>Dev tools: <code>pytest</code>, <code>pytest-cov</code></td>
+</tr>
+<tr>
+<td><code>.gitignore</code></td>
+<td>Excludes <code>.venv/</code>, <code>__pycache__/</code>, <code>*.db</code></td>
+</tr>
+<tr>
+<td>Entry point</td>
+<td>One command that starts the chosen app surface</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour3_Advanced.md</code> → <code>### Talk points</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-readme-quickstart-sequence-d67b2704" data-slide-number="35">
+            <h1>Demo: README Quickstart Sequence</h1>
+            <pre data-lang="text"><code># 1. Create and activate a virtual environment
+python -m venv .venv
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+# macOS or Linux: source .venv/bin/activate
+
+# 2. Install runtime dependencies
+python -m pip install -r requirements.txt
+
+# 3. Install dev tools
+python -m pip install -r requirements-dev.txt
+
+# 4. Set required environment variables
+# Windows PowerShell: $env:TRACKER_API_KEY=&quot;dev-key&quot;
+# macOS or Linux: export TRACKER_API_KEY=dev-key
+
+# 5. Run the app
+python -m api.app
+
+# 6. Run the tests
+pytest -q</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour3_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="generating-dependency-files-2f78f6fc" data-slide-number="36">
+            <h1>Generating Dependency Files</h1>
+            <pre data-lang="bash"><code># Capture all installed packages from the active venv
+pip freeze &gt; requirements.txt
+
+# Review and trim: keep only what the app actually imports
+# Move pytest and coverage tools into requirements-dev.txt</code></pre>
+<p>requirements-dev.txt content:</p>
+<pre data-lang="text"><code>pytest
+pytest-cov</code></pre>
+<h3>Path safety rule</h3>
+<p>Use <code>pathlib.Path</code> for all file paths — never hard-code machine-specific paths.</p>
+<pre data-lang="python"><code>from pathlib import Path
+
+DB_PATH = Path(__file__).parent / &quot;data&quot; / &quot;tracker.db&quot;</code></pre>
+        </section>
+
+        <section class="slide" id="packaging-quality-gate-51785d55" data-slide-number="37">
+            <h1>Packaging Quality Gate</h1>
+            <p>Before the lab, evaluate the capstone against this checklist:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Ready evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>README has setup + run + test steps</td>
+<td>Reviewer can follow without asking</td>
+</tr>
+<tr>
+<td>Dependencies are complete</td>
+<td>No <code>ModuleNotFoundError</code> on fresh install</td>
+</tr>
+<tr>
+<td>Environment variables are documented</td>
+<td>No secret values committed to Git</td>
+</tr>
+<tr>
+<td>Entry point is one clear command</td>
+<td><code>python -m api.app</code> or equivalent</td>
+</tr>
+<tr>
+<td><code>pytest -q</code> passes from a clean state</td>
+<td>Tests do not depend on IDE memory</td>
+</tr>
+</tbody>
+</table>
+        </section>
+
+        <section class="slide" id="lab-make-the-project-shareable-hour-47-b40e6c96" data-slide-number="38">
+            <h1>Lab: Make the Project Shareable (Hour 47)</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Update <code>README.md</code> with exact setup, run, and test commands</li>
+  <li>Run <code>pip freeze &gt; requirements.txt</code> and review the output</li>
+  <li>Create <code>requirements-dev.txt</code> with <code>pytest</code> and <code>pytest-cov</code></li>
+  <li>Update <code>.gitignore</code> to exclude <code>.venv/</code>, <code>__pycache__/</code>, and <code>*.db</code></li>
+  <li>Perform a fresh-run smoke test from a clean terminal or new directory</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Another learner could follow the setup without guessing</li>
-  <li>Entry points and environment variables are documented</li>
+  <li>Another learner can follow the README without asking for hidden steps</li>
+  <li>No machine-specific paths remain in the production code</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-47-ac2422d2" data-slide-number="39">
             <h1>Common Pitfalls (Hour 47)</h1>
-            <p><strong>⚠️</strong> Missing dependency in <code>requirements.txt</code></p>
-<p><strong>⚠️</strong> Undocumented environment variables</p>
-<p><strong>⚠️</strong> Entry-point confusion between GUI, API, and scripts</p>
-<p><strong>⚠️</strong> Relative paths that only work from one folder</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 47)</h1>
-            <ul>
-  <li>Homework goal: a documented runnable delivery package for the capstone</li>
-  <li>Best practice: package the runnable app before optional build tooling</li>
-  <li>Pitfall to avoid: spending all packaging time on an executable</li>
-  <li>Quiz-ready anchor: <code>Hour 47 | requirements file: ready</code></li>
+            <p><strong>⚠️</strong> Missing a dependency in <code>requirements.txt</code> that happens to be installed globally</p>
+<p><strong>⚠️</strong> Committing a <code>.env</code> file or credentials — document variable names, never commit values</p>
+<p><strong>⚠️</strong> Entry-point path that only resolves inside the IDE&#x27;s working directory</p>
+<p><strong>⚠️</strong> Spending all packaging time on an optional executable before the basic release works</p>
+<p><strong>⚠️</strong> README commands that only work with the original instructor environment assumptions</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour3_Advanced.md</code> → <code>### Common pitfalls to watch for</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What does a fresh-run test reveal that “it works on my machine” usually hides?</p>
+        <section class="slide" id="quick-check-hour-47-dd5043be" data-slide-number="40">
+            <h1>Quick Check (Hour 47)</h1>
+            <p><strong>Question:</strong> What does a fresh-run test reveal that &quot;it works on my machine&quot; usually hides?</p>
+<blockquote>**Discussion points:**</blockquote>
+<blockquote>- Packages installed globally but absent from `requirements.txt`</blockquote>
+<blockquote>- Hard-coded paths that only resolve in the original working directory</blockquote>
+<blockquote>- Environment variables that were set once and never documented</blockquote>
+<blockquote>- IDE-specific configuration that does not survive a new clone</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Hour 48: Final Demo + Review + Retrospective</h1>
+        <section class="slide" id="hour-48-final-demo-review-and-retrospective-22d46d42" data-slide-number="41">
+            <h1>Hour 48 — Final Demo, Review, and Retrospective</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Demonstrate the minimum capstone deliverables clearly</li>
-  <li>Explain architecture choices and tradeoffs</li>
-  <li>Practice certification-style code reading</li>
-  <li>Name one next step for continued growth</li>
+        <section class="slide" id="session-12-hour-48-74ba92b6" data-slide-number="42">
+            <h1>Session 12, Hour 48</h1>
+            
+        </section>
+
+        <section class="slide" id="hour-48-learning-outcomes-d8c73ea4" data-slide-number="43">
+            <h1>Hour 48 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Demonstrate an end-to-end working capstone system within a 3–5 minute timebox</li>
+  <li>Answer architecture and tradeoff questions from a reviewer</li>
+  <li>Practice certification-style code-reading on short Python prompts</li>
+  <li>Create a concrete next-step practice plan after the course</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Capstone Minimum Deliverables</h1>
-            <ul>
-  <li>model + service layer</li>
-  <li>SQLite persistence</li>
-  <li>one interface surface: GUI or API</li>
-  <li>analytics/reporting</li>
-  <li>tests</li>
-  <li>packaging readiness</li>
-</ul>
+        <section class="slide" id="final-demo-minimum-capstone-deliverables-763416ff" data-slide-number="44">
+            <h1>Final Demo: Minimum Capstone Deliverables</h1>
+            <p>Every demo should show evidence across all six layers:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model + Service</td>
+<td>Domain object created, validated, returned</td>
+</tr>
+<tr>
+<td>Persistence</td>
+<td>Data reloaded across restart or a second query</td>
+</tr>
+<tr>
+<td>Interface surface</td>
+<td>GUI window <strong>or</strong> API JSON response shown</td>
+</tr>
+<tr>
+<td>Analytics or Report</td>
+<td>Generated file or printed summary shown</td>
+</tr>
+<tr>
+<td>Tests</td>
+<td><code>pytest -q</code> output or a recent passing result</td>
+</tr>
+<tr>
+<td>Packaging</td>
+<td>README quickstart or <code>requirements.txt</code> shown</td>
+</tr>
+</tbody>
+</table>
+<blockquote>&quot;Coherence over perfection.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day12_Hour4_Advanced.md` → `### Talk points`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Final-hour mindset</h1>
-            <ul>
-  <li>coherence over perfection</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="strong-demo-flow-acf91bf4" data-slide-number="45">
             <h1>Strong Demo Flow</h1>
-            <ol>
-  <li>one-sentence problem statement</li>
-  <li>create or retrieve data</li>
-  <li>show persistence</li>
-  <li>show interface surface</li>
-  <li>show one analytics/report artifact</li>
-  <li>mention testing or packaging evidence</li>
+            <p>Six steps — target 3–5 minutes total:</p>
+<ol>
+  <li><strong>Problem statement</strong> — one sentence: what does the tracker solve?</li>
+  <li><strong>Create or retrieve data</strong> — show the service layer in action</li>
+  <li><strong>Show persistence</strong> — reload or re-query to prove SQLite saved the record</li>
+  <li><strong>Show an interface surface</strong> — GUI window, API call, or CLI output</li>
+  <li><strong>Show one analytics or report artifact</strong> — file path, chart, or summary</li>
+  <li><strong>Mention reliability evidence</strong> — <code>pytest -q</code> result, coverage note, or packaging step</li>
 </ol>
-        </section>
-
-        <section class="slide">
-            <h1>Timebox</h1>
-            <ul>
-  <li>aim for 3–5 minutes</li>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code>### Demo steps</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Questions Worth Answering During Demos</h1>
-            <ul>
-  <li>Why did you choose this architecture?</li>
-  <li>What part was hardest to stabilize?</li>
-  <li>What tradeoff did you make intentionally?</li>
-  <li>What would you improve next?</li>
+        <section class="slide" id="reviewer-prompts-during-demos-2988f89f" data-slide-number="46">
+            <h1>Reviewer Prompts During Demos</h1>
+            <p>Expect questions like these:</p>
+<ul>
+  <li>&quot;Why did you put that logic in the service rather than the route?&quot;</li>
+  <li>&quot;What happens when a record ID does not exist?&quot;</li>
+  <li>&quot;Which part was hardest to stabilize, and how did you solve it?&quot;</li>
+  <li>&quot;What tradeoff did you make intentionally?&quot;</li>
+  <li>&quot;What would you improve or add next?&quot;</li>
+</ul>
+<h3>If something fails during the demo</h3>
+<p>State expected behavior → read the error message → name the diagnostic step.</p>
+<p>Narrating a failure calmly is a professional skill, not a sign of weakness.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code>## Capstone Demo Rubric and Rotation Setup</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Coaching note</h1>
-            <ul>
-  <li>Bring the story back to user flow + architecture if details take over</li>
+        <section class="slide" id="certification-style-code-reading-c230fe5a" data-slide-number="47">
+            <h1>Certification-Style Code Reading</h1>
+            <pre data-lang="python"><code>def choose_label(status: str) -&gt; str:
+    if status in {&quot;done&quot;, &quot;closed&quot;}:
+        return &quot;complete&quot;
+    if status:
+        return &quot;in progress&quot;
+    return &quot;unknown&quot;</code></pre>
+<p><strong>Predict the output for each call before running:</strong></p>
+<pre data-lang="python"><code>print(choose_label(&quot;done&quot;))     # ?
+print(choose_label(&quot;open&quot;))     # ?
+print(choose_label(&quot;&quot;))         # ?
+print(choose_label(&quot;closed&quot;))   # ?</code></pre>
+<p>Practice pattern: read carefully, state which branch is taken, then confirm.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Certification-Style Review Prompt</h1>
-            <pre data-lang="python"><code>class Tracker:
-    def __init__(self):
-        self.items = []
-
-    def add(self, item):
-        self.items.append(item)
-
-t = Tracker()
-t.add(&quot;alpha&quot;)
-print(len(t.items))</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Ask</h1>
-            <ul>
-  <li>What prints?</li>
-  <li>Why?</li>
+        <section class="slide" id="certification-style-code-reading-answers-91493941" data-slide-number="48">
+            <h1>Certification-Style Code Reading — Answers</h1>
+            <pre data-lang="python"><code>print(choose_label(&quot;done&quot;))     # complete
+print(choose_label(&quot;open&quot;))     # in progress
+print(choose_label(&quot;&quot;))         # unknown   (empty string is falsy)
+print(choose_label(&quot;closed&quot;))   # complete</code></pre>
+<h3>Key concepts exercised</h3>
+<ul>
+  <li>Set membership test with <code>in {&quot;done&quot;, &quot;closed&quot;}</code></li>
+  <li>Truthiness of an empty string — <code>&quot;&quot;</code> evaluates to <code>False</code></li>
+  <li>Early <code>return</code> from a function — later branches are never reached</li>
+  <li>No mutation of the input parameter</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="retrospective-prompts-04d8424d" data-slide-number="49">
             <h1>Retrospective Prompts</h1>
-            <ul>
-  <li>What can you do now that you could not do before?</li>
+            <p>Ask yourself or a study partner:</p>
+<ul>
+  <li>What can you do now that you could not do before this course?</li>
   <li>What still feels shaky but understandable?</li>
-  <li>What will you practice next while the material is fresh?</li>
+  <li>What will you practice most in the first two weeks after today?</li>
+</ul>
+<h3>Post-course action choices</h3>
+<ul>
+  <li>Keep improving the capstone tracker — one new feature per week</li>
+  <li>Read the pytest documentation on parameterization and marks</li>
+  <li>Explore Flask Blueprints or SQLAlchemy as optional next layers</li>
+  <li>Practice certification-style code reading with short daily snippets</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Ask learners to capture</h1>
-            <ol>
-  <li>one skill to apply immediately</li>
-  <li>one skill to keep practicing</li>
-  <li>one artifact they are proud of</li>
-</ol>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 48)</h1>
-            <ul>
-  <li>Homework goal: a final capstone walkthrough and certification-style review summary</li>
-  <li>Best practice: connect the whole course back to one coherent architecture</li>
-  <li>Pitfall to avoid: a demo without reflection</li>
-  <li>Quiz-ready anchor: <code>Hour 48 | final demo domain: tracker</code></li>
+        <section class="slide" id="next-step-planning-template-a27ba36b" data-slide-number="50">
+            <h1>Next-Step Planning Template</h1>
+            <p>Write down four things before leaving today:</p>
+<table>
+<thead>
+<tr>
+<th>Prompt</th>
+<th>Your answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One skill to apply immediately at work or in study</td>
+<td></td>
+</tr>
+<tr>
+<td>One Python concept to keep practicing</td>
+<td></td>
+</tr>
+<tr>
+<td>One concrete capstone improvement to make this week</td>
+<td></td>
+</tr>
+<tr>
+<td>The single command you will run when you return to the project</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code>## Retrospective and Next-Step Planning</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What makes a final demo convincing even if the project is not perfect?</p>
+        <section class="slide" id="common-pitfalls-hour-48-63ac01f2" data-slide-number="51">
+            <h1>Common Pitfalls (Hour 48)</h1>
+            <p><strong>⚠️</strong> Trying to add or fix features during the final hour — stabilize and communicate what already works</p>
+<p><strong>⚠️</strong> Demo overrun because setup was not rehearsed from the README beforehand</p>
+<p><strong>⚠️</strong> Presenting code that was copied without being able to explain the design choices</p>
+<p><strong>⚠️</strong> Ignoring a failure during the demo instead of narrating the debugging plan</p>
+<p><strong>⚠️</strong> Finishing the course without a concrete next step written down</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day12_Hour4_Advanced.md</code> → <code>### Common pitfalls to watch for</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Day 12 Wrap-Up</h1>
+        <section class="slide" id="quick-check-hour-48-fa7b8b6f" data-slide-number="52">
+            <h1>Quick Check (Hour 48)</h1>
+            <p><strong>Question:</strong> What makes a final demo convincing even when the project is not perfect?</p>
+<blockquote>**Answer discussion:**</blockquote>
+<blockquote>- A clear problem statement and architecture explanation</blockquote>
+<blockquote>- Evidence of persistence — reload or re-query, not just a first run</blockquote>
+<blockquote>- Honest acknowledgment of one tradeoff or known gap</blockquote>
+<blockquote>- Calm, structured response if something fails during the demo</blockquote>
+<blockquote>- A specific next improvement named — not just &quot;make it better&quot;</blockquote>
+        </section>
+
+        <section class="slide" id="session-12-summary-fedf5de9" data-slide-number="53">
+            <h1>Session 12 Summary</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>End-of-Day Evidence</h1>
-            <ul>
-  <li>Tests protect core behavior</li>
-  <li>Coverage informs smarter improvements</li>
-  <li>Packaging supports a clean handoff</li>
-  <li>The final demo proves understanding, not just feature count</li>
-</ul>
+        <section class="slide" id="what-we-built-and-proved-today-4210bf5b" data-slide-number="54">
+            <h1>What We Built and Proved Today</h1>
+            <table>
+<thead>
+<tr>
+<th>Hour</th>
+<th>Artifact</th>
+<th>Evidence of success</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>45</td>
+<td><code>tests/test_service.py</code></td>
+<td><code>pytest -q</code> — all green, sad paths covered</td>
+</tr>
+<tr>
+<td>46</td>
+<td>Hardened suite and coverage report</td>
+<td>Risk-informed improvements, integration test passes</td>
+</tr>
+<tr>
+<td>47</td>
+<td><code>README.md</code> and <code>requirements.txt</code></td>
+<td>Fresh-run smoke test succeeds on a clean install</td>
+</tr>
+<tr>
+<td>48</td>
+<td>Final capstone demo</td>
+<td>Architecture explained, persistence shown, tests mentioned</td>
+</tr>
+</tbody>
+</table>
+<h3>Session theme</h3>
+<p>Quality supports confidence. Packaging supports handoff. The demo proves understanding.</p>
         </section>
 
-        <section class="slide">
-            <h1>Homework Focus</h1>
-            <ul>
-  <li>Keep outputs deterministic in <code>Advanced_Day12_homework.ipynb</code></li>
-  <li>Rehearse the anchor lines:</li>
-  <li style="margin-left: 30px;"><code>test runner: pytest</code></li>
-  <li style="margin-left: 30px;"><code>coverage target: service layer</code></li>
-  <li style="margin-left: 30px;"><code>requirements file: ready</code></li>
-  <li style="margin-left: 30px;"><code>final demo domain: tracker</code></li>
+        <section class="slide" id="course-wrap-up-what-you-can-now-do-39391cbc" data-slide-number="55">
+            <h1>Course Wrap-Up — What You Can Now Do</h1>
+            <p>After 48 hours across 12 sessions, you can:</p>
+<ul>
+  <li>Design layered Python applications with clean, testable boundaries</li>
+  <li>Persist and query structured data with SQLite through a repository</li>
+  <li>Expose services through a Flask JSON API with typed error contracts</li>
+  <li>Build analytics and reporting pipelines from persisted data</li>
+  <li>Protect behavior with a focused pytest test suite using fixtures</li>
+  <li>Package a runnable deliverable another developer can install and run</li>
+  <li>Explain architecture choices and tradeoffs under review</li>
 </ul>
+<blockquote>The goal was never to memorize syntax. It was to build systems that communicate clearly.</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="the-capstone-architecture-in-full-a9f8a697" data-slide-number="56">
+            <h1>The Capstone Architecture in Full</h1>
+            <pre data-lang="text"><code>advanced_tracker/
+├── tracker/           &lt;- domain model, service, repository
+│   ├── model.py
+│   ├── service.py
+│   └── repository.py
+├── api/               &lt;- Flask routes and JSON serialization
+│   └── app.py
+├── reports/           &lt;- analytics and report pipeline
+│   └── generate_report.py
+├── tests/             &lt;- pytest test suite
+│   └── test_service.py
+├── requirements.txt
+├── requirements-dev.txt
+└── README.md</code></pre>
+<p>Every layer has a single job. Every boundary is testable independently.</p>
+        </section>
+
+        <section class="slide" id="post-course-practice-plan-d1fa5c87" data-slide-number="57">
+            <h1>Post-Course Practice Plan</h1>
+            <p>Keep the capstone alive with one deliberate improvement per week:</p>
+<ul>
+  <li><strong>Week 1</strong> — Parameterize one group of pytest tests; add one edge case per layer</li>
+  <li><strong>Week 2</strong> — Add a second API endpoint or a second report format</li>
+  <li><strong>Week 3</strong> — Read the Flask or SQLAlchemy documentation for one new pattern</li>
+  <li><strong>Week 4</strong> — Walk a colleague through the README and explain one design tradeoff</li>
+</ul>
+<h3>Certification path</h3>
+<p>Code reading is a skill that improves with daily practice.</p>
+<p>Predict the output of short Python snippets — before running — and explain the branch taken.</p>
+        </section>
+
+        <section class="slide" id="final-exit-ticket-adf2ae8e" data-slide-number="58">
             <h1>Final Exit Ticket</h1>
-            <ol>
-  <li>Which test gives you the most confidence?</li>
-  <li>What did the fresh-run test teach you?</li>
-  <li>What part of your capstone best shows your growth?</li>
+            <p>Before you leave today, write one sentence for each prompt:</p>
+<ol>
+  <li>The test that gives me the most confidence in my capstone is...</li>
+  <li>The thing a fresh-run test taught me about my project is...</li>
+  <li>The part of my capstone that best shows my growth across the course is...</li>
+  <li>The first thing I will do when I return to this project is...</li>
 </ol>
-        </section>
-
-        <section class="slide">
-            <h1>Course Close</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>You Can Now</h1>
-            <ul>
-  <li>design layered Python applications</li>
-  <li>persist and query data</li>
-  <li>expose and consume APIs</li>
-  <li>build analytics/reporting paths</li>
-  <li>test core logic</li>
-  <li>package a runnable deliverable</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Next step</h1>
-            <ul>
-  <li>keep the capstone alive through one deliberate improvement</li>
-</ul>
+<blockquote>&quot;Name what works, name what still needs attention, name your next command.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day12_Hour4_Advanced.md` → `## Closing Debrief`</blockquote>
         </section>
     </div>
     
@@ -991,7 +1365,11 @@ print(len(t.items))</code></pre>
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1064,17 +1442,24 @@ print(len(t.items))</code></pre>
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

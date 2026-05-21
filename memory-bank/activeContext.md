@@ -33,6 +33,12 @@ Lecture Markdown is now a first-class published surface alongside slide decks. T
     - `slides/shared/lecture/lecture.css` and `slides/shared/lecture/lecture.js` now provide the shared lecture-page UX layer
     - `.github/workflows/marp-action.yml` now installs pinned `Markdown`, generates lecture HTML into `_site`, and runs lecture validation before publish checks
     - `scripts/generate_portal_manifest.py`, `scripts/check_portal_publish.py`, and `slides/shared/portal/portal.js` now recognize published lecture HTML in the Pages artifact
+  - Lecture-to-slide cue rollout:
+    - `Basics/lessons/lecture/Day*_Hour*_Basics.md` and `Advanced/lessons/lecture/Day*_Hour*_Advanced.md` now carry explicit `[Instructor slide change: page=...; title=...]` markers at major teaching transitions
+    - `scripts/generate_lecture_pages.py` now resolves those cues against the matching session deck HTML, renders linked slide-change callouts, and exposes a persistent current-slide indicator in lecture HTML
+    - `scripts/sync_lecture_slide_cues.py` can refresh the source Markdown cue markers from the session deck structure
+    - `Basics/generate_slides.py` and `Advanced/generate_slides.py` now emit stable per-slide ids so lecture cues can deep-link to named deck anchors instead of brittle numeric hashes alone
+    - `scripts/validate_lecture_html.py` now requires instructor slide cues and verifies each cue rendered a deck deep link
 - In progress:
   - none
 - Blocked:
@@ -54,9 +60,12 @@ Lecture Markdown is now a first-class published surface alongside slide decks. T
 - `slides/shared/portal/day-overviews.json`
 - `scripts/generate_day_overviews.py`
 - `scripts/generate_lecture_pages.py`
+- `scripts/sync_lecture_slide_cues.py`
 - `scripts/generate_portal_manifest.py`
 - `scripts/check_portal_publish.py`
 - `scripts/validate_lecture_html.py`
+- `Basics/generate_slides.py`
+- `Advanced/generate_slides.py`
 - `slides/shared/lecture/lecture.css`
 - `slides/shared/lecture/lecture.js`
 - `Basics/lessons/lecture/Day*_Hour*_Basics.html`

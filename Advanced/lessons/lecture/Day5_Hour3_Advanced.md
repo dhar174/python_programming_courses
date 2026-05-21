@@ -1,5 +1,7 @@
 # Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced)
 
+[Instructor slide change: page=25; title=Hour 19: Forms and Validation Feedback Patterns]
+
 ## Instructor script purpose and scope
 
 This hour is the practical bridge between “a form exists” and “a form is trustworthy.”
@@ -72,6 +74,8 @@ Runbook talk-point window alignment (10-20 minutes):
 Arithmetic shown explicitly:
 
 **4 + 9 + 8 + 8 + 26 + 5 = 60**
+
+[Instructor slide change: page=26; title=Learning Outcomes]
 
 ## Learning outcomes (student-facing)
 
@@ -310,6 +314,8 @@ This hour is about form submission quality and clear user feedback.”
 Transition line:
 
 “Let’s implement the complete pattern end to end.”
+
+[Instructor slide change: page=30; title=Demo: validate_and_save and Inline Error Application]
 
 ## Segment 4 (8 minutes): Live demo (required elements included)
 
@@ -631,6 +637,8 @@ Run these in front of class:
 Instructor line after test steps:
 
 “If your class implementation does not pass these five checks, it is not complete yet.”
+
+[Instructor slide change: page=31; title=Lab: Add Validation Behavior (Hour 19)]
 
 ## Segment 5 (26 minutes): Hands-on lab (required 25-35, set to 26)
 

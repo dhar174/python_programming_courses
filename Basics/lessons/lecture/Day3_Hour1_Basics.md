@@ -11,6 +11,8 @@ By the end of this hour, you will be able to:
 
 ---
 
+[Instructor slide change: page=4; title=Hour 9: Comparisons + Boolean Logic]
+
 ## Section 1: Instructor Prep & Setup Checklist
 
 ### Pre-Class Checklist
@@ -170,6 +172,8 @@ if age == 18:
 ```
 
 **[Memory device]:** Think of `==` as asking a question: "Are these equal?" Two equal signs = one question.
+
+[Instructor slide change: page=17; title=Quick Check (Hour 9)]
 
 ### Quick Check #1
 
@@ -677,6 +681,8 @@ Because `0` is falsey, this prints the "empty" message. It's the same as writing
 
 ---
 
+[Instructor slide change: page=13; title=Demo: Membership Eligibility Checker]
+
 ## Section 6: Live Demo – Age Gating (5-10 minutes)
 
 ### Demo Script: Age-Based Access Control
@@ -779,6 +785,8 @@ Notice how I tested **boundary values**:
 This is how you verify your logic is correct. We'll talk more about this in the debugging hour.
 
 ---
+
+[Instructor slide change: page=14; title=Lab: Community Center Eligibility Checker]
 
 ## Section 7: Hands-On Lab – Eligibility Checker (20 minutes, 3 checkpoints)
 
@@ -920,6 +928,8 @@ Your solution must:
 - ✅ Check residency status for the Adult Program
 - ✅ Provide helpful feedback messages
 - ✅ Run without errors
+
+[Instructor slide change: page=16; title=Common Pitfalls (Hour 9)]
 
 ### Common Pitfalls to Watch For
 

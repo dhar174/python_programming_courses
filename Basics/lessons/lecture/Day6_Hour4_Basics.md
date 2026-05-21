@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=35; title=Hour 24: Checkpoint 3 — Data Structures Assessment]
+
+[Instructor slide change: page=36; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 **By the end of this hour, learners will be able to:**
@@ -46,6 +50,8 @@ Revisit these anchors before class begins:
 - **Normalize productive struggle.** Difficulty is data, not failure.
 - **Front-load clarity.** Spend the first 15 minutes ensuring learners understand the rubric, the task, and the testing strategy.
 - **Protect coding time.** Do not spend 45+ minutes introducing; aim for 25–35 minutes of uninterrupted work.
+
+[Instructor slide change: page=37; title=What This Checkpoint Tests]
 
 ### 2.3 Checkpoint Task Summary
 
@@ -391,6 +397,8 @@ Remember: a simple, correct program is better than a half-finished fancy program
 
 ---
 
+[Instructor slide change: page=43; title=Common Pitfalls — Hour 24]
+
 ## 8. Troubleshooting Pitfalls
 
 ### 8.1 Pitfall: Unsafe Bracket Access
@@ -500,6 +508,8 @@ Ask these questions **aloud** after work time. Learners can answer verbally or t
 4. **"What data-structure topic do you want to practice again before the next checkpoint?"**
    - Expected answer: Varies by learner. Possible answers: "Dictionaries," "loops," "safe access."
    - Teaching moment: Learners are identifying their own learning needs. That is the metacognition skill you want.
+
+[Instructor slide change: page=44; title=Quick Check — Hour 24]
 
 ### 9.2 Exit Ticket (Written or Spoken)
 
@@ -692,4 +702,3 @@ Both are correct. Learners using either pattern have demonstrated the core habit
 **Total word count: 3,247 words**
 
 **All 12 sections present and fully developed.**
-

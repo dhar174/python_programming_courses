@@ -386,627 +386,801 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-1-session-1-hours-14-3d9ceafc" data-slide-number="1">
             <h1>Advanced Day 1 — Session 1 (Hours 1–4)</h1>
             <div class="subtitle">Python Programming (Advanced) • Kickoff, Class Design, Validation, and Composition</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-1-overview-2d35a32f" data-slide-number="2">
             <h1>Session 1 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-267c27a7" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 1: Advanced kickoff + baseline diagnostic + Git workflow</li>
-  <li>Hour 2: Designing classes from requirements</li>
-  <li>Hour 3: Properties, invariants, and custom exceptions</li>
-  <li>Hour 4: Composition vs inheritance + polymorphism</li>
+  <li>Hour 1 — Advanced kickoff, baseline diagnostic, and Git workflow</li>
+  <li>Hour 2 — Designing classes from requirements and boundaries</li>
+  <li>Hour 3 — Properties, invariants, and custom exceptions</li>
+  <li>Hour 4 — Composition vs inheritance and polymorphism</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 1 overview</code></li>
   <li><code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code> → <code># Day 1, Hour 1: Advanced Kickoff, Baseline Diagnostic, and Git Workflow</code></li>
   <li><code>Advanced/lessons/lecture/Day1_Hour2_Advanced.md</code> → <code># Day 1, Hour 2: Designing Classes from Requirements</code></li>
   <li><code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code> → <code># Day 1, Hour 3: Properties, Invariants, and Custom Exceptions</code></li>
-  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code># Day 1, Hour 4: Composition vs Inheritance + Polymorphism</code></li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code># Day 1, Hour 4: Composition vs Inheritance and Polymorphism</code></li>
 </ul>
+<p>Runbook source of truth for all four hours:</p>
+<p><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 1, Hours 1–4</code></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-1-outcomes-499d0d30" data-slide-number="4">
             <h1>Session 1 Outcomes</h1>
-            <ul>
-  <li>Set up an advanced-course capstone workspace</li>
-  <li>Use Git for frequent, understandable progress commits</li>
-  <li>Translate requirements into domain models + service boundaries</li>
-  <li>Protect object state with validation and specific exceptions</li>
-  <li>Prefer composition when collaborator behavior may change</li>
+            <p>By the end of today, learners will be able to:</p>
+<ul>
+  <li>Set up an advanced-course capstone workspace and Git baseline</li>
+  <li>Use Git as a checkpoint system with meaningful commit messages</li>
+  <li>Translate a requirements list into domain models and service boundaries</li>
+  <li>Protect object state with validated properties and specific custom exceptions</li>
+  <li>Choose composition over inheritance when collaborator behavior may change</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="in-scope-4797cdf3" data-slide-number="6">
             <h1>In Scope</h1>
             <ul>
-  <li>Project scaffold and workflow habits</li>
-  <li>Responsibility-driven design</li>
-  <li>Properties, invariants, and custom exceptions</li>
-  <li>Lightweight polymorphism and composition</li>
+  <li>Project scaffold and repeatable workflow habits</li>
+  <li>Responsibility-driven design and boundary thinking</li>
+  <li>Properties, invariants, and domain-specific exceptions</li>
+  <li>Lightweight polymorphism and composition patterns</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Not Yet</h1>
+        <section class="slide" id="not-yet-covered-2f426c69" data-slide-number="7">
+            <h1>Not Yet Covered</h1>
             <ul>
-  <li>Database persistence</li>
-  <li>GUI or HTTP layers</li>
-  <li>Production auth/security systems</li>
-  <li>Overengineered inheritance hierarchies</li>
+  <li>Database or file-based persistence (Day 3+)</li>
+  <li>GUI or HTTP interface layers</li>
+  <li>Production authentication or security systems</li>
+  <li>Abstract base classes, protocols, or deep inheritance hierarchies</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-1-advanced-kickoff-baseline-diagnostic-c3e3b96a" data-slide-number="8">
             <h1>Hour 1: Advanced Kickoff + Baseline Diagnostic</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-10a527c4" data-slide-number="9">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Confirm the lab environment is ready for advanced work</li>
-  <li>Create the standard capstone folder layout</li>
-  <li>Initialize Git and make a first meaningful commit</li>
-  <li>Prove baseline readiness with a tiny diagnostic script</li>
+  <li>Explain the difference between file save and lab session save</li>
+  <li>Create the standard capstone folder layout with Git initialized</li>
+  <li>Write and run a deterministic diagnostic script covering class, dict, file, and exception</li>
+  <li>Make a first meaningful Git commit with a clear message</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="why-day-1-starts-here-f08a6cb3" data-slide-number="10">
             <h1>Why Day 1 Starts Here</h1>
-            <ul>
-  <li>Advanced Python is about <strong>structure</strong>, not just syntax</li>
-  <li>We will build a capstone across the course</li>
-  <li>Frequent saves and small commits reduce recovery pain</li>
-  <li>The goal is a repeatable workflow before bigger architecture work</li>
+            <p>Advanced Python is about <strong>intentional structure</strong>, not just syntax.</p>
+<ul>
+  <li>The course builds a capstone tracker incrementally across all sessions</li>
+  <li>Working in small steps and committing frequently reduces recovery pain</li>
+  <li>A clean project layout now makes future features easier to add</li>
+  <li>Today&#x27;s goal is a repeatable workflow before the architecture grows</li>
+</ul>
+<blockquote>&quot;Advanced means intentional. We want code that communicates clearly.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day1_Hour1_Advanced.md` → `## Opening Script`</blockquote>
+        </section>
+
+        <section class="slide" id="two-kinds-of-saving-caaca13f" data-slide-number="11">
+            <h1>Two Kinds of Saving</h1>
+            <p>Understanding this distinction prevents lab-session loss:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>What it saves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+S</code> or File → Save</td>
+<td>The current file on disk</td>
+</tr>
+<tr>
+<td>Save and Suspend</td>
+<td>The entire lab session state</td>
+</tr>
+</tbody>
+</table>
+<ul>
+  <li>Saving a file is not the same as suspending the lab</li>
+  <li>If stepping away for more than ~15 minutes, use <strong>Save and Suspend</strong></li>
+  <li>Locate the Save and Suspend control before writing any code</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code> → <code>## 1. Advanced Kickoff (10 minutes)</code></li>
-  <li><code>Advanced/assignments/Advanced_Day1_homework.ipynb</code> → <code>## Part 1: Setup, Diagnostic Thinking, and Git Workflow</code></li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code> → <code>## LogicalLabs/CHOICE Launch and Persistence Briefing</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="standard-capstone-scaffold-f36d27d8" data-slide-number="12">
             <h1>Standard Capstone Scaffold</h1>
-            <pre data-lang="text"><code>project_root/
-├── src/
-├── tests/
-├── data/
-└── reports/</code></pre>
+            <pre data-lang="text"><code>advanced_tracker/
+├── src/          ← application code
+├── tests/        ← test files
+├── data/         ← small local data files
+└── reports/      ← generated outputs</code></pre>
 <ul>
-  <li>Keep course work inside one repo/workspace</li>
-  <li>Save files normally; use lab suspend for longer breaks</li>
-  <li>Build the habit now before the project gets bigger</li>
+  <li>Use <code>.gitkeep</code> placeholder files in empty folders so Git tracks them</li>
+  <li>Keep course work inside one consistent repo/workspace</li>
+  <li>Build the folder habit now — the project will grow into these directories</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Workspace + Git Baseline</h1>
-            <pre data-lang="bash"><code>mkdir capstone_tracker
-cd capstone_tracker
-git init
-python --version
+        <section class="slide" id="git-workflow-for-this-course-7ddaa431" data-slide-number="13">
+            <h1>Git Workflow for This Course</h1>
+            <p>Six words to know from day one:</p>
+<ul>
+  <li><strong>clone</strong> — copy a remote repo to the local workspace</li>
+  <li><strong>pull</strong> — bring in remote changes before starting work</li>
+  <li><strong>add</strong> — stage changes for the next commit</li>
+  <li><strong>commit</strong> — record a local checkpoint in history</li>
+  <li><strong>push</strong> — send local commits to a remote (GitHub etc.)</li>
+  <li><strong>status</strong> — inspect what Git currently sees (<code>git status</code> is your friend)</li>
+</ul>
+<pre data-lang="bash"><code>git init
+git status
+git add diagnostic.py src/.gitkeep tests/.gitkeep reports/.gitkeep
+git commit -m &quot;chore: initial setup&quot;
 git status</code></pre>
-<ul>
-  <li>Start in a clean project folder</li>
-  <li>Confirm interpreter selection early</li>
-  <li>Commit after a working checkpoint, not after a mystery pile of edits</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Readiness Script</h1>
-            <pre data-lang="python"><code>class Hello:
-    def __init__(self, name: str) -&gt; None:
-        self.name = name
-
-    def greet(self) -&gt; None:
-        print(f&quot;Hello, {self.name}!&quot;)
-
-
-data = {&quot;status&quot;: &quot;ready&quot;}</code></pre>
-<ul>
-  <li>Include a class</li>
-  <li>Touch a dictionary</li>
-  <li>Show exception handling</li>
-  <li>Demonstrate file-aware thinking</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Environment + Diagnostic Check</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Create the project folders: <code>src</code>, <code>tests</code>, <code>data</code>, <code>reports</code></li>
-  <li>Initialize a Git repo</li>
-  <li>Write a short diagnostic script that:</li>
-  <li style="margin-left: 30px;">defines a class</li>
-  <li style="margin-left: 30px;">uses a dictionary</li>
-  <li style="margin-left: 30px;">catches a specific error</li>
-  <li style="margin-left: 30px;">ends with <code>Diagnostic status: ready</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 1)</h1>
-            <p><span class="check">✓</span> <code>python --version</code> succeeds</p>
-<p><span class="check">✓</span> <code>git init</code> completed in the project folder</p>
-<p><span class="check">✓</span> Diagnostic script runs cleanly</p>
-<p><span class="check">✓</span> Learner can explain <strong>commit vs push</strong></p>
-<p><span class="check">✓</span> Folder layout matches the course scaffold</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 1)</h1>
-            <ul>
-  <li>Homework asks for:</li>
-  <li style="margin-left: 30px;"><code>Student: ...</code></li>
-  <li style="margin-left: 30px;"><code>Goal: ...</code></li>
-  <li style="margin-left: 30px;"><code>Python Version: ...</code></li>
-  <li style="margin-left: 30px;"><code>Project folders: src, tests, data, reports</code></li>
-  <li style="margin-left: 30px;"><code>Git workflow: clone -&gt; pull -&gt; status -&gt; add -&gt; commit -&gt; push</code></li>
-  <li>Quiz focus:</li>
-  <li style="margin-left: 30px;">save vs suspend</li>
-  <li style="margin-left: 30px;"><code>git init</code></li>
-  <li style="margin-left: 30px;">commit vs push</li>
-  <li style="margin-left: 30px;">diagnostic skill mix</li>
-</ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day1_homework.ipynb</code> → <code>### Exercise 1.1</code>, <code>### Exercise 1.2</code>, <code>### Exercise 1.3</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day1_Quiz.html</code> → <code>QUIZ_DATA</code> questions 1–6</li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code> → <code>## Concept Briefing: Git Workflow</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 1)</h1>
-            <p><strong>⚠️</strong> Confusing file save with lab session save</p>
-<p><strong>⚠️</strong> Waiting too long between commits</p>
-<p><strong>⚠️</strong> Skipping the readiness script and discovering issues later</p>
-<p><strong>⚠️</strong> Treating Git as backup instead of workflow</p>
+        <section class="slide" id="demo-diagnostic-script-c452c549" data-slide-number="14">
+            <h1>Demo: Diagnostic Script</h1>
+            <pre data-lang="python"><code>from pathlib import Path
+
+
+class LearnerProfile:
+    def __init__(self, name: str, goal: str) -&gt; None:
+        self.name = name
+        self.goal = goal
+
+    def summary(self) -&gt; str:
+        return f&quot;{self.name} is practicing: {self.goal}&quot;
+
+
+def main() -&gt; None:
+    profile = LearnerProfile(&quot;Advanced Learner&quot;, &quot;readable, testable Python&quot;)
+    status = {&quot;python&quot;: &quot;ready&quot;, &quot;git&quot;: &quot;ready for first commit&quot;}
+    report_path = Path(&quot;data&quot;) / &quot;diagnostic_report.txt&quot;
+
+    try:
+        report_path.write_text(profile.summary() + &quot;\n&quot;, encoding=&quot;utf-8&quot;)
+        print(report_path.read_text(encoding=&quot;utf-8&quot;))
+        print(&quot;Diagnostic complete.&quot;)
+    except OSError as error:
+        print(f&quot;File operation failed: {error}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour1_Advanced.md</code> → <code>### Demo Step 3: Create the diagnostic script</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> What does a commit do that a push does not?</p>
+        <section class="slide" id="lab-environment-baseline-diagnostic-bb5d72e1" data-slide-number="15">
+            <h1>Lab: Environment + Baseline Diagnostic</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Launch the assigned LogicalLabs/CHOICE lab; locate Save and Suspend</li>
+  <li>Create a <code>course_preflight.txt</code> with your name, date, and one learning goal</li>
+  <li>Create <code>advanced_tracker/</code> with subfolders <code>src/</code>, <code>tests/</code>, <code>data/</code>, <code>reports/</code></li>
+  <li>Initialize Git and add <code>.gitkeep</code> files in the empty subdirectories</li>
+  <li>Write <code>diagnostic.py</code> that exercises a class, a dictionary, file I/O, and a <code>try/except</code></li>
+  <li>Run the script cleanly, then commit with <code>git commit -m &quot;chore: initial setup&quot;</code></li>
+</ol>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="completion-criteria-hour-1-e2f44393" data-slide-number="16">
+            <h1>Completion Criteria — Hour 1</h1>
+            <p><span class="check">✓</span> <code>python --version</code> succeeds in the lab terminal</p>
+<p><span class="check">✓</span> Project folders match the standard scaffold</p>
+<p><span class="check">✓</span> <code>git init</code> completed and first commit recorded</p>
+<p><span class="check">✓</span> Diagnostic script runs without a traceback</p>
+<p><span class="check">✓</span> Learner can explain the difference between <strong>commit</strong> and <strong>push</strong></p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-1-69b255a2" data-slide-number="17">
+            <h1>Common Pitfalls — Hour 1</h1>
+            <p><strong>⚠️</strong> Confusing <code>Ctrl+S</code> file save with lab session Save and Suspend</p>
+<p><strong>⚠️</strong> Accumulating three hours of changes before making a single commit</p>
+<p><strong>⚠️</strong> Skipping the diagnostic script and discovering environment issues in Hour 2</p>
+<p><strong>⚠️</strong> Using <code>git add .</code> from the wrong directory and staging unexpected files</p>
+<h3>Quick Check</h3>
+<p><strong>Question:</strong> What does <code>git commit</code> do that <code>git add</code> does not?</p>
+        </section>
+
+        <section class="slide" id="hour-2-designing-classes-from-requirements-be01c170" data-slide-number="18">
             <h1>Hour 2: Designing Classes from Requirements</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-53e1dbba" data-slide-number="19">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Turn a requirements list into candidate classes</li>
-  <li>Separate what an object <strong>knows</strong> from what it <strong>does</strong></li>
-  <li>Keep UI concerns out of domain models</li>
-  <li>Introduce a coordinating service layer</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Responsibility-Driven Design</h1>
-            <ul>
-  <li>Ask first:</li>
-  <li style="margin-left: 30px;">What does this object know?</li>
-  <li style="margin-left: 30px;">What does this object do?</li>
-  <li>Keep methods small and testable</li>
-  <li>Let the model protect its own state</li>
-  <li>Let the service layer coordinate workflows</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>From Requirements to Classes</h1>
-            <h3>Example Tracker Domain</h3>
-<ul>
-  <li><code>Task</code></li>
-  <li style="margin-left: 30px;">knows: title, description, priority, status</li>
-  <li style="margin-left: 30px;">does: complete(), update_priority()</li>
-  <li><code>TaskService</code> or <code>TaskManager</code></li>
-  <li style="margin-left: 30px;">knows: collection of tasks</li>
-  <li style="margin-left: 30px;">does: add_task(), get_pending_tasks(), search()</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Boundary Rule</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Keep These Separate</h1>
-            <ul>
-  <li><strong>Model</strong>: domain state + invariant-friendly behavior</li>
-  <li><strong>Service layer</strong>: orchestration + use cases</li>
-  <li><strong>UI layer</strong>: <code>print()</code>, <code>input()</code>, menus, prompts</li>
-</ul>
-<h3>Smell to Fix</h3>
-<ul>
-  <li>A <code>Task</code> class that asks for user input directly</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Small but Clean Model</h1>
-            <pre data-lang="python"><code>class Task:
-    def __init__(self, title: str, description: str, priority: str = &quot;Medium&quot;) -&gt; None:
-        self.title = title
-        self.description = description
-        self.priority = priority
-        self.is_complete = False
-
-    def complete(self) -&gt; None:
-        self.is_complete = True</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Outside-the-Class Summary</h1>
-            <pre data-lang="python"><code>def display_task_summary(task: Task) -&gt; None:
-    status = &quot;Done&quot; if task.is_complete else &quot;Pending&quot;
-    print(f&quot;[{status}] {task.title} (Priority: {task.priority})&quot;)</code></pre>
-<ul>
-  <li>Logic stays in the model</li>
-  <li>Presentation stays outside the model</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Domain Modeling</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Pick one tracker domain:</li>
-  <li style="margin-left: 30px;">tasks</li>
-  <li style="margin-left: 30px;">contacts</li>
-  <li style="margin-left: 30px;">inventory</li>
-  <li style="margin-left: 30px;">notes</li>
-  <li style="margin-left: 30px;">expenses</li>
-  <li>Write 5–8 requirements</li>
-  <li>Design 3–5 classes</li>
-  <li>Implement at least:</li>
-  <li style="margin-left: 30px;">one domain class</li>
-  <li style="margin-left: 30px;">one coordinating class</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 2)</h1>
-            <p><span class="check">✓</span> Requirements map clearly to classes</p>
-<p><span class="check">✓</span> Attributes and methods are distinct</p>
-<p><span class="check">✓</span> No <code>input()</code> / <code>print()</code> inside domain logic</p>
-<p><span class="check">✓</span> Demo block creates an object and shows a summary externally</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 2)</h1>
-            <ul>
-  <li>Homework expects:</li>
-  <li style="margin-left: 30px;">requirement bullets</li>
-  <li style="margin-left: 30px;">3–5 classes</li>
-  <li style="margin-left: 30px;">one domain class + one coordinating class</li>
-  <li style="margin-left: 30px;">a clear boundary rule</li>
-  <li>Quiz focus:</li>
-  <li style="margin-left: 30px;">what an object knows vs does</li>
-  <li style="margin-left: 30px;">what belongs in a service layer</li>
-  <li style="margin-left: 30px;">where validation should live</li>
+  <li>Translate a short requirements list into candidate classes</li>
+  <li>Describe any class in terms of what it <strong>knows</strong> and what it <strong>does</strong></li>
+  <li>Keep <code>input()</code> and <code>print()</code> out of domain model classes</li>
+  <li>Implement a model class and a coordinating service function</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day1_homework.ipynb</code> → <code>## Part 2: Designing Classes from Requirements</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day1_Quiz.html</code> → <code>QUIZ_DATA</code> questions 7–12</li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour2_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 2)</h1>
-            <p><strong>⚠️</strong> Putting UI prompts into model methods</p>
-<p><strong>⚠️</strong> Designing around globals instead of collaborators</p>
-<p><strong>⚠️</strong> Making classes vague helper buckets</p>
-<p><strong>⚠️</strong> Jumping to inheritance before clarifying responsibilities</p>
+        <section class="slide" id="design-vocabulary-57e549e3" data-slide-number="20">
+            <h1>Design Vocabulary</h1>
+            <p>Four terms used all course:</p>
+<ul>
+  <li><strong>Requirement</strong> — something the program must do, from the outside view</li>
+  <li><strong>Responsibility</strong> — a job owned by a piece of code; ask <em>knows</em> and <em>does</em></li>
+  <li><strong>Boundary</strong> — a line between responsibilities that lets one part change without breaking others</li>
+  <li><strong>Service function</strong> — a small coordinating function that uses model objects to complete one use case</li>
+</ul>
+<blockquote>&quot;A good class definition is not only a list of what belongs. It is also a boundary against what does not belong.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day1_Hour2_Advanced.md` → `## Concept Briefing: From Requirements to Classes`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Where should business validation live: UI, service/model, or Git history?</p>
+        <section class="slide" id="from-requirements-to-classes-five-steps-07ffa0ab" data-slide-number="21">
+            <h1>From Requirements to Classes — Five Steps</h1>
+            <pre data-lang="text"><code>Step 1 — Underline important nouns and verbs
+Step 2 — Group related data and behavior
+Step 3 — Name candidate classes
+Step 4 — For each class, list what it knows and does
+Step 5 — Decide what does NOT belong in the class</code></pre>
+<ul>
+  <li>Nouns are clues, not automatic classes</li>
+  <li>Avoid the &quot;junk drawer&quot; — one giant manager that does everything</li>
+  <li>A small testable class beats a large untestable god-object every time</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour2_Advanced.md</code> → <code>## Concept Briefing: From Requirements to Classes</code></li>
+</ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="sketching-the-tracker-domain-a1bb0b46" data-slide-number="22">
+            <h1>Sketching the Tracker Domain</h1>
+            <pre data-lang="text"><code>Task
+  knows — title, priority, completed status
+  does  — mark_complete(), is_pending(), change_priority()
+  not   — ask user for input, print itself to screen
+
+Project
+  knows — name, list of Task objects
+  does  — add_task(), pending_tasks(), completed_count()
+  not   — display menus, read from input()
+
+Service function
+  complete_task_by_title(project, title)
+  — searches the project, calls task.mark_complete()
+  — returns True/False; does not print</code></pre>
+        </section>
+
+        <section class="slide" id="demo-task-project-classes-73d88dff" data-slide-number="23">
+            <h1>Demo: Task + Project Classes</h1>
+            <pre data-lang="python"><code>from __future__ import annotations
+
+
+class Task:
+    allowed_priorities = {&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;}
+
+    def __init__(self, title: str, priority: str = &quot;medium&quot;) -&gt; None:
+        cleaned = title.strip()
+        if not cleaned:
+            raise ValueError(&quot;Task title cannot be empty.&quot;)
+        if priority.strip().lower() not in self.allowed_priorities:
+            raise ValueError(f&quot;Priority must be one of: {sorted(self.allowed_priorities)}&quot;)
+        self.title = cleaned
+        self.priority = priority.strip().lower()
+        self.is_complete = False
+
+    def mark_complete(self) -&gt; None:
+        self.is_complete = True
+
+    def is_pending(self) -&gt; bool:
+        return not self.is_complete
+
+    def __str__(self) -&gt; str:
+        status = &quot;done&quot; if self.is_complete else &quot;pending&quot;
+        return f&quot;{self.title} [{self.priority}, {status}]&quot;</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour2_Advanced.md</code> → <code>### Demo Part 1: Model Objects Only</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-project-service-function-3757c041" data-slide-number="24">
+            <h1>Demo: Project + Service Function</h1>
+            <pre data-lang="python"><code>class Project:
+    def __init__(self, name: str) -&gt; None:
+        self.name = name.strip()
+        self.tasks: list[Task] = []
+
+    def add_task(self, task: Task) -&gt; None:
+        self.tasks.append(task)
+
+    def pending_tasks(self) -&gt; list[Task]:
+        return [t for t in self.tasks if t.is_pending()]
+
+    def completed_count(self) -&gt; int:
+        return sum(1 for t in self.tasks if t.is_complete)
+
+
+def complete_task_by_title(project: Project, title: str) -&gt; bool:
+    for task in project.pending_tasks():
+        if task.title.lower() == title.strip().lower():
+            task.mark_complete()
+            return True
+    return False</code></pre>
+        </section>
+
+        <section class="slide" id="demo-running-the-tracker-c8ec846b" data-slide-number="25">
+            <h1>Demo: Running the Tracker</h1>
+            <pre data-lang="python"><code>def main() -&gt; None:
+    project = Project(&quot;Day 1 Tracker&quot;)
+    project.add_task(Task(&quot;Sketch tracker classes&quot;, &quot;high&quot;))
+    project.add_task(Task(&quot;Implement one model&quot;, &quot;medium&quot;))
+    project.add_task(Task(&quot;Separate UI from logic&quot;, &quot;high&quot;))
+
+    completed = complete_task_by_title(project, &quot;Implement one model&quot;)
+    print(f&quot;Completed requested task: {completed}&quot;)
+    print(f&quot;Pending: {len(project.pending_tasks())} tasks remaining&quot;)
+    for task in project.pending_tasks():
+        print(f&quot;  - {task}&quot;)</code></pre>
+<p>Expected output:</p>
+<pre data-lang="text"><code>Completed requested task: True
+Pending: 2 tasks remaining
+  - Sketch tracker classes [high, pending]
+  - Separate UI from logic [high, pending]</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour2_Advanced.md</code> → <code>### Demo Part 3: Deterministic Demo Block</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-domain-modeling-61f0de22" data-slide-number="26">
+            <h1>Lab: Domain Modeling</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Choose one tracker domain — tasks, contacts, inventory, expenses, or notes</li>
+  <li>Write 5–8 plain-language requirements</li>
+  <li>Design 3–5 candidate classes (what each <em>knows</em> and <em>does</em>)</li>
+  <li>Implement at least one domain class and one coordinating class or service function</li>
+  <li>Write a <code>main()</code> demo block with no <code>input()</code> or <code>print()</code> inside the model</li>
+</ol>
+        </section>
+
+        <section class="slide" id="completion-criteria-common-pitfalls-hour-2-e62a13e2" data-slide-number="27">
+            <h1>Completion Criteria + Common Pitfalls — Hour 2</h1>
+            <p><span class="check">✓</span> Requirements map to classes with clear responsibilities</p>
+<p><span class="check">✓</span> No <code>input()</code> or <code>print()</code> inside domain class methods</p>
+<p><span class="check">✓</span> At least one working model class and one service function</p>
+<p><span class="check">✓</span> <code>main()</code> creates objects and shows a summary externally</p>
+<p><strong>⚠️</strong> Putting UI prompts or <code>print()</code> inside model methods</p>
+<p><strong>⚠️</strong> Building one giant class that coordinates, stores, and displays everything</p>
+<p><strong>⚠️</strong> Jumping to inheritance before understanding what each class owns</p>
+<p><strong>⚠️</strong> Skipping Step 5 — not deciding what does NOT belong in a class</p>
+<h3>Quick Check</h3>
+<p><strong>Question:</strong> If a <code>Contact</code> class calls <code>input(&quot;Email: &quot;)</code> in its <code>__init__</code>, what does that make harder?</p>
+        </section>
+
+        <section class="slide" id="hour-3-properties-invariants-and-custom-exceptions-e16bf721" data-slide-number="28">
             <h1>Hour 3: Properties, Invariants, and Custom Exceptions</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-47094c45" data-slide-number="29">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Define an invariant for a real domain object</li>
-  <li>Use <code>@property</code> to control attribute access</li>
-  <li>Raise specific exceptions for domain problems</li>
-  <li>Catch errors in the driver/UI layer instead of inside the model</li>
+  <li>Explain a property as controlled access to an attribute</li>
+  <li>Use a backing attribute to avoid recursive property calls</li>
+  <li>Define custom domain exceptions for validation failures and missing items</li>
+  <li>Update a service function to raise domain exceptions instead of returning <code>None</code></li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Core Idea: Valid Objects Stay Valid</h1>
-            <ul>
-  <li>An <strong>invariant</strong> is a rule that must remain true</li>
-  <li>Examples:</li>
-  <li style="margin-left: 30px;">title must not be blank</li>
-  <li style="margin-left: 30px;">amount must be positive</li>
-  <li style="margin-left: 30px;">priority must be an integer in range</li>
-  <li>A model that accepts invalid state becomes harder to trust later</li>
+        <section class="slide" id="core-concept-invariants-and-properties-35c3ae24" data-slide-number="30">
+            <h1>Core Concept — Invariants and Properties</h1>
+            <p>An <strong>invariant</strong> is a rule that must always be true for an object to be valid.</p>
+<p>Examples for a task tracker:</p>
+<ul>
+  <li>Title must not be blank or whitespace-only</li>
+  <li>Priority must be an integer between 1 and 5</li>
+  <li>Completed status must never be set to an arbitrary type</li>
+</ul>
+<p>A <strong>property</strong> creates one safe doorway into a piece of state:</p>
+<ul>
+  <li>Every assignment — including during <code>__init__</code> — passes through the setter</li>
+  <li>The setter uses a <strong>backing attribute</strong> (<code>_priority</code>) to store the real value</li>
+  <li>Writing <code>self.priority = value</code> inside the setter causes infinite recursion — always use <code>self._priority = value</code></li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code> → <code>## Outcomes and Key Vocabulary</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Custom Exception + Property</h1>
+        <section class="slide" id="demo-custom-domain-exceptions-ff06ad6b" data-slide-number="31">
+            <h1>Demo: Custom Domain Exceptions</h1>
             <pre data-lang="python"><code>class ValidationError(Exception):
-    pass
+    &quot;&quot;&quot;Raised when tracker data violates a domain rule.&quot;&quot;&quot;
 
 
-class Task:
-    def __init__(self, title: str, priority: int = 1) -&gt; None:
-        self.title = title
-        self.priority = priority</code></pre>
+class NotFoundError(Exception):
+    &quot;&quot;&quot;Raised when a requested tracker item does not exist.&quot;&quot;&quot;</code></pre>
+<p>Returning <code>None</code> or <code>False</code> for domain failures:</p>
+<ul>
+  <li>The caller might forget to check the return value</li>
+  <li>The error meaning is ambiguous</li>
+  <li>The real failure can travel silently and surface far from its cause</li>
+</ul>
+<p>Raising a specific exception gives the caller a <strong>clear, catchable signal</strong>.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code> → <code>### Step 1: Define domain exceptions</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Validated Setter</h1>
-            <pre data-lang="python"><code>    @property
+        <section class="slide" id="demo-validated-task-model-72bbba81" data-slide-number="32">
+            <h1>Demo: Validated Task Model</h1>
+            <pre data-lang="python"><code>class Task:
+    def __init__(self, title: str, priority: int = 3) -&gt; None:
+        self.title = title       # routes through the setter
+        self.priority = priority  # routes through the setter
+        self.completed = False
+
+    @property
+    def title(self) -&gt; str:
+        return self._title
+
+    @title.setter
+    def title(self, value: str) -&gt; None:
+        if not isinstance(value, str) or not value.strip():
+            raise ValidationError(&quot;Task title cannot be empty.&quot;)
+        self._title = value.strip()
+
+    @property
     def priority(self) -&gt; int:
         return self._priority
 
     @priority.setter
     def priority(self, value: int) -&gt; None:
-        if not isinstance(value, int) or value &lt; 1:
-            raise ValidationError(&quot;Priority must be an integer &gt;= 1&quot;)
+        if type(value) is not int or not (1 &lt;= value &lt;= 5):
+            raise ValidationError(&quot;Task priority must be an integer from 1 to 5.&quot;)
         self._priority = value</code></pre>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Backing field uses <code>_priority</code></li>
-  <li>Setter guards the invariant</li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code> → <code>### Step 2: Create a model with validated properties</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Catching Specific Errors</h1>
-            <pre data-lang="python"><code>try:
-    task = Task(&quot;Clean Desk&quot;, priority=-1)
+        <section class="slide" id="demo-service-with-notfounderror-b14990c5" data-slide-number="33">
+            <h1>Demo: Service with NotFoundError</h1>
+            <pre data-lang="python"><code>def complete_task_by_title(tasks: list[Task], title: str) -&gt; Task:
+    &quot;&quot;&quot;Mark the first matching task complete; raise NotFoundError if missing.&quot;&quot;&quot;
+    normalized = title.strip()
+    for task in tasks:
+        if task.title.casefold() == normalized.casefold():
+            task.mark_complete()
+            return task
+    raise NotFoundError(f&quot;No task found with title: {title!r}&quot;)</code></pre>
+<p>The service raises <code>NotFoundError</code> — it does <strong>not</strong> print, return <code>False</code>, or return <code>None</code>.</p>
+<p>The caller decides how to communicate the failure.</p>
+        </section>
+
+        <section class="slide" id="demo-caller-level-error-handling-b85d0474" data-slide-number="34">
+            <h1>Demo: Caller-Level Error Handling</h1>
+            <pre data-lang="python"><code>tasks = [Task(&quot;Write outline&quot;, 2), Task(&quot;Review PR&quot;, 4)]
+
+try:
+    done = complete_task_by_title(tasks, &quot;review pr&quot;)
+    print(f&quot;Completed: {done.title}&quot;)
+except NotFoundError as error:
+    print(f&quot;Could not complete task: {error}&quot;)
+
+try:
+    Task(&quot;   &quot;, priority=2)          # blank title
 except ValidationError as error:
-    print(f&quot;ValidationError: {error}&quot;)</code></pre>
+    print(f&quot;Could not create task: {error}&quot;)
+
+try:
+    complete_task_by_title(tasks, &quot;Submit invoice&quot;)
+except NotFoundError as error:
+    print(f&quot;Could not complete task: {error}&quot;)</code></pre>
 <ul>
-  <li>Specific beats broad</li>
-  <li>Avoid <code>except Exception:</code> for expected domain failures</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Validation + Exceptions</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Convert one important attribute to a validated property</li>
-  <li>Add at least two custom exceptions:</li>
-  <li style="margin-left: 30px;"><code>ValidationError</code></li>
-  <li style="margin-left: 30px;"><code>NotFoundError</code></li>
-  <li>Show:</li>
-  <li style="margin-left: 30px;">invalid data raises <code>ValidationError</code></li>
-  <li style="margin-left: 30px;">missing lookup raises <code>NotFoundError</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 3)</h1>
-            <p><span class="check">✓</span> A real invariant is enforced</p>
-<p><span class="check">✓</span> The setter uses a backing field</p>
-<p><span class="check">✓</span> Specific exceptions are raised intentionally</p>
-<p><span class="check">✓</span> Friendly handling happens in a driver/demo block</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 3)</h1>
-            <ul>
-  <li>Homework expects both <code>ValidationError</code> and <code>NotFoundError</code></li>
-  <li>Canonical outputs include:</li>
-  <li style="margin-left: 30px;"><code>Priority set to: 3</code></li>
-  <li style="margin-left: 30px;"><code>ValidationError: title cannot be empty</code></li>
-  <li style="margin-left: 30px;"><code>NotFoundError: task 404 was not found</code></li>
-  <li>Quiz focus:</li>
-  <li style="margin-left: 30px;">invariant meaning</li>
-  <li style="margin-left: 30px;">why <code>@property</code> helps</li>
-  <li style="margin-left: 30px;">why specific exceptions beat <code>except Exception:</code></li>
+  <li>Catch <strong>specific</strong> exceptions only — not <code>except Exception</code></li>
+  <li>Broad <code>except Exception</code> hides real bugs like <code>AttributeError</code> or <code>NameError</code></li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day1_homework.ipynb</code> → <code>## Part 3: Properties, Invariants, and Custom Exceptions</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day1_Quiz.html</code> → <code>QUIZ_DATA</code> questions 13–18</li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour3_Advanced.md</code> → <code>### Step 4: Add caller-level handling</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 3)</h1>
-            <p><strong>⚠️</strong> Setter assigns to <code>self.priority</code> recursively</p>
-<p><strong>⚠️</strong> Returning <code>False</code> instead of surfacing a real error</p>
-<p><strong>⚠️</strong> Catching every exception and hiding unrelated bugs</p>
-<p><strong>⚠️</strong> Validating only in the UI and not in the model/service</p>
+        <section class="slide" id="lab-validation-exceptions-b8ed65a7" data-slide-number="35">
+            <h1>Lab: Validation + Exceptions</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Add at least one <code>@property</code> with a validated setter to a model class</li>
+  <li>Use a backing attribute (<code>_title</code>, <code>_amount</code>, etc.) in every setter</li>
+  <li>Define <code>ValidationError</code> and <code>NotFoundError</code> as custom exception classes</li>
+  <li>Raise <code>ValidationError</code> in the setter when the value breaks the invariant</li>
+  <li>Update one service function to raise <code>NotFoundError</code> for a missing item</li>
+  <li>Write a <code>main()</code> block that catches specific custom exceptions and prints user-friendly messages</li>
+</ol>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Why is <code>ValidationError</code> usually better than returning <code>False</code> from validation code?</p>
+        <section class="slide" id="completion-criteria-common-pitfalls-hour-3-63b80297" data-slide-number="36">
+            <h1>Completion Criteria + Common Pitfalls — Hour 3</h1>
+            <p><span class="check">✓</span> A real domain invariant is enforced in a <code>@property</code> setter</p>
+<p><span class="check">✓</span> The setter stores the value in a backing attribute, not <code>self.property</code></p>
+<p><span class="check">✓</span> Both <code>ValidationError</code> and <code>NotFoundError</code> are defined and raised intentionally</p>
+<p><span class="check">✓</span> Friendly messages appear only at the caller boundary, not inside the model</p>
+<p><strong>⚠️</strong> Writing <code>self.priority = value</code> inside <code>priority.setter</code> — causes recursion</p>
+<p><strong>⚠️</strong> Returning <code>False</code> or <code>None</code> instead of raising a domain exception</p>
+<p><strong>⚠️</strong> Using <code>except Exception</code> broadly, which hides unrelated programming bugs</p>
+<p><strong>⚠️</strong> Validating only in the UI layer and skipping model-level protection</p>
+<h3>Quick Check</h3>
+<p><strong>Question:</strong> Why is <code>ValidationError</code> raised in the setter better than returning <code>False</code> from a validate method?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-4-composition-vs-inheritance-polymorphism-35052f37" data-slide-number="37">
             <h1>Hour 4: Composition vs Inheritance + Polymorphism</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-3d9ef8f8" data-slide-number="38">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Distinguish <strong>is-a</strong> from <strong>has-a</strong></li>
-  <li>Use composition when collaborator behavior may vary</li>
-  <li>Reduce branchy code with shared method names</li>
-  <li>Explain duck typing in practical terms</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Inheritance vs Composition</h1>
-            <h3>Use Inheritance for</h3>
-<ul>
-  <li>real <strong>is-a</strong> relationships</li>
-  <li>stable shared behavior</li>
-</ul>
-<h3>Use Composition for</h3>
-<ul>
-  <li><strong>has-a</strong> relationships</li>
-  <li>swappable collaborators</li>
-  <li>cleaner extension without deep class trees</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Branchy Export Smell</h1>
-            <pre data-lang="python"><code>def export_data(data, format_type):
-    if format_type == &quot;json&quot;:
-        ...
-    elif format_type == &quot;csv&quot;:
-        ...
-    else:
-        raise ValueError(&quot;Unknown format&quot;)</code></pre>
-<ul>
-  <li>Works at first</li>
-  <li>Scales badly as new behaviors appear</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Polymorphic Exporters</h1>
-            <pre data-lang="python"><code>class JSONExporter:
-    def export(self, data):
-        return {&quot;data&quot;: data}
-
-
-class CSVExporter:
-    def export(self, data):
-        return f&quot;data,{data}&quot;</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Composition in the Caller</h1>
-            <pre data-lang="python"><code>class ReportService:
-    def __init__(self, exporter) -&gt; None:
-        self.exporter = exporter
-
-    def generate(self, data):
-        return self.exporter.export(data)</code></pre>
-<ul>
-  <li>Caller depends on a compatible collaborator</li>
-  <li>New exporter types do not require new caller branches</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Refactor a Branchy Design</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Start with a branching scenario:</li>
-  <li style="margin-left: 30px;">exporting</li>
-  <li style="margin-left: 30px;">notifications</li>
-  <li style="margin-left: 30px;">payments</li>
-  <li>Create 2+ implementations with the same method name</li>
-  <li>Add a class that <strong>has a</strong> collaborator</li>
-  <li>Swap collaborators without changing caller structure</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 4)</h1>
-            <p><span class="check">✓</span> A large <code>if/elif</code> chain is reduced or removed</p>
-<p><span class="check">✓</span> Two or more implementations share one method name</p>
-<p><span class="check">✓</span> Composition is visible in the caller</p>
-<p><span class="check">✓</span> A third implementation could be added with minimal change</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 4)</h1>
-            <ul>
-  <li>Homework expects:</li>
-  <li style="margin-left: 30px;">a branchy design replaced</li>
-  <li style="margin-left: 30px;">composition shown clearly</li>
-  <li style="margin-left: 30px;">optional third implementation</li>
-  <li>Canonical output references:</li>
-  <li style="margin-left: 30px;"><code>Composed notifier sent: Task created</code></li>
-  <li style="margin-left: 30px;"><code>Export text: TASK-101 | Draft syllabus</code></li>
-  <li style="margin-left: 30px;"><code>Export dict: {&#x27;id&#x27;: &#x27;TASK-101&#x27;, &#x27;title&#x27;: &#x27;Draft syllabus&#x27;}</code></li>
-  <li>Quiz focus:</li>
-  <li style="margin-left: 30px;">is-a vs has-a</li>
-  <li style="margin-left: 30px;">duck typing</li>
-  <li style="margin-left: 30px;">caller stability when new implementations appear</li>
+  <li>Distinguish <strong>is-a</strong> (inheritance) from <strong>has-a</strong> (composition)</li>
+  <li>Explain duck typing — Python cares about available behavior, not ancestry</li>
+  <li>Identify <code>if/elif</code> chains that are candidates for polymorphic refactoring</li>
+  <li>Refactor a branching exporter into composed formatter objects</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day1_homework.ipynb</code> → <code>## Part 4: Composition vs Inheritance + Polymorphism</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day1_Quiz.html</code> → <code>QUIZ_DATA</code> questions 19–24</li>
+  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 4)</h1>
-            <p><strong>⚠️</strong> Moving the <code>if/elif</code> chain into a new class instead of removing it</p>
-<p><strong>⚠️</strong> Inheriting when the relationship is really has-a</p>
-<p><strong>⚠️</strong> Forgetting that duck typing cares about behavior, not ancestry</p>
-<p><strong>⚠️</strong> Hard-coding collaborator choice inside the caller</p>
+        <section class="slide" id="inheritance-vs-composition-c4aa98a6" data-slide-number="39">
+            <h1>Inheritance vs Composition</h1>
+            <pre data-lang="text"><code>Inheritance — use when one type really IS a specialized version of another
+  Test: &quot;A SavingsAccount IS a BankAccount&quot; ✓ reasonable
+
+Composition — use when one object HAS or USES another object
+  Test: &quot;A ReportRunner HAS a formatter&quot; ✓ correct
+        &quot;A ReportRunner IS a formatter&quot;  ✗ wrong relationship</code></pre>
+<p>Four vocabulary items:</p>
+<ul>
+  <li><strong>Inheritance</strong> — subclass receives structure and behavior from a parent</li>
+  <li><strong>Composition</strong> — one object stores or receives another object as a collaborator</li>
+  <li><strong>Polymorphism</strong> — different objects respond to the same method name</li>
+  <li><strong>Duck typing</strong> — if an object provides the method the caller needs, it qualifies</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code>## Outcomes and Vocabulary</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> What is the practical benefit of giving the caller any object with a compatible <code>export()</code> method?</p>
+        <section class="slide" id="design-smell-the-branchy-exporter-ef75e3e2" data-slide-number="40">
+            <h1>Design Smell — The Branchy Exporter</h1>
+            <pre data-lang="python"><code>from typing import Any
+
+
+def export_report(report: dict[str, Any], format_type: str) -&gt; object:
+    if format_type == &quot;text&quot;:
+        return f&quot;Report: {report[&#x27;title&#x27;]}\nCompleted: {report[&#x27;completed&#x27;]}&quot;
+    elif format_type == &quot;dict&quot;:
+        return {&quot;title&quot;: report[&quot;title&quot;], &quot;completed&quot;: report[&quot;completed&quot;]}
+    else:
+        raise ValueError(f&quot;Unknown format: {format_type}&quot;)</code></pre>
+<p>The smell:</p>
+<ul>
+  <li>Every new format requires reopening and editing this function</li>
+  <li>A misspelled string silently reaches the <code>else</code> branch</li>
+  <li>Changing one branch risks breaking another</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code>### Step 1: Start with a working before-state</code></li>
+</ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="demo-polymorphic-formatter-classes-01284c06" data-slide-number="41">
+            <h1>Demo: Polymorphic Formatter Classes</h1>
+            <pre data-lang="python"><code>from typing import Any
+
+Report = dict[str, Any]
+
+
+class TextReportFormatter:
+    def format(self, report: Report) -&gt; str:
+        return (
+            f&quot;Report: {report[&#x27;title&#x27;]}\n&quot;
+            f&quot;Completed: {report[&#x27;completed&#x27;]}\n&quot;
+            f&quot;Pending: {report[&#x27;pending&#x27;]}&quot;
+        )
+
+
+class DictReportFormatter:
+    def format(self, report: Report) -&gt; dict[str, Any]:
+        total = report[&quot;completed&quot;] + report[&quot;pending&quot;]
+        return {
+            &quot;title&quot;: report[&quot;title&quot;],
+            &quot;completed&quot;: report[&quot;completed&quot;],
+            &quot;pending&quot;: report[&quot;pending&quot;],
+            &quot;total&quot;: total,
+        }</code></pre>
+<p>Both classes define <code>format(report)</code> — no shared parent class required.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code>### Step 2: Refactor into two classes with the same method name</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-reportrunner-using-composition-c46fbbd9" data-slide-number="42">
+            <h1>Demo: ReportRunner Using Composition</h1>
+            <pre data-lang="python"><code>class ReportRunner:
+    def __init__(self, formatter: Any) -&gt; None:
+        self.formatter = formatter   # has-a relationship
+
+    def build_output(self, report: Report) -&gt; object:
+        return self.formatter.format(report)   # polymorphic call
+
+
+def main() -&gt; None:
+    report = {&quot;title&quot;: &quot;Day 1 Tracker&quot;, &quot;completed&quot;: 7, &quot;pending&quot;: 3}
+
+    text_runner = ReportRunner(TextReportFormatter())
+    dict_runner = ReportRunner(DictReportFormatter())
+
+    print(text_runner.build_output(report))
+    print()
+    print(dict_runner.build_output(report))</code></pre>
+<p><code>ReportRunner</code> does not ask <em>which kind</em> of formatter it holds.</p>
+<p>It simply calls <code>format()</code> and trusts duck typing.</p>
+        </section>
+
+        <section class="slide" id="adding-a-third-formatter-no-changes-to-reportrunner-ed6542d6" data-slide-number="43">
+            <h1>Adding a Third Formatter — No Changes to ReportRunner</h1>
+            <pre data-lang="python"><code>class SummaryReportFormatter:
+    def format(self, report: Report) -&gt; str:
+        total = report[&quot;completed&quot;] + report[&quot;pending&quot;]
+        return f&quot;{report[&#x27;title&#x27;]}: {report[&#x27;completed&#x27;]} of {total} complete&quot;
+
+
+summary_runner = ReportRunner(SummaryReportFormatter())
+print(summary_runner.build_output(report))
+# Day 1 Tracker: 7 of 10 complete</code></pre>
+<p>This is the payoff: a new behavior is added by creating a new class.</p>
+<p><code>ReportRunner.build_output()</code> is <strong>never modified</strong>.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day1_Hour4_Advanced.md</code> → <code>### Step 4: Optional quick extension</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-refactor-a-branching-feature-0d9e9003" data-slide-number="44">
+            <h1>Lab: Refactor a Branching Feature</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Start with a working <code>if/elif</code> function (export, notification, or payment)</li>
+  <li>Refactor each branch into its own class with one shared method name (<code>format</code>, <code>send</code>, or <code>process</code>)</li>
+  <li>Create a runner/service class that <strong>has-a</strong> collaborator and calls the shared method</li>
+  <li>Swap collaborators in the demo block without changing the runner&#x27;s internals</li>
+  <li>Optional — add a third implementation to confirm zero changes to the runner</li>
+</ol>
+        </section>
+
+        <section class="slide" id="completion-criteria-common-pitfalls-hour-4-91f3bc80" data-slide-number="45">
+            <h1>Completion Criteria + Common Pitfalls — Hour 4</h1>
+            <p><span class="check">✓</span> A large <code>if/elif</code> chain is removed from the caller</p>
+<p><span class="check">✓</span> Two or more classes share the same method name</p>
+<p><span class="check">✓</span> The runner/service uses composition — it stores a collaborator, not inherits from one</p>
+<p><span class="check">✓</span> A third implementation can be added without touching the runner</p>
+<p><strong>⚠️</strong> Moving the <code>if/elif</code> chain into a new class — that relocates branching, not removes it</p>
+<p><strong>⚠️</strong> Inheriting from a formatter when the real relationship is has-a</p>
+<p><strong>⚠️</strong> Assuming polymorphism requires a shared base class — duck typing handles it in Python</p>
+<p><strong>⚠️</strong> Hard-coding the collaborator choice inside the runner constructor</p>
+<h3>Quick Check</h3>
+<p><strong>Question:</strong> What is the practical benefit of giving the runner <em>any</em> object with a compatible <code>format()</code> method?</p>
+        </section>
+
+        <section class="slide" id="session-1-wrap-up-5033b541" data-slide-number="46">
             <h1>Session 1 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-we-built-today-00bb25bb" data-slide-number="47">
             <h1>What We Built Today</h1>
-            <ul>
-  <li>A stable workspace + Git baseline</li>
-  <li>Cleaner domain boundaries</li>
-  <li>Validated models with specific exceptions</li>
-  <li>Composition-friendly architecture</li>
-</ul>
-<h3>Key Day 1 Rule</h3>
-<p><strong>Professional Python starts with trustworthy structure.</strong></p>
+            <table>
+<thead>
+<tr>
+<th>Hour</th>
+<th>Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hour 1</td>
+<td>Stable workspace and first Git commit</td>
+</tr>
+<tr>
+<td>Hour 2</td>
+<td>Domain model with clear responsibilities and boundaries</td>
+</tr>
+<tr>
+<td>Hour 3</td>
+<td>Validated properties and domain-specific exceptions</td>
+</tr>
+<tr>
+<td>Hour 4</td>
+<td>Composition-based design with polymorphic collaborators</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Day 1 Rule</strong> — Professional Python starts with trustworthy structure.</p>
         </section>
 
-        <section class="slide">
-            <h1>Day 1 Homework / Study Checklist</h1>
-            <ul>
-  <li>Re-run the diagnostic script</li>
-  <li>Refine your requirements list</li>
-  <li>Enforce one invariant with a property</li>
-  <li>Add two specific custom exceptions</li>
-  <li>Refactor one branch-heavy workflow into collaborators</li>
+        <section class="slide" id="day-1-checklist-next-session-preview-e8286da7" data-slide-number="48">
+            <h1>Day 1 Checklist + Next Session Preview</h1>
+            <h3>Before Session 2</h3>
+<ul>
+  <li>Re-run the diagnostic script to confirm the environment is still ready</li>
+  <li>Add a validated <code>@property</code> to at least one model attribute</li>
+  <li>Define <code>ValidationError</code> and <code>NotFoundError</code> and raise them intentionally</li>
+  <li>Refactor one <code>if/elif</code> workflow into composed collaborators</li>
+  <li>Commit every working checkpoint with a meaningful message</li>
+</ul>
+<h3>Session 2 Preview (Hours 5–8)</h3>
+<ul>
+  <li>Factory pattern for centralized, validated object creation</li>
+  <li>Strategy pattern for runtime-swappable behavior</li>
+  <li><code>__repr__</code>, <code>__str__</code>, equality, and light type hints</li>
+  <li>Checkpoint 1 — stable headless core: models, service CRUD, exceptions, serialization</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
@@ -1014,21 +1188,10 @@ class CSVExporter:
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Next Session Preview</h1>
-            <h3>Session 2 (Hours 5–8)</h3>
-<ul>
-  <li>Factory pattern for validated creation</li>
-  <li>Strategy pattern for swappable behavior</li>
-  <li><code>__repr__</code>, <code>__str__</code>, equality, and light type hints</li>
-  <li>Checkpoint 1: domain + service layer milestone</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="thank-you-b901d50f" data-slide-number="49">
             <h1>Thank You!</h1>
-            <p>Save your work.</p>
-<p>Commit the latest good state.</p>
+            <p>Save your files.</p>
+<p>Commit the latest working state.</p>
 <p>Be ready to extend the core tomorrow.</p>
         </section>
     </div>
@@ -1074,7 +1237,11 @@ class CSVExporter:
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1147,17 +1314,24 @@ class CSVExporter:
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

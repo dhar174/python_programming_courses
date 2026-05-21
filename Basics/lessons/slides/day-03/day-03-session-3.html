@@ -386,656 +386,1042 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="basics-day-3-session-3-hours-912-999c8f09" data-slide-number="1">
             <h1>Basics Day 3 — Session 3 (Hours 9–12)</h1>
             <div class="subtitle">Python Programming (Basic) • Comparisons, F-Strings, Text Processing &amp; Debugging</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-3-overview-b27828d4" data-slide-number="2">
             <h1>Session 3 Overview</h1>
+            
+        </section>
+
+        <section class="slide" id="topics-covered-today-9b29223c" data-slide-number="3">
+            <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 9: Comparisons + boolean logic</li>
-  <li>Hour 10: String formatting with f-strings</li>
-  <li>Hour 11: Working with text: split/join</li>
-  <li>Hour 12: Debugging habits (Basics level)</li>
+  <li>Hour 9: Comparisons + boolean logic — making decisions with code</li>
+  <li>Hour 10: String formatting with f-strings — professional output</li>
+  <li>Hour 11: Working with text — <code>split()</code> and <code>join()</code></li>
+  <li>Hour 12: Debugging habits — reading tracebacks, fixing bugs</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-9-comparisons-boolean-logic-9bcaa336" data-slide-number="4">
             <h1>Hour 9: Comparisons + Boolean Logic</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-034582de" data-slide-number="5">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Use comparison operators (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>)</li>
-  <li>Explain the difference between <code>==</code> (comparison) and <code>=</code> (assignment)</li>
-  <li>Combine conditions with <code>and</code>, <code>or</code>, and <code>not</code></li>
-  <li>Chain comparison operators in Python</li>
-  <li>Identify boundary condition mistakes (off-by-one errors)</li>
+  <li>Use all six comparison operators (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>)</li>
+  <li>Explain the critical difference between <code>==</code> (comparison) and <code>=</code> (assignment)</li>
+  <li>Combine conditions using <code>and</code>, <code>or</code>, and <code>not</code></li>
+  <li>Chain comparison operators in Python (Pythonic range checks)</li>
+  <li>Apply boolean logic to build eligibility checks and decision rules</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Comparison Operators</h1>
-            <h3>The Six Comparisons</h3>
-<pre data-lang="python"><code>age = 18
+        <section class="slide" id="the-six-comparison-operators-41def17e" data-slide-number="6">
+            <h1>The Six Comparison Operators</h1>
+            <pre data-lang="python"><code>age = 18
 
-age == 18   # True   (equal to)
-age != 21   # True   (not equal to)
-age &lt; 21    # True   (less than)
-age &gt; 16    # True   (greater than)
-age &lt;= 18   # True   (less than or equal)
-age &gt;= 18   # True   (greater than or equal)</code></pre>
-<h3>Critical Rule</h3>
-<p><code>=</code> <strong>assigns</strong> a value — <code>==</code> <strong>compares</strong> values</p>
-<pre data-lang="python"><code>x = 5       # assignment
-x == 5      # comparison → True</code></pre>
+print(age == 18)    # True  — equality check
+print(age == 21)    # False
+print(age != 21)    # True  — not equal
+print(age &lt; 21)     # True  — less than
+print(age &gt; 21)     # False — greater than
+print(age &gt;= 18)    # True  — greater than or equal
+print(age &lt;= 18)    # True  — less than or equal</code></pre>
+<p>Every comparison produces exactly <strong><code>True</code> or <code>False</code></strong> — the only two boolean values.</p>
         </section>
 
-        <section class="slide">
-            <h1>Boolean Logic: and / or / not</h1>
-            <h3>Combining Conditions</h3>
-<pre data-lang="python"><code>age = 20
-has_id = True
+        <section class="slide" id="vs-the-most-common-mistake-00e3b980" data-slide-number="7">
+            <h1>= vs == — The Most Common Mistake</h1>
+            <pre data-lang="python"><code>age = 18          # = assigns a value to a variable
 
-# Both must be True
-age &gt;= 18 and has_id        # True
+if age == 18:     # == compares two values
+    print(&quot;You are 18&quot;)</code></pre>
+<pre data-lang="python"><code># ❌ WRONG — SyntaxError (assignment inside if)
+if age = 18:
+    print(&quot;You are 18&quot;)</code></pre>
+<blockquote>💡 **Memory device:** `==` asks a question — &quot;Are these equal?&quot; Two equal signs, one question.</blockquote>
+        </section>
 
-# At least one must be True
-age &gt;= 21 or has_id         # True
+        <section class="slide" id="real-world-comparisons-347a681c" data-slide-number="8">
+            <h1>Real-World Comparisons</h1>
+            <pre data-lang="python"><code># Password length check (uses len() from Day 2)
+password = &quot;secret&quot;
+min_length = 8
+print(len(password) &gt;= min_length)    # False — only 6 chars
 
-# Flip the result
-not has_id                  # False</code></pre>
-<h3>Chaining Comparisons</h3>
+# Case-sensitive string equality
+user_answer = &quot;Paris&quot;
+correct_answer = &quot;paris&quot;
+print(user_answer == correct_answer)              # False
+print(user_answer.lower() == correct_answer)      # True</code></pre>
+<blockquote>⚠️ `&quot;18&quot;` (str) ≠ `18` (int) — always convert `input()` before comparing numbers</blockquote>
+        </section>
+
+        <section class="slide" id="chaining-comparisons-pythonic-ccc902f8" data-slide-number="9">
+            <h1>Chaining Comparisons (Pythonic)</h1>
+            <pre data-lang="python"><code>age = 25
+
+# Standard (works in all languages)
+if age &gt;= 18 and age &lt;= 65:
+    print(&quot;Working age&quot;)
+
+# Pythonic chained form — reads like math notation
+if 18 &lt;= age &lt;= 65:
+    print(&quot;Working age&quot;)   # same result, cleaner code</code></pre>
 <pre data-lang="python"><code>score = 85
-# Instead of: score &gt;= 70 and score &lt;= 100
-70 &lt;= score &lt;= 100          # True (Pythonic)</code></pre>
+# Range check in one expression
+print(70 &lt;= score &lt;= 100)   # True</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Truthy and Falsy (Preview)</h1>
-            <h3>Quick Peek</h3>
-<ul>
-  <li><strong>Falsy values</strong>: <code>0</code>, <code>0.0</code>, <code>&quot;&quot;</code>, <code>None</code>, <code>False</code></li>
-  <li>Everything else is <strong>truthy</strong></li>
-</ul>
-<pre data-lang="python"><code>name = &quot;&quot;
-if name:
-    print(&quot;Has a name&quot;)
+        <section class="slide" id="boolean-logic-and-or-not-6df76e7f" data-slide-number="10">
+            <h1>Boolean Logic: `and` / `or` / `not`</h1>
+            <pre data-lang="python"><code>age = 25
+has_license = True
+is_raining = False
+
+# and — both must be True
+print(age &gt;= 18 and has_license)   # True
+
+# or — at least one must be True
+print(age &gt;= 21 or has_license)    # True
+
+# not — flips the value
+print(not is_raining)              # True</code></pre>
+<p><strong>Truth table summary:</strong></p>
+<p><code>and</code> → both must be True</p>
+<p><code>or</code>  → at least one must be True</p>
+<p><code>not</code> → reverses the boolean value</p>
+        </section>
+
+        <section class="slide" id="combining-operators-precedence-5337c17f" data-slide-number="11">
+            <h1>Combining Operators + Precedence</h1>
+            <pre data-lang="python"><code>age = 25
+is_student = True
+has_coupon = False
+
+# Comparisons first, then not, then and, then or
+if (age &lt; 18 or is_student) and (not has_coupon):
+    print(&quot;Discount applies&quot;)</code></pre>
+<blockquote>⚠️ **Order matters:** `and` evaluates before `or`</blockquote>
+<blockquote></blockquote>
+<blockquote>`a and b or c` means `(a and b) or c` — use parentheses to make intent explicit</blockquote>
+        </section>
+
+        <section class="slide" id="truthy-and-falsy-a-preview-09ad0226" data-slide-number="12">
+            <h1>Truthy and Falsy — A Preview</h1>
+            <p><strong>Falsy values</strong> (treated as <code>False</code> in boolean context):</p>
+<pre data-lang="python"><code>&quot;&quot;          # empty string
+0           # zero
+0.0         # zero float
+None        # Python&#x27;s null
+False       # the boolean itself</code></pre>
+<pre data-lang="python"><code># Practical example — check for empty input
+age_input = input(&quot;Enter your age: &quot;)
+
+if age_input:                      # True if user typed something
+    age = int(age_input)
+    print(f&quot;You are {age} years old&quot;)
 else:
-    print(&quot;Name is empty&quot;)   # ← this prints</code></pre>
-<blockquote>💡 We&#x27;ll see more of this as we work with conditionals.</blockquote>
+    print(&quot;You didn&#x27;t enter anything!&quot;)</code></pre>
+<blockquote>💡 For now, stick to **explicit** comparisons (`!= &quot;&quot;`, `&gt; 0`) — easier to read</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Age Gating</h1>
-            <h3>Watch for…</h3>
+        <section class="slide" id="demo-membership-eligibility-checker-2a8100bf" data-slide-number="13">
+            <h1>Demo: Membership Eligibility Checker</h1>
+            <pre data-lang="python"><code># age_gate.py
+print(&quot;=== Membership Eligibility Checker ===\n&quot;)
+
+age = int(input(&quot;Enter your age: &quot;))
+has_membership = input(&quot;Do you have a membership? (yes/no): &quot;).lower() == &quot;yes&quot;
+
+if age &gt;= 18 and has_membership:
+    print(&quot;✓ Access granted! Welcome to the premium section.&quot;)
+elif age &gt;= 18 and not has_membership:
+    print(&quot;✗ You are old enough, but you need a membership.&quot;)
+elif age &gt;= 13:
+    print(&quot;✗ You must be 18 or older for this content.&quot;)
+else:
+    print(&quot;✗ This content requires adult supervision.&quot;)</code></pre>
+<p><strong>Test boundary values:</strong> 12, 13, 17, 18, 65</p>
+        </section>
+
+        <section class="slide" id="lab-community-center-eligibility-checker-9eafe575" data-slide-number="14">
+            <h1>Lab: Community Center Eligibility Checker</h1>
+            <p><strong>Time: 20–35 minutes</strong> | File: <code>eligibility_checker.py</code></p>
+<p><strong>Rules to implement:</strong></p>
 <ul>
-  <li>Two comparisons combined with <code>and</code></li>
-  <li>Clean boundary handling</li>
+  <li><strong>Children&#x27;s Program:</strong> age 5–12 (any residency)</li>
+  <li><strong>Teen Program:</strong> age 13–17 (any residency)</li>
+  <li><strong>Adult Program:</strong> age 18–64 AND local resident</li>
+  <li><strong>Senior Program:</strong> age 65+ (any residency)</li>
 </ul>
 <pre data-lang="python"><code>age = int(input(&quot;Enter your age: &quot;))
+is_resident = input(&quot;Local resident? (yes/no): &quot;).lower() == &quot;yes&quot;
 
-if age &gt;= 13 and age &lt; 18:
-    print(&quot;Teen access granted&quot;)
-elif age &gt;= 18:
-    print(&quot;Adult access granted&quot;)
-else:
-    print(&quot;Access denied — too young&quot;)</code></pre>
-<h3>Expected Output (age = 15)</h3>
-<pre><code>Enter your age: 15
-Teen access granted</code></pre>
+if 5 &lt;= age &lt;= 12:
+    print(&quot;✓ Children&#x27;s Program&quot;)
+elif 13 &lt;= age &lt;= 17:
+    print(&quot;✓ Teen Program&quot;)
+elif 18 &lt;= age &lt;= 64 and is_resident:
+    print(&quot;✓ Adult Program&quot;)
+elif 18 &lt;= age &lt;= 64 and not is_resident:
+    print(&quot;✗ Adult Program requires local residency.&quot;)
+elif age &gt;= 65:
+    print(&quot;✓ Senior Program&quot;)</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Eligibility Checker</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Ask the user for their age (use <code>input()</code> + <code>int()</code>)</li>
-  <li>Determine eligibility for 3 brackets:</li>
-  <li style="margin-left: 30px;"><strong>Child</strong>: age &lt; 13</li>
-  <li style="margin-left: 30px;"><strong>Teen</strong>: age 13–17 (inclusive)</li>
-  <li style="margin-left: 30px;"><strong>Adult</strong>: age 18+</li>
-  <li>Print a clear message for each bracket</li>
-</ul>
-<h3>Completion Criteria</h3>
-<p><span class="check">✓</span> Correct branching for boundary values (12, 13, 17, 18)</p>
-<p><span class="check">✓</span> Uses <code>&gt;=</code> and <code>&lt;</code> appropriately</p>
-<p><span class="check">✓</span> No hard-coded values (works for any valid age)</p>
+        <section class="slide" id="lab-checkpoints-hour-9-b2f8c546" data-slide-number="15">
+            <h1>Lab Checkpoints (Hour 9)</h1>
+            <p><strong>Checkpoint 1 — Input &amp; Conversion (5 min)</strong></p>
+<p><span class="check">✓</span> Age converted to <code>int</code>, residency converted to <code>bool</code></p>
+<p><strong>Checkpoint 2 — Core Logic (10 min)</strong></p>
+<p><span class="check">✓</span> All four programs branch correctly</p>
+<p><span class="check">✓</span> Boundary values work: ages 12, 13, 18, 65</p>
+<p><strong>Checkpoint 3 — Debug &amp; Verify (5 min)</strong></p>
+<p><span class="check">✓</span> Non-resident adult case handled</p>
+<p><span class="check">✓</span> Code has comments on boundary checks</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-9-ede7572a" data-slide-number="16">
             <h1>Common Pitfalls (Hour 9)</h1>
-            <p><strong>⚠️</strong> <strong>Off-by-one boundaries</strong> — test edge values (12, 13, 17, 18)</p>
-<p><strong>⚠️</strong> <strong>Comparing strings to numbers</strong> — <code>input()</code> returns a string!</p>
-<p><strong>⚠️</strong> <strong>Using <code>=</code> instead of <code>==</code></strong> — assignment vs comparison</p>
-<p><strong>⚠️</strong> <strong>Forgetting <code>int()</code> conversion</strong> — <code>&quot;18&quot; &gt;= 13</code> is a TypeError</p>
+            <p><strong>⚠️</strong> <strong><code>=</code> instead of <code>==</code></strong> — SyntaxError inside <code>if</code></p>
+<p><strong>⚠️</strong> <strong>String vs integer comparison</strong> — <code>input()</code> returns a string; use <code>int()</code></p>
+<p><strong>⚠️</strong> <strong>Off-by-one boundaries</strong> — always test the exact threshold values</p>
+<p><strong>⚠️</strong> <strong><code>and</code> before <code>or</code></strong> — use parentheses when mixing operators</p>
+<pre data-lang="python"><code># ❌ Dangerous ambiguity
+if a and b or c:          # reads as (a and b) or c
+
+# ✓ Explicit intent
+if (a and b) or c:</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-9-54ae6f4d" data-slide-number="17">
             <h1>Quick Check (Hour 9)</h1>
-            <p><strong>Question</strong>: What&#x27;s the difference between <code>==</code> and <code>=</code>?</p>
-<p><strong>Expected Answer</strong>:</p>
-<ul>
-  <li><code>=</code> assigns a value to a variable</li>
-  <li><code>==</code> compares two values and returns <code>True</code> or <code>False</code></li>
-</ul>
+            <p><strong>What will this print?</strong></p>
+<pre data-lang="python"><code>temperature = 75
+is_sunny = True
+
+if temperature &gt;= 70 and is_sunny:
+    print(&quot;Perfect beach day!&quot;)
+else:
+    print(&quot;Maybe another day&quot;)</code></pre>
+<p><strong>Answer:</strong> <code>Perfect beach day!</code> — both conditions are <code>True</code></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-10-string-formatting-with-f-strings-dc7460b5" data-slide-number="18">
             <h1>Hour 10: String Formatting with F-Strings</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-b856d9b7" data-slide-number="19">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Use f-strings for readable output (<code>f&quot;{var}&quot;</code>)</li>
-  <li>Format numbers to fixed decimals (<code>{value:.2f}</code>)</li>
-  <li>Apply width and alignment specifiers</li>
-  <li>Explain why f-strings are better than concatenation</li>
+  <li>Use f-strings to embed variables directly in strings (<code>f&quot;{var}&quot;</code>)</li>
+  <li>Format floats to fixed decimal places (<code>{value:.2f}</code>)</li>
+  <li>Apply width and alignment specifiers for columnar output</li>
+  <li>Combine f-strings with <code>if/elif/else</code> for conditional messages</li>
+  <li>Explain why f-strings beat concatenation and <code>str.format()</code></li>
+  <li>Avoid the four most common f-string beginner mistakes</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>F-String Basics</h1>
-            <h3>Simple Variable Insertion</h3>
-<pre data-lang="python"><code>name = &quot;Alice&quot;
-age = 25
-
-print(f&quot;Hello, {name}!&quot;)
-print(f&quot;{name} is {age} years old&quot;)</code></pre>
-<h3>Expressions Inside Braces</h3>
-<pre data-lang="python"><code>price = 49.99
-tax_rate = 0.08
-
-print(f&quot;Total: {price * (1 + tax_rate)}&quot;)</code></pre>
-<blockquote>💡 Anything valid Python can go inside `{}`</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Formatting Numbers</h1>
-            <h3>Fixed Decimal Places</h3>
-<pre data-lang="python"><code>price = 19.999
-tip = 3.5
-
-print(f&quot;Price: ${price:.2f}&quot;)     # Price: $20.00
-print(f&quot;Tip:   ${tip:.2f}&quot;)       # Tip:   $3.50</code></pre>
-<h3>Width and Alignment</h3>
-<pre data-lang="python"><code># Right-align in a 10-character field
-print(f&quot;{&#x27;Item&#x27;:&lt;10} {&#x27;Price&#x27;:&gt;8}&quot;)
-print(f&quot;{&#x27;Coffee&#x27;:&lt;10} {4.50:&gt;8.2f}&quot;)
-print(f&quot;{&#x27;Sandwich&#x27;:&lt;10} {8.75:&gt;8.2f}&quot;)</code></pre>
-<pre><code>Item       Price
-Coffee         4.50
-Sandwich       8.75</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Why F-Strings Beat Concatenation</h1>
-            <h3>Concatenation (Harder to Read)</h3>
-<pre data-lang="python"><code># ❌ String concatenation
-print(&quot;Hello, &quot; + name + &quot;! You are &quot; + str(age) + &quot; years old.&quot;)</code></pre>
-<h3>F-String (Cleaner)</h3>
-<pre data-lang="python"><code># ✓ F-string
-print(f&quot;Hello, {name}! You are {age} years old.&quot;)</code></pre>
-<h3>Benefits</h3>
-<ul>
-  <li>No manual <code>str()</code> conversion needed</li>
-  <li>Reads left-to-right naturally</li>
-  <li>Format specifiers built in</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Upgrade Tip Calculator Output</h1>
-            <h3>Watch for…</h3>
-<ul>
-  <li>Reformatting existing output with f-strings</li>
-  <li>Consistent decimal formatting</li>
-  <li>Alignment for clean columns</li>
-</ul>
-<pre data-lang="python"><code>bill = 85.50
+        <section class="slide" id="the-problem-messy-concatenation-5e21882e" data-slide-number="20">
+            <h1>The Problem: Messy Concatenation</h1>
+            <pre data-lang="python"><code>bill = 87.5
 tip_percent = 18
-tip = bill * (tip_percent / 100)
+tip = bill * tip_percent / 100
 total = bill + tip
 
-tip_label = f&quot;Tip ({tip_percent}%):&quot;
-
-print(f&quot;{&#x27;Bill:&#x27;:&lt;12} ${bill:&gt;8.2f}&quot;)
-print(f&quot;{tip_label:&lt;12} ${tip:&gt;8.2f}&quot;)
-print(f&quot;{&#x27;Total:&#x27;:&lt;12} ${total:&gt;8.2f}&quot;)</code></pre>
-<h3>Expected Output</h3>
-<pre><code>Bill:        $   85.50
-Tip (18%):   $   15.39
-Total:       $  100.89</code></pre>
+# ❌ Old way — hard to read, manual str() conversion
+print(&quot;Bill: $&quot; + str(bill))
+print(&quot;Tip (&quot; + str(tip_percent) + &quot;%): $&quot; + str(tip))
+print(&quot;Total: $&quot; + str(total))</code></pre>
+<p>Output problems: <code>87.5</code> instead of <code>87.50</code>, hard-to-read code, error-prone.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="f-string-basics-d6575c1f" data-slide-number="21">
+            <h1>F-String Basics</h1>
+            <pre data-lang="python"><code>name = &quot;Alice&quot;
+age = 25
+
+# Variables go right where they belong
+print(f&quot;My name is {name} and I am {age} years old&quot;)</code></pre>
+<pre data-lang="python"><code># Expressions work inside {} too
+price = 19.99
+quantity = 3
+print(f&quot;Total: ${price * quantity}&quot;)     # Total: $59.97
+
+# Even method calls
+name = &quot;alice&quot;
+print(f&quot;Hello, {name.upper()}!&quot;)         # Hello, ALICE!</code></pre>
+<blockquote>💡 The **`f` prefix** before the quote is mandatory — it tells Python to evaluate `{}`</blockquote>
+        </section>
+
+        <section class="slide" id="format-specifiers-numbers-0d51e1c7" data-slide-number="22">
+            <h1>Format Specifiers: Numbers</h1>
+            <pre data-lang="python"><code>pi = 3.14159265
+
+print(f&quot;2 decimals: {pi:.2f}&quot;)     # 3.14
+print(f&quot;4 decimals: {pi:.4f}&quot;)     # 3.1416
+print(f&quot;0 decimals: {pi:.0f}&quot;)     # 3</code></pre>
+<pre data-lang="python"><code># Currency — always 2 decimal places
+price = 19.5
+tax   = 1.625
+total = price + tax
+
+print(f&quot;Price: ${price:.2f}&quot;)      # Price: $19.50
+print(f&quot;Tax:   ${tax:.2f}&quot;)        # Tax:   $1.62
+print(f&quot;Total: ${total:.2f}&quot;)      # Total: $21.12</code></pre>
+<blockquote>💡 `.2f` rounds to 2 decimal places — it does **not** truncate</blockquote>
+        </section>
+
+        <section class="slide" id="width-and-alignment-526bcf06" data-slide-number="23">
+            <h1>Width and Alignment</h1>
+            <pre data-lang="python"><code># Left-align label (&lt;), right-align number (&gt;)
+print(f&quot;{&#x27;Item&#x27;:&lt;20} {&#x27;Price&#x27;:&gt;10}&quot;)
+print(f&quot;{&#x27;Coffee&#x27;:&lt;20} {&#x27;$3.50&#x27;:&gt;10}&quot;)
+print(f&quot;{&#x27;Sandwich&#x27;:&lt;20} {&#x27;$8.75&#x27;:&gt;10}&quot;)</code></pre>
+<pre><code>Item                      Price
+Coffee                    $3.50
+Sandwich                  $8.75</code></pre>
+<pre data-lang="python"><code># Combined: left label + right-aligned dollar amount
+item = &quot;Latte&quot;
+price = 4.5
+print(f&quot;{item:&lt;15} ${price:&gt;6.2f}&quot;)
+# Latte           $  4.50</code></pre>
+        </section>
+
+        <section class="slide" id="more-format-specifier-patterns-2c9ffb05" data-slide-number="24">
+            <h1>More Format Specifier Patterns</h1>
+            <pre data-lang="python"><code># GPA — one decimal
+gpa = 3.8667
+print(f&quot;GPA: {gpa:.1f}&quot;)              # GPA: 3.9
+
+# Percentage — manual calculation
+correct, total = 17, 20
+pct = correct / total * 100
+print(f&quot;Score: {pct:.1f}%&quot;)           # Score: 85.0%
+
+# Large numbers with comma separator
+population = 8336817
+print(f&quot;Population: {population:,}&quot;)  # Population: 8,336,817
+
+# Currency + commas
+revenue = 2493817.44
+print(f&quot;Revenue: ${revenue:,.2f}&quot;)    # Revenue: $2,493,817.44</code></pre>
+        </section>
+
+        <section class="slide" id="f-strings-with-conditional-logic-d7cbcc93" data-slide-number="25">
+            <h1>F-Strings with Conditional Logic</h1>
+            <pre data-lang="python"><code>student_name = &quot;Marcus&quot;
+score = 82.7
+
+if score &gt;= 90:
+    print(f&quot;{student_name} earned an A with {score:.1f}% — Excellent!&quot;)
+elif score &gt;= 80:
+    print(f&quot;{student_name} earned a B with {score:.1f}% — Good job!&quot;)
+elif score &gt;= 70:
+    print(f&quot;{student_name} earned a C with {score:.1f}% — Satisfactory&quot;)
+else:
+    print(f&quot;{student_name} earned an F with {score:.1f}% — See instructor&quot;)</code></pre>
+<pre><code>Marcus earned a B with 82.7% — Good job!</code></pre>
+<blockquote>💡 `if/elif/else` picks the message; f-string makes it look good. A natural pair.</blockquote>
+        </section>
+
+        <section class="slide" id="four-common-f-string-mistakes-efab532b" data-slide-number="26">
+            <h1>Four Common F-String Mistakes</h1>
+            <pre data-lang="python"><code># 1 — Space between f and quote (SyntaxError)
+print(f &quot;Hello, {name}!&quot;)    # ❌
+print(f&quot;Hello, {name}!&quot;)     # ✓
+
+# 2 — Quote conflict (apostrophe ends string early)
+# print(f&#x27;It&#x27;s a {item}!&#x27;)   # ❌
+print(f&quot;It&#x27;s a {item}!&quot;)     # ✓ use double quotes
+
+# 3 — Printing literal braces (use double braces)
+print(f&quot;{{name}} becomes {name}&quot;)  # ✓ → {name} becomes Alice
+
+# 4 — Forgetting the f on one line (no error, wrong output!)
+print(f&quot;Item: {item}&quot;)
+print(&quot;Quantity: {quantity}&quot;)   # ❌ prints literal {quantity}</code></pre>
+        </section>
+
+        <section class="slide" id="demo-professional-tip-calculator-5df7e043" data-slide-number="27">
+            <h1>Demo: Professional Tip Calculator</h1>
+            <pre data-lang="python"><code># tip_calculator_formatted.py
+bill = float(input(&quot;Enter bill amount: $&quot;))
+tip_percent = float(input(&quot;Enter tip %: &quot;))
+
+tip_amount = bill * (tip_percent / 100)
+total = bill + tip_amount
+
+print(&quot;\n--- Receipt ---&quot;)
+print(f&quot;{&#x27;Bill:&#x27;:&lt;15} ${bill:&gt;8.2f}&quot;)
+print(f&quot;{&#x27;Tip (&#x27; + str(int(tip_percent)) + &#x27;%):&#x27;:&lt;15} ${tip_amount:&gt;8.2f}&quot;)
+print(&quot;-&quot; * 26)
+print(f&quot;{&#x27;Total:&#x27;:&lt;15} ${total:&gt;8.2f}&quot;)
+print(&quot;\nThank you!&quot;)</code></pre>
+<pre><code>--- Receipt ---
+Bill:           $   87.50
+Tip (20%):      $   17.50
+--------------------------
+Total:          $  105.00</code></pre>
+        </section>
+
+        <section class="slide" id="lab-upgrade-tip-calculator-2d6e9835" data-slide-number="28">
             <h1>Lab: Upgrade Tip Calculator</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+            <p><strong>Time: 25–35 minutes</strong> | File: <code>tip_calculator_pro.py</code></p>
+<h3>Requirements</h3>
 <ul>
-  <li>Rewrite your Tip Calculator output using f-strings</li>
-  <li>Show bill, tip, and total each on a separate labeled line</li>
-  <li>Format all money values to 2 decimal places</li>
-  <li>Align numbers in a clean column</li>
+  <li>Prompt for bill amount and tip percentage</li>
+  <li>Calculate tip and total</li>
+  <li>Display a formatted receipt with:</li>
+  <li style="margin-left: 30px;">All dollar amounts to <strong>exactly 2 decimal places</strong></li>
+  <li style="margin-left: 30px;">Clear labels, consistent alignment</li>
+  <li style="margin-left: 30px;">A separator line before the total</li>
+  <li style="margin-left: 30px;">A thank-you message</li>
+  <li>Use <strong>f-strings only</strong> — no <code>+</code> concatenation</li>
 </ul>
 <h3>Completion Criteria</h3>
-<p><span class="check">✓</span> Clean, consistent output formatting</p>
 <p><span class="check">✓</span> All monetary values show exactly 2 decimal places</p>
-<p><span class="check">✓</span> No type errors</p>
-<p><span class="check">✓</span> Uses f-strings (not concatenation or <code>str.format()</code>)</p>
+<p><span class="check">✓</span> Labels and amounts align in clean columns</p>
+<p><span class="check">✓</span> No <code>str()</code> calls in output lines — f-strings handle conversions</p>
+<p><span class="check">✓</span> Code is readable and commented</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-10-539607da" data-slide-number="29">
             <h1>Common Pitfalls (Hour 10)</h1>
-            <p><strong>⚠️</strong> <strong>Forgetting the leading <code>f</code></strong> — <code>&quot;{name}&quot;</code> prints literally</p>
-<p><strong>⚠️</strong> <strong>Using braces incorrectly</strong> — <code>f&quot;{{name}}&quot;</code> prints <code>{name}</code></p>
-<p><strong>⚠️</strong> <strong>Mixing quotes</strong> — use different quotes inside vs outside</p>
-<p><strong>⚠️</strong> <strong>Wrong format spec</strong> — <code>.2f</code> not <code>.2</code> for fixed decimals</p>
-<pre data-lang="python"><code># ❌ Missing the f
-print(&quot;{name} is {age}&quot;)     # literal text
+            <p><strong>⚠️</strong> <strong>Forgetting the <code>f</code> prefix</strong> — <code>&quot;{name}&quot;</code> prints literal text, no error</p>
+<p><strong>⚠️</strong> <strong>Space between <code>f</code> and quote</strong> — <code>f &quot;...&quot;</code> is a SyntaxError</p>
+<p><strong>⚠️</strong> <strong>Apostrophe / quote conflict</strong> — use double quotes when text has apostrophes</p>
+<p><strong>⚠️</strong> <strong><code>{{</code> for literal braces</strong> — <code>{</code> alone is always treated as a placeholder</p>
+<pre data-lang="python"><code>item = &quot;Coffee&quot;
+quantity = 2
 
-# ✓ With the f
-print(f&quot;{name} is {age}&quot;)    # variable values</code></pre>
+print(f&quot;Item: {item}&quot;)
+print(&quot;Quantity: {quantity}&quot;)   # ❌ — forgot the f!
+# Output: Quantity: {quantity}  ← silent bug</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-10-bd7f12e9" data-slide-number="30">
             <h1>Quick Check (Hour 10)</h1>
-            <p><strong>Question</strong>: Why is f-string formatting usually better than <code>+</code> concatenation?</p>
-<p><strong>Expected Answer</strong>:</p>
-<ul>
-  <li>No need for <code>str()</code> conversion</li>
-  <li>Easier to read (variables inline)</li>
-  <li>Built-in format specifiers for numbers</li>
-</ul>
+            <p><strong>What will this print?</strong></p>
+<pre data-lang="python"><code>name = &quot;Alice&quot;
+score = 87.6789
+
+print(f&quot;{name} scored {score:.1f} points&quot;)</code></pre>
+<p><strong>Answer:</strong> <code>Alice scored 87.7 points</code></p>
+<p>The <code>.1f</code> specifier rounds to 1 decimal place.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-11-working-with-text-split-and-join-7c606e89" data-slide-number="31">
             <h1>Hour 11: Working with Text — split() and join()</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-f8e4bf61" data-slide-number="32">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Split sentences into lists of words with <code>.split()</code></li>
-  <li>Join words back into a string with <code>&#x27; &#x27;.join()</code></li>
-  <li>Count words in a sentence</li>
-  <li>Find the longest word in a text string</li>
+  <li>Use <code>.split()</code> to break a string into a list of words</li>
+  <li>Understand how <code>.split()</code> handles whitespace and custom delimiters</li>
+  <li>Use <code>.join()</code> to combine list elements into a single string</li>
+  <li>Parse structured data (CSV-style) using <code>split(&quot;,&quot;)</code></li>
+  <li>Count words and find the longest word in a sentence</li>
+  <li>Rebuild strings with custom separators</li>
+  <li>Apply the split-process-join pattern</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>The split() Method</h1>
-            <h3>Default: Split on Whitespace</h3>
-<pre data-lang="python"><code>sentence = &quot;Hello Python World&quot;
-words = sentence.split()
-print(words)        # [&#x27;Hello&#x27;, &#x27;Python&#x27;, &#x27;World&#x27;]
-print(len(words))   # 3</code></pre>
-<h3>Split on a Custom Delimiter</h3>
-<pre data-lang="python"><code>data = &quot;Alice,Bob,Charlie&quot;
-names = data.split(&quot;,&quot;)
-print(names)        # [&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Charlie&#x27;]</code></pre>
-<h3>Accessing Individual Words</h3>
-<pre data-lang="python"><code>words = &quot;Hello Python World&quot;.split()
-print(words[0])     # &#x27;Hello&#x27;
-print(words[-1])    # &#x27;World&#x27;</code></pre>
+        <section class="slide" id="split-string-to-list-55effd09" data-slide-number="33">
+            <h1>split() — String to List</h1>
+            <pre data-lang="python"><code>sentence = &quot;Python is awesome&quot;
+
+words = sentence.split()        # split on whitespace (default)
+print(words)                    # [&#x27;Python&#x27;, &#x27;is&#x27;, &#x27;awesome&#x27;]
+print(type(words))              # &lt;class &#x27;list&#x27;&gt;
+print(len(words))               # 3
+print(words[0])                 # &#x27;Python&#x27;
+print(words[-1])                # &#x27;awesome&#x27;</code></pre>
+<p><strong><code>.split()</code> handles whitespace smartly:</strong></p>
+<pre data-lang="python"><code>text = &quot;  Hello    world  &quot;
+print(text.split())             # [&#x27;Hello&#x27;, &#x27;world&#x27;] — strips &amp; collapses
+
+text = &quot;one\ttwo\tthree&quot;
+print(text.split())             # [&#x27;one&#x27;, &#x27;two&#x27;, &#x27;three&#x27;] — tabs too</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>The join() Method</h1>
-            <h3>Combining Words into a String</h3>
-<pre data-lang="python"><code>words = [&#x27;Hello&#x27;, &#x27;Python&#x27;, &#x27;World&#x27;]
+        <section class="slide" id="split-custom-delimiters-b6529840" data-slide-number="34">
+            <h1>split() — Custom Delimiters</h1>
+            <pre data-lang="python"><code># CSV-style data
+data = &quot;John,Doe,25,Engineer&quot;
+fields = data.split(&quot;,&quot;)
+print(fields)
+# [&#x27;John&#x27;, &#x27;Doe&#x27;, &#x27;25&#x27;, &#x27;Engineer&#x27;]
 
-# Join with a space
-result = &#x27; &#x27;.join(words)
-print(result)       # &#x27;Hello Python World&#x27;
+# Phone number
+phone = &quot;555-123-4567&quot;
+parts = phone.split(&quot;-&quot;)
+print(parts)    # [&#x27;555&#x27;, &#x27;123&#x27;, &#x27;4567&#x27;]</code></pre>
+<p><strong>Parsing and converting types together:</strong></p>
+<pre data-lang="python"><code>record = &quot;Coffee Beans,12.99,3&quot;
+fields = record.split(&quot;,&quot;)
 
-# Join with hyphens
-result = &#x27;-&#x27;.join(words)
-print(result)       # &#x27;Hello-Python-World&#x27;
+product = fields[0]
+price = float(fields[1])
+qty   = int(fields[2])
 
-# Join with &#x27; | &#x27;
-result = &#x27; | &#x27;.join(words)
-print(result)       # &#x27;Hello | Python | World&#x27;</code></pre>
-<h3>Key Pattern</h3>
-<p>The separator goes <strong>before</strong> <code>.join()</code>:</p>
-<pre data-lang="python"><code>separator.join(list_of_strings)</code></pre>
+print(f&quot;{product}: {qty} x ${price:.2f} = ${price * qty:.2f}&quot;)
+# Coffee Beans: 3 x $12.99 = $38.97</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="join-list-to-string-ac9f7241" data-slide-number="35">
+            <h1>join() — List to String</h1>
+            <pre data-lang="python"><code>words = [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]
+
+print(&quot; &quot;.join(words))       # apple banana cherry
+print(&quot;,&quot;.join(words))       # apple,banana,cherry
+print(&quot;, &quot;.join(words))      # apple, banana, cherry
+print(&quot;-&quot;.join(words))       # apple-banana-cherry
+print(&quot; | &quot;.join(words))     # apple | banana | cherry
+print(&quot;&quot;.join(words))        # applebananacherry</code></pre>
+<p><strong>The syntax: separator comes FIRST</strong></p>
+<pre data-lang="python"><code>result = &quot; and &quot;.join([&#x27;Python&#x27;, &#x27;Java&#x27;, &#x27;JavaScript&#x27;])
+print(result)    # Python and Java and JavaScript</code></pre>
+<blockquote>⚠️ `.join()` requires a list of **strings** — use `str(n)` if you have numbers</blockquote>
+        </section>
+
+        <section class="slide" id="counting-words-and-finding-the-longest-67c3575f" data-slide-number="36">
             <h1>Counting Words and Finding the Longest</h1>
-            <h3>Word Count</h3>
-<pre data-lang="python"><code>sentence = &quot;The quick brown fox jumps&quot;
+            <pre data-lang="python"><code>sentence = &quot;Python is an amazing programming language&quot;
 words = sentence.split()
-print(f&quot;Word count: {len(words)}&quot;)   # 5</code></pre>
-<h3>Longest Word</h3>
-<pre data-lang="python"><code>sentence = &quot;The quick brown fox jumps&quot;
+
+# Word count
+print(f&quot;Word count: {len(words)}&quot;)           # 6
+
+# Longest word — beginner-friendly loop
+longest = &quot;&quot;
+for word in words:
+    if len(word) &gt; len(longest):
+        longest = word
+
+print(f&quot;Longest word: &#x27;{longest}&#x27;&quot;)          # &#x27;programming&#x27;
+print(f&quot;Its length: {len(longest)}&quot;)         # 11</code></pre>
+        </section>
+
+        <section class="slide" id="the-round-trip-relationship-6d194115" data-slide-number="37">
+            <h1>The Round-Trip Relationship</h1>
+            <p><code>.split()</code> and <code>.join()</code> are <strong>inverses</strong> of each other:</p>
+<pre data-lang="python"><code># Clean messy whitespace in one line
+messy = &quot;  too   many    spaces   &quot;
+clean = &quot; &quot;.join(messy.split())
+print(f&quot;&#x27;{clean}&#x27;&quot;)
+# &#x27;too many spaces&#x27;</code></pre>
+<pre data-lang="python"><code># Build a URL-friendly slug
+title = &quot;Python Programming Basics&quot;
+slug = &quot;-&quot;.join(title.split()).lower()
+print(slug)          # python-programming-basics</code></pre>
+<pre data-lang="python"><code># Build a CSV line from variables
+name, dept, score = &quot;Alice&quot;, &quot;Engineering&quot;, 92.5
+line = &quot;,&quot;.join([name, dept, str(score)])
+print(line)          # Alice,Engineering,92.5</code></pre>
+        </section>
+
+        <section class="slide" id="demo-sentence-statistics-a157a2b9" data-slide-number="38">
+            <h1>Demo: Sentence Statistics</h1>
+            <pre data-lang="python"><code># sentence_stats.py
+print(&quot;=== Sentence Statistics ===\n&quot;)
+
+sentence = input(&quot;Enter a sentence: &quot;)
 words = sentence.split()
+
+word_count = len(words)
 
 longest = &quot;&quot;
 for word in words:
     if len(word) &gt; len(longest):
         longest = word
 
-print(f&quot;Longest word: {longest}&quot;)    # &#x27;quick&#x27; or &#x27;brown&#x27; or &#x27;jumps&#x27;</code></pre>
+print(f&quot;\nWord count: {word_count}&quot;)
+print(f&quot;Longest word: &#x27;{longest}&#x27; ({len(longest)} characters)&quot;)
+print(f&quot;Hyphenated: {&#x27;-&#x27;.join(words)}&quot;)
+print(f&quot;Piped: {&#x27; | &#x27;.join(words)}&quot;)</code></pre>
+<pre><code>Enter a sentence: Python programming is incredibly powerful
+
+Word count: 5
+Longest word: &#x27;programming&#x27; (11 characters)
+Piped: Python | programming | is | incredibly | powerful</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Word Count and Rebuild</h1>
-            <h3>Watch for…</h3>
+        <section class="slide" id="lab-sentence-analyzer-641c529d" data-slide-number="39">
+            <h1>Lab: Sentence Analyzer</h1>
+            <p><strong>Time: 25–35 minutes</strong> | File: <code>sentence_analyzer.py</code></p>
+<h3>Requirements</h3>
+<ol>
+  <li>Prompt the user for a sentence</li>
+  <li>Calculate and display:</li>
+</ol>
 <ul>
-  <li><code>.split()</code> producing a list</li>
-  <li><code>len()</code> counting words</li>
-  <li><code>.join()</code> rebuilding with a new separator</li>
+  <li style="margin-left: 30px;">Total word count</li>
+  <li style="margin-left: 30px;">The longest word and its length</li>
 </ul>
-<pre data-lang="python"><code>sentence = input(&quot;Enter a sentence: &quot;)
-words = sentence.split()
-
-print(f&quot;Word count: {len(words)}&quot;)
-print(f&quot;Hyphenated: {&#x27;-&#x27;.join(words)}&quot;)</code></pre>
-<h3>Expected Output</h3>
-<pre><code>Enter a sentence: Python is great
-Word count: 3
-Hyphenated: Python-is-great</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Sentence Stats</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+<ol>
+  <li>Show transformations:</li>
+</ol>
 <ul>
-  <li>Ask the user to input a sentence</li>
-  <li>Print the word count</li>
-  <li>Print the longest word</li>
-  <li>Print a version where words are joined by <code> | </code></li>
+  <li style="margin-left: 30px;">Words joined with pipes: <code>word1 | word2 | word3</code></li>
+  <li style="margin-left: 30px;">Words joined with hyphens: <code>word1-word2-word3</code></li>
 </ul>
+<ol>
+  <li>Use <code>.split()</code> and <code>.join()</code> appropriately</li>
+</ol>
 <h3>Example Output</h3>
 <pre><code>Enter a sentence: The quick brown fox jumps
+
 Word count: 5
-Longest word: quick
-Pipe version: The | quick | brown | fox | jumps</code></pre>
-<h3>Completion Criteria</h3>
-<p><span class="check">✓</span> Accurate word count</p>
-<p><span class="check">✓</span> Correctly identifies longest word</p>
-<p><span class="check">✓</span> Uses <code>.split()</code> and <code>.join()</code> correctly</p>
-<p><span class="check">✓</span> Clean formatted output</p>
+Longest word: &#x27;quick&#x27; (5 characters)
+Pipe version: The | quick | brown | fox | jumps
+Hyphen version: The-quick-brown-fox-jumps</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="lab-completion-criteria-hour-11-ee681452" data-slide-number="40">
+            <h1>Lab Completion Criteria (Hour 11)</h1>
+            <p><span class="check">✓</span> Accurate word count for any input</p>
+<p><span class="check">✓</span> Correctly identifies the longest word</p>
+<p><span class="check">✓</span> Both pipe and hyphen transformations are correct</p>
+<p><span class="check">✓</span> Uses <code>.split()</code> and <code>.join()</code> (no manual loops for joining)</p>
+<p><span class="check">✓</span> Clean formatted output using f-strings</p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-11-d8d8ee6b" data-slide-number="41">
             <h1>Common Pitfalls (Hour 11)</h1>
-            <p><strong>⚠️</strong> <strong>Punctuation attached to words</strong> — <code>&quot;hello,&quot;</code> counts as one word</p>
-<p><strong>⚠️</strong> <strong>Empty input edge case</strong> — <code>&quot;&quot;.split()</code> returns <code>[]</code></p>
-<p><strong>⚠️</strong> <strong>Forgetting that split returns a list</strong> — not a string</p>
-<p><strong>⚠️</strong> <strong>join() requires strings</strong> — <code>&#x27;, &#x27;.join([1, 2, 3])</code> fails</p>
-<pre data-lang="python"><code># ⚠️ This fails
+            <p><strong>⚠️</strong> <strong><code>split()</code> returns a list</strong> — not a string; use <code>len()</code> and indexing on it</p>
+<p><strong>⚠️</strong> <strong>Punctuation stays attached</strong> — <code>&quot;hello,&quot;</code> is one word with the comma</p>
+<p><strong>⚠️</strong> <strong>Empty input</strong> — <code>&quot;&quot;.split()</code> returns <code>[]</code>; <code>len([])</code> is 0</p>
+<p><strong>⚠️</strong> <strong><code>join()</code> needs strings</strong> — numbers must be converted first</p>
+<pre data-lang="python"><code># ❌ join() with integers fails
 numbers = [1, 2, 3]
-result = &#x27;, &#x27;.join(numbers)  # TypeError!
+result = &quot;, &quot;.join(numbers)          # TypeError!
 
 # ✓ Convert to strings first
-result = &#x27;, &#x27;.join(str(n) for n in numbers)</code></pre>
+result = &quot;, &quot;.join(str(n) for n in numbers)
+print(result)    # 1, 2, 3</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-11-5ff7b649" data-slide-number="42">
             <h1>Quick Check (Hour 11)</h1>
-            <p><strong>Question</strong>: What type does <code>.split()</code> return?</p>
-<p><strong>Expected Answer</strong>: A <strong>list</strong> of strings</p>
+            <p><strong>What will this print?</strong></p>
+<pre data-lang="python"><code>items = [&#x27;Python&#x27;, &#x27;Java&#x27;, &#x27;JavaScript&#x27;]
+result = &quot; and &quot;.join(items)
+print(result)</code></pre>
+<p><strong>Answer:</strong> <code>Python and Java and JavaScript</code></p>
+<p>The separator <code>&quot; and &quot;</code> is inserted <strong>between</strong> each element.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-12-debugging-habits-basics-level-21aa17bd" data-slide-number="43">
             <h1>Hour 12: Debugging Habits (Basics Level)</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-6634cabc" data-slide-number="44">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Read and interpret common error messages</li>
-  <li>Identify NameError, TypeError, ValueError, IndexError</li>
-  <li>Use print-debugging strategically to isolate problems</li>
-  <li>Apply a systematic debugging process</li>
+  <li>Read Python tracebacks from bottom to top</li>
+  <li>Identify and fix the four most common error types (NameError, TypeError, ValueError, IndexError)</li>
+  <li>Use <code>print()</code> strategically to check variable values and types</li>
+  <li>Check your working directory when files are not found</li>
+  <li>Form a hypothesis before making any code change</li>
+  <li>Apply a systematic 6-step debugging process</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Reading Error Messages (Tracebacks)</h1>
-            <h3>Anatomy of a Traceback</h3>
-<pre><code>Traceback (most recent call last):
-  File &quot;calculator.py&quot;, line 5, in &lt;module&gt;
-    total = bill + tip_amount
-NameError: name &#x27;tip_amount&#x27; is not defined</code></pre>
-<h3>What to Look For (Bottom to Top)</h3>
+        <section class="slide" id="what-is-a-traceback-19d38cad" data-slide-number="45">
+            <h1>What Is a Traceback?</h1>
+            <pre><code>Traceback (most recent call last):
+  File &quot;broken_script.py&quot;, line 7, in &lt;module&gt;
+    result = calculate_average(score)
+NameError: name &#x27;score&#x27; is not defined</code></pre>
+<p><strong>How to read it (bottom to top):</strong></p>
 <ol>
-  <li><strong>Error type</strong>: <code>NameError</code></li>
-  <li><strong>Error message</strong>: <code>name &#x27;tip_amount&#x27; is not defined</code></li>
-  <li><strong>File and line</strong>: <code>calculator.py</code>, line 5</li>
-  <li><strong>Code context</strong>: <code>total = bill + tip_amount</code></li>
+  <li><strong>Error type + message:</strong> <code>NameError: name &#x27;score&#x27; is not defined</code></li>
+  <li><strong>Line number:</strong> line 7</li>
+  <li><strong>Code at that line:</strong> <code>result = calculate_average(score)</code></li>
+  <li><strong>Root cause:</strong> typo — variable is <code>scores</code> (with an &#x27;s&#x27;)</li>
 </ol>
-<blockquote>💡 Read tracebacks from the **bottom up** — the error type is the most important clue.</blockquote>
+<blockquote>💡 Tracebacks are **helpful diagnostic information** — not punishment.</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="multi-level-tracebacks-e9f9ce62" data-slide-number="46">
+            <h1>Multi-Level Tracebacks</h1>
+            <pre><code>Traceback (most recent call last):
+  File &quot;multi_level.py&quot;, line 8, in &lt;module&gt;
+    result = calculate_ratio(10, 0)
+  File &quot;multi_level.py&quot;, line 6, in calculate_ratio
+    return divide_values(x, y)
+  File &quot;multi_level.py&quot;, line 3, in divide_values
+    return a / b
+ZeroDivisionError: division by zero</code></pre>
+<p><strong>Reading the chain:</strong></p>
+<ul>
+  <li>Line 8 → called <code>calculate_ratio</code></li>
+  <li>Line 6 → called <code>divide_values</code></li>
+  <li>Line 3 → <strong>error occurs here</strong></li>
+</ul>
+<p>The <strong>actual error</strong> is always at the very bottom.</p>
+        </section>
+
+        <section class="slide" id="the-four-common-error-types-019df7ca" data-slide-number="47">
             <h1>The Four Common Error Types</h1>
-            <h3>NameError — Undefined Variable</h3>
-<pre data-lang="python"><code>print(mesage)    # ❌ Typo: &#x27;mesage&#x27; instead of &#x27;message&#x27;</code></pre>
-<h3>TypeError — Wrong Type for Operation</h3>
-<pre data-lang="python"><code>age = input(&quot;Age: &quot;)
-print(age + 5)   # ❌ Can&#x27;t add str + int</code></pre>
-<h3>ValueError — Right Type, Wrong Value</h3>
-<pre data-lang="python"><code>number = int(&quot;hello&quot;)   # ❌ Can&#x27;t convert &quot;hello&quot; to int</code></pre>
-<h3>IndexError — Out of Range</h3>
-<pre data-lang="python"><code>words = [&quot;hello&quot;, &quot;world&quot;]
-print(words[5])          # ❌ Only indices 0 and 1 exist</code></pre>
+            <table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Quick Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NameError</code></td>
+<td>Variable/function doesn&#x27;t exist</td>
+<td>Check spelling; define before use</td>
+</tr>
+<tr>
+<td><code>TypeError</code></td>
+<td>Wrong type for operation</td>
+<td>Convert with <code>str()</code>, <code>int()</code>, <code>float()</code></td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>Right type, wrong value</td>
+<td>Validate input before converting</td>
+</tr>
+<tr>
+<td><code>IndexError</code></td>
+<td>Index out of range</td>
+<td>Indices start at 0; check <code>len()</code></td>
+</tr>
+</tbody>
+</table>
         </section>
 
-        <section class="slide">
-            <h1>Print-Debugging Strategy</h1>
-            <h3>The Process</h3>
-<ol>
-  <li><strong>Reproduce</strong> the error (run the script)</li>
-  <li><strong>Read</strong> the traceback (bottom up)</li>
-  <li><strong>Hypothesize</strong> what&#x27;s wrong</li>
-  <li><strong>Add print statements</strong> to confirm</li>
-  <li><strong>Fix</strong> one thing at a time</li>
-  <li><strong>Re-run</strong> after each fix</li>
+        <section class="slide" id="error-examples-nameerror-and-typeerror-3945cf4b" data-slide-number="48">
+            <h1>Error Examples: NameError and TypeError</h1>
+            <pre data-lang="python"><code># NameError — typo in variable name
+name = &quot;Alice&quot;
+print(nam)        # ❌ NameError: name &#x27;nam&#x27; is not defined
+
+# NameError — used before defined
+print(greeting)   # ❌ NameError
+greeting = &quot;Hello&quot;</code></pre>
+<pre data-lang="python"><code># TypeError — can&#x27;t add str + int
+age = 25
+message = &quot;I am &quot; + age              # ❌ TypeError
+message = f&quot;I am {age}&quot;              # ✓ f-string fixes it
+
+# TypeError — forgot to convert input()
+bill = input(&quot;Enter bill: &quot;)         # bill is a string
+tip = bill * 0.18                    # ❌ TypeError
+tip = float(bill) * 0.18             # ✓</code></pre>
+        </section>
+
+        <section class="slide" id="error-examples-valueerror-and-indexerror-342548a5" data-slide-number="49">
+            <h1>Error Examples: ValueError and IndexError</h1>
+            <pre data-lang="python"><code># ValueError — right type, wrong value
+age = int(&quot;twenty&quot;)    # ❌ ValueError: invalid literal for int()
+age = int(&quot;20&quot;)        # ✓
+
+# ValueError — wrong number of values to unpack
+name = &quot;Alice&quot;
+first, last = name.split()  # ❌ only one word
+name = &quot;Alice Johnson&quot;
+first, last = name.split()  # ✓</code></pre>
+<pre data-lang="python"><code># IndexError — index out of range
+fruits = [&quot;apple&quot;, &quot;banana&quot;]
+print(fruits[2])    # ❌ only indices 0 and 1 exist
+print(fruits[1])    # ✓ &quot;banana&quot;
+
+numbers = [1, 2, 3, 4, 5]
+print(numbers[5])   # ❌ valid indices are 0–4
+print(numbers[-1])  # ✓ last element</code></pre>
+        </section>
+
+        <section class="slide" id="the-6-step-debugging-process-dd86ebb4" data-slide-number="50">
+            <h1>The 6-Step Debugging Process</h1>
+            <ol>
+  <li><strong>Reproduce</strong> — run the script and observe the exact error</li>
+  <li><strong>Read</strong> — read the traceback from bottom to top</li>
+  <li><strong>Hypothesize</strong> — form a theory about the cause <em>before</em> changing anything</li>
+  <li><strong>Add print statements</strong> — verify your hypothesis with <code>DEBUG</code> output</li>
+  <li><strong>Fix</strong> — make the <strong>smallest</strong> change that addresses the root cause</li>
+  <li><strong>Re-run</strong> — verify the fix works; repeat if needed</li>
 </ol>
-<pre data-lang="python"><code># Step 4: Add diagnostic prints
+<blockquote>🔑 Change **one thing at a time**, then re-run. Never change multiple things at once.</blockquote>
+        </section>
+
+        <section class="slide" id="print-debugging-strategies-6fb02868" data-slide-number="51">
+            <h1>Print-Debugging Strategies</h1>
+            <p><strong>Strategy 1 — Print variable values and types</strong></p>
+<pre data-lang="python"><code>bill = input(&quot;Enter bill: &quot;)
+tip_percent = input(&quot;Enter tip %: &quot;)
+
+# Add these to diagnose the crash
 print(f&quot;DEBUG: bill = {bill}, type = {type(bill)}&quot;)
-print(f&quot;DEBUG: tip = {tip}, type = {type(tip)}&quot;)
-total = bill + tip   # ← error is here</code></pre>
-<h3>Key Habit</h3>
-<blockquote>Change **one thing**, then re-run. Never change multiple things at once.</blockquote>
-        </section>
+print(f&quot;DEBUG: tip_percent = {tip_percent}, type = {type(tip_percent)}&quot;)
 
-        <section class="slide">
-            <h1>Demo: Break and Fix</h1>
-            <h3>Watch for…</h3>
-<ul>
-  <li>Purposely broken script</li>
-  <li>Reading the traceback</li>
-  <li>Adding print statements to isolate the failure</li>
-</ul>
-<pre data-lang="python"><code># Broken script — 3 bugs hidden
+tip = bill * (tip_percent / 100)  # ← crashes here</code></pre>
+<p>Output reveals: both are <code>str</code>, not <code>float</code> — add <code>float()</code> conversion.</p>
+<p><strong>Strategy 2 — Checkpoint prints</strong></p>
+<pre data-lang="python"><code>print(&quot;DEBUG: Starting program&quot;)
 name = input(&quot;Enter name: &quot;)
-age = input(&quot;Enter age: &quot;)
-birth_year = 2025 - age           # Bug 1: age is a string
-greeting = f&quot;Hello, {nmae}!&quot;      # Bug 2: typo in variable name
-scores = [85, 92, 78]
-print(f&quot;Top score: {scores[3]}&quot;)  # Bug 3: index out of range</code></pre>
-<h3>Fix Each in Order</h3>
-<ol>
-  <li><code>age = int(input(&quot;Enter age: &quot;))</code></li>
-  <li><code>greeting = f&quot;Hello, {name}!&quot;</code></li>
-  <li><code>print(f&quot;Top score: {scores[2]}&quot;)</code></li>
-</ol>
+print(&quot;DEBUG: Got name&quot;)          # crash between these = this line failed
+age = int(input(&quot;Enter age: &quot;))
+print(&quot;DEBUG: Got age&quot;)</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="print-debugging-the-debug-flag-pattern-c578c0fc" data-slide-number="52">
+            <h1>Print-Debugging: The DEBUG Flag Pattern</h1>
+            <pre data-lang="python"><code>DEBUG = True   # set to False when done
+
+score1 = int(input(&quot;Enter score 1: &quot;))
+score2 = int(input(&quot;Enter score 2: &quot;))
+score3 = int(input(&quot;Enter score 3: &quot;))
+
+if DEBUG:
+    print(f&quot;DEBUG: score1={score1}, score2={score2}, score3={score3}&quot;)
+
+total = score1 + score2 + score3
+
+if DEBUG:
+    print(f&quot;DEBUG: total = {total}&quot;)
+
+average = total / 3
+print(f&quot;Average: {average:.1f}&quot;)</code></pre>
+<p><strong>One variable to turn all debug output on or off.</strong></p>
+        </section>
+
+        <section class="slide" id="checking-your-working-directory-7448cb0e" data-slide-number="53">
+            <h1>Checking Your Working Directory</h1>
+            <pre><code>FileNotFoundError: [Errno 2] No such file or directory: &#x27;data.txt&#x27;</code></pre>
+<p>Python looks for files in the <strong>current working directory</strong>. If the file lives elsewhere, it won&#x27;t be found.</p>
+<pre data-lang="python"><code>import os
+print(f&quot;Current directory: {os.getcwd()}&quot;)</code></pre>
+<p><strong>Fix:</strong> Change to your project folder before running:</p>
+<pre data-lang="bash"><code>cd python_basics      # navigate to project folder
+python my_script.py   # now Python looks here for files</code></pre>
+<blockquote>💡 This is why we use **one course folder** — keeping everything together prevents path confusion</blockquote>
+        </section>
+
+        <section class="slide" id="demo-systematic-break-and-fix-abe405dd" data-slide-number="54">
+            <h1>Demo: Systematic Break-and-Fix</h1>
+            <pre data-lang="python"><code># buggy_calculator.py — score inputs not converted!
+score1 = input(&quot;Enter score 1: &quot;)
+score2 = input(&quot;Enter score 2: &quot;)
+score3 = input(&quot;Enter score 3: &quot;)
+
+total = score1 + score2 + score3   # ❌ string concatenation
+average = total / 3                 # TypeError: str / int
+
+print(f&quot;Average score: {average:.1f}&quot;)</code></pre>
+<p><strong>Debug output reveals:</strong> <code>total = &#x27;859078&#x27;</code> (strings joined, not added)</p>
+<p><strong>Fix:</strong> <code>score1 = int(input(&quot;Enter score 1: &quot;))</code></p>
+<p>After fix: correctly calculates <code>average = 84.3</code></p>
+        </section>
+
+        <section class="slide" id="lab-debugging-drill-c433633f" data-slide-number="55">
             <h1>Lab: Debugging Drill</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>You&#x27;ll receive <strong>3 broken scripts</strong></li>
-  <li>For each script:</li>
-</ul>
-<ol>
-  <li>Run it and read the error message</li>
-  <li>Hypothesize what&#x27;s wrong</li>
-  <li>Add print statements to confirm</li>
-  <li>Fix the bug</li>
-  <li>Write a 1-sentence explanation of what went wrong</li>
+            <p><strong>Time: 25–35 minutes</strong> | Fix three broken scripts</p>
+<p><strong>Script 1 — NameError (broken_greeter.py)</strong></p>
+<pre data-lang="python"><code>first_name = input(&quot;Enter your first name: &quot;)
+last_name = input(&quot;Enter your last name: &quot;)
+print(f&quot;Hello, {first_nam} {last_name}!&quot;)   # typo!</code></pre>
+<p><strong>Script 2 — TypeError (broken_temp_converter.py)</strong></p>
+<pre data-lang="python"><code>fahrenheit = input(&quot;Enter temperature in Fahrenheit: &quot;)
+celsius = (fahrenheit - 32) * 5 / 9    # str - int fails!
+print(f&quot;{fahrenheit}F is {celsius:.1f}C&quot;)</code></pre>
+<p><strong>Script 3 — IndexError (broken_average.py)</strong></p>
+<pre data-lang="python"><code>numbers = [85, 92, 78, 90, 88]
+fifth_number = numbers[5]    # only indices 0–4 exist!
+print(f&quot;The 5th number is: {fifth_number}&quot;)</code></pre>
+        </section>
+
+        <section class="slide" id="debugging-drill-for-each-script-5486a08c" data-slide-number="56">
+            <h1>Debugging Drill — For Each Script</h1>
+            <ol>
+  <li>Run it and observe the error</li>
+  <li>Read the traceback — what is the error type and line?</li>
+  <li>Add debug <code>print()</code> statements to confirm your hypothesis</li>
+  <li>Fix the bug (one change at a time)</li>
+  <li>Write <strong>one sentence</strong> explaining what went wrong</li>
 </ol>
-<h3>Broken Script 1 — NameError</h3>
-<pre data-lang="python"><code>user_name = &quot;Alice&quot;
-print(f&quot;Welcome, {username}!&quot;)</code></pre>
-<h3>Broken Script 2 — TypeError</h3>
-<pre data-lang="python"><code>price = input(&quot;Enter price: &quot;)
-tax = price * 0.08
-print(f&quot;Tax: ${tax:.2f}&quot;)</code></pre>
-<h3>Broken Script 3 — IndexError</h3>
-<pre data-lang="python"><code>colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;]
-print(f&quot;Last color: {colors[3]}&quot;)</code></pre>
+<h3>Expected Root Cause Explanations</h3>
+<ul>
+  <li><strong>Script 1:</strong> <code>first_nam</code> is a typo — should be <code>first_name</code> (NameError)</li>
+  <li><strong>Script 2:</strong> <code>input()</code> returns a string — wrap with <code>float()</code> (TypeError)</li>
+  <li><strong>Script 3:</strong> List has 5 elements (indices 0–4) — use <code>numbers[4]</code> (IndexError)</li>
+</ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="debugging-drill-completion-criteria-ba3da2df" data-slide-number="57">
             <h1>Debugging Drill — Completion Criteria</h1>
-            <p><span class="check">✓</span> All 3 scripts fixed and running without errors</p>
-<p><span class="check">✓</span> Learner can explain each fix in one sentence:</p>
-<ul>
-  <li style="margin-left: 30px;">Script 1: <code>username</code> should be <code>user_name</code> (variable name typo)</li>
-  <li style="margin-left: 30px;">Script 2: <code>price</code> needs <code>float()</code> conversion (string × float fails)</li>
-  <li style="margin-left: 30px;">Script 3: Use <code>colors[2]</code> or <code>colors[-1]</code> (index 3 doesn&#x27;t exist)</li>
-</ul>
+            <p><span class="check">✓</span> All 3 scripts run without errors</p>
+<p><span class="check">✓</span> Correct output verified with test inputs</p>
+<p><span class="check">✓</span> One-sentence root cause explanation written for each</p>
+<p><span class="check">✓</span> Debug <code>print()</code> statements removed from final code</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="optional-python-2-vs-python-3-6a4f56ea" data-slide-number="58">
+            <h1>Optional: Python 2 vs Python 3</h1>
+            <blockquote>When you find old tutorials online — recognize these differences</blockquote>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Python 2</th>
+<th>Python 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>print</td>
+<td><code>print &quot;hello&quot;</code> (statement)</td>
+<td><code>print(&quot;hello&quot;)</code> (function)</td>
+</tr>
+<tr>
+<td>Division</td>
+<td><code>5 / 2 → 2</code> (integer)</td>
+<td><code>5 / 2 → 2.5</code> (float)</td>
+</tr>
+<tr>
+<td>Input</td>
+<td><code>raw_input()</code></td>
+<td><code>input()</code></td>
+</tr>
+<tr>
+<td>Strings</td>
+<td>ASCII by default</td>
+<td>Unicode by default</td>
+</tr>
+</tbody>
+</table>
+<blockquote>🔑 Always write Python 3. If you see `print &quot;...&quot;` online, it&#x27;s Python 2 — translate the syntax.</blockquote>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-12-f2838a27" data-slide-number="59">
             <h1>Common Pitfalls (Hour 12)</h1>
-            <p><strong>⚠️</strong> <strong>Changing multiple things at once</strong> — fix one bug, re-run</p>
-<p><strong>⚠️</strong> <strong>Not re-running after each fix</strong> — always verify</p>
-<p><strong>⚠️</strong> <strong>Ignoring the error message</strong> — read it first!</p>
-<p><strong>⚠️</strong> <strong>Leaving debug prints in final code</strong> — clean up when done</p>
+            <p><strong>⚠️</strong> <strong>Changing multiple things at once</strong> — you won&#x27;t know which fix worked</p>
+<p><strong>⚠️</strong> <strong>Not re-running after each fix</strong> — always verify before moving on</p>
+<p><strong>⚠️</strong> <strong>Skipping the traceback</strong> — it tells you exactly what and where</p>
+<p><strong>⚠️</strong> <strong>Leaving debug prints in final code</strong> — clean them up before submission</p>
         </section>
 
-        <section class="slide">
-            <h1>Optional: Python 2 vs Python 3 (Quick Note)</h1>
-            <h3>Key Differences (When You See Old Code Online)</h3>
-<ul>
-  <li><strong>Print</strong>: Python 2 <code>print &quot;hello&quot;</code> → Python 3 <code>print(&quot;hello&quot;)</code></li>
-  <li><strong>Division</strong>: Python 2 <code>5 / 2 → 2</code> → Python 3 <code>5 / 2 → 2.5</code></li>
-  <li><strong>Input</strong>: Python 2 <code>raw_input()</code> → Python 3 <code>input()</code></li>
-  <li><strong>Strings</strong>: Python 2 ASCII default → Python 3 Unicode default</li>
-</ul>
-<blockquote>💡 Always use Python 3. If you find Python 2 code online, convert the syntax.</blockquote>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-12-6642c158" data-slide-number="60">
             <h1>Quick Check (Hour 12)</h1>
-            <p><strong>Question</strong>: You see this error: <code>TypeError: can only concatenate str (not &quot;int&quot;) to str</code>. What&#x27;s likely wrong and how do you fix it?</p>
-<p><strong>Expected Answer</strong>: You&#x27;re trying to add a string and an integer — use <code>str()</code> to convert the int, or use an f-string.</p>
+            <p><strong>You see this error:</strong></p>
+<pre><code>TypeError: can&#x27;t multiply sequence by non-int of type &#x27;float&#x27;</code></pre>
+<p><strong>What&#x27;s likely wrong and how do you fix it?</strong></p>
+<p><strong>Answer:</strong> A string is being multiplied by a float — <code>input()</code> returns a string. Wrap the <code>input()</code> call with <code>float()</code> to convert it to a number first.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-3-wrap-up-48bc06f5" data-slide-number="61">
             <h1>Session 3 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-we-covered-today-ba41fa3e" data-slide-number="62">
             <h1>What We Covered Today</h1>
             <h3>Hour 9: Comparisons + Boolean Logic</h3>
 <ul>
-  <li>Comparison operators: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></li>
-  <li>Combining conditions with <code>and</code>, <code>or</code>, <code>not</code></li>
-  <li>Eligibility Checker lab</li>
+  <li>Six comparison operators; <code>==</code> vs <code>=</code> distinction</li>
+  <li><code>and</code>, <code>or</code>, <code>not</code> — combining conditions with correct precedence</li>
+  <li>Chained comparisons: <code>18 &lt;= age &lt;= 65</code></li>
+  <li>Truthy/falsy preview; community center eligibility checker lab</li>
 </ul>
-<h3>Hour 10: String Formatting with F-Strings</h3>
+<h3>Hour 10: F-Strings</h3>
 <ul>
-  <li><code>f&quot;{variable}&quot;</code> syntax</li>
-  <li>Number formatting: <code>{value:.2f}</code></li>
-  <li>Tip Calculator upgrade lab</li>
+  <li><code>f&quot;{variable}&quot;</code> syntax, expressions and method calls inside <code>{}</code></li>
+  <li>Number formatting: <code>:.2f</code>, <code>:.1f</code>, <code>:,</code>, <code>:,.2f</code></li>
+  <li>Width and alignment: <code>:&lt;15</code>, <code>:&gt;8.2f</code></li>
+  <li>f-strings inside <code>if/elif/else</code> blocks; four common mistakes</li>
 </ul>
-<h3>Hour 11: Text Processing — split/join</h3>
+<h3>Hour 11: split() and join()</h3>
 <ul>
-  <li><code>.split()</code> to break strings into word lists</li>
-  <li><code>.join()</code> to rebuild strings</li>
-  <li>Sentence Stats lab</li>
+  <li><code>.split()</code> — whitespace default, custom delimiters, CSV parsing</li>
+  <li><code>.join()</code> — syntax: separator first; join only accepts strings</li>
+  <li>Word counting, longest word, split-process-join pattern</li>
 </ul>
 <h3>Hour 12: Debugging Habits</h3>
 <ul>
-  <li>Reading tracebacks (bottom up)</li>
-  <li>Common errors: NameError, TypeError, ValueError, IndexError</li>
-  <li>Debugging Drill lab</li>
+  <li>Traceback anatomy: read bottom to top</li>
+  <li>Big Four errors: NameError, TypeError, ValueError, IndexError</li>
+  <li>6-step debugging process; print-debugging strategies; working directory</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrail-reminder-afd2fe6d" data-slide-number="63">
             <h1>Scope Guardrail Reminder</h1>
-            <h3>Stay in Basics Scope</h3>
-<p><span class="check">✓</span> Comparison operators and boolean logic</p>
-<p><span class="check">✓</span> F-string formatting (basics)</p>
-<p><span class="check">✓</span> split() and join() for text processing</p>
-<p><span class="check">✓</span> Print-debugging and reading tracebacks</p>
-<h3>Not Yet (Advanced Topics)</h3>
-<p><span class="cross">✗</span> Regular expressions</p>
-<p><span class="cross">✗</span> try/except error handling</p>
-<p><span class="cross">✗</span> List comprehensions</p>
-<p><span class="cross">✗</span> Advanced string formatting (str.format(), %-style)</p>
-<p><span class="cross">✗</span> Custom exception classes</p>
-        </section>
-
-        <section class="slide">
-            <h1>No-Go Topics for Basics Course</h1>
-            <h3>Keep for Advanced Module</h3>
+            <h3>Stay in Basics Scope ✓</h3>
 <ul>
-  <li>Web frameworks (Flask/Django)</li>
-  <li>Databases/SQL/ORM</li>
-  <li>GUI frameworks (Tkinter/PyQt)</li>
-  <li>Testing frameworks (pytest)</li>
-  <li>Packaging/distribution</li>
-  <li>Decorators &amp; generators</li>
-  <li>Lambda functions</li>
-  <li>Advanced OOP patterns</li>
+  <li>Comparison operators and boolean logic</li>
+  <li>F-string formatting (<code>:.2f</code>, width, alignment)</li>
+  <li><code>split()</code> and <code>join()</code> for text processing</li>
+  <li>Print-debugging and reading tracebacks</li>
+</ul>
+<h3>Not Yet — Advanced Topics ✗</h3>
+<ul>
+  <li>Regular expressions</li>
+  <li><code>try/except</code> error handling</li>
+  <li>List comprehensions</li>
+  <li><code>str.format()</code> / <code>%</code>-style formatting</li>
+  <li>Custom exception classes</li>
+  <li>Lambda functions, decorators, generators</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="homework-practice-6b9a4c32" data-slide-number="64">
             <h1>Homework / Practice</h1>
-            <h3>Recommended Exercises</h3>
+            <ol>
+  <li><strong>Grade Calculator</strong> — use comparisons and <code>if/elif/else</code> to assign letter grades (A/B/C/D/F) from a numeric score; format output with f-strings</li>
+</ol>
 <ol>
-  <li>Build a grade calculator that uses comparisons to assign letter grades</li>
-  <li>Create a formatted receipt with f-string alignment</li>
-  <li>Write a word frequency counter (split a sentence, count occurrences)</li>
-  <li>Debug a multi-bug script (combine all error types from today)</li>
+  <li><strong>Formatted Receipt</strong> — build a multi-item receipt using f-string width/alignment so all prices line up in a right-justified column</li>
+</ol>
+<ol>
+  <li><strong>Word Frequency Counter</strong> — split a sentence, count how many times each word appears, display a formatted count table</li>
+</ol>
+<ol>
+  <li><strong>Multi-Bug Script</strong> — write a script with all four error types deliberately hidden; swap with a classmate and debug each other&#x27;s code</li>
 </ol>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="next-session-preview-5d37e57a" data-slide-number="65">
             <h1>Next Session Preview</h1>
             <h3>Session 4 (Hours 13–16)</h3>
 <ul>
-  <li>Hour 13: Lists fundamentals — create, index, slice, mutate</li>
-  <li>Hour 14: Iterating lists with <code>for</code> loops — accumulators &amp; averages</li>
-  <li>Hour 15: Nested lists for table-like data — rows &amp; columns</li>
+  <li>Hour 13: Lists — create, index, slice, mutate</li>
+  <li>Hour 14: Iterating lists with <code>for</code> loops — accumulators and averages</li>
+  <li>Hour 15: Nested lists for table-like data — rows and columns</li>
   <li>Hour 16: Checkpoint 2 — Lists + string handling</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="questions-143b7212" data-slide-number="66">
             <h1>Questions?</h1>
-            <p><strong>Remember</strong>:</p>
+            <p><strong>Key takeaways from today:</strong></p>
 <ul>
-  <li><code>==</code> compares, <code>=</code> assigns</li>
-  <li>Always use f-strings for formatted output</li>
-  <li><code>.split()</code> returns a list, <code>.join()</code> builds a string</li>
-  <li>Debug one fix at a time — always re-run after each change</li>
+  <li><code>==</code> compares, <code>=</code> assigns — never confuse them</li>
+  <li>F-strings: the <code>f</code> prefix is mandatory; <code>:.2f</code> for money; check every <code>{}</code></li>
+  <li><code>.split()</code> → list of strings; <code>.join()</code> → string from list</li>
+  <li>Debug systematically: read traceback → hypothesize → print → fix one thing → re-run</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="thank-you-ba26a246" data-slide-number="67">
             <h1>Thank You!</h1>
             <p>See you in Session 4!</p>
         </section>
@@ -1082,7 +1468,11 @@ print(f&quot;Last color: {colors[3]}&quot;)</code></pre>
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1155,17 +1545,24 @@ print(f&quot;Last color: {colors[3]}&quot;)</code></pre>
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

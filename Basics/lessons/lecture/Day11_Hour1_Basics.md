@@ -1,5 +1,7 @@
 # Day 11, Hour 1: Files — Reading and Writing Text
 
+[Instructor slide change: page=4; title=Hour 41: Files — Reading and Writing Text]
+
 ## Instructor Use Notes (Read First)
 
 This script is designed to be read almost verbatim during class. It is intentionally detailed so you can teach confidently even if learners are seeing file I/O for the first time.
@@ -15,6 +17,8 @@ This script is designed to be read almost verbatim during class. It is intention
 - **Important non-goals for this hour:** JSON structure design, full path-manipulation lesson, advanced parsing, classes, databases.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## Outcomes (state these clearly at the top of class)
 
@@ -192,6 +196,8 @@ Use this recap sentence:
 
 ---
 
+[Instructor slide change: page=10; title=Demo — Shopping List Save and Load]
+
 ## Live Demo (5–10 min)
 
 ### Demo Goal
@@ -291,6 +297,8 @@ Then say:
 Keep this short; main lab uses line-based flow.
 
 ---
+
+[Instructor slide change: page=11; title=Lab — Save and Load Text]
 
 ## Hands-on Lab (25–35 min)
 
@@ -514,6 +522,8 @@ If fix needed, give one precise next action:
 
 ---
 
+[Instructor slide change: page=12; title=Common Pitfalls (Hour 41)]
+
 ## Common Pitfalls to Watch For (and exact coaching language)
 
 ### Pitfall 1: Wrong path or wrong working directory
@@ -613,6 +623,8 @@ Instead, coach with micro-prompts:
 - First 8 minutes guided steps.
 - Next 15–20 minutes independent.
 - Final 5–7 minutes spot checks and debrief.
+
+[Instructor slide change: page=13; title=Quick Check (Hour 41)]
 
 ### Minutes 50–60: Quick check + recap
 

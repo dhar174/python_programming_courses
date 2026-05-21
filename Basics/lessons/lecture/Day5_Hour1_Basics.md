@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 17: Tuples + Unpacking]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on tuples: what they are, how they differ from lists, how immutability protects data, and how unpacking lets you pull values out cleanly. Stay within Basics scope — do not introduce named tuples, `collections.namedtuple`, or advanced destructuring. The key outcomes are creating tuples, understanding why they are immutable, unpacking tuple values into variables, and making a principled choice between tuple and list. The lab reinforces all of this in a concrete coordinate-tracking program.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -445,6 +449,8 @@ You will not always be certain which to choose. That is normal. As you write mor
 
 ---
 
+[Instructor slide change: page=13; title=Demo: Coordinate Pairs]
+
 ## 8) Live Demo: Coordinate Pairs
 
 ### 8.1 Overview
@@ -585,6 +591,8 @@ Run it.
 "Notice the structure: `path` is a list — it is mutable, it can grow or shrink. Each item inside the list is a tuple — each coordinate is fixed. This is a natural and very common pattern in Python: a mutable outer container of immutable records."
 
 ---
+
+[Instructor slide change: page=14; title=Lab: Coordinate Tracker]
 
 ## 9) Hands-on Lab: Coordinate Tracker
 
@@ -740,6 +748,8 @@ This pattern — a list of tuples — is one you will use many times in real Pyt
 
 ---
 
+[Instructor slide change: page=15; title=Common Pitfalls (Hour 17)]
+
 ## 10) Common Pitfalls
 
 ### 10.1 The single-element tuple trap (revisited)
@@ -890,6 +900,8 @@ Run it.
 This is a taste of how tuples connect naturally to geometric calculations in real programs."
 
 ---
+
+[Instructor slide change: page=16; title=Quick Check]
 
 ## 12) Debrief, Recap, and Exit Ticket
 

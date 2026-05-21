@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=43; title=Hour 12: Debugging Habits (Basics Level)]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Transition from Hour 11: 3 minutes
@@ -16,6 +18,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=44; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -182,6 +186,8 @@ ZeroDivisionError: division by zero
 **The path:** Line 8 → called function on Line 6 → called function on Line 3 → **error occurred here**
 
 **The traceback shows the call chain**, but the **actual error** is at the bottom.
+
+[Instructor slide change: page=60; title=Quick Check (Hour 12)]
 
 ### Quick Check #1
 
@@ -377,6 +383,8 @@ You might also see:
 **For now, focus on the Big Four:** NameError, TypeError, ValueError, IndexError.
 
 ---
+
+[Instructor slide change: page=50; title=The 6-Step Debugging Process]
 
 ## Section 4: Print-Debugging Strategies (8-10 minutes)
 
@@ -614,6 +622,8 @@ python my_script.py
 
 ---
 
+[Instructor slide change: page=54; title=Demo: Systematic Break-and-Fix]
+
 ## Section 6: Live Demo – Break and Fix (5-10 minutes)
 
 ### Demo Script: Deliberate Debugging
@@ -743,6 +753,8 @@ print(f"Average score: {average:.1f}")
 **Once you verify it works, set `DEBUG = False` to hide the debug output.**
 
 ---
+
+[Instructor slide change: page=55; title=Lab: Debugging Drill]
 
 ## Section 7: Hands-On Lab – Debugging Drill (25-35 minutes)
 

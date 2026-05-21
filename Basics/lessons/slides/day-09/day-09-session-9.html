@@ -386,13 +386,18 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="basics-day-9-session-9-hours-3336-3c328685" data-slide-number="1">
             <h1>Basics Day 9 — Session 9 (Hours 33–36)</h1>
-            <div class="subtitle">Python Programming (Basic) • Functions, Scope &amp; Modules</div>
+            <div class="subtitle">Functions, Scope, Collections, Modules</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-9-overview-38c5e80e" data-slide-number="2">
             <h1>Session 9 Overview</h1>
+            
+        </section>
+
+        <section class="slide" id="topics-covered-today-a8c97248" data-slide-number="3">
+            <h1>Topics Covered Today</h1>
             <ul>
   <li>Hour 33: Functions — def, parameters, return</li>
   <li>Hour 34: Scope + common function mistakes</li>
@@ -401,1236 +406,764 @@
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-33-functions-def-parameters-return-67b04b92" data-slide-number="4">
             <h1>Hour 33: Functions — def, parameters, return</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-ce7c122d" data-slide-number="5">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Write simple functions using <code>def</code></li>
-  <li>Pass arguments and receive parameters</li>
-  <li>Return values from functions and store results</li>
-  <li>Understand the difference between <code>return</code> and <code>print</code></li>
+  <li>Write a function using <code>def</code> with parameters and a body</li>
+  <li>Distinguish parameters (the placeholder) from arguments (the value passed)</li>
+  <li>Use <code>return</code> to send a value back to the caller</li>
+  <li>Contrast <code>print()</code> (displays to human) with <code>return</code> (delivers to program)</li>
+  <li>Refactor repeated procedural code into named, reusable functions</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Why Write Functions?</h1>
-            <h3>The Problem Without Functions</h3>
-<pre data-lang="python"><code># Without functions — repeated logic everywhere
-name1 = input(&quot;Name: &quot;).strip().title()
-print(f&quot;Hello, {name1}!&quot;)
+        <section class="slide" id="anatomy-of-a-function-fd4e96ca" data-slide-number="6">
+            <h1>Anatomy of a Function</h1>
+            <h3>Definition (stored in memory — runs nothing yet)</h3>
+<pre data-lang="python"><code>#  keyword  name       parameter
+#     |       |            |
+def greet_user(name):
+    message = f&quot;Hello, {name}!&quot;   # body — indented 4 spaces
+    return message                # sends data back to the caller</code></pre>
+<h3>Call (triggers execution)</h3>
+<pre data-lang="python"><code>result = greet_user(&quot;Alice&quot;)   # argument &quot;Alice&quot; -&gt; parameter name
+print(result)                  # Hello, Alice!
 
-name2 = input(&quot;Name: &quot;).strip().title()
-print(f&quot;Hello, {name2}!&quot;)
-
-name3 = input(&quot;Name: &quot;).strip().title()
-print(f&quot;Hello, {name3}!&quot;)
-# Same 2 lines repeated 3 times — hard to update!</code></pre>
-<h3>The Solution — Define Once, Call Many Times</h3>
-<pre data-lang="python"><code>def greet(name: str) -&gt; None:
-    formatted = name.strip().title()
-    print(f&quot;Hello, {formatted}!&quot;)
-
-greet(&quot;alice&quot;)
-greet(&quot;BOB&quot;)
-greet(&quot;  carol  &quot;)</code></pre>
-<blockquote>💡 **Functions give you reuse + clarity.** Change the logic once, every call benefits.</blockquote>
+greet_user(&quot;Bob&quot;)              # call as many times as needed
+greet_user(&quot;Charlie&quot;)</code></pre>
+<blockquote>**Defining** stores the function. **Calling** runs it.</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Anatomy of a Function</h1>
-            <h3>The def Statement</h3>
-<pre data-lang="python"><code>def function_name(parameter1, parameter2):
-    &quot;&quot;&quot;Docstring: what this function does.&quot;&quot;&quot;
-    # function body
-    return result</code></pre>
-<h3>Breaking It Down</h3>
-<table>
+        <section class="slide" id="parameters-and-arguments-24f8e1bb" data-slide-number="7">
+            <h1>Parameters and Arguments</h1>
+            <pre data-lang="python"><code># One parameter
+def greet(name):
+    print(f&quot;Hello, {name}!&quot;)
+
+greet(&quot;Alice&quot;)    # &quot;Alice&quot; is the argument
+greet(&quot;Bob&quot;)
+
+# Multiple parameters (matched by position)
+def add_two_numbers(a, b):
+    total = a + b
+    print(f&quot;{a} + {b} = {total}&quot;)
+
+add_two_numbers(5, 3)    # a=5, b=3
+add_two_numbers(10, 20)  # a=10, b=20</code></pre>
+<ul>
+  <li><strong>Parameter</strong> — placeholder variable in the function signature (<code>name</code>, <code>a</code>, <code>b</code>)</li>
+  <li><strong>Argument</strong> — the actual value you supply at call time (<code>&quot;Alice&quot;</code>, <code>5</code>, <code>3</code>)</li>
+</ul>
+        </section>
+
+        <section class="slide" id="the-return-statement-ce94650c" data-slide-number="8">
+            <h1>The return Statement</h1>
+            <pre data-lang="python"><code>def multiply(a, b):
+    result = a * b
+    return result              # sends the value back to the caller
+
+# The call expression is REPLACED by the returned value
+answer = multiply(5, 4)        # answer = 20
+bigger = answer + 10           # bigger = 30
+
+# return exits immediately — useful for early exit
+def safe_divide(a, b):
+    if b == 0:
+        return &quot;Error: division by zero&quot;
+    return a / b               # only reached when b != 0
+
+print(safe_divide(10, 2))      # 5.0
+print(safe_divide(10, 0))      # Error: division by zero</code></pre>
+<blockquote>Once Python hits `return`, the function stops. Everything after is skipped.</blockquote>
+        </section>
+
+        <section class="slide" id="return-vs-print-62242cba" data-slide-number="9">
+            <h1>return vs. print()</h1>
+            <table>
 <thead>
 <tr>
-<th>Part</th>
-<th>Purpose</th>
+<th></th>
+<th><code>print()</code></th>
+<th><code>return</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>def</code></td>
-<td>Keyword that starts a function definition</td>
+<td>Who receives the data?</td>
+<td>Human (screen)</td>
+<td>The program (caller)</td>
 </tr>
 <tr>
-<td><code>function_name</code></td>
-<td>Name you choose — use <code>snake_case</code></td>
+<td>Can the caller use the value?</td>
+<td>No</td>
+<td>Yes</td>
 </tr>
 <tr>
-<td><code>(parameter1, ...)</code></td>
-<td>Inputs the function receives</td>
-</tr>
-<tr>
-<td><code>&quot;&quot;&quot;...&quot;&quot;&quot;</code></td>
-<td>Docstring explaining the function</td>
-</tr>
-<tr>
-<td><code>return result</code></td>
-<td>Sends a value back to the caller</td>
+<td>Function stops after?</td>
+<td>No</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
-<blockquote>💡 **Parameters** are the placeholders in the `def` line. **Arguments** are the actual values you pass when you call the function.</blockquote>
+<pre data-lang="python"><code>def bad_sum(a, b):
+    print(a + b)          # shows 8 on screen
+
+result = bad_sum(3, 5)    # result is None — not 8!
+print(result)             # None
+
+def good_sum(a, b):
+    return a + b          # gives 8 to the caller
+
+result = good_sum(3, 5)   # result is 8
+print(result)             # 8</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Parameters and Arguments</h1>
-            <h3>Defining Parameters</h3>
-<pre data-lang="python"><code>def add_numbers(a: int, b: int) -&gt; int:
-    &quot;&quot;&quot;Return the sum of a and b.&quot;&quot;&quot;
-    return a + b</code></pre>
-<h3>Calling with Arguments</h3>
-<pre data-lang="python"><code>result = add_numbers(3, 5)
-print(result)   # 8
+        <section class="slide" id="demo-refactoring-a-calculator-c97f061c" data-slide-number="10">
+            <h1>Demo: Refactoring a Calculator</h1>
+            <h3>Before — logic buried in a big menu loop, hard to test</h3>
+<pre data-lang="python"><code>if choice == &quot;1&quot;:
+    result = num1 + num2
+    print(f&quot;Result: {result}&quot;)
+elif choice == &quot;2&quot;:
+    result = num1 - num2
+    print(f&quot;Result: {result}&quot;)</code></pre>
+<h3>After — each operation is an isolated, testable function</h3>
+<pre data-lang="python"><code>def add(x, y):
+    return x + y
 
-print(add_numbers(10, 20))   # 30
-print(add_numbers(100, -5))  # 95</code></pre>
-<h3>Positional vs Keyword Arguments</h3>
-<pre data-lang="python"><code>def describe_item(name: str, price: float) -&gt; str:
-    return f&quot;{name} costs ${price:.2f}&quot;
+def subtract(x, y):
+    return x - y
 
-# Positional — order matters
-print(describe_item(&quot;Apple&quot;, 0.99))
+def get_float_input(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print(&quot;Please enter a valid number.&quot;)
 
-# Keyword — order doesn&#x27;t matter
-print(describe_item(price=1.49, name=&quot;Banana&quot;))</code></pre>
+# main() becomes a clear traffic director
+def main():
+    num1 = get_float_input(&quot;First number: &quot;)
+    num2 = get_float_input(&quot;Second number: &quot;)
+    print(f&quot;Sum: {add(num1, num2)}&quot;)</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>return vs print — The Key Difference</h1>
-            <h3>print Only Shows on Screen</h3>
-<pre data-lang="python"><code>def bad_double(n: int) -&gt; None:
-    print(n * 2)    # Only displays; you can&#x27;t use the value
-
-result = bad_double(5)   # Prints: 10
-print(result)            # Prints: None  ← problem!</code></pre>
-<h3>return Sends the Value Back</h3>
-<pre data-lang="python"><code>def good_double(n: int) -&gt; int:
-    return n * 2    # Sends value back to caller
-
-result = good_double(5)  # result = 10
-print(result)            # Prints: 10
-total = good_double(5) + good_double(3)   # total = 16</code></pre>
-<blockquote>⚠️ **Key rule:** If you need to use the result later — store it, combine it, pass it on — use `return`. Only `print` when you&#x27;re done with the value and just want to display it.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Return Values and Storing Results</h1>
-            <h3>Functions Are Just Expressions</h3>
-<pre data-lang="python"><code>def celsius_to_fahrenheit(c: float) -&gt; float:
-    &quot;&quot;&quot;Convert Celsius to Fahrenheit.&quot;&quot;&quot;
-    return (c * 9 / 5) + 32
-
-# Store the result
-boiling = celsius_to_fahrenheit(100)
-print(f&quot;100°C = {boiling}°F&quot;)     # 100°C = 212.0°F
-
-# Use inline
-freezing = celsius_to_fahrenheit(0)
-body_temp = celsius_to_fahrenheit(37)
-
-print(f&quot;Freezing: {freezing}°F&quot;)   # Freezing: 32.0°F
-print(f&quot;Body:     {body_temp}°F&quot;)  # Body:     98.6°F</code></pre>
-<h3>A Function Without return Returns None</h3>
-<pre data-lang="python"><code>def show_name(name: str) -&gt; None:
-    print(f&quot;Name: {name}&quot;)
-
-value = show_name(&quot;Alice&quot;)  # Prints: Name: Alice
-print(value)                # Prints: None</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Refactor a Calculator Into Functions</h1>
-            <h3>Watch For:</h3>
+        <section class="slide" id="lab-refactor-contact-manager-hour-33-c9bba447" data-slide-number="11">
+            <h1>Lab: Refactor Contact Manager (Hour 33)</h1>
+            <p><strong>Time: 13 minutes</strong></p>
+<h3>Tasks</h3>
+<p>Refactor a menu-driven contact manager into named functions:</p>
 <ul>
-  <li>Each function does one job</li>
-  <li>Each function returns (not prints) its result</li>
-  <li>The <code>main</code> block calls the functions and displays results</li>
+  <li><code>add_contact(contact_list, name)</code> — appends name; returns nothing</li>
+  <li><code>list_contacts(contact_list)</code> — prints all contacts; returns nothing</li>
+  <li><code>search_contact(contact_list, query)</code> — <strong>returns</strong> <code>True</code>/<code>False</code> (no print inside)</li>
+  <li><code>main()</code> — contains the <code>while True</code> menu loop and calls all three functions</li>
 </ul>
-<pre data-lang="python"><code>def add(a: float, b: float) -&gt; float:
-    &quot;&quot;&quot;Return a + b.&quot;&quot;&quot;
-    return a + b
-
-def subtract(a: float, b: float) -&gt; float:
-    &quot;&quot;&quot;Return a - b.&quot;&quot;&quot;
-    return a - b
-
-def multiply(a: float, b: float) -&gt; float:
-    &quot;&quot;&quot;Return a * b.&quot;&quot;&quot;
-    return a * b
-
-# Manual testing — call each function and print the result
-print(&quot;Testing add:&quot;)
-print(add(3, 4))          # Expected: 7
-print(add(-1, 1))         # Expected: 0
-print(add(0.1, 0.2))      # Expected: ~0.3
-
-print(&quot;\nTesting subtract:&quot;)
-print(subtract(10, 3))    # Expected: 7
-print(subtract(0, 5))     # Expected: -5
-
-print(&quot;\nTesting multiply:&quot;)
-print(multiply(4, 5))     # Expected: 20
-print(multiply(-2, 3))    # Expected: -6</code></pre>
-<h3>Expected Output</h3>
-<pre><code>Testing add:
-7
-0
-0.30000000000000004
-
-Testing subtract:
-7
--5
-
-Testing multiply:
-20
--6</code></pre>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Each function does exactly one thing</p>
+<p><span class="check">✓</span> <code>search_contact()</code> uses <code>return</code>, not <code>print()</code></p>
+<p><span class="check">✓</span> Main loop uses the returned boolean in an <code>if</code> statement</p>
+<p><span class="check">✓</span> No logic is duplicated across menu branches</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Refactor Contact Manager</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Refactor a contact manager program by extracting repeated logic into named functions.</p>
-<p><strong>Starting Point — messy, repeated code:</strong></p>
-<pre data-lang="python"><code>contacts = {}
-
-# Add a contact
-name = input(&quot;Name: &quot;).strip().title()
-phone = input(&quot;Phone: &quot;).strip()
-contacts[name] = phone
-print(f&quot;Added {name}.&quot;)
-
-# List contacts
-for name, phone in contacts.items():
-    print(f&quot;  {name}: {phone}&quot;)
-
-# Search a contact
-search = input(&quot;Search: &quot;).strip().title()
-if search in contacts:
-    print(f&quot;Found: {search} → {contacts[search]}&quot;)
-else:
-    print(f&quot;{search} not found.&quot;)</code></pre>
+        <section class="slide" id="common-pitfalls-hour-33-0dfa6025" data-slide-number="12">
+            <h1>Common Pitfalls (Hour 33)</h1>
+            <p><strong>⚠️</strong> <strong>Defining but never calling</strong> — <code>def greet()</code> stores the code; you must write <code>greet()</code> to run it</p>
+<p><strong>⚠️</strong> <strong>Missing colon after <code>def</code></strong> — <code>def greet(name)</code> without <code>:</code> raises <code>SyntaxError</code></p>
+<p><strong>⚠️</strong> <strong>Using <code>print()</code> when <code>return</code> is needed</strong> — the value looks right on screen, but the caller gets <code>None</code></p>
+<p><strong>⚠️</strong> <strong>Confusing parameters and arguments</strong> — <code>name</code> in <code>def greet(name)</code> is a parameter; <code>&quot;Alice&quot;</code> in <code>greet(&quot;Alice&quot;)</code> is the argument</p>
+<p><strong>⚠️</strong> <strong>Indentation errors in the body</strong> — all function body lines must be indented exactly 4 spaces</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Refactor Contact Manager (continued)</h1>
-            <p><strong>Your Task — extract these three functions:</strong></p>
-<pre data-lang="python"><code>def add_contact(contacts: dict, name: str, phone: str) -&gt; None:
-    &quot;&quot;&quot;Add a contact to the contacts dictionary.&quot;&quot;&quot;
-    ...  # your code here
-
-def list_contacts(contacts: dict) -&gt; None:
-    &quot;&quot;&quot;Print all contacts.&quot;&quot;&quot;
-    ...  # your code here
-
-def search_contact(contacts: dict, name: str) -&gt; str | None:
-    &quot;&quot;&quot;Return phone number if found, else None.&quot;&quot;&quot;
-    ...  # your code here</code></pre>
-<p><strong>Requirements:</strong></p>
-<ol>
-  <li>Each function takes <code>contacts</code> as its first parameter — no globals</li>
-  <li><code>add_contact</code> stores the entry and prints a confirmation</li>
-  <li><code>list_contacts</code> prints every name/phone pair</li>
-  <li><code>search_contact</code> <strong>returns</strong> the phone number (or <code>None</code>) — caller decides to print</li>
-</ol>
-<p><strong>Completion Criteria:</strong></p>
-<ul>
-  <li>✅ Functions called from a menu loop</li>
-  <li>✅ No logic is duplicated</li>
-  <li>✅ <code>search_contact</code> returns a value; calling code handles the print</li>
-</ul>
+        <section class="slide" id="quick-check-hour-33-ac6987f0" data-slide-number="13">
+            <h1>Quick Check (Hour 33)</h1>
+            <p><strong>Q1:</strong> What is the difference between <code>print(result)</code> and <code>return result</code> inside a function?</p>
+<p><strong>Q2:</strong> In <code>def add(a, b): return a + b</code>, what are the parameters and what are the arguments in <code>add(10, 5)</code>?</p>
+<p><strong>Q3:</strong> A function outputs the correct answer on screen, but <code>result = my_func(3)</code> gives <code>None</code>. What is the bug?</p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 33</h1>
-            <h3>Pitfall 1: Relying on a Global Variable Unintentionally</h3>
-<pre data-lang="python"><code># Bug: function reads contacts from global scope
-contacts = {}
-
-def add_contact(name, phone):
-    contacts[name] = phone   # works... but contacts isn&#x27;t a parameter!
-    # If caller passes a different dict, this ignores it</code></pre>
-<pre data-lang="python"><code># Fix: always pass data explicitly
-def add_contact(contacts: dict, name: str, phone: str) -&gt; None:
-    contacts[name] = phone
-    print(f&quot;Added {name}.&quot;)</code></pre>
-<h3>Pitfall 2: Returning None by Mistake</h3>
-<pre data-lang="python"><code># Bug: missing return statement
-def search_contact(contacts, name):
-    if name in contacts:
-        print(contacts[name])  # prints but doesn&#x27;t return!
-    # implicitly returns None
-
-result = search_contact(contacts, &quot;Alice&quot;)
-print(result)   # None — can&#x27;t use it later</code></pre>
-<pre data-lang="python"><code># Fix: return the value
-def search_contact(contacts: dict, name: str) -&gt; str | None:
-    if name in contacts:
-        return contacts[name]
-    return None</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 33</h1>
-            <h3>Extension 1: Normalize Name on Add</h3>
-<pre data-lang="python"><code>def normalize_name(name: str) -&gt; str:
-    &quot;&quot;&quot;Strip whitespace and title-case a name.&quot;&quot;&quot;
-    return name.strip().title()
-
-def add_contact(contacts: dict, name: str, phone: str) -&gt; None:
-    clean_name = normalize_name(name)
-    contacts[clean_name] = phone.strip()
-    print(f&quot;Added {clean_name}.&quot;)</code></pre>
-<h3>Extension 2: Validate Phone Format (Simple)</h3>
-<pre data-lang="python"><code>def is_valid_phone(phone: str) -&gt; bool:
-    &quot;&quot;&quot;Return True if phone is digits only and 7–15 chars.&quot;&quot;&quot;
-    digits_only = phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-    return digits_only.isdigit() and 7 &lt;= len(digits_only) &lt;= 15
-
-# Usage
-phone = input(&quot;Phone: &quot;).strip()
-if is_valid_phone(phone):
-    add_contact(contacts, name, phone)
-else:
-    print(&quot;Invalid phone number — digits only please.&quot;)</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Simple string checks only — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check — Hour 33</h1>
-            <p><strong>Exit Ticket Question:</strong> When should a function return a value instead of printing?</p>
-<p><strong>Model Answer:</strong> &quot;A function should <strong>return</strong> a value when the result needs to be used by the caller — stored in a variable, passed to another function, displayed later, or combined with other values. Use <code>print</code> inside a function only when the sole purpose of the function is to display output and the result will never be needed again. As a general rule, prefer <code>return</code> — it makes functions more flexible and testable.&quot;</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-34-scope-common-function-mistakes-b08dc258" data-slide-number="14">
             <h1>Hour 34: Scope + Common Function Mistakes</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-49dfdc8d" data-slide-number="15">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Explain local vs global scope in Python</li>
-  <li>Avoid unintended reliance on global variables</li>
-  <li>Use default parameters for optional behavior</li>
-  <li>Handle divide-by-zero with a simple <code>if</code> check</li>
+  <li>Explain local scope and identify which variables belong to which scope</li>
+  <li>Avoid bugs by passing data explicitly instead of relying on global variables</li>
+  <li>Diagnose <code>UnboundLocalError</code> caused by variable shadowing</li>
+  <li>Apply default parameters with correct syntax — required params before defaults</li>
+  <li>Recognise the mutable default argument trap with lists and dicts</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>What Is Scope?</h1>
-            <h3>The Rule</h3>
-<p>A <strong>variable&#x27;s scope</strong> is the region of code where it exists and can be used.</p>
-<h3>Local vs Global</h3>
-<pre data-lang="python"><code>greeting = &quot;Hello&quot;       # global — accessible everywhere
-
-def say_hi(name: str) -&gt; None:
-    message = f&quot;{greeting}, {name}!&quot;   # message is LOCAL
+        <section class="slide" id="local-scope-the-function-bubble-fb4e834c" data-slide-number="16">
+            <h1>Local Scope — The Function Bubble</h1>
+            <p>Variables created <strong>inside</strong> a function are <strong>local</strong> — they disappear when the function ends.</p>
+<pre data-lang="python"><code>def make_greeting():
+    message = &quot;Good morning!&quot;   # LOCAL variable
     print(message)
 
-say_hi(&quot;Alice&quot;)      # Hello, Alice!
-print(message)       # NameError: name &#x27;message&#x27; is not defined</code></pre>
-<blockquote>💡 **Local variables live inside the function only.** They are created when the function runs and disappear when it returns.</blockquote>
+make_greeting()     # Good morning!
+print(message)      # NameError: name &quot;message&quot; is not defined</code></pre>
+<blockquote>What happens inside a function **stays** inside — unless you explicitly `return` it.</blockquote>
+<p>Local variables in different functions are completely independent and can share the same name without conflict.</p>
         </section>
 
-        <section class="slide">
-            <h1>Local Scope in Detail</h1>
-            <h3>Every Function Has Its Own &quot;Space&quot;</h3>
-<pre data-lang="python"><code>def compute_area(width: float, height: float) -&gt; float:
-    area = width * height    # &#x27;area&#x27; is local to compute_area
-    return area
+        <section class="slide" id="global-scope-and-why-globals-are-risky-d907265b" data-slide-number="17">
+            <h1>Global Scope and Why Globals Are Risky</h1>
+            <pre data-lang="python"><code>discount_rate = 0.10   # GLOBAL — readable inside any function
 
-def compute_perimeter(width: float, height: float) -&gt; float:
-    perimeter = 2 * (width + height)  # different &#x27;area&#x27; variable in scope
-    return perimeter
+def calculate_price(base_price):
+    return base_price - (base_price * discount_rate)   # reads global
 
-print(compute_area(5, 3))        # 15
-print(compute_perimeter(5, 3))   # 16
-# Neither &#x27;area&#x27; nor &#x27;perimeter&#x27; exists outside their functions</code></pre>
-<h3>The Scope Lookup Order</h3>
-<p>Python looks for a variable in this order:</p>
-<ol>
-  <li><strong>Local</strong> — inside the current function</li>
-  <li><strong>Enclosing</strong> — outer function (if nested — not common yet)</li>
-  <li><strong>Global</strong> — module level</li>
-  <li><strong>Built-in</strong> — Python&#x27;s built-ins like <code>print</code>, <code>len</code></li>
-</ol>
-<blockquote>💡 This is called **LEGB** rule — Local → Enclosing → Global → Built-in.</blockquote>
+print(calculate_price(100))   # 90.0</code></pre>
+<p><span class="check">✓</span> Reading a global is technically allowed.</p>
+<p><span class="cross">✗</span> If <code>discount_rate</code> is changed anywhere in 500 lines, every function is silently affected.</p>
+<p><span class="cross">✗</span> Functions with hidden global dependencies are nearly impossible to test in isolation.</p>
+<blockquote>**Best practice:** pass data in through parameters, return data out through `return`.</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>The Global Variable Trap</h1>
-            <h3>A Subtle Bug</h3>
-<pre data-lang="python"><code># Global list — function reads it silently
-contacts = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;]
+        <section class="slide" id="variable-shadowing-and-unboundlocalerror-bfcd8914" data-slide-number="18">
+            <h1>Variable Shadowing and UnboundLocalError</h1>
+            <pre data-lang="python"><code>score = 0   # global
 
-def show_first():
-    print(contacts[0])   # reads global &#x27;contacts&#x27;
+def add_points(points):
+    score = score + points   # CRASH — UnboundLocalError!
+    return score</code></pre>
+<p><strong>Why it crashes:</strong> Python sees <code>score = ...</code> and marks ALL uses of <code>score</code> in this function as local. Then it tries to read the local <code>score</code> on the right side before it has been assigned.</p>
+<h3>The fix — pass in, return out</h3>
+<pre data-lang="python"><code>def add_points(current_score, points):
+    return current_score + points   # no globals, no surprises
 
-show_first()    # Works... but only with the global!</code></pre>
-<h3>Why This Is a Problem</h3>
-<pre data-lang="python"><code># You want to test with different data
-test_contacts = [&quot;Dave&quot;, &quot;Eve&quot;]
-show_first()   # Still prints &quot;Alice&quot; — ignores test_contacts!</code></pre>
-<h3>The Fix — Pass Data as a Parameter</h3>
-<pre data-lang="python"><code>def show_first(contacts: list) -&gt; None:
-    if contacts:
-        print(contacts[0])
-
-show_first(contacts)        # Works with real data
-show_first(test_contacts)   # Works with test data
-show_first([])              # Safely handles empty list</code></pre>
+score = 0
+score = add_points(score, 50)
+print(score)   # 50</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Bug Caused by Global, Then Fixed</h1>
-            <h3>Watch For:</h3>
-<ul>
-  <li>First version silently reads global list</li>
-  <li>Bug: adding items to wrong list</li>
-  <li>Fix: pass the list explicitly</li>
-</ul>
-<pre data-lang="python"><code># --- Bug Version ---
-inventory = []
+        <section class="slide" id="the-professional-pattern-c6c30b34" data-slide-number="19">
+            <h1>The Professional Pattern</h1>
+            <pre data-lang="python"><code># BAD — global state creates invisible side-effects
+player_health = 100
 
-def add_item(name: str) -&gt; None:
-    inventory.append(name)    # silently mutates global!
+def take_damage(damage):
+    global player_health
+    player_health = player_health - damage   # who changed health? hard to track
 
-add_item(&quot;Widget&quot;)
-add_item(&quot;Gadget&quot;)
-print(inventory)   # [&#x27;Widget&#x27;, &#x27;Gadget&#x27;] — looks fine...
+# GOOD — explicit in, explicit out
+def take_damage(current_health, damage):
+    return current_health - damage
 
-# What if we wanted a DIFFERENT inventory?
-test_inv = []
-add_item(&quot;Test Item&quot;)   # Still modifies global inventory, not test_inv!
-print(test_inv)         # []  ← test_inv was never used</code></pre>
-<pre data-lang="python"><code># --- Fixed Version ---
-def add_item(inventory: list, name: str) -&gt; None:
-    inventory.append(name)
+def heal(current_health, amount):
+    return current_health + amount
 
-production = []
-testing = []
-
-add_item(production, &quot;Widget&quot;)
-add_item(testing, &quot;Test Item&quot;)
-
-print(production)  # [&#x27;Widget&#x27;]
-print(testing)     # [&#x27;Test Item&#x27;]</code></pre>
+player_health = 100
+player_health = take_damage(player_health, 25)   # 75
+player_health = heal(player_health, 10)          # 85</code></pre>
+<p>Every input is visible in the function call. Every output is captured. No hidden dependencies.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="default-parameters-b200a772" data-slide-number="20">
             <h1>Default Parameters</h1>
-            <h3>Making Arguments Optional</h3>
-<pre data-lang="python"><code>def greet(name: str, greeting: str = &quot;Hello&quot;) -&gt; str:
-    &quot;&quot;&quot;Greet someone with an optional custom greeting.&quot;&quot;&quot;
-    return f&quot;{greeting}, {name}!&quot;
+            <pre data-lang="python"><code>def greet(name, greeting=&quot;Hello&quot;):
+    print(f&quot;{greeting}, {name}!&quot;)
 
-print(greet(&quot;Alice&quot;))              # Hello, Alice!
-print(greet(&quot;Bob&quot;, &quot;Good morning&quot;))  # Good morning, Bob!
-print(greet(&quot;Carol&quot;, &quot;Hi&quot;))        # Hi, Carol!</code></pre>
-<h3>Practical Example</h3>
-<pre data-lang="python"><code>def format_price(amount: float, currency: str = &quot;USD&quot;,
-                 decimals: int = 2) -&gt; str:
-    &quot;&quot;&quot;Format a price with optional currency and decimal places.&quot;&quot;&quot;
-    return f&quot;{currency} {amount:.{decimals}f}&quot;
+greet(&quot;Alice&quot;, &quot;Good morning&quot;)   # Good morning, Alice!
+greet(&quot;Bob&quot;)                     # Hello, Bob!  &lt;- uses default
+greet(&quot;Charlie&quot;, greeting=&quot;Hey&quot;) # Hey, Charlie!</code></pre>
+<h3>Critical rule — required parameters FIRST, defaults LAST</h3>
+<pre data-lang="python"><code># WRONG — SyntaxError: non-default argument follows default argument
+# def broken(greeting=&quot;Hello&quot;, name):
+#     ...
 
-print(format_price(9.99))             # USD 9.99
-print(format_price(9.99, &quot;EUR&quot;))      # EUR 9.99
-print(format_price(9.99, &quot;JPY&quot;, 0))  # JPY 10</code></pre>
-<blockquote>⚠️ **Rule:** Default parameters must come **after** required parameters in the function signature.</blockquote>
+# CORRECT
+def greet(name, greeting=&quot;Hello&quot;):
+    ...</code></pre>
+<p>Without this rule Python cannot tell whether <code>greet(&quot;Alice&quot;)</code> fills <code>greeting</code> or <code>name</code>.</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Calculator Functions</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Build a calculator as a set of clean, testable functions, then connect them in a small CLI.</p>
-<p><strong>Requirements:</strong></p>
-<pre data-lang="python"><code>def add(a: float, b: float) -&gt; float:
-    &quot;&quot;&quot;Return a + b.&quot;&quot;&quot;
-    ...
+        <section class="slide" id="mutable-default-argument-trap-596fc06c" data-slide-number="21">
+            <h1>Mutable Default Argument Trap</h1>
+            <pre data-lang="python"><code># DANGEROUS — the list [] is created once when the function is defined
+def append_item(item, my_list=[]):
+    my_list.append(item)
+    return my_list
 
-def subtract(a: float, b: float) -&gt; float:
-    &quot;&quot;&quot;Return a - b.&quot;&quot;&quot;
-    ...
+append_item(&quot;A&quot;)   # [&quot;A&quot;]
+append_item(&quot;B&quot;)   # [&quot;A&quot;, &quot;B&quot;]  &lt;- same list persists across calls!</code></pre>
+<h3>Safe pattern — use `None` as the default sentinel</h3>
+<pre data-lang="python"><code>def append_item(item, my_list=None):
+    if my_list is None:
+        my_list = []           # fresh list every call
+    my_list.append(item)
+    return my_list
 
-def multiply(a: float, b: float) -&gt; float:
-    &quot;&quot;&quot;Return a * b.&quot;&quot;&quot;
-    ...
-
-def divide(a: float, b: float) -&gt; float | None:
-    &quot;&quot;&quot;Return a / b, or None if b is zero.&quot;&quot;&quot;
-    if b == 0:
-        print(&quot;Error: cannot divide by zero.&quot;)
-        return None
-    return a / b</code></pre>
-<blockquote>⚠️ Handle divide-by-zero with a simple `if b == 0` check — exceptions/try-except are NOT introduced here.</blockquote>
+append_item(&quot;A&quot;)   # [&quot;A&quot;]
+append_item(&quot;B&quot;)   # [&quot;B&quot;]  &lt;- independent lists</code></pre>
+<blockquote>Never use a mutable object (`list`, `dict`, `set`) as a default argument value.</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Calculator Functions (continued)</h1>
-            <p><strong>Build the CLI that uses your functions:</strong></p>
-<pre data-lang="python"><code>def main() -&gt; None:
-    print(&quot;Simple Calculator&quot;)
-    print(&quot;Operations: add, subtract, multiply, divide&quot;)
-
-    a = float(input(&quot;Enter first number: &quot;))
-    op = input(&quot;Enter operation: &quot;).strip().lower()
-    b = float(input(&quot;Enter second number: &quot;))
-
-    if op == &quot;add&quot;:
-        result = add(a, b)
-    elif op == &quot;subtract&quot;:
-        result = subtract(a, b)
-    elif op == &quot;multiply&quot;:
-        result = multiply(a, b)
-    elif op == &quot;divide&quot;:
-        result = divide(a, b)
-    else:
-        print(&quot;Unknown operation.&quot;)
-        return
-
-    if result is not None:
-        print(f&quot;Result: {result}&quot;)
-
-main()</code></pre>
-<p><strong>Completion Criteria:</strong></p>
+        <section class="slide" id="lab-calculator-functions-hour-34-97279917" data-slide-number="22">
+            <h1>Lab: Calculator Functions (Hour 34)</h1>
+            <p><strong>Time: 14 minutes</strong></p>
+<h3>Tasks</h3>
+<p>Build four isolated math functions with no global variables:</p>
 <ul>
-  <li>✅ All four functions work and return values</li>
-  <li>✅ No crash on divide by zero (<code>if b == 0</code> guard in <code>divide</code>)</li>
-  <li>✅ CLI calls functions correctly and displays results</li>
+  <li><code>add(num1, num2)</code>, <code>subtract(num1, num2)</code>, <code>multiply(num1, num2=1)</code>, <code>divide(num1, num2)</code></li>
+  <li><code>divide()</code> must <strong>return</strong> <code>&quot;Error: Cannot divide by zero!&quot;</code> when <code>num2 == 0</code> — no crash</li>
+  <li><code>multiply()</code> uses a default so <code>multiply(5)</code> returns <code>5</code></li>
+  <li>A <code>while True</code> main loop reads operation choice, converts input to <code>float</code>, calls the right function, and prints the result</li>
 </ul>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> No <code>global</code> keyword anywhere in the file</p>
+<p><span class="check">✓</span> All four functions use <code>return</code>, not <code>print()</code></p>
+<p><span class="check">✓</span> <code>divide(10, 0)</code> returns the error string — does not crash</p>
+<p><span class="check">✓</span> <code>multiply(7)</code> returns <code>7</code> (default param kicks in)</p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 34</h1>
-            <h3>Pitfall 1: Shadowing Variable Names</h3>
-<pre data-lang="python"><code># Bug: local &#x27;result&#x27; shadows intention, but this is fine...
-# The real trap is shadowing built-in names
-list = [1, 2, 3]     # &#x27;list&#x27; now hides the built-in!
-print(list([4, 5]))  # TypeError — &#x27;list&#x27; is your variable now</code></pre>
-<pre data-lang="python"><code># Fix: never use built-in names as variables
-numbers = [1, 2, 3]   # clear, descriptive name</code></pre>
-<h3>Pitfall 2: Not Returning the Computed Value</h3>
-<pre data-lang="python"><code># Bug: computes the answer but throws it away
-def multiply(a: float, b: float) -&gt; float:
-    product = a * b
-    # Missing return!
-
-result = multiply(4, 5)
-print(result)   # None — not 20!</code></pre>
-<pre data-lang="python"><code># Fix: always return the result
-def multiply(a: float, b: float) -&gt; float:
-    product = a * b
-    return product    # or simply: return a * b</code></pre>
-<blockquote>⚠️ **Speaker note:** Stay in Basics scope — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.</blockquote>
+        <section class="slide" id="common-pitfalls-hour-34-e1649fdb" data-slide-number="23">
+            <h1>Common Pitfalls (Hour 34)</h1>
+            <p><strong>⚠️</strong> <strong>Accessing a local variable from outside</strong> — <code>NameError</code>; fix by returning the value</p>
+<p><strong>⚠️</strong> <strong>UnboundLocalError</strong> — triggered by assigning to a name locally while also trying to read it from global scope; fix by passing as a parameter</p>
+<p><strong>⚠️</strong> <strong>Using <code>global</code> keyword</strong> — almost always a design smell; restructure to pass data in instead</p>
+<p><strong>⚠️</strong> <strong>Default param order violated</strong> — required params must precede defaults or <code>SyntaxError</code> at definition time</p>
+<p><strong>⚠️</strong> <strong>Mutable default (list or dict)</strong> — use <code>None</code> sentinel and create the mutable object inside the function body</p>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions — Hour 34</h1>
-            <h3>Extension: Power and Modulus</h3>
-<pre data-lang="python"><code>def power(base: float, exponent: float) -&gt; float:
-    &quot;&quot;&quot;Return base raised to the power of exponent.&quot;&quot;&quot;
-    return base ** exponent
-
-def modulus(a: int, b: int) -&gt; int | None:
-    &quot;&quot;&quot;Return a mod b, or None if b is zero.&quot;&quot;&quot;
-    if b == 0:
-        print(&quot;Error: modulus by zero undefined.&quot;)
-        return None
-    return a % b
-
-# Test them:
-print(power(2, 10))     # 1024.0
-print(power(9, 0.5))    # 3.0 (square root)
-print(modulus(17, 5))   # 2
-print(modulus(10, 0))   # Error + None</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Simple arithmetic and <code>if</code> checks only — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.</p>
+        <section class="slide" id="quick-check-hour-34-5a775da4" data-slide-number="24">
+            <h1>Quick Check (Hour 34)</h1>
+            <p><strong>Q1:</strong> What prints and why?</p>
+<pre data-lang="python"><code>def double(n):
+    n = n * 2
+x = 5
+double(x)
+print(x)</code></pre>
+<p><strong>Q2:</strong> Why does <code>score = score + points</code> crash with <code>UnboundLocalError</code> when <code>score</code> is a global variable?</p>
+<p><strong>Q3:</strong> Write the correct signature for <code>greet</code> that has a required <code>name</code> and an optional <code>title</code> defaulting to <code>&quot;Ms.&quot;</code>.</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check — Hour 34</h1>
-            <p><strong>Exit Ticket Question:</strong> If you create a variable inside a function, can you use it outside?</p>
-<p><strong>Model Answer:</strong> &quot;No. A variable created inside a function is <strong>local</strong> to that function. It only exists while the function is running and disappears when the function returns. To make a value available outside, you must <code>return</code> it from the function and capture it in a variable at the calling scope. Attempting to access a local variable from outside its function raises a <code>NameError</code>.&quot;</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-35-functions-with-collections-96bcc252" data-slide-number="25">
             <h1>Hour 35: Functions with Collections</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-e055319d" data-slide-number="26">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Pass lists and dictionaries into functions</li>
-  <li>Decide when to mutate a collection in-place vs return a new one</li>
-  <li>Write clear docstrings explaining expectations</li>
-  <li>Avoid accidental mutation bugs</li>
+  <li>Recognise that lists and dicts are passed by reference — the function sees the original, not a copy</li>
+  <li>Distinguish mutating a collection in-place from returning a new one</li>
+  <li>Choose the right pattern for each context using a clear decision guide</li>
+  <li>Write docstrings that declare whether a function mutates or returns (function contracts)</li>
+  <li>Apply the filter pattern to extract matching items into a new list</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Passing Collections to Functions</h1>
-            <h3>Lists Are Passed by Reference</h3>
-<pre data-lang="python"><code>def double_all(numbers: list) -&gt; None:
-    &quot;&quot;&quot;Double every number in the list in-place.&quot;&quot;&quot;
-    for i in range(len(numbers)):
-        numbers[i] = numbers[i] * 2
+        <section class="slide" id="collections-are-passed-by-reference-04d2f5d3" data-slide-number="27">
+            <h1>Collections Are Passed by Reference</h1>
+            <pre data-lang="python"><code>def empty_the_list(my_list):
+    my_list.clear()          # modifies the ORIGINAL — no copy was made
 
-scores = [10, 20, 30]
-double_all(scores)
-print(scores)    # [20, 40, 60] — original was modified!</code></pre>
-<h3>The Key Insight</h3>
-<ul>
-  <li>When you pass a list to a function, <strong>both the caller and the function share the same list object</strong>.</li>
-  <li>Changes made inside the function <strong>affect the original list</strong>.</li>
-  <li>This is called <strong>mutation</strong> — you changed the object in-place.</li>
-</ul>
-<blockquote>💡 This is different from integers and strings, which are **immutable** — you can&#x27;t change them in-place.</blockquote>
-        </section>
+groceries = [&quot;Milk&quot;, &quot;Eggs&quot;, &quot;Bread&quot;]
+print(groceries)             # [&quot;Milk&quot;, &quot;Eggs&quot;, &quot;Bread&quot;]
 
-        <section class="slide">
-            <h1>Mutate In-Place vs Return a New Collection</h1>
-            <h3>Option A — Mutate In-Place (Modify the Original)</h3>
-<pre data-lang="python"><code>def uppercase_names(names: list) -&gt; None:
-    &quot;&quot;&quot;Uppercase all names in the list in-place.&quot;&quot;&quot;
-    for i in range(len(names)):
-        names[i] = names[i].upper()
-
-team = [&quot;alice&quot;, &quot;bob&quot;, &quot;carol&quot;]
-uppercase_names(team)
-print(team)   # [&#x27;ALICE&#x27;, &#x27;BOB&#x27;, &#x27;CAROL&#x27;] — team is changed</code></pre>
-<h3>Option B — Return a New Collection (Leave Original Alone)</h3>
-<pre data-lang="python"><code>def uppercase_names_new(names: list) -&gt; list:
-    &quot;&quot;&quot;Return a new list of uppercased names.&quot;&quot;&quot;
-    result = []
-    for name in names:
-        result.append(name.upper())
-    return result
-
-team = [&quot;alice&quot;, &quot;bob&quot;, &quot;carol&quot;]
-upper_team = uppercase_names_new(team)
-print(team)        # [&#x27;alice&#x27;, &#x27;bob&#x27;, &#x27;carol&#x27;] — unchanged
-print(upper_team)  # [&#x27;ALICE&#x27;, &#x27;BOB&#x27;, &#x27;CAROL&#x27;] — new list</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>When to Choose Which Approach</h1>
-            <h3>Prefer Returning a New Collection When:</h3>
-<ul>
-  <li>You want to keep the original data intact</li>
-  <li>The function should be predictable with no side-effects</li>
-  <li>You plan to test the function in isolation</li>
-  <li>You need both old and new versions at the same time</li>
-</ul>
-<h3>Prefer Mutating In-Place When:</h3>
-<ul>
-  <li>The collection is very large (copying would waste memory)</li>
-  <li>The intent is clearly &quot;update this structure&quot;</li>
-  <li>The function is a &quot;modifier&quot; (e.g., <code>sort()</code> in Python&#x27;s standard library)</li>
-</ul>
-<h3>Document Your Choice — Use a Docstring</h3>
-<pre data-lang="python"><code>def normalize_contacts(contacts: list) -&gt; list:
-    &quot;&quot;&quot;Return a new list of contacts with stripped, title-cased names.
-
-    The original contacts list is NOT modified.
-    &quot;&quot;&quot;
-    result = []
-    for name in contacts:
-        result.append(name.strip().title())
-    return result</code></pre>
-<blockquote>💡 A good docstring answers: **What goes in? What comes out? Is anything modified?**</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Normalize a List of Names</h1>
-            <h3>Watch For:</h3>
-<ul>
-  <li>In-place version modifies the original list</li>
-  <li>New-list version leaves original untouched</li>
-  <li>Print before/after to confirm the difference</li>
-</ul>
-<pre data-lang="python"><code>def normalize_inplace(names: list) -&gt; None:
-    &quot;&quot;&quot;Normalize names in-place: strip whitespace and title-case.&quot;&quot;&quot;
-    for i in range(len(names)):
-        names[i] = names[i].strip().title()
-
-def normalize_new(names: list) -&gt; list:
-    &quot;&quot;&quot;Return a new list of normalized names.&quot;&quot;&quot;
-    result = []
-    for name in names:
-        result.append(name.strip().title())
-    return result
-
-raw_names = [&quot;  alice SMITH &quot;, &quot;BOB jones&quot;, &quot; carol  &quot;]
-
-# --- In-place ---
-copy1 = raw_names.copy()    # copy so we can demo both
-print(&quot;Before:&quot;, copy1)
-normalize_inplace(copy1)
-print(&quot;After (in-place):&quot;, copy1)
-
-# --- New list ---
-print(&quot;\nOriginal:&quot;, raw_names)
-clean = normalize_new(raw_names)
-print(&quot;Original after new-list:&quot;, raw_names)   # unchanged
-print(&quot;New list:&quot;, clean)</code></pre>
-<h3>Expected Output</h3>
-<pre><code>Before: [&#x27;  alice SMITH &#x27;, &#x27;BOB jones&#x27;, &#x27; carol  &#x27;]
-After (in-place): [&#x27;Alice Smith&#x27;, &#x27;Bob Jones&#x27;, &#x27;Carol&#x27;]
-
-Original: [&#x27;  alice SMITH &#x27;, &#x27;BOB jones&#x27;, &#x27; carol  &#x27;]
-Original after new-list: [&#x27;  alice SMITH &#x27;, &#x27;BOB jones&#x27;, &#x27; carol  &#x27;]
-New list: [&#x27;Alice Smith&#x27;, &#x27;Bob Jones&#x27;, &#x27;Carol&#x27;]</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Normalize Contacts</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Write a function that normalizes a list of contact names and demonstrate it.</p>
-<p><strong>Requirements:</strong></p>
-<pre data-lang="python"><code>def normalize_contacts(contacts: list) -&gt; list:
-    &quot;&quot;&quot;Return a new list with each name stripped of whitespace
-    and converted to title case.
-
-    The original contacts list is NOT modified.
-    &quot;&quot;&quot;
-    ...  # your code here</code></pre>
-<p><strong>Sample Data to Use:</strong></p>
-<pre data-lang="python"><code>raw_contacts = [
-    &quot;  alice smith  &quot;,
-    &quot;BOB JONES&quot;,
-    &quot;carol white   &quot;,
-    &quot;  DAVE BROWN&quot;,
-    &quot;eve  &quot;,
-]</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Normalize Contacts (continued)</h1>
-            <p><strong>Print Before and After:</strong></p>
-<pre data-lang="python"><code>print(&quot;=== Before Normalization ===&quot;)
-for name in raw_contacts:
-    print(f&quot;  {repr(name)}&quot;)
-
-cleaned = normalize_contacts(raw_contacts)
-
-print(&quot;\n=== After Normalization ===&quot;)
-for name in cleaned:
-    print(f&quot;  {name}&quot;)
-
-print(&quot;\n=== Original List (should be unchanged) ===&quot;)
-for name in raw_contacts:
-    print(f&quot;  {repr(name)}&quot;)</code></pre>
-<p><strong>Completion Criteria:</strong></p>
-<ul>
-  <li>✅ Names are stripped and title-cased in the returned list</li>
-  <li>✅ Original <code>raw_contacts</code> is NOT modified</li>
-  <li>✅ Learner can explain: &quot;I returned a new list so the original is preserved&quot;</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 35</h1>
-            <h3>Pitfall 1: Reassigning a Local Variable Without Returning</h3>
-<pre data-lang="python"><code># Bug: local rebind — does NOT modify caller&#x27;s list
-def bad_normalize(names: list) -&gt; None:
-    new_list = []
-    for n in names:
-        new_list.append(n.strip().title())
-    names = new_list  # local rebind!
-    # &#x27;names&#x27; now points to a new list — caller&#x27;s list is unchanged
-    # AND nothing is returned!
-
-data = [&quot;  alice &quot;, &quot;BOB&quot;]
-bad_normalize(data)
-print(data)   # [&#x27;  alice &#x27;, &#x27;BOB&#x27;]  ← unchanged and no return!</code></pre>
-<pre data-lang="python"><code># Fix: return the new list (and capture it at the call site)
-def normalize(names: list) -&gt; list:
-    result = []
-    for n in names:
-        result.append(n.strip().title())
-    return result
-
-data = [&quot;  alice &quot;, &quot;BOB&quot;]
-data = normalize(data)   # capture the return value!
-print(data)   # [&#x27;Alice&#x27;, &#x27;Bob&#x27;]</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 35 (continued)</h1>
-            <h3>Pitfall 2: Modifying a List While Iterating Over It</h3>
-<pre data-lang="python"><code># Bug: removing from a list while looping causes skips
-names = [&quot;Alice&quot;, &quot;&quot;, &quot;Bob&quot;, &quot;&quot;, &quot;Carol&quot;]
-
-for name in names:
-    if name == &quot;&quot;:
-        names.remove(name)   # modifies list mid-loop!
-
-print(names)   # [&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;&#x27;, &#x27;Carol&#x27;] ← one blank remains!</code></pre>
-<pre data-lang="python"><code># Fix: build a new list with only the items you want
-names = [&quot;Alice&quot;, &quot;&quot;, &quot;Bob&quot;, &quot;&quot;, &quot;Carol&quot;]
-cleaned = []
-
-for name in names:
-    if name != &quot;&quot;:
-        cleaned.append(name)
-
-print(cleaned)   # [&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Carol&#x27;]</code></pre>
-<blockquote>⚠️ **Never remove items from a list while iterating over it with a for loop.** Build a new list instead.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 35</h1>
-            <h3>Extension: Remove Duplicate Names</h3>
-<pre data-lang="python"><code>def remove_duplicates(contacts: list) -&gt; list:
-    &quot;&quot;&quot;Return a new list with duplicate names removed.
-
-    Case-insensitive: &#x27;Alice&#x27; and &#x27;alice&#x27; are treated as the same.
-    Preserves order of first occurrence.
-    &quot;&quot;&quot;
-    seen = set()
-    result = []
-    for name in contacts:
-        key = name.strip().lower()
-        if key not in seen:
-            seen.add(key)
-            result.append(name.strip().title())
-    return result
-
-contacts = [&quot;Alice&quot;, &quot;alice&quot;, &quot;BOB&quot;, &quot;Alice&quot;, &quot;Carol&quot;, &quot;bob&quot;]
-unique = remove_duplicates(contacts)
-print(unique)   # [&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Carol&#x27;]</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Using a <code>set</code> for lookup is fine at this level — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check — Hour 35</h1>
-            <p><strong>Exit Ticket Question:</strong> What&#x27;s one advantage of returning a new list instead of modifying in place?</p>
-<p><strong>Model Answer:</strong> &quot;Returning a new list preserves the original data unchanged, which means: (1) you can compare before and after, (2) the function has no side-effects — it won&#x27;t accidentally alter data used elsewhere in the program, and (3) the function is easier to test in isolation. This style is sometimes called a <strong>pure function</strong> — same input always produces the same output without modifying anything outside the function.&quot;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 36: Modules — Imports and Creating utils.py</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Import from the Python standard library</li>
-  <li>Use <code>import</code> vs <code>from ... import</code></li>
-  <li>Create your own module and import from it</li>
-  <li>Avoid common import mistakes (name conflicts, wrong directory)</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>What Is a Module?</h1>
-            <h3>The Idea</h3>
-<p>A <strong>module</strong> is just a Python file (<code>.py</code>) that contains functions, variables, or classes that you can reuse in other programs.</p>
-<h3>Two Categories</h3>
+empty_the_list(groceries)
+print(groceries)             # []  &lt;- original was destroyed!</code></pre>
+<blockquote>Python passes a **reference** to the collection. Your function and your main code share the **same** list object.</blockquote>
 <table>
 <thead>
 <tr>
 <th>Type</th>
-<th>Examples</th>
+<th>Behaviour when passed to a function</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Standard library</strong></td>
-<td><code>math</code>, <code>random</code>, <code>datetime</code>, <code>os</code></td>
+<td><code>int</code>, <code>str</code>, <code>float</code>, <code>bool</code></td>
+<td>Effectively pass by value — safe</td>
 </tr>
 <tr>
-<td><strong>Your own modules</strong></td>
-<td><code>utils.py</code>, <code>contacts.py</code>, <code>helpers.py</code></td>
-</tr>
-</tbody>
-</table>
-<h3>Why Use Modules?</h3>
-<ul>
-  <li><strong>Reuse:</strong> write a helper once, import it anywhere</li>
-  <li><strong>Organization:</strong> keep related functions together</li>
-  <li><strong>Testing:</strong> test a module independently of your main program</li>
-</ul>
-<blockquote>💡 When you write `import math`, Python finds `math.py` (or the built-in equivalent) and makes its contents available to your program.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>import vs from ... import</h1>
-            <h3>`import module` — Access Through the Module Name</h3>
-<pre data-lang="python"><code>import math
-
-print(math.pi)           # 3.141592653589793
-print(math.sqrt(16))     # 4.0
-print(math.floor(3.7))   # 3
-print(math.ceil(3.2))    # 4</code></pre>
-<h3>`from module import name` — Use the Name Directly</h3>
-<pre data-lang="python"><code>from math import pi, sqrt
-
-print(pi)         # 3.141592653589793
-print(sqrt(16))   # 4.0
-# No &#x27;math.&#x27; prefix needed</code></pre>
-<h3>Which to Choose?</h3>
-<table>
-<thead>
-<tr>
-<th>Style</th>
-<th>When to use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>import math</code></td>
-<td>Namespace is clearer — <code>math.sqrt</code> tells you where it came from</td>
-</tr>
-<tr>
-<td><code>from math import sqrt</code></td>
-<td>Fine for a few well-known names you&#x27;ll use repeatedly</td>
-</tr>
-<tr>
-<td><code>from math import *</code></td>
-<td><strong>Avoid</strong> — pollutes your namespace unpredictably</td>
+<td><code>list</code>, <code>dict</code>, <code>set</code></td>
+<td>Pass by reference — original can change</td>
 </tr>
 </tbody>
 </table>
         </section>
 
-        <section class="slide">
-            <h1>Standard Library Tour: math, random, datetime</h1>
-            <h3>math — Numeric Utilities</h3>
-<pre data-lang="python"><code>import math
-
-print(math.pi)          # 3.141592653589793
-print(math.sqrt(25))    # 5.0
-print(math.pow(2, 8))   # 256.0
-print(math.floor(4.9))  # 4
-print(math.ceil(4.1))   # 5</code></pre>
-<h3>random — Random Values</h3>
-<pre data-lang="python"><code>import random
-
-print(random.randint(1, 6))       # Simulate a dice roll: 1–6
-print(random.choice([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]))  # Random item from list
-print(random.random())            # Float between 0.0 and 1.0</code></pre>
-<h3>datetime — Dates and Times (Light Touch)</h3>
-<pre data-lang="python"><code>from datetime import datetime, date
-
-today = date.today()
-print(today)                          # e.g., 2025-01-15
-now = datetime.now()
-print(now.strftime(&quot;%Y-%m-%d %H:%M&quot;)) # e.g., 2025-01-15 09:30</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Creating Your Own Module</h1>
-            <h3>Step 1 — Write utils.py</h3>
-<pre data-lang="python"><code># utils.py  (put this in the same folder as your main program)
-
-def safe_int(prompt: str) -&gt; int:
-    &quot;&quot;&quot;Prompt the user until a valid integer is entered.&quot;&quot;&quot;
-    while True:
-        raw = input(prompt).strip()
-        if raw.lstrip(&quot;-&quot;).isdigit():
-            return int(raw)
-        print(&quot;Please enter a whole number.&quot;)
-
-def format_money(value: float, currency: str = &quot;USD&quot;) -&gt; str:
-    &quot;&quot;&quot;Return a formatted money string, e.g. &#x27;USD 12.50&#x27;.&quot;&quot;&quot;
-    return f&quot;{currency} {value:.2f}&quot;</code></pre>
-<h3>Step 2 — Import in main.py</h3>
-<pre data-lang="python"><code># main.py  (same folder as utils.py)
-from utils import safe_int, format_money
-
-price = safe_int(&quot;Enter price in cents: &quot;)
-dollars = price / 100
-print(format_money(dollars))</code></pre>
-<blockquote>⚠️ **Do NOT name your file `random.py`, `math.py`, `json.py`, or any other standard library name.** Python finds YOUR file first, breaking the built-in import.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Create utils.py and Import Into main.py</h1>
-            <h3>Watch For:</h3>
-<ul>
-  <li>File structure — both files in the same directory</li>
-  <li>Running <code>main.py</code> (not <code>utils.py</code>) from the project root</li>
-  <li>What happens if you run from the wrong directory</li>
-</ul>
-<pre><code>project/
-├── main.py
-└── utils.py</code></pre>
-<pre data-lang="python"><code># utils.py
-def safe_int(prompt: str) -&gt; int:
-    &quot;&quot;&quot;Prompt until a valid integer is entered.&quot;&quot;&quot;
-    while True:
-        raw = input(prompt).strip()
-        if raw.lstrip(&quot;-&quot;).isdigit():
-            return int(raw)
-        print(&quot;Please enter a whole number.&quot;)
-
-def format_money(value: float, currency: str = &quot;USD&quot;) -&gt; str:
-    &quot;&quot;&quot;Return formatted money string.&quot;&quot;&quot;
-    return f&quot;{currency} {value:.2f}&quot;</code></pre>
-<pre data-lang="python"><code># main.py
-from utils import safe_int, format_money
-
-amount = safe_int(&quot;Enter amount in cents: &quot;)
-print(format_money(amount / 100))</code></pre>
-<h3>Expected Interaction</h3>
-<pre><code>Enter amount in cents: abc
-Please enter a whole number.
-Enter amount in cents: 1499
-USD 14.99</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Common Import Errors and Fixes</h1>
-            <h3>Error 1: Running the Wrong File as Main</h3>
-<pre><code># Wrong: running utils.py directly — there&#x27;s no main logic there
-$ python utils.py
-# No output or unexpected behavior
-
-# Fix: always run main.py
-$ python main.py</code></pre>
-<h3>Error 2: Filename Mismatch</h3>
-<pre data-lang="bash"><code># Project files:
-#   project/
-#     main.py
-#     helpers.py    # but in main.py you wrote:
-#
-# In main.py:
-#     import utils   # ModuleNotFoundError: No module named &#x27;utils&#x27;</code></pre>
-<pre data-lang="bash"><code># Fix option 1: rename helpers.py to utils.py
-$ mv helpers.py utils.py
-
-# Fix option 2: update the import in main.py
-# import helpers</code></pre>
-<h3>Error 3: Module Name Conflicts</h3>
-<pre data-lang="python"><code># Wrong: you named your file &#x27;random.py&#x27; then tried:
-import random
-random.randint(1, 6)   # AttributeError — Python found YOUR random.py!</code></pre>
-<pre data-lang="python"><code># Fix: rename your file (e.g., helpers.py, utils.py)
-# Never use names like: random.py, math.py, json.py, os.py, pathlib.py</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Create a utils Module</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Build a reusable <code>utils.py</code> module and use its helpers inside an existing program.</p>
-<p><strong>Step 1 — Create <code>utils.py</code> with these two functions:</strong></p>
-<pre data-lang="python"><code># utils.py
-
-def safe_int(prompt: str) -&gt; int:
-    &quot;&quot;&quot;Keep prompting until the user enters a valid integer.
-    Returns the integer value.&quot;&quot;&quot;
-    ...  # your code here
-
-def format_money(value: float, currency: str = &quot;USD&quot;) -&gt; str:
-    &quot;&quot;&quot;Return a formatted money string.
-    Example: format_money(9.5) → &#x27;USD 9.50&#x27;&quot;&quot;&quot;
-    ...  # your code here</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Create a utils Module (continued)</h1>
-            <p><strong>Step 2 — Use them in a tip calculator or to-do manager:</strong></p>
-<pre data-lang="python"><code># main.py (Tip Calculator example)
-from utils import safe_int, format_money
-
-def calculate_tip(subtotal: float, tip_percent: int) -&gt; float:
-    &quot;&quot;&quot;Return the tip amount.&quot;&quot;&quot;
-    return subtotal * (tip_percent / 100)
-
-def main() -&gt; None:
-    print(&quot;=== Tip Calculator ===&quot;)
-    cents = safe_int(&quot;Enter bill amount in cents: &quot;)
-    subtotal = cents / 100
-    tip_pct = safe_int(&quot;Enter tip percentage (e.g. 15): &quot;)
-
-    tip = calculate_tip(subtotal, tip_pct)
-    total = subtotal + tip
-
-    print(f&quot;Subtotal: {format_money(subtotal)}&quot;)
-    print(f&quot;Tip ({tip_pct}%): {format_money(tip)}&quot;)
-    print(f&quot;Total:    {format_money(total)}&quot;)
-
-main()</code></pre>
-<p><strong>Completion Criteria:</strong></p>
-<ul>
-  <li>✅ <code>utils.py</code> exists and imports correctly into <code>main.py</code></li>
-  <li>✅ <code>safe_int</code> rejects non-numeric input and loops until valid</li>
-  <li>✅ <code>format_money</code> produces correctly formatted output</li>
-  <li>✅ Both helpers are called <strong>at least twice</strong> in the program</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 36</h1>
-            <h3>Pitfall 1: File Named After a Standard Library Module</h3>
-<pre data-lang="python"><code># Bug: you created &#x27;random.py&#x27; in your project folder
-# Then at the top of main.py you wrote:
-import random
-print(random.randint(1, 6))
-# AttributeError: module &#x27;random&#x27; has no attribute &#x27;randint&#x27;
-# Python found YOUR random.py, which has no randint!</code></pre>
-<pre data-lang="python"><code># Fix: rename your file
-# ✅ Good names: utils.py, helpers.py, my_tools.py, contact_utils.py
-# ❌ Bad names: random.py, math.py, os.py, json.py, pathlib.py, string.py</code></pre>
-<h3>Pitfall 2: Running utils.py Instead of main.py</h3>
-<pre data-lang="bash"><code># Bug: running the module file directly
-$ python utils.py   # nothing happens — no main() call here
-
-# Fix: run the file that contains your main logic
-$ python main.py</code></pre>
-<blockquote>⚠️ **Speaker note:** Stay in Basics scope — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 36</h1>
-            <h3>Extension: Add a menu_choice Helper</h3>
-<pre data-lang="python"><code># Add to utils.py
-
-def menu_choice(prompt: str, options: list) -&gt; str:
-    &quot;&quot;&quot;Show a menu and return the user&#x27;s valid choice.
-
-    Example:
-        choice = menu_choice(&quot;Select:&quot;, [&quot;add&quot;, &quot;list&quot;, &quot;quit&quot;])
+        <section class="slide" id="pattern-1-mutate-in-place-e9e17286" data-slide-number="28">
+            <h1>Pattern 1: Mutate In-Place</h1>
+            <p>Directly modify the list your function received.</p>
+<pre data-lang="python"><code>def clean_names_inplace(name_list):
     &quot;&quot;&quot;
-    while True:
-        print(prompt)
-        for i, option in enumerate(options, start=1):
-            print(f&quot;  {i}. {option}&quot;)
-        raw = input(&quot;Enter choice number: &quot;).strip()
-        if raw.isdigit():
-            index = int(raw) - 1
-            if 0 &lt;= index &lt; len(options):
-                return options[index]
-        print(f&quot;Please enter a number between 1 and {len(options)}.&quot;)
+    MUTATES the list by cleaning all names in-place.
+    The original list is modified. No return value.
+    &quot;&quot;&quot;
+    for i in range(len(name_list)):
+        name_list[i] = name_list[i].strip().title()
 
-# Usage in main.py
-from utils import safe_int, format_money, menu_choice
-
-action = menu_choice(&quot;What would you like to do?&quot;,
-                     [&quot;add contact&quot;, &quot;list contacts&quot;, &quot;quit&quot;])
-print(f&quot;You chose: {action}&quot;)</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Simple <code>while</code> loop with integer parsing — no try/except, no decorators, no lambda, no list comprehensions, no file I/O.</p>
+raw = [&quot;  alice smith&quot;, &quot;BOB  JONES&quot;, &quot; cHarLiE bRoWn &quot;]
+clean_names_inplace(raw)
+print(raw)   # [&quot;Alice Smith&quot;, &quot;Bob Jones&quot;, &quot;Charlie Brown&quot;]</code></pre>
+<p><strong>When to use:</strong> sorting existing data, memory-critical operations (millions of items), explicit destructive intent documented in the docstring.</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check — Hour 36</h1>
-            <p><strong>Exit Ticket Question:</strong> What&#x27;s the difference between <code>import math</code> and <code>from math import sqrt</code>?</p>
-<p><strong>Model Answer:</strong> &quot;Both load the <code>math</code> module into memory. The difference is how you access its contents. With <code>import math</code>, you access functions through the module name: <code>math.sqrt(16)</code>. With <code>from math import sqrt</code>, you import the name <code>sqrt</code> directly into your namespace and call it as just <code>sqrt(16)</code> — no prefix needed. The first style is generally preferred because it makes the origin of the function clear. Use <code>from ... import</code> when you have a few frequently-used names and the source is obvious from context.&quot;</p>
+        <section class="slide" id="pattern-2-return-a-new-collection-1905ef02" data-slide-number="29">
+            <h1>Pattern 2: Return a New Collection</h1>
+            <p>Build and return a fresh list — leave the original untouched.</p>
+<pre data-lang="python"><code>def clean_names_return_new(name_list):
+    &quot;&quot;&quot;
+    Returns a NEW list of cleaned, title-cased names.
+    Original list is never modified.
+    &quot;&quot;&quot;
+    cleaned = []
+    for name in name_list:
+        cleaned.append(name.strip().title())
+    return cleaned
+
+raw = [&quot;  alice smith&quot;, &quot;BOB  JONES&quot;, &quot; cHarLiE bRoWn &quot;]
+result = clean_names_return_new(raw)
+
+print(result)   # [&quot;Alice Smith&quot;, &quot;Bob Jones&quot;, &quot;Charlie Brown&quot;]
+print(raw)      # [&quot;  alice smith&quot;, &quot;BOB  JONES&quot;, &quot; cHarLiE bRoWn &quot;] &lt;- unchanged</code></pre>
+<p><strong>When to use:</strong> transforming or filtering data, keeping original as a reference, any time safety matters more than memory.</p>
         </section>
 
-        <section class="slide">
-            <h1>Session 9 Recap</h1>
-            <h3>What We Covered Today</h3>
+        <section class="slide" id="decision-guide-function-contracts-50c9b3d4" data-slide-number="30">
+            <h1>Decision Guide + Function Contracts</h1>
+            <h3>When to use each pattern</h3>
 <table>
 <thead>
 <tr>
-<th>Hour</th>
-<th>Topic</th>
-<th>Key Takeaway</th>
+<th>Situation</th>
+<th>Recommended pattern</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>33</td>
-<td>Functions — def, parameters, return</td>
-<td>Use <code>return</code> to send values back; avoid globals</td>
+<td>Transform or filter data</td>
+<td>Return new collection</td>
 </tr>
 <tr>
-<td>34</td>
-<td>Scope + common mistakes</td>
-<td>Local variables are local; pass data in via parameters</td>
+<td>Sort or shuffle existing list</td>
+<td>Mutate in-place</td>
 </tr>
 <tr>
-<td>35</td>
-<td>Functions with collections</td>
-<td>Choose in-place vs new list deliberately; document it</td>
+<td>Keep original as a reference</td>
+<td>Return new collection</td>
 </tr>
 <tr>
-<td>36</td>
-<td>Modules — imports and utils.py</td>
-<td>One module = one responsibility; don&#x27;t shadow stdlib names</td>
+<td>Memory critical (millions of items)</td>
+<td>Mutate in-place</td>
+</tr>
+<tr>
+<td>Default choice for beginners</td>
+<td><strong>Return new collection</strong></td>
 </tr>
 </tbody>
 </table>
-        </section>
-
-        <section class="slide">
-            <h1>Session 9 Key Concepts</h1>
-            <h3>The Four Big Ideas</h3>
-<p><strong>1. Functions are for reuse AND clarity</strong></p>
-<p>Write a function when you&#x27;d otherwise copy-paste logic — or when naming the logic makes code easier to read.</p>
-<p><strong>2. Return values, don&#x27;t just print</strong></p>
-<p><code>print</code> is for display. <code>return</code> is for sending data back to the caller. Prefer <code>return</code> — it makes functions more flexible and testable.</p>
-<p><strong>3. Scope: local variables stay local</strong></p>
-<p>Pass data in through parameters. Avoid silently relying on globals — it makes code hard to test and debug.</p>
-<p><strong>4. Modules organize and enable reuse</strong></p>
-<p>Split related helpers into their own <code>.py</code> file. <code>import</code> them where needed. Never name your file after a standard library module.</p>
-        </section>
-
-        <section class="slide">
-            <h1>Session 9 Common Patterns Reference</h1>
-            <h3>Function That Returns a Value</h3>
-<pre data-lang="python"><code>def calculate_discount(price: float, percent: int) -&gt; float:
-    &quot;&quot;&quot;Return the discounted price.&quot;&quot;&quot;
-    return price * (1 - percent / 100)
-
-sale_price = calculate_discount(100.0, 20)
-print(f&quot;Sale price: ${sale_price:.2f}&quot;)   # Sale price: $80.00</code></pre>
-<h3>Function That Takes and Returns a Collection</h3>
-<pre data-lang="python"><code>def filter_short_names(names: list, max_len: int = 5) -&gt; list:
-    &quot;&quot;&quot;Return a new list of names shorter than max_len characters.&quot;&quot;&quot;
+<h3>Docstrings make the contract explicit</h3>
+<pre data-lang="python"><code>def remove_empty_strings(my_list):
+    &quot;&quot;&quot;
+    Returns a NEW list with all empty strings removed.
+    Does NOT modify the original list.
+    &quot;&quot;&quot;
     result = []
-    for name in names:
-        if len(name) &lt;= max_len:
-            result.append(name)
-    return result
-
-short = filter_short_names([&quot;Alice&quot;, &quot;Bob&quot;, &quot;Christopher&quot;, &quot;Eve&quot;])
-print(short)   # [&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Eve&#x27;]</code></pre>
-<h3>Import Pattern</h3>
-<pre data-lang="python"><code># Standard library
-import math
-from datetime import date
-
-# Your own module
-from utils import safe_int, format_money</code></pre>
+    for item in my_list:
+        if item != &quot;&quot;:
+            result.append(item)
+    return result</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Looking Ahead — Day 10</h1>
-            <h3>Next Session Builds On Today</h3>
-<p><strong>Hour 37: String Methods Deep Dive</strong></p>
-<ul>
-  <li><code>split()</code>, <code>join()</code>, <code>strip()</code>, <code>replace()</code>, <code>find()</code></li>
-  <li>String cleaning pipelines using functions from today</li>
+        <section class="slide" id="demo-filtering-a-collection-c1c33757" data-slide-number="31">
+            <h1>Demo: Filtering a Collection</h1>
+            <pre data-lang="python"><code>scores = [45, 87, 92, 65, 78, 91, 55, 88]
+
+def get_passing_scores(score_list):
+    &quot;&quot;&quot;
+    Returns a NEW list containing only scores &gt;= 70.
+    Original list is not modified.
+    &quot;&quot;&quot;
+    passing = []
+    for score in score_list:
+        if score &gt;= 70:
+            passing.append(score)
+    return passing
+
+print(&quot;All scores:&quot;, scores)
+result = get_passing_scores(scores)
+print(&quot;Passing scores:&quot;, result)
+# All scores:    [45, 87, 92, 65, 78, 91, 55, 88]
+# Passing scores: [87, 92, 78, 91, 88]</code></pre>
+<blockquote>Core pattern: empty list → loop → conditional append → return new list. You will use this hundreds of times.</blockquote>
+        </section>
+
+        <section class="slide" id="lab-normalize-contacts-hour-35-98308ea2" data-slide-number="32">
+            <h1>Lab: Normalize Contacts (Hour 35)</h1>
+            <p><strong>Time: 25 minutes</strong></p>
+<h3>Task</h3>
+<p>Write <code>normalize_contacts(contacts)</code> that cleans a list of messy contact names:</p>
+<ol>
+  <li>Strip leading and trailing whitespace from each name</li>
+  <li>Convert each name to title case</li>
+  <li>Return a new list (or mutate in-place — declare your choice in the docstring)</li>
+</ol>
+<pre data-lang="python"><code>raw = [&quot;  sarah jones &quot;, &quot;MARK smith&quot;, &quot; tina turner  &quot;]
+# Expected: [&quot;Sarah Jones&quot;, &quot;Mark Smith&quot;, &quot;Tina Turner&quot;]</code></pre>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Function has a docstring that states whether it mutates or returns</p>
+<p><span class="check">✓</span> Output matches the expected result exactly</p>
+<p><span class="check">✓</span> No extra whitespace in any name</p>
+<p><span class="check">✓</span> Stretch: test on a second list to confirm general correctness</p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-35-747cb825" data-slide-number="33">
+            <h1>Common Pitfalls (Hour 35)</h1>
+            <p><strong>⚠️</strong> <strong>Forgetting to capture the return value</strong> — <code>normalize(names)</code> does nothing visible; you need <code>cleaned = normalize(names)</code></p>
+<p><strong>⚠️</strong> <strong>Loop variable reassignment</strong> — <code>for name in contacts: name = name.strip()</code> reassigns the loop variable, NOT the list item; use <code>contacts[i] = ...</code> or build a new list</p>
+<p><strong>⚠️</strong> <strong>Assuming a copy was made</strong> — calling <code>.clear()</code> or <code>.append()</code> inside a function always modifies the original list</p>
+<p><strong>⚠️</strong> <strong>Skipping the docstring</strong> — without a mutation statement, future readers cannot tell whether the original data is safe</p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-35-29f4794f" data-slide-number="34">
+            <h1>Quick Check (Hour 35)</h1>
+            <p><strong>Q1:</strong> After this runs, what does <code>scores</code> contain? Why?</p>
+<pre data-lang="python"><code>def double_all(lst):
+    for i in range(len(lst)):
+        lst[i] = lst[i] * 2
+
+scores = [1, 2, 3]
+double_all(scores)
+print(scores)</code></pre>
+<p><strong>Q2:</strong> What is wrong with this mutation attempt?</p>
+<pre data-lang="python"><code>for name in contacts:
+    name = name.strip().title()</code></pre>
+<p><strong>Q3:</strong> You need <code>filter_even(nums)</code> to return even numbers without changing the original. Which pattern should you use?</p>
+        </section>
+
+        <section class="slide" id="hour-36-modules-imports-and-creating-utils-py-f0c9b26a" data-slide-number="35">
+            <h1>Hour 36: Modules — Imports and Creating utils.py</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-7499fd6e" data-slide-number="36">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Import from the standard library using <code>import</code>, <code>from ... import</code>, and <code>as</code> alias forms</li>
+  <li>Explain the <code>__name__</code> variable and how it controls code execution on import vs. direct run</li>
+  <li>Create a custom <code>utils.py</code> module with focused, reusable functions</li>
+  <li>Import from a custom module using correct file organisation</li>
+  <li>Troubleshoot common import errors — naming conflicts, path issues, circular imports</li>
 </ul>
-<p><strong>Hour 38: String Formatting + f-strings</strong></p>
+        </section>
+
+        <section class="slide" id="three-import-forms-79cd3642" data-slide-number="37">
+            <h1>Three Import Forms</h1>
+            <h3>Form 1 — Full module import</h3>
+<pre data-lang="python"><code>import math
+import random
+
+result = math.sqrt(25)          # clear: sqrt comes from math
+value = random.randint(1, 10)   # clear: randint comes from random</code></pre>
+<h3>Form 2 — Targeted import</h3>
+<pre data-lang="python"><code>from math import sqrt, pi
+from random import choice
+
+result = sqrt(25)               # concise; source less obvious</code></pre>
+<h3>Form 3 — Aliased import</h3>
+<pre data-lang="python"><code>import math as m
+import datetime as dt
+
+area = m.pi * m.sqrt(radius)
+now = dt.datetime.now()</code></pre>
+<p>Use Form 1 for clarity; Form 2 for frequent focused calls; Form 3 for long module names.</p>
+        </section>
+
+        <section class="slide" id="the-name-special-variable-5563e57d" data-slide-number="38">
+            <h1>The __name__ Special Variable</h1>
+            <p>Every Python file has <code>__name__</code>. Its value depends on <strong>how</strong> the file is executed.</p>
+<table>
+<thead>
+<tr>
+<th>Execution method</th>
+<th>Value of <code>__name__</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run directly (<code>python utils.py</code>)</td>
+<td><code>&quot;__main__&quot;</code></td>
+</tr>
+<tr>
+<td>Imported (<code>import utils</code>)</td>
+<td><code>&quot;utils&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Making a file work as both a script and an importable module</h3>
+<pre data-lang="python"><code>def add(a, b):
+    return a + b
+
+def multiply(a, b):
+    return a * b
+
+if __name__ == &quot;__main__&quot;:
+    # Only runs when the file is executed directly
+    # Skipped when the file is imported
+    print(f&quot;add(3, 5) = {add(3, 5)}&quot;)
+    print(f&quot;multiply(4, 7) = {multiply(4, 7)}&quot;)</code></pre>
+        </section>
+
+        <section class="slide" id="naming-best-practices-file-organisation-74f69610" data-slide-number="39">
+            <h1>Naming Best Practices + File Organisation</h1>
+            <h3>Avoid shadowing the standard library</h3>
+<pre data-lang="python"><code># If your file is named random.py in the project folder:
+import random
+random.randint(1, 10)   # AttributeError — your file has no randint!
+# Python finds YOUR random.py before the stdlib random module</code></pre>
+<h3>Safe naming conventions</h3>
 <ul>
-  <li>Format specs: <code>{value:.2f}</code>, <code>{value:&gt;10}</code>, <code>{value:,}</code></li>
-  <li>Building formatted reports</li>
+  <li>✅ <code>utils.py</code>, <code>math_helpers.py</code>, <code>validators.py</code>, <code>formatters.py</code></li>
+  <li>❌ <code>random.py</code>, <code>string.py</code>, <code>math.py</code> — shadow stdlib modules</li>
 </ul>
-<p><strong>Hour 39: Working With Files — Reading</strong></p>
+<h3>Standard layout for the Basics course</h3>
+<pre><code>project_folder/
+├── main.py      &lt;- user interaction and control flow (orchestrates)
+└── utils.py     &lt;- reusable helper functions (provides tools)</code></pre>
+<p><code>main.py</code> calls <code>utils.py</code>. <code>utils.py</code> never imports <code>main.py</code>.</p>
+        </section>
+
+        <section class="slide" id="demo-standard-library-imports-13c6b42e" data-slide-number="40">
+            <h1>Demo: Standard Library Imports</h1>
+            <pre data-lang="python"><code>import math
+import random
+from datetime import datetime
+from random import choice
+
+# math module
+print(math.sqrt(25))          # 5.0
+print(math.pi)                # 3.14159...
+print(math.ceil(3.2))         # 4
+
+# random module
+nums = [1, 2, 3, 4, 5]
+print(random.choice(nums))    # random item
+print(random.randint(1, 10))  # random int
+
+# datetime
+now = datetime.now()
+print(f&quot;Year: {now.year}, Month: {now.month}&quot;)
+
+# from-import form (no prefix required)
+selected = choice([&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;])
+print(selected)</code></pre>
+        </section>
+
+        <section class="slide" id="demo-creating-a-custom-module-e175ae0e" data-slide-number="41">
+            <h1>Demo: Creating a Custom Module</h1>
+            <h3>math_helpers.py</h3>
+<pre data-lang="python"><code>def add(a, b):
+    &quot;&quot;&quot;Add two numbers.&quot;&quot;&quot;
+    return a + b
+
+def power(base, exponent):
+    &quot;&quot;&quot;Raise base to exponent.&quot;&quot;&quot;
+    return base ** exponent
+
+if __name__ == &quot;__main__&quot;:
+    print(f&quot;add(3, 5) = {add(3, 5)}&quot;)
+    print(f&quot;power(2, 8) = {power(2, 8)}&quot;)</code></pre>
+<h3>use_math_helpers.py (same folder)</h3>
+<pre data-lang="python"><code>from math_helpers import add, power
+
+print(f&quot;add(10, 20) = {add(10, 20)}&quot;)    # 30
+print(f&quot;power(3, 4) = {power(3, 4)}&quot;)   # 81</code></pre>
+<p>Running <code>math_helpers.py</code> directly shows the test output. Importing it skips the <code>__name__</code> block — only the functions are available.</p>
+        </section>
+
+        <section class="slide" id="lab-build-utils-py-hour-36-25b97d03" data-slide-number="42">
+            <h1>Lab: Build utils.py (Hour 36)</h1>
+            <p><strong>Time: 25 minutes — 4 checkpoints</strong></p>
+<p><strong>Checkpoint 1 (5 min):</strong> Create <code>utils.py</code> and <code>main.py</code> in the same folder; add a module docstring to each file</p>
+<p><strong>Checkpoint 2 (8 min):</strong> Implement <code>safe_int(prompt)</code> in <code>utils.py</code></p>
+<pre data-lang="python"><code>def safe_int(prompt):
+    &quot;&quot;&quot;Loops until the user provides a valid integer.&quot;&quot;&quot;
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print(&quot;   ERROR: Please enter an integer.&quot;)</code></pre>
+<p><strong>Checkpoint 3 (8 min):</strong> Implement <code>format_money(value)</code> in <code>utils.py</code></p>
+<pre data-lang="python"><code>def format_money(value):
+    &quot;&quot;&quot;Returns value formatted as USD currency string.&quot;&quot;&quot;
+    return f&quot;${value:,.2f}&quot;</code></pre>
+<p><strong>Checkpoint 4 (4 min):</strong> Add <code>if __name__ == &quot;__main__&quot;:</code> guard to <code>utils.py</code>; import and use both functions in <code>main.py</code></p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-36-6c76d80f" data-slide-number="43">
+            <h1>Common Pitfalls (Hour 36)</h1>
+            <p><strong>⚠️</strong> <strong>Naming your file after a stdlib module</strong> — <code>random.py</code> in your project shadows <code>import random</code>; Python finds your file first</p>
+<p><strong>⚠️</strong> <strong>ImportError: cannot import name</strong> — the function does not exist yet in <code>utils.py</code>; implement it first, then re-run</p>
+<p><strong>⚠️</strong> <strong>No output when running utils.py directly</strong> — you need a <code>if __name__ == &quot;__main__&quot;:</code> block with test calls</p>
+<p><strong>⚠️</strong> <strong>Circular import</strong> — <code>main.py</code> imports <code>utils.py</code> and <code>utils.py</code> imports <code>main.py</code>; keep <code>utils.py</code> self-contained</p>
+<p><strong>⚠️</strong> <strong>Files in different folders</strong> — both <code>main.py</code> and <code>utils.py</code> must be in the same directory, otherwise <code>ModuleNotFoundError</code></p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-36-7f5a525a" data-slide-number="44">
+            <h1>Quick Check (Hour 36)</h1>
+            <p><strong>Q1:</strong> Write one example of each import form: <code>import</code>, <code>from ... import</code>, and <code>import ... as</code>.</p>
+<p><strong>Q2:</strong> A student creates <code>math.py</code> in their project folder and then gets <code>AttributeError: module has no attribute sqrt</code>. What went wrong?</p>
+<p><strong>Q3:</strong> What is <code>__name__</code> equal to when a Python file is run directly? What is it equal to when the same file is imported?</p>
+        </section>
+
+        <section class="slide" id="session-9-wrap-up-e64d1afc" data-slide-number="45">
+            <h1>Session 9 Wrap-Up</h1>
+            
+        </section>
+
+        <section class="slide" id="what-we-covered-today-1c121d6e" data-slide-number="46">
+            <h1>What We Covered Today</h1>
+            <h3>Hour 33: Functions — def, parameters, return</h3>
 <ul>
-  <li><code>open()</code>, <code>with</code> statement, reading lines</li>
-  <li>Process file data using the functions you wrote today</li>
+  <li><code>def</code>, parameters vs. arguments, <code>return</code> vs. <code>print()</code></li>
+  <li>Refactoring repeated code into clean, testable functions</li>
 </ul>
-<p><strong>Hour 40: Working With Files — Writing</strong></p>
+<h3>Hour 34: Scope + Common Mistakes</h3>
 <ul>
-  <li>Writing and appending to files</li>
-  <li>Save and load contact data to disk</li>
+  <li>Local scope isolates variables; globals create hidden bugs</li>
+  <li>Variable shadowing and <code>UnboundLocalError</code>; default parameters; mutable default trap</li>
 </ul>
-<blockquote>💡 **Homework suggestion:** Add a third helper to your `utils.py` — a `menu_choice(prompt, options)` function that displays a numbered menu and returns the chosen option. You&#x27;ll use it in Day 10.</blockquote>
+<h3>Hour 35: Functions with Collections</h3>
+<ul>
+  <li>Lists and dicts pass by reference — mutation is real and immediate</li>
+  <li>Mutate in-place vs. return new collection; docstring contracts declare intent</li>
+</ul>
+<h3>Hour 36: Modules — Imports and utils.py</h3>
+<ul>
+  <li>Three import forms; <code>__name__</code> guard for dual-purpose files</li>
+  <li>Safe naming, <code>main.py</code> + <code>utils.py</code> layout, import troubleshooting</li>
+</ul>
+        </section>
+
+        <section class="slide" id="scope-guardrail-reminder-a37773f9" data-slide-number="47">
+            <h1>Scope Guardrail Reminder</h1>
+            <h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> <code>def</code>, parameters, <code>return</code> — core function mechanics</p>
+<p><span class="check">✓</span> Local and global scope — pass data in, return data out</p>
+<p><span class="check">✓</span> Default parameters with scalar defaults (<code>None</code>, <code>0</code>, <code>&quot;&quot;</code>)</p>
+<p><span class="check">✓</span> <code>import</code>, <code>from ... import</code>, <code>import ... as</code> — three standard forms</p>
+<p><span class="check">✓</span> Single-file custom modules (<code>utils.py</code>) with <code>if __name__ == &quot;__main__&quot;:</code></p>
+<h3>Not Yet (Advanced Topics)</h3>
+<p><span class="cross">✗</span> <code><em>args</code> and <code></em>*kwargs</code> — variadic arguments</p>
+<p><span class="cross">✗</span> Lambda functions</p>
+<p><span class="cross">✗</span> Decorators</p>
+<p><span class="cross">✗</span> Closures and nested function factories</p>
+<p><span class="cross">✗</span> Packages (<code>__init__.py</code>) and relative imports</p>
+<p><span class="cross">✗</span> List comprehensions as function return values</p>
         </section>
     </div>
     
@@ -1675,7 +1208,11 @@ from utils import safe_int, format_money</code></pre>
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1748,17 +1285,24 @@ from utils import safe_int, format_money</code></pre>
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

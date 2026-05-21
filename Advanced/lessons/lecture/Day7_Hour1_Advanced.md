@@ -1,5 +1,7 @@
 # Day 7, Hour 1: From Objects to Tables — Schema Thinking + the Repository Idea (Course Hour 25)
 
+[Instructor slide change: page=6; title=Hour 25: Schema Thinking + Repository Idea]
+
 ## Instructor Notes
 
 - **Course:** Python Programming (Advanced)
@@ -12,6 +14,8 @@
 > **Instructor note:** This document is intentionally written as a read-aloud teaching guide. Your job this hour is not to turn learners into database administrators and not to jump ahead into ORM tooling. Keep the focus on a practical bridge: we already know how to model business concepts as Python objects, and now we need a reliable way to store those objects in a relational database. Emphasize schema thinking, stable IDs, the shape of CRUD operations, and the value of a repository as a boundary between business logic and SQL details. Learners should leave with a schema draft and a clean repository interface, even if the concrete SQLite implementation comes in the next hour.
 
 ---
+
+[Instructor slide change: page=7; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -472,6 +476,8 @@ The runbook warns us specifically about trying to store nested objects without a
 
 ---
 
+[Instructor slide change: page=11; title=Lab: Design Schema + Interface]
+
 ## 10) Guided Practice: Schema Draft + Repository Contract (~10 minutes)
 
 **Say:**
@@ -538,6 +544,8 @@ That is the conceptual foundation for the next several hours. In the next hour, 
 If today felt less flashy than a demo-heavy hour, that is okay. Good persistence code begins with good thinking. Schema design is part of programming, not paperwork."
 
 ---
+
+[Instructor slide change: page=13; title=Quick Check]
 
 ## 13) Exit Ticket
 

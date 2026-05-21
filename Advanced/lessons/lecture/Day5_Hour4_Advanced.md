@@ -1,5 +1,7 @@
 # Day 5 Hour 4 Advanced: Record List UI with Treeview or Listbox, Selection Callbacks, and Safe Refresh
 
+[Instructor slide change: page=33; title=Hour 20: Record List UI with Treeview, Selection, and Safe Refresh]
+
 ## Instructor delivery context
 
 - Audience: Advanced learners who already completed Day 5 Hour 3 forms and validation work.
@@ -8,6 +10,8 @@
   - In scope: record list/table display, selection callback behavior, details pane updates, refresh safety, empty-state handling, and a tightly scoped optional search/filter extension.
   - Out of scope: Day 6 architecture topics, broader testing frameworks, deployment, packaging, and backend persistence changes.
 - Teaching posture: near-verbatim facilitation script with clear transitions, exact timing, mini-checkpoints, and observable pass/fail completion checks.
+
+[Instructor slide change: page=34; title=Learning Outcomes]
 
 ## Learning outcomes for Hour 20
 
@@ -255,6 +259,8 @@ We also require a repeated-refresh acceptance check:
 Instructor says:
 
 This check catches fragile refresh code quickly. We will use it in the lab pass/fail rubric.
+
+[Instructor slide change: page=38; title=Demo: Treeview Record Browser — Setup and Wiring]
 
 ## Segment 4 script: live demo (8 minutes)
 
@@ -540,6 +546,8 @@ Minute 29:
   - Action: refresh three consecutive times.
   - Expected: row count unchanged and correct, no duplicate or stale rows.
 
+[Instructor slide change: page=40; title=Lab: Build List-and-Details UI (Hour 20)]
+
 ## Segment 5 script: hands-on lab (26 minutes)
 
 ### Lab statement for learners
@@ -794,6 +802,8 @@ Core check 4:
 Core check 5:
 - empty-data behavior is safe
 - pass evidence: with empty source, list shows zero rows and details pane shows safe fallback
+
+[Instructor slide change: page=41; title=Common Pitfalls (Hour 20)]
 
 ### Common pitfalls and correction prompts
 

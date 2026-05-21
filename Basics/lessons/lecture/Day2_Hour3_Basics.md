@@ -1,5 +1,7 @@
 # Day 2, Hour 3: Input/Output + Type Conversion (Course Hour 7)
 
+[Instructor slide change: page=28; title=Hour 7: Interactive Input + Type Conversion]
+
 ## Learning Outcomes
 
 By the end of this hour, you will be able to:
@@ -153,6 +155,8 @@ print(f"Count: {count}, type: {type(count)}")
 
 ---
 
+[Instructor slide change: page=35; title=Demo: Temperature Converter]
+
 ## Section 4: Live Coding Demo
 
 ### Demo A: Small Temperature Converter (with type inspection)
@@ -240,6 +244,8 @@ print(f"{miles} miles = {km:.2f} km")
 "Before running, estimate: 10 miles should be roughly 16 kilometers. If the output was 160.934 or 1.60934, I'd know something was wrong with my formula. Plausibility checks are a superpower for catching bugs early."
 
 ---
+
+[Instructor slide change: page=36; title=Lab: Unit Converter]
 
 ## Section 5: Guided Lab with Checkpoints (Problem-Solving)
 
@@ -572,6 +578,8 @@ value = input("Enter value: ").strip()  # Removes leading/trailing whitespace
 **Prevention Strategy:** For this hour, not necessary. But if weird behavior appears with string operations, `.strip()` is a quick check.
 
 ---
+
+[Instructor slide change: page=39; title=Quick Check (Hour 7)]
 
 ## Section 8: Exit Ticket & Quick-Check Questions
 

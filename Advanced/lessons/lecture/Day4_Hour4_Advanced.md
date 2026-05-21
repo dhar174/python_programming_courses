@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=37; title=Hour 16: Checkpoint 2 — Persistence-Ready Core + JSON Save/Load]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -36,6 +38,8 @@ This one-hour plan totals exactly 60 minutes: 5 + 10 + 10 + 6 + 26 + 3 = 60. The
 
 ---
 
+[Instructor slide change: page=38; title=Learning Outcomes]
+
 ## Learning Outcomes for This Hour
 
 By the end of this hour, you will be able to:
@@ -49,6 +53,8 @@ By the end of this hour, you will be able to:
 8. Explain why JSON persistence now prepares the codebase for future database integration later
 
 ---
+
+[Instructor slide change: page=39; title=What Checkpoint 2 Proves]
 
 ## Section 1: Checkpoint Framing and Grading Focus (5 minutes)
 
@@ -344,6 +350,8 @@ That is exactly why this checkpoint is called persistence-ready, not persistence
 
 ---
 
+[Instructor slide change: page=45; title=Demo: Save → Restart → Load]
+
 ## Section 4: Live Demo – Save -> Restart -> Load (6 minutes)
 
 ### Demo Goal
@@ -534,6 +542,8 @@ If a student is stuck, help them narrow the steps:
 - sixth, add error handling
 
 That sequence keeps the checkpoint from feeling overwhelming.
+
+[Instructor slide change: page=48; title=Common Pitfalls (Hour 16)]
 
 ### Common Pitfalls to Watch For
 

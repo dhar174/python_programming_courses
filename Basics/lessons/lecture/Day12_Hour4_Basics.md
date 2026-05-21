@@ -1,5 +1,7 @@
 # Session 12, Hour 4: Final Assessment and Certification-Style Review Facilitation Script
 
+[Instructor slide change: page=30; title=Hour 48: Final Assessment + Review]
+
 ## Purpose of this hour in program operations
 
 This script is the final assessment facilitation guide for Hour 48 of the Basics course. This is not a standard coding lesson. This is the closing checkpoint of the program where learners demonstrate end-to-end competency, complete a certification-style conceptual and code-reading review, receive individualized feedback, and leave with explicit next-step study targets.
@@ -592,6 +594,8 @@ How to run extension safely:
 - Encourage independent attempt first.
 - Debrief reasoning process.
 - Avoid introducing advanced tooling.
+
+[Instructor slide change: page=34; title=Final Exit Ticket]
 
 ## Quick check and exit ticket, required for every learner
 

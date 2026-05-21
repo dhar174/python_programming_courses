@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 29: Menu-Driven Loops and State Management]
+
+[Instructor slide change: page=5; title=Learning Outcomes]
+
 ## Section 1: Learning Outcomes
 
 By the end of this hour, you will be able to:
@@ -138,6 +142,8 @@ By contrast, if `items = []` is outside the loop (before the `while` statement),
 This principle applies to all persistent state: lists, dictionaries, counters, flags, user preferences—anything that needs to survive across menu cycles must be initialized before the loop starts. This is crucial. Many students struggle with this point, so internalize it now."
 
 ---
+
+[Instructor slide change: page=9; title=Demo: Inventory Tracker]
 
 ## Section 5: Live Demo (15–25 minutes)
 
@@ -280,6 +286,8 @@ while True:
 
 ---
 
+[Instructor slide change: page=11; title=Lab: Build a Menu Application]
+
 ## Section 7: Lab with Checkpoints (30 minutes)
 
 **Say:**
@@ -351,6 +359,8 @@ else:
 ```
 
 ---
+
+[Instructor slide change: page=12; title=Common Pitfalls (Hour 29)]
 
 ## Section 8: Troubleshooting Pitfalls
 

@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 1: Orientation + Environment Readiness]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Welcome & Course Overview: 5 minutes
@@ -246,6 +248,8 @@ A script file is a text file containing multiple Python statements saved with a 
 
 **[Key distinction]:** The REPL is for **exploring**. Scripts are for **building**.
 
+[Instructor slide change: page=10; title=Lab: Environment Check + First Run]
+
 ### Where Files Live in the Lab
 
 **[Instructor speaks:]**
@@ -290,6 +294,8 @@ python_basics/          ← Your main course folder
 **Why this matters:** Consistency helps you find things fast. Six weeks from now, you'll know exactly where your old scripts are.
 
 ---
+
+[Instructor slide change: page=9; title=Demo: Environment Setup]
 
 ## Section 5: Live Demo (5-10 minutes)
 
@@ -646,6 +652,8 @@ Based on years of teaching this course, here are the most common issues beginner
 **Fix:** Retype the quotes manually in your code editor, or change your editor settings to convert smart quotes automatically.
 
 ---
+
+[Instructor slide change: page=13; title=Quick Check]
 
 ## Section 8: Exit Ticket & Looking Ahead (5 minutes)
 

@@ -1,5 +1,7 @@
 # Day 11 Hour 4 (Hour 44): Exception Handling — Full Basics Treatment Instructor Script
 
+[Instructor slide change: page=34; title=Hour 44: Exception Handling]
+
 ## Instructor intent and alignment
 
 This hour is the capstone of Session 11. In Hours 41–43, learners built file and JSON workflow confidence. In Hour 44, we harden that workflow so student programs can survive bad input and bad files without crashing. This script is designed to be read nearly verbatim while you teach.
@@ -26,6 +28,8 @@ Use this pacing guide to keep the hour tight:
 5. **Debrief + quick check exit ticket (3–5 min)**
 
 If learners are stuck during lab, shorten independent time by 5 minutes and run a guided fix pass.
+
+[Instructor slide change: page=35; title=Learning Outcomes]
 
 ## Outcomes to state out loud
 
@@ -202,6 +206,8 @@ Say:
 
 “Notice these are all predictable in user-facing CLI apps. That is why they are first-class catches for today.”
 
+[Instructor slide change: page=41; title=Demo — Hardened CLI Tool]
+
 ### 6) Common pitfalls to call out before demo (1 minute)
 
 Say this directly:
@@ -370,6 +376,8 @@ Say:
 Then connect to lab:
 
 “Now you will take a fragile starter program and add this same resilience.”
+
+[Instructor slide change: page=42; title=Lab — Harden Your Program]
 
 ## Hands-on lab (25–35 minutes): Harden your program
 
@@ -964,6 +972,8 @@ Prompt:
 “If your code handles only `FileNotFoundError` and `JSONDecodeError`, what happens to a typo bug?”
 
 Expected response: It still surfaces, which helps debugging.
+
+[Instructor slide change: page=43; title=Common Pitfalls + Quick Check (Hour 44)]
 
 ## Quick check / exit ticket (required by runbook)
 

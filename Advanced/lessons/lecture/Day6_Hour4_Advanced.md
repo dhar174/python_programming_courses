@@ -1,5 +1,7 @@
 # Day 6 Hour 4 Advanced — Checkpoint 3: GUI Milestone Demo Facilitation Script
 
+[Instructor slide change: page=48; title=Hour 24 — Checkpoint 3: GUI Milestone Demo]
+
 ## Hour identity and facilitation purpose
 
 This document is the instructor facilitation script for Hour 24 in the Advanced Python runbook, defined as Checkpoint 3: GUI milestone demo. It is intentionally written as a checkpoint operations guide, not as a normal concept lecture. Your primary role in this hour is to collect evidence of milestone readiness, score consistently, coach quickly, and route learners to the right remediation path without derailing the whole cohort.
@@ -24,6 +26,8 @@ Keep scope strictly inside Hour 24 checkpoint facilitation. Do not teach new per
 ## Contract alignment note for Day 6 artifact consistency
 
 Contract alignment note: this script preserves canonical Hour 24 language and the canonical demo sequence used across Day 6 artifacts. The milestone wording remains consistent with the runbook phrase “Checkpoint 3: GUI milestone demo,” and the required short demo path remains exactly “add -> list -> update -> delete -> restart -> load.” If you adapt local classroom phrasing, keep those two anchors unchanged so rubric evidence remains comparable across sections and instructors.
+
+[Instructor slide change: page=49; title=Checkpoint Overview]
 
 ## What success looks like in this checkpoint hour
 
@@ -99,6 +103,8 @@ Reinforce:
 - Stable IDs must remain stable after restart and load.
 - Validation must exist in service or core, not only in button handlers.
 - Typical error paths must not crash.
+
+[Instructor slide change: page=51; title=Canonical Demo Sequence]
 
 ### Minute 8 to 14: demo protocol and fairness protocol
 
@@ -189,6 +195,8 @@ Always include:
 - One strength statement.
 - One highest priority fix.
 - One concrete next action within 30 minutes of independent work.
+
+[Instructor slide change: page=58; title=Closing Quick Check]
 
 ### Minute 57 to 60: quick check and close
 

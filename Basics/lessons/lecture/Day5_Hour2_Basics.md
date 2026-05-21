@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=17; title=Hour 18: Sets — Uniqueness + Membership]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 18. The entire hour focuses on sets: what they are, why uniqueness is built in, how to use them for fast membership checks, and how a few key operations (union, intersection, difference) solve real problems. Stay firmly within Basics scope — do not introduce frozensets, set comprehensions, or the `collections` module here. The key outcomes are (1) using `set()` to strip duplicates from a list, (2) checking membership with `in`, (3) building intuition for when a set beats a list, and (4) understanding why sets are unordered and how to work with that. The lab ties everything together in a practical "Unique Visitors" program that learners build step by step. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip or abbreviate the conceptual explanations.
 
 ---
+
+[Instructor slide change: page=18; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -499,6 +503,8 @@ This is the pattern you will use in the lab. Collect data into a set, do your se
 
 ---
 
+[Instructor slide change: page=26; title=Demo: List of Names → Set]
+
 ## 9) Live Demo: List of Names → Set
 
 **Say:**
@@ -597,6 +603,8 @@ Here is the full picture of what we just built:
 That is the complete pattern for uniqueness and membership in Python. Now let's build it from scratch in the lab."
 
 ---
+
+[Instructor slide change: page=27; title=Lab: Unique Visitors]
 
 ## 10) Hands-on Lab: Unique Visitors
 
@@ -745,6 +753,8 @@ Both patterns are valid. The list-then-convert pattern is more common and more g
 
 ---
 
+[Instructor slide change: page=28; title=Common Pitfalls (Hour 18)]
+
 ## 11) Common Pitfalls
 
 ### 11.1 Expecting order to be preserved
@@ -877,6 +887,8 @@ print(f"Morning only            : {sorted(morning_only)}")
 ```
 
 ---
+
+[Instructor slide change: page=29; title=Quick Check]
 
 ## 13) Debrief, Recap, and Exit Ticket
 

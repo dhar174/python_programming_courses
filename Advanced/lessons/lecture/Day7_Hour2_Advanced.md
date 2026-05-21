@@ -1,5 +1,7 @@
 # Day 7, Hour 2: SQLite CRUD with Parameterized Queries (Course Hour 26)
 
+[Instructor slide change: page=14; title=Hour 26: `sqlite3` CRUD with Parameterized Queries]
+
 ## Instructor Notes
 
 - **Course:** Python Programming (Advanced)
@@ -13,6 +15,8 @@
 > **Instructor note:** This hour is the learners' first concrete SQLite implementation in the advanced sequence. Keep the conversation practical and specific. The targets are: open a database file with `sqlite3`, create a table safely with `CREATE TABLE IF NOT EXISTS`, and run safe CRUD operations using `?` parameter placeholders. Reinforce the runbook quality gate repeatedly: no SQL string concatenation, every write is committed, and update/delete must be ID-based. Keep ORMs out of scope. The point is confidence with the standard library and visibility into what the application is actually doing.
 
 ---
+
+[Instructor slide change: page=15; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -228,6 +232,8 @@ This is one of those rules I want you to internalize so deeply that unsafe SQL s
 
 ---
 
+[Instructor slide change: page=18; title=Demo: First SQLite Repository Methods]
+
 ## 7) Live Demo Part 1: Insert and List Rows (~15 minutes)
 
 **Say:**
@@ -400,6 +406,8 @@ Second, during early development, it is smart to print or log the target ID befo
 
 ---
 
+[Instructor slide change: page=20; title=Common Pitfalls (Hour 26)]
+
 ## 9) Common Pitfalls to Teach Explicitly
 
 ### 9.1 Forgetting commit
@@ -427,6 +435,8 @@ This is why I strongly recommend printing `db_path.resolve()` during early devel
 "Finally, do not assume an update or delete worked just because no exception was raised. Check the target ID. Check `rowcount`. Re-query the table. Practical debugging beats wishful thinking."
 
 ---
+
+[Instructor slide change: page=19; title=Lab: First SQLite Integration]
 
 ## 10) Guided Practice: First SQLite Integration (~7 minutes)
 
@@ -494,6 +504,8 @@ More importantly, we built safe habits:
 In the next hour, we will take the next architectural step: instead of returning raw row tuples, we will map rows back into dataclass objects so the rest of the application can continue speaking the language of the domain."
 
 ---
+
+[Instructor slide change: page=21; title=Quick Check]
 
 ## 13) Exit Ticket
 

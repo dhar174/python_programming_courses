@@ -1,5 +1,7 @@
 # Day 1, Hour 3: Properties, Invariants, and Custom Exceptions
 
+[Instructor slide change: page=28; title=Hour 3: Properties, Invariants, and Custom Exceptions]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -26,6 +28,8 @@
 This is a one-hour plan. The timed teaching headings above total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays within the runbook's required 25-35 minute lab range. If the room needs support, protect the guided lab by using prepared starter code and live-coding only the property setter, service exception, and caller handling. Do not weaken the required objectives by making validation, `ValidationError`, or `NotFoundError` optional; those are core outcomes for this hour.
 
 ---
+
+[Instructor slide change: page=29; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -210,6 +214,8 @@ Raising a custom exception:
 "Let's build the small version. Watch for three things: the backing attribute, the model raising `ValidationError`, and the service raising `NotFoundError`."
 
 ---
+
+[Instructor slide change: page=31; title=Demo: Custom Domain Exceptions]
 
 ## Live Demo: Validated Tracker Model and Service Exception (10 minutes)
 
@@ -411,6 +417,8 @@ except Exception:
 
 ---
 
+[Instructor slide change: page=35; title=Lab: Validation + Exceptions]
+
 ## Guided Lab: Validation and Exceptions (25 minutes)
 
 The lab is required practice, not an optional extension. Learners may continue the model they designed in Hour 2 or use the task tracker model from the demo. The minimum required scope is one validated property, two custom exception classes, one service function that raises a domain exception, and caller code that handles expected errors with user-friendly messages.
@@ -579,6 +587,8 @@ Missing item failure:
 "If your `except` block says `except Exception`, narrow it. Catch `ValidationError` or `NotFoundError`. If there are two expected failures, use two `except` blocks. That helps future readers know exactly what the caller is prepared to handle."
 
 ---
+
+[Instructor slide change: page=36; title=Completion Criteria + Common Pitfalls — Hour 3]
 
 ## Troubleshooting Guide
 

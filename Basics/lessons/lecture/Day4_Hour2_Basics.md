@@ -6,6 +6,10 @@
 
 ---
 
+[Instructor slide change: page=15; title=Hour 14: Boolean Expressions & Comparison Operators]
+
+[Instructor slide change: page=16; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 After this instructional hour, learners will be able to:
@@ -199,6 +203,8 @@ This is a performance detail, but it's also useful to know: if the first check f
 
 ---
 
+[Instructor slide change: page=21; title=Demo: Age-Gating Eligibility Checker]
+
 ## 5. Live Demo: Comparisons and Logical Operators (10 minutes)
 
 **Set Up the Scenario**: "Let's build an age-gating system for an online service. We need to check:
@@ -294,6 +300,8 @@ print(result)
 Give them 10 seconds to think, then reveal: `False` (because `not has_membership` is `False`).
 
 ---
+
+[Instructor slide change: page=23; title=Lab: Camp Eligibility Checker]
 
 ## 6. Practice Walkthrough: Guided Practice (7 minutes)
 
@@ -430,6 +438,8 @@ Test boundary values:
 - Age 17 (just above): should not be eligible
 
 ---
+
+[Instructor slide change: page=22; title=Common Pitfalls (Hour 14)]
 
 ## 8. Troubleshooting Pitfalls
 

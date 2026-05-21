@@ -1,4 +1,7 @@
 # Day 1, Hour 4: Numbers and Operators
+
+[Instructor slide change: page=39; title=Hour 4: Numbers + Operators]
+
 ## Python Programming (Basics) – Lecture Script
 
 **Course:** Python Programming (Basics) – 48 Hours  
@@ -392,6 +395,8 @@ print(f"Total: ${round(total, 2)}")  # Display: $21.39
 
 ---
 
+[Instructor slide change: page=46; title=Demo: Mini Calculator]
+
 ## Part 3: Live Demo – Mini Calculator (5-10 minutes)
 
 **[Instructor cue: Share your screen and open VS Code or the Python environment]**
@@ -597,6 +602,8 @@ Result: 3.33
 "Now it's your turn. You're going to build a **Tip Calculator**—a real, practical program that you could actually use at a restaurant. Let's walk through what you'll be building."
 
 ---
+
+[Instructor slide change: page=47; title=Lab: Tip Calculator]
 
 ## Part 4: Hands-On Lab – Tip Calculator (25-35 minutes)
 
@@ -874,6 +881,8 @@ print(f"Total: ${round(final_total, 2)}")
 - "Cool! You added the split feature. How did that work?"
 
 ---
+
+[Instructor slide change: page=52; title=Quick Check]
 
 ### Quick Check / Exit Ticket
 

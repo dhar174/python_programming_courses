@@ -1,5 +1,7 @@
 # Day 7, Hour 3: Row Mapping — Converting Database Rows Back into Objects (Course Hour 27)
 
+[Instructor slide change: page=22; title=Hour 27: Row Mapping Back into Objects]
+
 ## Instructor Notes
 
 - **Course:** Python Programming (Advanced)
@@ -15,6 +17,8 @@
 ---
 
 ## Instructor Deliverable Script (Use Largely Verbatim)
+
+[Instructor slide change: page=23; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -187,6 +191,8 @@ That makes mapping code easier to read and less likely to break from accidental 
 "No matter which row style you use, do not repeat the mapping logic in five different methods. Put it in one helper. That way, if you change the schema later, there is one place to update."
 
 ---
+
+[Instructor slide change: page=26; title=Demo: Complete CRUD with Mapped Objects]
 
 ## 6) Live Demo Part 1: A Repository That Returns Expense Objects (~15 minutes)
 
@@ -460,6 +466,8 @@ class ExpenseService:
 
 ---
 
+[Instructor slide change: page=28; title=Common Pitfalls (Hour 27)]
+
 ## 9) Common Pitfalls to Surface Explicitly
 
 ### 9.1 Mismatched column ordering
@@ -483,6 +491,8 @@ class ExpenseService:
 "If you repeat mapping code in three methods, you now have three places to fix when the schema changes. Centralize it."
 
 ---
+
+[Instructor slide change: page=27; title=Lab: Finish Repo CRUD]
 
 ## 10) Guided Practice: Finish CRUD with Mapped Objects (~7 minutes)
 
@@ -542,6 +552,8 @@ The deeper lesson is architectural: the repository protects the rest of the code
 Next hour we will harden the database layer further by looking at transactions, integrity constraints, and safe initialization patterns so startup and multi-step writes behave predictably."
 
 ---
+
+[Instructor slide change: page=29; title=Quick Check]
 
 ## 13) Exit Ticket
 

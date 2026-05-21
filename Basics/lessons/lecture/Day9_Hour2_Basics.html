@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,6 +71,11 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
                     <p><strong>Python Programming Basics – Session 9</strong></p>
 <p><strong>Course:</strong> Python Programming (Basics)<br>
@@ -74,11 +84,15 @@
 <strong>Mode:</strong> Instructor-led + live coding + guided lab<br>
 <strong>Audience:</strong> Beginners in Python (Basics scope only)</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="14" data-slide-title="Hour 34: Scope + Common Function Mistakes" data-slide-anchor="hour-34-scope-common-function-mistakes-b08dc258"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 14</strong><a class="lecture-slide-cue-link" href="../slides/day-09/day-09-session-9.html#hour-34-scope-common-function-mistakes-b08dc258" data-slide-deck-link>Slide 14: Hour 34: Scope + Common Function Mistakes</a></div></aside>
+
 <h2 id="instructor-deliverable-script-use-largely-verbatim">Instructor Deliverable Script (Use Largely Verbatim)</h2>
 <blockquote>
 <p><strong>Instructor note:</strong> This document is written as a read-aloud teaching guide. Scope is famously tricky for beginners. Clarify the boundary between the "inside" of a function and the "outside" global environment. Emphasize passing data explicitly rather than implicitly relying on global state. Introduce default parameters as a convenient feature. This hour combines deep concept delivery with practical lab work that demonstrates real-world pitfalls. Use the live demos to show crashes and failures—students learn powerfully from seeing "NameError" and "UnboundLocalError" appear, then seeing them fixed.</p>
 </blockquote>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="15" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-49dfdc8d"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 15</strong><a class="lecture-slide-cue-link" href="../slides/day-09/day-09-session-9.html#learning-outcomes-49dfdc8d" data-slide-deck-link>Slide 15: Learning Outcomes</a></div></aside>
+
 <h2 id="learning-outcomes">Learning Outcomes</h2>
 <p>By the end of this hour, you will be able to:</p>
 <ol>
@@ -297,6 +311,8 @@ append_to_list_correct(&quot;B&quot;)  # Output: ['B']  &lt;- Fresh list!
 <p><strong>Say:</strong></p>
 <p>"By checking <code>if my_list is None</code>, we create a fresh empty list for each call. This is the safe pattern for mutable defaults. Keep this in your back pocket—it's a real Python gotcha."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="22" data-slide-title="Lab: Calculator Functions (Hour 34)" data-slide-anchor="lab-calculator-functions-hour-34-97279917"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 22</strong><a class="lecture-slide-cue-link" href="../slides/day-09/day-09-session-9.html#lab-calculator-functions-hour-34-97279917" data-slide-deck-link>Slide 22: Lab: Calculator Functions (Hour 34)</a></div></aside>
+
 <h2 id="guided-lab-calculator-functions-14-minutes">Guided Lab: Calculator Functions (~14 minutes)</h2>
 <h3 id="lab-overview">Lab Overview</h3>
 <p><strong>Say:</strong></p>
@@ -405,6 +421,8 @@ while True:
 <p>"Notice a few things: First, the four math functions don't know anything about the main program. They're completely independent. They take inputs, compute, and return results. Second, the main loop uses <code>try/except</code> to catch bad input gracefully. And third, <code>multiply</code> with a default parameter means someone could call <code>multiply(5)</code> and get 5 back, or <code>multiply(5, 3)</code> and get 15.</p>
 <p>These functions are safe, reusable, and testable. This is professional code."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="23" data-slide-title="Common Pitfalls (Hour 34)" data-slide-anchor="common-pitfalls-hour-34-e1649fdb"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 23</strong><a class="lecture-slide-cue-link" href="../slides/day-09/day-09-session-9.html#common-pitfalls-hour-34-e1649fdb" data-slide-deck-link>Slide 23: Common Pitfalls (Hour 34)</a></div></aside>
+
 <h2 id="troubleshooting-pitfalls-common-mistakes-and-how-to-fix-them">Troubleshooting Pitfalls: Common Mistakes and How to Fix Them</h2>
 <h3 id="pitfall-1-trying-to-use-a-local-variable-outside-its-function">Pitfall 1: Trying to Use a Local Variable Outside Its Function</h3>
 <p><strong>The mistake:</strong></p>

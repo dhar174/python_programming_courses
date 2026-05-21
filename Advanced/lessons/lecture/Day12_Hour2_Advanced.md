@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 12, Hour 46
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=19; title=Hour 46 — Coverage, Edge Cases, and Integration]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -14,6 +16,8 @@
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
 | 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+
+[Instructor slide change: page=21; title=Hour 46 Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -81,6 +85,8 @@ Use these prompts to keep the class active:
 - "What should happen if the input is missing, malformed, or points to a record that does not exist?"
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
+
+[Instructor slide change: page=25; title=Demo: Not-Found Edge Case]
 
 ## Live Demo (17-35 minutes)
 
@@ -151,6 +157,8 @@ def test_missing_record_raises(service):
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
+[Instructor slide change: page=27; title=Lab: Harden the Suite (Hour 46)]
+
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -186,6 +194,8 @@ Harden with tests: run a coverage report if available, add two tests for high-va
 - Edge cases include missing record and invalid input.
 - Learner can explain what coverage does and does not guarantee.
 
+[Instructor slide change: page=28; title=Common Pitfalls (Hour 46)]
+
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
@@ -217,6 +227,8 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Add a smoke test for create_app with Flask test_client().
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
+
+[Instructor slide change: page=29; title=Quick Check (Hour 46)]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

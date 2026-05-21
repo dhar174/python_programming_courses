@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=15; title=Hour 26: while Loops + Sentinel Patterns]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on while loops: what they are, how they repeat until a condition becomes False, how to avoid infinite loops, and how to use break and continue for early exits. The sentinel pattern (using a special value like 'q' to signal stopping) is the core application. Stay within Basics scope — do not introduce do-while patterns (Python does not have them), complex state machines, or event-driven loops. The key outcomes are writing while loops with proper termination conditions, using break/continue appropriately, and building a password prompt with attempt limiting. The lab reinforces all of this in a retry-until-success authentication flow.
 
 ---
+
+[Instructor slide change: page=16; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -290,6 +294,8 @@ Document your sentinel clearly in the prompt so users know how to stop."
 
 ---
 
+[Instructor slide change: page=22; title=Demo — Password Prompt with Retry Limit]
+
 ## 7) Live Coding Demo: Password Prompt (~10 minutes)
 
 ### 7.1 Announce the demo
@@ -390,6 +396,8 @@ Now if the user succeeds on attempt 1, attempts never increments, and the final 
 
 ---
 
+[Instructor slide change: page=23; title=Lab — Password Prompt]
+
 ## 8) Guided Lab: Password Prompt (~25 minutes)
 
 ### 8.1 Announce the lab
@@ -450,6 +458,8 @@ This keeps prompting even after success, because there is no break. The user see
 - "If I run your program and deliberately fail 3 times, what message do I see?"
 - "How do you know whether the loop exited because of success or because of running out of attempts?"
 
+[Instructor slide change: page=24; title=Common Pitfalls — Hour 26]
+
 ### 8.3 Debugging support
 
 If a student is stuck:
@@ -508,6 +518,8 @@ The fix for all of these: plan your loop carefully, update the counter consisten
 While loops are flexible and powerful, but they require careful logic. In Hour 3, we will learn for loops, which are better suited for 'repeat exactly N times' scenarios."
 
 ---
+
+[Instructor slide change: page=25; title=Quick Check — Hour 26]
 
 ## 10) Exit Ticket (~3 minutes)
 

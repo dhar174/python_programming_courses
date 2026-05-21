@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,8 +71,15 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
-                    <h2 id="instructor-notes">Instructor Notes</h2>
+                    <aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="28" data-slide-title="Hour 3: Properties, Invariants, and Custom Exceptions" data-slide-anchor="hour-3-properties-invariants-and-custom-exceptions-e16bf721"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 28</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#hour-3-properties-invariants-and-custom-exceptions-e16bf721" data-slide-deck-link>Slide 28: Hour 3: Properties, Invariants, and Custom Exceptions</a></div></aside>
+
+<h2 id="instructor-notes">Instructor Notes</h2>
 <ul>
 <li><strong>Course</strong>: Python Programming (Advanced)</li>
 <li><strong>Session</strong>: Day 1, Hour 3 of 48</li>
@@ -122,6 +134,8 @@
 </table>
 <p>This is a one-hour plan. The timed teaching headings above total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays within the runbook's required 25-35 minute lab range. If the room needs support, protect the guided lab by using prepared starter code and live-coding only the property setter, service exception, and caller handling. Do not weaken the required objectives by making validation, <code>ValidationError</code>, or <code>NotFoundError</code> optional; those are core outcomes for this hour.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="29" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-47094c45"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 29</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#learning-outcomes-47094c45" data-slide-deck-link>Slide 29: Learning Outcomes</a></div></aside>
+
 <h2 id="learning-outcomes">Learning Outcomes</h2>
 <p>By the end of this hour, learners will be able to:</p>
 <ol>
@@ -246,6 +260,8 @@ Raising a custom exception:
 <p><strong>Transition</strong></p>
 <p>"Let's build the small version. Watch for three things: the backing attribute, the model raising <code>ValidationError</code>, and the service raising <code>NotFoundError</code>."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="31" data-slide-title="Demo: Custom Domain Exceptions" data-slide-anchor="demo-custom-domain-exceptions-ff06ad6b"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 31</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#demo-custom-domain-exceptions-ff06ad6b" data-slide-deck-link>Slide 31: Demo: Custom Domain Exceptions</a></div></aside>
+
 <h2 id="live-demo-validated-tracker-model-and-service-exception-10-minutes">Live Demo: Validated Tracker Model and Service Exception (10 minutes)</h2>
 <p>The live demo is deterministic and self-contained. Use prepared starter code for the full file if needed, then live-code the property setter, service exception, and caller handling so learners can predict the output without losing lab time. The domain is a task tracker, building directly from Hour 2's model and service boundary ideas.</p>
 <p><strong>Instructor setup</strong></p>
@@ -402,6 +418,8 @@ except Exception:
 </code></pre>
 <p>"This catches too much. It would catch our expected <code>NotFoundError</code>, but it would also catch unrelated bugs. If I misspelled a variable name or called a method that does not exist, this block would hide the real problem behind a vague message. In advanced code, broad exception handling is not a default habit. Catch the errors you can actually handle."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="35" data-slide-title="Lab: Validation + Exceptions" data-slide-anchor="lab-validation-exceptions-b8ed65a7"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 35</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#lab-validation-exceptions-b8ed65a7" data-slide-deck-link>Slide 35: Lab: Validation + Exceptions</a></div></aside>
+
 <h2 id="guided-lab-validation-and-exceptions-25-minutes">Guided Lab: Validation and Exceptions (25 minutes)</h2>
 <p>The lab is required practice, not an optional extension. Learners may continue the model they designed in Hour 2 or use the task tracker model from the demo. The minimum required scope is one validated property, two custom exception classes, one service function that raises a domain exception, and caller code that handles expected errors with user-friendly messages.</p>
 <h3 id="lab-prompt-for-students">Lab prompt for students</h3>
@@ -539,6 +557,8 @@ Missing item failure:
 <p>"If your service returns <code>None</code> for a required item, decide whether that creates ambiguity. For today's lab, the runbook requires a custom exception for missing items, so use <code>NotFoundError</code>."</p>
 <p>"If your <code>except</code> block says <code>except Exception</code>, narrow it. Catch <code>ValidationError</code> or <code>NotFoundError</code>. If there are two expected failures, use two <code>except</code> blocks. That helps future readers know exactly what the caller is prepared to handle."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="36" data-slide-title="Completion Criteria + Common Pitfalls — Hour 3" data-slide-anchor="completion-criteria-common-pitfalls-hour-3-63b80297"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 36</strong><a class="lecture-slide-cue-link" href="../slides/day-01/day-01-session-1.html#completion-criteria-common-pitfalls-hour-3-63b80297" data-slide-deck-link>Slide 36: Completion Criteria + Common Pitfalls — Hour 3</a></div></aside>
+
 <h2 id="troubleshooting-guide">Troubleshooting Guide</h2>
 <p>Use these explanations when learners get stuck. Keep the tone calm and evidence-based: read the traceback, identify the line, and connect the error to the design rule.</p>
 <h3 id="problem-recursionerror-in-a-property-setter">Problem: RecursionError in a property setter</h3>

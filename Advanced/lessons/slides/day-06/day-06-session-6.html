@@ -386,493 +386,1375 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-6-session-6-hours-2124-79fab100" data-slide-number="1">
             <h1>Advanced Day 6 — Session 6 (Hours 21–24)</h1>
             <div class="subtitle">Python Programming (Advanced) • GUI CRUD Wiring, Architecture, and Milestone Readiness</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-6-overview-f60d92f6" data-slide-number="2">
             <h1>Session 6 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-46add289" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 21: Update and delete workflows in the GUI</li>
-  <li>Hour 22: Controller separation and callback cleanup</li>
-  <li>Hour 23: JSON persistence and GUI polish</li>
-  <li>Hour 24: Checkpoint 3 GUI milestone demo</li>
+  <li>Hour 21 — CRUD wiring: update and delete workflows in the GUI</li>
+  <li>Hour 22 — Controller separation and callback cleanup</li>
+  <li>Hour 23 — JSON persistence and GUI polish sprint</li>
+  <li>Hour 24 — Checkpoint 3: GUI milestone demo</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Day goal</h1>
-            <ul>
-  <li>Turn a promising interface into a trustworthy mini-application</li>
-  <li>Keep stable IDs as the bridge between UI state and domain operations</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 6 overview (Hours 21–24); Advanced/lessons/lecture/Day6_Hour4_Advanced.md — Session context --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis</h1>
-            <ul>
-  <li>Round-trip update/delete through the current source of truth</li>
-  <li>Refactor into a controller-style app structure</li>
-  <li>Add JSON load/save before the GUI checkpoint</li>
-  <li>Practice the demo path, not just isolated screenshots</li>
-</ul>
-<h3>Canonical quiz/contracts to recognize</h3>
+        <section class="slide" id="session-goal-e5876c5d" data-slide-number="4">
+            <h1>Session Goal</h1>
+            <p>Turn a promising interface into a <strong>trustworthy mini-application</strong>.</p>
+<p>Keep stable IDs as the bridge between UI state and domain operations.</p>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>Hour 21 | selected id: task-002</code></li>
-  <li><code>Hour 22 | ui class: TrackerApp</code></li>
-  <li><code>Hour 23 | persistence hook: save on demand</code></li>
-  <li><code>Hour 24 | demo start: app opens cleanly</code></li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code># Day 6 Hour 1 Advanced — CRUD Wiring in the GUI: Update and Delete Workflows</code></li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code># Day 6 Hour 2 Advanced — GUI Architecture: Controller Separation and Avoiding Callback Spaghetti</code></li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code># Day 6 Hour 3 Advanced — GUI Mini-Project Sprint: Persistence and Polish</code></li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code># Day 6 Hour 4 Advanced — Checkpoint 3: GUI Milestone Demo Facilitation Script</code></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/assignments/Advanced_Day6_homework.ipynb — Part 1 through Part 4; Advanced/quizzes/Advanced_Day6_Quiz.html — Hour 21 through Hour 24 canonical contract questions --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 21: Update and Delete Workflows</h1>
+        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="5">
+            <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
+        <section class="slide" id="in-scope-3be9548f" data-slide-number="6">
+            <h1>In Scope</h1>
             <ul>
-  <li>Use <strong>select → load → edit → save update</strong></li>
-  <li>Delete with confirmation</li>
-  <li>Refresh after each change</li>
-  <li>Handle missing-record cases cleanly</li>
-  <li>Target records by <strong>stable ID</strong>, not list index</li>
+  <li>Update and delete wired to stable record IDs</li>
+  <li>Tkinter GUI architecture with <code>App</code> / controller class</li>
+  <li>JSON load on startup and save after every CRUD change</li>
+  <li>Graceful error handling with <code>messagebox</code></li>
+  <li>Checkpoint 3 demo: add → list → update → delete → restart → load</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 21: CRUD wiring in GUI: update and delete workflows; Advanced/lessons/lecture/Day6_Hour1_Advanced.md — Learning objectives --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="not-yet-299e44c6" data-slide-number="7">
+            <h1>Not Yet</h1>
+            <ul>
+  <li>SQLite or any database backend (Session 7)</li>
+  <li>Async or multi-threaded GUI patterns</li>
+  <li>Authentication or production security</li>
+  <li>Heavy visual theming or advanced layout managers</li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-21-update-and-delete-workflows-00e9aaf2" data-slide-number="8">
+            <h1>Hour 21 — Update and Delete Workflows</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-1ad5f233" data-slide-number="9">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Implement <strong>select → load → edit → save update</strong> workflow</li>
+  <li>Delete with confirmation via <code>messagebox.askyesno</code></li>
+  <li>Refresh the display after every mutation</li>
+  <li>Handle <code>NotFoundError</code> and <code>ValidationError</code> gracefully</li>
+  <li>Target records by <strong>stable ID</strong>, never by list index</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>## Learning objectives</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="why-update-delete-are-harder-than-add-0ccd5b92" data-slide-number="10">
             <h1>Why Update/Delete Are Harder Than Add</h1>
-            <h3>Create</h3>
-<ul>
-  <li>Read form</li>
-  <li>Validate</li>
-  <li>Save new record</li>
-  <li>Refresh</li>
-</ul>
-<h3>Update/Delete</h3>
-<ul>
-  <li>Identify the correct record</li>
-  <li>Keep selection state accurate</li>
-  <li>Avoid stale widgets after refresh</li>
-  <li>Recover if the record is already gone</li>
-</ul>
+            <table>
+<thead>
+<tr>
+<th>Create</th>
+<th>Update / Delete</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read form</td>
+<td>Identify the correct record</td>
+</tr>
+<tr>
+<td>Validate</td>
+<td>Keep selection state accurate</td>
+</tr>
+<tr>
+<td>Save new record</td>
+<td>Avoid stale widgets after refresh</td>
+</tr>
+<tr>
+<td>Refresh list</td>
+<td>Recover if the record is already gone</td>
+</tr>
+</tbody>
+</table>
 <blockquote>Display order is not identity. Stable IDs are.</blockquote>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day6_Hour1_Advanced.md — Why add is easy and update/delete are trickier; Stable IDs: the core design choice --&gt;</p>
+<ul>
+  <li><strong>Fragile pattern</strong> — <code>records[selected_index] = ...</code></li>
+  <li><strong>Durable pattern</strong> — <code>service.update_item(selected_id, ...)</code></li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 2) Why add is easy and update/delete are trickier</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Standard Update Flow</h1>
-            <ol>
-  <li>User selects a record</li>
-  <li>UI loads that record into the form</li>
-  <li>User edits fields</li>
-  <li>UI sends <code>selected_id</code> + form values to the service</li>
-  <li>Service updates the correct record</li>
-  <li>UI refreshes the list and resets state intentionally</li>
-</ol>
-<pre data-lang="python"><code>service.update_item(selected_id, name, category, status, notes)</code></pre>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Editing pattern: select -&gt; load into form -&gt; save update; Advanced/lessons/lecture/Day6_Hour1_Advanced.md — Implement the standard GUI update flow --&gt;</p>
+        <section class="slide" id="stable-ids-the-core-design-choice-82653ba0" data-slide-number="11">
+            <h1>Stable IDs: The Core Design Choice</h1>
+            <p>A stable ID is created <strong>once</strong>, when the record is created.</p>
+<ul>
+  <li>Does <strong>not</strong> change when the record is edited</li>
+  <li>Does <strong>not</strong> depend on screen or sort order</li>
+  <li>Does <strong>not</strong> depend on list filtering</li>
+  <li><strong>Survives</strong> save/load cycles</li>
+</ul>
+<p><strong>Recommended form</strong> — a string UUID:</p>
+<pre data-lang="python"><code>from uuid import uuid4
+
+item_id = str(uuid4())  # e.g. &quot;3f2b1c4e-...&quot;</code></pre>
+<p>Keep <code>self.selected_item_id: str | None = None</code> in the <code>App</code> class.</p>
+<p>Capture it on selection. Pass it to every service call.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 3) Stable IDs: the core design choice</code></li>
+</ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="domain-model-trackeritem-trackerservice-51658ed7" data-slide-number="12">
+            <h1>Domain Model: TrackerItem + TrackerService</h1>
+            <pre data-lang="python"><code>from dataclasses import dataclass
+from uuid import uuid4
+
+
+@dataclass(slots=True)
+class TrackerItem:
+    item_id: str
+    name: str
+    category: str
+    status: str
+    notes: str = &quot;&quot;
+
+    @classmethod
+    def create(cls, name, category, status, notes=&quot;&quot;):
+        return cls(item_id=str(uuid4()), name=name,
+                   category=category, status=status, notes=notes)</code></pre>
+<p>Service enforces validation and owns mutation:</p>
+<pre data-lang="python"><code>def update_item(self, item_id, name, category, status, notes=&quot;&quot;):
+    if not name.strip():
+        raise ValidationError(&quot;Name is required.&quot;)
+    item = self.get_item(item_id)   # raises NotFoundError if missing
+    item.name = name.strip()
+    item.category = category.strip()
+    item.status = status.strip()
+    item.notes = notes.strip()
+    return item</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 4) Example domain model and service reminder</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="selection-handler-capturing-the-stable-id-04c21503" data-slide-number="13">
+            <h1>Selection Handler: Capturing the Stable ID</h1>
+            <pre data-lang="python"><code>def on_item_selected(self, event=None):
+    selection = self.tree.selection()
+    if not selection:
+        self.selected_item_id = None
+        return
+
+    values = self.tree.item(selection[0], &quot;values&quot;)
+    item_id = values[0]          # first column stores the stable ID
+    self.selected_item_id = item_id
+
+    try:
+        item = self.service.get_item(item_id)
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Selection Error&quot;, str(error))
+        self.refresh_items()
+        self.clear_form()
+        return
+
+    self.name_var.set(item.name)
+    self.category_var.set(item.category)
+    self.status_var.set(item.status)
+    self.notes_text.delete(&quot;1.0&quot;, tk.END)
+    self.notes_text.insert(&quot;1.0&quot;, item.notes)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 5) Update workflow: select -&gt; load -&gt; edit -&gt; save update</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="update-handler-5566428b" data-slide-number="14">
+            <h1>Update Handler</h1>
+            <pre data-lang="python"><code>def on_update(self):
+    if self.selected_item_id is None:
+        messagebox.showwarning(&quot;No Selection&quot;,
+                               &quot;Please select a record to update.&quot;)
+        return
+
+    try:
+        updated = self.service.update_item(
+            item_id=self.selected_item_id,
+            name=self.name_var.get(),
+            category=self.category_var.get(),
+            status=self.status_var.get(),
+            notes=self.notes_text.get(&quot;1.0&quot;, tk.END).strip(),
+        )
+    except ValidationError as error:
+        messagebox.showerror(&quot;Validation Error&quot;, str(error))
+        return
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Update Failed&quot;, str(error))
+        self.refresh_items()
+        self.clear_form()
+        self.selected_item_id = None
+        return
+
+    self.refresh_items(selected_item_id=updated.item_id)
+    self.set_status(f&quot;Updated: {updated.name}&quot;)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 5) Update workflow</code> — <code>on_update</code> example</li>
+</ul>
+        </section>
+
+        <section class="slide" id="delete-flow-and-confirmation-1462112f" data-slide-number="15">
             <h1>Delete Flow and Confirmation</h1>
-            <h3>Delete path</h3>
-<ul>
-  <li>Detect a valid selection</li>
-  <li>Ask for confirmation</li>
-  <li>Delete by ID</li>
-  <li>Refresh the list</li>
-  <li>Clear stale form values and selection</li>
-</ul>
-<h3>User-facing rule</h3>
-<ul>
-  <li>Destructive actions should be explicit</li>
-  <li>“No selection” is a normal state to handle</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Confirm delete with messagebox; Delete workflow, step by step; Advanced/lessons/lecture/Day6_Hour1_Advanced.md — Graceful error handling with <code>messagebox</code> --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Wiring Update + Delete</h1>
-            <h3>Instructor flow</h3>
+            <p>The delete checklist — always follow this order:</p>
 <ol>
-  <li>Select a record in <code>Treeview</code></li>
-  <li>Load values into the form</li>
-  <li>Update one field</li>
-  <li>Refresh and prove the correct record changed</li>
-  <li>Delete another record with confirmation</li>
-  <li>Show <code>NotFoundError</code> or missing-record handling gracefully</li>
+  <li>Guard: ensure a record is actually selected</li>
+  <li>Fetch item name to show in the confirmation prompt</li>
+  <li>Ask with <code>messagebox.askyesno</code> — destructive actions need explicit consent</li>
+  <li>Call <code>service.delete_item(selected_id)</code></li>
+  <li>Refresh the list from the service layer</li>
+  <li>Clear stale form values and stale <code>selected_item_id</code></li>
+  <li>Show status feedback</li>
 </ol>
-<h3>Watch for</h3>
+<pre data-lang="python"><code>confirmed = messagebox.askyesno(
+    title=&quot;Confirm Delete&quot;,
+    message=f&quot;Delete &#x27;{item.name}&#x27;? This action cannot be undone right now.&quot;,
+)
+if not confirmed:
+    return</code></pre>
+<blockquote>Canceling is part of correct behavior.</blockquote>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Which value is the true ID</li>
-  <li>What refresh does after each operation</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 6) Delete workflow: confirm, delete by ID, refresh cleanly</code></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: update flow and delete confirmation; Show handling NotFoundError gracefully; Advanced/lessons/lecture/Day6_Hour1_Advanced.md — Live demo guidance --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="delete-handler-64e2bec1" data-slide-number="16">
+            <h1>Delete Handler</h1>
+            <pre data-lang="python"><code>def on_delete(self):
+    if self.selected_item_id is None:
+        messagebox.showwarning(&quot;No Selection&quot;, &quot;Select a record to delete.&quot;)
+        return
+
+    try:
+        item = self.service.get_item(self.selected_item_id)
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Delete Failed&quot;, str(error))
+        self.refresh_items()
+        self.clear_form()
+        self.selected_item_id = None
+        return
+
+    if not messagebox.askyesno(&quot;Confirm Delete&quot;,
+                                f&quot;Delete &#x27;{item.name}&#x27;?&quot;):
+        return
+
+    try:
+        self.service.delete_item(item.item_id)
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Delete Failed&quot;, str(error))
+        return
+
+    self.refresh_items()
+    self.clear_form()
+    self.selected_item_id = None
+    self.set_status(f&quot;Deleted: {item.name}&quot;)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 6) Delete workflow</code> — <code>on_delete</code> example</li>
+</ul>
+        </section>
+
+        <section class="slide" id="refresh-pattern-one-source-of-truth-aedbd064" data-slide-number="17">
+            <h1>Refresh Pattern: One Source of Truth</h1>
+            <p>Rebuild the list from the service layer every time data changes:</p>
+<pre data-lang="python"><code>def refresh_items(self, selected_item_id=None):
+    for row_id in self.tree.get_children():
+        self.tree.delete(row_id)
+
+    for item in self.service.list_items():
+        row_id = self.tree.insert(
+            &quot;&quot;, tk.END,
+            values=(item.item_id, item.name, item.category, item.status),
+        )
+        if selected_item_id == item.item_id:
+            self.tree.selection_set(row_id)
+            self.tree.focus(row_id)</code></pre>
+<p>Any code path that changes data calls <strong>one</strong> refresh method.</p>
+<p>Do not patch visual details by hand — rebuild from the service.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 8) What the list refresh should do</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-gui-update-delete-round-trip-510af3f9" data-slide-number="18">
             <h1>Lab: GUI Update/Delete Round Trip</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+            <p><strong>Time — 25–35 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Implement Update using the selected record</li>
-  <li>Implement Delete with confirmation</li>
-  <li>Refresh the list after each change</li>
-  <li>Clear or reset stale form state</li>
-</ul>
+<ol>
+  <li>Wire row selection so the form loads the selected record</li>
+  <li>Track the selected record&#x27;s stable ID</li>
+  <li>Implement <strong>Update</strong> — send changes to the service layer</li>
+  <li>Implement <strong>Delete</strong> with confirmation dialog</li>
+  <li>Refresh the list automatically after each change</li>
+  <li>Handle <code>NotFoundError</code> and <code>ValidationError</code> with user-facing messages</li>
+</ol>
 <h3>Completion Criteria</h3>
-<p><span class="check">✓</span> Update works reliably</p>
-<p><span class="check">✓</span> Delete works reliably</p>
+<p><span class="check">✓</span> Update works reliably and targets the correct record</p>
+<p><span class="check">✓</span> Delete works reliably with confirmation</p>
 <p><span class="check">✓</span> UI stays in sync after each change</p>
-<p><span class="check">✓</span> Selection maps to a stable ID</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Update/Delete; Advanced/assignments/Advanced_Day6_homework.ipynb — Part 1: Hour 21 --&gt;</p>
+<p><span class="check">✓</span> Selection maps to a stable ID, not a row index</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour1_Advanced.md</code> → <code>### 10) Guided practice prompt</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 21)</h1>
-            <p><strong>⚠️</strong> Mutating stale widget state without reloading</p>
-<p><strong>⚠️</strong> Using list index as the real ID</p>
-<p><strong>⚠️</strong> Deleting while the UI still points at stale selection</p>
-<p><strong>⚠️</strong> Forgetting to refresh after update/delete</p>
+        <section class="slide" id="common-pitfalls-hour-21-0a8cfadb" data-slide-number="19">
+            <h1>Common Pitfalls — Hour 21</h1>
+            <p><strong>⚠️</strong> <strong>Using list index as the record ID</strong> — breaks after insert, delete, or sort</p>
+<p><strong>⚠️</strong> <strong>Mutating stale widget state</strong> — always reload from the service after any change</p>
+<p><strong>⚠️</strong> <strong>Deleting while pointing at a stale selection</strong> — guard with an early nil-check</p>
+<p><strong>⚠️</strong> <strong>Forgetting to refresh after update/delete</strong> — UI falls out of sync silently</p>
+<p><strong>⚠️</strong> <strong>Suppressing <code>NotFoundError</code></strong> — stale IDs are a design signal, not noise</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quick-check-3b75577a" data-slide-number="20">
             <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why is a stable ID better than relying on a visual row index?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day6_Quiz.html — Hour 21 best practice and pitfall --&gt;</p>
+            <blockquote>Why is a stable ID better than relying on a visual row index?</blockquote>
+<p>Expected answer: row positions change after insertions, deletes, and re-sorts.</p>
+<p>An ID created once at record creation survives all of those events.</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 22: GUI Architecture and Controller Separation</h1>
+        <section class="slide" id="hour-22-gui-architecture-and-controller-separation-17bb4f65" data-slide-number="21">
+            <h1>Hour 22 — GUI Architecture and Controller Separation</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-47bca827" data-slide-number="22">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Recognize callback spaghetti</li>
-  <li>Refactor toward an <code>App</code> / controller class</li>
-  <li>Keep callbacks thin</li>
-  <li>Separate widget creation from service logic</li>
-  <li>Manage selection and status state clearly</li>
+  <li>Recognize the symptoms of callback spaghetti</li>
+  <li>Refactor toward a <code>TrackerApp</code> controller class</li>
+  <li>Keep callbacks thin — collect input, call service, update screen</li>
+  <li>Separate widget construction from event-handling logic</li>
+  <li>Manage <code>selected_item_id</code> and status state in one clear place</li>
+  <li>Avoid circular imports by enforcing a one-way dependency direction</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 22: GUI architecture; Advanced/lessons/lecture/Day6_Hour2_Advanced.md — Learning objectives --&gt;</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>## Learning objectives</code></li>
+</ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-callback-spaghetti-looks-like-054982a4" data-slide-number="23">
             <h1>What Callback Spaghetti Looks Like</h1>
-            <ul>
-  <li>Top-level functions with unclear ownership</li>
-  <li>Globals for widgets and selection state</li>
-  <li>Duplicate form-reading code</li>
-  <li>Duplicate refresh code</li>
-  <li>Business rules embedded directly in callbacks</li>
-  <li>Fragile bugs when state changes in one place but not another</li>
+            <p>Common symptoms in a growing GUI codebase:</p>
+<ul>
+  <li>Many top-level functions with <strong>unclear ownership</strong></li>
+  <li>Globals for widgets: <code>name_entry</code>, <code>tree</code>, <code>status_label</code></li>
+  <li>Duplicate form-reading logic in every handler</li>
+  <li>Duplicate refresh logic after every action</li>
+  <li><strong>Business rules embedded directly in callbacks</strong></li>
+  <li>Mysterious bugs from stale selection state</li>
+  <li>Hard-to-test code because logic is fused to UI objects</li>
 </ul>
-<h3>Smell test</h3>
-<p>If adding one button means editing scattered unrelated code, structure is the problem.</p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day6_Hour2_Advanced.md — What callback spaghetti looks like --&gt;</p>
+<h3>The smell test</h3>
+<blockquote>If adding **one button** means editing six scattered unrelated functions,</blockquote>
+<blockquote>the problem is structure, not Tkinter.</blockquote>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 2) What callback spaghetti looks like</code></li>
+</ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="before-global-state-mess-9c5f73b8" data-slide-number="24">
+            <h1>Before: Global-State Mess</h1>
+            <pre data-lang="python"><code>service = TrackerService()
+selected_item_id = None       # global — shared, unmanaged
+
+def update_item():
+    global selected_item_id
+    name = name_entry.get()             # repeated form reads
+    category = category_entry.get()
+    status = status_combo.get()
+    notes = notes_text.get(&quot;1.0&quot;, &quot;end&quot;).strip()
+    service.update_item(selected_item_id, name, category, status, notes)
+    refresh_tree()             # duplicated in add_item and delete_item
+    status_label.config(text=&quot;Updated item&quot;)
+
+def delete_item():
+    global selected_item_id
+    service.delete_item(selected_item_id)   # no confirmation, no error guard
+    refresh_tree()
+    clear_form()</code></pre>
+<p>Each handler knows too much. State ownership is invisible.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 4) A quick &#x27;before&#x27; example</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="target-architecture-14c5be74" data-slide-number="25">
             <h1>Target Architecture</h1>
-            <h3>Model / domain</h3>
+            <pre data-lang="text"><code>main.py
+  └── assembles TrackerApp(root, service)
+
+ui/app.py   ← TrackerApp
+  ├── build_ui()         widget creation
+  ├── get_form_data()    read form once, reuse everywhere
+  ├── clear_form()
+  ├── refresh_items()
+  ├── on_add()           thin callbacks → service calls
+  ├── on_update()
+  ├── on_delete()
+  ├── on_item_selected()
+  └── set_status()
+
+core/service.py   ← validation, mutation, lookup
+core/models.py    ← TrackerItem
+core/exceptions.py</code></pre>
+<blockquote>The `App` class is a **traffic director**, not the whole city.</blockquote>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>TrackerItem</code></li>
-  <li>Exceptions</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 3) The target structure for this capstone</code></li>
 </ul>
-<h3>Service layer</h3>
-<ul>
-  <li>Add, update, delete, list, get by ID</li>
-</ul>
-<h3>UI / controller class</h3>
-<ul>
-  <li>Builds widgets</li>
-  <li>Reads form values</li>
-  <li>Calls the service</li>
-  <li>Refreshes the screen</li>
-  <li>Owns selection + status state</li>
-</ul>
-<pre data-lang="text"><code>widgets -&gt; App/controller -&gt; service -&gt; model</code></pre>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Thin UI callbacks call service layer; Advanced/lessons/lecture/Day6_Hour2_Advanced.md — The target structure for this capstone --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Refactor into `TrackerApp`</h1>
-            <h3>Refactor target methods</h3>
+        <section class="slide" id="trackerapp-class-shell-635eaa84" data-slide-number="26">
+            <h1>TrackerApp: Class Shell</h1>
+            <pre data-lang="python"><code>import tkinter as tk
+from tkinter import ttk, messagebox
+from core.exceptions import NotFoundError, ValidationError
+from core.service import TrackerService
+
+
+class TrackerApp:
+    def __init__(self, root: tk.Tk, service: TrackerService) -&gt; None:
+        self.root = root
+        self.service = service
+        self.selected_item_id: str | None = None
+        self.status_text = tk.StringVar(value=&quot;Ready&quot;)
+        self.name_var = tk.StringVar()
+        self.category_var = tk.StringVar()
+        self.status_var = tk.StringVar()
+
+        self.root.title(&quot;Full-Stack Tracker&quot;)
+        self.build_ui()
+        self.refresh_items()</code></pre>
+<p>App entry point stays minimal:</p>
+<pre data-lang="python"><code>def main() -&gt; None:
+    root = tk.Tk()
+    app = TrackerApp(root=root, service=TrackerService())
+    root.mainloop()</code></pre>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>build_ui()</code></li>
-  <li><code>refresh()</code></li>
-  <li><code>on_add()</code></li>
-  <li><code>on_update()</code></li>
-  <li><code>on_delete()</code></li>
-  <li><code>load_selected_record()</code></li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 7) Live refactor: build the TrackerApp shell first</code></li>
 </ul>
-<h3>Key rule</h3>
-<ul>
-  <li>Change one boundary at a time</li>
-  <li>Preserve working behavior while cleaning structure</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Refactor to an App class with methods: build_ui(), refresh(), on_add(), on_delete(); Advanced/lessons/lecture/Day6_Hour2_Advanced.md — Refactoring into an <code>App</code> controller class --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="build-ui-widget-construction-in-one-place-9c86f7cc" data-slide-number="27">
+            <h1>build_ui(): Widget Construction in One Place</h1>
+            <pre data-lang="python"><code>def build_ui(self) -&gt; None:
+    f = ttk.Frame(self.root, padding=12)
+    f.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+    self.root.columnconfigure(0, weight=1)
+    self.root.rowconfigure(0, weight=1)
+
+    ttk.Label(f, text=&quot;Name&quot;).grid(row=0, column=0, sticky=&quot;w&quot;)
+    ttk.Entry(f, textvariable=self.name_var, width=30).grid(row=0, column=1, sticky=&quot;ew&quot;)
+
+    ttk.Label(f, text=&quot;Status&quot;).grid(row=1, column=0, sticky=&quot;w&quot;)
+    self.status_combo = ttk.Combobox(
+        f, textvariable=self.status_var,
+        values=[&quot;Open&quot;, &quot;In Progress&quot;, &quot;Done&quot;], state=&quot;readonly&quot;,
+    )
+    self.status_combo.grid(row=1, column=1, sticky=&quot;ew&quot;)
+
+    bf = ttk.Frame(f)
+    bf.grid(row=3, column=0, columnspan=2, sticky=&quot;ew&quot;, pady=8)
+    ttk.Button(bf, text=&quot;Add&quot;,    command=self.on_add).grid(row=0, column=0, padx=4)
+    ttk.Button(bf, text=&quot;Update&quot;, command=self.on_update).grid(row=0, column=1, padx=4)
+    ttk.Button(bf, text=&quot;Delete&quot;, command=self.on_delete).grid(row=0, column=2, padx=4)
+
+    self.tree = ttk.Treeview(f, columns=(&quot;id&quot;,&quot;name&quot;,&quot;category&quot;,&quot;status&quot;),
+                              show=&quot;headings&quot;, height=10)
+    self.tree.grid(row=4, column=0, columnspan=2, sticky=&quot;nsew&quot;)
+    self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_item_selected)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 8) Refactor widget creation into build_ui()</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="thin-callbacks-get-form-data-on-add-98b7ce2b" data-slide-number="28">
+            <h1>Thin Callbacks: get_form_data + on_add</h1>
+            <p>Extract repeated form-reading into <strong>one</strong> helper:</p>
+<pre data-lang="python"><code>def get_form_data(self) -&gt; dict[str, str]:
+    return {
+        &quot;name&quot;:     self.name_var.get(),
+        &quot;category&quot;: self.category_var.get(),
+        &quot;status&quot;:   self.status_var.get(),
+        &quot;notes&quot;:    self.notes_text.get(&quot;1.0&quot;, tk.END).strip(),
+    }</code></pre>
+<p>Callback now reads like a policy statement:</p>
+<pre data-lang="python"><code>def on_add(self) -&gt; None:
+    try:
+        item = self.service.add_item(**self.get_form_data())
+    except ValidationError as error:
+        messagebox.showerror(&quot;Validation Error&quot;, str(error))
+        return
+
+    self.refresh_items(selected_item_id=item.item_id)
+    self.set_status(f&quot;Added: {item.name}&quot;)
+    self.clear_form(keep_status=True)</code></pre>
+<blockquote>One callback removed three duplicated form-read blocks.</blockquote>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 9) Thin callbacks as methods</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="state-management-selection-and-status-29c50b15" data-slide-number="29">
+            <h1>State Management: Selection and Status</h1>
+            <p><strong>Keep</strong> cleanly named app state on <code>self</code>:</p>
+<ul>
+  <li><code>self.selected_item_id</code> — the one piece of identity state</li>
+  <li><code>self.status_text</code> — a <code>StringVar</code> the status label binds to</li>
+  <li><code>self.name_var</code>, <code>self.category_var</code>, <code>self.status_var</code> — form mirrors</li>
+</ul>
+<p><strong>Avoid</strong> hidden state:</p>
+<ul>
+  <li>globals changed from multiple functions</li>
+  <li>relying on whatever tree row still exists after refresh</li>
+  <li>leaving form fields populated with unknown record content</li>
+</ul>
+<p><code>set_status</code> stays trivial:</p>
+<pre data-lang="python"><code>def set_status(self, message: str) -&gt; None:
+    self.status_text.set(message)</code></pre>
+<p>Centralize. Name everything. One owner per piece of state.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 10) State management: selection and status</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="module-boundaries-and-import-direction-20fde2f8" data-slide-number="30">
+            <h1>Module Boundaries and Import Direction</h1>
+            <pre data-lang="text"><code>main.py          assembles dependencies
+  ↓ imports
+ui/app.py        imports service + exceptions
+  ↓ imports
+core/service.py  imports models + exceptions
+  ↓ imports
+core/models.py   no imports from ui or service</code></pre>
+<p><strong>Rule</strong> — <code>core/service.py</code> must <strong>never</strong> import <code>ui/app.py</code>.</p>
+<p>If that boundary breaks:</p>
+<ol>
+  <li>Step back before debugging behavior</li>
+  <li>Re-establish one-way dependency</li>
+  <li>Use dependency injection to pass objects rather than importing</li>
+</ol>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 12) Circular imports and module boundaries</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="refactor-strategy-move-one-piece-at-a-time-45a68378" data-slide-number="31">
+            <h1>Refactor Strategy: Move One Piece at a Time</h1>
+            <p>Safe sequence — never rewrite the whole GUI from scratch:</p>
+<ol>
+  <li><strong>Freeze behavior</strong> — run the app once; record what works; commit or backup</li>
+  <li><strong>Create the class shell</strong> — open a window from <code>TrackerApp.__init__</code></li>
+  <li><strong>Move widget creation</strong> into <code>build_ui()</code>; verify window still opens</li>
+  <li><strong>Move one callback</strong> (Add first); test immediately</li>
+  <li><strong>Extract helpers</strong> — <code>get_form_data()</code>, <code>clear_form()</code>, <code>refresh_items()</code></li>
+  <li><strong>Move remaining callbacks</strong> — Update, Delete, selection handler</li>
+  <li><strong>Verify</strong> behavior is unchanged end-to-end</li>
+  <li><strong>Split modules</strong> only after the class is stable</li>
+</ol>
+<blockquote>Behavior must be preserved at every step.</blockquote>
+<blockquote>A refactor that breaks working features is a regression, not progress.</blockquote>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 13) Refactor strategy: do not rebuild the plane midair</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-refactor-without-breaking-behavior-3fb29ba4" data-slide-number="32">
             <h1>Lab: Refactor Without Breaking Behavior</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Required Tasks</h3>
 <ul>
-  <li>Create an <code>App</code> class that owns the UI</li>
-  <li>Move service calls out of widget construction code</li>
-  <li>Keep callbacks small and readable</li>
-  <li>Verify that behavior is unchanged after the refactor</li>
+  <li>Create a <code>TrackerApp</code> class that builds and owns the interface</li>
+  <li>Move widget references into <code>build_ui()</code> on <code>self</code></li>
+  <li>Move event handlers into methods on the class</li>
+  <li>Extract <code>get_form_data()</code> and <code>refresh_items()</code> helpers</li>
+  <li>Keep add/update/delete/select behavior working correctly</li>
+  <li>Confirm business rules remain in the service layer</li>
 </ul>
 <h3>Completion Criteria</h3>
-<p><span class="check">✓</span> Code is easier to read</p>
-<p><span class="check">✓</span> Functionality is preserved</p>
-<p><span class="check">✓</span> State ownership is clearer</p>
-<p><span class="check">✓</span> Circular imports are avoided</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Refactor GUI; Advanced/assignments/Advanced_Day6_homework.ipynb — Part 2: Hour 22 --&gt;</p>
+<p><span class="check">✓</span> New teammate can locate widget creation and callback logic quickly</p>
+<p><span class="check">✓</span> App launches and performs CRUD correctly after refactor</p>
+<p><span class="check">✓</span> Selection state is managed in one clear place</p>
+<p><span class="check">✓</span> No new circular import problems introduced</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour2_Advanced.md</code> → <code>### 15) Practice lab script</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 22)</h1>
-            <p><strong>⚠️</strong> Over-refactoring midstream and breaking working code</p>
-<p><strong>⚠️</strong> Callback spaghetti hidden inside a class instead of removed</p>
-<p><strong>⚠️</strong> Circular imports between UI and service modules</p>
-<p><strong>⚠️</strong> Letting the controller become the business brain</p>
+        <section class="slide" id="common-pitfalls-hour-22-bec5cb50" data-slide-number="33">
+            <h1>Common Pitfalls — Hour 22</h1>
+            <p><strong>⚠️</strong> <strong>Over-refactoring midstream</strong> — move one thing, test, then move the next</p>
+<p><strong>⚠️</strong> <strong>Callback spaghetti inside a class</strong> — a class wrapper does not fix scattered logic</p>
+<p><strong>⚠️</strong> <strong>Circular imports</strong> — if <code>service.py</code> imports <code>app.py</code>, re-establish one-way deps</p>
+<p><strong>⚠️</strong> <strong>Controller as the business brain</strong> — keep validation and domain logic in the service</p>
+<p><strong>⚠️</strong> <strong>Giant <code>build_ui()</code> method</strong> — extract <code>build_form()</code>, <code>build_buttons()</code>, <code>build_list()</code></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quick-check-ea226bc3" data-slide-number="34">
             <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What is one sign that your GUI code needs refactoring?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day6_Quiz.html — Hour 22 explanation --&gt;</p>
+            <blockquote>What is one sign that your GUI code needs refactoring?</blockquote>
+<p>Strong answer: *&quot;If adding one button requires editing five scattered globals or functions,</p>
+<p>the structure is the problem.&quot;*</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 23: Persistence + Polish Sprint</h1>
+        <section class="slide" id="hour-23-persistence-and-polish-sprint-70e0fe13" data-slide-number="35">
+            <h1>Hour 23 — Persistence and Polish Sprint</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-c173d4d4" data-slide-number="36">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Load JSON on startup</li>
-  <li>Save after add/update/delete</li>
-  <li>Handle missing or invalid JSON gracefully</li>
-  <li>Add one small usability improvement</li>
-  <li>Prepare for a confident checkpoint demo</li>
+  <li>Load tracker data from JSON when the app starts</li>
+  <li>Save after add, update, and delete operations</li>
+  <li>Handle missing files and malformed JSON without crashing</li>
+  <li>Add at least one small usability improvement</li>
+  <li>Explain why JSON is the right persistence step before SQLite</li>
+  <li>Prepare a GUI milestone demonstrable in the checkpoint hour</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 23: GUI mini-project sprint: persistence + polish; Advanced/lessons/lecture/Day6_Hour3_Advanced.md — Learning objectives --&gt;</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>## Learning objectives</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Why JSON Is the Right Milestone Here</h1>
-            <ul>
-  <li>JSON is transparent and easy to inspect</li>
-  <li>JSON is portable and simple to debug</li>
-  <li>JSON is enough for <strong>this</strong> milestone</li>
-  <li>SQLite comes next session</li>
-</ul>
-<h3>Sequencing matters</h3>
+        <section class="slide" id="why-json-now-not-sqlite-2f4200b5" data-slide-number="37">
+            <h1>Why JSON Now, Not SQLite</h1>
+            <table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>JSON today</th>
+<th>SQLite next session</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Human-readable</td>
+<td><span class="check">✓</span> easy to inspect</td>
+<td><span class="cross">✗</span> binary format</td>
+</tr>
+<tr>
+<td>Setup cost</td>
+<td><span class="check">✓</span> zero</td>
+<td>requires schema DDL</td>
+</tr>
+<tr>
+<td>Debug speed</td>
+<td><span class="check">✓</span> open in editor</td>
+<td>requires tooling</td>
+</tr>
+<tr>
+<td>Query power</td>
+<td>limited</td>
+<td><span class="check">✓</span> SQL</td>
+</tr>
+<tr>
+<td>Concurrent writes</td>
+<td>limited</td>
+<td><span class="check">✓</span> supported</td>
+</tr>
+</tbody>
+</table>
+<blockquote>&quot;Good engineers start with the solution that best fits the milestone.&quot;</blockquote>
+<p>Architecture matters here:</p>
 <ul>
-  <li>Good architecture today makes the storage swap easier tomorrow</li>
+  <li>Strong service boundaries today make the SQLite swap <strong>cheaper</strong> tomorrow</li>
   <li>Stability beats novelty in a checkpoint week</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day6_Hour3_Advanced.md — Why JSON now instead of SQLite now --&gt;</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 2) Why JSON now instead of SQLite now</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Persistence Hook Pattern</h1>
-            <h3>Minimum behavior</h3>
+        <section class="slide" id="service-side-json-persistence-61a45214" data-slide-number="38">
+            <h1>Service-Side JSON Persistence</h1>
+            <pre data-lang="python"><code>from __future__ import annotations
+import json
+from dataclasses import asdict
+from pathlib import Path
+
+
+class StorageError(Exception):
+    pass
+
+
+class TrackerService:
+    # ... existing CRUD methods ...
+
+    def save_to_json(self, file_path: Path) -&gt; None:
+        data = [asdict(item) for item in self._items]
+        try:
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.write_text(json.dumps(data, indent=2), encoding=&quot;utf-8&quot;)
+        except OSError as error:
+            raise StorageError(f&quot;Unable to save: {error}&quot;) from error
+
+    def load_from_json(self, file_path: Path) -&gt; None:
+        if not file_path.exists():
+            self._items = []
+            return
+        try:
+            raw = json.loads(file_path.read_text(encoding=&quot;utf-8&quot;))
+        except json.JSONDecodeError as error:
+            raise StorageError(f&quot;Invalid JSON: {error}&quot;) from error
+        except OSError as error:
+            raise StorageError(f&quot;Cannot read file: {error}&quot;) from error
+        self._items = [TrackerItem(**r) for r in raw]</code></pre>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Load on startup</li>
-  <li>Save after add</li>
-  <li>Save after update</li>
-  <li>Save after delete</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 4) Example: service-side JSON persistence</code></li>
 </ul>
-<h3>Optional polish</h3>
-<ul>
-  <li>File menu</li>
-  <li>About/help dialog</li>
-  <li>Status bar message</li>
-  <li>Save shortcut such as <code>Ctrl+S</code></li>
-</ul>
-<p><strong>Quiz/homework cue</strong>: <code>Hour 23 | persistence hook: save on demand</code></p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Load data on startup; save after changes; Advanced/assignments/Advanced_Day6_homework.ipynb — Part 3: Hour 23; Advanced/quizzes/Advanced_Day6_Quiz.html — Hour 23 canonical contract --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Load → Change → Save → Restart</h1>
-            <h3>Instructor flow</h3>
+        <section class="slide" id="load-on-startup-1f0282c3" data-slide-number="39">
+            <h1>Load on Startup</h1>
+            <pre data-lang="python"><code>from pathlib import Path
+from tkinter import messagebox
+
+
+class TrackerApp:
+    def __init__(self, root, service):
+        self.root = root
+        self.service = service
+        self.data_file = Path(&quot;data/tracker_items.json&quot;)
+        self.selected_item_id = None
+        self.status_text = tk.StringVar(value=&quot;Ready&quot;)
+        self.name_var = tk.StringVar()
+        self.category_var = tk.StringVar()
+        self.status_var = tk.StringVar()
+
+        self.build_ui()
+        self.load_data_on_startup()   # load before first refresh
+        self.refresh_items()
+
+    def load_data_on_startup(self):
+        try:
+            self.service.load_from_json(self.data_file)
+        except StorageError as error:
+            messagebox.showerror(&quot;Load Error&quot;, str(error))
+            self.set_status(&quot;Started with empty data — load error&quot;)
+            return
+        self.set_status(f&quot;Loaded {len(self.service.list_items())} items&quot;)</code></pre>
+<p>Missing file on first run is <strong>normal</strong>, not an error.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 5) Load on startup</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="persist-changes-helper-5e470026" data-slide-number="40">
+            <h1>persist_changes() Helper</h1>
+            <p>Use a <strong>single</strong> helper so all three callbacks call the same save logic:</p>
+<pre data-lang="python"><code>def persist_changes(self) -&gt; bool:
+    try:
+        self.service.save_to_json(self.data_file)
+    except StorageError as error:
+        messagebox.showerror(&quot;Save Error&quot;, str(error))
+        self.set_status(&quot;Save failed&quot;)
+        return False
+    self.set_status(&quot;Changes saved&quot;)
+    return True</code></pre>
+<blockquote>⚠️ Saving only after add, and forgetting update/delete,</blockquote>
+<blockquote>is the **most common persistence bug** at this stage.</blockquote>
+<p>The pattern for every mutation callback:</p>
 <ol>
-  <li>Start the app and load records</li>
-  <li>Add or update one record</li>
-  <li>Save automatically or on demand</li>
-  <li>Restart the app</li>
-  <li>Prove data persisted</li>
-  <li>Show a calm error path for malformed JSON</li>
+  <li>Do the domain action via service</li>
+  <li>Call <code>persist_changes()</code></li>
+  <li>Refresh the interface</li>
+  <li>Give status feedback</li>
 </ol>
-<h3>Design takeaway</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Persistence is part of user trust</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 6) Save after each CRUD operation</code></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: start app -&gt; load -&gt; add -&gt; save -&gt; restart -&gt; load; Advanced/lessons/lecture/Day6_Hour3_Advanced.md — Opening: why persistence changes the feel of an app --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Mini-Project Sprint</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+        <section class="slide" id="crud-callbacks-with-persistence-hooks-5812ecb4" data-slide-number="41">
+            <h1>CRUD Callbacks With Persistence Hooks</h1>
+            <pre data-lang="python"><code>def on_add(self):
+    try:
+        item = self.service.add_item(**self.get_form_data())
+    except ValidationError as error:
+        messagebox.showerror(&quot;Validation Error&quot;, str(error))
+        return
+    self.persist_changes()
+    self.refresh_items(selected_item_id=item.item_id)
+    self.clear_form(keep_status=True)
+
+def on_update(self):
+    if self.selected_item_id is None:
+        messagebox.showwarning(&quot;No Selection&quot;, &quot;Select a record to update.&quot;)
+        return
+    try:
+        item = self.service.update_item(self.selected_item_id,
+                                         **self.get_form_data())
+    except (ValidationError, NotFoundError) as error:
+        messagebox.showerror(&quot;Update Error&quot;, str(error))
+        return
+    self.persist_changes()
+    self.refresh_items(selected_item_id=item.item_id)
+
+def on_delete(self):
+    if self.selected_item_id is None:
+        messagebox.showwarning(&quot;No Selection&quot;, &quot;Select a record to delete.&quot;)
+        return
+    try:
+        item = self.service.get_item(self.selected_item_id)
+    except NotFoundError as error:
+        messagebox.showerror(&quot;Delete Error&quot;, str(error))
+        return
+    if not messagebox.askyesno(&quot;Confirm Delete&quot;, f&quot;Delete &#x27;{item.name}&#x27;?&quot;):
+        return
+    self.service.delete_item(item.item_id)
+    self.persist_changes()
+    self.refresh_items()
+    self.clear_form(keep_status=True)
+    self.selected_item_id = None</code></pre>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Add load on startup and save after CRUD</li>
-  <li>Handle missing/corrupt JSON without crashing</li>
-  <li>Add one usability improvement</li>
-  <li>Prepare a short milestone demo path</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 6) Save after each CRUD operation</code> — full CRUD example</li>
+</ul>
+        </section>
+
+        <section class="slide" id="graceful-json-error-handling-eaf85c5e" data-slide-number="42">
+            <h1>Graceful JSON Error Handling</h1>
+            <p>Three failure scenarios the app must survive:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Expected behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File missing on first launch</td>
+<td>Start with empty list; no crash</td>
+</tr>
+<tr>
+<td>File corrupted or invalid JSON</td>
+<td>Show <code>showerror</code> dialog; continue with empty list</td>
+</tr>
+<tr>
+<td>Disk write failure on save</td>
+<td>Show <code>showerror</code> dialog; data stays in memory</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Never</strong> let a JSON error produce a raw traceback for the user.</p>
+<pre data-lang="python"><code>except json.JSONDecodeError as error:
+    raise StorageError(f&quot;The data file is not valid JSON: {error}&quot;) from error</code></pre>
+<p>Recovery strategy for malformed file:</p>
+<ul>
+  <li>Show error dialog</li>
+  <li>Keep app open with current in-memory state or empty list</li>
+  <li>Optionally offer to back up the bad file before overwriting</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 7) Graceful handling of malformed JSON</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="optional-jsontrackerstore-for-stronger-separation-0ade1f47" data-slide-number="43">
+            <h1>Optional: JsonTrackerStore for Stronger Separation</h1>
+            <p>If the class is moving quickly, show a dedicated storage helper:</p>
+<pre data-lang="python"><code>class JsonTrackerStore:
+    def __init__(self, file_path: Path) -&gt; None:
+        self.file_path = file_path
+
+    def save_items(self, items: list[TrackerItem]) -&gt; None:
+        payload = [asdict(item) for item in items]
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.file_path.write_text(json.dumps(payload, indent=2),
+                                   encoding=&quot;utf-8&quot;)
+
+    def load_items(self) -&gt; list[TrackerItem]:
+        if not self.file_path.exists():
+            return []
+        raw = json.loads(self.file_path.read_text(encoding=&quot;utf-8&quot;))
+        return [TrackerItem(**r) for r in raw]</code></pre>
+<p><strong>Note</strong> — the checkpoint does not require this abstraction.</p>
+<p>Use it only if the class has time and the architecture discussion is productive.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 8) A dedicated JSON store helper, if you want stronger separation</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="usability-polish-menu-and-keyboard-shortcut-cf46d78f" data-slide-number="44">
+            <h1>Usability Polish: Menu and Keyboard Shortcut</h1>
+            <p>Polish is <strong>not</strong> decoration — it teaches users what the app is doing.</p>
+<pre data-lang="python"><code>def build_menu(self) -&gt; None:
+    menubar = tk.Menu(self.root)
+
+    file_menu = tk.Menu(menubar, tearoff=False)
+    file_menu.add_command(label=&quot;Save&quot;,
+                          command=self.persist_changes,
+                          accelerator=&quot;Ctrl+S&quot;)
+    file_menu.add_separator()
+    file_menu.add_command(label=&quot;Exit&quot;, command=self.root.destroy)
+    menubar.add_cascade(label=&quot;File&quot;, menu=file_menu)
+
+    help_menu = tk.Menu(menubar, tearoff=False)
+    help_menu.add_command(label=&quot;About&quot;, command=self.show_about)
+    menubar.add_cascade(label=&quot;Help&quot;, menu=help_menu)
+
+    self.root.config(menu=menubar)
+    self.root.bind(&quot;&lt;Control-s&gt;&quot;,
+                   lambda event: self.persist_changes())</code></pre>
+<p>Other quick polish options: status bar, Clear Form button, improved window title,</p>
+<p>default focus on startup, hide ID column visually while keeping it internally.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 9) Usability polish: turn the demo into a tool</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-mini-project-sprint-c8434e6c" data-slide-number="45">
+            <h1>Lab: Mini-Project Sprint</h1>
+            <p><strong>Time — 25–35 minutes</strong></p>
+<h3>Required Tasks</h3>
+<ol>
+  <li>Load records from JSON on app startup</li>
+  <li>Save after add, update, and delete</li>
+  <li>Handle a missing data file without crashing</li>
+  <li>Handle invalid JSON with a clear error message</li>
+  <li>Add <strong>at least one</strong> usability improvement</li>
+</ol>
+<h3>Choose at Least One Polish Feature</h3>
+<ul>
+  <li>File menu with Save and Exit</li>
+  <li>Help/About dialog</li>
+  <li>Status bar message for last action</li>
+  <li><code>Ctrl+S</code> save shortcut</li>
+  <li>Clear Form button</li>
 </ul>
 <h3>Completion Criteria</h3>
-<p><span class="check">✓</span> GUI persists data across runs</p>
-<p><span class="check">✓</span> User feedback is clear</p>
-<p><span class="check">✓</span> Core workflow works before visual polish</p>
-<p><span class="check">✓</span> Restart behavior is demonstrable</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: GUI milestone sprint; Advanced/assignments/Advanced_Day6_homework.ipynb — Part 3: Hour 23 --&gt;</p>
+<p><span class="check">✓</span> Data persists across restarts</p>
+<p><span class="check">✓</span> User feedback is understandable</p>
+<p><span class="check">✓</span> No obvious crash during normal use</p>
+<p><span class="check">✓</span> Code organized well enough to explain at checkpoint</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour3_Advanced.md</code> → <code>### 12) Sprint instructions for learners</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 23)</h1>
-            <p><strong>⚠️</strong> Polishing visuals before save/load actually works</p>
-<p><strong>⚠️</strong> Forgetting to save after update/delete</p>
-<p><strong>⚠️</strong> Crashing on malformed JSON</p>
-<p><strong>⚠️</strong> Treating JSON as “temporary” and never testing restart behavior</p>
+        <section class="slide" id="common-pitfalls-hour-23-7569330b" data-slide-number="46">
+            <h1>Common Pitfalls — Hour 23</h1>
+            <p><strong>⚠️</strong> <strong>Saving after add, but forgetting update/delete</strong> — persistence is inconsistent</p>
+<p><strong>⚠️</strong> <strong>Crashing on malformed JSON</strong> — always wrap <code>json.loads</code> in exception handling</p>
+<p><strong>⚠️</strong> <strong>Storing widget state instead of domain objects</strong> — serialize <code>TrackerItem</code>, not UI details</p>
+<p><strong>⚠️</strong> <strong>Dropping stable IDs on save</strong> — the JSON must preserve existing <code>item_id</code> values</p>
+<p><strong>⚠️</strong> <strong>Polishing visuals before save/load actually works</strong> — a stylish app that loses data is a failed milestone</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quick-check-edb618f0" data-slide-number="47">
             <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What usability improvement did you add that you would want in a real tool?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day6_Quiz.html — Hour 23 explanation --&gt;</p>
+            <blockquote>Why must save happen after **update** and **delete**, not only after add?</blockquote>
+<p>Strong answer: *&quot;The JSON file must reflect the current source of truth.</p>
+<p>Forgetting to save after update or delete creates a mismatch between what the user sees and what persists after restart.&quot;*</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 24: Checkpoint 3 — GUI Milestone Demo</h1>
+        <section class="slide" id="hour-24-checkpoint-3-gui-milestone-demo-4858dabb" data-slide-number="48">
+            <h1>Hour 24 — Checkpoint 3: GUI Milestone Demo</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Checkpoint outcome</h1>
-            <ul>
-  <li>Launch the GUI</li>
-  <li>Perform CRUD through the interface</li>
-  <li>Prove JSON persistence across restart</li>
-  <li>Explain where the service layer lives</li>
-  <li>Explain how the app finds the correct record for update/delete</li>
+        <section class="slide" id="checkpoint-overview-f28745ac" data-slide-number="49">
+            <h1>Checkpoint Overview</h1>
+            <p><strong>Expected outcome</strong> — a working GUI CRUD app wired to the service layer.</p>
+<p>Grading focus (four pillars):</p>
+<ol>
+  <li><strong>UI works</strong> — launch reliability and usable controls</li>
+  <li><strong>CRUD complete</strong> — add, list, update, delete all through the interface</li>
+  <li><strong>Errors handled</strong> — expected mistakes do not crash the app</li>
+  <li><strong>Code organization</strong> — clean separation between UI and service responsibilities</li>
+</ol>
+<p>Must-pass gates (any failure caps the score):</p>
+<ul>
+  <li>Stable IDs for update and delete — including after restart and load</li>
+  <li>Validation in service or core layer, not only in UI widget callbacks</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 24: Checkpoint 3: GUI milestone demo; Advanced/lessons/lecture/Day6_Hour4_Advanced.md — Learning objectives --&gt;</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## What success looks like in this checkpoint hour</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Required Demo Path</h1>
-            <h3>Part A — Launch and orient</h3>
+        <section class="slide" id="instructor-stance-for-this-hour-04c43236" data-slide-number="50">
+            <h1>Instructor Stance for This Hour</h1>
+            <p>Use a <strong>coaching evaluator</strong> stance — rigorous on evidence, calm on process.</p>
+<p>Opening language to read:</p>
+<blockquote>&quot;This checkpoint is a proof of working software and maintainable structure,</blockquote>
+<blockquote>not a perfection contest. I will score what you demonstrate.</blockquote>
+<blockquote>If something breaks, narrate your expected behavior and what you would inspect first.</blockquote>
+<blockquote>Good engineering communication still earns credit.&quot;</blockquote>
+<p>Score only <strong>directly observed</strong> behavior:</p>
 <ul>
-  <li>Open the app cleanly</li>
-  <li>Point out form, list, and feedback area</li>
+  <li>&quot;It worked earlier&quot; — does not count</li>
+  <li>&quot;The code should do this&quot; — does not count</li>
+  <li>Explanation supports partial understanding credit but cannot replace execution evidence</li>
 </ul>
-<h3>Part B — CRUD</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Add a record</li>
-  <li>Update the correct record</li>
-  <li>Delete a record with confirmation</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Instructor stance for this hour</code></li>
 </ul>
-<h3>Part C — Persistence</h3>
-<ul>
-  <li>Save if needed</li>
-  <li>Close and reopen</li>
-  <li>Show that records reload</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day6_Hour4_Advanced.md — Concrete learner demo prompt; Advanced/quizzes/Advanced_Day6_Quiz.html — Hour 24 canonical contract --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>What the Checkpoint Rubric Rewards</h1>
-            <ul>
-  <li>GUI works reliably</li>
-  <li>Persistence works reliably</li>
-  <li>Errors are handled reasonably</li>
-  <li>Callbacks are not doing all the business logic</li>
-  <li>Stable IDs are used instead of list positions</li>
-  <li>Learner can explain one next improvement</li>
+        <section class="slide" id="canonical-demo-sequence-d8e9e3b7" data-slide-number="51">
+            <h1>Canonical Demo Sequence</h1>
+            <p>Prompt every learner with the same script:</p>
+<blockquote>&quot;Please run the canonical Hour 24 sequence now: **add → list → update → delete → restart → load**.&quot;</blockquote>
+<p>Then ask three standard questions:</p>
+<ol>
+  <li>&quot;Show where your service layer performs validation.&quot;</li>
+  <li>&quot;Show how selected rows map to stable IDs.&quot;</li>
+  <li>&quot;Trigger one typical error path and show no-crash behavior.&quot;</li>
+</ol>
+<p>Time discipline:</p>
+<ul>
+  <li>Core flow target — <strong>5 minutes</strong></li>
+  <li>Q&amp;A and architecture explanation — <strong>2–3 minutes</strong></li>
+  <li>Recovery overhead — <strong>2 minutes maximum</strong></li>
 </ul>
-<h3>Best practice reminder</h3>
-<p>Checkpoint the <strong>full path</strong>, not isolated screenshots.</p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day6_Hour4_Advanced.md — Concrete grading rubric; Advanced/assignments/Advanced_Day6_homework.ipynb — Part 4: Hour 24 --&gt;</p>
+<p>If time expires, mark unobserved criteria as unproven.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Canonical demo protocol for learner evidence collection</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Failure Modes to Triage</h1>
-            <h3>If restart loses data</h3>
+        <section class="slide" id="must-pass-gates-cefff69a" data-slide-number="52">
+            <h1>Must-Pass Gates</h1>
+            <h3>Gate 1 — Stable Identity for Update and Delete</h3>
+<p>Update and delete must target stable IDs, not row index, <strong>including after restart and load</strong>.</p>
+<p>Fail indicators: wrong record changes after insert or sorting; behavior differs after reload.</p>
+<h3>Gate 2 — Service or Core Validation</h3>
+<p>Validation must exist in service or core layer. UI calls service and handles raised errors.</p>
+<p>Fail indicators: service accepts invalid state when called directly; different UI paths bypass rules.</p>
+<h3>Gate 3 — Typical Error Path Resilience</h3>
+<p>At least one typical error path must be demonstrated without crash.</p>
+<p>Examples: update with no selection, delete with no selection, invalid field, missing JSON on first launch.</p>
+<blockquote>If Gate 1 fails → maximum status is **Partial**.</blockquote>
+<blockquote>If Gate 2 fails → architecture band capped at Partial.</blockquote>
+<blockquote>If Gate 3 fails → error handling capped at low band.</blockquote>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Check save path</li>
-  <li>Check JSON write timing</li>
-  <li>Check that list reloads from saved data</li>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Must pass gates for critical reliability and architecture risks</code></li>
 </ul>
-<h3>If update/delete hits the wrong record</h3>
-<ul>
-  <li>Print the selected ID</li>
-  <li>Verify the service method uses that ID</li>
-  <li>Confirm the UI cleared stale selection after refresh</li>
-</ul>
-<h3>If the demo feels fragile</h3>
-<ul>
-  <li>Simplify the path</li>
-  <li>Stabilize the required features first</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day6_Hour4_Advanced.md — Common failure modes and triage guidance --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Session 6 Wrap-Up</h1>
+        <section class="slide" id="checkpoint-timing-crosswalk-aade0dc2" data-slide-number="53">
+            <h1>Checkpoint Timing Crosswalk</h1>
+            <table>
+<thead>
+<tr>
+<th>Window</th>
+<th>Required duration</th>
+<th>Slot in Hour 24</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Instructor talk points</td>
+<td>10–20 min</td>
+<td>Min 0–14: grading focus, rubric, must-pass gates</td>
+</tr>
+<tr>
+<td>Live demo (instructor)</td>
+<td>5–10 min</td>
+<td>Min 14–21: fast checklist run of canonical flow</td>
+</tr>
+<tr>
+<td>Hands-on lab</td>
+<td>25–35 min</td>
+<td>Min 21–52: supervised demo prep + rolling checks</td>
+</tr>
+<tr>
+<td>Checkpoint 3 block</td>
+<td>45–60 min</td>
+<td>Entire hour — scoring and remediation routing</td>
+</tr>
+</tbody>
+</table>
+<p>These are <strong>not</strong> four separate sessions — they are operational components of one checkpoint hour.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Explicit timing crosswalk from runbook windows to checkpoint schedule</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="checkpoint-rubric-9a4a8655" data-slide-number="54">
+            <h1>Checkpoint Rubric</h1>
+            <table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Points</th>
+<th>Strong evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GUI launches and is operable</td>
+<td>15</td>
+<td>First launch succeeds; controls visible and labeled</td>
+</tr>
+<tr>
+<td>CRUD through UI complete</td>
+<td>30</td>
+<td>Add, list, update, delete all work; refresh coherent</td>
+</tr>
+<tr>
+<td>Persistence and restart load</td>
+<td>20</td>
+<td>Save, restart, reload confirm identical records</td>
+</tr>
+<tr>
+<td>UI/core separation</td>
+<td>20</td>
+<td>Callbacks delegate to service; files explainable</td>
+</tr>
+<tr>
+<td>Error handling and reliability</td>
+<td>10</td>
+<td>Typical error path shown without crash</td>
+</tr>
+<tr>
+<td>Demo clarity and reflection</td>
+<td>5</td>
+<td>Design choices explained; next improvement named</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>100</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Evidence to score decision rules</code> — scoring table</li>
+</ul>
+        </section>
+
+        <section class="slide" id="scoring-decision-matrix-e5f9ff7b" data-slide-number="55">
+            <h1>Scoring Decision Matrix</h1>
+            <table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Conditions</th>
+<th>Next action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pass</strong></td>
+<td>All deliverables observed; all three gates satisfied; no crash in typical use</td>
+<td>Mark pass; give one stretch recommendation</td>
+</tr>
+<tr>
+<td><strong>Partial</strong></td>
+<td>Core works but one gate unresolved or one deliverable not fully demonstrated</td>
+<td>Mark partial; assign targeted remediation + recheck deadline</td>
+</tr>
+<tr>
+<td><strong>Not yet</strong></td>
+<td>Multiple core failures; canonical flow incomplete; repeated crashes</td>
+<td>Mark not yet; structured recovery plan + coaching block</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>### Decision matrix for final checkpoint status</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="triage-playbooks-for-common-blockers-568393e1" data-slide-number="56">
+            <h1>Triage Playbooks for Common Blockers</h1>
+            <h3>Blocker 1 — Wrong row updates after insert or reload</h3>
+<p>Questions: &quot;What uniquely identifies a record in your model?&quot; / &quot;Where is that value stored in the UI list?&quot;</p>
+<p>Fix: persist IDs in JSON; bind selection to ID, not visual index; re-run canonical flow after restart.</p>
+<h3>Blocker 2 — Service bypasses validation</h3>
+<p>Questions: &quot;Where is the authoritative validation function?&quot; / &quot;What error is raised for invalid data?&quot;</p>
+<p>Fix: move rule into service or model; UI handles raised error; keep lightweight UI pre-validation for UX only.</p>
+<h3>Blocker 3 — Crash on typical error path</h3>
+<p>Questions: &quot;Which exception is thrown?&quot; / &quot;Where is it caught?&quot; / &quot;What does the user see?&quot;</p>
+<p>Fix: add guard clauses before service calls; wrap fragile boundaries; keep event loop responsive.</p>
+<h3>Blocker 4 — Launch reliability inconsistency</h3>
+<p>Questions: &quot;How do you resolve the data file path at runtime?&quot; / &quot;What working-directory assumptions are hard-coded?&quot;</p>
+<p>Fix: use <code>Path(__file__).parent / &quot;data/tracker_items.json&quot;</code> instead of bare relative paths.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Triage playbooks for common checkpoint blockers</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-demo-prep-sprint-4f54d5af" data-slide-number="57">
+            <h1>Lab: Demo Prep Sprint</h1>
+            <p><strong>Time — 25–35 minutes (rolling checkpoint checks during this window)</strong></p>
+<h3>Learner Tasks</h3>
+<ol>
+  <li>Run the full canonical sequence: add → list → update → delete → restart → load</li>
+  <li>Fix any blockers from instructor circulation prompts</li>
+  <li>Prepare a one-sentence explanation of where the service layer lives</li>
+  <li>Prepare a one-sentence answer for: &quot;How does update find the correct record?&quot;</li>
+</ol>
+<h3>Instructor Circulation Prompts</h3>
+<ul>
+  <li>&quot;Show me where the selected record ID is captured.&quot;</li>
+  <li>&quot;What layer enforces non-empty name validation?&quot;</li>
+  <li>&quot;If no row is selected and the user clicks Update, what happens?&quot;</li>
+  <li>&quot;If the JSON file cannot parse, what does the user see?&quot;</li>
+</ul>
+<p>Triage card mindset: Green (likely pass) / Yellow (one area shaky) / Red (must-pass gate at risk).</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Run of show</code> — Minute 21–52</li>
+</ul>
+        </section>
+
+        <section class="slide" id="closing-quick-check-5ab9dc50" data-slide-number="58">
+            <h1>Closing Quick Check</h1>
+            <p>Ask every learner before the session ends:</p>
+<blockquote>**&quot;If you had one more hour, what would you improve first in your GUI?&quot;**</blockquote>
+<p>Collect answers verbally or in chat.</p>
+<p>Prioritize responses that mention:</p>
+<ul>
+  <li>Reliability and error handling</li>
+  <li>Architecture boundaries</li>
+  <li>User trust (persistence, confirmations, feedback messages)</li>
+</ul>
+<p>Over responses that mention only visual or cosmetic changes.</p>
+<p><strong>Checkpoint 3 is complete when every learner has a score decision and a concrete next action.</strong></p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>### Minute 57 to 60: quick check and close</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="session-6-summary-what-we-built-cc533717" data-slide-number="59">
+            <h1>Session 6 Summary — What We Built</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>What We Strengthened</h1>
-            <ul>
-  <li>Real update/delete workflows</li>
-  <li>Cleaner GUI architecture</li>
-  <li>Persistence that survives restart</li>
-  <li>A concrete checkpoint story</li>
-</ul>
+        <section class="slide" id="four-hours-one-cohesive-story-98fe9a0e" data-slide-number="60">
+            <h1>Four Hours, One Cohesive Story</h1>
+            <table>
+<thead>
+<tr>
+<th>Hour</th>
+<th>Theme</th>
+<th>Key Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21</td>
+<td>Update and delete workflows</td>
+<td>Stable-ID CRUD round trip in Tkinter</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Controller separation</td>
+<td><code>TrackerApp</code> class; thin callbacks; clean module graph</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Persistence and polish</td>
+<td>JSON load/save; graceful error handling; one polish feature</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Checkpoint 3 demo</td>
+<td>End-to-end evidence: add → list → update → delete → restart → load</td>
+</tr>
+</tbody>
+</table>
         </section>
 
-        <section class="slide">
-            <h1>Scope Guardrails</h1>
-            <p><span class="check">✓</span> Stable CRUD path</p>
+        <section class="slide" id="scope-guardrails-confirmed-a8636f83" data-slide-number="61">
+            <h1>Scope Guardrails — Confirmed</h1>
+            <p><span class="check">✓</span> Stable CRUD path through the service layer</p>
 <p><span class="check">✓</span> JSON persistence for this milestone</p>
-<p><span class="check">✓</span> Clean UI/service boundary</p>
-<p><span class="check">✓</span> Demo-ready behavior</p>
-<p><span class="cross">✗</span> Not yet: database backend swap</p>
-<p><span class="cross">✗</span> Not required: heavy visual theming</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 6 overview; Advanced/lessons/lecture/Day6_Hour4_Advanced.md — Debrief and next-step reflection --&gt;</p>
+<p><span class="check">✓</span> Clean UI / service boundary</p>
+<p><span class="check">✓</span> Demo-ready behavior with no crashes on typical error paths</p>
+<p><span class="cross">✗</span> Not yet — database backend swap (Session 7)</p>
+<p><span class="cross">✗</span> Not required — heavy visual theming or production authentication</p>
         </section>
 
-        <section class="slide">
-            <h1>Thank You!</h1>
-            <p>Session 7 next:</p>
-<ul>
-  <li>From objects to tables</li>
-  <li>SQLite CRUD with safe queries</li>
-  <li>Row mapping and database hardening</li>
+        <section class="slide" id="what-s-next-session-7-hours-2528-05062ffe" data-slide-number="62">
+            <h1>What&#x27;s Next — Session 7 (Hours 25–28)</h1>
+            
+        </section>
+
+        <section class="slide" id="from-objects-to-tables-b0a743b3" data-slide-number="63">
+            <h1>From Objects to Tables</h1>
+            <ul>
+  <li><strong>SQLite CRUD</strong> with the <code>sqlite3</code> module</li>
+  <li>Writing safe parameterized queries (no string concatenation)</li>
+  <li>Row mapping: converting database rows back to <code>TrackerItem</code> objects</li>
+  <li>Database hardening: schema migration and integrity checks</li>
+  <li>Swapping JSON storage for SQLite in the same <code>TrackerApp</code> architecture</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 7 overview (Hours 25–28) --&gt;</p>
+<blockquote>Because the service layer is already the gateway for all operations,</blockquote>
+<blockquote>the storage swap will touch the service and storage modules —</blockquote>
+<blockquote>the UI layer stays largely stable.</blockquote>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day6_Hour4_Advanced.md</code> → <code>## Preparing learners for Hour 4</code> (preview direction)</li>
+</ul>
         </section>
     </div>
     
@@ -917,7 +1799,11 @@
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -990,17 +1876,24 @@
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

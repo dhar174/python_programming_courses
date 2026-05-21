@@ -386,663 +386,978 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-9-session-9-hours-3336-4ba69bee" data-slide-number="1">
             <h1>Advanced Day 9 — Session 9 (Hours 33–36)</h1>
             <div class="subtitle">Python Programming (Advanced) • REST APIs and Flask Foundations</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-9-overview-38c5e80e" data-slide-number="2">
             <h1>Session 9 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-f5fc4957" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 33: REST fundamentals + Flask app setup</li>
-  <li>Hour 34: CRUD endpoints for the main resource</li>
-  <li>Hour 35: Serialization + validation</li>
-  <li>Hour 36: App structure + dependency wiring</li>
+  <li>Hour 33 — REST fundamentals + Flask app setup</li>
+  <li>Hour 34 — CRUD endpoints for the main resource</li>
+  <li>Hour 35 — Serialization + validation (manual, consistent)</li>
+  <li>Hour 36 — App structure: blueprints and dependency wiring</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="capstone-through-line-3069a54f" data-slide-number="4">
             <h1>Capstone Through-Line</h1>
             <ul>
   <li>Expose the existing tracker logic through a Flask API</li>
   <li>Keep the service layer as the center of truth</li>
   <li>Build for maintainability, not framework novelty</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Alignment Sources</h1>
-            <ul>
-  <li>Runbook: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → Session 9 overview; Hours 33–36</li>
-  <li>Lecture: <code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> through <code>Day9_Hour4_Advanced.md</code></li>
-  <li>Homework: <code>Advanced/assignments/Advanced_Day9_homework.ipynb</code></li>
-  <li>Quiz: <code>Advanced/quizzes/Advanced_Day9_Quiz.html</code></li>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code># Day 9, Hour 1: REST fundamentals + Flask app setup</code></li>
+  <li><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code># Day 9, Hour 2: CRUD endpoints for your main resource</code></li>
+  <li><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code># Day 9, Hour 3: Serialization + validation (manual, consistent)</code></li>
+  <li><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code># Day 9, Hour 4: App structure: blueprints and dependency wiring</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Today’s Output Target</h1>
-            <ul>
-  <li>A working Flask surface over the tracker project</li>
-  <li>Predictable JSON responses</li>
-  <li>A structure that can keep growing tomorrow</li>
+        <section class="slide" id="session-9-outcomes-3fb069f7" data-slide-number="5">
+            <h1>Session 9 Outcomes</h1>
+            <p>By the end of today, learners will be able to:</p>
+<ul>
+  <li>Create a Flask application with a health endpoint and JSON error contract</li>
+  <li>Implement GET, POST, PUT, and DELETE for a tracker resource</li>
+  <li>Centralize serialization and validation outside route functions</li>
+  <li>Refactor a single-file Flask app into an application factory with explicit wiring</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>## Learning Outcomes</code></li>
+  <li><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>## Learning Outcomes</code></li>
+  <li><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>## Learning Outcomes</code></li>
+  <li><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Session Success Criteria</h1>
-            <ul>
-  <li><code>/health</code> responds with JSON</li>
-  <li>Main resource supports CRUD behavior</li>
-  <li>Error responses use one consistent JSON shape</li>
-  <li>Write-ready app structure uses explicit dependency wiring</li>
-  <li>Homework and quiz checkpoints are visible in the day’s build flow</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-26682a64" data-slide-number="6">
             <h1>Scope Guardrails for Today</h1>
-            <ul>
-  <li>Stay in course scope: Flask + clean contracts + practical structure</li>
-  <li>Do <strong>not</strong> drift into deployment, OAuth, JWT, or API versioning</li>
-  <li>Reuse service and repository logic instead of rebuilding business rules in routes</li>
-  <li>Choose one resource name and keep it consistent in your own project</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 33: REST Fundamentals + Flask App Setup</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
+        <section class="slide" id="in-scope-342713ee" data-slide-number="7">
+            <h1>In Scope</h1>
             <ul>
-  <li>Explain REST-style resources in plain language</li>
-  <li>Distinguish <code>GET</code> from <code>POST</code></li>
-  <li>Create a minimal Flask app</li>
-  <li>Return JSON instead of default HTML errors</li>
+  <li>Flask route handlers as thin HTTP adapters</li>
+  <li>REST resource naming and HTTP status code conventions</li>
+  <li>JSON error envelopes with a consistent shape</li>
+  <li>Manual serialization and field-level validation helpers</li>
+  <li>Application factory pattern and explicit dependency wiring</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Why an API Matters Now</h1>
+        <section class="slide" id="not-yet-5464f052" data-slide-number="8">
+            <h1>Not Yet</h1>
             <ul>
-  <li>The capstone already has logic and persistence</li>
-  <li>Flask becomes a <strong>new interface</strong>, not a new project</li>
-  <li>An API lets other tools call the same application behavior</li>
-  <li>Strong layering now makes later integration easier</li>
+  <li>Production deployment, reverse proxies, or WSGI configuration</li>
+  <li>OAuth, JWT, or session-based authentication</li>
+  <li>API versioning or rate limiting</li>
+  <li>Complex ORMs or SQLAlchemy migrations</li>
+  <li>Front-end frameworks or advanced GUI integration</li>
 </ul>
-<pre data-lang="text"><code>Client -&gt; Flask route -&gt; service -&gt; repository -&gt; SQLite</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-33-rest-fundamentals-flask-app-setup-c222b47b" data-slide-number="9">
+            <h1>Hour 33 — REST Fundamentals + Flask App Setup</h1>
+            <h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code># Day 9, Hour 1</code></p>
+        </section>
+
+        <section class="slide" id="hour-33-learning-outcomes-317b1428" data-slide-number="10">
+            <h1>Hour 33 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Create a small Flask application with a reliable health endpoint</li>
+  <li>Explain resources, HTTP verbs, status codes, and JSON response contracts</li>
+  <li>Use one consistent JSON error shape for every sad path</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>## Learning Outcomes</code></p>
+        </section>
+
+        <section class="slide" id="why-an-api-layer-now-7e512a47" data-slide-number="11">
+            <h1>Why an API Layer Now</h1>
+            <p>The capstone tracker already has a working model, service, and repository.</p>
+<p>Flask adds a <strong>new interface</strong> — not a new project.</p>
+<pre data-lang="text"><code>Client ──► Flask route ──► TrackerService ──► SQLiteRepository ──► SQLite</code></pre>
+<ul>
+  <li>Other tools (tests, GUIs, scripts) can call the same logic over HTTP</li>
+  <li>Strong layering keeps the service reusable outside Flask</li>
+  <li>An API contract makes the next developer&#x27;s job predictable</li>
+</ul>
+<blockquote>&quot;Routes translate HTTP details into service calls, not contain all business rules.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Talk points`</blockquote>
+        </section>
+
+        <section class="slide" id="rest-in-plain-english-86a00125" data-slide-number="12">
             <h1>REST in Plain English</h1>
-            <ul>
-  <li><strong>Resource</strong>: the thing the API exposes</li>
-  <li><strong>Route</strong>: URL pattern connected to code</li>
-  <li><strong>Method</strong>: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code></li>
-  <li><strong>Status code</strong>: fast signal of what happened</li>
-  <li><strong>JSON contract</strong>: predictable request/response shape</li>
-</ul>
+            <table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource</td>
+<td>The thing the API exposes (e.g., a tracker record)</td>
+</tr>
+<tr>
+<td>Route</td>
+<td>URL pattern mapped to Python code</td>
+</tr>
+<tr>
+<td>HTTP method</td>
+<td><code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> — the verb</td>
+</tr>
+<tr>
+<td>Status code</td>
+<td>Fast numeric signal of what happened</td>
+</tr>
+<tr>
+<td>JSON contract</td>
+<td>The agreed shape of every request and response</td>
+</tr>
+</tbody>
+</table>
+<h3>Key Status Codes for Day 9</h3>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200</code></td>
+<td>Success</td>
+</tr>
+<tr>
+<td><code>201</code></td>
+<td>Resource created</td>
+</tr>
+<tr>
+<td><code>400</code></td>
+<td>Bad request (malformed input)</td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td>Unexpected server failure</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>### Talk points</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Useful Day 9 status codes</h1>
-            <ul>
-  <li><code>200</code> success</li>
-  <li><code>201</code> created</li>
-  <li><code>400</code> bad input</li>
-  <li><code>404</code> missing resource</li>
-  <li><code>500</code> unexpected failure</li>
-</ul>
+        <section class="slide" id="demo-flask-app-factory-6ae3936e" data-slide-number="13">
+            <h1>Demo: Flask App Factory</h1>
+            <pre data-lang="python"><code>from __future__ import annotations
+
+from uuid import uuid4
+from flask import Flask, jsonify
+
+
+def error_response(code: str, message: str, status: int):
+    payload = {
+        &quot;error&quot;: {
+            &quot;code&quot;: code,
+            &quot;message&quot;: message,
+            &quot;request_id&quot;: str(uuid4()),
+        }
+    }
+    return jsonify(payload), status
+
+
+def create_app() -&gt; Flask:
+    app = Flask(__name__)
+
+    @app.get(&quot;/health&quot;)
+    def health():
+        return jsonify({&quot;status&quot;: &quot;ok&quot;, &quot;service&quot;: &quot;tracker-api&quot;})
+
+    @app.errorhandler(404)
+    def not_found(_error):
+        return error_response(&quot;not_found&quot;, &quot;Route not found&quot;, 404)
+
+    return app</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Minimal Flask Starter</h1>
-            <pre data-lang="python"><code>from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.get(&quot;/health&quot;)
+        <section class="slide" id="the-health-endpoint-11626725" data-slide-number="14">
+            <h1>The Health Endpoint</h1>
+            <p>Why <code>/health</code> is the right first route:</p>
+<ul>
+  <li>Proves the process is up before testing deeper behavior</li>
+  <li>Returns a predictable JSON body — no HTML, no guesswork</li>
+  <li>Cheapest possible integration smoke test</li>
+  <li>Establishes the <code>create_app()</code> factory pattern from the start</li>
+</ul>
+<pre data-lang="python"><code>@app.get(&quot;/health&quot;)
 def health():
-    return jsonify({&quot;status&quot;: &quot;ok&quot;})</code></pre>
+    return jsonify({&quot;status&quot;: &quot;ok&quot;, &quot;service&quot;: &quot;tracker-api&quot;})</code></pre>
+<p><strong>Teaching point:</strong> Start with one honest route before adding CRUD.</p>
         </section>
 
-        <section class="slide">
-            <h1>Teaching point</h1>
-            <ul>
-  <li>Start with one honest route before adding CRUD</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Consistent Error Contract</h1>
-            <pre data-lang="json"><code>{
+        <section class="slide" id="consistent-json-error-contract-15bc4cbb" data-slide-number="15">
+            <h1>Consistent JSON Error Contract</h1>
+            <p>Every sad path must return the same envelope — no surprises, no HTML tracebacks.</p>
+<pre data-lang="json"><code>{
   &quot;error&quot;: {
     &quot;code&quot;: &quot;not_found&quot;,
-    &quot;message&quot;: &quot;Record 12 was not found.&quot;,
-    &quot;request_id&quot;: &quot;a1b2c3d4&quot;
+    &quot;message&quot;: &quot;Record 12 was not found&quot;,
+    &quot;request_id&quot;: &quot;a1b2c3d4-...&quot;
   }
 }</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Why it matters</h1>
-            <ul>
-  <li>Clients can depend on one structure</li>
-  <li>Logs and user-facing errors connect more cleanly</li>
+<ul>
+  <li><code>code</code> — machine-readable identifier for the failure type</li>
+  <li><code>message</code> — human-readable explanation</li>
+  <li><code>request_id</code> — tracing handle (UUID generated per request)</li>
 </ul>
+<blockquote>&quot;Every error should return JSON, never a surprise HTML traceback.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day9_Hour1_Advanced.md` → `### Talk points`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="demo-flow-hour-33-3bca11c7" data-slide-number="16">
             <h1>Demo Flow: Hour 33</h1>
             <ol>
-  <li>Create <code>app = Flask(__name__)</code></li>
-  <li>Add <code>/health</code></li>
-  <li>Run the server locally</li>
-  <li>Test with browser, <code>curl</code>, or a small Python call</li>
-  <li>Trigger one intentional failure and show JSON output</li>
+  <li>Show project folders: <code>api/</code>, <code>src/</code>, <code>tests/</code>, <code>data/</code>, <code>reports/</code></li>
+  <li>Create <code>create_app()</code> returning a Flask instance</li>
+  <li>Add <code>GET /health</code> → <code>{&quot;status&quot;: &quot;ok&quot;, &quot;service&quot;: &quot;tracker-api&quot;}</code></li>
+  <li>Add <code>error_response(code, message, status)</code> helper with <code>request_id</code></li>
+  <li>Register a <code>404</code> error handler using <code>error_response</code></li>
+  <li>Run <code>flask --app api.app run --debug</code></li>
+  <li>Test <code>/health</code> in browser or with <code>curl</code></li>
+  <li>Call a missing route — observe the JSON error, not an HTML traceback</li>
 </ol>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>### Demo steps</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Flask Starter + Smoke Test</h1>
+        <section class="slide" id="lab-flask-starter-hour-33-d492362d" data-slide-number="17">
+            <h1>Lab: Flask Starter (Hour 33)</h1>
             <p><strong>Time: 25–35 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Create a small Flask app</li>
-  <li>Add <code>/health</code></li>
-  <li>Return JSON on success</li>
-  <li>Add one reusable error helper</li>
-  <li>Verify the app from outside the Flask file</li>
-</ul>
+<ol>
+  <li>Create <code>api/app.py</code> with <code>create_app()</code></li>
+  <li>Add <code>GET /health</code> returning <code>{&quot;status&quot;: &quot;ok&quot;}</code></li>
+  <li>Implement <code>error_response</code> with <code>code</code>, <code>message</code>, <code>request_id</code></li>
+  <li>Register a global 404 handler</li>
+  <li>Run the server and verify one happy path and one sad path</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>App starts reliably</li>
-  <li><code>/health</code> returns JSON</li>
-  <li>Learner can explain what a route does</li>
+  <li><code>/health</code> returns JSON with <code>status ok</code></li>
+  <li>At least one error path returns the shared error envelope</li>
+  <li>Learner can explain <code>GET</code> vs <code>POST</code> and why <code>201</code> is used for create</li>
 </ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>## Hands-on Lab</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 33)</h1>
-            <p><strong>⚠️</strong> Mixing setup, routing, and service logic in one giant file</p>
-<p><strong>⚠️</strong> Returning HTML errors while success paths return JSON</p>
-<p><strong>⚠️</strong> Treating the API as a separate project instead of a new interface</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 33)</h1>
+        <section class="slide" id="common-pitfalls-hour-33-015022b8" data-slide-number="18">
+            <h1>Common Pitfalls — Hour 33</h1>
             <ul>
-  <li>Homework goal: build a Flask app with a health route and clear REST basics</li>
-  <li>Best practice: start with one small health endpoint before layering CRUD</li>
-  <li>Quiz-ready anchor: <code>Hour 33 | framework: Flask</code></li>
-  <li>Deliverable check: can you show a health route and explain why it matters?</li>
+  <li><strong>Port already in use</strong> — choose a different port rather than restarting the whole lab</li>
+  <li><strong>Debug mode leaks tracebacks</strong> — helpful locally; inappropriate as an API contract</li>
+  <li><strong>Returning plain strings</strong> — makes clients harder to write; always use <code>jsonify</code></li>
+  <li><strong>One giant file</strong> — mixing setup, routing, and service logic increases debugging cost</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>### Common pitfalls to watch for</code></p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-33-73b7877f" data-slide-number="19">
+            <h1>Quick Check — Hour 33</h1>
+            <p><strong>Exit questions:</strong></p>
+<ul>
+  <li>What HTTP status code fits a successful create, and why is it not just <code>200</code>?</li>
+  <li>What happy path did you prove this hour?</li>
+  <li>What sad path did you test or plan to test next?</li>
+  <li>Which file or module is most important for the next hour?</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why is a health endpoint a smart first step before building CRUD routes?</p>
+        <section class="slide" id="hour-34-crud-endpoints-for-the-main-resource-158d8ce0" data-slide-number="20">
+            <h1>Hour 34 — CRUD Endpoints for the Main Resource</h1>
+            <h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code># Day 9, Hour 2</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 34: CRUD Endpoints for the Main Resource</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Implement <code>GET</code>, <code>POST</code>, <code>PUT</code>, and <code>DELETE</code></li>
-  <li>Keep routes thin</li>
-  <li>Connect handlers to the service layer</li>
-  <li>Return the right status codes for the outcome</li>
+        <section class="slide" id="hour-34-learning-outcomes-83d58cfa" data-slide-number="21">
+            <h1>Hour 34 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Implement GET, POST, PUT, and DELETE for the tracker record resource</li>
+  <li>Map service-layer outcomes to correct HTTP status codes</li>
+  <li>Demonstrate both successful operations and sad paths such as bad JSON and missing records</li>
 </ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>## Learning Outcomes</code></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="thin-routes-principle-c5d015d5" data-slide-number="22">
+            <h1>Thin Routes Principle</h1>
+            <p>Routes are <strong>adapters</strong>, not business logic containers.</p>
+<pre data-lang="text"><code>HTTP request
+  → parse input
+    → call service method
+      → serialize output
+        → return HTTP response</code></pre>
+<ul>
+  <li><code>400</code> means the <strong>request</strong> is malformed</li>
+  <li><code>404</code> means the <strong>resource</strong> was not found</li>
+  <li>Use parameterized repository methods — never build SQL from request text</li>
+  <li>Keep service and repository reusable outside Flask</li>
+</ul>
+<blockquote>&quot;Route handlers should be thin adapters: parse input, call service, serialize output.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day9_Hour2_Advanced.md` → `### Talk points`</blockquote>
+        </section>
+
+        <section class="slide" id="canonical-route-set-20b97f15" data-slide-number="23">
             <h1>Canonical Route Set</h1>
-            <ul>
-  <li><code>GET /records</code></li>
-  <li><code>POST /records</code></li>
-  <li><code>GET /records/&lt;id&gt;</code></li>
-  <li><code>PUT /records/&lt;id&gt;</code></li>
-  <li><code>DELETE /records/&lt;id&gt;</code></li>
-</ul>
+            <p>Use <strong>plural nouns</strong> for collections:</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Method</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/records</code></td>
+<td><code>GET</code></td>
+<td>List all records</td>
+</tr>
+<tr>
+<td><code>/records</code></td>
+<td><code>POST</code></td>
+<td>Create a record</td>
+</tr>
+<tr>
+<td><code>/records/&lt;id&gt;</code></td>
+<td><code>GET</code></td>
+<td>Fetch one record</td>
+</tr>
+<tr>
+<td><code>/records/&lt;id&gt;</code></td>
+<td><code>PUT</code></td>
+<td>Update one record</td>
+</tr>
+<tr>
+<td><code>/records/&lt;id&gt;</code></td>
+<td><code>DELETE</code></td>
+<td>Delete one record</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>### Talk points</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Naming note</h1>
-            <ul>
-  <li>Lecture examples use <code>records</code></li>
-  <li>Homework/quiz output anchors may use <code>tasks</code></li>
-  <li>Your project should pick <strong>one</strong> resource name and stay consistent</li>
-</ul>
-        </section>
+        <section class="slide" id="demo-get-and-post-0d04617f" data-slide-number="24">
+            <h1>Demo: GET and POST</h1>
+            <pre data-lang="python"><code>from flask import request, jsonify
 
-        <section class="slide">
-            <h1>Thin Route Handler Mindset</h1>
-            <h3>Route responsibilities</h3>
-<ul>
-  <li>Read request input</li>
-  <li>Call the service</li>
-  <li>Catch known exceptions</li>
-  <li>Return JSON + status code</li>
-</ul>
-<h3>Avoid in the route</h3>
-<ul>
-  <li>Direct SQL</li>
-  <li>Deep business logic</li>
-  <li>Hidden global state</li>
-</ul>
-        </section>
+@app.get(&quot;/records&quot;)
+def list_records():
+    records = service.list_records()
+    return jsonify({&quot;data&quot;: [r.to_dict() for r in records]})
 
-        <section class="slide">
-            <h1>Safe JSON Parsing Pattern</h1>
-            <pre data-lang="python"><code>payload = request.get_json(silent=True)
-if payload is None:
-    return error_response(
-        &quot;invalid_json&quot;,
-        &quot;Request body must be valid JSON.&quot;,
-        400,
-    )</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Key distinction</h1>
-            <ul>
-  <li>Bad input → <code>400</code></li>
-  <li>Missing resource → <code>404</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>CRUD Example</h1>
-            <pre data-lang="python"><code>@app.post(&quot;/records&quot;)
+@app.post(&quot;/records&quot;)
 def create_record():
     payload = request.get_json(silent=True)
     if payload is None:
-        return error_response(&quot;invalid_json&quot;, &quot;Request body must be valid JSON.&quot;, 400)
-
-    record = service.add_record(
-        title=payload.get(&quot;title&quot;, &quot;&quot;),
-        category=payload.get(&quot;category&quot;, &quot;&quot;),
-        status=payload.get(&quot;status&quot;, &quot;open&quot;),
-    )
-    return jsonify(record.to_dict()), 201</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo Flow: Hour 34</h1>
-            <ol>
-  <li>Add list + create routes</li>
-  <li>Add get-by-id</li>
-  <li>Add update + delete</li>
-  <li>Show one success case</li>
-  <li>Show one validation or not-found case</li>
-</ol>
-        </section>
-
-        <section class="slide">
-            <h1>Smoke test habit</h1>
-            <ul>
-  <li>Verify behavior from outside the Flask app</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Build the CRUD Surface</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Add the full CRUD route set</li>
-  <li>Route everything through the service layer</li>
-  <li>Return consistent JSON</li>
-  <li>Test at least one success and one failure for each major path</li>
-</ul>
-<h3>Completion Criteria</h3>
-<ul>
-  <li>CRUD endpoints respond predictably</li>
-  <li>Status codes match the actual outcome</li>
-  <li>Learner can explain <code>400</code> vs <code>404</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 34)</h1>
-            <p><strong>⚠️</strong> Returning <code>200</code> for everything</p>
-<p><strong>⚠️</strong> Writing business rules in Flask handlers</p>
-<p><strong>⚠️</strong> Forgetting to test malformed requests</p>
-<p><strong>⚠️</strong> Letting route names drift between files</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 34)</h1>
-            <ul>
-  <li>Homework goal: a small set of CRUD endpoints for the tracker resource</li>
-  <li>Best practice: use HTTP verbs and status codes consistently</li>
-  <li>Pitfall to avoid: wrong status codes make clients harder to trust</li>
-  <li>Quiz-ready anchor: <code>Hour 34 | endpoint: POST /tasks</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: When should a route return <code>400</code> instead of <code>404</code>?</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 35: Serialization + Validation</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Centralize request parsing</li>
-  <li>Centralize response serialization</li>
-  <li>Keep validation rules coherent</li>
-  <li>Use intentional negative cases to test the contract</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>API Contracts Are Promises</h1>
-            <ul>
-  <li>Requests should arrive in a predictable shape</li>
-  <li>Responses should leave in a predictable shape</li>
-  <li>Failure paths should look consistent too</li>
-  <li>“It works” is not enough if every endpoint behaves differently</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Serializer Helper</h1>
-            <pre data-lang="python"><code>def serialize_record(record) -&gt; dict:
-    return {
-        &quot;id&quot;: record.id,
-        &quot;title&quot;: record.title,
-        &quot;category&quot;: record.category,
-        &quot;status&quot;: record.status,
-        &quot;priority&quot;: record.priority,
-    }</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Benefit</h1>
-            <ul>
-  <li>One change point instead of copy/paste edits across routes</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Parser + Validation Helper</h1>
-            <pre data-lang="python"><code>def parse_record_payload(payload: dict) -&gt; dict:
-    title = str(payload.get(&quot;title&quot;, &quot;&quot;)).strip()
-    category = str(payload.get(&quot;category&quot;, &quot;&quot;)).strip()
-    status = str(payload.get(&quot;status&quot;, &quot;open&quot;)).strip().lower()
-
-    if not title:
-        raise ValidationError(&quot;Title is required.&quot;)
-    if not category:
-        raise ValidationError(&quot;Category is required.&quot;)
-    if status not in {&quot;open&quot;, &quot;in_progress&quot;, &quot;done&quot;}:
-        raise ValidationError(&quot;Status is invalid.&quot;)
-
-    return {&quot;title&quot;: title, &quot;category&quot;: category, &quot;status&quot;: status}</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Where Validation Should Live</h1>
-            <ul>
-  <li>Parser helpers normalize and reject malformed payloads</li>
-  <li>Service layer enforces domain invariants</li>
-  <li>Routes should <strong>not</strong> duplicate the same rules repeatedly</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Negative test ideas</h1>
-            <ul>
-  <li>invalid JSON</li>
-  <li>missing title</li>
-  <li>missing category</li>
-  <li>invalid status value</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Cleaner Route Pattern</h1>
-            <pre data-lang="python"><code>@app.post(&quot;/records&quot;)
-def create_record():
-    payload = request.get_json(silent=True)
-    if payload is None:
-        return error_response(&quot;invalid_json&quot;, &quot;Request body must be valid JSON.&quot;, 400)
-
+        return error_response(&quot;bad_json&quot;, &quot;Request body must be JSON&quot;, 400)
     try:
-        parsed = parse_record_payload(payload)
-        record = service.add_record(**parsed)
+        record = service.create_record(payload)
     except ValidationError as exc:
         return error_response(&quot;validation_error&quot;, str(exc), 400)
-
-    return jsonify(serialize_record(record)), 201</code></pre>
+    return jsonify({&quot;data&quot;: record.to_dict()}), 201</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Make the API Coherent</h1>
+        <section class="slide" id="demo-get-by-id-put-delete-e9d28463" data-slide-number="25">
+            <h1>Demo: GET by ID, PUT, DELETE</h1>
+            <pre data-lang="python"><code>@app.get(&quot;/records/&lt;int:record_id&gt;&quot;)
+def get_record(record_id: int):
+    try:
+        return jsonify({&quot;data&quot;: service.get_record(record_id).to_dict()})
+    except NotFoundError:
+        return error_response(&quot;not_found&quot;, f&quot;Record {record_id} was not found&quot;, 404)
+
+@app.put(&quot;/records/&lt;int:record_id&gt;&quot;)
+def update_record(record_id: int):
+    payload = request.get_json(silent=True)
+    if payload is None:
+        return error_response(&quot;bad_json&quot;, &quot;Request body must be JSON&quot;, 400)
+    try:
+        record = service.update_record(record_id, payload)
+    except ValidationError as exc:
+        return error_response(&quot;validation_error&quot;, str(exc), 400)
+    except NotFoundError:
+        return error_response(&quot;not_found&quot;, f&quot;Record {record_id} was not found&quot;, 404)
+    return jsonify({&quot;data&quot;: record.to_dict()})
+
+@app.delete(&quot;/records/&lt;int:record_id&gt;&quot;)
+def delete_record(record_id: int):
+    try:
+        service.delete_record(record_id)
+    except NotFoundError:
+        return error_response(&quot;not_found&quot;, f&quot;Record {record_id} was not found&quot;, 404)
+    return jsonify({&quot;data&quot;: {&quot;deleted_id&quot;: record_id}})</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
+        </section>
+
+        <section class="slide" id="status-code-decision-guide-925ab137" data-slide-number="26">
+            <h1>Status Code Decision Guide</h1>
+            <table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Success — returning existing data</td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>Success — resource just created</td>
+<td><code>201</code></td>
+</tr>
+<tr>
+<td>Request body is not valid JSON</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td>Field missing or value invalid</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td>ID refers to a record that does not exist</td>
+<td><code>404</code></td>
+</tr>
+<tr>
+<td>Unexpected exception in server code</td>
+<td><code>500</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule:</strong> <code>400</code> = the caller&#x27;s fault. <code>404</code> = resource not there. <code>500</code> = server&#x27;s fault.</p>
+        </section>
+
+        <section class="slide" id="lab-crud-api-hour-34-4b72b674" data-slide-number="27">
+            <h1>Lab: CRUD API (Hour 34)</h1>
             <p><strong>Time: 25–35 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Add one serializer helper</li>
-  <li>Add one parser/validator helper</li>
-  <li>Replace ad hoc route logic with helpers</li>
-  <li>Run a few negative cases intentionally</li>
-</ul>
+<ol>
+  <li>Implement all five routes: list, create, get-by-id, update, delete</li>
+  <li>Test list, create, get by id, update, delete — happy paths</li>
+  <li>Test bad JSON, validation failure, and missing id — sad paths</li>
+  <li>Ensure the service/repository layer is never imported inside a route body</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Output shape is consistent across routes</li>
-  <li>Validation rules live in one obvious place</li>
-  <li>Learner can explain at least one negative test result</li>
+  <li>All five routes respond with JSON</li>
+  <li>POST returns <code>201</code>; missing records return <code>404</code>; invalid payloads return <code>400</code></li>
+  <li>The service/repository layer remains reusable outside Flask</li>
 </ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>## Hands-on Lab</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 35)</h1>
-            <p><strong>⚠️</strong> Different key sets across endpoints</p>
-<p><strong>⚠️</strong> Validation logic duplicated in multiple routes</p>
-<p><strong>⚠️</strong> Plain-text errors in one handler and JSON in another</p>
-<p><strong>⚠️</strong> Negative cases never tested until demo time</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 35)</h1>
+        <section class="slide" id="common-pitfalls-hour-34-66d1255c" data-slide-number="28">
+            <h1>Common Pitfalls — Hour 34</h1>
             <ul>
-  <li>Homework goal: manual serializers and validators for tracker payloads</li>
-  <li>Best practice: one consistent request/response contract</li>
-  <li>Pitfall to avoid: different key sets confuse clients</li>
-  <li>Quiz-ready anchor: <code>Hour 35 | request fields checked: title, priority</code></li>
+  <li><strong>One route for every operation</strong> with manual method branching instead of <code>@app.get</code>, <code>@app.post</code></li>
+  <li><strong>Inconsistent integer/string ids</strong> — use <code>&lt;int:record_id&gt;</code> in Flask to avoid silent mismatches</li>
+  <li><strong>Returning <code>200</code> for a delete that failed</strong> — map the error correctly</li>
+  <li><strong>SQLite exceptions leaking as HTML <code>500</code></strong> — catch domain errors in the route</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour2_Advanced.md</code> → <code>### Common pitfalls to watch for</code></p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-34-b4c13a6f" data-slide-number="29">
+            <h1>Quick Check — Hour 34</h1>
+            <p><strong>Exit questions:</strong></p>
+<ul>
+  <li>When should an API return <code>400</code> instead of <code>404</code>? Give one tracker example of each.</li>
+  <li>What happy path did you prove this hour?</li>
+  <li>What sad path did you test or plan to test next?</li>
+  <li>Can the same service method be called by a CLI without importing Flask?</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why is centralizing parsing and serialization safer than rebuilding dictionaries inside each route?</p>
+        <section class="slide" id="hour-35-serialization-validation-6f5e430f" data-slide-number="30">
+            <h1>Hour 35 — Serialization + Validation</h1>
+            <h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code># Day 9, Hour 3</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 36: App Structure + Dependency Wiring</h1>
-            
+        <section class="slide" id="hour-35-learning-outcomes-7a36de83" data-slide-number="31">
+            <h1>Hour 35 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Standardize request and response shapes for the API</li>
+  <li>Centralize validation so routes do not duplicate domain rules</li>
+  <li>Create predictable JSON errors that clients and tests can rely on</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>## Learning Outcomes</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
+        <section class="slide" id="serialization-and-deserialization-c737bfbc" data-slide-number="32">
+            <h1>Serialization and Deserialization</h1>
+            <p><strong>Serialization</strong> — converting Python objects to plain JSON-ready dicts</p>
+<p><strong>Deserialization</strong> — reading client payloads and turning them into validated data</p>
+<p>Key principles:</p>
+<ul>
+  <li>The JSON contract is part of the product; changing field names randomly breaks clients</li>
+  <li>Manual validation is acceptable when it is <strong>centralized and consistent</strong></li>
+  <li>Do not duplicate validation logic in the GUI, the API, and the repository</li>
+  <li>JSON has no <code>datetime</code> object — convert dates to ISO 8601 strings explicitly</li>
+</ul>
+<blockquote>&quot;The contract is part of the product.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day9_Hour3_Advanced.md` → `### Talk points`</blockquote>
+        </section>
+
+        <section class="slide" id="demo-parse-record-payload-3fd6d70f" data-slide-number="33">
+            <h1>Demo: parse_record_payload</h1>
+            <pre data-lang="python"><code>from tracker.exceptions import ValidationError
+
+REQUIRED_FIELDS = {&quot;title&quot;, &quot;category&quot;}
+ALLOWED_FIELDS = REQUIRED_FIELDS | {&quot;status&quot;}
+ALLOWED_STATUSES = {&quot;open&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+
+def parse_record_payload(payload: dict) -&gt; dict:
+    if not isinstance(payload, dict):
+        raise ValidationError(&quot;Payload must be a JSON object&quot;)
+    unknown = payload.keys() - ALLOWED_FIELDS
+    if unknown:
+        raise ValidationError(f&quot;Unknown field: {sorted(unknown)[0]}&quot;)
+    missing = REQUIRED_FIELDS - payload.keys()
+    if missing:
+        raise ValidationError(f&quot;Missing required field: {sorted(missing)[0]}&quot;)
+    if not isinstance(payload[&quot;title&quot;], str):
+        raise ValidationError(&quot;title must be a string&quot;)
+    if not isinstance(payload[&quot;category&quot;], str):
+        raise ValidationError(&quot;category must be a string&quot;)
+    if &quot;status&quot; in payload and not isinstance(payload[&quot;status&quot;], str):
+        raise ValidationError(&quot;status must be a string&quot;)
+    title = payload[&quot;title&quot;].strip()
+    category = payload[&quot;category&quot;].strip()
+    status = payload.get(&quot;status&quot;, &quot;open&quot;).strip().lower()
+    if not title:
+        raise ValidationError(&quot;title cannot be blank&quot;)
+    if not category:
+        raise ValidationError(&quot;category cannot be blank&quot;)
+    if status not in ALLOWED_STATUSES:
+        raise ValidationError(f&quot;status must be one of {sorted(ALLOWED_STATUSES)}&quot;)
+    return {&quot;title&quot;: title, &quot;category&quot;: category, &quot;status&quot;: status}</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
+        </section>
+
+        <section class="slide" id="demo-record-to-response-7b8cdb07" data-slide-number="34">
+            <h1>Demo: record_to_response</h1>
+            <pre data-lang="python"><code>def record_to_response(record) -&gt; dict:
+    return record.to_dict()</code></pre>
+<p><strong>Why a named helper instead of inline <code>.to_dict()</code>?</strong></p>
+<ul>
+  <li>One place to rename or add fields without touching every route</li>
+  <li>Makes the serialization contract explicit and testable</li>
+  <li>Prevents <code>record.__dict__</code> leaking private fields or internal state</li>
+</ul>
+<h3>Anti-pattern to avoid</h3>
+<pre data-lang="python"><code># Do NOT do this — exposes internals, no stable contract
+return jsonify(record.__dict__), 200</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
+        </section>
+
+        <section class="slide" id="validation-sad-path-matrix-306df255" data-slide-number="35">
+            <h1>Validation Sad-Path Matrix</h1>
+            <table>
+<thead>
+<tr>
+<th>Bad input type</th>
+<th>Example</th>
+<th>Expected error code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non-JSON body</td>
+<td>Raw string body</td>
+<td><code>bad_json</code></td>
+</tr>
+<tr>
+<td>Missing required field</td>
+<td>No <code>title</code> key</td>
+<td><code>validation_error</code></td>
+</tr>
+<tr>
+<td>Wrong type</td>
+<td><code>&quot;title&quot;: 42</code></td>
+<td><code>validation_error</code></td>
+</tr>
+<tr>
+<td>Unknown field</td>
+<td><code>&quot;colour&quot;: &quot;red&quot;</code></td>
+<td><code>validation_error</code></td>
+</tr>
+<tr>
+<td>Blank required field</td>
+<td><code>&quot;title&quot;: &quot;  &quot;</code></td>
+<td><code>validation_error</code></td>
+</tr>
+<tr>
+<td>Invalid enum value</td>
+<td><code>&quot;status&quot;: &quot;maybe&quot;</code></td>
+<td><code>validation_error</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule:</strong> Validation errors must never expose a Python stack trace.</p>
+        </section>
+
+        <section class="slide" id="benefits-of-centralized-validation-dc0a846f" data-slide-number="36">
+            <h1>Benefits of Centralized Validation</h1>
+            <p>Before centralization — validation scattered across routes:</p>
+<pre data-lang="python"><code># POST /records
+if &quot;title&quot; not in payload:
+    return error_response(&quot;validation_error&quot;, &quot;title required&quot;, 400)
+
+# PUT /records/&lt;id&gt;
+if &quot;title&quot; not in payload:
+    return error_response(&quot;validation_error&quot;, &quot;title required&quot;, 400)</code></pre>
+<p>After centralization — routes become shorter and safer:</p>
+<pre data-lang="python"><code># POST /records
+data = parse_record_payload(payload)   # one call covers all rules
+record = service.create_record(data)</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>### Demo steps</code></p>
+        </section>
+
+        <section class="slide" id="lab-clean-api-contracts-hour-35-4c9b6b32" data-slide-number="37">
+            <h1>Lab: Clean API Contracts (Hour 35)</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Create <code>api/serializers.py</code> with <code>parse_record_payload</code> and <code>record_to_response</code></li>
+  <li>Route every POST and PUT payload through <code>parse_record_payload</code></li>
+  <li>Manually test three negative cases: missing field, bad type, unknown field</li>
+  <li>Verify that routes become shorter after the refactor</li>
+</ol>
+<h3>Completion Criteria</h3>
+<ul>
+  <li>Every endpoint uses the same response wrapper and error wrapper</li>
+  <li>Validation messages are helpful without exposing stack traces</li>
+  <li>Routes are shorter because parsing and serialization are reusable</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>## Hands-on Lab</code></p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-35-c51213e6" data-slide-number="38">
+            <h1>Common Pitfalls — Hour 35</h1>
             <ul>
-  <li>Explain why growing apps need structure</li>
-  <li>Refactor toward a <code>create_app()</code> pattern</li>
-  <li>Wire dependencies explicitly</li>
-  <li>Avoid circular imports and hidden globals</li>
+  <li><strong>Different error formats per endpoint</strong> — inconsistency breaks client integrations</li>
+  <li><strong>Duplicating validation</strong> in GUI, API layer, and repository</li>
+  <li><strong>Accepting unknown fields silently</strong> — they hide typos and future field conflicts</li>
+  <li><strong>Forgetting JSON has no <code>datetime</code></strong> — convert dates to strings explicitly</li>
+</ul>
+<h3>Optional Extensions</h3>
+<ul>
+  <li>Include <code>request_id</code> in all responses, not only errors</li>
+  <li>Document the contract in README with one sample request and response</li>
+  <li>Add <code>pytest</code> tests for <code>parse_record_payload</code> without starting Flask</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour3_Advanced.md</code> → <code>### Common pitfalls to watch for</code></p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-35-55ed5de2" data-slide-number="39">
+            <h1>Quick Check — Hour 35</h1>
+            <p><strong>Exit questions:</strong></p>
+<ul>
+  <li>Why should all API errors follow a consistent format even when the messages differ?</li>
+  <li>What happy path did you prove this hour?</li>
+  <li>What sad path did you test or plan to test next?</li>
+  <li>Which fields are part of the public API versus internal implementation details?</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>When Structure Starts to Matter</h1>
-            <ul>
-  <li>Single-file apps are great for learning</li>
-  <li>Growth creates import noise and setup confusion</li>
-  <li>Testing gets harder when construction happens at import time</li>
-  <li>Clear startup makes the app easier to reason about</li>
-</ul>
+        <section class="slide" id="hour-36-app-structure-blueprints-and-dependency-wiring-a083da3f" data-slide-number="40">
+            <h1>Hour 36 — App Structure: Blueprints and Dependency Wiring</h1>
+            <h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code># Day 9, Hour 4</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Simple Application Factory</h1>
-            <pre data-lang="python"><code>def create_app():
+        <section class="slide" id="hour-36-learning-outcomes-fef049fb" data-slide-number="41">
+            <h1>Hour 36 Learning Outcomes</h1>
+            <p>By the end of this hour, learners will be able to:</p>
+<ul>
+  <li>Refactor Flask code into a maintainable application structure</li>
+  <li>Use an application factory to wire configuration, repository, and service dependencies</li>
+  <li>Avoid circular imports and hidden global state</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>## Learning Outcomes</code></p>
+        </section>
+
+        <section class="slide" id="why-structure-matters-6180c647" data-slide-number="42">
+            <h1>Why Structure Matters</h1>
+            <p>Structure exists to reduce friction, not to impress anyone.</p>
+<p>Problems with a single-file approach:</p>
+<ul>
+  <li>Can&#x27;t create an isolated app instance for tests</li>
+  <li>DB connection created at import time — no flexibility</li>
+  <li>Circular imports appear as the app grows</li>
+  <li>Configuration is invisible and hard to change</li>
+</ul>
+<blockquote>&quot;The application factory pattern lets tests create isolated apps with temporary databases.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day9_Hour4_Advanced.md` → `### Talk points`</blockquote>
+        </section>
+
+        <section class="slide" id="application-factory-pattern-091463bb" data-slide-number="43">
+            <h1>Application Factory Pattern</h1>
+            <p><strong>Before</strong> — module-level app creation, hidden dependencies:</p>
+<pre data-lang="python"><code># api/app.py — problematic
+from tracker.repository import SQLiteTrackerRepository
+
+repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)   # import-time side effect
+service = TrackerService(repo=repo)
+app = Flask(__name__)</code></pre>
+<p><strong>After</strong> — explicit factory, wiring visible in one place:</p>
+<pre data-lang="python"><code>def create_app(db_path: Path | None = None) -&gt; Flask:
     app = Flask(__name__)
-    repo = SQLiteTrackerRepository(&quot;data/tracker.db&quot;)
+    database_path = db_path or Path(&quot;data/tracker.db&quot;)
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    repo = SQLiteTrackerRepository(str(database_path))
     repo.init_db()
     service = TrackerService(repo=repo)
     register_routes(app, service)
     return app</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Why it helps</h1>
-            <ul>
-  <li>One visible startup path</li>
-  <li>Explicit dependencies</li>
-  <li>Easier testing later</li>
-</ul>
+        <section class="slide" id="demo-create-app-api-app-py-ed082850" data-slide-number="44">
+            <h1>Demo: create_app (api/app.py)</h1>
+            <pre data-lang="python"><code>from pathlib import Path
+from flask import Flask
+
+from api.routes import register_routes
+from tracker.repository import SQLiteTrackerRepository
+from tracker.service import TrackerService
+
+
+def create_app(db_path: Path | None = None) -&gt; Flask:
+    app = Flask(__name__)
+    database_path = db_path or Path(&quot;data/tracker.db&quot;)
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    repo = SQLiteTrackerRepository(str(database_path))
+    repo.init_db()
+    service = TrackerService(repo=repo)
+    register_routes(app, service)
+    return app</code></pre>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Structure Options for This Course</h1>
-            <h3>Minimum good structure</h3>
+        <section class="slide" id="demo-register-routes-api-routes-py-70249bc3" data-slide-number="45">
+            <h1>Demo: register_routes (api/routes.py)</h1>
+            <pre data-lang="python"><code>from flask import Flask
+from tracker.service import TrackerService
+
+
+def register_routes(app: Flask, service: TrackerService) -&gt; None:
+    @app.get(&quot;/health&quot;)
+    def health():
+        return {&quot;status&quot;: &quot;ok&quot;}
+
+    @app.get(&quot;/records&quot;)
+    def list_records():
+        return {&quot;data&quot;: [r.to_dict() for r in service.list_records()]}
+
+    # ... POST, GET/&lt;id&gt;, PUT/&lt;id&gt;, DELETE/&lt;id&gt; here</code></pre>
+<p><strong>Key design decisions:</strong></p>
 <ul>
-  <li><code>api/app.py</code> for startup</li>
-  <li><code>api/routes.py</code> for route registration</li>
-  <li>service + repository modules stay separate</li>
+  <li><code>service</code> is injected — no global import needed inside route functions</li>
+  <li>Routes never construct repositories or open database connections</li>
+  <li><code>create_app</code> is the single composition root — one place to understand wiring</li>
 </ul>
-<h3>Optional structure</h3>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>### Demo code or command sketch</code></p>
+        </section>
+
+        <section class="slide" id="circular-import-anti-pattern-b6db8c64" data-slide-number="46">
+            <h1>Circular Import Anti-Pattern</h1>
+            <p><strong>The trap</strong> — routes importing app while app imports routes:</p>
+<pre data-lang="text"><code>api/app.py   imports   api/routes.py
+api/routes.py   imports   api/app.py   ← circular!</code></pre>
+<p><strong>Prevention rules:</strong></p>
 <ul>
-  <li>Flask blueprints if the learner is ready</li>
+  <li><code>api/routes.py</code> must never import <code>api/app.py</code></li>
+  <li>Pass <code>service</code> as a parameter, not as a module-level global</li>
+  <li>Never create repositories or open connections at import time</li>
+  <li>Use <code>create_app()</code> as the composition root — everything wired there</li>
 </ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>### Common pitfalls to watch for</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Guardrail</h1>
-            <ul>
-  <li>Do not overframework the capstone</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Architecture Risks</h1>
-            <ul>
-  <li>Global service creation at import time</li>
-  <li><code>routes.py</code> importing <code>app.py</code> and vice versa</li>
-  <li>Repository construction hidden in random modules</li>
-  <li>Learners changing file layout without updating imports deliberately</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Refactor Sprint</h1>
+        <section class="slide" id="lab-refactor-api-structure-hour-36-57d54136" data-slide-number="47">
+            <h1>Lab: Refactor API Structure (Hour 36)</h1>
             <p><strong>Time: 25–35 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Move routes into a dedicated module or grouping</li>
-  <li>Add <code>create_app()</code></li>
-  <li>Construct repository + service in one clear place</li>
-  <li>Re-test <code>/health</code> and main resource routes</li>
-</ul>
+<ol>
+  <li>Create <code>api/routes.py</code> with <code>register_routes(app, service)</code> helper</li>
+  <li>Create <code>api/app.py</code> with <code>create_app(db_path=None)</code> factory</li>
+  <li>Construct repository and service inside <code>create_app</code>, not at module level</li>
+  <li>Run <code>/health</code> and at least one CRUD endpoint to confirm the refactor works</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Startup is predictable</li>
-  <li>Route wiring is readable</li>
-  <li>API still behaves the same after refactor</li>
+  <li>App still starts after the refactor</li>
+  <li><code>/health</code> and at least one CRUD endpoint still work</li>
+  <li>DB path can be changed for tests or demos via <code>create_app(db_path=...)</code></li>
 </ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>## Hands-on Lab</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 36)</h1>
-            <p><strong>⚠️</strong> Circular imports</p>
-<p><strong>⚠️</strong> Hidden global singletons</p>
-<p><strong>⚠️</strong> Refactoring too much at once</p>
-<p><strong>⚠️</strong> Losing a working route while reorganizing</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 36)</h1>
+        <section class="slide" id="common-pitfalls-hour-36-1dc42d48" data-slide-number="48">
+            <h1>Common Pitfalls — Hour 36</h1>
             <ul>
-  <li>Homework goal: an app structure that can grow beyond one file</li>
-  <li>Best practice: use an app factory and optional blueprints to organize startup</li>
-  <li>Pitfall to avoid: global singletons hide dependencies and hurt testing</li>
-  <li>Quiz-ready anchor: <code>Hour 36 | app factory: create_app</code></li>
+  <li><strong>Circular imports</strong> between <code>app.py</code> and <code>routes.py</code></li>
+  <li><strong>Creating the database connection at import time</strong> — prevents test isolation</li>
+  <li><strong>Moving files without updating imports</strong> — always run after moving, not just after writing</li>
+  <li><strong>Refactoring and changing behavior at the same time</strong> — refactor first, then extend</li>
+</ul>
+<h3>Optional Extensions</h3>
+<ul>
+  <li>Use a Flask Blueprint for records routes</li>
+  <li>Add a config object or environment variable for the database path</li>
+  <li>Add a test that creates an app with <code>tmp_path</code> from pytest</li>
+</ul>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour4_Advanced.md</code> → <code>### Common pitfalls to watch for</code></p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-36-19d277f2" data-slide-number="49">
+            <h1>Quick Check — Hour 36</h1>
+            <p><strong>Exit questions:</strong></p>
+<ul>
+  <li>What risk appears when a repository or database connection is created at import time?</li>
+  <li>What happy path did you prove this hour?</li>
+  <li>What sad path did you test or plan to test next?</li>
+  <li>Where is the one place a reader can see how the app is assembled?</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What problem does <code>create_app()</code> solve that a global <code>service = ...</code> pattern does not?</p>
+        <section class="slide" id="capstone-quality-gate-session-9-1d21f758" data-slide-number="50">
+            <h1>Capstone Quality Gate — Session 9</h1>
+            <p>Before leaving, check each artifact against this rubric:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Ready</th>
+<th>Needs Attention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correctness</td>
+<td>Feature works with a realistic happy path</td>
+<td>Only works with hard-coded data</td>
+</tr>
+<tr>
+<td>Error handling</td>
+<td>Sad path produces a clear JSON error</td>
+<td>App crashes or returns an HTML traceback</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Responsibility is in the correct layer</td>
+<td>Route, service, and SQL logic are tangled</td>
+</tr>
+<tr>
+<td>Repeatability</td>
+<td>Command or test reproduces the result</td>
+<td>Result depends on manual memory</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>Names are clear, next feature has an obvious home</td>
+<td>Works once but hard to extend</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<p><code>Advanced/lessons/lecture/Day9_Hour1_Advanced.md</code> → <code>### Capstone quality gate</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Day 9 Wrap-Up</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>What Learners Should Leave With</h1>
-            <ul>
-  <li>A Flask entry point</li>
-  <li>CRUD routes around one main resource</li>
-  <li>Manual parser + serializer helpers</li>
-  <li>A maintainable startup path for tomorrow’s security and client work</li>
+        <section class="slide" id="session-9-summary-c315190e" data-slide-number="51">
+            <h1>Session 9 Summary</h1>
+            <h3>What we built today</h3>
+<ul>
+  <li><code>GET /health</code> — first proof the server is live</li>
+  <li>Five CRUD routes backed by <code>TrackerService</code> and <code>SQLiteTrackerRepository</code></li>
+  <li><code>parse_record_payload</code> and <code>record_to_response</code> — centralized contract helpers</li>
+  <li><code>create_app(db_path)</code> — application factory with explicit dependency wiring</li>
+</ul>
+<h3>Design principles reinforced</h3>
+<ul>
+  <li>Routes are thin adapters, not business logic containers</li>
+  <li>One JSON error envelope for every sad path</li>
+  <li>No import-time side effects; configuration injected at construction time</li>
+  <li>A thin vertical slice per hour, always runnable before extending</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Homework Focus</h1>
-            <ul>
-  <li>Build deterministic outputs in <code>Advanced_Day9_homework.ipynb</code></li>
-  <li>Keep the contract stable enough for autograder-style labels</li>
-  <li>Rehearse the hour anchors:</li>
-  <li style="margin-left: 30px;"><code>framework: Flask</code></li>
-  <li style="margin-left: 30px;"><code>endpoint: POST /tasks</code></li>
-  <li style="margin-left: 30px;"><code>request fields checked: title, priority</code></li>
-  <li style="margin-left: 30px;"><code>app factory: create_app</code></li>
+        <section class="slide" id="what-s-next-day-10-a619ed16" data-slide-number="52">
+            <h1>What&#x27;s Next — Day 10</h1>
+            <p>Session 10 builds on today&#x27;s foundations:</p>
+<ul>
+  <li>Testing the Flask API with <code>pytest</code> and Flask <code>test_client()</code></li>
+  <li>Writing focused integration tests with an in-memory or temp-file database</li>
+  <li>Packaging the tracker for distribution and repeatable installation</li>
+  <li>Final capstone review and delivery preparation</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Exit Ticket</h1>
-            <ol>
-  <li>Which route feels strongest right now?</li>
-  <li>Which failure case still needs testing?</li>
-  <li>What part of your API structure will make tomorrow easier?</li>
-</ol>
-        </section>
-
-        <section class="slide">
-            <h1>Looking Ahead</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Next Session</h1>
-            <ul>
-  <li>Protect write routes with an API key</li>
-  <li>Build a Python client</li>
-  <li>Choose an integration path</li>
-  <li>Demo the API milestone confidently</li>
-</ul>
+<p><strong>Commit message to write before Day 10:</strong></p>
+<p><code>feat: add Flask API with health, CRUD endpoints, and application factory</code></p>
         </section>
     </div>
     
@@ -1087,7 +1402,11 @@ def create_record():
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1160,17 +1479,24 @@ def create_record():
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

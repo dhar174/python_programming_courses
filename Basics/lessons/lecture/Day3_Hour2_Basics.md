@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=18; title=Hour 10: String Formatting with F-Strings]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Transition from Hour 9: 3 minutes
@@ -14,6 +16,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=19; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -168,6 +172,8 @@ Breaking it down:
 - **`{age}`**: placeholder that gets replaced with the value of `age`
 
 **The curly braces are signals:** "Insert this variable's value here."
+
+[Instructor slide change: page=30; title=Quick Check (Hour 10)]
 
 ### Quick Check #1
 
@@ -744,6 +750,8 @@ Quick summary of the four gotchas:
 
 ---
 
+[Instructor slide change: page=27; title=Demo: Professional Tip Calculator]
+
 ## Section 5: Live Demo – Tip Calculator Upgrade (5-10 minutes)
 
 ### Demo Script: Making Output Professional
@@ -849,6 +857,8 @@ Thank you!
 The aligned version is more complex, so **don't worry if you don't use alignment in your lab today**. Just getting comfortable with `.2f` for money is the main goal.
 
 ---
+
+[Instructor slide change: page=28; title=Lab: Upgrade Tip Calculator]
 
 ## Section 6: Hands-On Lab – Upgrade Tip Calculator (25-35 minutes)
 
@@ -958,6 +968,8 @@ Your solution must:
 - ✅ Include a separator line (e.g., dashes)
 - ✅ Run without errors
 - ✅ Handle both integer and decimal inputs correctly
+
+[Instructor slide change: page=29; title=Common Pitfalls (Hour 10)]
 
 ### Common Pitfalls to Watch For
 

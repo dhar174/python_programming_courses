@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=26; title=Hour 27: for Loops + range()]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on for loops: iterating over sequences, using range() for counted loops, understanding inclusive/exclusive endpoints, and choosing between for and while. Stay within Basics scope — do not introduce enumerate(), zip(), list comprehensions, or generator expressions. The key outcomes are writing for loops to iterate over lists, using range() with one/two/three arguments, and building a multiplication table. The lab reinforces all of this in a practical table-generation program.
 
 ---
+
+[Instructor slide change: page=27; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -313,6 +317,8 @@ Keep nesting to two levels when possible. Three or more levels become hard to re
 
 ---
 
+[Instructor slide change: page=32; title=Demo — Multiplication Table]
+
 ## 7) Live Coding Demo: Multiplication Table (~10 minutes)
 
 ### 7.1 Announce the demo
@@ -396,6 +402,8 @@ This is wrong because we wanted 1-10, not 0-9. The fix is to use range(1, 11)."
 
 ---
 
+[Instructor slide change: page=33; title=Lab — Multiplication Table]
+
 ## 8) Guided Lab: Multiplication Table (~25 minutes)
 
 ### 8.1 Announce the lab
@@ -451,6 +459,8 @@ This prints every product on a separate line instead of in a table. The fix is t
 - "How many times does the inner loop run for each iteration of the outer loop?"
 - "If n is 5, what values should i and j take? Does range(5) give you that?"
 - "How do you print multiple values on the same line?"
+
+[Instructor slide change: page=34; title=Common Pitfalls — Hour 27]
 
 ### 8.3 Debugging support
 
@@ -508,6 +518,8 @@ The fix for all of these: plan your loops carefully, test with small values, and
 These patterns apply to many problems: processing lists, generating sequences, building tables, and more."
 
 ---
+
+[Instructor slide change: page=35; title=Quick Check — Hour 27]
 
 ## 10) Exit Ticket (~3 minutes)
 

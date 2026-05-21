@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,9 +71,16 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
                     <p><strong>Python Programming Basics – Session 3</strong></p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="31" data-slide-title="Hour 11: Working with Text — split() and join()" data-slide-anchor="hour-11-working-with-text-split-and-join-7c606e89"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 31</strong><a class="lecture-slide-cue-link" href="../slides/day-03/day-03-session-3.html#hour-11-working-with-text-split-and-join-7c606e89" data-slide-deck-link>Slide 31: Hour 11: Working with Text — split() and join()</a></div></aside>
+
 <h2 id="timing-overview">Timing Overview</h2>
 <p><strong>Total Time:</strong> 60 minutes<br>
 - Recap &amp; Transition from Hour 10: 3 minutes
@@ -80,6 +92,8 @@
 - Hands-On Lab (Sentence Stats): 25-35 minutes
 - Debrief &amp; Exit Ticket: 5 minutes</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="32" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-f8e4bf61"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 32</strong><a class="lecture-slide-cue-link" href="../slides/day-03/day-03-session-3.html#learning-outcomes-f8e4bf61" data-slide-deck-link>Slide 32: Learning Outcomes</a></div></aside>
+
 <h2 id="learning-outcomes-for-this-hour">Learning Outcomes for This Hour</h2>
 <p>By the end of this hour, you will be able to:
 1. Use <code>.split()</code> to break strings into lists of words
@@ -193,6 +207,8 @@ text = &quot;one\ttwo\tthree&quot;
 print(text.split())      # ['one', 'two', 'three']
 </code></pre>
 <p><strong>[Key point]:</strong> When you call <code>.split()</code> without arguments, Python splits on <strong>any whitespace</strong> and ignores empty strings in the result.</p>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="42" data-slide-title="Quick Check (Hour 11)" data-slide-anchor="quick-check-hour-11-5ff7b649"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 42</strong><a class="lecture-slide-cue-link" href="../slides/day-03/day-03-session-3.html#quick-check-hour-11-5ff7b649" data-slide-deck-link>Slide 42: Quick Check (Hour 11)</a></div></aside>
+
 <h3 id="quick-check-1">Quick Check #1</h3>
 <p><strong>[Instructor asks:]</strong></p>
 <p>What will this code print?</p>
@@ -573,6 +589,8 @@ Bob,Analyst,37.5,$45.00,$1687.50
 </code></pre>
 <p><strong>[Key insight]:</strong> Notice how we used f-strings <em>inside</em> the list that we pass to <code>.join()</code>. Each f-string formats one value, and <code>.join()</code> stitches them together with commas. This is a clean, readable way to produce structured text output without messy string concatenation.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="38" data-slide-title="Demo: Sentence Statistics" data-slide-anchor="demo-sentence-statistics-a157a2b9"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 38</strong><a class="lecture-slide-cue-link" href="../slides/day-03/day-03-session-3.html#demo-sentence-statistics-a157a2b9" data-slide-deck-link>Slide 38: Demo: Sentence Statistics</a></div></aside>
+
 <h2 id="section-6-live-demo-word-count-and-rebuild-5-10-minutes">Section 6: Live Demo – Word Count and Rebuild (5-10 minutes)</h2>
 <h3 id="demo-script-sentence-statistics">Demo Script: Sentence Statistics</h3>
 <p><strong>[Instructor speaks:]</strong></p>
@@ -670,6 +688,8 @@ Longest word: 'Hello' (5 characters)
 <p><strong>Notice:</strong> <code>.split()</code> handles extra spaces gracefully.</p>
 <p><strong>[Important note]:</strong> In a production program, you'd add validation to check if the input is empty before processing. For now, we'll trust the user to provide valid input.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="39" data-slide-title="Lab: Sentence Analyzer" data-slide-anchor="lab-sentence-analyzer-641c529d"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 39</strong><a class="lecture-slide-cue-link" href="../slides/day-03/day-03-session-3.html#lab-sentence-analyzer-641c529d" data-slide-deck-link>Slide 39: Lab: Sentence Analyzer</a></div></aside>
+
 <h2 id="section-7-hands-on-lab-sentence-stats-25-35-minutes">Section 7: Hands-On Lab – Sentence Stats (25-35 minutes)</h2>
 <h3 id="lab-overview">Lab Overview</h3>
 <p><strong>[Instructor speaks:]</strong></p>
@@ -772,6 +792,8 @@ Hyphenated: Python-programming-is-amazing
 - ✅ Use <code>.join()</code> to create both transformations (piped and hyphenated)
 - ✅ Display output in a clear, formatted way
 - ✅ Run without errors</p>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="41" data-slide-title="Common Pitfalls (Hour 11)" data-slide-anchor="common-pitfalls-hour-11-d8d8ee6b"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 41</strong><a class="lecture-slide-cue-link" href="../slides/day-03/day-03-session-3.html#common-pitfalls-hour-11-d8d8ee6b" data-slide-deck-link>Slide 41: Common Pitfalls (Hour 11)</a></div></aside>
+
 <h3 id="common-pitfalls-to-watch-for">Common Pitfalls to Watch For</h3>
 <p><strong>[Instructor speaks:]</strong></p>
 <p>As you work, watch out for these common mistakes:</p>

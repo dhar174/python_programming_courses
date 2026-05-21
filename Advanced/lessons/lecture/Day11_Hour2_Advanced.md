@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 11, Hour 42
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=10; title=Hour 41 — Learning Outcomes]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -72,6 +74,8 @@ Use these prompts to keep the class active:
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
 
+[Instructor slide change: page=13; title=Demo — Load and Inspect]
+
 ## Live Demo (17-35 minutes)
 
 **[Instructor speaks:]**
@@ -136,6 +140,8 @@ plt.close(fig)
 - Ask what a reviewer would need in order to reproduce the result.
 - Ask what test or manual check would catch a regression later.
 
+[Instructor slide change: page=16; title=Lab — Analytics Starter (Hour 41)]
+
 ## Guided Practice (35-40 minutes)
 
 **[Instructor speaks:]**
@@ -171,6 +177,8 @@ Generate charts: create one or two plots from the dataset, save them into report
 - Axes and titles are readable.
 - Script can be rerun without manual plotting steps.
 
+[Instructor slide change: page=17; title=Common Pitfalls — Hour 41]
+
 ## Debrief and Troubleshooting (50-56 minutes)
 
 **[Instructor speaks:]**
@@ -202,6 +210,8 @@ If learners meet the completion criteria early, offer one of these stretch goals
 - Create a chart function that accepts a DataFrame and output path.
 
 Remind learners that optional work must not break the required slice. A polished required feature is better than three unfinished experiments.
+
+[Instructor slide change: page=18; title=Quick Check — Hour 41]
 
 ## Quick Checks and Exit Ticket (56-60 minutes)
 

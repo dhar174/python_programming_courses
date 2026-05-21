@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=31; title=Hour 11: Working with Text — split() and join()]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Transition from Hour 10: 3 minutes
@@ -15,6 +17,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=32; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -185,6 +189,8 @@ print(text.split())      # ['one', 'two', 'three']
 ```
 
 **[Key point]:** When you call `.split()` without arguments, Python splits on **any whitespace** and ignores empty strings in the result.
+
+[Instructor slide change: page=42; title=Quick Check (Hour 11)]
 
 ### Quick Check #1
 
@@ -724,6 +730,8 @@ Bob,Analyst,37.5,$45.00,$1687.50
 
 ---
 
+[Instructor slide change: page=38; title=Demo: Sentence Statistics]
+
 ## Section 6: Live Demo – Word Count and Rebuild (5-10 minutes)
 
 ### Demo Script: Sentence Statistics
@@ -846,6 +854,8 @@ Longest word: 'Hello' (5 characters)
 
 ---
 
+[Instructor slide change: page=39; title=Lab: Sentence Analyzer]
+
 ## Section 7: Hands-On Lab – Sentence Stats (25-35 minutes)
 
 ### Lab Overview
@@ -960,6 +970,8 @@ Your solution must:
 - ✅ Use `.join()` to create both transformations (piped and hyphenated)
 - ✅ Display output in a clear, formatted way
 - ✅ Run without errors
+
+[Instructor slide change: page=41; title=Common Pitfalls (Hour 11)]
 
 ### Common Pitfalls to Watch For
 

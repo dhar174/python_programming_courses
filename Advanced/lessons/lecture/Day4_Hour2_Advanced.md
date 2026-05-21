@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=18; title=Hour 14: Security Basics — Secrets, Env Vars, and Hashing]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Security Mindset Reset: 5 minutes
@@ -13,6 +15,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=19; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -198,6 +202,8 @@ I want to model careful language here. If we demo `hashlib.sha256`, that does **
 
 If students ask about production password storage, the accurate answer is that real systems use stronger, purpose-built password hashing approaches and broader security design practices. But those are beyond this lesson.
 
+[Instructor slide change: page=25; title=Demo: Environment Variable + Gated Admin Action]
+
 ### `sha256` Demo for Comparison-Only Use
 
 **[Instructor speaks:]**
@@ -359,6 +365,8 @@ These questions make the demo about reasoning, not imitation.
 
 ---
 
+[Instructor slide change: page=26; title=Lab: Secure-ish Configuration (18 min)]
+
 ## Section 5: Hands-On Lab – Secure-ish Configuration (18 minutes)
 
 ### Lab Framing
@@ -415,6 +423,8 @@ If a student is stuck, give them a checklist:
 - fifth, add one README note
 
 That sequence keeps the lab manageable.
+
+[Instructor slide change: page=27; title=Common Pitfalls (Hour 14)]
 
 ### Common Pitfalls to Watch For
 

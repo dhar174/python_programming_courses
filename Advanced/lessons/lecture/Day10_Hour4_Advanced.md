@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 10, Hour 40
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=34; title=Hour 40: Checkpoint 5 — API Milestone Demo]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -13,6 +15,8 @@
 | 15-40 | Independent stabilization and rehearsal | Learners fix only blockers, rehearse commands, and document evidence. |
 | 40-55 | Timeboxed learner demos / fast-grade checks | Run short demos or spot checks against the checkpoint rubric. |
 | 55-60 | Reflection and exit ticket | Capture remaining risks before analytics and testing begin. |
+
+[Instructor slide change: page=35; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -81,6 +85,8 @@ Use these prompts to keep the class active:
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
 
+[Instructor slide change: page=37; title=Fast-Grade Demo Sequence]
+
 ## Instructor Model Demo (15-25 minutes)
 
 **[Instructor speaks:]**
@@ -141,6 +147,8 @@ Suggested instructor circulation questions:
 
 ## Stabilization and Demo Queue (40-55 minutes)
 
+[Instructor slide change: page=36; title=What the Checkpoint Must Prove]
+
 ### Lab prompt
 
 Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone demos or fast-grade checks. Each learner should be ready to show Flask CRUD, SQLite persistence, consistent JSON errors, API-key gate for writes, and optionally a Python client.
@@ -160,6 +168,8 @@ Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone de
 - Persistence is proven by restarting or re-querying the database.
 - Security gate works for missing/wrong/correct keys.
 - Student can point to separation between routes and service logic.
+
+[Instructor slide change: page=40; title=Common Pitfalls and Exit Ticket — Hour 40]
 
 ## Reflection, Quick Checks, and Exit Ticket (55-60 minutes)
 

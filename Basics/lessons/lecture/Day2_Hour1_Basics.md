@@ -9,6 +9,8 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 5: String Indexing, Slicing, and `len()`]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is intentionally written as a delivery script. You can read it almost word-for-word while teaching, pausing where learners need extra think time.
@@ -151,6 +153,8 @@ print("python" in text)
 
 ---
 
+[Instructor slide change: page=10; title=Demo: Initials + Email Domain]
+
 ## 4) Live Demo Script (~8 minutes)
 
 ## Demo A: Extract initials from a full name
@@ -210,6 +214,8 @@ print(filename[-3:])
 **Say:** “Negative indexing and end slices are compact and readable.”
 
 ---
+
+[Instructor slide change: page=11; title=Lab: Username Builder]
 
 ## 5) Guided Lab: Username Builder (25–35 minutes)
 
@@ -352,6 +358,8 @@ print(first[0].lower() + last.lower().replace(" ", ""))
 **Say:** “If your slice is one character too short, inspect your end index. End index is excluded.”
 
 ---
+
+[Instructor slide change: page=14; title=Quick Check (Hour 5)]
 
 ## 7) Quick Checks / Exit Ticket (~6 minutes)
 

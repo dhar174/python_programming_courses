@@ -177,7 +177,37 @@
             margin-top: calc(var(--spacing) / 2);
             margin-bottom: calc(var(--spacing) / 2);
         }
-        
+
+        /* ====================================
+           TABLES
+           ==================================== */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: var(--spacing);
+            background: #fff;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        td {
+            background: #fff;
+        }
+         
         /* ====================================
            CODE BLOCKS
            ==================================== */
@@ -356,712 +386,646 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="basics-day-2-session-2-hours-58-3bc4fe77" data-slide-number="1">
             <h1>Basics Day 2 — Session 2 (Hours 5–8)</h1>
-            <div class="subtitle">Python Programming (Basic) • Strings, I/O, and Fundamentals Checkpoint</div>
+            <div class="subtitle">Python Programming (Basic) • Strings, Input, Conversion &amp; Checkpoint 1</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-2-overview-05c40247" data-slide-number="2">
             <h1>Session 2 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-4b253bc3" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 5: String fundamentals – indexing, slicing, len()</li>
-  <li>Hour 6: String methods – normalize, search, replace</li>
-  <li>Hour 7: Input/output + type conversion</li>
-  <li>Hour 8: Checkpoint 1 – Fundamentals mini-assessment</li>
+  <li>Hour 5: String indexing, slicing, and <code>len()</code></li>
+  <li>Hour 6: String methods — normalize, search, replace</li>
+  <li>Hour 7: Interactive input and type conversion</li>
+  <li>Hour 8: Checkpoint 1 — fundamentals mini-assessment</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Hour 5: String Fundamentals — Indexing, Slicing, len()</h1>
+        <section class="slide" id="hour-5-string-indexing-slicing-and-len-f42d1e20" data-slide-number="4">
+            <h1>Hour 5: String Indexing, Slicing, and `len()`</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-6e198af2" data-slide-number="5">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Index and slice strings</li>
-  <li>Use len() and basic membership checks</li>
-  <li>Understand negative indexing</li>
+  <li>Access individual characters using index notation</li>
+  <li>Extract substrings with slice syntax (<code>start:end</code>)</li>
+  <li>Use <code>len()</code> to measure length and avoid out-of-range errors</li>
+  <li>Perform basic membership checks with the <code>in</code> operator</li>
 </ul>
+<blockquote>*Source: `Basics/lessons/lecture/Day2_Hour1_Basics.md` — Section 0)*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>String Indexing Basics</h1>
-            <h3>Indexing Starts at 0</h3>
-<pre data-lang="python"><code>message = &quot;Python&quot;
-print(message[0])   # &#x27;P&#x27;
-print(message[1])   # &#x27;y&#x27;
-print(message[5])   # &#x27;n&#x27;</code></pre>
-<h3>Think of Indices as Positions</h3>
-<pre><code>P   y   t   h   o   n
-0   1   2   3   4   5</code></pre>
+        <section class="slide" id="strings-are-ordered-sequences-ec6ffd46" data-slide-number="6">
+            <h1>Strings Are Ordered Sequences</h1>
+            <h3>Think of Each Character as a Labeled Box</h3>
+<pre data-lang="python"><code>word = &quot;Python&quot;
+#       P  y  t  h  o  n
+# index 0  1  2  3  4  5</code></pre>
+<h3>Indexing Starts at Zero — Not One</h3>
+<pre data-lang="python"><code>print(word[0])   # P
+print(word[1])   # y
+print(word[5])   # n</code></pre>
+<blockquote>&quot;Index means position. Position counting starts at 0.&quot;</blockquote>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Section 3.2*</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="negative-indexing-3583e07f" data-slide-number="7">
             <h1>Negative Indexing</h1>
-            <h3>Counting from the End</h3>
-<pre data-lang="python"><code>message = &quot;Python&quot;
-print(message[-1])  # &#x27;n&#x27; (last character)
-print(message[-2])  # &#x27;o&#x27; (second to last)
-print(message[-6])  # &#x27;P&#x27; (same as [0])</code></pre>
-<h3>Negative Index Reference</h3>
-<pre><code> P    y    t    h    o    n
- 0    1    2    3    4    5
--6   -5   -4   -3   -2   -1</code></pre>
+            <h3>Count Backwards from the End</h3>
+<pre data-lang="python"><code>word = &quot;Python&quot;
+print(word[-1])   # n  (last character)
+print(word[-2])   # o
+print(word[-6])   # P  (same as word[0])</code></pre>
+<h3>When Is This Useful?</h3>
+<ul>
+  <li>File extensions: <code>filename[-3:]</code> → <code>&quot;pdf&quot;</code></li>
+  <li>Last character of user input</li>
+  <li>End is more predictable than the beginning</li>
+</ul>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Section 3.3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>String Slicing</h1>
-            <h3>Basic Slicing: s[start:end]</h3>
-<pre data-lang="python"><code>message = &quot;Python&quot;
-print(message[0:3])   # &#x27;Pyt&#x27; (start to end-1)
-print(message[2:5])   # &#x27;tho&#x27;
-print(message[1:])    # &#x27;ython&#x27; (start to end)
-print(message[:4])    # &#x27;Pyth&#x27; (beginning to end-1)</code></pre>
-<h3>Remember: End Index is Exclusive</h3>
-<p>The slice <code>s[a:b]</code> includes index <code>a</code> but excludes index <code>b</code>.</p>
+        <section class="slide" id="slicing-fundamentals-19b98fac" data-slide-number="8">
+            <h1>Slicing Fundamentals</h1>
+            <h3>Syntax: `s[start:end]` — End Is **Exclusive**</h3>
+<pre data-lang="python"><code>word = &quot;Python&quot;
+print(word[0:3])   # Pyt   (indexes 0, 1, 2)
+print(word[2:5])   # tho
+print(word[:4])    # Pyth  (start defaults to 0)
+print(word[1:])    # ython (end defaults to len)</code></pre>
+<h3>The One Rule to Memorize</h3>
+<blockquote>&quot;`s[a:b]` **includes** `a`, **excludes** `b`&quot;</blockquote>
+<p>If your slice looks one character short — check your end index.</p>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Section 3.4*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>The len() Function</h1>
-            <h3>Getting String Length</h3>
+        <section class="slide" id="len-and-the-in-operator-4404e543" data-slide-number="9">
+            <h1>`len()` and the `in` Operator</h1>
+            <h3>`len()` — Your Measuring Tape</h3>
 <pre data-lang="python"><code>message = &quot;Hello, World!&quot;
-print(len(message))   # 13
-
-# Useful for bounds checking
-last_index = len(message) - 1
-print(message[last_index])  # &#x27;!&#x27;</code></pre>
-<h3>Empty String Check</h3>
-<pre data-lang="python"><code>user_input = &quot;&quot;
-if len(user_input) == 0:
-    print(&quot;No input provided&quot;)</code></pre>
+print(len(message))                    # 13
+print(message[len(message) - 1])       # !  (last char, safe)</code></pre>
+<h3>`in` — Boolean Membership Check</h3>
+<pre data-lang="python"><code>text = &quot;Hello, Python learners!&quot;
+print(&quot;Python&quot; in text)    # True
+print(&quot;python&quot; in text)    # False  ← case-sensitive!</code></pre>
+<p>Use <code>in</code> when the question is <strong>yes/no</strong>. Use <code>find()</code> when you need the <strong>position</strong>.</p>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Sections 3.5–3.6*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Membership with &#x27;in&#x27;</h1>
-            <h3>Checking for Substrings</h3>
-<pre data-lang="python"><code>message = &quot;Hello, Python!&quot;
-
-# Check if substring exists
-print(&quot;Python&quot; in message)     # True
-print(&quot;python&quot; in message)     # False (case-sensitive)
-print(&quot;Java&quot; in message)       # False
-
-# Use in conditions
-if &quot;Python&quot; in message:
-    print(&quot;Found Python!&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Practical String Operations</h1>
+        <section class="slide" id="demo-initials-email-domain-933c788f" data-slide-number="10">
+            <h1>Demo: Initials + Email Domain</h1>
             <h3>Extract Initials from a Name</h3>
 <pre data-lang="python"><code>full_name = &quot;Alice Smith&quot;
 first_initial = full_name[0]
-# Find space position to get last name initial
 space_index = full_name.find(&quot; &quot;)
 last_initial = full_name[space_index + 1]
 print(f&quot;Initials: {first_initial}.{last_initial}.&quot;)
 # Output: Initials: A.S.</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Extract Domain from Email</h1>
-            <h3>Using Slicing and find()</h3>
+<h3>Extract Domain from an Email</h3>
 <pre data-lang="python"><code>email = &quot;student@example.com&quot;
-at_position = email.find(&quot;@&quot;)
-domain = email[at_position + 1:]
+at_index = email.find(&quot;@&quot;)
+domain = email[at_index + 1:]
 print(f&quot;Domain: {domain}&quot;)
 # Output: Domain: example.com</code></pre>
-<h3>Get Last Character</h3>
-<pre data-lang="python"><code>filename = &quot;document.pdf&quot;
-extension = filename[-3:]
-print(f&quot;Extension: {extension}&quot;)
-# Output: Extension: pdf</code></pre>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Section 4, Demos A–B*</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="lab-username-builder-e9827282" data-slide-number="11">
             <h1>Lab: Username Builder</h1>
-            <p><strong>Time: 25-35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Input first and last name</li>
-  <li>Build a username: first initial + last name (lowercase)</li>
-  <li>Show username length</li>
-</ul>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Requirements</h3>
+<ol>
+  <li>Ask for first name and last name</li>
+  <li>Build username: <code>first initial + last name</code></li>
+  <li>Normalize to lowercase; remove spaces in last name</li>
+  <li>Print username and its character count</li>
+</ol>
 <h3>Example Interaction</h3>
 <pre><code>Enter first name: Alice
-Enter last name: Smith
-Username: asmith
-Length: 6 characters</code></pre>
+Enter last name: Van Halen
+Username: avanhalen
+Length: 9 characters</code></pre>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Correct username for normal names</p>
+<p><span class="check">✓</span> Handles multi-word last names</p>
+<p><span class="check">✓</span> Correct length output</p>
+<p><span class="check">✓</span> Program runs end-to-end without errors</p>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Section 5*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Sample Solution Structure</h1>
-            <pre data-lang="python"><code># Get input
-first_name = input(&quot;Enter first name: &quot;)
-last_name = input(&quot;Enter last name: &quot;)
+        <section class="slide" id="reference-solution-username-builder-71cb3357" data-slide-number="12">
+            <h1>Reference Solution: Username Builder</h1>
+            <pre data-lang="python"><code># Username Builder (Hour 5)
+first_name = input(&quot;Enter first name: &quot;).strip()
+last_name  = input(&quot;Enter last name: &quot;).strip()
 
-# Build username
-first_initial = first_name[0].lower()
-last_clean = last_name.lower().replace(&quot; &quot;, &quot;&quot;)
-username = first_initial + last_clean
+if len(first_name) == 0 or len(last_name) == 0:
+    print(&quot;Please provide both first and last name.&quot;)
+else:
+    first_initial = first_name[0].lower()
+    last_clean    = last_name.lower().replace(&quot; &quot;, &quot;&quot;)
+    username      = first_initial + last_clean
 
-# Display result
-print(f&quot;Username: {username}&quot;)
-print(f&quot;Length: {len(username)} characters&quot;)</code></pre>
+    print(f&quot;Username: {username}&quot;)
+    print(f&quot;Length: {len(username)} characters&quot;)</code></pre>
+<blockquote>*Source: `Day2_Hour1_Basics.md` — Section 5.3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Completion Criteria (Hour 5)</h1>
-            <p><span class="check">✓</span> Correct username for multi-word last names (strip spaces)</p>
-<p><span class="check">✓</span> Handles at least one realistic name</p>
-<p><span class="check">✓</span> Displays username length correctly</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-5-bbde0403" data-slide-number="13">
             <h1>Common Pitfalls (Hour 5)</h1>
-            <p><strong>⚠️</strong> <strong>IndexError from empty strings</strong></p>
-<pre data-lang="python"><code>name = &quot;&quot;
-first_char = name[0]  # IndexError!
-# Fix: Check length first</code></pre>
-<p><strong>⚠️</strong> <strong>Not normalizing case/spacing</strong></p>
-<pre data-lang="python"><code># Don&#x27;t forget: &quot;Van Halen&quot; → &quot;vanhalen&quot;</code></pre>
+            <p><strong>⚠️</strong> <strong><code>IndexError</code> from empty input</strong> — always check <code>len()</code> before indexing</p>
+<p><strong>⚠️</strong> <strong>Forgetting normalization</strong> — <code>first[0] + last</code> gives <code>&quot;AVan Halen&quot;</code> not <code>&quot;avanhalen&quot;</code></p>
+<p><strong>⚠️</strong> <strong>Off-by-one in slices</strong> — remember: end index is excluded</p>
+<h3>Quick Fix Pattern</h3>
+<pre data-lang="python"><code>if len(name) &gt; 0:
+    print(name[0])</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions</h1>
-            <ul>
-  <li>Add a rule: if username &gt; 12 chars, shorten last name</li>
-  <li>Add a numeric suffix if desired</li>
-</ul>
-<pre data-lang="python"><code># Example extension
-if len(username) &gt; 12:
-    username = username[:12]
-print(f&quot;Username: {username}&quot;)</code></pre>
+        <section class="slide" id="quick-check-hour-5-b769e2dd" data-slide-number="14">
+            <h1>Quick Check (Hour 5)</h1>
+            <ol>
+  <li>What does <code>s[-1]</code> return?</li>
+  <li>If <code>s = &quot;Python&quot;</code>, what is <code>s[1:4]</code>?</li>
+  <li>Why is <code>len(s) - 1</code> the safe last index?</li>
+  <li>Is <code>&quot;py&quot; in &quot;Python&quot;</code> True or False — and why?</li>
+</ol>
+<p><strong>Answers:</strong> last char · <code>&quot;yth&quot;</code> · indexing starts at 0 · <strong>False</strong> (case-sensitive)</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What does <code>s[-1]</code> do?</p>
-<p><strong>Answer</strong>: Returns the last character of string <code>s</code> (counting from the end with -1).</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-6-string-methods-normalize-search-replace-8315f308" data-slide-number="15">
             <h1>Hour 6: String Methods — Normalize, Search, Replace</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-d3eb74e9" data-slide-number="16">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Use common string methods</li>
-  <li>Explain immutability: methods return new strings</li>
-  <li>Apply methods for data cleaning</li>
+  <li>Use <code>.lower()</code>, <code>.upper()</code>, <code>.strip()</code>, <code>.replace()</code>, <code>.find()</code>, <code>.count()</code></li>
+  <li>Explain why strings are <strong>immutable</strong> and why methods return new strings</li>
+  <li>Choose <code>find()</code> vs <code>in</code> based on whether you need position or presence</li>
+  <li>Clean messy user input with method chaining</li>
+  <li>Detect keywords while handling capitalization variations</li>
 </ul>
+<blockquote>*Source: `Basics/lessons/lecture/Day2_Hour2_Basics.md` — Learning Outcomes*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Key String Methods</h1>
-            <h3>Case Conversion</h3>
-<pre data-lang="python"><code>text = &quot;Hello World&quot;
-
-print(text.lower())    # &#x27;hello world&#x27;
-print(text.upper())    # &#x27;HELLO WORLD&#x27;
-print(text.title())    # &#x27;Hello World&#x27;</code></pre>
-<h3>Important: Original is Unchanged!</h3>
-<pre data-lang="python"><code>original = &quot;Hello&quot;
-result = original.lower()
-print(original)  # Still &#x27;Hello&#x27;
-print(result)    # &#x27;hello&#x27;</code></pre>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="string-immutability-64e62953" data-slide-number="17">
             <h1>String Immutability</h1>
-            <h3>Strings Cannot Be Modified In Place</h3>
+            <h3>Strings Cannot Be Changed In-Place</h3>
 <pre data-lang="python"><code>message = &quot;Hello&quot;
-# ❌ This doesn&#x27;t work:
-# message[0] = &quot;h&quot;  # TypeError!
-
-# ✓ Create a new string instead:
-message = message.lower()
-print(message)  # &#x27;hello&#x27;</code></pre>
-<h3>Always Assign the Result Back</h3>
-<pre data-lang="python"><code>name = &quot;  alice  &quot;
-name = name.strip()  # Must assign!
-print(name)  # &#x27;alice&#x27;</code></pre>
+message.upper()    # Returns &quot;HELLO&quot; — but does NOT change message!
+print(message)     # Still prints &quot;Hello&quot;</code></pre>
+<h3>Always Assign the Return Value</h3>
+<pre data-lang="python"><code>message = message.upper()
+print(message)     # Now prints &quot;HELLO&quot;</code></pre>
+<blockquote>**Key rule:** String methods **always** return a new string. Assign the result or you lose it.</blockquote>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Core Concepts §1*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>The strip() Method</h1>
-            <h3>Remove Whitespace</h3>
-<pre data-lang="python"><code>user_input = &quot;   hello   &quot;
-
-print(user_input.strip())   # &#x27;hello&#x27; (both sides)
-print(user_input.lstrip())  # &#x27;hello   &#x27; (left only)
-print(user_input.rstrip())  # &#x27;   hello&#x27; (right only)</code></pre>
-<h3>Why This Matters</h3>
-<p>User input often has extra spaces:</p>
-<pre data-lang="python"><code>name = input(&quot;Enter name: &quot;)  # User types &quot;  Alice  &quot;
-name = name.strip()
-print(f&quot;Hello, {name}!&quot;)  # &quot;Hello, Alice!&quot;</code></pre>
+        <section class="slide" id="case-transformation-methods-d512c3e5" data-slide-number="18">
+            <h1>Case Transformation Methods</h1>
+            <table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.lower()</code></td>
+<td>all lowercase</td>
+</tr>
+<tr>
+<td><code>.upper()</code></td>
+<td>ALL UPPERCASE</td>
+</tr>
+<tr>
+<td><code>.title()</code></td>
+<td>Title Case</td>
+</tr>
+<tr>
+<td><code>.capitalize()</code></td>
+<td>First letter only</td>
+</tr>
+</tbody>
+</table>
+<h3>Example</h3>
+<pre data-lang="python"><code>user_input = &quot;jAvA is GREAT&quot;
+print(user_input.lower())    # &quot;java is great&quot;
+print(user_input.title())    # &quot;Java Is Great&quot;</code></pre>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Core Concepts §2*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>The replace() Method</h1>
-            <h3>Substitute Substrings</h3>
-<pre data-lang="python"><code>message = &quot;I like cats. Cats are great!&quot;
-
-new_message = message.replace(&quot;cats&quot;, &quot;dogs&quot;)
-print(new_message)
-# &#x27;I like dogs. Cats are great!&#x27;
-# Note: case-sensitive!</code></pre>
-<h3>Multiple Replacements</h3>
-<pre data-lang="python"><code>text = &quot;a-b-c-d&quot;
-clean = text.replace(&quot;-&quot;, &quot; &quot;)
-print(clean)  # &#x27;a b c d&#x27;</code></pre>
+        <section class="slide" id="whitespace-management-3c814b7d" data-slide-number="19">
+            <h1>Whitespace Management</h1>
+            <h3>Stripping Methods</h3>
+<pre data-lang="python"><code>dirty = &quot;  hello  world  &quot;
+print(dirty.strip())    # &quot;hello  world&quot;  ← outer gone, inner stays!
+print(dirty.lstrip())   # &quot;hello  world  &quot;
+print(dirty.rstrip())   # &quot;  hello  world&quot;</code></pre>
+<h3>Important: Strip Does NOT Remove Embedded Spaces</h3>
+<p>To remove internal spaces use <code>.replace()</code>:</p>
+<pre data-lang="python"><code>no_spaces = dirty.strip().replace(&quot; &quot;, &quot;&quot;)
+print(no_spaces)   # &quot;helloworld&quot;</code></pre>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Core Concepts §3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>The find() Method</h1>
-            <h3>Locate Substrings</h3>
-<pre data-lang="python"><code>message = &quot;Hello, Python!&quot;
+        <section class="slide" id="string-searching-2fea19c1" data-slide-number="20">
+            <h1>String Searching</h1>
+            <h3>Three Tools — Pick the Right One</h3>
+<pre data-lang="python"><code>text = &quot;Python is powerful&quot;
 
-position = message.find(&quot;Python&quot;)
-print(position)  # 7
+# Use &#x27;in&#x27; for True/False only:
+print(&quot;is&quot; in text)          # True
 
-# Returns -1 if not found
-position = message.find(&quot;Java&quot;)
-print(position)  # -1</code></pre>
-<h3>Using find() for Checking</h3>
-<pre data-lang="python"><code>email = &quot;user@example.com&quot;
-if email.find(&quot;@&quot;) != -1:
-    print(&quot;Valid email format&quot;)
-else:
-    print(&quot;Missing @ symbol&quot;)</code></pre>
-        </section>
+# Use .find() when you need the position:
+pos = text.find(&quot;is&quot;)
+print(pos)                   # 7
 
-        <section class="slide">
-            <h1>Using &#x27;in&#x27; for Containment</h1>
-            <h3>Simpler Than find() for Checks</h3>
-<pre data-lang="python"><code>message = &quot;Hello, Python!&quot;
-
-# Using &#x27;in&#x27; (preferred for simple checks)
-if &quot;Python&quot; in message:
-    print(&quot;Found it!&quot;)
-
-# Using find()
-if message.find(&quot;Python&quot;) != -1:
-    print(&quot;Found it!&quot;)</code></pre>
-<h3>Best Practice</h3>
-<ul>
-  <li>Use <code>in</code> for True/False checks</li>
-  <li>Use <code>find()</code> when you need the position</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Clean Messy Input</h1>
-            <h3>Before and After Comparison</h3>
-<pre data-lang="python"><code># Messy user input
-raw_input = &quot;   HELLO world   &quot;
-
-# Clean it up
-cleaned = raw_input.strip()      # Remove whitespace
-cleaned = cleaned.lower()        # Lowercase
-# Or chain methods:
-cleaned = raw_input.strip().lower()
-
-print(f&quot;Before: &#x27;{raw_input}&#x27;&quot;)
-print(f&quot;After:  &#x27;{cleaned}&#x27;&quot;)
-# Before: &#x27;   HELLO world   &#x27;
-# After:  &#x27;hello world&#x27;</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: find() Returning -1</h1>
-            <h3>Handle &quot;Not Found&quot; Cases</h3>
-<pre data-lang="python"><code>text = &quot;Python programming&quot;
-
-# Found
-pos = text.find(&quot;prog&quot;)
-print(f&quot;&#x27;prog&#x27; found at position: {pos}&quot;)  # 7
-
-# Not found
-pos = text.find(&quot;java&quot;)
-print(f&quot;&#x27;java&#x27; found at position: {pos}&quot;)  # -1
-
-# Use the result
-if pos == -1:
-    print(&quot;Keyword not found&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Text Sanitizer</h1>
-            <p><strong>Time: 25-35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Input a sentence</li>
-  <li>Strip whitespace, make lowercase</li>
-  <li>Replace multiple spaces with single spaces (basic approach)</li>
-  <li>Report whether a chosen keyword appears</li>
-</ul>
-<h3>Example Interaction</h3>
-<pre><code>Enter a sentence:    Hello   World   
-Enter keyword to find: world
-Cleaned: &#x27;hello world&#x27;
-Keyword &#x27;world&#x27; found: True</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Sample Solution Structure</h1>
-            <pre data-lang="python"><code># Get input
-sentence = input(&quot;Enter a sentence: &quot;)
-keyword = input(&quot;Enter keyword to find: &quot;)
-
-# Clean the sentence
-cleaned = sentence.strip().lower()
-# Basic approach to reduce multiple spaces
-cleaned = cleaned.replace(&quot;  &quot;, &quot; &quot;)
-
-# Check for keyword
-keyword_lower = keyword.lower()
-found = keyword_lower in cleaned
-
-# Display results
-print(f&quot;Cleaned: &#x27;{cleaned}&#x27;&quot;)
-print(f&quot;Keyword &#x27;{keyword}&#x27; found: {found}&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 6)</h1>
-            <p><span class="check">✓</span> Outputs transformed sentence</p>
-<p><span class="check">✓</span> Correctly reports keyword presence</p>
-<p><span class="check">✓</span> Handles whitespace properly</p>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 6)</h1>
-            <p><strong>⚠️</strong> <strong>Expecting replace to modify in place</strong></p>
-<pre data-lang="python"><code>text = &quot;hello&quot;
-text.replace(&quot;e&quot;, &quot;a&quot;)  # Returns new string!
-print(text)  # Still &#x27;hello&#x27;
-# Fix: text = text.replace(&quot;e&quot;, &quot;a&quot;)</code></pre>
-<p><strong>⚠️</strong> <strong>Confusing find() results</strong></p>
-<pre data-lang="python"><code>pos = text.find(&quot;xyz&quot;)
-if pos:  # ❌ Wrong! 0 is falsy but valid
-    print(&quot;Found&quot;)
-# ✓ Correct:
-if pos != -1:
+# Use .count() for total occurrences:
+print(text.count(&quot;o&quot;))       # 2</code></pre>
+<h3>Critical Detail</h3>
+<blockquote>`.find()` returns **`-1`** when not found — **not** `False` or `None`</blockquote>
+<pre data-lang="python"><code># ❌ TRAP: find() returns 0 at index 0, which is falsy!
+if text.find(&quot;py&quot;) != -1:   # ✓ correct check
     print(&quot;Found&quot;)</code></pre>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Core Concepts §4*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions</h1>
-            <ul>
-  <li>Add: count occurrences using <code>.count()</code></li>
-  <li>Add: title-case name fields</li>
-</ul>
-<pre data-lang="python"><code>text = &quot;hello hello world&quot;
-count = text.count(&quot;hello&quot;)
-print(f&quot;&#x27;hello&#x27; appears {count} times&quot;)  # 2</code></pre>
+        <section class="slide" id="string-replacement-d5c4247c" data-slide-number="21">
+            <h1>String Replacement</h1>
+            <h3>`.replace(old, new)` — Returns a New String</h3>
+<pre data-lang="python"><code>text = &quot;The cat sat on the mat&quot;
+result = text.replace(&quot;cat&quot;, &quot;dog&quot;)
+print(result)   # &quot;The dog sat on the mat&quot;
+print(text)     # &quot;The cat sat on the mat&quot;  ← unchanged!</code></pre>
+<h3>Case-Sensitive by Default</h3>
+<pre data-lang="python"><code># &quot;The&quot; at start is NOT matched by &quot;the&quot;
+fixed = text.lower().replace(&quot;the&quot;, &quot;a&quot;)
+print(fixed)    # &quot;a cat sat on a mat&quot;</code></pre>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Core Concepts §5*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why do we assign back after calling a string method?</p>
-<p><strong>Answer</strong>: Because strings are immutable — methods return a <em>new</em> string; the original is unchanged unless we assign the result back to the variable.</p>
+        <section class="slide" id="method-chaining-2f35da7f" data-slide-number="22">
+            <h1>Method Chaining</h1>
+            <h3>Combine Multiple Methods in One Expression</h3>
+<pre data-lang="python"><code>user_input = &quot;  PYTHON IS AWESOME  &quot;
+clean = user_input.lower().strip().replace(&quot;awesome&quot;, &quot;great&quot;)
+print(clean)    # &quot;python is great&quot;</code></pre>
+<h3>For Long Chains — Break for Readability</h3>
+<pre data-lang="python"><code>result = (user_input
+    .lower()
+    .strip()
+    .replace(&quot;python&quot;, &quot;java&quot;))</code></pre>
+<blockquote>Always read chains **left to right** — each method acts on the result of the previous one.</blockquote>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Core Concepts §6*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Hour 7: Input/Output + Type Conversion</h1>
+        <section class="slide" id="demo-email-validation-helper-a1b30c3c" data-slide-number="23">
+            <h1>Demo: Email Validation Helper</h1>
+            <pre data-lang="python"><code>email = &quot;  JOHN.DOE@EXAMPLE.COM  &quot;
+
+# Step 1: Remove whitespace
+email = email.strip()
+print(f&quot;After strip: &#x27;{email}&#x27;&quot;)    # &#x27;JOHN.DOE@EXAMPLE.COM&#x27;
+
+# Step 2: Lowercase
+email = email.lower()
+print(f&quot;After lower: &#x27;{email}&#x27;&quot;)    # &#x27;john.doe@example.com&#x27;
+
+# Step 3: Check for @
+if &quot;@&quot; in email:
+    print(&quot;Valid format (contains @)&quot;)
+
+# Step 4: Extract prefix
+at_pos = email.find(&quot;@&quot;)
+prefix = email[:at_pos]
+print(f&quot;Prefix: {prefix}&quot;)          # john.doe
+
+# Step 5: Count dots
+print(f&quot;Total dots: {email.count(&#x27;.&#x27;)}&quot;)   # 2</code></pre>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Live Coding Demo*</blockquote>
+        </section>
+
+        <section class="slide" id="lab-text-sanitizer-f2f082f2" data-slide-number="24">
+            <h1>Lab: Text Sanitizer</h1>
+            <p><strong>Time: 30 minutes</strong></p>
+<h3>Goal</h3>
+<p>Build a text sanitizer that:</p>
+<ol>
+  <li>Strips leading/trailing spaces and converts to lowercase</li>
+  <li>Replaces multiple consecutive spaces with a single space</li>
+  <li>Counts occurrences of a given keyword (case-insensitive)</li>
+</ol>
+<h3>Expected Results</h3>
+<pre data-lang="python"><code>text_sanitizer(&quot;  HELLO   WORLD  &quot;, &quot;hello&quot;)  # (&quot;hello world&quot;, 1)
+text_sanitizer(&quot;Python IS great&quot;,   &quot;python&quot;) # (&quot;python is great&quot;, 1)
+text_sanitizer(&quot;  CAT  cat  CAT  &quot;, &quot;cat&quot;)    # (&quot;cat cat cat&quot;, 3)</code></pre>
+<h3>Completion Criteria</h3>
+<p><span class="check">✓</span> Normalization works  <span class="check">✓</span> Multiple spaces collapsed  <span class="check">✓</span> Keyword count correct</p>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Guided Lab*</blockquote>
+        </section>
+
+        <section class="slide" id="reference-solution-text-sanitizer-61c2b24a" data-slide-number="25">
+            <h1>Reference Solution: Text Sanitizer</h1>
+            <pre data-lang="python"><code>def text_sanitizer(sentence, keyword):
+    # Normalize: strip and lowercase
+    cleaned = sentence.strip().lower()
+
+    # Collapse multiple spaces
+    while &quot;  &quot; in cleaned:
+        cleaned = cleaned.replace(&quot;  &quot;, &quot; &quot;)
+
+    # Normalize keyword, then count
+    keyword_normalized = keyword.lower()
+    count = cleaned.count(keyword_normalized)
+
+    return cleaned, count</code></pre>
+<blockquote>**Key insight:** Normalize the keyword too — not just the sentence.</blockquote>
+<blockquote>*Source: `Day2_Hour2_Basics.md` — Lab Solution*</blockquote>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-6-073eafb0" data-slide-number="26">
+            <h1>Common Pitfalls (Hour 6)</h1>
+            <p><strong>⚠️</strong> <strong>Forgetting to assign the result</strong> — <code>msg.lower()</code> without assignment does nothing</p>
+<p><strong>⚠️</strong> <strong>Using <code>find()</code> as a boolean</strong> — <code>0</code> is falsy; always compare <code>!= -1</code></p>
+<p><strong>⚠️</strong> <strong>Single <code>replace(&quot;  &quot;, &quot; &quot;)</code> doesn&#x27;t catch all spaces</strong> — use a <code>while</code> loop</p>
+<p><strong>⚠️</strong> <strong>Forgetting to normalize the keyword</strong> before <code>.count()</code></p>
+        </section>
+
+        <section class="slide" id="quick-check-hour-6-e9df320f" data-slide-number="27">
+            <h1>Quick Check (Hour 6)</h1>
+            <ol>
+  <li>Why does <code>message.upper()</code> not change <code>message</code>?</li>
+  <li>What does <code>.find(&quot;x&quot;)</code> return when <code>&quot;x&quot;</code> is not in the string?</li>
+  <li>Which method would you use to remove tabs from the start of a line?</li>
+  <li>What is the difference between <code>.strip()</code> and <code>.replace(&quot; &quot;, &quot;&quot;)</code>?</li>
+</ol>
+<p><strong>Answers:</strong> immutability · <code>-1</code> · <code>.lstrip()</code> · strip removes only edges; replace removes all</p>
+        </section>
+
+        <section class="slide" id="hour-7-interactive-input-type-conversion-ba7421cc" data-slide-number="28">
+            <h1>Hour 7: Interactive Input + Type Conversion</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-dc419574" data-slide-number="29">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Collect user input and convert types safely (happy path)</li>
-  <li>Explain why input() returns a string</li>
-  <li>Apply int() and float() for numeric conversions</li>
+  <li>Use <code>input()</code> to collect user data at runtime</li>
+  <li>Apply <code>int()</code>, <code>float()</code>, and <code>str()</code> to convert text to numeric types</li>
+  <li>Combine input and conversion for practical calculations</li>
+  <li>Recognize <code>ValueError</code> and understand when it occurs</li>
+  <li>Build interactive programs with clean, formatted output</li>
 </ul>
+<blockquote>*Source: `Basics/lessons/lecture/Day2_Hour3_Basics.md` — Learning Outcomes*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>The input() Function</h1>
-            <h3>Always Returns a String</h3>
+        <section class="slide" id="input-always-returns-a-string-a70a9493" data-slide-number="30">
+            <h1>`input()` Always Returns a String</h1>
+            <h3>Every User Response Is Text — Even Digits</h3>
 <pre data-lang="python"><code>name = input(&quot;Enter your name: &quot;)
 print(f&quot;Hello, {name}!&quot;)
-print(type(name))  # &lt;class &#x27;str&#x27;&gt;
-
-age = input(&quot;Enter your age: &quot;)
-print(type(age))   # &lt;class &#x27;str&#x27;&gt; - NOT int!</code></pre>
-<h3>Why This Matters</h3>
-<pre data-lang="python"><code>age = input(&quot;Enter your age: &quot;)  # User types 25
-# age is &quot;25&quot;, not 25
-next_year = age + 1  # TypeError!</code></pre>
+print(type(name))       # &lt;class &#x27;str&#x27;&gt;</code></pre>
+<h3>Even Numeric-Looking Input Is a String</h3>
+<pre data-lang="python"><code>age = input(&quot;Enter your age: &quot;)
+print(type(age))        # &lt;class &#x27;str&#x27;&gt;  — not int!
+# age + 1               # ❌ TypeError!</code></pre>
+<blockquote>&quot;Python cannot guess whether `&#x27;25&#x27;` is an age, a count, or a product ID. Forcing you to specify is a feature, not a bug.&quot;</blockquote>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Type Conversion Functions</h1>
-            <h3>Converting to Numbers</h3>
-<pre data-lang="python"><code># String to integer
-age_str = &quot;25&quot;
-age = int(age_str)
-print(age + 1)  # 26
-
-# String to float
-price_str = &quot;19.99&quot;
-price = float(price_str)
-print(price * 2)  # 39.98</code></pre>
-<h3>Converting Input Directly</h3>
+        <section class="slide" id="why-type-conversion-is-required-db8be463" data-slide-number="31">
+            <h1>Why Type Conversion Is Required</h1>
+            <h3>Mixing Types Causes Errors</h3>
+<pre data-lang="python"><code>age = input(&quot;Enter your age: &quot;)   # returns &quot;25&quot; (string)
+# next_year = age + 1             # ❌ TypeError: can only concatenate str to str</code></pre>
+<h3>The Fix: Convert Before Arithmetic</h3>
 <pre data-lang="python"><code>age = int(input(&quot;Enter your age: &quot;))
-price = float(input(&quot;Enter price: &quot;))</code></pre>
+next_year = age + 1
+print(f&quot;Next year you will be {next_year}&quot;)</code></pre>
+<blockquote>**Rule:** Collect as text → convert immediately → compute safely.</blockquote>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Common Conversion Patterns</h1>
-            <h3>Safe Patterns for Numeric Input</h3>
-<pre data-lang="python"><code># Integer input
-quantity = int(input(&quot;How many? &quot;))
-
-# Float input
-temperature = float(input(&quot;Temperature: &quot;))
-
-# Combine operations
-print(f&quot;Double: {quantity * 2}&quot;)</code></pre>
-<h3>When Conversion Fails</h3>
-<pre data-lang="python"><code># If user types &quot;abc&quot; instead of a number:
-# ValueError: invalid literal for int()</code></pre>
+        <section class="slide" id="conversion-functions-5f8445d0" data-slide-number="32">
+            <h1>Conversion Functions</h1>
+            <h3>The Three You Need</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Converts to</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int(x)</code></td>
+<td>Whole number</td>
+<td><code>int(&quot;25&quot;)</code> → <code>25</code></td>
+</tr>
+<tr>
+<td><code>float(x)</code></td>
+<td>Decimal number</td>
+<td><code>float(&quot;19.99&quot;)</code> → <code>19.99</code></td>
+</tr>
+<tr>
+<td><code>str(x)</code></td>
+<td>Text</td>
+<td><code>str(42)</code> → <code>&quot;42&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Usage</h3>
+<pre data-lang="python"><code>age   = int(&quot;25&quot;)        # 26 after age + 1
+price = float(&quot;19.99&quot;)   # 39.98 after price * 2
+label = str(42)          # &quot;42!&quot; after label + &quot;!&quot;</code></pre>
+<blockquote>Choose based on domain: count/ID → `int`; measurement/price → `float`</blockquote>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>ValueError Preview</h1>
-            <h3>What Happens with Bad Input</h3>
-<pre data-lang="python"><code># User enters &quot;hello&quot; when asked for a number
-number = int(&quot;hello&quot;)  # ValueError!</code></pre>
-<h3>For Now: Assume Valid Input</h3>
-<ul>
-  <li>In this hour, we practice the &quot;happy path&quot;</li>
-  <li>Full error handling comes later (exceptions)</li>
-  <li>Mention: &quot;We&#x27;ll learn to handle bad input later&quot;</li>
-</ul>
+        <section class="slide" id="combining-input-with-conversion-09b70f5b" data-slide-number="33">
+            <h1>Combining `input()` with Conversion</h1>
+            <h3>The Common Pattern</h3>
+<pre data-lang="python"><code>age         = int(input(&quot;Enter your age: &quot;))
+temperature = float(input(&quot;Temperature in °F: &quot;))
+count       = int(input(&quot;How many? &quot;))</code></pre>
+<h3>One-Liner: Collect + Convert in a Single Step</h3>
+<p>The outer call converts immediately — no separate assignment needed.</p>
+<pre data-lang="python"><code>miles = float(input(&quot;Enter distance in miles: &quot;))
+km    = miles * 1.60934
+print(f&quot;{miles} miles = {km:.2f} km&quot;)</code></pre>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 3*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Simple Converter</h1>
-            <h3>Show Type Conversion in Action</h3>
-<pre data-lang="python"><code># Temperature converter (F to C)
-fahrenheit = input(&quot;Enter temperature in °F: &quot;)
-print(f&quot;Input type: {type(fahrenheit)}&quot;)
+        <section class="slide" id="valueerror-know-it-don-t-fear-it-2ce97ef3" data-slide-number="34">
+            <h1>`ValueError` — Know It, Don&#x27;t Fear It</h1>
+            <h3>When Conversion Fails</h3>
+<pre data-lang="python"><code># int(&quot;hello&quot;)  # ValueError: invalid literal for int()
+# int(&quot;3.5&quot;)    # ValueError: invalid literal for int() — has decimal!
+# float(&quot;abc&quot;)  # ValueError: could not convert string to float</code></pre>
+<h3>The Two-Step Fix for Decimals</h3>
+<pre data-lang="python"><code># Option 1: use float if decimals are possible
+value = float(&quot;3.5&quot;)       # 3.5 ✓
 
-# Convert to float for math
-fahrenheit = float(fahrenheit)
+# Option 2: float first, then int to truncate
+value = int(float(&quot;3.5&quot;))  # 3 ✓</code></pre>
+<blockquote>Today we use valid (happy-path) inputs. Formal error handling (`try/except`) comes in a later session.</blockquote>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 3 + Pitfall §2*</blockquote>
+        </section>
+
+        <section class="slide" id="demo-temperature-converter-e9cfc014" data-slide-number="35">
+            <h1>Demo: Temperature Converter</h1>
+            <pre data-lang="python"><code>fahrenheit_text = input(&quot;Enter temperature in °F: &quot;)
+print(f&quot;Raw input: {fahrenheit_text}&quot;)
+print(f&quot;Raw input type: {type(fahrenheit_text)}&quot;)   # &lt;class &#x27;str&#x27;&gt;
+
+fahrenheit = float(fahrenheit_text)
+print(f&quot;Converted type: {type(fahrenheit)}&quot;)         # &lt;class &#x27;float&#x27;&gt;
+
 celsius = (fahrenheit - 32) * 5 / 9
 
-print(f&quot;Fahrenheit type: {type(fahrenheit)}&quot;)
-print(f&quot;{fahrenheit}°F = {celsius:.1f}°C&quot;)</code></pre>
+print(f&quot;\n{fahrenheit:.1f}°F = {celsius:.1f}°C&quot;)</code></pre>
+<p><strong>Test with <code>98.6</code>:</strong></p>
+<pre><code>Raw input type: &lt;class &#x27;str&#x27;&gt;
+Converted type: &lt;class &#x27;float&#x27;&gt;
+
+98.6°F = 37.0°C</code></pre>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 4, Demo A*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Show ValueError</h1>
-            <h3>What Happens with Non-Numeric Input</h3>
-<pre data-lang="python"><code># This will crash if user enters text
-number = int(&quot;3.5&quot;)  # ValueError!
-# Can&#x27;t convert &quot;3.5&quot; directly to int
-
-# Correct approach:
-number = int(float(&quot;3.5&quot;))  # 3
-# Or just use float if decimals expected</code></pre>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="lab-unit-converter-8546dc9f" data-slide-number="36">
             <h1>Lab: Unit Converter</h1>
-            <p><strong>Time: 25-35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Choose: miles→km OR °F→°C</li>
-  <li>Ask user for a number</li>
-  <li>Convert and print formatted output</li>
-</ul>
-<h3>Conversion Formulas</h3>
-<ul>
-  <li>Miles to km: <code>km = miles * 1.60934</code></li>
-  <li>°F to °C: <code>celsius = (fahrenheit - 32) * 5 / 9</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Example Interaction</h1>
-            <h3>Miles to Kilometers</h3>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Build one complete converter (your choice):</h3>
+<p><strong>Option A — Miles → Kilometers</strong></p>
 <pre><code>=== Miles to Kilometers Converter ===
 Enter distance in miles: 10
 10.0 miles = 16.09 kilometers</code></pre>
-<h3>Fahrenheit to Celsius</h3>
+<p><strong>Option B — Fahrenheit → Celsius</strong></p>
 <pre><code>=== Temperature Converter ===
 Enter temperature in °F: 98.6
 98.6°F = 37.0°C</code></pre>
+<h3>Workflow: Collect → Convert → Compute → Format → Verify</h3>
+<p>Test with a known value before declaring victory!</p>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 5*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Sample Solution Structure</h1>
-            <pre data-lang="python"><code># Miles to Kilometers
-print(&quot;=== Miles to Kilometers Converter ===&quot;)
+        <section class="slide" id="reference-solutions-unit-converter-1a1d13ab" data-slide-number="37">
+            <h1>Reference Solutions: Unit Converter</h1>
+            <h3>Miles → Kilometers</h3>
+<pre data-lang="python"><code>print(&quot;=== Miles to Kilometers Converter ===&quot;)
 miles = float(input(&quot;Enter distance in miles: &quot;))
-
-# Convert
-km = miles * 1.60934
-
-# Display with formatting
-print(f&quot;{miles} miles = {km:.2f} kilometers&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Alternative Solution (Temperature)</h1>
-            <pre data-lang="python"><code># Fahrenheit to Celsius
-print(&quot;=== Temperature Converter ===&quot;)
+km    = miles * 1.60934
+print(f&quot;{miles:.1f} miles = {km:.2f} kilometers&quot;)</code></pre>
+<h3>Fahrenheit → Celsius</h3>
+<pre data-lang="python"><code>print(&quot;=== Temperature Converter ===&quot;)
 fahrenheit = float(input(&quot;Enter temperature in °F: &quot;))
-
-# Convert
-celsius = (fahrenheit - 32) * 5 / 9
-
-# Display with formatting
-print(f&quot;{fahrenheit}°F = {celsius:.1f}°C&quot;)</code></pre>
+celsius    = (fahrenheit - 32) * 5 / 9
+print(f&quot;{fahrenheit:.1f}°F = {celsius:.1f}°C&quot;)</code></pre>
+<blockquote>*Source: `Day2_Hour3_Basics.md` — Section 5, Solution Guidance*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Completion Criteria (Hour 7)</h1>
-            <p><span class="check">✓</span> Correct conversion on sample input</p>
-<p><span class="check">✓</span> Readable output with units</p>
-<p><span class="check">✓</span> Uses proper type conversion</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-7-9246f54c" data-slide-number="38">
             <h1>Common Pitfalls (Hour 7)</h1>
-            <p><strong>⚠️</strong> <strong>ValueError when user types text</strong></p>
-<pre data-lang="python"><code># Remind learners: for now, assume valid input
-# We&#x27;ll handle errors properly later</code></pre>
-<p><strong>⚠️</strong> <strong>Hard-coded constants wrong</strong></p>
-<pre data-lang="python"><code># Double-check your conversion factors!
-# Miles to km: 1.60934
-# F to C: (f - 32) * 5/9</code></pre>
+            <p><strong>⚠️</strong> <strong>Forgetting conversion</strong> — <code>price * 3</code> on a string repeats text, not math</p>
+<p><strong>⚠️</strong> <strong>Using <code>int()</code> on a decimal string</strong> — <code>int(&quot;3.5&quot;)</code> raises <code>ValueError</code>; use <code>float()</code> first</p>
+<p><strong>⚠️</strong> <strong>Wrong formula constants</strong> — always plausibility-check (10 miles ≈ 16 km, not 1609)</p>
+<p><strong>⚠️</strong> <strong>No units in output</strong> — <code>16.09</code> is ambiguous; always include labels</p>
+<p><strong>⚠️</strong> <strong>Ugly floating-point output</strong> — use <code>:.1f</code> or <code>:.2f</code> in f-strings</p>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions</h1>
-            <ul>
-  <li>Add a menu to choose conversion type (no loops yet)</li>
-</ul>
-<pre data-lang="python"><code>print(&quot;1. Miles to Kilometers&quot;)
-print(&quot;2. Fahrenheit to Celsius&quot;)
-choice = input(&quot;Choose (1 or 2): &quot;)
-
-if choice == &quot;1&quot;:
-    # miles conversion
-    pass
-elif choice == &quot;2&quot;:
-    # temperature conversion
-    pass</code></pre>
+        <section class="slide" id="quick-check-hour-7-0b9465c0" data-slide-number="39">
+            <h1>Quick Check (Hour 7)</h1>
+            <ol>
+  <li>What type does <code>input()</code> always return?</li>
+  <li>Why can&#x27;t you do <code>age + 1</code> right after <code>input()</code>?</li>
+  <li>Which function converts <code>&quot;19.99&quot;</code> to a decimal number?</li>
+  <li>What error appears when <code>int()</code> receives <code>&quot;3.5&quot;</code>?</li>
+</ol>
+<p><strong>Answers:</strong> <code>str</code> · still a string · <code>float()</code> · <code>ValueError</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What happens if you call <code>int()</code> on <code>&#x27;3.5&#x27;</code>?</p>
-<p><strong>Answer</strong>: <code>ValueError</code> — Python cannot convert a string with a decimal point directly to int. Use <code>int(float(&#x27;3.5&#x27;))</code> if you need the integer value (3).</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-8-checkpoint-1-fundamentals-mini-assessment-4775e03c" data-slide-number="40">
             <h1>Hour 8: Checkpoint 1 — Fundamentals Mini-Assessment</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-01789c9a" data-slide-number="41">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Demonstrate basic script writing, variables, numbers, strings, and input</li>
-  <li>Apply concepts from Hours 1–7 in a practical exercise</li>
-  <li>Self-assess understanding of Python fundamentals</li>
+  <li>Synthesize variables, types, operators, strings, and input/output in one program</li>
+  <li>Apply type conversion correctly for real-world data</li>
+  <li>Debug and build a multi-step program from requirements</li>
+  <li>Explain variable naming and type-choice decisions</li>
+  <li>Build a solid foundation for Day 3 (conditionals and loops)</li>
 </ul>
+<blockquote>*Source: `Basics/lessons/lecture/Day2_Hour4_Basics.md` — Learning Outcomes*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Checkpoint Overview</h1>
-            <h3>Assessment Format</h3>
+        <section class="slide" id="checkpoint-format-cf25f8ef" data-slide-number="42">
+            <h1>Checkpoint Format</h1>
+            <h3>What This Is</h3>
 <ul>
-  <li><strong>Open-book</strong>: Notes and slides allowed</li>
-  <li><strong>Individual</strong>: Complete your own work</li>
-  <li><strong>Timeboxed</strong>: 45–60 minutes for the lab</li>
-  <li><strong>Focus</strong>: Correctness first, then formatting</li>
+  <li><strong>Open-book and individual</strong> — notes, previous scripts, and class materials are allowed</li>
+  <li><strong>Timeboxed</strong> — 50 minutes to build and test a complete program</li>
+  <li><strong>Purpose:</strong> demonstrate basic competence, not memorize commands</li>
 </ul>
+<h3>What It Tests</h3>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input + conversion</td>
+<td><code>input()</code> + <code>int()</code> / <code>float()</code></td>
+</tr>
+<tr>
+<td>Variable naming</td>
+<td>Descriptive, snake_case names</td>
+</tr>
+<tr>
+<td>Arithmetic</td>
+<td><code>quantity × price</code></td>
+</tr>
+<tr>
+<td>String formatting</td>
+<td><code>:.2f</code> in f-strings</td>
+</tr>
+<tr>
+<td>Output design</td>
+<td>Readable receipt with labels</td>
+</tr>
+</tbody>
+</table>
+<blockquote>*Source: `Day2_Hour4_Basics.md` — Core Concepts*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Instructor Talk Points</h1>
-            <h3>Before Starting</h3>
-<ul>
-  <li>Explain the rules: open-book, individual, timeboxed</li>
-  <li>Remind: focus on <strong>correctness first</strong>, then formatting</li>
-  <li>Encourage: test with sample inputs before submitting</li>
-</ul>
-<h3>During Assessment</h3>
-<ul>
-  <li>Circulate and observe (don&#x27;t solve for them)</li>
-  <li>Note common struggles for debrief</li>
-  <li>Allow questions about requirements, not solutions</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Sample Rubric Walkthrough</h1>
-            <h3>How Submissions Will Be Evaluated</h3>
+        <section class="slide" id="problem-statement-simple-receipt-generator-a55ba3b5" data-slide-number="43">
+            <h1>Problem Statement: Simple Receipt Generator</h1>
+            <p><strong>Build <code>checkpoint1_receipt.py</code> that:</strong></p>
 <ol>
-  <li><strong>Runs without errors</strong> (40%)</li>
+  <li>Prints a title line</li>
+  <li>Asks for: item name, quantity, price per item</li>
+  <li>Computes <strong>subtotal</strong> = <code>quantity × price_per_item</code></li>
+  <li>Sets <strong>total</strong> = subtotal <em>(baseline: no tax or discount)</em></li>
+  <li>Prints a formatted receipt with all values to 2 decimal places</li>
 </ol>
-<ul>
-  <li style="margin-left: 30px;">Program executes end-to-end</li>
-  <li style="margin-left: 30px;">No crashes on valid input</li>
-</ul>
-<ol>
-  <li><strong>Correct calculations</strong> (30%)</li>
-</ol>
-<ul>
-  <li style="margin-left: 30px;">Math is accurate</li>
-  <li style="margin-left: 30px;">Type conversions done properly</li>
-</ul>
-<ol>
-  <li><strong>Readable output</strong> (20%)</li>
-</ol>
-<ul>
-  <li style="margin-left: 30px;">Formatted nicely</li>
-  <li style="margin-left: 30px;">Clear labels for values</li>
-</ul>
-<ol>
-  <li><strong>Code quality</strong> (10%)</li>
-</ol>
-<ul>
-  <li style="margin-left: 30px;">Meaningful variable names</li>
-  <li style="margin-left: 30px;">Appropriate comments</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Checkpoint Lab: Simple Receipt Generator</h1>
-            <p><strong>Time: 45-60 minutes</strong></p>
-<h3>Requirements</h3>
-<ul>
-  <li>Input: item name, quantity, price per item</li>
-  <li>Compute subtotal and total</li>
-  <li>Print a receipt with aligned lines and 2-decimal money formatting</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Receipt Generator: Expected Output</h1>
-            <h3>Example Interaction</h3>
+<h3>Expected Output</h3>
 <pre><code>=== Receipt Generator ===
 Enter item name: Widget
 Enter quantity: 3
@@ -1073,224 +1037,183 @@ Quantity: 3
 Price:    $9.99 each
 -----------------------------
 Subtotal: $29.97
+Total:    $29.97
 =============================</code></pre>
+<blockquote>*Source: `Day2_Hour4_Basics.md` — Problem Statement*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Receipt Generator: Sample Solution</h1>
-            <pre data-lang="python"><code># Receipt Generator
-print(&quot;=== Receipt Generator ===&quot;)
+        <section class="slide" id="demo-walk-through-69507fca" data-slide-number="44">
+            <h1>Demo Walk-Through</h1>
+            <h3>Step 1: Collect Input</h3>
+<pre data-lang="python"><code>print(&quot;=== Receipt Generator ===&quot;)
 
-# Get input
-item_name = input(&quot;Enter item name: &quot;)
-quantity = int(input(&quot;Enter quantity: &quot;))
-price = float(input(&quot;Enter price per item: &quot;))
-
-# Calculate
-subtotal = quantity * price
-
-# Print receipt
-print()
-print(&quot;=&quot; * 28)
-print(&quot;         RECEIPT&quot;)
-print(&quot;=&quot; * 28)
+item_name      = input(&quot;Enter item name: &quot;).strip()
+quantity       = int(input(&quot;Enter quantity: &quot;))
+price_per_item = float(input(&quot;Enter price per item: &quot;))</code></pre>
+<h3>Step 2: Compute</h3>
+<pre data-lang="python"><code>subtotal = quantity * price_per_item
+total    = subtotal   # baseline: no tax/discount</code></pre>
+<h3>Step 3: Format and Print</h3>
+<pre data-lang="python"><code>print()
+print(&quot;========== RECEIPT ==========&quot;)
 print(f&quot;Item:     {item_name}&quot;)
 print(f&quot;Quantity: {quantity}&quot;)
-print(f&quot;Price:    ${price:.2f} each&quot;)
-print(&quot;-&quot; * 28)
+print(f&quot;Price:    ${price_per_item:.2f} each&quot;)
+print(&quot;-----------------------------&quot;)
 print(f&quot;Subtotal: ${subtotal:.2f}&quot;)
-print(&quot;=&quot; * 28)</code></pre>
+print(f&quot;Total:    ${total:.2f}&quot;)
+print(&quot;=============================&quot;)</code></pre>
+<blockquote>*Source: `Day2_Hour4_Basics.md` — Live Coding Demo, Steps 1–4*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Optional Quiz (10 minutes)</h1>
-            <h3>Quick Knowledge Check</h3>
-<p>8–10 questions covering:</p>
-<ul>
-  <li>Variable types (str, int, float, bool)</li>
-  <li>Arithmetic operators</li>
-  <li>String indexing and slicing</li>
-  <li>String methods</li>
-  <li>Type conversion</li>
-</ul>
+        <section class="slide" id="assessment-rubric-472a63cb" data-slide-number="45">
+            <h1>Assessment Rubric</h1>
+            <table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Points</th>
+<th>What to Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Program runs end-to-end</strong></td>
+<td>35</td>
+<td>No crash on valid input; prompts and output in logical order</td>
+</tr>
+<tr>
+<td><strong>Correct math and types</strong></td>
+<td>35</td>
+<td><code>quantity</code> as <code>int</code>, <code>price</code> as <code>float</code>, subtotal = qty × price, total = subtotal</td>
+</tr>
+<tr>
+<td><strong>Readable output formatting</strong></td>
+<td>20</td>
+<td>Money values to 2 decimals with <code>:.2f</code>, clear labels, separators</td>
+</tr>
+<tr>
+<td><strong>Code clarity</strong></td>
+<td>10</td>
+<td>Descriptive names (<code>subtotal</code> not <code>c</code>), logical flow</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>100</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>**Priority order:** correctness → types → formatting → clarity</blockquote>
+<blockquote>*Source: `Day2_Hour4_Basics.md` — Assessment Rubric*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Sample Quiz Questions</h1>
-            <h3>Question 1</h3>
-<p>What is the output of <code>print(type(42))</code>?</p>
-<ul>
-  <li>A) <code>int</code></li>
-  <li>B) <code>&lt;class &#x27;int&#x27;&gt;</code></li>
-  <li>C) <code>42</code></li>
-  <li>D) <code>number</code></li>
-</ul>
-<p><strong>Answer</strong>: B</p>
+        <section class="slide" id="common-pitfalls-checkpoint-1-73b2e388" data-slide-number="46">
+            <h1>Common Pitfalls (Checkpoint 1)</h1>
+            <p><strong>⚠️</strong> <strong>Forgetting conversion</strong> — <code>price * 3</code> on a string gives <code>&quot;9.999.999.99&quot;</code> not <code>29.97</code></p>
+<p><strong>⚠️</strong> <strong><code>quantity</code> as <code>float</code></strong> — use <code>int</code> for counts; <code>float(3)</code> gives <code>3.0</code> which obscures intent</p>
+<p><strong>⚠️</strong> <strong><code>total ≠ subtotal</code></strong> — don&#x27;t add unintended math; baseline has no tax or discount</p>
+<p><strong>⚠️</strong> <strong>Missing <code>:.2f</code></strong> — floating-point precision: <code>29.970000000001</code> instead of <code>29.97</code></p>
+<p><strong>⚠️</strong> <strong>Vague variable names</strong> — <code>a</code>, <code>b</code>, <code>c</code> obscure intent; use <code>quantity</code>, <code>price_per_item</code>, <code>subtotal</code></p>
+<blockquote>*Source: `Day2_Hour4_Basics.md` — Troubleshooting Pitfalls*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Sample Quiz Questions</h1>
-            <h3>Question 2</h3>
-<p>What does <code>&quot;Python&quot;[2:5]</code> return?</p>
-<ul>
-  <li>A) <code>&quot;Pyt&quot;</code></li>
-  <li>B) <code>&quot;yth&quot;</code></li>
-  <li>C) <code>&quot;tho&quot;</code></li>
-  <li>D) <code>&quot;thon&quot;</code></li>
-</ul>
-<p><strong>Answer</strong>: C (<code>&quot;tho&quot;</code> — indices 2, 3, 4)</p>
+        <section class="slide" id="debrief-quick-check-questions-3b23173e" data-slide-number="47">
+            <h1>Debrief: Quick-Check Questions</h1>
+            <ol>
+  <li><strong>What type does <code>input()</code> return?</strong></li>
+</ol>
+<p>→ <code>str</code> — always, even for digits</p>
+<ol>
+  <li><strong>Why use <code>int</code> for quantity and <code>float</code> for price?</strong></li>
+</ol>
+<p>→ Quantity is a count (whole number); price includes decimals — types clarify intent</p>
+<ol>
+  <li><strong>How do you format money to 2 decimal places?</strong></li>
+</ol>
+<p>→ <code>f&quot;${subtotal:.2f}&quot;</code> in an f-string</p>
+<ol>
+  <li><strong>What happens if you multiply a string by a number?</strong></li>
+</ol>
+<p>→ String repetition: <code>&quot;abc&quot; * 3</code> → <code>&quot;abcabcabc&quot;</code></p>
+<ol>
+  <li><strong>Why is <code>total == subtotal</code> in this checkpoint?</strong></li>
+</ol>
+<p>→ No tax or discount in the baseline version — by design</p>
+<blockquote>*Source: `Day2_Hour4_Basics.md` — Exit Ticket*</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Sample Quiz Questions</h1>
-            <h3>Question 3</h3>
-<p>Why does <code>input()</code> always return a string?</p>
-<ul>
-  <li>A) Because keyboards only type text</li>
-  <li>B) To avoid errors with special characters</li>
-  <li>C) Because Python doesn&#x27;t know what type you want</li>
-  <li>D) It&#x27;s a bug in Python</li>
-</ul>
-<p><strong>Answer</strong>: C</p>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 8)</h1>
-            <p><span class="check">✓</span> Program runs end-to-end without crashes</p>
-<p><span class="check">✓</span> Correct math and type conversions</p>
-<p><span class="check">✓</span> Output is readable and formatted</p>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 8)</h1>
-            <p><strong>⚠️</strong> <strong>Forgetting float conversion for price</strong></p>
-<pre data-lang="python"><code>price = input(&quot;Price: &quot;)  # String!
-total = price * 3  # &#x27;9.999.999.99&#x27; not 29.97</code></pre>
-<p><strong>⚠️</strong> <strong>String concatenation vs numeric addition</strong></p>
-<pre data-lang="python"><code># ❌ Wrong
-result = &quot;3&quot; + &quot;5&quot;  # &#x27;35&#x27;
-# ✓ Correct
-result = int(&quot;3&quot;) + int(&quot;5&quot;)  # 8</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions</h1>
-            <ul>
-  <li>Add: discount percent</li>
-  <li>Add: tax percent</li>
-</ul>
-<pre data-lang="python"><code># Extension example
-tax_rate = 0.08  # 8% tax
-tax_amount = subtotal * tax_rate
-total = subtotal + tax_amount
-print(f&quot;Tax (8%): ${tax_amount:.2f}&quot;)
-print(f&quot;Total:    ${total:.2f}&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check (Debrief)</h1>
-            <p><strong>Question</strong>: Ask 2–3 learners to explain how they debugged one error.</p>
-<h3>Discussion Points</h3>
-<ul>
-  <li>What error did you encounter?</li>
-  <li>How did you identify the problem?</li>
-  <li>What was your fix?</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="session-2-wrap-up-10f17c96" data-slide-number="48">
             <h1>Session 2 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-we-covered-today-3ab74356" data-slide-number="49">
             <h1>What We Covered Today</h1>
-            <h3>Hour 5: String Fundamentals</h3>
+            <h3>Hour 5: String Indexing + Slicing</h3>
 <ul>
-  <li>Indexing and negative indexing</li>
-  <li>Slicing with <code>s[start:end]</code></li>
-  <li>The <code>len()</code> function</li>
-  <li>Membership with <code>in</code></li>
+  <li>0-based indexing, negative indexing</li>
+  <li>Slice syntax <code>s[start:end]</code> (end exclusive)</li>
+  <li><code>len()</code> and <code>in</code> for safe, readable code</li>
 </ul>
 <h3>Hour 6: String Methods</h3>
 <ul>
-  <li><code>.lower()</code>, <code>.upper()</code>, <code>.strip()</code></li>
-  <li><code>.replace()</code> and <code>.find()</code></li>
-  <li>String immutability</li>
+  <li>Immutability: always assign the return value</li>
+  <li><code>.lower()</code>, <code>.strip()</code>, <code>.replace()</code>, <code>.find()</code>, <code>.count()</code></li>
+  <li>Method chaining for clean pipelines</li>
 </ul>
-<h3>Hour 7: Input/Output</h3>
+<h3>Hour 7: Input + Type Conversion</h3>
 <ul>
-  <li><code>input()</code> returns strings</li>
-  <li>Type conversion with <code>int()</code> and <code>float()</code></li>
-  <li>Unit converter exercise</li>
+  <li><code>input()</code> always returns <code>str</code></li>
+  <li><code>int()</code>, <code>float()</code>, <code>str()</code> for conversion</li>
+  <li>Build interactive converters: collect → convert → compute → format</li>
 </ul>
 <h3>Hour 8: Checkpoint 1</h3>
 <ul>
-  <li>Receipt Generator assessment</li>
-  <li>Fundamentals review</li>
+  <li>Receipt generator combining all Session 2 skills</li>
+  <li>Rubric: correctness → types → formatting → clarity</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrail-reminder-53a30a71" data-slide-number="50">
             <h1>Scope Guardrail Reminder</h1>
-            <h3>Stay in Basics Scope</h3>
-<p><span class="check">✓</span> Core string operations and methods</p>
-<p><span class="check">✓</span> Simple type conversion</p>
-<p><span class="check">✓</span> Basic input/output patterns</p>
-<p><span class="check">✓</span> Clear variable names and formatting</p>
-<h3>Not Yet (Advanced Topics)</h3>
+            <h3>Stay in Basics Scope ✓</h3>
+<p><span class="check">✓</span> String indexing, slicing, and built-in methods</p>
+<p><span class="check">✓</span> <code>input()</code> with explicit type conversion</p>
+<p><span class="check">✓</span> Clear variable names and formatted output</p>
+<p><span class="check">✓</span> Happy-path inputs (no <code>try/except</code> yet)</p>
+<h3>Not Yet (Advanced Topics) ✗</h3>
 <p><span class="cross">✗</span> Regular expressions</p>
-<p><span class="cross">✗</span> String formatting with format()</p>
-<p><span class="cross">✗</span> Advanced string parsing</p>
-<p><span class="cross">✗</span> Exception handling (try/except)</p>
+<p><span class="cross">✗</span> <code>try/except</code> error handling</p>
+<p><span class="cross">✗</span> List comprehensions</p>
+<p><span class="cross">✗</span> Lambda functions or decorators</p>
         </section>
 
-        <section class="slide">
-            <h1>No-Go Topics for Basics Course</h1>
-            <h3>Keep for Advanced</h3>
-<ul>
-  <li>Web frameworks (Flask/Django)</li>
-  <li>Databases/SQL/ORM</li>
-  <li>GUI frameworks (Tkinter/PyQt)</li>
-  <li>Testing frameworks (pytest)</li>
-  <li>Packaging/distribution</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Homework / Practice</h1>
-            <h3>Recommended Exercises</h3>
-<ol>
-  <li>Create a username generator with additional rules</li>
-  <li>Build a simple data cleaner for messy text</li>
-  <li>Create a multi-unit converter (length, weight, temperature)</li>
-  <li>Practice string slicing with different scenarios</li>
-</ol>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="next-session-preview-db25db0c" data-slide-number="51">
             <h1>Next Session Preview</h1>
             <h3>Session 3 (Hours 9–12)</h3>
 <ul>
-  <li>Hour 9: Booleans and comparisons</li>
-  <li>Hour 10: if/elif/else branching</li>
-  <li>Hour 11: Combining conditions</li>
-  <li>Hour 12: Checkpoint 2 – Branching mini-assessment</li>
+  <li>Hour 9: Comparisons and boolean logic</li>
+  <li>Hour 10: String formatting with f-strings (deeper dive)</li>
+  <li>Hour 11: Text operations with <code>split()</code> and <code>join()</code></li>
+  <li>Hour 12: Debugging habits at Basics level</li>
 </ul>
+<blockquote>Keep your Checkpoint 1 script — it is valuable practice material for Day 3!</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="questions-41aab0dc" data-slide-number="52">
             <h1>Questions?</h1>
-            <p><strong>Remember</strong>:</p>
+            <p><strong>Remember:</strong></p>
 <ul>
-  <li>Strings are immutable — always assign back</li>
-  <li><code>input()</code> returns strings — convert when needed</li>
-  <li>Use <code>in</code> for simple membership checks</li>
-  <li>Test with sample data before submitting</li>
+  <li>Save your work frequently</li>
+  <li>Normalize before you search (<code>lower()</code> + <code>strip()</code>)</li>
+  <li>Convert before you calculate (<code>int()</code> / <code>float()</code>)</li>
+  <li>Format your output for humans — include units and labels</li>
+  <li>Build incrementally: write 5 lines, run, test, repeat</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="thank-you-5841340b" data-slide-number="53">
             <h1>Thank You!</h1>
             <p>See you in Session 3!</p>
         </section>
@@ -1314,7 +1237,7 @@ print(f&quot;Total:    ${total:.2f}&quot;)</code></pre>
         // Initialize
         totalCounter.textContent = totalSlides;
         
-        function updateSlideDisplay() {
+        function updateSlideDisplay(updateHash = true) {
             // Hide all slides
             slides.forEach((slide, index) => {
                 slide.classList.remove('active', 'previous');
@@ -1336,7 +1259,13 @@ print(f&quot;Total:    ${total:.2f}&quot;)</code></pre>
             currentCounter.textContent = currentSlide + 1;
             
             // Update URL hash (for bookmarking)
-            window.location.hash = currentSlide + 1;
+            if (updateHash) {
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
+            }
         }
         
         function nextSlide() {
@@ -1408,21 +1337,24 @@ print(f&quot;Total:    ${total:.2f}&quot;)</code></pre>
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = slides.indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    goToSlide(slideNum);
-                    return;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay();
-        });
-        
-        // Initialize first slide
-        updateSlideDisplay();
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

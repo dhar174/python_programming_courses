@@ -11,6 +11,10 @@
 
 ---
 
+[Instructor slide change: page=22; title=Hour 39: Basic Encapsulation + Data Validation]
+
+[Instructor slide change: page=23; title=Learning Outcomes]
+
 ## Learning Outcomes
 
 By the end of this 60-minute session, learners will be able to:
@@ -369,6 +373,8 @@ print(account.balance)               # Still 0
 
 ---
 
+[Instructor slide change: page=28; title=Lab — Add Validation to Your Contact Manager]
+
 ## Hands-On Lab: Add Validation to Your Contact Manager (~28 minutes)
 
 **Say:**
@@ -504,6 +510,8 @@ if choice == "update":
   - **Fix:** "Check first, then update. Do the `if` check, and only inside the `if True` block, update the attribute."
 
 ---
+
+[Instructor slide change: page=29; title=Common Pitfalls — Hour 39]
 
 ## Troubleshooting & Common Pitfalls
 
