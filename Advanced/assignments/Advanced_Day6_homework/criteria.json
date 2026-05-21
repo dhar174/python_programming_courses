@@ -63,6 +63,23 @@
         "Hour 24 | checkpoint result: gui milestone ready"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 21/24 - Authenticity guardrail: GUI-controller-service separation shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); class_names = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; architecture_ok = {'TrackerApp', 'TaskService'}.issubset(class_names) and 'current_selection_id' in s; crud_flow_ok = all(token in s.lower() for token in ('update', 'delete', 'refresh')); persistence_ok = {'save_on_demand', 'handle_save'}.issubset(func_names); print('guardrail_architecture_shape_ok=' + str(architecture_ok)); print('guardrail_crud_flow_ok=' + str(crud_flow_ok)); print('guardrail_persistence_hook_ok=' + str(persistence_ok)); print('guardrail_demo_app_ok=' + str('DemoApp' in class_names))",
+        "advanced_day6.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_architecture_shape_ok=True",
+        "guardrail_crud_flow_ok=True",
+        "guardrail_persistence_hook_ok=True",
+        "guardrail_demo_app_ok=True"
+      ],
+      "points": 20
     }
   ]
 }

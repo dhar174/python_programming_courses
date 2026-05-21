@@ -91,6 +91,23 @@
         "Export dict: {'id': 'TASK-101', 'title': 'Draft syllabus'}"
       ],
       "points": 20
+    },
+    {
+      "name": "Exercise 2/4 - Authenticity guardrail: object model and validation structure",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); classes = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; funcs = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; prop = sum(1 for n in ast.walk(t) if isinstance(n, ast.FunctionDef) and any(isinstance(d, ast.Name) and d.id == 'property' for d in n.decorator_list)); setter = sum(1 for n in ast.walk(t) if isinstance(n, ast.FunctionDef) and any(isinstance(d, ast.Attribute) and d.attr == 'setter' for d in n.decorator_list)); print('guardrail_model_classes_ok=' + str({'Task', 'TaskRepository', 'TaskService'}.issubset(classes))); print('guardrail_properties_ok=' + str(prop >= 1 and setter >= 1)); print('guardrail_domain_methods_ok=' + str({'create_task', 'summary'}.issubset(funcs))); print('guardrail_exceptions_ok=' + str(all(token in s for token in ('ValidationError', 'NotFoundError'))))",
+        "advanced_day1.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_model_classes_ok=True",
+        "guardrail_properties_ok=True",
+        "guardrail_domain_methods_ok=True",
+        "guardrail_exceptions_ok=True"
+      ],
+      "points": 20
     }
   ]
 }

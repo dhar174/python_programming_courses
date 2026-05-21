@@ -64,6 +64,23 @@
         "Hour 16 | checkpoint result: persistence-ready core"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 13/16 - Authenticity guardrail: API safety + persistence implementation shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; json_calls = sum(1 for n in ast.walk(t) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr in {'dump', 'dumps', 'load', 'loads'}); timeout_shape = any(isinstance(n, ast.Call) and any(k.arg == 'timeout' for k in n.keywords) for n in ast.walk(t)) or ('timeout_used' in s); print('guardrail_http_timeout_ok=' + str(timeout_shape)); print('guardrail_security_shape_ok=' + str('sha256' in s.lower() and 'getenv' in s and 'TRACKER' in s)); print('guardrail_persistence_shape_ok=' + str(json_calls >= 2 and {'save', 'load'}.issubset(func_names))); print('guardrail_planning_gate_ok=' + str('plan_ready_for_build' in func_names))",
+        "advanced_day4.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_http_timeout_ok=True",
+        "guardrail_security_shape_ok=True",
+        "guardrail_persistence_shape_ok=True",
+        "guardrail_planning_gate_ok=True"
+      ],
+      "points": 20
     }
   ]
 }

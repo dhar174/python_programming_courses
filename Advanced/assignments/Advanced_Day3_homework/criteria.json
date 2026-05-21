@@ -63,6 +63,23 @@
         "Hour 12 | decorator rule: keep wrappers small and focused"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 10/12 - Authenticity guardrail: decorators + logging + safe file handling",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); imports = set(); [imports.update(a.name for a in n.names) for n in ast.walk(t) if isinstance(n, ast.Import)]; [imports.add(n.module) for n in ast.walk(t) if isinstance(n, ast.ImportFrom) and n.module]; func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; decorator_names = {n for n in func_names if n.endswith('decorator')}; with_open = any(isinstance(n, ast.With) and any(isinstance(i.context_expr, ast.Call) and ((isinstance(i.context_expr.func, ast.Name) and i.context_expr.func.id == 'open') or (isinstance(i.context_expr.func, ast.Attribute) and i.context_expr.func.attr == 'open')) for i in n.items) for n in ast.walk(t)); env_shape = ('TRACKER_ENV' in s) and (('getenv' in s) or ('os.environ' in s)); print('guardrail_logging_ok=' + str(any(name.startswith('logging') for name in imports))); print('guardrail_decorators_ok=' + str({'timing_decorator', 'auth_decorator', 'validation_decorator'}.issubset(decorator_names))); print('guardrail_file_context_ok=' + str(with_open)); print('guardrail_env_config_ok=' + str(env_shape))",
+        "advanced_day3.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_logging_ok=True",
+        "guardrail_decorators_ok=True",
+        "guardrail_file_context_ok=True",
+        "guardrail_env_config_ok=True"
+      ],
+      "points": 20
     }
   ]
 }

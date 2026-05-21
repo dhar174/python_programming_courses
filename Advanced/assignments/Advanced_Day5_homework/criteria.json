@@ -63,6 +63,23 @@
         "Hour 20 | selection rule: use stable record ids"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 17/20 - Authenticity guardrail: GUI composition and callback wiring shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); class_names = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; ui_classes_ok = {'TrackerAppWindow', 'TaskForm', 'RecordBrowser'}.issubset(class_names); callbacks_ok = {'add_task', 'submit', 'select'}.issubset(func_names); list_shape_ok = ('treeview' in s.lower()) and ('grid' in s.lower()) and ('task-' in s.lower()); print('guardrail_ui_classes_ok=' + str(ui_classes_ok)); print('guardrail_callbacks_ok=' + str(callbacks_ok)); print('guardrail_list_shape_ok=' + str(list_shape_ok)); print('guardrail_event_flow_ok=' + str('start' in func_names))",
+        "advanced_day5.py"
+      ],
+      "stdin": "",
+      "expected_stdout": [
+        "guardrail_ui_classes_ok=True",
+        "guardrail_callbacks_ok=True",
+        "guardrail_list_shape_ok=True",
+        "guardrail_event_flow_ok=True"
+      ],
+      "points": 20
     }
   ]
 }
