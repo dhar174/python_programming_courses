@@ -1,4 +1,7 @@
 # Day 1, Hour 3: Variables + Basic Types
+
+[Instructor slide change: page=26; title=Hour 3: Variables + Basic Types]
+
 ## Python Basics Course - Lecture Script
 
 **Session:** Day 1 (Session 1), Hour 3 of 4  
@@ -663,6 +666,8 @@ Alright, let's wrap up Hour 3. Here's what we covered today:
 
 Before we move to Hour 4, I want you to answer a quick check question. This is your "exit ticket"—it helps me know what's landing and what might need reinforcement.
 
+[Instructor slide change: page=38; title=Quick Check]
+
 ### Quick Check / Exit Ticket
 
 **Question:** What's the difference between `'5'` and `5`?
@@ -833,4 +838,3 @@ print("Type of likes_python:", type(likes_python))
 
 **Prepared for:** Python Basics Course, Day 1, Session 1  
 **Next Hour:** Hour 4 - Numbers + Operators
-

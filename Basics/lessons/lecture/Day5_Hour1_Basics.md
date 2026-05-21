@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 17: Tuples + Unpacking]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on tuples: what they are, how they differ from lists, how immutability protects data, and how unpacking lets you pull values out cleanly. Stay within Basics scope — do not introduce named tuples, `collections.namedtuple`, or advanced destructuring. The key outcomes are creating tuples, understanding why they are immutable, unpacking tuple values into variables, and making a principled choice between tuple and list. The lab reinforces all of this in a concrete coordinate-tracking program.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -914,6 +918,8 @@ This is a taste of how tuples connect naturally to geometric calculations in rea
 "In the next hours, we will see tuples appear again when we work with dictionaries — specifically, when we iterate over a dictionary's key-value pairs, we will unpack them as two-element tuples. So the unpacking pattern you just practised will keep paying off.
 
 You will also see tuples appear naturally when functions return multiple results. Returning a tuple is the idiomatic Python way to 'return two things at once'."
+
+[Instructor slide change: page=16; title=Quick Check]
 
 ### 12.3 Exit ticket
 

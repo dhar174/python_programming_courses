@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,8 +71,15 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
-                    <h2 id="instructor-intent-and-alignment">Instructor intent and alignment</h2>
+                    <aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="24" data-slide-title="Hour 43: Directories and Paths with pathlib" data-slide-anchor="hour-43-directories-and-paths-with-pathlib-24-38bfc2a5"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 24</strong><a class="lecture-slide-cue-link" href="../slides/day-11/day-11-session-11.html#hour-43-directories-and-paths-with-pathlib-24-38bfc2a5" data-slide-deck-link>Slide 24: Hour 43: Directories and Paths with pathlib</a></div></aside>
+
+<h2 id="instructor-intent-and-alignment">Instructor intent and alignment</h2>
 <p>This hour is the bridge between “I can read/write one file” and “I can build programs that keep working when moved to another machine, another folder, or another teammate’s environment.” In Hour 42, learners saved JSON. In Hour 43, we make that persistence reliable by teaching directory creation and file discovery with <code>pathlib</code>.</p>
 <p>This script is aligned to the runbook for Hour 43 and intentionally emphasizes portable path patterns:</p>
 <ul>
@@ -77,6 +89,8 @@
 <li>Use directory discovery (<code>iterdir</code>, <code>glob</code>) instead of hardcoding file names.</li>
 </ul>
 <p>If learners leave this hour with one key habit, it should be: “My code computes paths from the project, not from my personal machine layout.”</p>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="25" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-25-e351adaa"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 25</strong><a class="lecture-slide-cue-link" href="../slides/day-11/day-11-session-11.html#learning-outcomes-25-e351adaa" data-slide-deck-link>Slide 25: Learning Outcomes</a></div></aside>
+
 <h2 id="outcomes-state-these-at-the-start">Outcomes (state these at the start)</h2>
 <p>By the end of this hour, learners will be able to:</p>
 <ol>
@@ -213,6 +227,8 @@ json_files = sorted(DATA_DIR.glob(&quot;*.json&quot;), key=lambda p: p.name.lowe
 </blockquote>
 <p>Desired answer: CWD helps debug context, but reliable code should use a stable project-relative anchor.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="31" data-slide-title="Demo — Create Folder, Save JSON, Discover Files" data-slide-anchor="demo-create-folder-save-json-discover-files-31-1dc3993c"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 31</strong><a class="lecture-slide-cue-link" href="../slides/day-11/day-11-session-11.html#demo-create-folder-save-json-discover-files-31-1dc3993c" data-slide-deck-link>Slide 31: Demo — Create Folder, Save JSON, Discover Files</a></div></aside>
+
 <h2 id="live-demo-510-min-create-folder-write-json-discover-files">Live demo (5–10 min): create folder, write JSON, discover files</h2>
 <h3 id="demo-goal-to-announce">Demo goal to announce</h3>
 <p>“We will write one script that:</p>
@@ -532,6 +548,8 @@ Chosen JSON path: None
 <li>Uses <code>encoding="utf-8"</code> and consistent output formatting.</li>
 </ul>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="33" data-slide-title="Common Pitfalls + Quick Check (Hour 43)" data-slide-anchor="common-pitfalls-quick-check-hour-43-33-ff765cbc"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 33</strong><a class="lecture-slide-cue-link" href="../slides/day-11/day-11-session-11.html#common-pitfalls-quick-check-hour-43-33-ff765cbc" data-slide-deck-link>Slide 33: Common Pitfalls + Quick Check (Hour 43)</a></div></aside>
+
 <h2 id="common-pitfalls-and-instructor-interventions">Common pitfalls and instructor interventions</h2>
 <h3 id="pitfall-1-hardcoded-absolute-paths">Pitfall 1: Hardcoded absolute paths</h3>
 <p><strong>Example of issue</strong></p>

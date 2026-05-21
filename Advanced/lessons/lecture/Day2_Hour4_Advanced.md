@@ -1,5 +1,7 @@
 # Day 2, Hour 4: Checkpoint 1: Domain + Service Layer Milestone
 
+[Instructor slide change: page=39; title=Hour 8: Checkpoint 1 — Domain + Service Layer Milestone]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -33,6 +35,8 @@ Recommended grading cadence:
 5. Incomplete students leave with a clear next-step path instead of a vague "keep working."
 
 ---
+
+[Instructor slide change: page=40; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -357,6 +361,8 @@ Transition:
 
 ---
 
+[Instructor slide change: page=42; title=Checkpoint 1 Rubric]
+
 ## Checkpoint Build and Grade Lab (40 minutes)
 
 ### Student-facing lab prompt
@@ -505,6 +511,8 @@ If a learner has only 5 minutes remaining and is incomplete, choose the shortest
 5. Ask them to finish the missing rows before the next session begins.
 
 ---
+
+[Instructor slide change: page=47; title=Common Pitfalls (Hour 8)]
 
 ## Troubleshooting and Pitfalls
 
@@ -704,6 +712,8 @@ Then say:
 "If your hand went down, that tells you exactly what to add next. Do not add new features until those expected errors are covered."
 
 ---
+
+[Instructor slide change: page=48; title=Quick Check (Hour 8)]
 
 ## Exit Ticket and Wrap-up (5 minutes)
 

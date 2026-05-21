@@ -386,557 +386,1035 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-2-session-2-hours-58-1-81399734" data-slide-number="1">
             <h1>Advanced Day 2 — Session 2 (Hours 5–8)</h1>
-            <div class="subtitle">Python Programming (Advanced) • Factory, Strategy, Ergonomics, and Checkpoint 1</div>
+            <div class="subtitle">Python Programming (Advanced) • Factory Pattern, Strategy Pattern, Class Ergonomics, and Checkpoint 1</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-2-overview-2-05c40247" data-slide-number="2">
             <h1>Session 2 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-3-301bab6a" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 5: Pattern: Factory (practical creation + validation)</li>
-  <li>Hour 6: Pattern: Strategy (swap behaviors cleanly)</li>
-  <li>Hour 7: Pythonic class ergonomics (<code>repr</code> / <code>str</code> / equality) + light type hints</li>
-  <li>Hour 8: Checkpoint 1: domain + service layer milestone</li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 2 overview</code></li>
-  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code># Day 2, Hour 1: Pattern: Factory (practical creation + validation)</code></li>
-  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code># Day 2, Hour 2: Pattern: Strategy (swap behaviors cleanly)</code></li>
-  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code># Day 2, Hour 3: Pythonic Class Ergonomics</code></li>
-  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code># Day 2, Hour 4: Checkpoint 1: Domain + Service Layer Milestone</code></li>
+  <li>Hour 5: Pattern — Factory (practical creation + validation)</li>
+  <li>Hour 6: Pattern — Strategy (swap behaviors cleanly)</li>
+  <li>Hour 7: Pythonic class ergonomics (<code>__repr__</code> / <code>__str__</code> / type hints)</li>
+  <li>Hour 8: Checkpoint 1 — domain + service layer milestone</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Session 2 Outcomes</h1>
+        <section class="slide" id="source-alignment-4-1a150e22" data-slide-number="4">
+            <h1>Source Alignment</h1>
+            
+        </section>
+
+        <section class="slide" id="lecture-files-used-in-this-session-5-2011e93d" data-slide-number="5">
+            <h1>Lecture Files Used in This Session</h1>
             <ul>
-  <li>Centralize creation rules with factories</li>
-  <li>Swap behavior without rewriting callers</li>
-  <li>Make models easier to inspect, print, and compare</li>
-  <li>Deliver a clean headless core for Checkpoint 1</li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code># Day 2, Hour 1: Pattern: Factory</code></li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code># Day 2, Hour 2: Pattern: Strategy</code></li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code># Day 2, Hour 3: Pythonic Class Ergonomics</code></li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code># Day 2, Hour 4: Checkpoint 1</code></li>
 </ul>
+<p>Runbook source of truth for all four hours:</p>
+<p><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 2, Hours 5–8</code></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-6-26682a64" data-slide-number="6">
             <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="in-scope-7-f4e610d9" data-slide-number="7">
             <h1>In Scope</h1>
             <ul>
-  <li>Validated object creation</li>
-  <li>Strategy dispatch with functions or collaborators</li>
-  <li>Readable object output and simple type hints</li>
-  <li>Core-only checkpoint work</li>
+  <li>Centralized object creation and validation (Factory)</li>
+  <li>Runtime behavior selection (Strategy)</li>
+  <li>Readable <code>__repr__</code>, <code>__str__</code>, light type hints, <code>to_dict()</code></li>
+  <li>Checkpoint 1 — stable headless core: models + service CRUD + exceptions + serialization</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Not Yet</h1>
+        <section class="slide" id="not-yet-covered-8-d3b4505d" data-slide-number="8">
+            <h1>Not Yet Covered</h1>
             <ul>
-  <li>Database persistence</li>
-  <li>GUI callbacks</li>
-  <li>HTTP routes</li>
-  <li>Heavy typing abstractions or framework ceremony</li>
+  <li>Database persistence or file I/O (Day 3+)</li>
+  <li>GUI callbacks or HTTP routes (later sessions)</li>
+  <li>Advanced typing (<code>Protocol</code>, <code>TypeVar</code>, <code>Generic</code>)</li>
+  <li>Plugin discovery, dependency injection frameworks</li>
+  <li>Authentication and security systems</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Hour 5: Factory Pattern</h1>
+        <section class="slide" id="hour-5-pattern-factory-9-968442c4" data-slide-number="9">
+            <h1>Hour 5: Pattern — Factory</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-10-16181bf9" data-slide-number="10">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Move creation + normalization logic out of <code>__init__</code></li>
-  <li>Turn raw payloads into safe domain objects</li>
-  <li>Raise validation errors before bad objects spread</li>
-  <li>Explain why centralized creation improves consistency</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Why Factories Matter</h1>
-            <ul>
-  <li>External data is messy</li>
-  <li>Repeating validation in every caller causes drift</li>
-  <li><code>__init__</code> should initialize, not become a giant intake pipeline</li>
-  <li>A factory can:</li>
-  <li style="margin-left: 30px;">validate</li>
-  <li style="margin-left: 30px;">normalize</li>
-  <li style="margin-left: 30px;">apply defaults</li>
-  <li style="margin-left: 30px;">return a ready-to-use object</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Factory from Raw Data</h1>
-            <pre data-lang="python"><code>class UserFactory:
-    @classmethod
-    def from_dict(cls, data):
-        if &quot;name&quot; not in data:
-            raise ValidationError(&quot;Missing required field: &#x27;name&#x27;&quot;)
-
-        name = data[&quot;name&quot;].strip().title()
-        role = data.get(&quot;role&quot;, &quot;member&quot;).lower()
-        return User(full_name=name, role=role)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Factory Responsibilities</h1>
-            <ul>
-  <li>Validate required fields</li>
-  <li>Normalize messy input</li>
-  <li>Supply safe defaults</li>
-  <li>Reject unsupported values early</li>
-</ul>
-<h3>Better Than</h3>
-<ul>
-  <li>every route validating differently</li>
-  <li>every CLI prompt building objects ad hoc</li>
-  <li>huge constructors full of branching</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Build a Validated Factory</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Create a <code>from_dict()</code> or <code>create_*()</code> factory</li>
-  <li>Validate at least one required field</li>
-  <li>Normalize one messy field</li>
-  <li>Return a safe tracker record or raise <code>ValidationError</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 5)</h1>
-            <p><span class="check">✓</span> Factory builds valid objects from raw payloads</p>
-<p><span class="check">✓</span> Missing or bad data fails clearly</p>
-<p><span class="check">✓</span> Creation logic is not duplicated in multiple callers</p>
-<p><span class="check">✓</span> The returned object is ready for service-layer use</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 5)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> validated factory for safe tracker records</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> use a classmethod factory</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> duplicating validation logic in every caller</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 5 | factory title: Refactor auth flow</code></li>
+  <li>Explain why raw data should pass through one trusted creation path</li>
+  <li>Implement <code>RecordFactory.from_dict()</code> for JSON-like dictionary input</li>
+  <li>Enforce required fields, normalization, optional defaults, and value validation</li>
+  <li>Raise <code>ValidationError</code> before an invalid object escapes the factory</li>
+  <li>Keep the model constructor simple; put raw-input logic in the factory</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day2_homework.ipynb</code> → <code>## Part 1: Hour 5 - Pattern: Factory</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day2_Quiz.html</code> → <code>QUIZ_DATA</code> questions 1–5</li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="why-factories-matter-11-e61ef69a" data-slide-number="11">
+            <h1>Why Factories Matter</h1>
+            <p>Real programs receive raw, messy input:</p>
+<pre><code>{
+    &quot;title&quot;: &quot;  write tests  &quot;,
+    &quot;owner&quot;: &quot;MARIA&quot;,
+    &quot;status&quot;: &quot;IN_PROGRESS&quot;,
+    &quot;priority&quot;: &quot;High&quot;
+}</code></pre>
+<p>Problems without a factory:</p>
+<ul>
+  <li>Every feature writes its own parsing and validation rules</li>
+  <li>Inconsistent defaults (<code>&quot;done&quot;</code> vs <code>&quot;Done&quot;</code> vs <code>&quot;DONE&quot;</code>)</li>
+  <li>Bugs appear far from the cause when silent defaults hide missing data</li>
+  <li><code>__init__</code> becomes a noisy mix of storage, parsing, and error reporting</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Concept Briefing: Why Factories</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="factory-vocabulary-12-4f50110a" data-slide-number="12">
+            <h1>Factory Vocabulary</h1>
+            <table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Factory</strong></td>
+<td>Code whose job is to create objects from raw input</td>
+</tr>
+<tr>
+<td><strong>Raw input</strong></td>
+<td>Data before our program trusts it</td>
+</tr>
+<tr>
+<td><strong>Normalization</strong></td>
+<td>Converting input into a consistent shape</td>
+</tr>
+<tr>
+<td><strong>Required field</strong></td>
+<td>Must be supplied; never silently defaulted</td>
+</tr>
+<tr>
+<td><strong>Optional field</strong></td>
+<td>May safely receive a default</td>
+</tr>
+<tr>
+<td><strong>Caller boundary</strong></td>
+<td>Where validation errors are caught and reported</td>
+</tr>
+</tbody>
+</table>
+<p>Arrow: <code>raw dict → factory validates → valid object or ValidationError</code></p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Outcomes, Setup, and Vocabulary</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-simple-model-factory-skeleton-13-78309751" data-slide-number="13">
+            <h1>Demo: Simple Model + Factory Skeleton</h1>
+            <pre data-lang="python"><code>class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when raw input cannot produce a valid record.&quot;&quot;&quot;
+
+
+class TaskRecord:
+    def __init__(
+        self,
+        title: str,
+        owner: str,
+        status: str,
+        priority: str,
+        estimate_minutes: int,
+    ) -&gt; None:
+        self.title = title
+        self.owner = owner
+        self.status = status
+        self.priority = priority
+        self.estimate_minutes = estimate_minutes
+
+    def __str__(self) -&gt; str:
+        return (
+            f&quot;{self.title} | owner={self.owner} | status={self.status} | &quot;
+            f&quot;priority={self.priority} | estimate={self.estimate_minutes}m&quot;
+        )</code></pre>
+<p>Constructor stores clean values — no raw-dict parsing inside.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Live Demo: RecordFactory.from_dict()</code> → Demo Step 1</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-full-recordfactory-from-dict-14-6ee7898d" data-slide-number="14">
+            <h1>Demo: Full `RecordFactory.from_dict()`</h1>
+            <pre data-lang="python"><code>class RecordFactory:
+    REQUIRED_FIELDS = (&quot;title&quot;, &quot;owner&quot;)
+    ALLOWED_STATUSES = {&quot;todo&quot;, &quot;in_progress&quot;, &quot;done&quot;}
+    ALLOWED_PRIORITIES = {&quot;low&quot;, &quot;normal&quot;, &quot;high&quot;}
+
+    @classmethod
+    def from_dict(cls, data: dict[str, object]) -&gt; TaskRecord:
+        for field_name in cls.REQUIRED_FIELDS:
+            if field_name not in data:
+                raise ValidationError(f&quot;Missing required field: {field_name}&quot;)
+        title = str(data[&quot;title&quot;]).strip()
+        owner = str(data[&quot;owner&quot;]).strip().lower()
+        if not title:
+            raise ValidationError(&quot;Field &#x27;title&#x27; cannot be blank&quot;)
+        if not owner:
+            raise ValidationError(&quot;Field &#x27;owner&#x27; cannot be blank&quot;)
+        status = str(data.get(&quot;status&quot;, &quot;todo&quot;)).strip().lower()
+        priority = str(data.get(&quot;priority&quot;, &quot;normal&quot;)).strip().lower()
+        if status not in cls.ALLOWED_STATUSES:
+            raise ValidationError(f&quot;Invalid status &#x27;{status}&#x27;&quot;)
+        if priority not in cls.ALLOWED_PRIORITIES:
+            raise ValidationError(f&quot;Invalid priority &#x27;{priority}&#x27;&quot;)
+        estimate_minutes = int(data.get(&quot;estimate_minutes&quot;, 0))
+        return TaskRecord(title, owner, status, priority, estimate_minutes)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Live Demo: RecordFactory.from_dict()</code> → Demo Steps 3–4</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-running-the-factory-15-640273cb" data-slide-number="15">
+            <h1>Demo: Running the Factory</h1>
+            <pre data-lang="python"><code>sample_records = [
+    {&quot;title&quot;: &quot;  write factory tests  &quot;, &quot;owner&quot;: &quot;MARIA&quot;,
+     &quot;status&quot;: &quot;IN_PROGRESS&quot;, &quot;priority&quot;: &quot;High&quot;, &quot;estimate_minutes&quot;: &quot;45&quot;},
+    {&quot;title&quot;: &quot;Document validation rules&quot;, &quot;owner&quot;: &quot;jamal&quot;},
+    {&quot;title&quot;: &quot;Missing owner should fail&quot;, &quot;status&quot;: &quot;todo&quot;},
+]
+
+for index, raw in enumerate(sample_records, start=1):
+    try:
+        record = RecordFactory.from_dict(raw)
+        print(f&quot;Record {index} loaded: {record}&quot;)
+    except ValidationError as error:
+        print(f&quot;Record {index} rejected: {error}&quot;)</code></pre>
+<p>Expected output:</p>
+<pre><code>Record 1 loaded: write factory tests | owner=maria | status=in_progress | priority=high | estimate=45m
+Record 2 loaded: Document validation rules | owner=jamal | status=todo | priority=normal | estimate=0m
+Record 3 rejected: Missing required field: owner</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Live Demo: RecordFactory.from_dict()</code> → Demo Step 5</li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-tracker-factory-implementation-16-81a0b574" data-slide-number="16">
+            <h1>Lab: Tracker Factory Implementation</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Define <code>ValidationError</code> and a simple model (<code>TrackerRecord</code> or <code>TaskRecord</code>)</li>
+  <li>Keep the constructor simple — store clean values only</li>
+  <li>Implement <code>RecordFactory.from_dict(data)</code>:</li>
+</ol>
+<ul>
+  <li style="margin-left: 30px;">Check required fields (<code>title</code>, <code>owner</code>) — fail loudly if missing or blank</li>
+  <li style="margin-left: 30px;">Normalize: strip whitespace, lowercase status/owner</li>
+  <li style="margin-left: 30px;">Apply optional defaults: <code>status=&#x27;todo&#x27;</code>, <code>priority=&#x27;normal&#x27;</code></li>
+  <li style="margin-left: 30px;">Validate allowed values for status and priority</li>
+</ul>
+<ol>
+  <li>Load two valid hard-coded dictionaries through the factory</li>
+  <li>Show one invalid dictionary caught at the caller boundary</li>
+</ol>
+<p>Fast finisher: add <code>estimate_minutes</code> with a default of <code>0</code>; reject negatives; add <code>to_dict()</code></p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Guided Lab: Tracker Factory Implementation</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-5-17-c5a233fe" data-slide-number="17">
             <h1>Common Pitfalls (Hour 5)</h1>
-            <p><strong>⚠️</strong> Letting invalid objects exist &quot;just for now&quot;</p>
-<p><strong>⚠️</strong> Hiding normalization logic in random callers</p>
-<p><strong>⚠️</strong> Making <code>__init__</code> do everything</p>
-<p><strong>⚠️</strong> Using vague exceptions with vague messages</p>
+            <p><strong>⚠️</strong> Silently defaulting required fields — <code>title = data.get(&quot;title&quot;, &quot;Untitled&quot;)</code> hides missing data</p>
+<p><strong>⚠️</strong> All raw-dict parsing inside <code>__init__</code> — the constructor becomes a noisy traffic jam</p>
+<p><strong>⚠️</strong> Factory raises a broad <code>Exception</code> instead of <code>ValidationError</code> — callers cannot distinguish errors</p>
+<p><strong>⚠️</strong> Forgetting to validate after defaulting — a default status of <code>&quot;todo&quot;</code> is fine; accepting any status after defaulting is not</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code> → <code>## Guided Lab</code> → <code>### Instructor Circulation Plan</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Why is a factory safer than repeating payload validation in five different places?</p>
+        <section class="slide" id="quick-check-hour-5-18-99c9d24b" data-slide-number="18">
+            <h1>Quick Check (Hour 5)</h1>
+            <p><strong>Question:</strong> Why is <code>data.get(&quot;title&quot;, &quot;Untitled&quot;)</code> dangerous for a required field,</p>
+<p>but <code>data.get(&quot;status&quot;, &quot;todo&quot;)</code> safe for an optional field?</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 6: Strategy Pattern</h1>
+        <section class="slide" id="hour-6-pattern-strategy-19-a1e051d8" data-slide-number="19">
+            <h1>Hour 6: Pattern — Strategy</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-20-1cfe1da2" data-slide-number="20">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Replace branch-heavy behavior selection</li>
-  <li>Use functions or collaborators as strategies</li>
-  <li>Dispatch dynamically from a small mapping</li>
-  <li>Keep core orchestration stable while behavior changes</li>
+  <li>Define Strategy as selecting an algorithm at runtime</li>
+  <li>Explain that Python strategies can be functions, lambdas, or callable objects</li>
+  <li>Replace branchy <code>if</code>/<code>elif</code> blocks with a strategy registry dictionary</li>
+  <li>Keep the core workflow stable while behavior changes</li>
+  <li>Handle unknown choices explicitly rather than silently falling back</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Strategy in Plain English</h1>
-            <ul>
-  <li>We have one job with multiple ways to do it</li>
-  <li>We separate <strong>what happens</strong> from <strong>how it happens</strong></li>
-  <li>In Python, a strategy can just be a callable</li>
-</ul>
-<h3>Typical Use Cases</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li>sorting</li>
-  <li>filtering</li>
-  <li>exporting</li>
-  <li>notifications</li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Dispatch Map</h1>
-            <pre data-lang="python"><code>def sort_by_name(record):
-    return record[&quot;name&quot;]
-
-
-sorting_strategies = {
-    &quot;name&quot;: sort_by_name,
-    &quot;id&quot;: sort_by_id,
-    &quot;created&quot;: sort_by_date,
-}</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Core Function Stays Simple</h1>
-            <pre data-lang="python"><code>def display_records_strategy(records, strategy_key):
-    strategy_func = sorting_strategies.get(strategy_key, sort_by_id)
-    sorted_records = sorted(records, key=strategy_func)
-    for record in sorted_records:
+        <section class="slide" id="why-strategy-matters-21-99e8d3e2" data-slide-number="21">
+            <h1>Why Strategy Matters</h1>
+            <p>Without Strategy, behavior accumulates in one place:</p>
+<pre data-lang="python"><code>def display_records(records, sort_choice):
+    if sort_choice == &quot;name&quot;:
+        ordered = sorted(records, key=lambda r: r[&quot;name&quot;].lower())
+    elif sort_choice == &quot;created&quot;:
+        ordered = sorted(records, key=lambda r: r[&quot;created_date&quot;])
+    elif sort_choice == &quot;priority&quot;:
+        ordered = sorted(records, key=lambda r: r[&quot;priority&quot;])
+    else:
+        raise ValueError(f&quot;Unknown sort choice: {sort_choice}&quot;)
+    for record in ordered:
         print(record)</code></pre>
 <ul>
-  <li>Caller does not need a giant <code>if/elif</code></li>
-  <li>New strategies are easier to add</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Strategy Selection</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Choose a behavior that varies:</li>
-  <li style="margin-left: 30px;">filter active vs all</li>
-  <li style="margin-left: 30px;">sort by name vs date</li>
-  <li style="margin-left: 30px;">notify via email vs console</li>
-  <li>Implement 2+ strategies</li>
-  <li>Use a dictionary dispatcher or injected collaborator</li>
-  <li>Run the same caller with multiple behaviors</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 6)</h1>
-            <p><span class="check">✓</span> Two or more strategies exist</p>
-<p><span class="check">✓</span> Behavior is selected dynamically</p>
-<p><span class="check">✓</span> Caller logic stays small</p>
-<p><span class="check">✓</span> A new strategy can be added without rewriting the main flow</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 6)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> switch behavior without rewriting the caller</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> inject behavior objects or callables</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> burying every algorithm in one <code>if/elif</code> chain</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 6 | strategy selected: EmailNotifier</code></li>
+  <li>Every new sort rule requires editing this function</li>
+  <li>The same branching often appears in multiple display surfaces</li>
+  <li>One place strips case; another forgets — bugs appear</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day2_homework.ipynb</code> → <code>## Part 2: Hour 6 - Pattern: Strategy</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day2_Quiz.html</code> → <code>QUIZ_DATA</code> questions 6–10</li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Concept Briefing: Why Strategy</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="strategy-vocabulary-22-5c35a0bc" data-slide-number="22">
+            <h1>Strategy Vocabulary</h1>
+            <table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Strategy</strong></td>
+<td>A replaceable algorithm — a callable with the expected shape</td>
+</tr>
+<tr>
+<td><strong>Runtime selection</strong></td>
+<td>Choosing the strategy while the program runs</td>
+</tr>
+<tr>
+<td><strong>Callable</strong></td>
+<td>Any Python object you can call with <code>()</code></td>
+</tr>
+<tr>
+<td><strong>Core workflow</strong></td>
+<td>The stable part of the code that receives and uses a strategy</td>
+</tr>
+<tr>
+<td><strong>Strategy registry</strong></td>
+<td>A dictionary mapping user choices to strategy callables</td>
+</tr>
+</tbody>
+</table>
+<p>Arrow: <code>choice → registry lookup → core workflow receives strategy → result changes</code></p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Outcomes, Setup, and Vocabulary</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-sort-key-strategies-23-8daf1f69" data-slide-number="23">
+            <h1>Demo: Sort Key Strategies</h1>
+            <pre data-lang="python"><code>from typing import Callable
+
+Record = dict[str, object]
+SortKey = Callable[[Record], object]
+
+def sort_by_name(record: Record) -&gt; str:
+    return str(record[&quot;name&quot;]).lower()
+
+def sort_by_created_date(record: Record) -&gt; str:
+    return str(record[&quot;created_date&quot;])
+
+def sort_by_priority(record: Record) -&gt; int:
+    return int(record.get(&quot;priority&quot;, 999))
+
+SORT_STRATEGIES: dict[str, SortKey] = {
+    &quot;1&quot;: sort_by_name,
+    &quot;2&quot;: sort_by_created_date,
+    &quot;3&quot;: sort_by_priority,
+}
+
+def choose_sort_strategy(choice: str) -&gt; SortKey:
+    try:
+        return SORT_STRATEGIES[choice]
+    except KeyError as error:
+        raise ValueError(f&quot;Unknown sort choice {choice!r}&quot;) from error
+
+def display_records(records: list[Record], sort_key: SortKey, label: str) -&gt; None:
+    print(f&quot;\nSorted by {label}:&quot;)
+    for record in sorted(records, key=sort_key):
+        print(f&quot;- {record[&#x27;name&#x27;]} | {record[&#x27;created_date&#x27;]} | priority {record.get(&#x27;priority&#x27;, &#x27;-&#x27;)}&quot;)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Live Demos</code> → Demo Step 1</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-validation-strategies-24-57525839" data-slide-number="24">
+            <h1>Demo: Validation Strategies</h1>
+            <pre data-lang="python"><code>Validator = Callable[[Record], list[str]]
+
+def validate_task(record: Record) -&gt; list[str]:
+    errors: list[str] = []
+    if not str(record.get(&quot;title&quot;, &quot;&quot;)).strip():
+        errors.append(&quot;task requires a non-empty title&quot;)
+    if record.get(&quot;status&quot;) not in {&quot;pending&quot;, &quot;doing&quot;, &quot;done&quot;}:
+        errors.append(&quot;task status must be pending, doing, or done&quot;)
+    return errors
+
+def validate_contact(record: Record) -&gt; list[str]:
+    errors: list[str] = []
+    if not str(record.get(&quot;name&quot;, &quot;&quot;)).strip():
+        errors.append(&quot;contact requires a non-empty name&quot;)
+    if &quot;@&quot; not in str(record.get(&quot;email&quot;, &quot;&quot;)):
+        errors.append(&quot;contact requires an email containing @&quot;)
+    return errors
+
+VALIDATION_STRATEGIES: dict[str, Validator] = {
+    &quot;task&quot;: validate_task,
+    &quot;contact&quot;: validate_contact,
+}
+
+def report_validation(record: Record, validator: Validator) -&gt; None:
+    errors = validator(record)
+    label = record.get(&quot;name&quot;, &quot;&lt;unnamed&gt;&quot;)
+    if errors:
+        print(f&quot;{label} failed: {errors}&quot;)
+    else:
+        print(f&quot;{label} passed.&quot;)</code></pre>
+<p>One runner. Two strategies. No branching in the runner.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Live Demos</code> → Demo Step 2</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-callable-class-strategy-with-state-25-2da4d449" data-slide-number="25">
+            <h1>Demo: Callable Class Strategy with State</h1>
+            <pre data-lang="python"><code>class NamePrefixFilter:
+    def __init__(self, prefix: str) -&gt; None:
+        self.prefix = prefix.lower()
+
+    def __call__(self, record: Record) -&gt; bool:
+        return str(record[&quot;name&quot;]).lower().startswith(self.prefix)
+
+
+def include_all(record: Record) -&gt; bool:
+    return True
+
+
+def filter_records(
+    records: list[Record],
+    keep: Callable[[Record], bool],
+) -&gt; list[Record]:
+    return [record for record in records if keep(record)]
+
+
+starts_with_a = NamePrefixFilter(&quot;A&quot;)
+print(&quot;All records:&quot;, filter_records(records, include_all))
+print(&quot;Names starting with A:&quot;, filter_records(records, starts_with_a))</code></pre>
+<ul>
+  <li><code>starts_with_a</code> is callable — <code>__call__</code> makes any class a strategy</li>
+  <li>State is carried in the object, not in global variables</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Live Demos</code> → Demo Step 3</li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-menu-selected-strategies-26-3fe96f8e" data-slide-number="26">
+            <h1>Lab: Menu-Selected Strategies</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Choose a behavior that varies: sorting by name vs created date, or filtering active vs all</li>
+  <li>Implement at least <strong>two</strong> strategies as separate functions or callable objects</li>
+  <li>Store strategies in a dictionary registry</li>
+  <li>Wire a simulated menu choice to select the strategy</li>
+  <li>Pass the selected strategy into a stable core function</li>
+  <li>Run with two different choices — output must be clearly different</li>
+  <li>Handle an unknown choice explicitly (raise <code>ValueError</code>, not silent fallback)</li>
+</ol>
+<p>Fast finisher: combine a sort strategy and a filter strategy; add a third strategy</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Guided Lab: Menu-Selected Strategies</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-6-27-faf6cd60" data-slide-number="27">
             <h1>Common Pitfalls (Hour 6)</h1>
-            <p><strong>⚠️</strong> Calling a function instead of passing the function object</p>
-<p><strong>⚠️</strong> Keeping the big branch chain in the main routine</p>
-<p><strong>⚠️</strong> Naming strategies unclearly</p>
-<p><strong>⚠️</strong> Mixing strategy selection with unrelated UI complexity</p>
+            <p><strong>⚠️</strong> Hard-coded branching still lives in the core workflow — strategy names exist but selection moved, not eliminated</p>
+<p><strong>⚠️</strong> Accidentally calling the function in the registry — <code>&quot;1&quot;: sort_by_name()</code> stores the result, not the callable</p>
+<p><strong>⚠️</strong> Strategies that read hidden global variables — strategy state must come from parameters or constructor args</p>
+<p><strong>⚠️</strong> Silent fallback on unknown choice — <code>SORT_STRATEGIES.get(choice, sort_by_name)</code> hides typos and bugs</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code> → <code>## Troubleshooting and Common Pitfalls</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> What changes when you add a third strategy to a good strategy-based design?</p>
+        <section class="slide" id="quick-check-hour-6-28-753168a5" data-slide-number="28">
+            <h1>Quick Check (Hour 6)</h1>
+            <p><strong>Question:</strong> How is using a strategy dictionary different from an <code>if</code>/<code>elif</code> chain,</p>
+<p>and why does it matter when a new sort option is added?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-7-pythonic-class-ergonomics-29-66b10f7a" data-slide-number="29">
             <h1>Hour 7: Pythonic Class Ergonomics</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-30-61e4eda7" data-slide-number="30">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Differentiate <code>__str__</code> from <code>__repr__</code></li>
-  <li>Implement value-based equality with <code>__eq__</code></li>
-  <li>Add light type hints that improve readability and tooling</li>
-  <li>Prepare models for easier debugging and serialization</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Why Default Objects Are Not Enough</h1>
-            <pre data-lang="python"><code>print(task)
-# &lt;__main__.Task object at 0x...&gt;</code></pre>
-<ul>
-  <li>Not useful for logs</li>
-  <li>Not useful for debugging</li>
-  <li>Not helpful in a CLI or demo script</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Friendly + Developer Views</h1>
-            <pre data-lang="python"><code>class Task:
-    def __init__(self, t_id: int, title: str) -&gt; None:
-        self.id = t_id
-        self.title = title
-
-    def __repr__(self) -&gt; str:
-        return f&quot;Task(t_id={self.id}, title=&#x27;{self.title}&#x27;)&quot;
-
-    def __str__(self) -&gt; str:
-        return f&quot;[{self.id}] {self.title}&quot;</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Equality Matters, Too</h1>
-            <pre data-lang="python"><code>def __eq__(self, other: object) -&gt; bool:
-    if not isinstance(other, Task):
-        return False
-    return self.id == other.id and self.title == other.title</code></pre>
-<ul>
-  <li>Default equality checks identity</li>
-  <li>Custom equality can check useful data equivalence</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Light Type Hinting Rules</h1>
-            <ul>
-  <li>Keep it simple:</li>
-  <li style="margin-left: 30px;"><code>int</code></li>
-  <li style="margin-left: 30px;"><code>str</code></li>
-  <li style="margin-left: 30px;"><code>list</code></li>
-  <li style="margin-left: 30px;"><code>dict</code></li>
-  <li style="margin-left: 30px;"><code>-&gt; None</code></li>
-  <li>Use hints to document intent</li>
-  <li>Do not turn this hour into typing wizardry</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Make the Model Pleasant to Work With</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Add <code>__repr__</code></li>
-  <li>Add <code>__str__</code></li>
-  <li>Add <code>__eq__</code> where value comparison helps</li>
-  <li>Add type hints to <code>__init__</code> and 3+ methods/functions</li>
-  <li>Optional: add <code>to_dict()</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 7)</h1>
-            <p><span class="check">✓</span> Model prints helpfully for users and developers</p>
-<p><span class="check">✓</span> Equality behavior is intentional</p>
-<p><span class="check">✓</span> Type hints improve readability without overcomplication</p>
-<p><span class="check">✓</span> <code>__str__</code> and <code>__repr__</code> return strings, not <code>print()</code></p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 7)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> string output and equality that support debugging and testing</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> implement <code>repr</code>, <code>str</code>, and equality clearly</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> unreadable model output</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 7 | repr: Task(title=&#x27;Write tests&#x27;, priority=&#x27;medium&#x27;)</code></li>
+  <li>Explain why the default <code>&lt;__main__.Task object at 0x...&gt;</code> output is not enough</li>
+  <li>Implement <code>__repr__</code> for developer-facing debug inspection</li>
+  <li>Implement <code>__str__</code> for user-facing friendly display</li>
+  <li>Add light type hints using simple built-in annotations</li>
+  <li>Add <code>to_dict()</code> as checkpoint-prep serialization readiness</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day2_homework.ipynb</code> → <code>## Part 3: Hour 7 - Pythonic class ergonomics</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day2_Quiz.html</code> → <code>QUIZ_DATA</code> questions 11–15</li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="why-class-ergonomics-matter-31-c0fac3ce" data-slide-number="31">
+            <h1>Why Class Ergonomics Matter</h1>
+            <p>Without ergonomics:</p>
+<pre><code>[&lt;__main__.Task object at 0x000001F2A8C4D910&gt;,
+ &lt;__main__.Task object at 0x000001F2A8C4DA50&gt;]</code></pre>
+<p>With ergonomics:</p>
+<pre><code>[Task(task_id=101, title=&#x27;Write tests&#x27;, status=&#x27;open&#x27;, priority=2),
+ Task(task_id=102, title=&#x27;Review PR&#x27;, status=&#x27;blocked&#x27;, priority=1)]</code></pre>
+<ul>
+  <li>Debugging a wrong sort order is now possible at a glance</li>
+  <li>Logs include meaningful state, not memory addresses</li>
+  <li>Checkpoint reviewers can verify output without opening the debugger</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Opening Bridge</code> and <code>## Concept Briefing</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="repr-vs-str-32-4a63ebcb" data-slide-number="32">
+            <h1>`__repr__` vs `__str__`</h1>
+            <table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Audience</th>
+<th>When used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__repr__</code></td>
+<td>Developer</td>
+<td><code>repr(obj)</code>, list/dict containers, REPL, debugger</td>
+</tr>
+<tr>
+<td><code>__str__</code></td>
+<td>User</td>
+<td><code>print(obj)</code>, <code>str(obj)</code>, CLI menus, reports</td>
+</tr>
+</tbody>
+</table>
+<p>Rule of thumb:</p>
+<ul>
+  <li><code>__repr__</code> should be specific and unambiguous — include all important fields</li>
+  <li><code>__str__</code> should be short and friendly — only what the user needs</li>
+  <li>If <code>__str__</code> is missing, Python falls back to <code>__repr__</code> for <code>print()</code></li>
+</ul>
+<pre data-lang="python"><code>repr(task)  # Task(task_id=101, title=&#x27;Write tests&#x27;, status=&#x27;open&#x27;, priority=2)
+str(task)   # #101 Write tests [open]
+print([task])  # uses __repr__ — lists always use repr for contents</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Concept Briefing</code> → sections 2–4</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-adding-repr-and-str-33-6f68d7e8" data-slide-number="33">
+            <h1>Demo: Adding `__repr__` and `__str__`</h1>
+            <pre data-lang="python"><code>class Task:
+    def __init__(self, task_id: int, title: str, status: str, priority: int) -&gt; None:
+        self.task_id = task_id
+        self.title = title
+        self.status = status
+        self.priority = priority
+
+    def __repr__(self) -&gt; str:
+        return (
+            &quot;Task(&quot;
+            f&quot;task_id={self.task_id!r}, &quot;
+            f&quot;title={self.title!r}, &quot;
+            f&quot;status={self.status!r}, &quot;
+            f&quot;priority={self.priority!r}&quot;
+            &quot;)&quot;
+        )
+
+    def __str__(self) -&gt; str:
+        return f&quot;#{self.task_id} {self.title} [{self.status}, priority {self.priority}]&quot;</code></pre>
+<p>Note <code>!r</code> inside the f-string — it calls <code>repr()</code> on the value, adding quotes to strings.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Live Demo</code> → Steps 2–3</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-type-hints-to-dict-for-checkpoint-readiness-34-83eb352b" data-slide-number="34">
+            <h1>Demo: Type Hints + `to_dict()` for Checkpoint Readiness</h1>
+            <pre data-lang="python"><code>    def is_complete(self) -&gt; bool:
+        return self.status == &quot;done&quot;
+
+    def rename(self, new_title: str) -&gt; None:
+        self.title = new_title.strip()
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {
+            &quot;task_id&quot;: self.task_id,
+            &quot;title&quot;: self.title,
+            &quot;status&quot;: self.status,
+            &quot;priority&quot;: self.priority,
+        }
+
+
+def format_task_for_log(task: Task) -&gt; str:
+    return f&quot;Saving {task!r}&quot;</code></pre>
+<p>Expected output snippet:</p>
+<pre><code>#101 Write tests [open, priority 2]
+Task(task_id=101, title=&#x27;Write tests&#x27;, status=&#x27;open&#x27;, priority=2)
+False
+Saving Task(task_id=101, title=&#x27;Write tests&#x27;, status=&#x27;open&#x27;, priority=2)
+{&#x27;task_id&#x27;: 101, &#x27;title&#x27;: &#x27;Write tests&#x27;, &#x27;status&#x27;: &#x27;open&#x27;, &#x27;priority&#x27;: 2}</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Live Demo</code> → Step 4</li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-make-your-model-pleasant-to-work-with-35-11131180" data-slide-number="35">
+            <h1>Lab: Make Your Model Pleasant to Work With</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Tasks (in order)</h3>
+<ol>
+  <li>Choose your main model (<code>Task</code>, <code>Contact</code>, <code>InventoryItem</code>, or your tracker class)</li>
+  <li>Add or improve <code>__repr__</code> — include debug-important fields, use <code>!r</code> for string values</li>
+  <li>Add or improve <code>__str__</code> — short, user-readable, suitable for CLI or report output</li>
+  <li>Add type hints to at least three methods (include the constructor)</li>
+  <li>Add or refine <code>to_dict()</code> — required for the Checkpoint 1 lab next hour</li>
+</ol>
+<p>Output check:</p>
+<ul>
+  <li><code>print(obj)</code> → user-friendly</li>
+  <li><code>repr(obj)</code> → developer-friendly with field names</li>
+  <li><code>print([obj1, obj2])</code> → list uses <code>repr</code>, should be readable</li>
+  <li><code>obj.to_dict()</code> → stable dictionary for serialization</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Guided Lab: Make Your Model Pleasant to Work With</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="completion-criteria-hour-7-36-2f677795" data-slide-number="36">
+            <h1>Completion Criteria (Hour 7)</h1>
+            <p><span class="check">✓</span> <code>__repr__</code> returns a string with class name and key fields (uses <code>!r</code> for values)</p>
+<p><span class="check">✓</span> <code>__str__</code> returns a short, user-friendly string — does not call <code>print()</code> internally</p>
+<p><span class="check">✓</span> At least three type hints are present and correct</p>
+<p><span class="check">✓</span> <code>to_dict()</code> returns a dictionary with stable, meaningful keys</p>
+<p><span class="check">✓</span> <code>print(obj)</code> and <code>repr(obj)</code> produce clearly different, useful output</p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-7-37-a3762187" data-slide-number="37">
             <h1>Common Pitfalls (Hour 7)</h1>
-            <p><strong>⚠️</strong> <code>__str__</code> uses <code>print()</code> instead of returning a string</p>
-<p><strong>⚠️</strong> Overcomplicating hints with unnecessary imports</p>
-<p><strong>⚠️</strong> Equality based on the wrong fields</p>
-<p><strong>⚠️</strong> Forgetting that <code>repr()</code> serves developers first</p>
+            <p><strong>⚠️</strong> <code>__str__</code> calls <code>print()</code> instead of <code>return</code> — returns <code>None</code>, raises <code>TypeError</code> at runtime</p>
+<p><strong>⚠️</strong> Over-complicated typing imports — <code>from typing import Any, Callable, Optional, TypeVar...</code> is not needed for this hour; use simple built-ins</p>
+<p><strong>⚠️</strong> <code>to_dict()</code> omits important fields or returns inconsistent types — checkpoint reviewers need stable keys</p>
+<p><strong>⚠️</strong> Treating hints as runtime validation — <code>priority: int</code> does not prevent passing <code>&quot;high&quot;</code> unless explicit validation exists</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code> → <code>## Troubleshooting and Common Pitfalls</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> When would you inspect <code>repr(obj)</code> instead of <code>str(obj)</code>?</p>
+        <section class="slide" id="quick-check-hour-7-38-3b94af4c" data-slide-number="38">
+            <h1>Quick Check (Hour 7)</h1>
+            <p><strong>Question:</strong> A list of tasks prints with <code>repr</code> output for each task, even though</p>
+<p>you defined <code>__str__</code>. Why does that happen, and when would you explicitly call <code>str(task)</code>?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-8-checkpoint-1-domain-service-layer-milestone-39-aa700831" data-slide-number="39">
             <h1>Hour 8: Checkpoint 1 — Domain + Service Layer Milestone</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-40-7e1fdbdc" data-slide-number="40">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Deliver a stable, headless core package</li>
-  <li>Demonstrate happy-path and sad-path flows</li>
-  <li>Show service-layer CRUD behavior</li>
-  <li>Prepare the codebase for packaging and persistence next</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>What Checkpoint 1 Proves</h1>
-            <ul>
-  <li>Models are real, not placeholder shells</li>
-  <li>Services coordinate use cases cleanly</li>
-  <li>Exceptions communicate invalid operations</li>
-  <li>Objects can serialize to dictionaries</li>
-  <li>The core works without a GUI, DB, or API layer</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Rubric Snapshot</h1>
-            <h3>Expect to Show</h3>
-<ul>
-  <li>at least 2 model/helper classes</li>
-  <li>add, list, search, update, delete behaviors</li>
-  <li>custom exceptions</li>
-  <li><code>to_dict()</code> or similar serialization helper</li>
-  <li>a small demo script that proves the design</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo Shape for Grading</h1>
-            <pre data-lang="python"><code>print(&quot;--- Starting Checkpoint 1 Demo ---&quot;)
-print(&quot;1. Happy Path: Adding valid records...&quot;)
-print(&quot;2. Sad Path: Missing required fields...&quot;)
-print(&quot;3. Sad Path: Updating a missing record...&quot;)
-print(&quot;4. Serialization Check...&quot;)</code></pre>
-<ul>
-  <li>Make grading easy</li>
-  <li>Prove both success and failure paths deliberately</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Checkpoint 1 Build</h1>
-            <p><strong>Time: 45–60 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Review model and service separation</li>
-  <li>Fill missing CRUD operations</li>
-  <li>Confirm exceptions are raised intentionally</li>
-  <li>Add or refine <code>to_dict()</code></li>
-  <li>Build a demo script that shows:</li>
-  <li style="margin-left: 30px;">valid creation</li>
-  <li style="margin-left: 30px;">invalid data handling</li>
-  <li style="margin-left: 30px;">missing record handling</li>
-  <li style="margin-left: 30px;">serialization output</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 8)</h1>
-            <p><span class="check">✓</span> Headless core runs end to end</p>
-<p><span class="check">✓</span> Service layer does real work</p>
-<p><span class="check">✓</span> Sad paths fail cleanly</p>
-<p><span class="check">✓</span> Demo script proves the rubric without digging through the whole codebase</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 8)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> milestone that adds, validates, and lists tracker records</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> keep domain logic in the service layer</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> letting UI or raw dicts bypass the service layer</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 8 | checkpoint records: 2</code></li>
+  <li>Explain what &quot;core tracker library&quot; means: domain + service, no UI or database inside</li>
+  <li>Identify the minimum Checkpoint 1 requirements</li>
+  <li>Demonstrate a valid happy path and at least two sad paths</li>
+  <li>Keep domain and service responsibilities separate from UI responsibilities</li>
+  <li>Reflect on one design decision and explain why it helps the code</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day2_homework.ipynb</code> → <code>## Part 4: Hour 8 - Checkpoint 1</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day2_Quiz.html</code> → <code>QUIZ_DATA</code> questions 16–20</li>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="what-core-tracker-library-means-41-63ef633e" data-slide-number="41">
+            <h1>What &quot;Core Tracker Library&quot; Means</h1>
+            <pre><code>Domain model:   What thing does the app manage?
+Service layer:  What operations can the app perform on those things?
+UI/API/DB:      Later layers — they attach TO the core, not live INSIDE it.</code></pre>
+<ul>
+  <li>Service methods accept arguments, return values, raise exceptions</li>
+  <li>Service methods do <strong>not</strong> call <code>input()</code> or <code>print()</code> internally</li>
+  <li>A GUI button could call <code>service.add(task)</code> later — without rewriting the model</li>
+  <li>An API endpoint could call <code>service.update(id, **changes)</code> later — without changes</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Opening Bridge and Checkpoint Framing</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="checkpoint-1-rubric-42-0e6bf063" data-slide-number="42">
+            <h1>Checkpoint 1 Rubric</h1>
+            <table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Yes evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Models/helpers</td>
+<td>2+ model classes, or 1 model + 1 helper; constructors validate key fields</td>
+</tr>
+<tr>
+<td>Service CRUD</td>
+<td>add, list, search, update, delete — callable from a demo script</td>
+</tr>
+<tr>
+<td>Custom exceptions</td>
+<td><code>ValidationError</code> + <code>NotFoundError</code>; expected errors caught in demo</td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td><code>to_dict()</code> on the main model; enough fields for save or API response</td>
+</tr>
+<tr>
+<td>Runnable demo</td>
+<td>Runs end-to-end; proves happy path + at least 2 sad paths</td>
+</tr>
+<tr>
+<td>Separation of concerns</td>
+<td>No <code>input()</code> inside service methods; printing stays in demo/wrapper</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Rubric Walkthrough and Expectations</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-checkpoint-fast-grading-demo-43-b5c5c0d8" data-slide-number="43">
+            <h1>Demo: Checkpoint Fast Grading Demo</h1>
+            <pre data-lang="python"><code>from dataclasses import dataclass
+
+class ValidationError(Exception):
+    pass
+
+class NotFoundError(Exception):
+    pass
+
+@dataclass
+class Task:
+    task_id: int
+    title: str
+    owner: str
+    status: str = &quot;todo&quot;
+    priority: int = 3
+    estimate_minutes: int = 30
+    VALID_STATUSES = {&quot;todo&quot;, &quot;doing&quot;, &quot;done&quot;, &quot;blocked&quot;}
+
+    def __post_init__(self) -&gt; None:
+        if not self.title.strip():
+            raise ValidationError(&quot;title is required&quot;)
+        if self.status not in self.VALID_STATUSES:
+            raise ValidationError(f&quot;status must be one of {sorted(self.VALID_STATUSES)}&quot;)
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {&quot;task_id&quot;: self.task_id, &quot;title&quot;: self.title,
+                &quot;owner&quot;: self.owner, &quot;status&quot;: self.status,
+                &quot;priority&quot;: self.priority, &quot;estimate_minutes&quot;: self.estimate_minutes}</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Fast Grading Demo</code> → Deterministic demo code</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-taskfactory-taskservice-44-225a75d2" data-slide-number="44">
+            <h1>Demo: TaskFactory + TaskService</h1>
+            <pre data-lang="python"><code>class TaskFactory:
+    @staticmethod
+    def from_dict(data: dict[str, object]) -&gt; Task:
+        try:
+            return Task(task_id=int(data[&quot;task_id&quot;]), title=str(data[&quot;title&quot;]),
+                        owner=str(data[&quot;owner&quot;]),
+                        status=str(data.get(&quot;status&quot;, &quot;todo&quot;)),
+                        priority=int(data.get(&quot;priority&quot;, 3)),
+                        estimate_minutes=int(data.get(&quot;estimate_minutes&quot;, 30)))
+        except KeyError as exc:
+            raise ValidationError(f&quot;missing required field: {exc.args[0]}&quot;) from exc
+
+class TaskService:
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+    def add(self, task: Task) -&gt; Task:
+        self._tasks[task.task_id] = task
+        return task
+    def list_all(self) -&gt; list[Task]:
+        return list(self._tasks.values())
+    def search(self, text: str) -&gt; list[Task]:
+        text = text.casefold()
+        return [t for t in self._tasks.values()
+                if text in t.title.casefold() or text in t.owner.casefold()]
+    def get(self, task_id: int) -&gt; Task:
+        try:
+            return self._tasks[task_id]
+        except KeyError as exc:
+            raise NotFoundError(f&quot;task id {task_id} was not found&quot;) from exc
+    def update(self, task_id: int, **changes: object) -&gt; Task:
+        updated_data = self.get(task_id).to_dict()
+        updated_data.update(changes)
+        updated = TaskFactory.from_dict(updated_data)
+        self._tasks[task_id] = updated
+        return updated
+    def delete(self, task_id: int) -&gt; Task:
+        task = self.get(task_id)
+        del self._tasks[task_id]
+        return task</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Fast Grading Demo</code> → full demo code</li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-build-and-grade-checkpoint-1-45-954bc8ae" data-slide-number="45">
+            <h1>Lab: Build and Grade Checkpoint 1</h1>
+            <p><strong>Time: 40 minutes</strong></p>
+<h3>Minimum Requirements</h3>
+<ol>
+  <li><strong>Models/helpers</strong> — 2+ model classes, or 1 model + 1 helper class (e.g., <code>TaskFactory</code>)</li>
+  <li><strong>Service CRUD</strong> — add, list, search, update, delete; no <code>input()</code> inside service</li>
+  <li><strong>Custom exceptions</strong> — <code>ValidationError</code> for bad data, <code>NotFoundError</code> for missing records</li>
+  <li><strong>Serialization</strong> — <code>to_dict()</code> returns a dictionary with meaningful fields</li>
+  <li><strong>Runnable demo</strong> — proves happy path + invalid input + missing record</li>
+</ol>
+<p>Demo shape:</p>
+<pre data-lang="python"><code>print(&quot;--- Checkpoint 1 Demo ---&quot;)
+print(&quot;\n1. Happy path: add, list, search, update, delete&quot;)
+# ... create tasks, call service methods, print results ...
+print(&quot;\n2. Sad path: invalid input&quot;)
+try:
+    TaskFactory.from_dict({&quot;task_id&quot;: 3, &quot;title&quot;: &quot;   &quot;, &quot;owner&quot;: &quot;Ari&quot;})
+except ValidationError as exc:
+    print(&quot;Caught expected ValidationError:&quot;, exc)
+print(&quot;\n3. Sad path: missing record&quot;)
+try:
+    service.update(999, status=&quot;done&quot;)
+except NotFoundError as exc:
+    print(&quot;Caught expected NotFoundError:&quot;, exc)</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Checkpoint Build and Grade Lab</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="completion-criteria-hour-8-46-e3fb8af5" data-slide-number="46">
+            <h1>Completion Criteria (Hour 8)</h1>
+            <p><span class="check">✓</span> Core runs end-to-end through a small demo script</p>
+<p><span class="check">✓</span> Model/helper structure is present and responsible</p>
+<p><span class="check">✓</span> Service can add, list, search, update, and delete without requiring UI input</p>
+<p><span class="check">✓</span> Invalid input raises <code>ValidationError</code>; missing records raise <code>NotFoundError</code></p>
+<p><span class="check">✓</span> <code>to_dict()</code> returns a stable dictionary</p>
+<p><span class="check">✓</span> Service logic is not trapped inside UI prompts or global script flow</p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-8-47-d023e658" data-slide-number="47">
             <h1>Common Pitfalls (Hour 8)</h1>
-            <p><strong>⚠️</strong> UI prompts inside service methods</p>
-<p><strong>⚠️</strong> Global state everywhere</p>
-<p><strong>⚠️</strong> Missing-record crashes turning into <code>IndexError</code> noise</p>
-<p><strong>⚠️</strong> Demo scripts that show only the happy path</p>
+            <p><strong>⚠️</strong> Global state — <code>global tasks</code> in service functions makes each call share state unexpectedly; use a service object with <code>self._tasks</code></p>
+<p><strong>⚠️</strong> <code>input()</code> inside service methods — cannot be graded quickly, cannot be reused by GUI or API</p>
+<p><strong>⚠️</strong> Update without re-validation — changing <code>status</code> through direct attribute assignment can bypass invariants; rebuild through the factory</p>
+<p><strong>⚠️</strong> Demo proves only the happy path — missing a <code>ValidationError</code> or <code>NotFoundError</code> catch means the checkpoint is incomplete</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code> → <code>## Troubleshooting and Pitfalls</code></li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> Why is a clean core milestone more valuable right now than adding a flashy interface?</p>
+        <section class="slide" id="quick-check-hour-8-48-da0139c7" data-slide-number="48">
+            <h1>Quick Check (Hour 8)</h1>
+            <p><strong>Question:</strong> Could someone attach a GUI button to your <code>service.update(task_id, status=&quot;done&quot;)</code></p>
+<p>without rewriting the model? What would prevent that?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-2-wrap-up-49-10f17c96" data-slide-number="49">
             <h1>Session 2 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>What We Extended Today</h1>
-            <ul>
-  <li>Safer creation with factories</li>
-  <li>Cleaner behavior swaps with strategies</li>
-  <li>Better debugging ergonomics</li>
-  <li>A checkpointed service-layer core</li>
+        <section class="slide" id="key-takeaways-from-all-four-hours-50-d7d42000" data-slide-number="50">
+            <h1>Key Takeaways from All Four Hours</h1>
+            <p><strong>Hour 5 — Factory</strong></p>
+<ul>
+  <li>One trusted creation path from raw data to valid objects</li>
+  <li>Required fields fail loudly; optional fields default intentionally</li>
+</ul>
+<p><strong>Hour 6 — Strategy</strong></p>
+<ul>
+  <li>Extract variable behavior into named callables; keep the core workflow stable</li>
+  <li>A strategy registry dictionary replaces branchy dispatch</li>
+</ul>
+<p><strong>Hour 7 — Ergonomics</strong></p>
+<ul>
+  <li><code>__repr__</code> for developers; <code>__str__</code> for users; both must <code>return</code> a string</li>
+  <li>Light type hints document intent; <code>to_dict()</code> prepares for serialization</li>
+</ul>
+<p><strong>Hour 8 — Checkpoint 1</strong></p>
+<ul>
+  <li>Stable core first: model + service + exceptions + serialization + demo</li>
+  <li>No GUI, database, or API needed yet — prove the core stands alone</li>
 </ul>
 <h3>Key Rule</h3>
 <p><strong>Make the core trustworthy before adding more surfaces.</strong></p>
         </section>
 
-        <section class="slide">
-            <h1>Day 2 Homework / Study Checklist</h1>
+        <section class="slide" id="source-alignment-all-files-used-51-55be59a9" data-slide-number="51">
+            <h1>Source Alignment — All Files Used</h1>
+            <table>
+<thead>
+<tr>
+<th>Lecture File</th>
+<th>Content Covered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Advanced/lessons/lecture/Day2_Hour1_Advanced.md</code></td>
+<td>Factory pattern, <code>RecordFactory.from_dict()</code>, required fields, normalization, defaults, validation, lab, pitfalls</td>
+</tr>
+<tr>
+<td><code>Advanced/lessons/lecture/Day2_Hour2_Advanced.md</code></td>
+<td>Strategy pattern, sort-key strategies, validation strategies, <code>NamePrefixFilter</code> callable class, strategy registry, lab, pitfalls</td>
+</tr>
+<tr>
+<td><code>Advanced/lessons/lecture/Day2_Hour3_Advanced.md</code></td>
+<td><code>__repr__</code>, <code>__str__</code>, type hints, <code>to_dict()</code>, equality sidebar, lab, pitfalls</td>
+</tr>
+<tr>
+<td><code>Advanced/lessons/lecture/Day2_Hour4_Advanced.md</code></td>
+<td>Checkpoint 1 rubric, <code>TaskFactory</code>, <code>TaskService</code> full CRUD, grading demo, pitfalls</td>
+</tr>
+</tbody>
+</table>
+<p>Runbook: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → Session 2, Hours 5–8</p>
+        </section>
+
+        <section class="slide" id="scope-guardrail-what-is-not-covered-here-52-c6e1c846" data-slide-number="52">
+            <h1>Scope Guardrail — What Is NOT Covered Here</h1>
+            
+        </section>
+
+        <section class="slide" id="topics-deferred-to-later-sessions-53-c6ae317a" data-slide-number="53">
+            <h1>Topics Deferred to Later Sessions</h1>
             <ul>
-  <li>Re-run your factory with good and bad payloads</li>
-  <li>Add one more strategy</li>
-  <li>Confirm <code>repr</code>, <code>str</code>, and equality behavior</li>
-  <li>Verify the checkpoint demo proves both happy and sad paths</li>
-  <li>Match required labels exactly where autograding expects them</li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/assignments/Advanced_Day2_homework.ipynb</code> → <code>## Submission Checklist</code></li>
+  <li><strong>Database persistence</strong> — JSON save/load, SQLite, or ORM (Day 3+)</li>
+  <li><strong>Package structure</strong> — <code>src/</code> layout, <code>__init__.py</code>, import discipline (Day 3)</li>
+  <li><strong>Logging and diagnostics</strong> — <code>logging</code> module, structured log output (Day 3)</li>
+  <li><strong>Context managers</strong> — <code>with</code> statements for safe file/resource handling (Day 3)</li>
+  <li><strong>Decorators</strong> — timing, auth, memoization (Day 3)</li>
+  <li><strong>GUI or HTTP layers</strong> — attach to the stable core in later sessions</li>
+  <li><strong>Advanced typing</strong> — <code>Protocol</code>, <code>TypeVar</code>, <code>Generic</code>, <code>mypy</code> configuration</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="not-out-of-scope-forever-54-629ac451" data-slide-number="54">
+            <h1>Not Out of Scope Forever</h1>
+            <p>These topics build directly on the core established in this session.</p>
+<p>The Checkpoint 1 core is the foundation they attach to.</p>
+        </section>
+
+        <section class="slide" id="next-session-preview-55-04967ff8" data-slide-number="55">
             <h1>Next Session Preview</h1>
-            <h3>Session 3 (Hours 9–12)</h3>
-<ul>
-  <li>Package structure under <code>src/</code></li>
-  <li>Logging and developer diagnostics</li>
-  <li>Context managers and safe save patterns</li>
-  <li>Decorators for timing, auth, and validation</li>
-</ul>
+            
         </section>
 
-        <section class="slide">
-            <h1>Thank You!</h1>
-            <p>Save the notebook.</p>
-<p>Commit the checkpoint.</p>
+        <section class="slide" id="session-3-hours-912-day-3-56-876a3f0f" data-slide-number="56">
+            <h1>Session 3 (Hours 9–12) — Day 3</h1>
+            <ul>
+  <li><strong>Hour 9</strong> — Package structure under <code>src/</code>: modules, <code>__init__.py</code>, import discipline</li>
+  <li><strong>Hour 10</strong> — Logging and developer diagnostics: <code>logging</code> module, structured output</li>
+  <li><strong>Hour 11</strong> — Context managers and safe file patterns: <code>with</code> statements, custom managers</li>
+  <li><strong>Hour 12</strong> — Decorators: timing, validation wrappers, practical patterns</li>
+</ul>
+<p>Your Checkpoint 1 core becomes the package that Session 3 structures, logs, and wraps.</p>
+        </section>
+
+        <section class="slide" id="questions-57-744b5b7d" data-slide-number="57">
+            <h1>Questions?</h1>
+            <p>Save your work.</p>
+<p>Commit the Checkpoint 1 state.</p>
 <p>Come back ready to package the core properly.</p>
         </section>
     </div>
@@ -982,7 +1460,11 @@ print(&quot;4. Serialization Check...&quot;)</code></pre>
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1055,17 +1537,24 @@ print(&quot;4. Serialization Check...&quot;)</code></pre>
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = Array.from(slides).indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

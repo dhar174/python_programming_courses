@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 11, Hour 44
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=21; title=Hour 42 — Learning Outcomes]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -71,6 +73,8 @@ Use these prompts to keep the class active:
 - "What should happen if the input is missing, malformed, or points to a record that does not exist?"
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
+
+[Instructor slide change: page=24; title=Demo — Bar Chart with OO Interface]
 
 ## Live Demo (17-35 minutes)
 
@@ -189,6 +193,8 @@ Report integration: add a command or GUI/API action that generates CSV export, s
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=28; title=Common Pitfalls — Hour 42]
 
 ### Common pitfalls to watch for
 

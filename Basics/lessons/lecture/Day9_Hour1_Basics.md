@@ -10,11 +10,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 33: Functions — def, parameters, return]
+
 ## 0. Instructor Note: Context and Approach
 
 > This document is written as a read-aloud teaching guide. Emphasize why we need functions (code reuse and clarity), how we pass data into them, and crucially, how we get data back out using `return`. Differentiate strongly between `return` and `print()`. By the end of this hour, learners should understand that functions are the bridge between procedural scripts and organized, testable code. Functions represent a paradigm shift: from thinking "write a script that does X" to thinking "break X into reusable pieces, test each piece, and assemble them into a whole program."
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 1. Learning Outcomes
 
@@ -702,6 +706,8 @@ For now, make sure you practice writing a few functions on your own. The best wa
 3. **Add `return`:** `def add(a, b): return a + b` and assign the result to a variable.
 4. **Combine:** `def search(contact_list, query): return query in contact_list` and use the returned boolean in an `if` statement.
 5. **Refactor existing code:** Take their Contact Manager from earlier and break it into functions.
+
+[Instructor slide change: page=13; title=Quick Check (Hour 33)]
 
 ### Exit Ticket / Formative Assessment
 

@@ -212,8 +212,69 @@
     }
   }
 
+  function findSlideCues() {
+    return Array.from(document.querySelectorAll("[data-slide-cue='change']"));
+  }
+
+  function nearestSlideCue(cues) {
+    const marker = window.scrollY + Math.min(window.innerHeight * 0.25, 180);
+    let current = cues[0] || null;
+    cues.forEach(function (cue) {
+      if (cue.offsetTop <= marker) {
+        current = cue;
+      }
+    });
+    return current;
+  }
+
+  function updateCurrentSlideCue(currentCue, cues) {
+    const containers = document.querySelectorAll("[data-lecture-current-slide-card], [data-lecture-current-slide-banner]");
+    const links = document.querySelectorAll("[data-lecture-current-slide-link]");
+    const metas = document.querySelectorAll("[data-lecture-current-slide-meta]");
+
+    cues.forEach(function (cue) {
+      cue.classList.toggle("is-current-slide", cue === currentCue);
+    });
+
+    if (!currentCue) {
+      containers.forEach(function (container) {
+        container.hidden = true;
+      });
+      links.forEach(function (link) {
+        link.removeAttribute("href");
+        link.textContent = "No slide cues in this lecture yet";
+      });
+      metas.forEach(function (meta) {
+        meta.textContent = "Add instructor slide cues to the lecture markdown to enable this indicator.";
+      });
+      return;
+    }
+
+    const page = currentCue.dataset.slidePage || "";
+    const title = currentCue.dataset.slideTitle || "Current slide";
+    const cueLink = currentCue.querySelector("[data-slide-deck-link]");
+    const href = cueLink ? cueLink.getAttribute("href") || "" : "";
+    const label = page ? `Slide ${page}: ${title}` : title;
+
+    containers.forEach(function (container) {
+      container.hidden = false;
+    });
+    links.forEach(function (link) {
+      link.textContent = label;
+      if (href) {
+        link.setAttribute("href", href);
+      } else {
+        link.removeAttribute("href");
+      }
+    });
+    metas.forEach(function (meta) {
+      meta.textContent = "This stays current until the next highlighted slide-change cue.";
+    });
+  }
+
   function bindScrollState(headings, tocLinks) {
-    if (!headings.length) {
+    const slideCues = findSlideCues();
+    if (!headings.length && !slideCues.length) {
       return;
     }
 
@@ -221,7 +282,10 @@
     function refresh() {
       ticking = false;
       updateProgress();
-      setCurrentHeading(nearestHeading(headings), tocLinks);
+      if (headings.length) {
+        setCurrentHeading(nearestHeading(headings), tocLinks);
+      }
+      updateCurrentSlideCue(nearestSlideCue(slideCues), slideCues);
     }
 
     refresh();

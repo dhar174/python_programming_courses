@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 10, Hour 39
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=25; title=Hour 39: Integration Choice]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -14,6 +16,8 @@
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
 | 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+
+[Instructor slide change: page=26; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -189,6 +193,8 @@ Integration sprint: choose A) modify GUI to call the API for CRUD, or B) keep GU
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=33; title=Common Pitfalls and Exit Ticket — Hour 39]
 
 ### Common pitfalls to watch for
 

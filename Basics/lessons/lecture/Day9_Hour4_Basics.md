@@ -1,5 +1,7 @@
 # Day 9, Hour 4: Modules: Imports and Creating utils.py
 
+[Instructor slide change: page=35; title=Hour 36: Modules — Imports and Creating utils.py]
+
 ## 1. Instructor Note: Why This Matters
 
 This hour represents a critical inflection point in the Basics curriculum. Students transition from viewing Python as a single-file scripting environment to understanding it as a modular system where code organization and reuse become architectural concerns. By mastering imports and creating custom utility modules, learners develop professional coding habits that scale from command-line scripts to full applications.
@@ -7,6 +9,8 @@ This hour represents a critical inflection point in the Basics curriculum. Stude
 The ability to write custom modules like `utils.py` teaches students that they are not limited to built-in functionality or third-party packages—they can architect their own solutions. This shift in mindset underpins everything that follows: object-oriented design, testing frameworks, and real-world software development. The challenges they overcome in this hour (naming conflicts, import syntax, relative vs. absolute imports) will surface repeatedly in their careers, making hands-on practice now invaluable.
 
 Emphasize that professional Python developers spend significant time organizing code into logical modules and packages. Their success in this hour directly impacts their confidence and capability moving forward.
+
+[Instructor slide change: page=36; title=Learning Outcomes]
 
 ## 2. Learning Outcomes
 
@@ -232,6 +236,8 @@ project_folder/
 The key principle: separable concerns live in separate files. `main.py` orchestrates; `utils.py` provides reusable helpers. This mirrors professional practice.
 
 ## 6. Live Demo: Standard Library Imports and Custom Module Demo (17 minutes)
+
+[Instructor slide change: page=40; title=Demo: Standard Library Imports]
 
 ### Demo 1: Standard Library Imports (5 minutes)
 
@@ -887,6 +893,8 @@ In your next assignment, when you're working on a larger project, remember today
 - [ ] **Bonus +1**: Add comprehensive docstrings to all functions and modules, and write a README file explaining how to use the modules.
 
 ---
+
+[Instructor slide change: page=44; title=Quick Check (Hour 36)]
 
 ### Exit Ticket (Verbal or Written)
 

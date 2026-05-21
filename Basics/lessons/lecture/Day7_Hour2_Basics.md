@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=15; title=Hour 26: while Loops + Sentinel Patterns]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on while loops: what they are, how they repeat until a condition becomes False, how to avoid infinite loops, and how to use break and continue for early exits. The sentinel pattern (using a special value like 'q' to signal stopping) is the core application. Stay within Basics scope — do not introduce do-while patterns (Python does not have them), complex state machines, or event-driven loops. The key outcomes are writing while loops with proper termination conditions, using break/continue appropriately, and building a password prompt with attempt limiting. The lab reinforces all of this in a retry-until-success authentication flow.
 
 ---
+
+[Instructor slide change: page=16; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -449,6 +453,8 @@ This keeps prompting even after success, because there is no break. The user see
 - "What happens if the user enters the correct password on attempt 1? Does your loop stop immediately?"
 - "If I run your program and deliberately fail 3 times, what message do I see?"
 - "How do you know whether the loop exited because of success or because of running out of attempts?"
+
+[Instructor slide change: page=24; title=Common Pitfalls — Hour 26]
 
 ### 8.3 Debugging support
 

@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=25; title=Hour 35: Functions with Collections]
+
+[Instructor slide change: page=26; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 By the end of this hour, you will be able to:

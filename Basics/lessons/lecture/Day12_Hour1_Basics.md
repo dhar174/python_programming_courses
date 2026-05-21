@@ -1,5 +1,7 @@
 # Session 12, Hour 1: Capstone Kickoff — Requirements & Scaffolding
 
+[Instructor slide change: page=6; title=Hour 45: Kickoff + Scaffold]
+
 ## Hour intent and instructor framing
 
 This hour is the launchpad for the capstone. Keep students focused on one goal: **a working MVP skeleton** that runs, loads data, performs one useful action, and saves reliably.
@@ -180,6 +182,8 @@ Say:
 > Boring is good. Boring means stable.”
 
 ---
+
+[Instructor slide change: page=10; title=Live Demo Target]
 
 ## Live demo script (5–10 minutes): scaffold menu + load data + one action + save
 

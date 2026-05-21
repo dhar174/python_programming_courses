@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 12, Hour 45
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=8; title=Hour 45 — Unit Tests for the Service Layer]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -14,6 +16,8 @@
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
 | 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+
+[Instructor slide change: page=10; title=Hour 45 Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -95,6 +99,8 @@ Use these prompts to keep the class active:
 - "What should happen if the input is missing, malformed, or points to a record that does not exist?"
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
+
+[Instructor slide change: page=14; title=Demo: Happy-Path Test]
 
 ## Live Demo (17-35 minutes)
 
@@ -194,6 +200,8 @@ Add tests: create at least five tests for service/repository logic, including tw
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=17; title=Common Pitfalls (Hour 45)]
 
 ### Common pitfalls to watch for
 

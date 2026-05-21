@@ -1,5 +1,7 @@
 # Day 6 Hour 2 Advanced — GUI Architecture: Controller Separation and Avoiding Callback Spaghetti
 
+[Instructor slide change: page=21; title=Hour 22 — GUI Architecture and Controller Separation]
+
 ## Session context
 
 This hour continues **Session 6** of the Advanced Python full-stack tracker capstone. In Hour 1, learners wired update and delete into a functioning GUI. That is excellent progress, but working code is not automatically maintainable code. Once an application has a form, a list, add/update/delete actions, status messages, and save/load hooks, the GUI can become tangled fast.
@@ -552,6 +554,8 @@ Explain why `main()` is useful:
 
 ---
 
+[Instructor slide change: page=33; title=Common Pitfalls — Hour 22]
+
 ## Common pitfalls to watch for
 
 ### Pitfall 1: over-refactoring midstream
@@ -594,6 +598,8 @@ If learners are not fully done, prioritize in this order:
 4. clean up remaining duplication
 
 ---
+
+[Instructor slide change: page=34; title=Quick Check]
 
 ## Quick check / exit ticket
 

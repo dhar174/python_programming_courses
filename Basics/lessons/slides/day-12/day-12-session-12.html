@@ -18,20 +18,20 @@
             --code-fg: #f8f8f2;         /* Code text color (light) */
             --border: #cccccc;          /* Border color */
             --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
-
+            
             /* Typography */
             --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
             --font-heading: "Inter", system-ui, -apple-system, sans-serif;
             --font-code: "SF Mono", "Monaco", "Consolas", monospace;
-
+            
             /* Spacing */
             --spacing: 24px;            /* Base spacing unit */
             --slide-padding: 60px;      /* Padding inside slides */
-
+            
             /* Animation timing */
             --transition-speed: 0.3s;   /* Slide transition duration */
         }
-
+        
         /* ====================================
            BASE STYLES
            ==================================== */
@@ -40,7 +40,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: var(--font-body);
             background: var(--bg);
@@ -48,7 +48,7 @@
             line-height: 1.6;
             overflow: hidden;
         }
-
+        
         /* ====================================
            SLIDE CONTAINER
            ==================================== */
@@ -58,7 +58,7 @@
             height: 100vh;
             overflow: hidden;
         }
-
+        
         /* ====================================
            INDIVIDUAL SLIDES
            ==================================== */
@@ -77,18 +77,18 @@
             transition: opacity var(--transition-speed) ease,
                         transform var(--transition-speed) ease;
         }
-
+        
         .slide.active {
             opacity: 1;
             transform: translateX(0);
             z-index: 10;
         }
-
+        
         .slide.previous {
             opacity: 0;
             transform: translateX(-100%);
         }
-
+        
         /* Title slide special styling */
         .slide.title-slide {
             background: linear-gradient(135deg, var(--accent) 0%, #0052cc 100%);
@@ -96,20 +96,20 @@
             text-align: center;
             justify-content: center;
         }
-
+        
         .slide.title-slide h1 {
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: calc(var(--spacing) * 2);
             line-height: 1.2;
         }
-
+        
         .slide.title-slide .subtitle {
             font-size: 1.5rem;
             opacity: 0.9;
             font-weight: 300;
         }
-
+        
         /* ====================================
            TYPOGRAPHY
            ==================================== */
@@ -119,30 +119,30 @@
             line-height: 1.2;
             margin-bottom: var(--spacing);
         }
-
+        
         .slide:not(.title-slide) h1 {
             font-size: 2.5rem;
             color: var(--accent);
             border-bottom: 3px solid var(--accent);
             padding-bottom: calc(var(--spacing) / 2);
         }
-
+        
         .slide h2 {
             font-size: 2rem;
             margin-top: calc(var(--spacing) * 1.5);
         }
-
+        
         .slide h3 {
             font-size: 1.5rem;
             margin-top: var(--spacing);
         }
-
+        
         p {
             margin-bottom: var(--spacing);
             font-size: 1.2rem;
             max-width: 900px;
         }
-
+        
         /* ====================================
            LISTS
            ==================================== */
@@ -151,19 +151,19 @@
             margin-bottom: var(--spacing);
             max-width: 900px;
         }
-
+        
         li {
             margin-bottom: calc(var(--spacing) / 2);
             font-size: 1.2rem;
             line-height: 1.6;
         }
-
+        
         ul li {
             list-style-type: none;
             position: relative;
             padding-left: calc(var(--spacing) * 1.5);
         }
-
+        
         ul li::before {
             content: "→";
             position: absolute;
@@ -171,7 +171,7 @@
             color: var(--accent);
             font-weight: bold;
         }
-
+        
         /* Nested lists */
         ul ul, ol ol {
             margin-top: calc(var(--spacing) / 2);
@@ -207,7 +207,7 @@
         td {
             background: #fff;
         }
-
+         
         /* ====================================
            CODE BLOCKS
            ==================================== */
@@ -221,13 +221,13 @@
             box-shadow: 0 4px 6px var(--shadow);
             max-width: 1000px;
         }
-
+        
         code {
             font-family: var(--font-code);
             font-size: 1rem;
             line-height: 1.5;
         }
-
+        
         /* Inline code */
         p code, li code {
             background: var(--accent-light);
@@ -236,7 +236,7 @@
             border-radius: 3px;
             font-size: 0.9em;
         }
-
+        
         /* ====================================
            BLOCKQUOTES
            ==================================== */
@@ -250,7 +250,7 @@
             padding: var(--spacing);
             border-radius: 4px;
         }
-
+        
         /* ====================================
            IMAGES
            ==================================== */
@@ -261,7 +261,7 @@
             box-shadow: 0 4px 6px var(--shadow);
             margin: var(--spacing) 0;
         }
-
+        
         /* ====================================
            LINKS
            ==================================== */
@@ -271,11 +271,11 @@
             border-bottom: 2px solid transparent;
             transition: border-color 0.2s;
         }
-
+        
         a:hover {
             border-bottom-color: var(--accent);
         }
-
+        
         /* ====================================
            NAVIGATION CONTROLS
            ==================================== */
@@ -292,11 +292,11 @@
             opacity: 0.8;
             transition: opacity 0.3s;
         }
-
+        
         #nav-hint:hover {
             opacity: 1;
         }
-
+        
         #progress-bar {
             position: fixed;
             top: 0;
@@ -306,7 +306,7 @@
             z-index: 100;
             transition: width 0.3s ease;
         }
-
+        
         #slide-counter {
             position: fixed;
             bottom: 30px;
@@ -318,7 +318,7 @@
             font-size: 0.9rem;
             z-index: 100;
         }
-
+        
         /* ====================================
            RESPONSIVE DESIGN
            ==================================== */
@@ -326,24 +326,24 @@
             .slide {
                 padding: 30px;
             }
-
+            
             .slide.title-slide h1 {
                 font-size: 2.5rem;
             }
-
+            
             .slide h1 {
                 font-size: 2rem;
             }
-
+            
             .slide h2 {
                 font-size: 1.5rem;
             }
-
+            
             p, li {
                 font-size: 1rem;
             }
         }
-
+        
         /* ====================================
            SPECIAL ELEMENTS
            ==================================== */
@@ -352,27 +352,27 @@
             border-top: 2px solid var(--border);
             margin: calc(var(--spacing) * 2) 0;
         }
-
+        
         strong, b {
             font-weight: 600;
             color: var(--accent);
         }
-
+        
         em, i {
             font-style: italic;
         }
-
+        
         /* Checkmarks and X marks for task lists */
         .check {
             color: #22c55e;
             font-weight: bold;
         }
-
+        
         .cross {
             color: #ef4444;
             font-weight: bold;
         }
-
+        
         /* Warning/Alert styling */
         .warning {
             background: #fff3cd;
@@ -385,41 +385,24 @@
 </head>
 <body>
     <div id="slides-container">
-
-        <section class="slide title-slide">
+        
+        <section class="slide title-slide" id="basics-day-12-session-12-hours-4548-1-88d10129" data-slide-number="1">
             <h1>Basics Day 12 — Session 12 (Hours 45–48)</h1>
-            <div class="subtitle">Python Programming (Basic) • Capstone Delivery and Final Review</div>
+            <div class="subtitle">Capstone Project — Requirements, Build Sprint, Polish, and Final Assessment</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-12-overview-2-0743afea" data-slide-number="2">
             <h1>Session 12 Overview</h1>
+            
+        </section>
+
+        <section class="slide" id="topics-covered-today-3-f5ecf799" data-slide-number="3">
+            <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 45: Capstone kickoff — requirements + scaffolding</li>
-  <li>Hour 46: Capstone build sprint</li>
-  <li>Hour 47: Capstone polish + demo readiness</li>
-  <li>Hour 48: Final assessment + certification-style review</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Day 12 Goal</h1>
-            <p><strong>Finish With a Working Story</strong></p>
-<ul>
-  <li>Build a small command-line capstone project</li>
-  <li>Save and load data with JSON in a <code>data/</code> folder</li>
-  <li>Organize code with functions, modules, and at least one class</li>
-  <li>Handle common input and file errors gracefully</li>
-  <li>Demo the project clearly in under 3 minutes</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Capstone Theme Choices</h1>
-            <p><strong>Choose One CLI Personal Organizer</strong></p>
-<ul>
-  <li>Tasks</li>
-  <li>Contacts</li>
-  <li>Notes</li>
+  <li>Hour 45: Capstone kickoff — requirements &amp; scaffolding</li>
+  <li>Hour 46: Capstone build sprint — full CRUD</li>
+  <li>Hour 47: Capstone polish &amp; demo readiness</li>
+  <li>Hour 48: Final assessment &amp; certification-style review</li>
 </ul>
 <p><strong>Keep It Basics-Scope</strong></p>
 <ul>
@@ -430,7 +413,7 @@
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="required-capstone-features-4-1aa1774e" data-slide-number="4">
             <h1>Required Capstone Features</h1>
             <p><strong>Minimum Requirements</strong></p>
 <ul>
@@ -442,12 +425,12 @@
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="todays-rule-5-58a3d444" data-slide-number="5">
             <h1>Today’s Rule</h1>
             <p>Build the minimum viable product first, then polish.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-45-kickoff-scaffold-6-eea87304" data-slide-number="6">
             <h1>Hour 45: Kickoff + Scaffold</h1>
             <p><strong>Learning Outcomes</strong></p>
 <ul>
@@ -460,7 +443,7 @@
 <p>Skeleton + load/save + one CRUD action working.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="suggested-file-layout-7-b35c049c" data-slide-number="7">
             <h1>Suggested File Layout</h1>
             <pre data-lang="text"><code>personal_organizer/
 ├── main.py
@@ -472,7 +455,7 @@
 └── README.md</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="why-this-layout-helps-8-0b651290" data-slide-number="8">
             <h1>Why This Layout Helps</h1>
             <ul>
   <li><code>main.py</code> owns the menu flow</li>
@@ -482,12 +465,12 @@
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="first-working-flow-9-27b96d99" data-slide-number="9">
             <h1>First Working Flow</h1>
-
+            
         </section>
 
-        <section class="slide">
+        <section class="slide" id="live-demo-target-10-0a62e4f5" data-slide-number="10">
             <h1>Live Demo Target</h1>
             <ol>
   <li>Show the menu</li>
@@ -498,12 +481,12 @@
 </ol>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="mvp-question-11-071bb109" data-slide-number="11">
             <h1>MVP Question</h1>
             <p>What is the smallest useful version of your organizer?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="load-safely-when-file-is-missing-12-4bb74eb9" data-slide-number="12">
             <h1>Load Safely When File Is Missing</h1>
             <pre data-lang="python"><code>from pathlib import Path
 import json
@@ -521,7 +504,7 @@ def load_items():
         return []</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="save-after-changes-13-a4673630" data-slide-number="13">
             <h1>Save After Changes</h1>
             <pre data-lang="python"><code>def save_items(items):
     DATA_FILE.parent.mkdir(exist_ok=True)
@@ -529,12 +512,12 @@ def load_items():
         json.dump(items, file, indent=2)</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfall-14-ba8f6bf1" data-slide-number="14">
             <h1>Common Pitfall</h1>
             <p>If add/update/delete works during the run but disappears after restart, check whether <code>save_items()</code> was called.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-46-build-sprint-15-1def60b2" data-slide-number="15">
             <h1>Hour 46: Build Sprint</h1>
             <p><strong>Learning Outcomes</strong></p>
 <ul>
@@ -546,7 +529,7 @@ def load_items():
 <p>Add → list → search → update/delete → save/load retest</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="build-sprint-checklist-16-4e35c58f" data-slide-number="16">
             <h1>Build Sprint Checklist</h1>
             <p><strong>Required Actions</strong></p>
 <ul>
@@ -559,12 +542,12 @@ def load_items():
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="quality-improvement-17-0d68c7a4" data-slide-number="17">
             <h1>Quality Improvement</h1>
             <p>Pick at least one: sorted output, confirmations, or input validation.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="input-validation-pattern-18-6dc61315" data-slide-number="18">
             <h1>Input Validation Pattern</h1>
             <pre data-lang="python"><code>choice = input(&quot;Choose an option: &quot;).strip()
 
@@ -578,17 +561,17 @@ else:
     print(&quot;Please choose a listed option.&quot;)</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="keep-it-clear-19-87ffe332" data-slide-number="19">
             <h1>Keep It Clear</h1>
             <p>Friendly messages are part of user experience.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="debug-during-the-sprint-20-deca8f2a" data-slide-number="20">
             <h1>Debug During the Sprint</h1>
-
+            
         </section>
 
-        <section class="slide">
+        <section class="slide" id="spot-check-after-each-feature-21-4e054a53" data-slide-number="21">
             <h1>Spot-Check After Each Feature</h1>
             <ul>
   <li>Does the menu still appear?</li>
@@ -599,12 +582,12 @@ else:
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="exit-ticket-22-392aec54" data-slide-number="22">
             <h1>Exit Ticket</h1>
             <p>What is one bug you fixed today, and how did you find it?</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-47-polish-demo-readiness-23-1d26e0a0" data-slide-number="23">
             <h1>Hour 47: Polish + Demo Readiness</h1>
             <p><strong>Learning Outcomes</strong></p>
 <ul>
@@ -616,7 +599,7 @@ else:
 <p>A project that runs cleanly from scratch and supports a demo flow in under 3 minutes.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="polish-checklist-24-ecb27f53" data-slide-number="24">
             <h1>Polish Checklist</h1>
             <p><strong>Before Demo</strong></p>
 <ul>
@@ -629,12 +612,12 @@ else:
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="avoid-25-dd83785f" data-slide-number="25">
             <h1>Avoid</h1>
             <p>Last-minute refactors that break working code.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="demo-script-26-82d55a09" data-slide-number="26">
             <h1>Demo Script</h1>
             <p><strong>Recommended Flow</strong></p>
 <ol>
@@ -647,12 +630,12 @@ else:
 </ol>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="good-demo-habit-27-97cabffa" data-slide-number="27">
             <h1>Good Demo Habit</h1>
             <p>Say what you are proving before you run the step.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="readme-minimum-28-48da32b0" data-slide-number="28">
             <h1>README Minimum</h1>
             <pre data-lang="text"><code># Personal Organizer
 
@@ -666,12 +649,12 @@ Features:
 - Save/load JSON data</code></pre>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="why-it-matters-29-9152fedb" data-slide-number="29">
             <h1>Why It Matters</h1>
             <p>Run instructions make your project easier to grade, demo, and revisit.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-48-final-assessment-review-30-5c38c8c6" data-slide-number="30">
             <h1>Hour 48: Final Assessment + Review</h1>
             <p><strong>Learning Outcomes</strong></p>
 <ul>
@@ -687,7 +670,7 @@ Features:
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="capstone-rubric-31-1b5f4555" data-slide-number="31">
             <h1>Capstone Rubric</h1>
             <table>
 <thead>
@@ -721,7 +704,7 @@ Features:
 </table>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="certification-style-review-domains-32-5af53360" data-slide-number="32">
             <h1>Certification-Style Review Domains</h1>
             <p><strong>Review Agenda</strong></p>
 <ul>
@@ -735,7 +718,7 @@ Features:
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="code-reading-practice-33-2b3c902e" data-slide-number="33">
             <h1>Code Reading Practice</h1>
             <p><strong>Predict or Explain</strong></p>
 <ul>
@@ -749,7 +732,7 @@ Features:
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="final-exit-ticket-34-0c11eb30" data-slide-number="34">
             <h1>Final Exit Ticket</h1>
             <p><strong>Reflection Prompts</strong></p>
 <ul>
@@ -762,11 +745,11 @@ Features:
 <p>You now have the full Basics toolkit for building small, useful Python programs.</p>
         </section>
     </div>
-
+    
     <div id="progress-bar"></div>
     <div id="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
     <div id="nav-hint">← → or Space to navigate</div>
-
+    
     <script>
         // ====================================
         // SLIDE NAVIGATION
@@ -777,10 +760,10 @@ Features:
         const progressBar = document.getElementById('progress-bar');
         const currentCounter = document.getElementById('current');
         const totalCounter = document.getElementById('total');
-
+        
         // Initialize
         totalCounter.textContent = totalSlides;
-
+        
         function updateSlideDisplay(updateHash = true) {
             // Hide all slides
             slides.forEach((slide, index) => {
@@ -789,46 +772,50 @@ Features:
                     slide.classList.add('previous');
                 }
             });
-
+            
             // Show current slide
             if (slides[currentSlide]) {
                 slides[currentSlide].classList.add('active');
             }
-
+            
             // Update progress bar
             const progress = ((currentSlide + 1) / totalSlides) * 100;
             progressBar.style.width = progress + '%';
-
+            
             // Update counter
             currentCounter.textContent = currentSlide + 1;
-
+            
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
-
+        
         function nextSlide() {
             if (currentSlide < totalSlides - 1) {
                 currentSlide++;
                 updateSlideDisplay();
             }
         }
-
+        
         function prevSlide() {
             if (currentSlide > 0) {
                 currentSlide--;
                 updateSlideDisplay();
             }
         }
-
+        
         function goToSlide(index) {
             if (index >= 0 && index < totalSlides) {
                 currentSlide = index;
                 updateSlideDisplay();
             }
         }
-
+        
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             switch(e.key) {
@@ -853,20 +840,20 @@ Features:
                     break;
             }
         });
-
+        
         // Touch/swipe support for mobile
         let touchStartX = 0;
         let touchEndX = 0;
-
+        
         document.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
         });
-
+        
         document.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         });
-
+        
         function handleSwipe() {
             const swipeThreshold = 50;
             if (touchEndX < touchStartX - swipeThreshold) {
@@ -876,13 +863,22 @@ Features:
                 prevSlide();
             }
         }
-
+        
         // Load slide from URL hash immediately and clamp invalid values.
         const hash = window.location.hash.slice(1);
         if (hash) {
-            const slideNum = parseInt(hash) - 1;
-            if (!isNaN(slideNum)) {
-                currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = Array.from(slides).indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
+                if (!isNaN(slideNum)) {
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
+                }
             }
         }
         updateSlideDisplay(false);

@@ -1,5 +1,7 @@
 # Day 2, Hour 1: Pattern: Factory (Practical Creation + Validation)
 
+[Instructor slide change: page=9; title=Hour 5: Pattern — Factory]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -26,6 +28,8 @@
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the room needs more support, shorten the vocabulary section or the amount of instructor narration during the concept briefing, but do not make the required factory behavior optional. The runbook objective is that the factory creates valid objects or raises `ValidationError`.
 
 ---
+
+[Instructor slide change: page=10; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -206,6 +210,8 @@ Guide toward:
 "Let's build this now. We will create a simple model, then a `RecordFactory.from_dict()` method that takes a dictionary, validates it, normalizes it, applies optional defaults, and returns a valid object."
 
 ---
+
+[Instructor slide change: page=13; title=Demo: Simple Model + Factory Skeleton]
 
 ## Live Demo: `RecordFactory.from_dict()` (10 minutes)
 
@@ -776,6 +782,8 @@ Emphasize:
 
 ---
 
+[Instructor slide change: page=17; title=Common Pitfalls (Hour 5)]
+
 ## Troubleshooting Guide
 
 Use this section while circulating or during a short pause if many learners hit the same issue.
@@ -981,6 +989,8 @@ Offer these only after the required factory works.
 ## Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)
 
 Use this final segment to verify the required concept before moving on.
+
+[Instructor slide change: page=18; title=Quick Check (Hour 5)]
 
 ### Quick Check Questions
 

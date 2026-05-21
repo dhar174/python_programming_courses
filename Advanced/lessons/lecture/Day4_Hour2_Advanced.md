@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=18; title=Hour 14: Security Basics — Secrets, Env Vars, and Hashing]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Security Mindset Reset: 5 minutes
@@ -13,6 +15,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=19; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -242,6 +246,8 @@ Say this plainly: in this course hour, `sha256` is a **concept demo for comparis
 
 ## Section 4: Live Demo – Environment Variables + Gated Admin Action (10 minutes)
 
+[Instructor slide change: page=25; title=Demo: Environment Variable + Gated Admin Action]
+
 ### Demo Goal
 
 **[Instructor speaks:]**
@@ -415,6 +421,8 @@ If a student is stuck, give them a checklist:
 - fifth, add one README note
 
 That sequence keeps the lab manageable.
+
+[Instructor slide change: page=27; title=Common Pitfalls (Hour 14)]
 
 ### Common Pitfalls to Watch For
 

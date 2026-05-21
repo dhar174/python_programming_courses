@@ -6,6 +6,10 @@
 
 ---
 
+[Instructor slide change: page=15; title=Hour 14: Boolean Expressions & Comparison Operators]
+
+[Instructor slide change: page=16; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 After this instructional hour, learners will be able to:
@@ -206,6 +210,8 @@ This is a performance detail, but it's also useful to know: if the first check f
 2. Does the user have either a membership or have paid a fee?
 
 Let's code this live."
+
+[Instructor slide change: page=21; title=Demo: Age-Gating Eligibility Checker]
 
 ### Demo Code Part 1: Basic Comparisons
 
@@ -609,6 +615,8 @@ Every "yes or no" question in software comes down to comparisons and boolean log
 2. **Real-world framing**: Always connect to reality. "Imagine you're the programmer for an airline checking if a passenger can board..."
 3. **Common mistake emphasis**: Spend extra time on `=` vs. `==`. Ask learners to write both on a piece of paper and explain the difference.
 4. **Breakout practice**: If possible, pair learners and have them verbally talk through a boolean expression before coding it.
+
+[Instructor slide change: page=22; title=Common Pitfalls (Hour 14)]
 
 ### Troubleshooting On the Fly
 

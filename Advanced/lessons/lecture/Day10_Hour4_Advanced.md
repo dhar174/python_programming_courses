@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 10, Hour 40
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=34; title=Hour 40: Checkpoint 5 — API Milestone Demo]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -13,6 +15,8 @@
 | 15-40 | Independent stabilization and rehearsal | Learners fix only blockers, rehearse commands, and document evidence. |
 | 40-55 | Timeboxed learner demos / fast-grade checks | Run short demos or spot checks against the checkpoint rubric. |
 | 55-60 | Reflection and exit ticket | Capture remaining risks before analytics and testing begin. |
+
+[Instructor slide change: page=35; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -165,6 +169,8 @@ Checkpoint 5: use this block for final rehearsal plus timeboxed API milestone de
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=40; title=Common Pitfalls and Exit Ticket — Hour 40]
 
 ### Common pitfalls to watch for
 

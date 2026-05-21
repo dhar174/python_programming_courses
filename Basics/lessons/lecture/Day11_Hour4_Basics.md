@@ -1,5 +1,7 @@
 # Day 11 Hour 4 (Hour 44): Exception Handling — Full Basics Treatment Instructor Script
 
+[Instructor slide change: page=34; title=Hour 44: Exception Handling]
+
 ## Instructor intent and alignment
 
 This hour is the capstone of Session 11. In Hours 41–43, learners built file and JSON workflow confidence. In Hour 44, we harden that workflow so student programs can survive bad input and bad files without crashing. This script is designed to be read nearly verbatim while you teach.
@@ -26,6 +28,8 @@ Use this pacing guide to keep the hour tight:
 5. **Debrief + quick check exit ticket (3–5 min)**
 
 If learners are stuck during lab, shorten independent time by 5 minutes and run a guided fix pass.
+
+[Instructor slide change: page=35; title=Learning Outcomes]
 
 ## Outcomes to state out loud
 
@@ -214,6 +218,8 @@ Say this directly:
 Use:
 
 “Now let’s harden a tiny script with two fragile points: numeric input and JSON file loading. We will make it resilient while keeping exception handling specific.”
+
+[Instructor slide change: page=41; title=Demo — Hardened CLI Tool]
 
 ## Live demo (5–10 minutes): numeric input + JSON loading with friendly errors
 

@@ -1,5 +1,7 @@
 # Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk
 
+[Instructor slide change: page=8; title=Hour 17: GUI Fundamentals with Tkinter and ttk]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -40,6 +42,8 @@
 **Total arithmetic:** 4 + 9 + 8 + 8 + 26 + 5 = 60 minutes exactly.
 
 ---
+
+[Instructor slide change: page=9; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -307,6 +311,8 @@ That second rule is important. You can use `pack()` in one frame and `grid()` in
 ---
 
 ## Section 4: Live Demo (8 minutes)
+
+[Instructor slide change: page=12; title=Demo: Service First — ContactService]
 
 ### Demo Framing
 
@@ -708,6 +714,8 @@ Use these prompts while walking the room:
 - If the user enters good data, what message appears?
 - What line starts the event loop?
 - Are all widgets in this same parent using the same layout manager?
+
+[Instructor slide change: page=16; title=Common Pitfalls (Hour 17)]
 
 ### Common Pitfalls During the Lab
 

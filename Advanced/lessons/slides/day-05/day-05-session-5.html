@@ -386,560 +386,652 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-5-session-5-hours-1720-1-45d52b55" data-slide-number="1">
             <h1>Advanced Day 5 — Session 5 (Hours 17–20)</h1>
-            <div class="subtitle">Python Programming (Advanced) • GUI Foundations for the Tracker Capstone</div>
+            <div class="subtitle">GUI Fundamentals, Layout and Usability, Form Validation, and Record List UI with Tkinter</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-5-overview-2-0b562926" data-slide-number="2">
             <h1>Session 5 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-3-3397518a" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 17: GUI fundamentals with Tkinter / <code>ttk</code></li>
-  <li>Hour 18: Layout, spacing, and resizing</li>
-  <li>Hour 19: Forms, validation, and user feedback</li>
-  <li>Hour 20: Record lists, selection, and refresh</li>
+  <li>Hour 17: GUI fundamentals — event loop, widgets, callbacks, service wiring</li>
+  <li>Hour 18: Layout, usability, and resizing with nested frames and grid weights</li>
+  <li>Hour 19: Forms + validation feedback patterns and UI/service responsibility</li>
+  <li>Hour 20: Record list UI with Treeview/Listbox, selection callbacks, safe refresh</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Today&#x27;s Capstone Milestone</h1>
-            <ul>
-  <li>Move from CLI-style flow to event-driven desktop workflow</li>
-  <li>Keep the <strong>service layer</strong> as the home for business rules</li>
-  <li>Start building a tracker UI that can grow into CRUD workflows</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 5 overview (Hours 17–20); Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Section 1: Recap and Transition --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis</h1>
-            <ul>
-  <li>Build one working GUI action first</li>
-  <li>Use <code>grid()</code> intentionally for readable forms</li>
-  <li>Show validation feedback without crashes</li>
-  <li>Bind record selection to a <strong>stable ID</strong>, not display order</li>
-</ul>
-<h3>Canonical quiz/contracts to recognize</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>Hour 17 | root window: tracker app</code></li>
-  <li><code>Hour 18 | layout manager: grid</code></li>
-  <li><code>Hour 19 | field read: title entry</code></li>
-  <li><code>Hour 20 | list widget: treeview</code></li>
+  <li><code>Advanced/lessons/lecture/Day5_Hour1_Advanced.md</code> → <code># Day 5, Hour 1: GUI Fundamentals with Tkinter and ttk</code></li>
+  <li><code>Advanced/lessons/lecture/Day5_Hour2_Advanced.md</code> → <code># Day 5 Hour 2 Advanced — Tkinter Layout, Usability, and Resizing</code></li>
+  <li><code>Advanced/lessons/lecture/Day5_Hour3_Advanced.md</code> → <code># Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced)</code></li>
+  <li><code>Advanced/lessons/lecture/Day5_Hour4_Advanced.md</code> → <code># Day 5 Hour 4 Advanced: Record List UI with Treeview or Listbox</code></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/assignments/Advanced_Day5_homework.ipynb — Part 1 through Part 4; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 17 through Hour 20 canonical contract questions --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Hour 17: GUI Fundamentals</h1>
+        <section class="slide" id="session-5-outcomes-4-a8c794d6" data-slide-number="4">
+            <h1>Session 5 Outcomes</h1>
+            <ul>
+  <li>Build event-driven Tkinter apps that stay alive via <code>mainloop()</code></li>
+  <li>Use nested frames, sticky, and weights for readable, resizable layouts</li>
+  <li>Validate form input before saving and surface errors clearly to users</li>
+  <li>Display records in a Treeview, respond to selection, and refresh safely</li>
+  <li>Apply one consistent design rule: <strong>GUI handles interaction; service handles rules</strong></li>
+</ul>
+        </section>
+
+        <section class="slide" id="scope-guardrails-for-today-5-26682a64" data-slide-number="5">
+            <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="in-scope-6-3bc0cb81" data-slide-number="6">
+            <h1>In Scope</h1>
+            <ul>
+  <li>Tkinter/ttk window, widget, callback, and layout fundamentals</li>
+  <li>Frame decomposition, sticky behavior, and resize weight allocation</li>
+  <li>Required-field validation, inline error feedback, and Save button state</li>
+  <li>Treeview record browsing, selection callbacks, and safe refresh sequence</li>
+</ul>
+        </section>
+
+        <section class="slide" id="not-yet-7-8bf9a248" data-slide-number="7">
+            <h1>Not Yet</h1>
+            <ul>
+  <li>Tkinter threading or async GUI patterns</li>
+  <li>Database or file persistence backends</li>
+  <li>Full MVC/MVP framework architecture</li>
+  <li>Advanced sorting, filtering, or multi-level Treeview trees</li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-17-gui-fundamentals-with-tkinter-and-ttk-8-809eb457" data-slide-number="8">
+            <h1>Hour 17: GUI Fundamentals with Tkinter and ttk</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-9-20d02757" data-slide-number="9">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Explain why GUI programs are <strong>event-driven</strong></li>
-  <li>Create a small window with labels, entries, and buttons</li>
-  <li>Wire a button to a callback</li>
-  <li>Route validation through the service layer</li>
-  <li>Show visible success/error feedback</li>
+  <li>Explain what makes GUI programming event-driven</li>
+  <li>Describe the role of <code>mainloop()</code> in a Tkinter app</li>
+  <li>Create a window with <code>Label</code>, <code>Entry</code>, and <code>Button</code> using <code>ttk</code></li>
+  <li>Wire a button callback to a service layer</li>
+  <li>Show user feedback with a status label and <code>messagebox</code></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 17: GUI fundamentals (Tkinter/ttk): event loop, widgets, callbacks; Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>The Mental Model Shift</h1>
-            <h3>CLI mindset</h3>
-<ol>
-  <li>Start</li>
-  <li>Read input</li>
-  <li>Do work</li>
-  <li>Print output</li>
-  <li>Exit</li>
-</ol>
-<h3>GUI mindset</h3>
-<ul>
-  <li>Open a window</li>
-  <li>Wait for events</li>
-  <li>React through callbacks</li>
-  <li>Stay responsive until the user closes the app</li>
-</ul>
-<p><strong>Key phrase</strong>: The GUI handles interaction; the service layer handles rules.</p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Section 1: Recap and Transition; Section 2: The GUI Mental Model --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Core Building Blocks</h1>
+        <section class="slide" id="the-gui-mental-model-and-mainloop-10-abdb1c8b" data-slide-number="10">
+            <h1>The GUI Mental Model and `mainloop()`</h1>
             <ul>
-  <li><code>mainloop()</code> keeps the app alive and listening</li>
-  <li><code>Label</code> shows text</li>
-  <li><code>Entry</code> captures user input</li>
-  <li><code>Button</code> triggers a callback</li>
-  <li><code>messagebox</code> gives simple popup feedback</li>
-  <li><code>StringVar</code> helps connect UI state to Python values</li>
+  <li>Command-line programs run <strong>top to bottom</strong>; GUIs <strong>wait for events</strong></li>
+  <li>The user&#x27;s clicks, key presses, and text entry drive execution</li>
+  <li>Our code registers <strong>callbacks</strong>; the toolkit calls them when events fire</li>
 </ul>
-<h3>Keep callbacks short</h3>
+<pre data-lang="python"><code>root = tk.Tk()
+# ... create widgets and register callbacks ...
+root.mainloop()   # starts the event loop; keeps window alive</code></pre>
 <ul>
-  <li>Read form values</li>
-  <li>Call the service</li>
-  <li>Update the interface</li>
+  <li>Without <code>mainloop()</code> the window may flash and disappear</li>
+  <li>When the user closes the window, <code>mainloop()</code> exits</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — What mainloop() Does; Widgets and Callbacks; Demo Teaching Points to Repeat --&gt;</p>
+<blockquote>**Key message:** The GUI handles interaction; the service layer handles rules.</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Thin Callback Pattern</h1>
-            <pre data-lang="python"><code>def on_add(self) -&gt; None:
-    try:
-        record = self.service.add_record(
-            self.name_var.get(),
-            self.email_var.get(),
-        )
-    except ValidationError as exc:
-        self.status_var.set(f&quot;Error: {exc}&quot;)
-        return
-
-    self.status_var.set(f&quot;Added {record.name}&quot;)</code></pre>
-<h3>Why this pattern works</h3>
+        <section class="slide" id="the-three-part-gui-pattern-11-a72fc858" data-slide-number="11">
+            <h1>The Three-Part GUI Pattern</h1>
+            <pre data-lang="text"><code>widgets collect input
+        ↓
+  callback responds
+        ↓
+ service validates and stores
+        ↓
+  UI shows success or error</code></pre>
 <ul>
-  <li>UI gathers input</li>
-  <li>Service validates and stores</li>
-  <li>UI presents the outcome</li>
+  <li><strong>Widget</strong> — visible UI element (Label, Entry, Button)</li>
+  <li><strong>Callback</strong> — function wired to an event via <code>command=self.on_add</code> (not <code>command=self.on_add()</code>)</li>
+  <li><strong>Service layer</strong> — ordinary Python that owns business rules and validation</li>
+  <li>Blocking calls (sleep, network, large files) in a callback <strong>freeze the GUI</strong></li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Section 3: Core Design Pattern for This Hour; Demo Code --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Hello GUI + Add Form</h1>
-            <h3>Instructor flow</h3>
-<ol>
-  <li>Create the service class first</li>
-  <li>Build a small <code>ContactApp</code> / tracker app class</li>
-  <li>Add two fields and an <strong>Add</strong> button</li>
-  <li>Wire <code>command=self.on_add</code></li>
-  <li>Show one bad submission and one good submission</li>
-  <li>Point directly to <code>root.mainloop()</code></li>
-</ol>
-<h3>Watch for</h3>
+        <section class="slide" id="demo-service-first-contactservice-12-3aeb7aad" data-slide-number="12">
+            <h1>Demo: Service First — ContactService</h1>
+            <pre data-lang="python"><code>class ContactService:
+    def __init__(self) -&gt; None:
+        self._records: list[ContactRecord] = []
+
+    def add_record(self, name: str, email: str) -&gt; ContactRecord:
+        clean_name = name.strip()
+        clean_email = email.strip().lower()
+        if not clean_name:
+            raise ValidationError(&quot;Name is required.&quot;)
+        if &quot;@&quot; not in clean_email:
+            raise ValidationError(&quot;Email must include &#x27;@&#x27;.&quot;)
+        record = ContactRecord(name=clean_name, email=clean_email)
+        self._records.append(record)
+        return record</code></pre>
 <ul>
-  <li>Where the widgets live</li>
-  <li>Where the callback lives</li>
-  <li>Where the validation rule lives</li>
+  <li>Service does <strong>not</strong> know about widgets, <code>StringVar</code>, or <code>messagebox</code></li>
+  <li>Rules belong here whether input comes from GUI, CLI, or API</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Live demo (Hour 17); Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Demo Steps --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: First Working GUI Action</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+        <section class="slide" id="demo-contactapp-widgets-and-callback-13-b0412b73" data-slide-number="13">
+            <h1>Demo: ContactApp — Widgets and Callback</h1>
+            <pre data-lang="python"><code>class ContactApp:
+    def __init__(self, root: tk.Tk, service: ContactService) -&gt; None:
+        self.root = root
+        self.service = service
+        self.name_var = tk.StringVar()
+        self.email_var = tk.StringVar()
+        self.status_var = tk.StringVar(value=&quot;Ready.&quot;)
+        self._build_ui()
+
+    def _build_ui(self) -&gt; None:
+        frame = ttk.Frame(self.root, padding=16)
+        frame.pack(fill=&quot;both&quot;, expand=True)
+        ttk.Label(frame, text=&quot;Name&quot;).pack(anchor=&quot;w&quot;)
+        ttk.Entry(frame, textvariable=self.name_var).pack(fill=&quot;x&quot;, pady=(0, 10))
+        ttk.Label(frame, text=&quot;Email&quot;).pack(anchor=&quot;w&quot;)
+        ttk.Entry(frame, textvariable=self.email_var).pack(fill=&quot;x&quot;, pady=(0, 10))
+        ttk.Button(frame, text=&quot;Add Record&quot;, command=self.on_add).pack()
+        ttk.Label(frame, textvariable=self.status_var).pack(anchor=&quot;w&quot;)</code></pre>
+        </section>
+
+        <section class="slide" id="demo-the-on-add-callback-14-564c99de" data-slide-number="14">
+            <h1>Demo: The `on_add` Callback</h1>
+            <pre data-lang="python"><code>    def on_add(self) -&gt; None:
+        try:
+            record = self.service.add_record(
+                self.name_var.get(), self.email_var.get()
+            )
+        except ValidationError as exc:
+            self.status_var.set(f&quot;Error: {exc}&quot;)
+            messagebox.showerror(&quot;Validation Error&quot;, str(exc))
+            return
+        self.status_var.set(f&quot;Added {record.name}.&quot;)
+        messagebox.showinfo(&quot;Success&quot;, f&quot;Saved {record.name}.&quot;)
+        self.name_var.set(&quot;&quot;)
+        self.email_var.set(&quot;&quot;)
+
+def main() -&gt; None:
+    root = tk.Tk()
+    service = ContactService()
+    ContactApp(root, service)
+    root.mainloop()</code></pre>
+<ul>
+  <li>Callback coordinates; service decides</li>
+  <li><code>messagebox</code> is modal — acceptable for short feedback, not for long blocking work</li>
+</ul>
+        </section>
+
+        <section class="slide" id="lab-hello-gui-and-add-form-hour-17-15-5582d003" data-slide-number="15">
+            <h1>Lab: Hello GUI and Add Form (Hour 17)</h1>
+            <p><strong>Time: 26 minutes</strong></p>
 <h3>Tasks</h3>
 <ul>
-  <li>Create a Tkinter window for your tracker domain</li>
-  <li>Add at least two inputs</li>
-  <li>Add one working action button</li>
-  <li>Show status or messagebox feedback</li>
-  <li>Keep business rules outside the widget-building code</li>
+  <li>Part A — Hello GUI: create <code>tk.Tk()</code> window with a <code>ttk.Label</code>; confirm <code>mainloop()</code> keeps it alive</li>
+  <li>Part B — Add Form: build a two-field form with <code>Label</code>, <code>Entry</code>, <code>Button</code>, and status label</li>
+  <li>Part C — Wire a service: validate through a service; show <code>messagebox</code> on success and error</li>
+  <li>Part D — Test all cases: blank fields, one field only, two valid fields, close and relaunch</li>
 </ul>
-<h3>Completion Criteria</h3>
+<h3>Completion criteria</h3>
 <p><span class="check">✓</span> GUI launches reliably</p>
-<p><span class="check">✓</span> One callback works end to end</p>
-<p><span class="check">✓</span> Validation comes from a service/helper</p>
-<p><span class="check">✓</span> User sees success or error clearly</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Hello GUI + Add form; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 1: Hour 17 --&gt;</p>
+<p><span class="check">✓</span> Add action shows correct feedback for both valid and invalid input</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-17-16-661958e8" data-slide-number="16">
             <h1>Common Pitfalls (Hour 17)</h1>
-            <p><strong>⚠️</strong> Forgetting <code>mainloop()</code></p>
-<p><strong>⚠️</strong> Writing <code>command=self.on_add()</code> instead of <code>command=self.on_add</code></p>
-<p><strong>⚠️</strong> Burying business rules directly in callbacks</p>
-<p><strong>⚠️</strong> Clicking a button and giving the user no visible feedback</p>
+            <p><strong>⚠️</strong> Business logic placed inside the button callback instead of a service layer</p>
+<p><strong>⚠️</strong> Forgetting <code>root.mainloop()</code> — window flashes and disappears</p>
+<p><strong>⚠️</strong> Writing <code>command=on_add()</code> — calls the function at build time instead of wiring it</p>
+<p><strong>⚠️</strong> Creating a widget but not calling <code>.pack()</code> or <code>.grid()</code> — widget is invisible</p>
+<p><strong>⚠️</strong> Mixing <code>.pack()</code> and <code>.grid()</code> in the <strong>same parent container</strong> — causes layout errors</p>
+<p><strong>⚠️</strong> No visible feedback — user cannot tell whether Add succeeded or failed</p>
+<p><strong>Quick Check:</strong> What does <code>mainloop()</code> do? Why is <code>command=self.on_add</code> correct while <code>command=self.on_add()</code> is a bug?</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What does <code>mainloop()</code> do, and why should callbacks stay small?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 17 best practice and pitfall --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 18: Layout and Usability</h1>
+        <section class="slide" id="hour-18-layout-usability-and-resizing-17-9954d80e" data-slide-number="17">
+            <h1>Hour 18: Layout, Usability, and Resizing</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-18-48088a30" data-slide-number="18">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Use <code>grid()</code> for form-style layouts</li>
-  <li>Group related controls with frames</li>
-  <li>Add consistent spacing and alignment</li>
-  <li>Configure the layout to resize sensibly</li>
-  <li>Avoid mixing geometry managers in the same parent</li>
+  <li>Explain parent-child geometry ownership</li>
+  <li>Use nested frames to separate layout regions</li>
+  <li>Configure row and column weights so a window expands predictably</li>
+  <li>Apply sticky and padding for alignment and readability</li>
+  <li>Identify and fix overlap, collapse, and cramped spacing defects</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 18: Layout and usability; Advanced/lessons/lecture/Day5_Hour2_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>`pack()` vs `grid()`</h1>
-            <h3>Use `pack()` when</h3>
-<ul>
-  <li>You want simple stacking</li>
-</ul>
-<h3>Use `grid()` when</h3>
-<ul>
-  <li>You need rows + columns</li>
-  <li>You are building a form</li>
-  <li>Labels and inputs should line up cleanly</li>
-</ul>
-<blockquote>Do not mix `pack()` and `grid()` in the same parent widget.</blockquote>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour2_Advanced.md — <code>pack()</code> and <code>grid()</code>; The Rule About Mixing Geometry Managers --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Layout Rules That Matter</h1>
+        <section class="slide" id="parent-child-geometry-ownership-19-d58d4ed5" data-slide-number="19">
+            <h1>Parent-Child Geometry Ownership</h1>
             <ul>
-  <li>Use frames as layout boundaries</li>
-  <li>Add consistent <code>padx</code> / <code>pady</code></li>
-  <li>Use <code>sticky=&quot;w&quot;</code> or <code>sticky=&quot;ew&quot;</code> intentionally</li>
-  <li>Give growing columns a weight</li>
+  <li>A Tkinter layout is a <strong>tree</strong> — every widget has exactly one parent</li>
+  <li>Use <strong>one geometry manager</strong> for direct children of any one parent</li>
+  <li>You may use different managers in <em>different</em> nested parents — not mixed in the <strong>same</strong> parent</li>
 </ul>
-<pre data-lang="python"><code>main_frame.columnconfigure(1, weight=1)
-ttk.Entry(form_frame).grid(row=0, column=1, sticky=&quot;ew&quot;)</code></pre>
-<h3>Usability checklist</h3>
-<ol>
-  <li>Are related items grouped?</li>
-  <li>Is spacing consistent?</li>
-  <li>Is the main action easy to find?</li>
-  <li>Does resize behavior make sense?</li>
-</ol>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour2_Advanced.md — Usability Principles for Basic Desktop GUIs; Column Weights and Resizing --&gt;</p>
+<blockquote>&quot;Think of each frame as a room. Inside one room, choose one rule for placing furniture.&quot;</blockquote>
+<p><strong>Frame decomposition pattern:</strong></p>
+<ul>
+  <li>Page-level frame holds region frames</li>
+  <li>Each region frame manages its own local grid</li>
+  <li>Local coordination keeps layout reasoning simple</li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Refactor a Messy Layout</h1>
-            <h3>Demo target</h3>
+        <section class="slide" id="frame-decomposition-code-example-20-90c0072e" data-slide-number="20">
+            <h1>Frame Decomposition Code Example</h1>
+            <pre data-lang="python"><code>root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
+page = ttk.Frame(root, padding=12)
+page.grid(row=0, column=0, sticky=&quot;nsew&quot;)
+page.columnconfigure(0, weight=3)   # content region — wider
+page.columnconfigure(1, weight=2)   # sidebar region — narrower
+page.rowconfigure(1, weight=1)      # row 1 absorbs vertical growth
+
+content = ttk.Frame(page)
+content.grid(row=1, column=0, sticky=&quot;nsew&quot;)
+
+sidebar = ttk.Frame(page)
+sidebar.grid(row=1, column=1, sticky=&quot;nsew&quot;)</code></pre>
 <ul>
-  <li>One main frame</li>
-  <li>Two visual regions</li>
-  <li style="margin-left: 30px;">Form area</li>
-  <li style="margin-left: 30px;">Preview/list area</li>
-  <li><code>grid()</code> for the form</li>
-  <li>Safe nested <code>pack()</code> only inside a different parent such as a button bar</li>
+  <li>Regions are <strong>local layout jurisdictions</strong> — each configures its own weights and sticky</li>
 </ul>
-<h3>Success signal</h3>
-<ul>
-  <li>The app looks intentional</li>
-  <li>Resize behavior is acceptable</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Live demo (Hour 18); Advanced/lessons/lecture/Day5_Hour2_Advanced.md — Live Demo — Refactoring a Messy Layout --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Improve Layout and Resizing</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+        <section class="slide" id="sticky-weights-and-padding-21-861f66c2" data-slide-number="21">
+            <h1>Sticky, Weights, and Padding</h1>
+            <p><strong>Sticky</strong> — controls where a widget attaches inside its grid cell</p>
+<ul>
+  <li><code>ew</code> — horizontal stretch, <code>ns</code> — vertical stretch, <code>nsew</code> — full coverage</li>
+</ul>
+<p><strong>Weights</strong> — allocate the resize budget</p>
+<ul>
+  <li><code>columnconfigure(1, weight=1)</code> — column 1 absorbs extra width</li>
+  <li>A column with <code>weight=0</code> (default) receives no extra space</li>
+</ul>
+<pre data-lang="python"><code>content.columnconfigure(1, weight=1)
+ttk.Entry(content).grid(row=0, column=1, sticky=&quot;ew&quot;, pady=(0, 8))</code></pre>
+<p><strong>Padding</strong> — usability signal, not decoration</p>
+<ul>
+  <li>Consistent <code>padx</code>/<code>pady</code> creates visual rhythm and scan paths</li>
+  <li>Use <code>minsize</code> on <code>root</code> to protect baseline readability</li>
+</ul>
+<p><strong>Resize test rule:</strong> Test narrow, wide, and tall scenarios after every layout change.</p>
+        </section>
+
+        <section class="slide" id="pitfalls-missing-sticky-missing-weights-mixed-managers-22-6a65780b" data-slide-number="22">
+            <h1>Pitfalls — Missing Sticky, Missing Weights, Mixed Managers</h1>
+            <pre data-lang="python"><code># Defect: entry stays fixed while window grows (missing sticky + weight)
+ttk.Entry(frame).grid(row=0, column=1)
+# Fix:
+frame.columnconfigure(1, weight=1)
+ttk.Entry(frame).grid(row=0, column=1, sticky=&quot;ew&quot;)
+
+# Defect: listbox does not grow vertically (missing row weight + sticky)
+tk.Listbox(sidebar).grid(row=1, column=0)
+# Fix:
+sidebar.rowconfigure(1, weight=1)
+tk.Listbox(sidebar).grid(row=1, column=0, sticky=&quot;nsew&quot;)
+
+# Defect: mixing pack and grid in the same parent causes errors
+# Fix: choose one manager per parent; use a nested frame to isolate</code></pre>
+        </section>
+
+        <section class="slide" id="lab-refactor-a-rough-layout-hour-18-23-c13b9eda" data-slide-number="23">
+            <h1>Lab: Refactor a Rough Layout (Hour 18)</h1>
+            <p><strong>Time: 26 minutes</strong></p>
 <h3>Tasks</h3>
 <ul>
-  <li>Rebuild the GUI using at least one frame</li>
-  <li>Convert the form area to <code>grid()</code></li>
-  <li>Add consistent spacing</li>
-  <li>Test the window at more than one size</li>
+  <li>Start from a provided rough layout — no weights, no sticky, no nested frames</li>
+  <li>Sketch region decomposition in comments before coding</li>
+  <li>Apply structural frames, alignment with sticky, and consistent padding</li>
+  <li>Configure <code>rowconfigure</code>/<code>columnconfigure</code> weights where growth is expected</li>
+  <li>Run the mandatory resize test: narrow, wide, and tall</li>
+  <li>Peer-review: one commendation + one targeted adjustment</li>
 </ul>
-<h3>Completion Criteria</h3>
+<h3>Completion criteria</h3>
 <p><span class="check">✓</span> UI is readable and aligned</p>
-<p><span class="check">✓</span> Resizing does not break the layout</p>
-<p><span class="check">✓</span> One layout strategy per container</p>
-<p><span class="check">✓</span> Main action stays obvious</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Improve layout; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 2: Hour 18 --&gt;</p>
+<p><span class="check">✓</span> Resizing is acceptable under all three test scenarios</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-18-24-b1788b1c" data-slide-number="24">
             <h1>Common Pitfalls (Hour 18)</h1>
-            <p><strong>⚠️</strong> Mixing <code>pack</code> and <code>grid</code> in the same container</p>
-<p><strong>⚠️</strong> Forgetting <code>sticky</code>, so fields do not align or stretch</p>
-<p><strong>⚠️</strong> Inconsistent padding</p>
-<p><strong>⚠️</strong> Never testing resize behavior</p>
+            <p><strong>⚠️</strong> Missing <code>sticky</code> — entry stays tiny while its cell enlarges (overlap feel)</p>
+<p><strong>⚠️</strong> Missing row/column weight — listbox or text area does not grow (collapse feel)</p>
+<p><strong>⚠️</strong> Missing padding — labels, entries, and buttons visually blend (crowded feel)</p>
+<p><strong>⚠️</strong> Mixed geometry manager in one parent — runtime warnings and unpredictable layout</p>
+<p><strong>⚠️</strong> Uneven column weights — one region stretches too much; content area stays cramped</p>
+<p><strong>⚠️</strong> Testing only at default size — a layout not tested under resize is not finished</p>
+<p><strong>Quick Check:</strong> A column has <code>weight=1</code> but the entry still does not stretch. What else is missing?</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why is <code>grid()</code> usually a better fit for forms?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 18 canonical contract and pitfall --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 19: Forms, Validation, and Feedback</h1>
+        <section class="slide" id="hour-19-forms-and-validation-feedback-patterns-25-9da1cd13" data-slide-number="25">
+            <h1>Hour 19: Forms and Validation Feedback Patterns</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-26-9354ac49" data-slide-number="26">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Validate before saving</li>
-  <li>Normalize input before checking rules</li>
-  <li>Show friendly, actionable feedback</li>
-  <li>Keep predictable validation out of crash paths</li>
-  <li>Separate service validation from UI presentation</li>
+  <li>Validate input <strong>before</strong> saving — normalize first, validate second</li>
+  <li>Implement required-field checks and actionable inline feedback</li>
+  <li>Move focus to the first invalid field automatically</li>
+  <li>Disable and re-enable the Save button correctly on all code paths</li>
+  <li>Surface service-layer failures without exposing stack traces to users</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 19: Forms + validation feedback patterns; Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>Good Validation Helps the User Succeed</h1>
-            <h3>Weak message</h3>
-<p><code>Invalid input</code></p>
-<h3>Better message</h3>
-<p><code>Email is required</code></p>
-<h3>Best message</h3>
-<p><code>Enter an email address such as name@example.com</code></p>
-<h3>Normalize first</h3>
+        <section class="slide" id="inline-validation-vs-messagebox-27-e7fa1054" data-slide-number="27">
+            <h1>Inline Validation vs Messagebox</h1>
+            <p><strong>Inline validation</strong> — preferred for field-level, expected input mistakes</p>
 <ul>
-  <li><code>strip()</code> whitespace</li>
-  <li>lowercase email-like fields</li>
-  <li>clean obvious formatting noise before validation</li>
+  <li>Keeps user attention in context; connects each error to the exact field</li>
+  <li>Supports correction flow without modal interruption</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Validation Should Be Helpful, Not Punitive; Normalize Before You Validate --&gt;</p>
+<p><strong>Messagebox</strong> — reserved for major state changes, destructive actions, or severe failures</p>
+<ul>
+  <li>Forces acknowledgement when safety matters</li>
+  <li>Should never show a raw Python traceback</li>
+</ul>
+<blockquote>**Rule:** Field problem → inline message + focus move. App-level failure → concise status or controlled popup.</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Service vs UI Responsibilities</h1>
-            <h3>Service layer</h3>
+        <section class="slide" id="actionable-error-messages-and-save-button-behavior-28-30cfa72e" data-slide-number="28">
+            <h1>Actionable Error Messages and Save Button Behavior</h1>
+            <p><strong>Bad messages:</strong> &quot;Invalid input.&quot; | &quot;Error.&quot; | &quot;Email wrong.&quot;</p>
+<p><strong>Good messages:</strong></p>
 <ul>
-  <li>Decides whether data is valid</li>
-  <li>Returns structured errors or raises the right exception</li>
+  <li>&quot;Name is required. Use at least 2 letters.&quot;</li>
+  <li>&quot;Enter an email like name@example.com.&quot;</li>
+  <li>&quot;Role is required before saving.&quot;</li>
 </ul>
-<h3>UI layer</h3>
-<ul>
-  <li>Places messages near the right field</li>
-  <li>Moves focus to the first invalid control</li>
-  <li>Clears old errors</li>
-  <li>Resets the form after success</li>
-</ul>
-<pre data-lang="python"><code>errors = {
-    &quot;name&quot;: &quot;Name is required.&quot;,
-    &quot;email&quot;: &quot;Enter an email address such as name@example.com.&quot;,
-}</code></pre>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Service Errors vs UI Errors; A Clean Validation Pattern --&gt;</p>
+<p><strong>Save button disable/enable:</strong></p>
+<pre data-lang="python"><code>def on_save(self) -&gt; None:
+    self._clear_inline_errors()
+    self.save_btn.state([&quot;disabled&quot;])       # disable immediately
+
+    try:
+        result = self.service.validate_and_save(...)
+    except ServiceSaveError:
+        self.status_var.set(&quot;Could not save. Please try again.&quot;)
+        return
+    finally:
+        self._update_save_enabled_state()   # always restore on every path</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Validated Tracker Form</h1>
-            <h3>Demo highlights</h3>
+        <section class="slide" id="ui-service-responsibility-boundary-29-285b5b12" data-slide-number="29">
+            <h1>UI / Service Responsibility Boundary</h1>
+            <p><strong>UI layer owns:</strong></p>
 <ul>
-  <li>Inline field-level errors</li>
-  <li>Summary status message</li>
-  <li>Disabled/re-enabled Save button during submit</li>
-  <li>Focus moved to the first invalid field</li>
-  <li>App stays stable after bad input</li>
+  <li>Reading field values from widgets</li>
+  <li>Clearing old error state at the start of each save</li>
+  <li>Disabling/enabling Save control</li>
+  <li>Rendering inline errors and summary messages</li>
+  <li>Focus management</li>
 </ul>
-<h3>Instructor prompt</h3>
-<p>Ask learners to identify:</p>
-<ol>
-  <li>Where <code>.strip()</code> happens</li>
-  <li>Where errors are structured</li>
-  <li>Why inline feedback often beats a popup</li>
-</ol>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Live demo (Hour 19); Advanced/lessons/lecture/Day5_Hour3_Advanced.md — Live Demo — Inline Validation and Actionable Feedback --&gt;</p>
+<p><strong>Service layer owns:</strong></p>
+<ul>
+  <li>Input normalization — trim, lowercase, collapse whitespace</li>
+  <li>Validation rule decisions</li>
+  <li>Persistence call</li>
+  <li>Raising controlled exceptions for infrastructure issues</li>
+</ul>
+<p><strong>Structured error map returned by the service:</strong></p>
+<pre data-lang="python"><code>{&quot;name&quot;: &quot;Name is required.&quot;, &quot;email&quot;: &quot;Enter an email like name@example.com.&quot;}</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Validation Feedback Without Crashing</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+        <section class="slide" id="demo-validate-and-save-and-inline-error-application-30-cc3cf39a" data-slide-number="30">
+            <h1>Demo: validate_and_save and Inline Error Application</h1>
+            <pre data-lang="python"><code>def validate_and_save(self, name: str, email: str, role: str) -&gt; ValidationResult:
+    clean_name = &quot; &quot;.join(name.strip().split())
+    clean_email = email.strip().lower()
+    errors: dict[str, str] = {}
+    if not clean_name:
+        errors[&quot;name&quot;] = &quot;Name is required.&quot;
+    if not clean_email:
+        errors[&quot;email&quot;] = &quot;Email is required.&quot;
+    elif &quot;@&quot; not in clean_email:
+        errors[&quot;email&quot;] = &quot;Enter an email like name@example.com.&quot;
+    if errors:
+        return ValidationResult(ok=False, errors=errors)
+    self._records.append(Contact(clean_name, clean_email, role.strip()))
+    return ValidationResult(ok=True, errors={}, record=...)</code></pre>
+<pre data-lang="python"><code>    if not result.ok:
+        for field, msg in result.errors.items():
+            self.error_vars[field].set(msg)  # inline label under field
+        self._focus_first_invalid(result.errors)
+        self.status_var.set(&quot;Please fix the highlighted fields, then select Save.&quot;)</code></pre>
+        </section>
+
+        <section class="slide" id="lab-add-validation-behavior-hour-19-31-9bfc3cdb" data-slide-number="31">
+            <h1>Lab: Add Validation Behavior (Hour 19)</h1>
+            <p><strong>Time: 26 minutes</strong></p>
+<h3>Required deliverables</h3>
 <ul>
-  <li>Add required-field checks</li>
-  <li>Normalize user input</li>
-  <li>Display at least one inline error</li>
-  <li>Add a summary status message</li>
-  <li>Keep the app available for immediate correction</li>
+  <li>Required-field checks with whitespace normalization (trim before check)</li>
+  <li>Inline error labels rendered under each invalid field</li>
+  <li>Focus moved automatically to the first invalid field</li>
+  <li>Save button disable/enable on all paths, including exception path (use <code>finally</code>)</li>
+  <li>User-friendly service failure message — no stack trace shown in the UI</li>
+  <li>Demonstrable valid save path that clears the form</li>
 </ul>
-<h3>Completion Criteria</h3>
-<p><span class="check">✓</span> Missing data is rejected clearly</p>
-<p><span class="check">✓</span> Errors are actionable</p>
-<p><span class="check">✓</span> No raw traceback shown to the user</p>
+<h3>Acceptance tests to run before calling lab complete</h3>
+<ul>
+  <li>Blank fields, spaces-only fields, malformed email, valid input, simulated service failure</li>
+</ul>
+<h3>Completion criteria</h3>
+<p><span class="check">✓</span> Invalid entries show clear feedback</p>
 <p><span class="check">✓</span> Valid entries save successfully</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: Add validation UI; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 3: Hour 19 --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-19-32-e4ab5565" data-slide-number="32">
             <h1>Common Pitfalls (Hour 19)</h1>
-            <p><strong>⚠️</strong> Silent failure after bad input</p>
-<p><strong>⚠️</strong> Vague messages with no next step</p>
-<p><strong>⚠️</strong> Treating predictable validation as a crash-worthy exception</p>
-<p><strong>⚠️</strong> Forgetting to clear old errors before the next save</p>
+            <p><strong>⚠️</strong> Validation rule duplicated in both UI and service — inconsistent outcomes</p>
+<p><strong>⚠️</strong> Old inline errors remain visible after a successful save</p>
+<p><strong>⚠️</strong> Save button stays disabled forever — <code>finally</code> block missing</p>
+<p><strong>⚠️</strong> Spaces-only input passes required check — normalize <strong>before</strong> checking emptiness</p>
+<p><strong>⚠️</strong> Silent failure — button click does nothing and shows nothing to the user</p>
+<p><strong>⚠️</strong> Raw stack trace surfaced in a UI label or messagebox — translate to a calm user message</p>
+<p><strong>Quick Check:</strong> Give a good validation message and a bad one for an email field. What makes the good one better?</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why is “Enter an email address such as name@example.com” better than “Invalid email”?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 19 best practice and pitfall --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 20: Record Lists and Selection</h1>
+        <section class="slide" id="hour-20-record-list-ui-with-treeview-selection-and-safe-refresh-33-c82f750e" data-slide-number="33">
+            <h1>Hour 20: Record List UI with Treeview, Selection, and Safe Refresh</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-34-c731df26" data-slide-number="34">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Show multiple records in a list or table</li>
-  <li>Use <code>Treeview</code> or <code>Listbox</code> appropriately</li>
-  <li>Refresh safely without duplicate stale rows</li>
-  <li>React to selection events</li>
-  <li>Map selection to a stable record ID</li>
+  <li>Display records in a Listbox or Treeview widget</li>
+  <li>React to user selection and show record details in a details pane</li>
+  <li>Choose between Listbox and Treeview for a given use case</li>
+  <li>Implement selection callbacks that do not crash on empty selection</li>
+  <li>Refresh list data safely using the clear → repopulate → handle-selection sequence</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Hour 20: Record list UI; Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Learning Outcomes for This Hour --&gt;</p>
         </section>
 
-        <section class="slide">
-            <h1>`Listbox` vs `Treeview`</h1>
-            <h3>`Listbox`</h3>
+        <section class="slide" id="listbox-vs-treeview-35-0e84e5de" data-slide-number="35">
+            <h1>Listbox vs Treeview</h1>
+            <p><strong>Listbox is best when:</strong></p>
 <ul>
-  <li>Lightweight</li>
-  <li>Good for one visible string per row</li>
+  <li>Each row is a single display string</li>
+  <li>Fields can compress into one readable line</li>
+  <li>Column structure is not needed</li>
 </ul>
-<h3>`Treeview`</h3>
+<p><strong>Treeview is best when:</strong></p>
 <ul>
-  <li>Better for multi-column records</li>
-  <li>Good fit for tracker-style data</li>
-  <li>Easier to grow into sorting and richer browsing</li>
+  <li>Records have multiple fields and table-like readability matters</li>
+  <li>Named column headers improve clarity</li>
+  <li>Later sorting or richer row identity may be added</li>
 </ul>
-<h3>Selection rule</h3>
-<p>Selection should lead to a <strong>record ID</strong>, not just a row position.</p>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Choosing the Right List Widget; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 4: Hour 20 --&gt;</p>
+<blockquote>**Default choice for multi-field records:** Treeview — columns match fields directly.</blockquote>
+<p><strong>Quick ask:</strong> Given records with id, name, email, and role, which widget gives better clarity?</p>
+<p><strong>Expected answer:</strong> Treeview, because columns match fields directly.</p>
         </section>
 
-        <section class="slide">
-            <h1>Safe Refresh Pattern</h1>
-            <ol>
-  <li>Clear existing rows</li>
-  <li>Fetch current records</li>
-  <li>Insert fresh rows</li>
-  <li>Reset or refresh the details pane</li>
-</ol>
-<pre data-lang="python"><code>self.tree.delete(*self.tree.get_children())
-for record in records:
-    self.tree.insert(&quot;&quot;, &quot;end&quot;, iid=str(record.record_id), values=(...))</code></pre>
-<h3>Why this matters</h3>
-<ul>
-  <li>No duplicated rows</li>
-  <li>No stale details</li>
-  <li>No “selection points at the wrong thing” bug</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Refreshing Safely; Demo Code --&gt;</p>
+        <section class="slide" id="selection-callbacks-safe-handling-36-b789fce8" data-slide-number="36">
+            <h1>Selection Callbacks — Safe Handling</h1>
+            <pre data-lang="python"><code>self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_select)</code></pre>
+<pre data-lang="python"><code>def on_select(self, _event: tk.Event) -&gt; None:
+    selected_items = self.tree.selection()
+    if not selected_items:               # guard: nothing selected
+        self.clear_details(&quot;No record selected&quot;)
+        return
+    try:
+        selected_id = int(selected_items[0])   # guard: parse safely
+    except ValueError:
+        self.clear_details(&quot;No record selected&quot;)
+        return
+    record = self.service.get_record_by_id(selected_id)
+    if record is None:                   # guard: record may be gone
+        self.clear_details(&quot;No record selected&quot;)
+        return
+    self.show_details(record)</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Demo: List + Details Browser</h1>
-            <h3>Demo flow</h3>
-<ul>
-  <li>Add a <code>Treeview</code></li>
-  <li>Bind <code>&lt;&lt;TreeviewSelect&gt;&gt;</code></li>
-  <li>Show details for the selected record</li>
-  <li>Add a Refresh button</li>
-  <li>Handle empty-state cases safely</li>
-</ul>
-<h3>Empty-state behavior</h3>
-<ul>
-  <li>Empty list is still a valid state</li>
-  <li>No selection should clear or reset details</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Demo: Treeview showing records; Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Live Demo — Treeview with Selection and Details Pane --&gt;</p>
+        <section class="slide" id="refresh-safety-sequence-37-d9682fa8" data-slide-number="37">
+            <h1>Refresh Safety Sequence</h1>
+            <p><strong>The three-step sequence — order is non-negotiable:</strong></p>
+<pre data-lang="python"><code>def refresh_records(self) -&gt; None:
+    existing = self.tree.get_children()
+    if existing:
+        self.tree.delete(*existing)        # step 1: clear existing rows
+
+    records = self.service.list_records()
+    for item in records:                   # step 2: repopulate from source
+        self.tree.insert(&quot;&quot;, &quot;end&quot;, iid=str(item.record_id),
+                         values=(item.name, item.email, item.role))
+
+    if not records:                        # step 3: handle selection state
+        self.clear_details(&quot;No records available&quot;)
+        return
+    self.clear_details(&quot;No record selected&quot;)</code></pre>
+<p>Skipping step 1 causes <strong>stale rows to stack</strong> on subsequent refreshes.</p>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Record Browser</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+        <section class="slide" id="demo-treeview-record-browser-setup-and-wiring-38-225fbf5d" data-slide-number="38">
+            <h1>Demo: Treeview Record Browser — Setup and Wiring</h1>
+            <pre data-lang="python"><code>self.tree = ttk.Treeview(
+    main, columns=(&quot;name&quot;, &quot;email&quot;, &quot;role&quot;),
+    show=&quot;headings&quot;, selectmode=&quot;browse&quot;, height=12,
+)
+self.tree.heading(&quot;name&quot;, text=&quot;Name&quot;)
+self.tree.heading(&quot;email&quot;, text=&quot;Email&quot;)
+self.tree.heading(&quot;role&quot;, text=&quot;Role&quot;)
+self.tree.column(&quot;name&quot;, width=180, anchor=&quot;w&quot;)
+self.tree.column(&quot;email&quot;, width=240, anchor=&quot;w&quot;)
+self.tree.column(&quot;role&quot;, width=130, anchor=&quot;w&quot;)
+self.tree.bind(&quot;&lt;&lt;TreeviewSelect&gt;&gt;&quot;, self.on_select)</code></pre>
+<ul>
+  <li><code>show=&quot;headings&quot;</code> hides the default tree column; shows only named columns</li>
+  <li><code>iid=str(item.record_id)</code> lets us look up the source record by ID on selection</li>
+  <li>Details pane uses <code>tk.StringVar</code> bound to <code>ttk.Label</code> widgets for live updates</li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-three-mandatory-acceptance-checks-39-db72a0e0" data-slide-number="39">
+            <h1>Demo: Three Mandatory Acceptance Checks</h1>
+            <p>Run all three in front of students — any failure means the feature is not complete:</p>
+<p><strong>No-selection check</strong></p>
+<ul>
+  <li>Ensure nothing is selected → no exception; details pane shows &quot;No record selected&quot;</li>
+</ul>
+<p><strong>Empty-data check</strong></p>
+<ul>
+  <li>Clear source, then refresh → list shows 0 rows; details shows &quot;No records available&quot;; no crash</li>
+</ul>
+<p><strong>Repeated-refresh check</strong></p>
+<ul>
+  <li>Refresh three consecutive times → row count remains correct; no duplicate or stale rows</li>
+</ul>
+<blockquote>&quot;If your class implementation does not pass these three checks, it is not complete yet.&quot;</blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day5_Hour4_Advanced.md` → Segment 4: Demo acceptance checks</blockquote>
+        </section>
+
+        <section class="slide" id="lab-build-list-and-details-ui-hour-20-40-74823a3e" data-slide-number="40">
+            <h1>Lab: Build List-and-Details UI (Hour 20)</h1>
+            <p><strong>Time: 26 minutes</strong></p>
 <h3>Tasks</h3>
 <ul>
-  <li>Add a list area for saved records</li>
-  <li>Add a details pane</li>
-  <li>Bind selection to a callback</li>
-  <li>Add Refresh</li>
-  <li>Show safe behavior when there are no records</li>
+  <li>Scaffold a two-region layout — list area (Treeview recommended) + details pane with fallback text</li>
+  <li>Load in-memory records into the Treeview on startup</li>
+  <li>Bind <code>&lt;&lt;TreeviewSelect&gt;&gt;</code> and populate the details pane on valid selection; guard empty selection</li>
+  <li>Implement <code>refresh_records()</code> with the exact clear → repopulate → handle-selection sequence</li>
+  <li>Run all three acceptance checks (no-selection, empty-data, repeated-refresh)</li>
 </ul>
-<h3>Completion Criteria</h3>
-<p><span class="check">✓</span> List populates and updates</p>
-<p><span class="check">✓</span> Details follow the selected record</p>
-<p><span class="check">✓</span> No crash on empty selection</p>
-<p><span class="check">✓</span> Refresh clears stale rows first</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Lab: List + details; Advanced/assignments/Advanced_Day5_homework.ipynb — Part 4: Hour 20 --&gt;</p>
+<h3>Completion criteria</h3>
+<p><span class="check">✓</span> List loads records</p>
+<p><span class="check">✓</span> Selecting a row shows details</p>
+<p><span class="check">✓</span> Refreshing does not duplicate rows</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-20-41-287f96d9" data-slide-number="41">
             <h1>Common Pitfalls (Hour 20)</h1>
-            <p><strong>⚠️</strong> Using display order as identity</p>
-<p><strong>⚠️</strong> Not clearing old rows before refresh</p>
-<p><strong>⚠️</strong> Crashing when no selection exists</p>
-<p><strong>⚠️</strong> Leaving stale details visible after the list changes</p>
+            <p><strong>⚠️</strong> Selection callback crashes when <code>tree.selection()</code> returns an empty tuple — guard it first</p>
+<p><strong>⚠️</strong> Skipping the clear step in <code>refresh_records</code> — old rows stack on top of new rows</p>
+<p><strong>⚠️</strong> Details pane shows stale content after source data is cleared and refreshed</p>
+<p><strong>⚠️</strong> <code>iid</code> stored as an integer — Treeview requires a string <code>iid</code>; type mismatch crashes lookup</p>
+<p><strong>⚠️</strong> Refresh sequence out of order — repopulate before clear causes visible duplicates</p>
+<p><strong>⚠️</strong> Optional search/filter added before core acceptance checks pass — stabilize core first</p>
+<p><strong>Quick Check:</strong> What can go wrong if you refresh without clearing existing rows? What must happen when no row is selected?</p>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What should happen if the user clicks Refresh when there are zero records?</p>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Common pitfalls to watch for / Quick check; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 20 best practice and pitfall --&gt;</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="session-5-wrap-up-42-0b0319bc" data-slide-number="42">
             <h1>Session 5 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>What We Built Toward</h1>
+        <section class="slide" id="what-we-built-today-43-35d9bc52" data-slide-number="43">
+            <h1>What We Built Today</h1>
             <ul>
-  <li>Event-driven thinking instead of CLI-only flow</li>
-  <li>A cleaner form layout with <code>grid()</code> and frames</li>
-  <li>Validation that helps users recover</li>
-  <li>A record browser that is safe to refresh and select</li>
+  <li>A working event-driven Tkinter GUI with service-layer separation (Hour 17)</li>
+  <li>Intentional nested-frame layouts with predictable resize behavior (Hour 18)</li>
+  <li>Form validation with inline feedback, focus management, and safe Save state (Hour 19)</li>
+  <li>A record browser with Treeview, selection callbacks, and duplicate-free refresh (Hour 20)</li>
+</ul>
+<h3>The One Design Rule That Governed All Four Hours</h3>
+<p><strong>&quot;The GUI handles interaction; the service layer handles rules.&quot;</strong></p>
+        </section>
+
+        <section class="slide" id="day-5-homework-and-study-checklist-44-1a6b67c5" data-slide-number="44">
+            <h1>Day 5 Homework and Study Checklist</h1>
+            <ul>
+  <li>Re-run your Hour 17 app and add a third field with its own validation rule</li>
+  <li>Apply three-step frame decomposition to your Hour 18 layout and run all resize tests</li>
+  <li>Confirm your Hour 19 form passes all five test cases: blank, spaces, malformed email, valid, service error</li>
+  <li>Run the three acceptance checks on your Hour 20 record browser: no-selection, empty-data, repeated-refresh</li>
+  <li>Optional: add a search/filter field to the Treeview — only after all core checks pass</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Capstone checkpoint coming next</h1>
-            <ul>
-  <li>Update + delete workflows</li>
-  <li>Cleaner controller architecture</li>
-  <li>JSON persistence + polish</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 5 overview; Advanced/lessons/lecture/Day5_Hour4_Advanced.md — Wrap-Up --&gt;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Scope Guardrails</h1>
-            <h3>Stay in scope today</h3>
-<p><span class="check">✓</span> Tkinter / <code>ttk</code> fundamentals</p>
-<p><span class="check">✓</span> Small, maintainable callbacks</p>
-<p><span class="check">✓</span> Service-layer validation</p>
-<p><span class="check">✓</span> Stable IDs for selection</p>
-<h3>Not today&#x27;s goal</h3>
-<p><span class="cross">✗</span> Fancy theming</p>
-<p><span class="cross">✗</span> Framework switching</p>
-<p><span class="cross">✗</span> ORM/database work</p>
-<p><span class="cross">✗</span> Big “all-features-at-once” refactors</p>
-<h3>Homework / quiz prep</h3>
+        <section class="slide" id="next-session-preview-45-0ca3dc75" data-slide-number="45">
+            <h1>Next Session Preview</h1>
+            <h3>Session 6 (Hours 21–24)</h3>
 <ul>
-  <li>Be able to explain <strong>why</strong> <code>mainloop()</code> matters</li>
-  <li>Be able to justify <code>grid()</code> for forms</li>
-  <li>Be able to show a friendly validation path</li>
-  <li>Be able to explain why stable IDs beat list positions</li>
+  <li>Connecting the GUI to file or SQLite persistence</li>
+  <li>Edit and delete record workflows with confirmation dialogs</li>
+  <li>More complex layouts — scrollable frames and status bars</li>
+  <li>Checkpoint: integrated GUI application milestone</li>
 </ul>
-<p>&lt;!-- Sources: Advanced/lessons/lecture/Day5_Hour1_Advanced.md — Wrap-Up; Advanced/quizzes/Advanced_Day5_Quiz.html — Hour 17 through Hour 20 explanations --&gt;</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="thank-you-46-090c8633" data-slide-number="46">
             <h1>Thank You!</h1>
-            <p>Session 6 next:</p>
-<ul>
-  <li>Update + delete through the GUI</li>
-  <li>Controller cleanup</li>
-  <li>JSON persistence and checkpoint demo</li>
-</ul>
-<p>&lt;!-- Sources: Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md — Session 6 overview (Hours 21–24) --&gt;</p>
+            <p>Save your work.</p>
+<p>Commit the latest good state.</p>
+<p>Be ready to wire persistence tomorrow.</p>
         </section>
     </div>
     
@@ -984,7 +1076,11 @@ for record in records:
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1057,17 +1153,24 @@ for record in records:
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = Array.from(slides).indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

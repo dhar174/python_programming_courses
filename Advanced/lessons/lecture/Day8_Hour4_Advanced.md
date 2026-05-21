@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=42; title=Hour 32 — Checkpoint 4: Data-Driven App Milestone]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Frame the checkpoint and rubric: 10 minutes  
@@ -11,6 +13,8 @@
 - Showcase, reflection, and exit ticket: 10 minutes
 
 ---
+
+[Instructor slide change: page=43; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -377,6 +381,8 @@ def run_checkpoint_smoke_test() -> None:
 **[Instructor speaks:]**
 
 This kind of script does not replace the app demo, but it is excellent for debugging. If the script fails, the GUI is probably not the first place to look. If the script passes and the GUI fails, then the issue is likely UI state, selected ID handling, or refresh logic.
+
+[Instructor slide change: page=46; title=Checkpoint Rubric — Plain Language]
 
 ## Lab prompt
 

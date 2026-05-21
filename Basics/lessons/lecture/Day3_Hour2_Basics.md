@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=18; title=Hour 10: String Formatting with F-Strings]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Transition from Hour 9: 3 minutes
@@ -14,6 +16,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=19; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -168,6 +172,8 @@ Breaking it down:
 - **`{age}`**: placeholder that gets replaced with the value of `age`
 
 **The curly braces are signals:** "Insert this variable's value here."
+
+[Instructor slide change: page=30; title=Quick Check (Hour 10)]
 
 ### Quick Check #1
 

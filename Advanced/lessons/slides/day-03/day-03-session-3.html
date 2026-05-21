@@ -386,611 +386,775 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-3-session-3-hours-912-1-bcd27ad7" data-slide-number="1">
             <h1>Advanced Day 3 — Session 3 (Hours 9–12)</h1>
-            <div class="subtitle">Python Programming (Advanced) • Packages, Logging, Safe Saves, and Decorators</div>
+            <div class="subtitle">Python Programming (Advanced) • Project Packages, Logging, Safer File Ops, and Decorators</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-3-overview-2-b27828d4" data-slide-number="2">
             <h1>Session 3 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-3-a6947af9" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 9: Project structure, packages, imports, and config</li>
-  <li>Hour 10: Logging and error reporting (practical)</li>
-  <li>Hour 11: Context managers + safer file operations</li>
-  <li>Hour 12: Decorators (timing / authorization / validation)</li>
+  <li>Hour 9 (Hour 9 overall): Project structure, packages, imports, and config</li>
+  <li>Hour 10 (Hour 10 overall): Logging and error reporting (practical)</li>
+  <li>Hour 11 (Hour 11 overall): Context managers and safer file operations</li>
+  <li>Hour 12 (Hour 12 overall): Decorators — timing, toy authorization, lightweight validation</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 3 overview</code></li>
-  <li><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code># Advanced Day 3, Hour 1: Project Structure, Packages, Imports, and Config</code></li>
+  <li><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code># Day 3, Hour 1: Project Structure, Packages, Imports, and Config</code></li>
   <li><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code># Day 3, Hour 2: Logging and Error Reporting (Practical)</code></li>
-  <li><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code># Day 3, Hour 3: Context Managers + Safer File Operations</code></li>
-  <li><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code># Day 3, Hour 4: Decorators (Timing / Authorization / Validation)</code></li>
+  <li><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code># Day 3, Hour 3: Context Managers and Safer File Operations</code></li>
+  <li><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code># Day 3, Hour 4: Decorators for Timing, Toy Authorization, and Lightweight Validation</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-3-outcomes-4-a30a26c8" data-slide-number="4">
             <h1>Session 3 Outcomes</h1>
             <ul>
-  <li>Package the core under <code>src/</code></li>
-  <li>Add logging that helps developers without spamming users</li>
-  <li>Save JSON more safely with temp-then-replace thinking</li>
-  <li>Use decorators for repeated edge behavior</li>
+  <li>Organize the checkpoint core into <code>src/tracker/</code> with clean relative imports</li>
+  <li>Add practical <code>logging</code> that separates developer diagnostics from user messages</li>
+  <li>Save JSON safely using write-temp-then-replace instead of direct overwrite</li>
+  <li>Write and apply small <code>@timed</code> decorators without changing core function behavior</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-5-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="in-scope-6-62781a3e" data-slide-number="6">
             <h1>In Scope</h1>
             <ul>
-  <li>Packaging and import hygiene</li>
-  <li>File-based logging</li>
-  <li>Context managers and safe saves</li>
-  <li>Small, readable decorators</li>
+  <li>Package layout under <code>src/tracker/</code> with <code>__init__.py</code> and relative imports</li>
+  <li>File-based logging to <code>logs/app.log</code></li>
+  <li>Context managers and a <code>save_json_safe</code> helper</li>
+  <li>Small readable decorators for timing and toy authorization</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="not-yet-7-bfaa045b" data-slide-number="7">
             <h1>Not Yet</h1>
             <ul>
-  <li>Full production config systems</li>
-  <li>Secret-heavy deployment workflows</li>
-  <li>Decorator metaprogramming tricks</li>
-  <li>Database transactions</li>
+  <li>Publishing or installing packages (<code>pyproject.toml</code>, editable installs, <code>pip install -e .</code>)</li>
+  <li>Production secrets management or security frameworks</li>
+  <li>Decorator factories with arguments, class decorators, or metaclasses</li>
+  <li>Database transactions or full durability guarantees</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Hour 9: Project Structure + Imports + Config</h1>
+        <section class="slide" id="hour-9-project-structure-packages-imports-and-config-8-0d8049f0" data-slide-number="8">
+            <h1>Hour 9: Project Structure, Packages, Imports, and Config</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-9-32c84d3a" data-slide-number="9">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Move from a loose script pile to a usable package layout</li>
-  <li>Explain the role of <code>__init__.py</code></li>
-  <li>Avoid common import headaches</li>
-  <li>Centralize simple configuration</li>
+  <li>Move the checkpoint core from a flat script pile into <code>src/tracker/</code></li>
+  <li>Use relative imports inside the package (<code>from .models import Task</code>)</li>
+  <li>Run the demo with <code>python -m src.tracker.demo</code> from the project root</li>
+  <li>Centralize path constants in a light <code>config.py</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="why-structure-matters-now-10-97e993d6" data-slide-number="10">
             <h1>Why Structure Matters Now</h1>
-            <ul>
-  <li>Yesterday&#x27;s checkpoint core needs a cleaner home</li>
-  <li>New layers are coming:</li>
-  <li style="margin-left: 30px;">logging</li>
-  <li style="margin-left: 30px;">persistence</li>
-  <li style="margin-left: 30px;">APIs</li>
-  <li style="margin-left: 30px;">tests</li>
-  <li>Brittle imports slow every later step</li>
+            <pre data-lang="text"><code>Before (flat):              After (organized):
+project_root/               project_root/
+    models.py                   src/
+    services.py                     tracker/
+    exceptions.py                       __init__.py
+    demo.py                             exceptions.py
+                                        models.py
+                                        services.py
+                                        config.py
+                                        demo.py</code></pre>
+<ul>
+  <li>Upcoming layers need to find the core reliably: logging, persistence, GUI, API, tests</li>
+  <li>Structure tells future readers where responsibilities live</li>
+  <li>Brittle or accidental imports break when any layer moves</li>
 </ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code>## Opening Bridge from Checkpoint 1</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Practical `src/` Layout</h1>
-            <pre data-lang="text"><code>project_root/
-    src/
-        tracker/
-            __init__.py
-            models.py
-            services.py
-            exceptions.py
-            config.py
-    demo.py
-    README.md</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Import Rules to Remember</h1>
+        <section class="slide" id="key-vocabulary-11-efafd72c" data-slide-number="11">
+            <h1>Key Vocabulary</h1>
             <ul>
-  <li>Relative imports can help <strong>inside</strong> a package</li>
-  <li>Absolute imports are clearer <strong>from outside</strong> the package</li>
-  <li>Run from the project root or use <code>python -m ...</code></li>
+  <li><strong>Module</strong> — a single <code>.py</code> file: <code>models.py</code>, <code>services.py</code></li>
+  <li><strong>Package</strong> — a directory containing <code>__init__.py</code>: <code>tracker/</code></li>
+  <li><strong><code>__init__.py</code></strong> — marks a folder as a package; can stay empty</li>
+  <li><strong>Relative import</strong> — <code>from .models import Task</code> (dot = current package)</li>
+  <li><strong><code>-m</code> flag</strong> — run a module by import path, preserving package context</li>
+  <li><strong>Entry point</strong> — <code>src/tracker/demo.py</code>, run via <code>python -m src.tracker.demo</code></li>
 </ul>
-<h3>Three Headaches to Avoid</h3>
-<ol>
-  <li>Wrong entry file</li>
-  <li>Circular imports</li>
-  <li>Naming collisions like <code>json.py</code> or <code>logging.py</code></li>
-</ol>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code>## Outcomes, Setup, and Vocabulary</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Clean Package Move</h1>
-            <pre data-lang="python"><code>from tracker.exceptions import ValidationError
+        <section class="slide" id="relative-imports-in-models-py-12-8c5d9013" data-slide-number="12">
+            <h1>Relative Imports in `models.py`</h1>
+            <pre data-lang="python"><code># src/tracker/models.py
+from .exceptions import ValidationError   # dot = &quot;from this package&quot;
 
 
 class Task:
+    VALID_PRIORITIES = {&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;}
+
     def __init__(self, task_id: int, title: str, priority: str = &quot;medium&quot;) -&gt; None:
-        ...</code></pre>
+        cleaned = title.strip()
+        if not cleaned:
+            raise ValidationError(&quot;Task title cannot be empty.&quot;)
+        self.task_id   = task_id
+        self.title     = cleaned
+        self.priority  = priority.strip().lower()
+        self.completed = False
+
+    def to_dict(self) -&gt; dict[str, object]:
+        return {&quot;task_id&quot;: self.task_id, &quot;title&quot;: self.title,
+                &quot;priority&quot;: self.priority, &quot;completed&quot;: self.completed}</code></pre>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code>## Live Demo</code> → Step 4</p>
+        </section>
+
+        <section class="slide" id="dependency-direction-and-running-correctly-13-3a3022f8" data-slide-number="13">
+            <h1>Dependency Direction and Running Correctly</h1>
+            <pre data-lang="text"><code>Correct dependency direction:
+  demo.py  --&gt;  services.py  --&gt;  models.py
+      \               \               \
+       \-----------+   \-----------+   \--&gt; exceptions.py</code></pre>
 <ul>
-  <li>Move related files together</li>
-  <li>Fix imports intentionally</li>
-  <li>Re-run the demo after restructuring</li>
+  <li><code>models.py</code> must NOT import <code>services.py</code> — circular imports cause mysterious errors</li>
 </ul>
-        </section>
+<pre data-lang="powershell"><code># CORRECT — from project root
+python -m src.tracker.demo
 
-        <section class="slide">
-            <h1>Light Configuration</h1>
-            <ul>
-  <li>Move hard-coded paths into <code>config.py</code></li>
-  <li>Good early config values:</li>
-  <li style="margin-left: 30px;">data directory</li>
-  <li style="margin-left: 30px;">log path</li>
-  <li style="margin-left: 30px;">default save filename</li>
-  <li>Keep it small and practical</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Restructure the Core</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
+# BREAKS relative imports — avoid
+python src/tracker/demo.py</code></pre>
 <ul>
-  <li>Create <code>src/tracker/</code></li>
-  <li>Add <code>__init__.py</code></li>
-  <li>Move models and services into the package</li>
-  <li>Update imports</li>
-  <li>Add a simple <code>config.py</code></li>
-  <li>Prove the demo still runs</li>
+  <li><code>-m</code> preserves the package context so <code>from .services import TaskService</code> resolves</li>
+  <li>If it fails: check working directory and command before rewriting code</li>
 </ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code>## Concept Briefing</code> → §3 and §4</p>
         </section>
 
-        <section class="slide">
-            <h1>Completion Criteria (Hour 9)</h1>
-            <p><span class="check">✓</span> Package layout exists</p>
-<p><span class="check">✓</span> Imports are consistent</p>
-<p><span class="check">✓</span> Demo runs from the intended entry point</p>
-<p><span class="check">✓</span> Config values are not scattered across random files</p>
-        </section>
+        <section class="slide" id="light-config-module-14-3ad302da" data-slide-number="14">
+            <h1>Light Config Module</h1>
+            <pre data-lang="python"><code># src/tracker/config.py
+import os
+from pathlib import Path
 
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 9)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> package layout + config module</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> packages + dedicated settings module</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> relative imports everywhere without discipline</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 9 | package root: tracker_app</code></li>
-</ul>
-<h3>Source Alignment</h3>
+# parents[2]: config.py -&gt; tracker/ -&gt; src/ -&gt; project_root
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+DATA_DIR = Path(os.environ.get(&quot;TRACKER_DATA_DIR&quot;, &quot;data&quot;))
+DB_PATH  = DATA_DIR / &quot;tracker.db&quot;
+LOG_DIR  = BASE_DIR / &quot;logs&quot;
+LOG_FILE = LOG_DIR  / &quot;app.log&quot;</code></pre>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day3_homework.ipynb</code> → <code>## Part 1: Hour 9 - Project structure: packages, imports, and config</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day3_Quiz.html</code> → <code>QUIZ_DATA</code> questions 1–5</li>
+  <li>One home for constants — no hard-coded paths scattered across modules</li>
+  <li><code>os.environ.get(...)</code> allows overrides without a full config framework</li>
+  <li>PowerShell override: <code>$env:TRACKER_DATA_DIR = &quot;data&quot;; python -m src.tracker.demo</code></li>
 </ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code>## Concept Briefing</code> → <code>### 5. Light configuration</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 9)</h1>
-            <p><strong>⚠️</strong> Running modules directly from inside the package</p>
-<p><strong>⚠️</strong> Circular imports between services and models</p>
-<p><strong>⚠️</strong> Shadowing standard library module names</p>
-<p><strong>⚠️</strong> Hard-coded paths in multiple files</p>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> What usually causes <code>ModuleNotFoundError</code> right after a student &quot;cleans up&quot; project structure?</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 10: Logging and Error Reporting</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Use <code>logging</code> instead of scattered <code>print()</code> debugging</li>
-  <li>Choose practical levels: DEBUG, INFO, WARNING, ERROR</li>
-  <li>Keep user messages separate from developer diagnostics</li>
-  <li>Write logs to <code>logs/app.log</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Big Idea</h1>
-            <p><strong>Logs are for developers. Error messages are for users.</strong></p>
-<ul>
-  <li>Users need calm, clear feedback</li>
-  <li>Developers need timestamps, context, and failure detail</li>
-  <li>More output is not the same as better diagnostics</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Practical Log Levels</h1>
-            <ul>
-  <li><code>DEBUG</code> → detailed development tracing</li>
-  <li><code>INFO</code> → normal important events</li>
-  <li><code>WARNING</code> → something odd happened, but recovery is possible</li>
-  <li><code>ERROR</code> → an operation failed</li>
-</ul>
-<h3>Example Signals</h3>
-<ul>
-  <li>&quot;created task 7&quot; → INFO</li>
-  <li>&quot;task 999 missing&quot; → WARNING</li>
-  <li>&quot;failed to save file&quot; → ERROR</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Configure Logging</h1>
-            <pre data-lang="python"><code>import logging
-
-logging.basicConfig(
-    level=logging.INFO,
-    filename=&quot;logs/app.log&quot;,
-)</code></pre>
-<pre data-lang="python"><code>logger = logging.getLogger(__name__)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Friendly User Message, Richer Log</h1>
-            <pre data-lang="python"><code>try:
-    service.get_task(999)
-except NotFoundError:
-    logger.warning(&quot;Attempted lookup for missing task_id=%s&quot;, 999)
-    print(&quot;Task 999 was not found.&quot;)</code></pre>
-<ul>
-  <li>Same event</li>
-  <li>Different audiences</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Add Logging</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Create <code>logs/</code></li>
-  <li>Configure file logging</li>
-  <li>Add at least three log calls</li>
-  <li>Trigger one failure on purpose</li>
-  <li>Inspect <code>logs/app.log</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 10)</h1>
-            <p><span class="check">✓</span> <code>app.log</code> is created</p>
-<p><span class="check">✓</span> Logs show useful events, not noise</p>
-<p><span class="check">✓</span> User-facing messages stay readable</p>
-<p><span class="check">✓</span> Failures leave a developer trail</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 10)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> structured log messages for service events and failures</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> use logging levels instead of <code>print()</code> debugging</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> dumping raw secrets or stack noise into ordinary logs</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 10 | logger name: tracker.service</code></li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/assignments/Advanced_Day3_homework.ipynb</code> → <code>## Part 2: Hour 10 - Logging and error reporting</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day3_Quiz.html</code> → <code>QUIZ_DATA</code> questions 6–10</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 10)</h1>
-            <p><strong>⚠️</strong> Using logs as a substitute for clear code</p>
-<p><strong>⚠️</strong> Logging too little or too much</p>
-<p><strong>⚠️</strong> Showing full tracebacks to end users</p>
-<p><strong>⚠️</strong> Forgetting to create the log directory</p>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> When should you log at <code>WARNING</code> instead of <code>ERROR</code>?</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 11: Context Managers + Safer File Operations</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Explain what a context manager really guarantees</li>
-  <li>Use <code>with</code> for safer resource handling</li>
-  <li>Understand why naive overwrites can corrupt data</li>
-  <li>Apply a write-temp-then-replace save pattern</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>The Mental Model for `with`</h1>
-            <ul>
-  <li>setup on entry</li>
-  <li>cleanup on exit</li>
-  <li>cleanup still happens if an exception occurs</li>
-</ul>
-<h3>Common Uses</h3>
-<ul>
-  <li>files</li>
-  <li>locks</li>
-  <li>database connections</li>
-  <li>temporary resources</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Why Direct Overwrites Are Risky</h1>
-            <pre data-lang="python"><code>with open(&quot;tasks.json&quot;, &quot;w&quot;) as file:
-    file.write(json_text)</code></pre>
-<ul>
-  <li>Better than manual close</li>
-  <li>Still risky if the write fails midway</li>
-  <li>Can leave a good file half-written or corrupted</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Safe Save Pattern</h1>
-            <ol>
-  <li>Resolve the real target path</li>
-  <li>Make sure the parent directory exists</li>
-  <li>Write new content to a temp file</li>
-  <li>Close it successfully</li>
-  <li>Replace the original file</li>
+        <section class="slide" id="lab-restructure-your-tracker-15-d14a9c88" data-slide-number="15">
+            <h1>Lab: Restructure Your Tracker</h1>
+            <p><strong>Time: 25 minutes</strong></p>
+<h3>Required Steps</h3>
+<ol>
+  <li><code>mkdir src\tracker</code> and create an empty <code>src\tracker\__init__.py</code></li>
+  <li>Move <code>models.py</code>, <code>services.py</code>, <code>exceptions.py</code>, <code>demo.py</code> into <code>src/tracker/</code></li>
+  <li>Update all internal imports to use the dot-relative form</li>
+  <li>Add <code>config.py</code> with <code>DATA_DIR</code>, <code>DB_PATH</code>, <code>LOG_DIR</code>, <code>LOG_FILE</code></li>
+  <li>Run <code>python -m src.tracker.demo</code> from the project root</li>
+  <li>Confirm happy path and at least one caught <code>NotFoundError</code> or <code>ValidationError</code></li>
 </ol>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour1_Advanced.md</code> → <code>## Guided Lab: Restructure Your Tracker</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Demo: `save_json_safe`</h1>
-            <pre data-lang="python"><code>from pathlib import Path
-import json
-
-
-def save_json_safe(path: str | Path, data: list[dict]) -&gt; None:
-    target_path = Path(path)
-    temp_path = target_path.with_suffix(target_path.suffix + &quot;.tmp&quot;)
-    with temp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
-        json.dump(data, file, indent=2)
-        file.write(&quot;\n&quot;)
-    temp_path.replace(target_path)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Safe Save Utility</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Implement <code>save_json_safe(path, data)</code></li>
-  <li>Use <code>with</code></li>
-  <li>Write a <code>.tmp</code> file next to the real file</li>
-  <li>Replace only after success</li>
-  <li>Simulate a failure and compare outcomes</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 11)</h1>
-            <p><span class="check">✓</span> File work uses context managers</p>
-<p><span class="check">✓</span> Save logic writes to temp first</p>
-<p><span class="check">✓</span> Replace happens after success</p>
-<p><span class="check">✓</span> Student can explain why the pattern is safer</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 11)</h1>
+        <section class="slide" id="completion-criteria-hour-9-16-4e534719" data-slide-number="16">
+            <h1>Completion Criteria (Hour 9)</h1>
             <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> safe file operation flow that writes and reads tracker data</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> wrap file work in context managers</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> opening files without <code>with</code></li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 11 | file mode: context manager used</code></li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/assignments/Advanced_Day3_homework.ipynb</code> → <code>## Part 3: Hour 11 - Context managers + safer file operations</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day3_Quiz.html</code> → <code>QUIZ_DATA</code> questions 11–15</li>
+  <li><code>src/tracker/__init__.py</code> exists (can be empty)</li>
+  <li>Internal imports use the dot-relative form — <code>from .models import Task</code></li>
+  <li>No module named after a stdlib module (<code>logging.py</code>, <code>json.py</code>, etc.)</li>
+  <li><code>python -m src.tracker.demo</code> from the project root runs without import errors</li>
+  <li><code>config.py</code> holds <code>DATA_DIR</code> and <code>DB_PATH</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 11)</h1>
-            <p><strong>⚠️</strong> Writing directly to the final file first</p>
-<p><strong>⚠️</strong> Putting temp files in unrelated locations</p>
-<p><strong>⚠️</strong> Forgetting to create the parent directory</p>
-<p><strong>⚠️</strong> Teaching &quot;it probably works&quot; instead of failure simulation</p>
+        <section class="slide" id="common-pitfalls-hour-9-17-a088b516" data-slide-number="17">
+            <h1>Common Pitfalls (Hour 9)</h1>
+            <ul>
+  <li>Running <code>python src/tracker/demo.py</code> — package context is missing</li>
+  <li>Keeping flat <code>from models import Task</code> after moving files into the package</li>
+  <li>Circular import: <code>models.py</code> importing from <code>services.py</code></li>
+  <li>Naming a local file <code>logging.py</code> or <code>json.py</code> — shadows the standard library</li>
+  <li>Skipping <code>__init__.py</code> — Python cannot recognize the directory as a package</li>
+</ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> What is the main advantage of writing to a temporary file first?</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 12: Decorators</h1>
+        <section class="slide" id="hour-10-logging-and-error-reporting-practical-18-6e1c2337" data-slide-number="18">
+            <h1>Hour 10: Logging and Error Reporting (Practical)</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-19-c9a82273" data-slide-number="19">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Explain decorators in plain language</li>
-  <li>Build a wrapper with <code><em>args</code> and <code></em>*kwargs</code></li>
-  <li>Add timing or authorization behavior without rewriting core functions</li>
-  <li>Use <code>functools.wraps</code></li>
+  <li>Explain why <code>logging</code> replaces scattered <code>print()</code> debugging</li>
+  <li>Choose the right level: DEBUG, INFO, WARNING, ERROR</li>
+  <li>Configure file logging to <code>logs/app.log</code> near program startup</li>
+  <li>Separate developer diagnostics from friendly user-facing messages</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Decorator Idea</h1>
+        <section class="slide" id="the-central-rule-20-cc0ff995" data-slide-number="20">
+            <h1>The Central Rule</h1>
+            <p><strong>Logs are for developers. Error messages are for users.</strong></p>
+<pre data-lang="text"><code>Developer view (logs/app.log):
+  2026-01-14 10:03:22 WARNING src.tracker.services
+    Missing task lookup task_id=999
+
+User view (terminal):
+  &quot;Task 999 was not found. Please check the ID and try again.&quot;</code></pre>
+<ul>
+  <li><code>print()</code> mixes audiences, carries no timestamp, no severity, disappears on exit</li>
+  <li><code>logging</code> routes information to the right audience and persists it to a file</li>
+  <li>Exceptions still control flow — logging records what happened</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code>## Opening Bridge</code> and <code>## Concept Briefing</code></p>
+        </section>
+
+        <section class="slide" id="practical-log-levels-21-2128b67b" data-slide-number="21">
+            <h1>Practical Log Levels</h1>
+            <pre data-lang="text"><code>DEBUG   — detailed developer-only info; filtered out in production
+INFO    — normal important events (service started, task added)
+WARNING — unexpected but recoverable (lookup for a missing task)
+ERROR   — an operation failed (validation rejected, file not writable)</code></pre>
+<pre data-lang="python"><code>logger.debug(&quot;Inspecting candidate task_id=%s&quot;, task_id)
+logger.info(&quot;Added task_id=%s title=%r&quot;, task.task_id, task.title)
+logger.warning(&quot;Missing task lookup task_id=%s&quot;, task_id)
+logger.error(&quot;Validation rejected task creation&quot;)</code></pre>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code>### Practical logging levels</code></p>
+        </section>
+
+        <section class="slide" id="logging-config-config-py-and-demo-py-22-aff7807f" data-slide-number="22">
+            <h1>Logging Config: `config.py` and `demo.py`</h1>
+            <pre data-lang="python"><code># src/tracker/config.py  — add log paths
+LOG_DIR  = BASE_DIR / &quot;logs&quot;
+LOG_FILE = LOG_DIR  / &quot;app.log&quot;</code></pre>
+<pre data-lang="python"><code># src/tracker/demo.py — configure once near startup
+import logging
+from .config import LOG_DIR, LOG_FILE
+
+def configure_logging() -&gt; None:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)   # create logs/ if missing
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;,
+    )</code></pre>
+<ul>
+  <li>Must call <code>LOG_DIR.mkdir(...)</code> <strong>before</strong> logging fires — the module will not create the directory</li>
+  <li>Call <code>configure_logging()</code> before creating any service object</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code>## Live Demo</code> → Step 1 and Step 3</p>
+        </section>
+
+        <section class="slide" id="module-level-logger-in-services-py-23-088adde6" data-slide-number="23">
+            <h1>Module-Level Logger in `services.py`</h1>
+            <pre data-lang="python"><code># src/tracker/services.py
+import logging
+from .exceptions import NotFoundError, ValidationError
+from .models import Task
+
+logger = logging.getLogger(__name__)   # logger name = &quot;src.tracker.services&quot;
+
+class TaskService:
+    def __init__(self) -&gt; None:
+        self._tasks: dict[int, Task] = {}
+        logger.info(&quot;TaskService initialized&quot;)
+
+    def add(self, task: Task) -&gt; None:
+        if task.task_id in self._tasks:
+            logger.warning(&quot;Rejected duplicate task_id=%s&quot;, task.task_id)
+            raise ValidationError(f&quot;Task {task.task_id} already exists.&quot;)
+        self._tasks[task.task_id] = task
+        logger.info(&quot;Added task_id=%s title=%r&quot;, task.task_id, task.title)
+
+    def get(self, task_id: int) -&gt; Task:
+        try:
+            return self._tasks[task_id]
+        except KeyError as exc:
+            logger.warning(&quot;Missing task lookup task_id=%s&quot;, task_id)
+            raise NotFoundError(f&quot;Task {task_id} was not found.&quot;) from exc</code></pre>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code>## Live Demo</code> → Step 2</p>
+        </section>
+
+        <section class="slide" id="friendly-messages-in-demo-py-24-a4b67291" data-slide-number="24">
+            <h1>Friendly Messages in `demo.py`</h1>
+            <pre data-lang="python"><code>def main() -&gt; None:
+    configure_logging()
+    service = TaskService()
+
+    try:
+        service.get(999)
+    except NotFoundError as exc:
+        logger.warning(&quot;Demo: missing task — %s&quot;, exc)
+        print(&quot;That task was not found. Please check the task ID.&quot;)
+
+    try:
+        service.add(Task(task_id=1, title=&quot;Duplicate&quot;))
+    except ValidationError:
+        logger.exception(&quot;Demo: validation failed on add&quot;)   # traceback in log
+        print(&quot;That task could not be saved. Please check the task details.&quot;)</code></pre>
+<ul>
+  <li><code>logger.exception(...)</code> stores the full traceback in <code>logs/app.log</code> — never on screen</li>
+  <li>Users see two clear sentences; developers see full context in the file</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code>## Live Demo</code> → Step 3</p>
+        </section>
+
+        <section class="slide" id="lab-add-practical-logging-25-06418e17" data-slide-number="25">
+            <h1>Lab: Add Practical Logging</h1>
+            <p><strong>Time: 25 minutes</strong></p>
+<h3>Required Steps</h3>
+<ol>
+  <li>Add <code>LOG_DIR</code> and <code>LOG_FILE</code> to <code>config.py</code></li>
+  <li>Call <code>configure_logging()</code> at startup before creating services</li>
+  <li>Add <code>logger = logging.getLogger(__name__)</code> to <code>services.py</code></li>
+  <li>Add at least 3 service-layer log calls (init, add, missing lookup)</li>
+  <li>Trigger one expected error and catch it with a friendly user message</li>
+  <li>Open <code>logs/app.log</code> and confirm readable, useful entries are present</li>
+</ol>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour2_Advanced.md</code> → <code>## Guided Lab: Add Practical Logging</code></p>
+        </section>
+
+        <section class="slide" id="completion-criteria-hour-10-26-0840d231" data-slide-number="26">
+            <h1>Completion Criteria (Hour 10)</h1>
             <ul>
-  <li>A decorator takes a function</li>
-  <li>Wraps it</li>
-  <li>Returns a new function</li>
-</ul>
-<h3>Good Course Use Cases</h3>
-<ul>
-  <li>timing</li>
-  <li>logging entry/exit</li>
-  <li>toy auth checks</li>
-  <li>lightweight validation</li>
+  <li><code>logs/app.log</code> is created automatically at startup</li>
+  <li>At least three useful service-layer log entries appear</li>
+  <li>User-facing output in the terminal stays friendly and short</li>
+  <li>At least one <code>logger.exception(...)</code> stores a traceback in the file (not on screen)</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: Essential Shape</h1>
-            <pre data-lang="python"><code>def my_decorator(func):
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return result
-    return wrapper</code></pre>
-<ul>
-  <li>Accept the function</li>
-  <li>Pass through arguments</li>
-  <li>Return the result</li>
+        <section class="slide" id="common-pitfalls-hour-10-27-64f204a7" data-slide-number="27">
+            <h1>Common Pitfalls (Hour 10)</h1>
+            <ul>
+  <li>Forgetting <code>LOG_DIR.mkdir(parents=True, exist_ok=True)</code> — logging silently produces no file</li>
+  <li>Calling <code>logging.basicConfig(...)</code> after the first log fires — it becomes a no-op</li>
+  <li>Logging inside a tight loop — produces a log file too noisy to read</li>
+  <li>Printing raw tracebacks to end users instead of routing them to the log</li>
+  <li>Naming a project file <code>logging.py</code> — shadows the standard library module</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Demo: `@timed`</h1>
-            <pre data-lang="python"><code>import time
+        <section class="slide" id="hour-11-context-managers-and-safer-file-operations-28-57d34f88" data-slide-number="28">
+            <h1>Hour 11: Context Managers and Safer File Operations</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-29-952836de" data-slide-number="29">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Explain what a context manager guarantees beyond &quot;closes the file&quot;</li>
+  <li>Use <code>with</code> consistently for files and other cleanup-requiring resources</li>
+  <li>Explain why opening the real file in write mode can corrupt it mid-write</li>
+  <li>Implement <code>save_json_safe(path, data)</code> using write-temp-then-replace</li>
+</ul>
+        </section>
+
+        <section class="slide" id="context-manager-mental-model-30-a72605ec" data-slide-number="30">
+            <h1>Context Manager Mental Model</h1>
+            <pre data-lang="python"><code># Manual — cleanup depends on reaching file.close()
+file = open(&quot;data/tasks.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;)
+file.write(&quot;example&quot;)
+file.close()    # skipped if exception occurs above
+
+# With context manager — cleanup guaranteed
+with Path(&quot;data/tasks.json&quot;).open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    file.write(&quot;example&quot;)
+# file is closed here, even if an exception was raised</code></pre>
+<ul>
+  <li><code>with</code> = &quot;enter this context, do work, always run exit cleanup&quot;</li>
+  <li>Same pattern works for locks, DB connections, temp directories, network sessions</li>
+  <li><code>with</code> guarantees cleanup — it does not guarantee a safe write strategy</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code>## Concept Briefing</code> → <code>### Part 1</code></p>
+        </section>
+
+        <section class="slide" id="why-direct-overwrites-can-corrupt-data-31-3a2fc482" data-slide-number="31">
+            <h1>Why Direct Overwrites Can Corrupt Data</h1>
+            <pre data-lang="python"><code># &quot;w&quot; mode truncates the real file IMMEDIATELY on open
+with Path(&quot;data/tasks.json&quot;).open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+    file.write(&quot;[\n&quot;)
+    file.write(&#x27;  {&quot;task_id&quot;: 2, &quot;title&quot;: &quot;Half-written&quot;&#x27;)
+    raise RuntimeError(&quot;crash mid-write&quot;)   # original content is already gone
+# with closed the file — but it closed a damaged file</code></pre>
+<pre data-lang="text"><code>Direct overwrite:
+  open real file -&gt; old content gone -&gt; write -&gt; maybe fail -&gt; corrupted file
+
+Temp-then-replace:
+  write side file -&gt; old file untouched -&gt; replace only after success</code></pre>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code>## Concept Briefing</code> → <code>### Part 2 and Part 3</code></p>
+        </section>
+
+        <section class="slide" id="save-json-safe-full-implementation-32-f3c1a779" data-slide-number="32">
+            <h1>`save_json_safe` — Full Implementation</h1>
+            <pre data-lang="python"><code>import json
+from pathlib import Path
+from typing import Any
+
+
+def save_json_safe(
+    path: str | Path,
+    data: Any,
+    *,
+    simulate_failure: bool = False,
+) -&gt; None:
+    target_path = Path(path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    # Same-directory temp works for &quot;tasks.json&quot; AND suffix-less &quot;tasks&quot;
+    tmp_path = target_path.with_name(f&quot;{target_path.name}.tmp&quot;)
+
+    try:
+        with tmp_path.open(&quot;w&quot;, encoding=&quot;utf-8&quot;) as file:
+            json.dump(data, file, indent=2)
+            file.write(&quot;\n&quot;)              # trailing newline for readability
+        if simulate_failure:
+            raise RuntimeError(&quot;simulated failure before replace&quot;)
+        tmp_path.replace(target_path)    # only touches target after success
+    except Exception:
+        tmp_path.unlink(missing_ok=True) # clean up temp, then re-raise
+        raise</code></pre>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code>## Live Demo: Write JSON to Temp, Then Replace</code></p>
+        </section>
+
+        <section class="slide" id="proving-the-pattern-works-33-092b1145" data-slide-number="33">
+            <h1>Proving the Pattern Works</h1>
+            <pre data-lang="python"><code># Save known-good data
+save_json_safe(&quot;data/tasks.json&quot;, [{&quot;task_id&quot;: 1, &quot;title&quot;: &quot;Original&quot;}])
+before = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+
+# Simulate a mid-write crash
+try:
+    save_json_safe(
+        &quot;data/tasks.json&quot;,
+        [{&quot;task_id&quot;: 9, &quot;title&quot;: &quot;Should NOT replace original&quot;}],
+        simulate_failure=True,
+    )
+except RuntimeError as err:
+    print(f&quot;Caught: {err}&quot;)
+
+after = Path(&quot;data/tasks.json&quot;).read_text(encoding=&quot;utf-8&quot;)
+print(before == after)                         # True  — original intact
+print(Path(&quot;data/tasks.json.tmp&quot;).exists())    # False — temp cleaned up</code></pre>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code>## Live Demo</code> → <code>### Run the simulated failure</code></p>
+        </section>
+
+        <section class="slide" id="lab-safe-save-utility-for-tracker-data-34-a8850d6b" data-slide-number="34">
+            <h1>Lab: Safe Save Utility for Tracker Data</h1>
+            <p><strong>Time: 25 minutes</strong></p>
+<h3>Required Steps</h3>
+<ol>
+  <li>Implement <code>save_json_safe(path, data)</code> in <code>src/tracker/storage.py</code></li>
+  <li>Save tracker-style data to <code>data/tasks.json</code> (use <code>task.to_dict()</code> for objects)</li>
+  <li>Inspect the file with <code>Get-Content data/tasks.json</code></li>
+  <li>Run a simulated failure — confirm original file is unchanged and <code>.tmp</code> is gone</li>
+  <li>Explain: &quot;What is one advantage of writing to a temp file first?&quot;</li>
+</ol>
+<h3>Stretch Options</h3>
+<ul>
+  <li>Add a <code>load_json(path)</code> helper that returns <code>[]</code> if the file does not exist</li>
+  <li>Log successful saves and failed saves using the Hour 10 logging setup</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour3_Advanced.md</code> → <code>## Guided Lab: Safe Save Utility for Tracker Data</code></p>
+        </section>
+
+        <section class="slide" id="completion-criteria-and-quick-check-hour-11-35-2e46b1ca" data-slide-number="35">
+            <h1>Completion Criteria and Quick Check (Hour 11)</h1>
+            <ul>
+  <li><code>save_json_safe</code> creates the parent directory automatically</li>
+  <li>Temp file is in the same directory as the target</li>
+  <li>JSON write happens inside a <code>with</code> block</li>
+  <li><code>tmp_path.replace(target_path)</code> runs only after the write succeeds</li>
+  <li>Simulated failure leaves the original file content unchanged</li>
+</ul>
+<p><strong>Question:</strong> <code>with</code> closes the file reliably. Why is that still not enough to make a direct overwrite safe?</p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-11-36-42c1cdaf" data-slide-number="36">
+            <h1>Common Pitfalls (Hour 11)</h1>
+            <ul>
+  <li>Using <code>.with_suffix(&quot;.tmp&quot;)</code> — breaks for files with no extension; use <code>with_name(f&quot;{name}.tmp&quot;)</code> instead</li>
+  <li>Writing the temp file in a different directory — complicates <code>replace</code> and may cause cross-device errors</li>
+  <li>Skipping <code>parent.mkdir(parents=True, exist_ok=True)</code> — <code>FileNotFoundError</code> on first run</li>
+  <li>Not calling <code>unlink(missing_ok=True)</code> in the exception path — leaves stale <code>.tmp</code> files</li>
+  <li>On Windows: <code>PermissionError</code> from <code>replace()</code> if the target is locked by an editor, sync tool, or antivirus</li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-12-decorators-for-timing-toy-authorization-and-lightweight-validation-37-113c9a1a" data-slide-number="37">
+            <h1>Hour 12: Decorators for Timing, Toy Authorization, and Lightweight Validation</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-38-af8db19b" data-slide-number="38">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Explain a decorator: a function that takes a function, wraps it, and returns a new callable</li>
+  <li>Write <code>wrapper(<em>args, </em>*kwargs)</code> that handles both functions and methods</li>
+  <li>Build a <code>@timed</code> decorator that logs via the Hour 10 logging setup</li>
+  <li>Use <code>functools.wraps</code> to preserve function name and docstring</li>
+</ul>
+        </section>
+
+        <section class="slide" id="the-problem-decorators-solve-39-abfffab8" data-slide-number="39">
+            <h1>The Problem Decorators Solve</h1>
+            <pre data-lang="python"><code># Duplicated timing code — error-prone to maintain
+def add_task(self, title: str) -&gt; int:
+    start = time.perf_counter()
+    result = self._do_add(title)
+    logger.info(&quot;add_task completed in %.6f s&quot;, time.perf_counter() - start)
+    return result
+
+def list_titles(self) -&gt; list[str]:
+    start = time.perf_counter()
+    result = list(self._titles)
+    logger.info(&quot;list_titles completed in %.6f s&quot;, time.perf_counter() - start)
+    return result</code></pre>
+<ul>
+  <li>Same wrapping code copied into every service method</li>
+  <li>Change the format string once — must edit every copy</li>
+  <li>Forget <code>return result</code> in one copy — silent <code>None</code> bug</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Opening Bridge from Safe Saves to Reusable Wrappers</code></p>
+        </section>
+
+        <section class="slide" id="decorator-anatomy-40-26e19ddf" data-slide-number="40">
+            <h1>Decorator Anatomy</h1>
+            <pre data-lang="python"><code>def my_decorator(func):          # 1. accept the original function
+    def wrapper(*args, **kwargs): # 2. inner function collects ALL args
+        result = func(*args, **kwargs)  # 3. call original
+        return result            # 4. MUST return original result
+    return wrapper               # 5. return the wrapper, not a call to it</code></pre>
+<pre data-lang="python"><code>@my_decorator
+def greet(name: str) -&gt; str:
+    return f&quot;Hello, {name}!&quot;
+
+# Equivalent to: greet = my_decorator(greet)</code></pre>
+<ul>
+  <li><code><em>args, </em>*kwargs</code> forwards everything including <code>self</code> for methods</li>
+  <li>Without <code>return result</code>: decorated function silently returns <code>None</code></li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Concept Briefing: Decorator Anatomy</code></p>
+        </section>
+
+        <section class="slide" id="professional-timed-decorator-41-b8e1decd" data-slide-number="41">
+            <h1>Professional `@timed` Decorator</h1>
+            <pre data-lang="python"><code>import logging
+import time
 from functools import wraps
+from typing import Any, Callable
 
 
-def timed(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
+def timed(func: Callable[..., Any]) -&gt; Callable[..., Any]:
+    @wraps(func)   # preserves __name__, __doc__ — use in professional code
+    def wrapper(*args: Any, **kwargs: Any) -&gt; Any:
+        start  = time.perf_counter()
         result = func(*args, **kwargs)
-        duration = time.perf_counter() - start
-        print(f&quot;{func.__name__} took {duration:.6f} seconds&quot;)
-        return result
+        elapsed = time.perf_counter() - start
+        logging.getLogger(__name__).info(
+            &quot;%s completed in %.6f seconds&quot;,
+            func.__name__,
+            elapsed,
+        )
+        return result  # original result unchanged
     return wrapper</code></pre>
+<ul>
+  <li><code>time.perf_counter()</code> — correct tool for measuring elapsed durations</li>
+  <li><code>logging.getLogger(__name__).info(...)</code> — timing goes to <code>logs/app.log</code>, not <code>print()</code></li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Live Demo: Professional @timed for Service Methods</code></p>
         </section>
 
-        <section class="slide">
-            <h1>Readability Rule</h1>
+        <section class="slide" id="applying-timed-to-service-methods-42-afb251a7" data-slide-number="42">
+            <h1>Applying `@timed` to Service Methods</h1>
+            <pre data-lang="python"><code>class TaskService:
+    def __init__(self) -&gt; None:
+        self._titles: list[str] = []
+
+    @timed
+    def add_task(self, title: str) -&gt; int:
+        self._titles.append(title)
+        return len(self._titles)          # still returns correct count
+
+    @timed
+    def list_titles(self) -&gt; list[str]:
+        return list(self._titles)         # still returns the list</code></pre>
+<pre data-lang="text"><code># logs/app.log after running the demo
+INFO src.tracker.services add_task completed in 0.000080 seconds
+INFO src.tracker.services list_titles completed in 0.000030 seconds</code></pre>
+<ul>
+  <li><code>self</code> passes through <code>args</code> — no special method support needed</li>
+  <li>Return values are unchanged after decoration</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Live Demo</code> → <code>### Add a deterministic service-method example</code></p>
+        </section>
+
+        <section class="slide" id="toy-requires-api-key-shape-not-security-43-fcb816b8" data-slide-number="43">
+            <h1>Toy `@requires_api_key` — Shape, Not Security</h1>
+            <pre data-lang="python"><code>from functools import wraps
+from typing import Any, Callable
+
+
+def requires_api_key(func: Callable[..., Any]) -&gt; Callable[..., Any]:
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -&gt; Any:
+        if kwargs.get(&quot;api_key&quot;) != &quot;demo-key&quot;:
+            raise PermissionError(&quot;invalid API key&quot;)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+@requires_api_key
+def fetch_remote_task_titles(*, api_key: str) -&gt; list[str]:
+    return [&quot;Plan API client&quot;, &quot;Document JSON contract&quot;]</code></pre>
+<ul>
+  <li>Keyword-only <code>api_key</code> avoids positional ambiguity</li>
+  <li><strong>This is a teaching toy</strong> — real auth involves protocols, secrets, rotation, auditing</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Live Demo: Toy @requires_api_key</code></p>
+        </section>
+
+        <section class="slide" id="readability-rules-for-decorators-44-c76ee8ae" data-slide-number="44">
+            <h1>Readability Rules for Decorators</h1>
+            <pre data-lang="text"><code>Use a decorator when:
+  - the extra behavior repeats across multiple functions
+  - the wrapper stays small and focused
+  - the decorated function becomes easier to read
+
+Avoid a decorator when:
+  - it hides the main business rule
+  - it creates surprising side effects
+  - debugging becomes harder than the duplication was</code></pre>
+<ul>
+  <li>Timing is a good decorator: it is cross-cutting, small, and observable</li>
+  <li>Validation that IS the business rule belongs in the model or service — not a wrapper</li>
+</ul>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Concept Briefing</code> → <code>### Part 3: Keep decorators small and readable</code></p>
+        </section>
+
+        <section class="slide" id="lab-timing-decorator-in-the-tracker-project-45-26c50466" data-slide-number="45">
+            <h1>Lab: Timing Decorator in the Tracker Project</h1>
+            <p><strong>Time: 26 minutes</strong></p>
+<h3>Required Steps</h3>
+<ol>
+  <li>Implement <code>@timed</code> using <code>perf_counter</code> + <code>logging.getLogger(__name__).info</code></li>
+  <li>Apply <code>@timed</code> to at least two service functions (e.g., <code>add_task</code>, <code>list_titles</code>)</li>
+  <li>Run the demo from the project root</li>
+  <li>Confirm timing messages appear in <code>logs/app.log</code></li>
+  <li>Verify the decorated functions still return the same values as before</li>
+</ol>
+<h3>Source</h3>
+<p><code>Advanced/lessons/lecture/Day3_Hour4_Advanced.md</code> → <code>## Guided Lab: Timing Decorator in the Tracker Project</code></p>
+        </section>
+
+        <section class="slide" id="completion-criteria-and-pitfalls-hour-12-46-db77ae80" data-slide-number="46">
+            <h1>Completion Criteria and Pitfalls (Hour 12)</h1>
             <ul>
-  <li>Decorators should handle repeated edge behavior</li>
-  <li>They should stay small</li>
-  <li>They should not hide the main business story</li>
+  <li><code>@timed</code> uses <code>wrapper(<em>args, </em>*kwargs)</code> — no fixed parameter list</li>
+  <li><code>time.perf_counter()</code> measures elapsed time</li>
+  <li>Timing message goes through <code>logging.getLogger(__name__).info(...)</code> — not <code>print()</code></li>
+  <li><code>return result</code> is present — decorated functions return unchanged values</li>
+  <li><code>@wraps(func)</code> preserves <code>func.__name__</code> and docstring</li>
 </ul>
-<h3>Stop If...</h3>
+<p>Pitfalls:</p>
 <ul>
-  <li>the wrapper is longer than the function it decorates</li>
-  <li>the decorator becomes a black box of business logic</li>
+  <li>Forgetting <code>return result</code> — decorated function silently returns <code>None</code></li>
+  <li>Not forwarding <code><em>args, </em>*kwargs</code> — method call fails with missing <code>self</code></li>
+  <li>Using <code>print()</code> instead of <code>logging</code> — timing output is inconsistent and untraceable</li>
+  <li>Omitting <code>@wraps(func)</code> — every decorated function appears as <code>wrapper</code> in logs</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Decorator Practice</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Tasks</h3>
-<ul>
-  <li>Build a <code>@timed</code> decorator</li>
-  <li>Attach it to 2 service methods</li>
-  <li>Log the timing result</li>
-  <li>Preserve metadata with <code>@wraps</code></li>
-  <li>Optional: sketch a toy auth or validation decorator</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Completion Criteria (Hour 12)</h1>
-            <p><span class="check">✓</span> Decorated functions still return the right result</p>
-<p><span class="check">✓</span> Timing or validation behavior is visible</p>
-<p><span class="check">✓</span> <code>@wraps</code> preserves helpful metadata</p>
-<p><span class="check">✓</span> Core function purpose remains clear</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 12)</h1>
-            <ul>
-  <li>Homework framing:</li>
-  <li style="margin-left: 30px;"><strong>Goal:</strong> decorated service function with reusable wrappers</li>
-  <li style="margin-left: 30px;"><strong>Best practice:</strong> use decorators for cross-cutting concerns</li>
-  <li style="margin-left: 30px;"><strong>Pitfall:</strong> stuffing business logic into decorators</li>
-  <li>Quiz/canonical contract marker:</li>
-  <li style="margin-left: 30px;"><code>Hour 12 | timing decorator: add_task took 0.002s</code></li>
-</ul>
-<h3>Source Alignment</h3>
-<ul>
-  <li><code>Advanced/assignments/Advanced_Day3_homework.ipynb</code> → <code>## Part 4: Hour 12 - Decorators</code></li>
-  <li><code>Advanced/quizzes/Advanced_Day3_Quiz.html</code> → <code>QUIZ_DATA</code> questions 16–20</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 12)</h1>
-            <p><strong>⚠️</strong> Forgetting to <code>return result</code></p>
-<p><strong>⚠️</strong> Ignoring <code><em>args</code> / <code></em>*kwargs</code> pass-through</p>
-<p><strong>⚠️</strong> Losing function metadata without <code>@wraps</code></p>
-<p><strong>⚠️</strong> Hiding too much logic in the decorator</p>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question:</strong> What breaks if the wrapper forgets to return the original function result?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="session-3-wrap-up-47-48bc06f5" data-slide-number="47">
             <h1>Session 3 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
-            <h1>What We Added Today</h1>
+        <section class="slide" id="what-we-built-today-48-d30db56c" data-slide-number="48">
+            <h1>What We Built Today</h1>
             <ul>
-  <li>Package structure under <code>src/</code></li>
-  <li>Real logging habits</li>
-  <li>Safer JSON save patterns</li>
-  <li>Reusable wrappers through decorators</li>
+  <li>A professional package shape under <code>src/tracker/</code> that other layers can import reliably</li>
+  <li>Practical logging that routes developer detail to <code>logs/app.log</code> and friendly messages to users</li>
+  <li>A <code>save_json_safe</code> helper that protects good data during file writes</li>
+  <li>A <code>@timed</code> decorator that eliminates repeated timing boilerplate around service methods</li>
 </ul>
-<h3>Key Rule</h3>
-<p><strong>Operational habits are part of software design, not an afterthought.</strong></p>
+<h3>Key Day 3 Rule</h3>
+<p><strong>Operational habits — structure, logging, safe saves, reusable wrappers — are part of the design, not an afterthought.</strong></p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="day-3-homework-study-checklist-49-bba52bf0" data-slide-number="49">
             <h1>Day 3 Homework / Study Checklist</h1>
             <ul>
-  <li>Run the project from the intended entry point</li>
-  <li>Inspect <code>logs/app.log</code></li>
-  <li>Test a simulated save failure</li>
-  <li>Re-run a decorated service call</li>
-  <li>Match canonical labels where the notebook expects them</li>
+  <li>Run <code>python -m src.tracker.demo</code> from the project root and confirm it succeeds</li>
+  <li>Open <code>logs/app.log</code> and explain every entry — what level, what module, what event</li>
+  <li>Trigger a simulated save failure and confirm the original file is unchanged</li>
+  <li>Confirm a decorated service call still returns the correct value after adding <code>@timed</code></li>
+  <li>Check: does <code>models.py</code> import anything from <code>services.py</code>? It should not</li>
 </ul>
 <h3>Source Alignment</h3>
 <ul>
-  <li><code>Advanced/assignments/Advanced_Day3_homework.ipynb</code> → <code>## Submission Checklist</code></li>
+  <li><code>Advanced/assignments/Advanced_Day3_homework.ipynb</code> → <code>## Reflection and Submission Checklist</code></li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="next-session-preview-50-f792b0de" data-slide-number="50">
             <h1>Next Session Preview</h1>
             <h3>Session 4 (Hours 13–16)</h3>
 <ul>
-  <li>HTTP clients with <code>requests</code></li>
+  <li>HTTP clients with <code>requests</code> and JSON API contracts</li>
   <li>Environment-variable and secrets habits</li>
   <li>Capstone planning workshop</li>
   <li>Checkpoint 2: persistence-ready core + JSON save/load</li>
 </ul>
+<h3>Bridge from Today</h3>
+<p>The same discipline applies to HTTP wrappers: keep wrappers small, use logging for visibility, and make the core service logic easy to read and test.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="thank-you-51-bf2752a5" data-slide-number="51">
             <h1>Thank You!</h1>
             <p>Package it cleanly.</p>
 <p>Log what matters.</p>
@@ -1040,7 +1204,11 @@ def timed(func):
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1113,17 +1281,24 @@ def timed(func):
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = Array.from(slides).indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

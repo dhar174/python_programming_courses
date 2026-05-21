@@ -386,638 +386,782 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="advanced-day-10-session-10-hours-3740-1-48c5d114" data-slide-number="1">
             <h1>Advanced Day 10 — Session 10 (Hours 37–40)</h1>
-            <div class="subtitle">Python Programming (Advanced) • API Security, Clients, and Milestone Demo</div>
+            <div class="subtitle">Python Programming (Advanced) • API Security, Python Clients, Integration, and Milestone Demo</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-10-overview-2-f31ecbb8" data-slide-number="2">
             <h1>Session 10 Overview</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-3-be2773bb" data-slide-number="3">
             <h1>Topics Covered Today</h1>
             <ul>
-  <li>Hour 37: API security basics with an API key gate</li>
-  <li>Hour 38: Consuming your own API with Python client functions</li>
-  <li>Hour 39: Integration choice — GUI to API or parallel UI/API</li>
-  <li>Hour 40: Checkpoint 5 API milestone demo</li>
+  <li>Hour 37 — API security basics: API key gate and safe storage</li>
+  <li>Hour 38 — Consuming your own API with Python client functions</li>
+  <li>Hour 39 — Integration choice: GUI talks to API or parallel UI/API</li>
+  <li>Hour 40 — Checkpoint 5: API milestone demo</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code># Day 10, Hour 1: API security basics: API key gate + safe storage</code></li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code># Day 10, Hour 2: Consuming your own API: Python client functions</code></li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code># Day 10, Hour 3: Integration choice: GUI talks to API or parallel UI/API</code></li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour4_Advanced.md</code> → <code># Day 10, Hour 4: Checkpoint 5: API milestone demo</code></li>
+</ul>
+<p>Runbook source of truth for all four hours:</p>
+<p><code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → <code>## Session 10, Hours 37–40</code></p>
+        </section>
+
+        <section class="slide" id="session-10-outcomes-4-7df36339" data-slide-number="4">
+            <h1>Session 10 Outcomes</h1>
+            <p>By the end of today, learners will be able to:</p>
+<ul>
+  <li>Gate write operations behind an environment-sourced API key using <code>X-API-Key</code></li>
+  <li>Read secrets from the environment rather than from source code</li>
+  <li>Build a small <code>requests</code>-based Python client with timeouts and structured error handling</li>
+  <li>Choose and defend one of two valid GUI/API integration architectures</li>
+  <li>Deliver a rehearsed Checkpoint 5 demo covering CRUD, auth failure, and layer explanation</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Day Goal</h1>
-            <ul>
-  <li>Move from “API exists” to “API is controlled, usable, and demo-ready”</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Alignment Sources</h1>
-            <ul>
-  <li>Runbook: <code>Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md</code> → Session 10 overview; Hours 37–40</li>
-  <li>Lecture: <code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> through <code>Day10_Hour4_Advanced.md</code></li>
-  <li>Homework: <code>Advanced/assignments/Advanced_Day10_homework.ipynb</code></li>
-  <li>Quiz: <code>Advanced/quizzes/Advanced_Day10_Quiz.html</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Session Theme</h1>
-            <ul>
-  <li>Protect the write surface</li>
-  <li>Use the API from the outside</li>
-  <li>Choose an integration path intentionally</li>
-  <li>Stabilize for checkpoint evidence</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Session Success Criteria</h1>
-            <ul>
-  <li>Write routes require an API key</li>
-  <li>Client calls use timeouts and predictable error handling</li>
-  <li>The project has a clear integration story</li>
-  <li>Checkpoint 5 shows health, CRUD, protection, and architecture explanation</li>
-</ul>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="scope-guardrails-for-today-5-26682a64" data-slide-number="5">
             <h1>Scope Guardrails for Today</h1>
+            
+        </section>
+
+        <section class="slide" id="in-scope-6-03681b4b" data-slide-number="6">
+            <h1>In Scope</h1>
             <ul>
-  <li>This is <strong>not</strong> full authentication or identity management</li>
-  <li>API keys live in configuration, not source control</li>
-  <li>Choose the architecture that best protects the milestone</li>
-  <li>Stabilize before adding extra features</li>
+  <li>Simple API key gating for write operations (POST, PUT, DELETE)</li>
+  <li>Reading secrets from the environment — not from source code</li>
+  <li>Python client library wrapping <code>requests</code> with timeouts</li>
+  <li>Two architectural integration patterns and the tradeoffs between them</li>
+  <li>Checkpoint demo covering CRUD, consistent JSON errors, and API key protection</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="not-yet-7-bfbb3884" data-slide-number="7">
+            <h1>Not Yet</h1>
+            <ul>
+  <li>Full OAuth, JWT, or identity systems</li>
+  <li>Session management or cookie-based authentication</li>
+  <li>Production-grade rate limiting or IP blocking</li>
+  <li>Multi-user access control</li>
+  <li>Front-end frameworks beyond Tkinter</li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-37-api-security-basics-8-2805539f" data-slide-number="8">
             <h1>Hour 37: API Security Basics</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-9-ff4bfda3" data-slide-number="9">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Explain why writes need stronger protection than reads</li>
-  <li>Load a key from configuration</li>
-  <li>Require <code>X-API-Key</code> on <code>POST</code>, <code>PUT</code>, and <code>DELETE</code></li>
-  <li>Return clear <code>401</code> and <code>403</code> responses</li>
+  <li>Add a simple API-key gate for write operations</li>
+  <li>Read secrets from the environment instead of source code</li>
+  <li>Return 401 or 403 JSON errors consistently</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Security Framing Without Panic</h1>
-            <ul>
-  <li>We are adding a <strong>course-level gate</strong></li>
-  <li>We are <strong>not</strong> building OAuth, JWT, or full auth systems</li>
-  <li>The lesson is about:</li>
-  <li style="margin-left: 30px;">safer configuration</li>
-  <li style="margin-left: 30px;">boundary checks</li>
-  <li style="margin-left: 30px;">consistent failure responses</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Rule of thumb</h1>
-            <ul>
-  <li>Reads may be open</li>
-  <li>Writes deserve protection</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>What an API Key Is — and Is Not</h1>
-            <ul>
-  <li>A shared secret checked at the HTTP boundary</li>
-  <li>Good enough for course-level protection of write operations</li>
-  <li><strong>Not</strong> a user identity system</li>
-  <li><strong>Not</strong> a replacement for a production auth stack</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Keep the Secret Out of Source</h1>
-            <pre data-lang="python"><code>import os
-
-API_KEY = os.getenv(&quot;TRACKER_API_KEY&quot;, &quot;&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Safe handling habits</h1>
-            <ul>
-  <li>Do not hard-code the key</li>
-  <li>Do not commit real values</li>
-  <li><code>.env.example</code> may hold placeholders only</li>
-  <li>Do not log the actual secret</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Header + Status Code Pattern</h1>
-            <h3>Client sends</h3>
-<pre data-lang="text"><code>X-API-Key: &lt;value&gt;</code></pre>
-<h3>Server responds</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>401</code> when the key is missing</li>
-  <li><code>403</code> when the key is present but wrong</li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Key habit</h1>
+        <section class="slide" id="vocabulary-hour-37-10-0d48396f" data-slide-number="10">
+            <h1>Vocabulary — Hour 37</h1>
             <ul>
-  <li>Pick a rule and apply it consistently</li>
+  <li><strong>API key gate</strong> — a check at the HTTP boundary that blocks write operations when the correct secret is absent</li>
+  <li><strong><code>X-API-Key</code></strong> — the request header name conventionally used to carry the key</li>
+  <li><strong><code>os.environ.get()</code></strong> — reads from the process environment; the key lives outside of source code</li>
+  <li><strong><code>hmac.compare_digest()</code></strong> — timing-safe string comparison that prevents timing-oracle attacks</li>
+  <li><strong>401 Unauthorized</strong> — the key is missing or unacceptable</li>
+  <li><strong>403 Forbidden</strong> — the key is present but does not match (pick one convention and document it)</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code>### Talk points</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Guard Helper Example</h1>
-            <pre data-lang="python"><code>def require_api_key():
-    provided = request.headers.get(&quot;X-API-Key&quot;, &quot;&quot;)
-
-    if not provided:
-        return error_response(&quot;missing_api_key&quot;, &quot;API key is required.&quot;, 401)
-
-    if not API_KEY or not hmac.compare_digest(provided, API_KEY):
-        return error_response(&quot;invalid_api_key&quot;, &quot;API key is invalid.&quot;, 403)
-
-    return None</code></pre>
+        <section class="slide" id="why-the-key-must-not-live-in-code-11-9c9c667d" data-slide-number="11">
+            <h1>Why the Key Must Not Live in Code</h1>
+            <p>Secrets embedded in source code are:</p>
+<ul>
+  <li>Visible in every Git clone, PR diff, and code review</li>
+  <li>Hard to rotate without a code change</li>
+  <li>Committed by accident more often than developers expect</li>
+</ul>
+<p>Environment-based secrets are:</p>
+<ul>
+  <li>Set per deployment without touching the codebase</li>
+  <li>Rotatable without a commit</li>
+  <li>Documented safely using placeholder examples only</li>
+</ul>
+<blockquote>&quot;Secrets do not belong in Git, screenshots, or hard-coded constants.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day10_Hour1_Advanced.md` → `### Talk points`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Demo Flow: Hour 37</h1>
-            <ol>
-  <li>Read the key from config</li>
-  <li>Add the helper</li>
-  <li>Protect write routes</li>
-  <li>Test three cases:</li>
+        <section class="slide" id="demo-require-api-key-decorator-12-83586005" data-slide-number="12">
+            <h1>Demo: `require_api_key` Decorator</h1>
+            <pre data-lang="python"><code>import hmac
+import os
+from functools import wraps
+from flask import request
+
+def require_api_key(view_func):
+    @wraps(view_func)
+    def wrapper(*args, **kwargs):
+        expected_key = os.environ.get(&quot;TRACKER_API_KEY&quot;)
+        supplied_key = request.headers.get(&quot;X-API-Key&quot;)
+        if not expected_key:
+            return error_response(&quot;server_misconfigured&quot;,
+                                  &quot;API key is not configured&quot;, 500)
+        if not supplied_key or not hmac.compare_digest(
+                supplied_key, expected_key):
+            return error_response(&quot;unauthorized&quot;,
+                                  &quot;Missing or invalid API key&quot;, 401)
+        return view_func(*args, **kwargs)
+    return wrapper</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-applying-the-decorator-to-a-write-route-13-09e92107" data-slide-number="13">
+            <h1>Demo: Applying the Decorator to a Write Route</h1>
+            <pre data-lang="python"><code>@app.post(&quot;/records&quot;)
+@require_api_key
+def create_record():
+    payload = request.get_json(silent=True)
+    if payload is None:
+        return error_response(&quot;invalid_json&quot;,
+                              &quot;Request body must be valid JSON.&quot;, 400)
+    record = tracker_service.create_record(payload)
+    return {&quot;data&quot;: record.to_dict()}, 201</code></pre>
+<p>Three test cases to run during demo:</p>
+<ol>
+  <li><code>POST /records</code> with <strong>no</strong> <code>X-API-Key</code> header — 401 JSON error</li>
+  <li><code>POST /records</code> with <strong>wrong</strong> key — 401 JSON error</li>
+  <li><code>POST /records</code> with <strong>correct</strong> key — 201 created record</li>
 </ol>
+<h3>Source Alignment</h3>
 <ul>
-  <li style="margin-left: 30px;">no key</li>
-  <li style="margin-left: 30px;">wrong key</li>
-  <li style="margin-left: 30px;">correct key</li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code>### Demo steps</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Teaching point</h1>
-            <ul>
-  <li>Security work is incomplete until the failure cases are tested</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Protect the Write Surface</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+        <section class="slide" id="hour-37-lab-protect-the-write-surface-14-2d3f5d4f" data-slide-number="14">
+            <h1>Hour 37 Lab — Protect the Write Surface</h1>
+            <p><strong>Time — 35–50 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Load the key from configuration</li>
-  <li>Protect <code>POST</code>, <code>PUT</code>, and <code>DELETE</code></li>
-  <li>Return structured auth failures</li>
-  <li>Add placeholder documentation for secret setup</li>
-</ul>
+<ol>
+  <li>Export <code>TRACKER_API_KEY</code> in the shell or run configuration</li>
+  <li>Add the <code>require_api_key</code> decorator (or equivalent helper)</li>
+  <li>Apply it to every <code>POST</code>, <code>PUT</code>, and <code>DELETE</code> route</li>
+  <li>Verify three cases manually: missing key, wrong key, correct key</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Every write route is protected</li>
-  <li>Auth failures still use JSON</li>
-  <li>Learner can explain why the service layer stays header-free</li>
+  <li>Write endpoints require the key; <code>GET</code> endpoints still work as intended</li>
+  <li>Missing and wrong keys return JSON using the shared error contract</li>
+  <li>No secret value is committed into source code</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code>### Completion criteria</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 37)</h1>
-            <p><strong>⚠️</strong> Hard-coding the key</p>
-<p><strong>⚠️</strong> Protecting some write routes but forgetting one</p>
-<p><strong>⚠️</strong> Logging the real secret</p>
-<p><strong>⚠️</strong> Treating missing and wrong keys as the same case without intention</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 37)</h1>
-            <ul>
-  <li>Homework goal: a simple API key check around write operations</li>
-  <li>Best practice: environment-based key in course scope</li>
-  <li>Pitfall to avoid: hard-coded credentials in source or logs</li>
-  <li>Quiz-ready anchor: <code>Hour 37 | protected route: POST /tasks</code></li>
+        <section class="slide" id="common-pitfalls-and-exit-ticket-hour-37-15-f97d7613" data-slide-number="15">
+            <h1>Common Pitfalls and Exit Ticket — Hour 37</h1>
+            <p><strong>Common pitfalls:</strong></p>
+<ul>
+  <li>Hard-coding the key value in <code>app.py</code> or any Python file</li>
+  <li>Protecting <code>POST</code> but forgetting <code>PUT</code> or <code>DELETE</code></li>
+  <li>Returning Flask&#x27;s default HTML error instead of JSON</li>
+  <li>Printing or logging the actual secret value</li>
+</ul>
+<p><strong>Exit ticket — answer before moving on:</strong></p>
+<ul>
+  <li>What HTTP status code fits a missing API key in this design?</li>
+  <li>Which file now owns the key-checking responsibility?</li>
+  <li>How would a reviewer prove that the key check works without seeing the real key?</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour1_Advanced.md</code> → <code>### Common pitfalls to watch for</code> and <code>## Quick Checks and Exit Ticket</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: Why should the API key check live in the route layer instead of inside the service layer?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-38-consuming-your-own-api-16-a8e03202" data-slide-number="16">
             <h1>Hour 38: Consuming Your Own API</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-17-b1ca252e" data-slide-number="17">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Write small client functions</li>
-  <li>Set request timeouts</li>
-  <li>Pass auth headers for protected operations</li>
-  <li>Turn server-side failures into readable client feedback</li>
+  <li>Write a small Python client library using <code>requests</code></li>
+  <li>Set timeouts and convert HTTP failures into friendly messages</li>
+  <li>Use the API key header for write operations without leaking the secret</li>
 </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Why Become Your Own Client?</h1>
-            <ul>
-  <li>An API can feel fine from the inside but awkward from the outside</li>
-  <li>Client code reveals:</li>
-  <li style="margin-left: 30px;">confusing contracts</li>
-  <li style="margin-left: 30px;">inconsistent errors</li>
-  <li style="margin-left: 30px;">missing timeouts</li>
-  <li style="margin-left: 30px;">unreliable route behavior</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Healthy mindset</h1>
-            <ul>
-  <li>Let the API prove itself from the consumer’s side</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Shape of a Simple Client Module</h1>
-            <ul>
-  <li>Keep it flat and readable</li>
-  <li>Each function should:</li>
-  <li style="margin-left: 30px;">build the URL</li>
-  <li style="margin-left: 30px;">send the request</li>
-  <li style="margin-left: 30px;">set a timeout</li>
-  <li style="margin-left: 30px;">handle errors predictably</li>
-  <li style="margin-left: 30px;">return parsed JSON or a small mapped result</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Timeout + Header Pattern</h1>
-            <pre data-lang="python"><code>import requests
-
-def create_record(payload: dict, api_key: str) -&gt; dict:
-    response = requests.post(
-        f&quot;{BASE_URL}/records&quot;,
-        json=payload,
-        headers={&quot;X-API-Key&quot;: api_key},
-        timeout=5,
-    )
-    response.raise_for_status()
-    return response.json()</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Habit to keep</h1>
-            <ul>
-  <li>Never let requests hang indefinitely</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Friendly Error Handling</h1>
-            <pre data-lang="python"><code>def safe_create_record(payload: dict, api_key: str):
-    try:
-        return create_record(payload, api_key)
-    except requests.Timeout:
-        print(&quot;The API request timed out.&quot;)
-    except requests.HTTPError as exc:
-        print(f&quot;Request failed: {exc}&quot;)
-    return None</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Teaching point</h1>
-            <ul>
-  <li>The client should help the user understand what failed</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Build the Client Module</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
-<h3>Required functions</h3>
+<h3>Source Alignment</h3>
 <ul>
-  <li><code>list_records</code></li>
-  <li><code>create_record</code></li>
-  <li><code>update_record</code></li>
-  <li><code>delete_record</code></li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
+        </section>
+
+        <section class="slide" id="vocabulary-hour-38-18-f00d41df" data-slide-number="18">
+            <h1>Vocabulary — Hour 38</h1>
+            <ul>
+  <li><strong>API client</strong> — a Python module that wraps raw HTTP calls in named functions</li>
+  <li><strong><code>timeout</code></strong> — maximum seconds <code>requests</code> will wait before raising <code>Timeout</code></li>
+  <li><strong><code>raise_for_status()</code></strong> — converts any 4xx/5xx response into an <code>HTTPError</code></li>
+  <li><strong><code>TrackerApiError</code></strong> — a custom exception carrying <code>status_code</code>, <code>code</code>, and <code>request_id</code></li>
+  <li><strong>Content-Type guard</strong> — a check that confirms the response is JSON before calling <code>.json()</code></li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>### Talk points</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="why-build-a-client-module-19-082be15f" data-slide-number="19">
+            <h1>Why Build a Client Module?</h1>
+            <p>A client module hides repetitive details so the rest of the app stays clean:</p>
+<table>
+<thead>
+<tr>
+<th>Without client module</th>
+<th>With client module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>requests.get(...)</code> scattered everywhere</td>
+<td><code>client.list_records()</code></td>
+</tr>
+<tr>
+<td>Timeout missing on several calls</td>
+<td>Timeout set once on the client object</td>
+</tr>
+<tr>
+<td>Headers rebuilt per call site</td>
+<td><code>_headers()</code> method centralises them</td>
+</tr>
+<tr>
+<td><code>HTTPError</code> leaks into GUI/CLI code</td>
+<td><code>TrackerApiError</code> is the only exception</td>
+</tr>
+</tbody>
+</table>
+<blockquote>&quot;A timeout is not optional; without it the program can hang forever.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day10_Hour2_Advanced.md` → `### Talk points`</blockquote>
+        </section>
+
+        <section class="slide" id="demo-trackerapierror-and-trackerapiclient-dataclass-20-86d8914d" data-slide-number="20">
+            <h1>Demo: `TrackerApiError` and `TrackerApiClient` Dataclass</h1>
+            <pre data-lang="python"><code>from dataclasses import dataclass
+import requests
+
+class TrackerApiError(RuntimeError):
+    def __init__(self, message: str, *, status_code: int | None = None,
+                 code: str | None = None,
+                 request_id: str | None = None) -&gt; None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.code = code
+        self.request_id = request_id
+
+@dataclass
+class TrackerApiClient:
+    base_url: str
+    api_key: str | None = None
+    timeout: float = 5.0
+
+    def _headers(self) -&gt; dict[str, str]:
+        headers = {&quot;Accept&quot;: &quot;application/json&quot;}
+        if self.api_key:
+            headers[&quot;X-API-Key&quot;] = self.api_key
+        return headers</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-request-json-central-error-translation-21-187a0e3f" data-slide-number="21">
+            <h1>Demo: `_request_json` — Central Error Translation</h1>
+            <pre data-lang="python"><code>    def _request_json(self, method: str, path: str, **kwargs) -&gt; dict | None:
+        url = f&quot;{self.base_url}{path}&quot;
+        try:
+            response = requests.request(
+                method, url, timeout=self.timeout,
+                headers=self._headers(), **kwargs)
+            response.raise_for_status()
+            if response.status_code == 204 or not response.content:
+                return None
+            if &quot;json&quot; not in response.headers.get(&quot;Content-Type&quot;, &quot;&quot;).lower():
+                raise TrackerApiError(
+                    f&quot;API returned non-JSON: {response.text[:200]}&quot;)
+            return response.json()
+        except requests.Timeout as exc:
+            raise TrackerApiError(
+                &quot;API request timed out. Check that the server is running.&quot;
+            ) from exc
+        except requests.ConnectionError as exc:
+            raise TrackerApiError(
+                &quot;Could not connect to the API. Check the base URL and port.&quot;
+            ) from exc</code></pre>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="demo-list-records-and-create-record-22-2d6d11b8" data-slide-number="22">
+            <h1>Demo: `list_records` and `create_record`</h1>
+            <pre data-lang="python"><code>    def list_records(self) -&gt; list[dict]:
+        payload = self._request_json(&quot;GET&quot;, &quot;/records&quot;)
+        if not payload:
+            raise TrackerApiError(&quot;API returned no record data.&quot;)
+        return payload[&quot;data&quot;]
+
+    def create_record(self, payload: dict) -&gt; dict:
+        response_payload = self._request_json(
+            &quot;POST&quot;, &quot;/records&quot;, json=payload)
+        if not response_payload:
+            raise TrackerApiError(&quot;API returned no created record data.&quot;)
+        return response_payload[&quot;data&quot;]</code></pre>
+<p>Demo sequence:</p>
+<ol>
+  <li>Instantiate <code>TrackerApiClient</code> with <code>base_url</code> and <code>api_key</code></li>
+  <li>Call <code>list_records()</code> — show the data list</li>
+  <li>Call <code>create_record({...})</code> — show the returned record</li>
+  <li>Stop the server to trigger <code>TrackerApiError</code> with friendly message</li>
+</ol>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>### Demo steps</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-38-lab-build-the-client-module-23-32694b17" data-slide-number="23">
+            <h1>Hour 38 Lab — Build the Client Module</h1>
+            <p><strong>Time — 35–50 minutes</strong></p>
+<h3>Tasks</h3>
+<ol>
+  <li>Create <code>client/api_client.py</code> with <code>TrackerApiClient</code></li>
+  <li>Implement <code>list_records</code>, <code>create_record</code>, <code>update_record</code>, <code>delete_record</code></li>
+  <li>Add <code>timeout</code> on every request path</li>
+  <li>Confirm write operations pass the <code>X-API-Key</code> header</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>Timeout is visible in each request path</li>
-  <li>Write operations pass the header</li>
-  <li>Learner can explain the difference between timeout and validation failure</li>
+  <li>Client can list, create, update, and delete records end-to-end</li>
+  <li>Timeouts are present on every request</li>
+  <li>Write operations pass the API key header when configured</li>
+  <li>Connection and HTTP errors produce <code>TrackerApiError</code>, not raw tracebacks</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>### Completion criteria</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 38)</h1>
-            <p><strong>⚠️</strong> No timeout</p>
-<p><strong>⚠️</strong> Forgetting headers on <code>PUT</code> or <code>DELETE</code></p>
-<p><strong>⚠️</strong> Copy-pasting base URLs everywhere</p>
-<p><strong>⚠️</strong> Swallowing errors with no visible message</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 38)</h1>
-            <ul>
-  <li>Homework goal: a reusable Python client for the tracker API</li>
-  <li>Best practice: wrap requests in small client functions</li>
-  <li>Pitfall to avoid: raw requests calls scattered everywhere</li>
-  <li>Quiz-ready anchor: <code>Hour 38 | client base url: http://localhost:5000</code></li>
+        <section class="slide" id="common-pitfalls-and-exit-ticket-hour-38-24-f81560a9" data-slide-number="24">
+            <h1>Common Pitfalls and Exit Ticket — Hour 38</h1>
+            <p><strong>Common pitfalls:</strong></p>
+<ul>
+  <li>No <code>timeout</code> argument on <code>requests</code> calls</li>
+  <li>Forgetting headers on <code>PUT</code>/<code>DELETE</code> after adding them to <code>POST</code></li>
+  <li>Assuming every response body is JSON even for network failures</li>
+  <li>Catching every exception and losing the useful status code</li>
+</ul>
+<p><strong>Exit ticket — answer before moving on:</strong></p>
+<ul>
+  <li>Why should a client set a timeout even during local development?</li>
+  <li>What is the difference between <code>requests.Timeout</code> and <code>requests.HTTPError</code>?</li>
+  <li>Which module is now the single place for all HTTP error translation?</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour2_Advanced.md</code> → <code>### Common pitfalls to watch for</code> and <code>## Quick Checks and Exit Ticket</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What problem does <code>timeout=5</code> solve that a successful happy-path demo might hide?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-39-integration-choice-25-2506cc61" data-slide-number="25">
             <h1>Hour 39: Integration Choice</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-26-f5664f6c" data-slide-number="26">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Describe two valid integration patterns</li>
-  <li>Choose the safer path for the current project state</li>
-  <li>Prove the system stays coherent</li>
-  <li>Explain tradeoffs clearly</li>
+  <li>Choose one capstone integration architecture and implement a cohesive flow</li>
+  <li>Explain the tradeoff between GUI to API and parallel surfaces over one service layer</li>
+  <li>Demonstrate both UI and API consistency over the same underlying data</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Two Valid Paths</h1>
-            <h3>Option A: GUI talks to API</h3>
-<pre data-lang="text"><code>GUI -&gt; client functions -&gt; API -&gt; service -&gt; repository -&gt; database</code></pre>
-<h3>Option B: Parallel GUI and API</h3>
-<pre data-lang="text"><code>GUI -&gt; service -&gt; repository -&gt; database
-API -&gt; service -&gt; repository -&gt; database</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Important</h1>
+        <section class="slide" id="vocabulary-hour-39-27-871a84e6" data-slide-number="27">
+            <h1>Vocabulary — Hour 39</h1>
             <ul>
-  <li>Both are valid in this course</li>
+  <li><strong>Option A</strong> — GUI calls <code>TrackerApiClient</code>; the API is the sole gateway to persistence</li>
+  <li><strong>Option B</strong> — GUI and API both call <code>TrackerService</code> and <code>TrackerRepository</code> directly</li>
+  <li><strong>Schema drift</strong> — the silent bug when GUI uses <code>name</code>, API uses <code>title</code>, database uses <code>item_name</code></li>
+  <li><strong>Single source of truth</strong> — one layer (the service) owns the validation rule; every surface defers to it</li>
+  <li><strong>Thin callback</strong> — a GUI function that coordinates, but does not own, business rules</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>### Talk points</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Option A: GUI to API</h1>
-            <h3>Benefits</h3>
+        <section class="slide" id="two-architecture-options-28-ae905471" data-slide-number="28">
+            <h1>Two Architecture Options</h1>
+            <p><strong>Option A — GUI calls API</strong></p>
+<pre data-lang="text"><code>Tkinter GUI
+    ↓  TrackerApiClient  (HTTP + X-API-Key)
+Flask API routes
+    ↓  TrackerService
+    ↓  TrackerRepository
+    ↓  SQLite</code></pre>
+<p><strong>Option B — Parallel surfaces, shared service</strong></p>
+<pre data-lang="text"><code>Tkinter GUI          Flask API routes
+    ↓                     ↓
+TrackerService  (shared)
+    ↓
+TrackerRepository → SQLite</code></pre>
+<h3>Source Alignment</h3>
 <ul>
-  <li>One outward-facing contract</li>
-  <li>GUI exercises the same HTTP behavior as other clients</li>
-  <li>Good practice for decoupled systems</li>
-</ul>
-<h3>Tradeoffs</h3>
-<ul>
-  <li>More moving parts</li>
-  <li>More failure points</li>
-  <li>GUI must handle network-style issues</li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>### Talk points</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Option B: Parallel GUI and API</h1>
-            <h3>Benefits</h3>
+        <section class="slide" id="option-a-code-sketch-gui-calls-the-api-client-29-f88289cf" data-slide-number="29">
+            <h1>Option A Code Sketch — GUI Calls the API Client</h1>
+            <pre data-lang="python"><code>from api_client import TrackerApiClient, TrackerApiError
+
+def on_save_clicked() -&gt; None:
+    payload = {
+        &quot;title&quot;: title_var.get(),
+        &quot;category&quot;: category_var.get(),
+        &quot;status&quot;: status_var.get() or &quot;open&quot;,
+    }
+    try:
+        created = api_client.create_record(payload)
+    except TrackerApiError as exc:
+        messagebox.showerror(&quot;Save failed&quot;, str(exc))
+        return
+    refresh_table()
+    save_status_var.set(f&quot;Saved record {created[&#x27;id&#x27;]}&quot;)</code></pre>
+<p>The GUI never imports <code>TrackerService</code> or <code>TrackerRepository</code> directly.</p>
+<h3>Source Alignment</h3>
 <ul>
-  <li>Faster to stabilize</li>
-  <li>Lower integration friction</li>
-  <li>Still demonstrates architecture reuse</li>
-</ul>
-<h3>Tradeoffs</h3>
-<ul>
-  <li>GUI does not exercise the HTTP contract directly</li>
-  <li>Fields and behavior can drift if discipline slips</li>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>How to Choose Well</h1>
-            <ul>
-  <li>If the API and client are stable, Option A is reasonable</li>
-  <li>If the project still feels shaky, Option B often protects the milestone better</li>
-  <li>Choosing the safer path is a <strong>professional decision</strong>, not a weaker one</li>
+        <section class="slide" id="option-b-code-sketch-gui-calls-service-directly-30-7b7b1354" data-slide-number="30">
+            <h1>Option B Code Sketch — GUI Calls Service Directly</h1>
+            <pre data-lang="python"><code>from tracker.service import TrackerService, ValidationError
+
+def save_directly_through_service() -&gt; None:
+    payload = {
+        &quot;title&quot;: title_var.get(),
+        &quot;category&quot;: category_var.get(),
+        &quot;status&quot;: status_var.get() or &quot;open&quot;,
+    }
+    try:
+        record = tracker_service.create_record(payload)
+    except ValidationError as exc:
+        messagebox.showerror(&quot;Save failed&quot;, str(exc))
+        return
+    save_status_var.set(f&quot;Saved record {record.id}&quot;)</code></pre>
+<p>The API routes call the <strong>same</strong> <code>tracker_service</code> instance — no duplicate validation.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Integration Sprint</h1>
-            <p><strong>Time: 25–35 minutes</strong></p>
+        <section class="slide" id="tradeoffs-at-a-glance-31-f316f101" data-slide-number="31">
+            <h1>Tradeoffs at a Glance</h1>
+            <table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Option A (GUI to API)</th>
+<th>Option B (Parallel)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complexity</td>
+<td>More moving parts</td>
+<td>Fewer layers</td>
+</tr>
+<tr>
+<td>Failure points</td>
+<td>Network errors to handle</td>
+<td>Fewer error modes</td>
+</tr>
+<tr>
+<td>Testability</td>
+<td>GUI tests require running API</td>
+<td>GUI tests use service directly</td>
+</tr>
+<tr>
+<td>Schema alignment</td>
+<td>Enforced by API contract</td>
+<td>Requires field discipline</td>
+</tr>
+<tr>
+<td>Demo risk</td>
+<td>Higher if API is still unstable</td>
+<td>Lower if API has rough edges</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb:</strong> If your API is stable, choose Option A. If the API still has rough edges, Option B protects the milestone better.</p>
+        </section>
+
+        <section class="slide" id="hour-39-lab-integration-sprint-32-ac5e7a22" data-slide-number="32">
+            <h1>Hour 39 Lab — Integration Sprint</h1>
+            <p><strong>Time — 35–50 minutes</strong></p>
 <h3>Tasks</h3>
-<ul>
-  <li>Choose Option A or B intentionally</li>
-  <li>Document the choice briefly</li>
-  <li>Prove both surfaces touch the same underlying data</li>
-  <li>Fix at least one mismatch if it appears</li>
-</ul>
+<ol>
+  <li>Choose Option A or B — state your choice in a code comment or README line</li>
+  <li>Implement one end-to-end action (create and list) through the chosen path</li>
+  <li>Prove both surfaces read the same database records</li>
+  <li>Confirm validation errors surface clearly to the user — no silent failures</li>
+</ol>
 <h3>Completion Criteria</h3>
 <ul>
-  <li>The architecture choice is explicit</li>
-  <li>The system still looks like <strong>one</strong> application</li>
+  <li>Chosen integration path works for at least create and list</li>
+  <li>Learner can explain why they chose A or B</li>
+  <li>Validation errors are shown consistently and do not crash the UI</li>
+  <li>The same fields and statuses appear across GUI, API, and database</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>### Completion criteria</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls (Hour 39)</h1>
-            <p><strong>⚠️</strong> GUI and API using different field names</p>
-<p><strong>⚠️</strong> Stale GUI data after writes</p>
-<p><strong>⚠️</strong> Accidentally creating two database files</p>
-<p><strong>⚠️</strong> Drifting into a hybrid design nobody can explain</p>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 39)</h1>
-            <ul>
-  <li>Homework goal: an integration story that connects the interface to the API cleanly</li>
-  <li>Best practice: pick one path and document the communication flow</li>
-  <li>Pitfall to avoid: parallel flows without a clear source of truth</li>
-  <li>Quiz-ready anchor: <code>Hour 39 | chosen path: gui talks to api</code></li>
+        <section class="slide" id="common-pitfalls-and-exit-ticket-hour-39-33-962da7aa" data-slide-number="33">
+            <h1>Common Pitfalls and Exit Ticket — Hour 39</h1>
+            <p><strong>Common pitfalls:</strong></p>
+<ul>
+  <li>Two schemas: <code>name</code> in GUI, <code>title</code> in API, <code>item_name</code> in the database</li>
+  <li>GUI does not refresh the table after an API call completes</li>
+  <li>Running the API and GUI against different SQLite database files</li>
+  <li>Turning the GUI callback into a large block of networking code</li>
+</ul>
+<p><strong>Exit ticket — answer before moving on:</strong></p>
+<ul>
+  <li>What is the biggest tradeoff of your chosen architecture?</li>
+  <li>Where is the single validation rule written that both surfaces must respect?</li>
+  <li>What command proves both surfaces share the same underlying data?</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour3_Advanced.md</code> → <code>### Common pitfalls to watch for</code> and <code>## Quick Checks and Exit Ticket</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: When would Option B be the smarter choice even if Option A feels more impressive?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="hour-40-checkpoint-5-api-milestone-demo-34-e73460b5" data-slide-number="34">
             <h1>Hour 40: Checkpoint 5 — API Milestone Demo</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-35-5929edeb" data-slide-number="35">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Demonstrate a working API backed by SQLite</li>
-  <li>Show security and error handling in action</li>
-  <li>Explain the layer connections</li>
-  <li>Identify the weakest part of the milestone honestly</li>
+  <li>Deliver a working REST API backed by SQLite</li>
+  <li>Demonstrate CRUD, consistent JSON errors, and API-key protection</li>
+  <li>Use a short rubric to identify final fixes before analytics and testing</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour4_Advanced.md</code> → <code>## Learning Outcomes</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>What Counts as Success</h1>
-            <ul>
-  <li>Flask API with CRUD routes</li>
-  <li>SQLite-backed persistence</li>
-  <li>Consistent JSON errors</li>
-  <li>API key protection on write operations</li>
-  <li>Optional Python client if available</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Reminder</h1>
-            <ul>
-  <li>Today rewards stability more than feature count</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Fast-Grade Demo Sequence</h1>
-            <ol>
-  <li><code>GET /health</code></li>
-  <li><code>GET /records</code></li>
-  <li><code>POST /records</code> with valid key</li>
-  <li><code>PUT /records/&lt;id&gt;</code> with valid key</li>
-  <li><code>DELETE /records/&lt;id&gt;</code> with valid key</li>
-  <li>one missing or invalid key failure</li>
-  <li>one invalid input or not-found failure</li>
+        <section class="slide" id="what-the-checkpoint-must-prove-36-30dda38d" data-slide-number="36">
+            <h1>What the Checkpoint Must Prove</h1>
+            <p>A milestone demo is <strong>evidence</strong>, not a sales pitch:</p>
+<ol>
+  <li>The API starts reliably from documented instructions</li>
+  <li>Health, list, create, update, and delete all work</li>
+  <li>Missing or wrong API keys produce a consistent JSON error</li>
+  <li>Persistence is real — data survives a server restart</li>
+  <li>Routes and service logic are visibly separated</li>
 </ol>
+<blockquote>&quot;Show the happy path first, then deliberately prove sad paths.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day10_Hour4_Advanced.md` → `### Talk points`</blockquote>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="fast-grade-demo-sequence-37-53fd9e45" data-slide-number="37">
+            <h1>Fast-Grade Demo Sequence</h1>
+            <pre data-lang="python"><code># Suggested demo order — run each step, read the result aloud
+
+# 1. GET /health          -&gt; 200 {&quot;status&quot;: &quot;ok&quot;}
+# 2. GET /records         -&gt; 200 {&quot;data&quot;: [...]}
+# 3. POST /records        (no X-API-Key) -&gt; 401 JSON error
+# 4. POST /records        (with key) -&gt; 201 created record
+# 5. PUT  /records/&lt;id&gt;   (with key) -&gt; 200 updated record
+# 6. DELETE /records/&lt;id&gt; (with key) -&gt; 204 or documented success
+# 7. GET  /records/&lt;id&gt;   (after delete) -&gt; 404 JSON error</code></pre>
+<p>Prove persistence: restart the server between steps 4 and 2, then re-run step 2 to show data survived.</p>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour4_Advanced.md</code> → <code>### Demo code or command sketch</code></li>
+</ul>
+        </section>
+
+        <section class="slide" id="stabilization-checklist-38-458dd03f" data-slide-number="38">
             <h1>Stabilization Checklist</h1>
-            <pre data-lang="text"><code>[ ] API starts reliably
-[ ] /health returns JSON
-[ ] Create returns 201
-[ ] Update returns 200
-[ ] Delete returns 200
-[ ] Invalid input returns 400 JSON
-[ ] Missing/wrong key returns 401/403 JSON
-[ ] Data persists in SQLite</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Rehearsal Mindset</h1>
-            <ul>
-  <li>Confirm payloads before demo time</li>
-  <li>Confirm headers before demo time</li>
-  <li>Confirm database path before demo time</li>
-  <li>Reproduce failures intentionally</li>
-  <li>Fix the weakest route first</li>
+            <p>Before queuing for a review, tick every item:</p>
+<ul>
+  <li>[ ] API starts from a fresh terminal with <code>flask run</code> or <code>python -m api.app</code></li>
+  <li>[ ] <code>GET /health</code> returns JSON <code>{&quot;status&quot;: &quot;ok&quot;}</code></li>
+  <li>[ ] <code>POST /records</code> with valid key returns <code>201</code> with the new record</li>
+  <li>[ ] <code>PUT /records/&lt;id&gt;</code> with valid key returns <code>200</code> with updated data</li>
+  <li>[ ] <code>DELETE /records/&lt;id&gt;</code> with valid key returns <code>204</code> or documented success</li>
+  <li>[ ] Any invalid input returns <code>400</code> JSON using the shared error contract</li>
+  <li>[ ] Missing or wrong key returns <code>401</code> or <code>403</code> JSON</li>
+  <li>[ ] Data persists — a fresh <code>GET /records</code> after restart confirms it</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour4_Advanced.md</code> → <code>### Completion criteria</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Scope guardrail</h1>
-            <ul>
-  <li>Stabilize before adding any “nice-to-have” endpoint</li>
+        <section class="slide" id="capstone-quality-gate-39-314c77b6" data-slide-number="39">
+            <h1>Capstone Quality Gate</h1>
+            <table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Ready evidence</th>
+<th>Needs attention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correctness</td>
+<td>Feature works with a realistic happy path</td>
+<td>Only works with hard-coded or instructor data</td>
+</tr>
+<tr>
+<td>Error handling</td>
+<td>Sad path produces clear JSON error or exception</td>
+<td>App crashes or returns HTML traceback</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Responsibility is in the correct layer</td>
+<td>Route, service, and SQL logic tangled together</td>
+</tr>
+<tr>
+<td>Repeatability</td>
+<td>A command or documented step reproduces the result</td>
+<td>Result depends on manual memory or IDE state</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>Names are clear; next feature has an obvious place</td>
+<td>Code works once but will be hard to extend</td>
+</tr>
+</tbody>
+</table>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour4_Advanced.md</code> → <code>### Capstone quality gate</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Common Failure Modes</h1>
-            <p><strong>⚠️</strong> HTML error page instead of JSON</p>
-<p><strong>⚠️</strong> One write route forgot the API key check</p>
-<p><strong>⚠️</strong> Service exceptions leaking uncaught</p>
-<p><strong>⚠️</strong> Payload shape not matching parser rules</p>
-<p><strong>⚠️</strong> Different database paths in different environments</p>
-        </section>
-
-        <section class="slide">
-            <h1>Showcase Prompt</h1>
-            <ul>
-  <li>Show one healthy path</li>
-  <li>Show one protected failure</li>
-  <li>Explain the architecture in one minute</li>
-  <li>Name the most fragile part honestly</li>
+        <section class="slide" id="common-pitfalls-and-exit-ticket-hour-40-40-60200a7b" data-slide-number="40">
+            <h1>Common Pitfalls and Exit Ticket — Hour 40</h1>
+            <p><strong>Common pitfalls:</strong></p>
+<ul>
+  <li>Returning an HTML error page during a sad-path demo</li>
+  <li>Uncaught service exceptions causing <code>500</code> for predictable validation issues</li>
+  <li>No visible separation between route logic and service logic</li>
+  <li>Demo exceeds the time budget because commands were not rehearsed</li>
+</ul>
+<p><strong>Exit ticket — answer before moving on:</strong></p>
+<ul>
+  <li>What is one concrete design choice that kept your API maintainable?</li>
+  <li>Which route would a reviewer probe first to test your security gate?</li>
+  <li>Name the weakest part of your milestone honestly — and the single next fix</li>
+</ul>
+<h3>Source Alignment</h3>
+<ul>
+  <li><code>Advanced/lessons/lecture/Day10_Hour4_Advanced.md</code> → <code>### Exit-ticket prompts</code> and <code>### Common pitfalls to watch for</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Good demo standard</h1>
-            <ul>
-  <li>believable</li>
-  <li>repeatable</li>
-  <li>explainable</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Homework + Quiz Emphasis (Hour 40)</h1>
-            <ul>
-  <li>Homework goal: a checkpoint demo showing the secured API and client path</li>
-  <li>Best practice: checkpoint the full request flow from caller to response</li>
-  <li>Pitfall to avoid: proving only one endpoint and calling it a milestone</li>
-  <li>Quiz-ready anchor: <code>Hour 40 | api demo health: ok</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check</h1>
-            <p><strong>Question</strong>: What makes an API milestone feel maintainable, not just functional?</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="day-10-wrap-up-41-2f5938ac" data-slide-number="41">
             <h1>Day 10 Wrap-Up</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="end-of-day-evidence-42-6945b9b6" data-slide-number="42">
             <h1>End-of-Day Evidence</h1>
-            <ul>
-  <li>Key-based protection is working</li>
-  <li>Client code can consume the API safely</li>
-  <li>Integration choice is deliberate</li>
-  <li>Checkpoint 5 can be demoed without guesswork</li>
+            <p>By the end of this session, each capstone should have:</p>
+<ul>
+  <li>Write routes protected by <code>X-API-Key</code> read from the environment</li>
+  <li>A <code>TrackerApiClient</code> with timeout, <code>_headers</code>, and structured error translation</li>
+  <li>A documented integration choice (Option A or Option B) with working create/list</li>
+  <li>A rehearsed Checkpoint 5 demo covering the full fast-grade sequence</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Homework Focus</h1>
-            <ul>
-  <li>Keep output deterministic in <code>Advanced_Day10_homework.ipynb</code></li>
-  <li>Rehearse the anchor lines:</li>
-  <li style="margin-left: 30px;"><code>protected route: POST /tasks</code></li>
-  <li style="margin-left: 30px;"><code>client base url: http://localhost:5000</code></li>
-  <li style="margin-left: 30px;"><code>chosen path: gui talks to api</code></li>
-  <li style="margin-left: 30px;"><code>api demo health: ok</code></li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Exit Ticket</h1>
-            <ol>
-  <li>Which endpoint is strongest in your demo flow?</li>
-  <li>What did the client reveal about your API?</li>
-  <li>Which architecture choice did you make — and why?</li>
+        <section class="slide" id="session-10-exit-ticket-43-35a9c58d" data-slide-number="43">
+            <h1>Session 10 Exit Ticket</h1>
+            <p>Three questions to answer before leaving:</p>
+<ol>
+  <li>Which write route is most confidently protected — and which one still worries you?</li>
+  <li>What did writing the Python client reveal about your own API contract?</li>
+  <li>Which integration architecture did you choose, and what would make you reconsider it?</li>
 </ol>
+<blockquote>&quot;Your exit ticket is a sentence, not an essay: name what works, name what still needs attention, and name your next command.&quot;</blockquote>
+<blockquote></blockquote>
+<blockquote>— `Advanced/lessons/lecture/Day10_Hour4_Advanced.md` → `## Reflection, Quick Checks, and Exit Ticket`</blockquote>
         </section>
 
-        <section class="slide">
-            <h1>Looking Ahead</h1>
+        <section class="slide" id="looking-ahead-day-11-44-c3b58eb8" data-slide-number="44">
+            <h1>Looking Ahead — Day 11</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="next-session-45-44de7d05" data-slide-number="45">
             <h1>Next Session</h1>
             <ul>
-  <li>Turn stored data into summaries</li>
-  <li>Build report-ready charts</li>
-  <li>Try a limited regression workflow or fallback analysis</li>
-  <li>Add analytics as a real capstone feature</li>
+  <li>Turn persisted tracker records into meaningful summaries with <code>pandas</code></li>
+  <li>Build report-ready charts using <code>matplotlib</code></li>
+  <li>Add an analytics layer as a real capstone deliverable</li>
+  <li>Introduce a limited regression test workflow to protect growing complexity</li>
 </ul>
+<blockquote>Today&#x27;s API stability is tomorrow&#x27;s analytics foundation. Checkpoint 5 is the gate.</blockquote>
         </section>
     </div>
     
@@ -1062,7 +1206,11 @@ API -&gt; service -&gt; repository -&gt; database</code></pre>
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -1135,17 +1283,24 @@ API -&gt; service -&gt; repository -&gt; database</code></pre>
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = Array.from(slides).indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

@@ -6,6 +6,10 @@
 **Delivery mode:** Instructor-led checkpoint with active lab
 **Scope guardrails:** Basics only, in-memory only, no file I/O, no package architecture
 
+[Instructor slide change: page=31; title=Hour 40: Checkpoint 5 — Functions, Modules, and Intro OOP]
+
+[Instructor slide change: page=32; title=Learning Outcomes]
+
 ## Learning Outcomes
 
 By the end of this checkpoint, learners will demonstrate the ability to:
@@ -361,6 +365,8 @@ Wait for hands, then say:
 
 This is the exact lab statement. Read aloud and leave it projected.
 
+[Instructor slide change: page=36; title=Checkpoint 5 Lab Requirements]
+
 ### Checkpoint lab requirements (must include these exactly)
 
 Build an **in-memory CLI Organizer** with the following requirements:
@@ -627,6 +633,8 @@ Say:
 
 "Last pass: readability and completion criteria check. Does a user know what to type? Does the output make sense? Is your code organized across the files as required?"
 
+[Instructor slide change: page=37; title=Common Pitfalls — Hour 40]
+
 ## Troubleshooting & Common Pitfalls
 
 ### Pitfall 1: import errors from wrong working directory
@@ -823,4 +831,3 @@ They can fill this in, use it, and add methods (like `matches`) gradually. The k
 ### Celebration and community:
 
 At the end, ask 2–3 volunteers to share their solution briefly (screen share or describe). Highlight what is well-organized about each one. This normalizes different but correct approaches and reinforces that structure is a choice, not a formula.
-

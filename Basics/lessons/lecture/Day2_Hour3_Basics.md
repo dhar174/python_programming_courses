@@ -1,5 +1,7 @@
 # Day 2, Hour 3: Input/Output + Type Conversion (Course Hour 7)
 
+[Instructor slide change: page=28; title=Hour 7: Interactive Input + Type Conversion]
+
 ## Learning Outcomes
 
 By the end of this hour, you will be able to:
@@ -154,6 +156,8 @@ print(f"Count: {count}, type: {type(count)}")
 ---
 
 ## Section 4: Live Coding Demo
+
+[Instructor slide change: page=35; title=Demo: Temperature Converter]
 
 ### Demo A: Small Temperature Converter (with type inspection)
 

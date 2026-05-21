@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 10, Hour 38
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=16; title=Hour 38: Consuming Your Own API]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -14,6 +16,8 @@
 | 35-50 | Guided lab / build time | Learners implement the hour milestone in their own capstone. |
 | 50-56 | Debrief and troubleshooting clinic | Surface common mistakes and reinforce contracts. |
 | 56-60 | Quick check / exit ticket | Verify readiness for the next hour. |
+
+[Instructor slide change: page=17; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -81,6 +85,8 @@ Use these prompts to keep the class active:
 - "What should happen if the input is missing, malformed, or points to a record that does not exist?"
 - "Which layer should know about this detail?"
 - "How could we test this without clicking through the whole application?"
+
+[Instructor slide change: page=20; title=Demo: `TrackerApiError` and `TrackerApiClient` Dataclass]
 
 ## Live Demo (17-35 minutes)
 
@@ -258,6 +264,8 @@ Build a client: create client/api_client.py with list_records, create_record, up
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=24; title=Common Pitfalls and Exit Ticket — Hour 38]
 
 ### Common pitfalls to watch for
 

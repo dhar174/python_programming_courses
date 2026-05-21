@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=30; title=Hour 19: Dictionary Fundamentals]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 19. The entire hour focuses on Python dictionaries: what they are, how key-value thinking works, how to create and manipulate them, and — critically — how to access them safely using `get()` rather than crashing with a `KeyError`. Stay firmly within Basics scope: do not introduce dict comprehensions, `collections.defaultdict`, or nested dictionaries beyond a passing mention. The two key outcomes are (1) creating, reading, adding, and updating a dictionary by key, and (2) always using `get()` or an `in`-check before accessing a key that might be missing. The live demo types an inventory dictionary from scratch and deliberately triggers a `KeyError` to make the contrast with `get()` vivid and memorable. The guided lab turns learners loose to build their own interactive inventory manager. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip the conceptual explanations — they are load-bearing.
 
 ---
+
+[Instructor slide change: page=31; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -925,6 +929,8 @@ for item in sorted(inventory):
 - **Item** — a single key-value pair
 - **KeyError** — the exception raised when you access a missing key with bracket notation
 - **`get()`** — the safe access method that returns `None` (or a default) instead of raising `KeyError`"
+
+[Instructor slide change: page=42; title=Quick Check]
 
 ### 14.3 Exit ticket
 

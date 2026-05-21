@@ -10,13 +10,15 @@ import shutil
 import sys
 import unicodedata
 from dataclasses import dataclass, field
-from html import escape
+from html import escape, unescape
+from html.parser import HTMLParser
 from pathlib import Path
 from xml.etree.ElementTree import Element
 
 try:
     from markdown import Markdown
     from markdown.extensions import Extension
+    from markdown.preprocessors import Preprocessor
     from markdown.treeprocessors import Treeprocessor
 except ImportError as exc:  # pragma: no cover - import failure is environment-specific
     raise SystemExit(
@@ -41,6 +43,14 @@ HOURLY_FILENAME_RE = re.compile(
     r"^Day(?P<day>\d+)_Hour(?P<hour>\d+)_(?P<module>Basics|Advanced)\.md$"
 )
 HEADING_TAG_RE = re.compile(r"h([1-6])$")
+CUE_LINE_RE = re.compile(
+    r"^\[Instructor slide (?P<kind>change):\s*page=(?P<page>\d+);\s*title=(?P<title>[^\]]+?)\s*\]$"
+)
+CUE_PLACEHOLDER_RE = re.compile(
+    r'<aside class="lecture-slide-cue lecture-slide-cue--(?P<kind>change)" '
+    r'data-slide-cue="(?P=kind)" data-slide-page="(?P<page>\d+)" '
+    r'data-slide-title="(?P<title>[^"]+)"></aside>'
+)
 
 
 @dataclass(frozen=True)
@@ -67,6 +77,13 @@ class RenderedLecture:
     title: str
     headings: list[Heading]
     html: str
+
+
+@dataclass(frozen=True)
+class SlideDeckSlide:
+    page: int
+    anchor: str
+    title: str
 
 
 @dataclass
@@ -141,14 +158,49 @@ class HeadingIdExtension(Extension):
         )
 
 
+class SlideCuePreprocessor(Preprocessor):
+    def run(self, lines: list[str]) -> list[str]:
+        processed: list[str] = []
+        in_code_block = False
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith("```"):
+                in_code_block = not in_code_block
+                processed.append(line)
+                continue
+            if in_code_block:
+                processed.append(line)
+                continue
+            match = CUE_LINE_RE.fullmatch(stripped)
+            if match is None:
+                processed.append(line)
+                continue
+            kind = match.group("kind")
+            page = match.group("page")
+            title = escape(match.group("title").strip(), quote=True)
+            processed.append(
+                f'<aside class="lecture-slide-cue lecture-slide-cue--{kind}" '
+                f'data-slide-cue="{kind}" data-slide-page="{page}" '
+                f'data-slide-title="{title}"></aside>'
+            )
+        return processed
+
+
+class SlideCueExtension(Extension):
+    def extendMarkdown(self, md: Markdown) -> None:
+        md.preprocessors.register(SlideCuePreprocessor(md), "pyc_slide_cues", 31)
+
+
 def render_markdown(markdown_text: str) -> RenderedLecture:
     if markdown_text.startswith("\ufeff"):
         markdown_text = markdown_text[1:]
     heading_extension = HeadingIdExtension()
+    cue_extension = SlideCueExtension()
     renderer = Markdown(
         extensions=[
             "extra",
             "sane_lists",
+            cue_extension,
             heading_extension,
         ],
         output_format="html5",
@@ -238,6 +290,159 @@ def render_toc(headings: list[Heading]) -> str:
     return "<ol class=\"lecture-toc-list\">\n" + "\n".join(items) + "\n</ol>"
 
 
+def normalize_slide_title(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value)
+    ascii_value = normalized.encode("ascii", "ignore").decode("ascii").lower()
+    return re.sub(r"[^a-z0-9]+", " ", ascii_value).strip()
+
+
+class SlideDeckIndexParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.slides: list[SlideDeckSlide] = []
+        self._current_page: int | None = None
+        self._current_anchor = ""
+        self._current_title_chunks: list[str] = []
+        self._capturing_title = False
+        self._have_title = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attr_map = {name: (value or "") for name, value in attrs}
+        if tag == "section":
+            classes = set(attr_map.get("class", "").split())
+            if "slide" in classes:
+                page_value = attr_map.get("data-slide-number", "").strip()
+                try:
+                    page = int(page_value) if page_value else len(self.slides) + 1
+                except ValueError:
+                    page = len(self.slides) + 1
+                self._current_page = page
+                self._current_anchor = attr_map.get("id", "").strip()
+                self._current_title_chunks = []
+                self._capturing_title = False
+                self._have_title = False
+                return
+
+        if self._current_page is None:
+            return
+
+        if tag in {"h1", "h2", "h3"} and not self._have_title:
+            self._capturing_title = True
+
+    def handle_data(self, data: str) -> None:
+        if self._capturing_title:
+            self._current_title_chunks.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if self._current_page is None:
+            return
+
+        if tag in {"h1", "h2", "h3"} and self._capturing_title:
+            self._capturing_title = False
+            self._have_title = True
+            return
+
+        if tag != "section":
+            return
+
+        title = "".join(self._current_title_chunks).strip() or f"Slide {self._current_page}"
+        self.slides.append(
+            SlideDeckSlide(
+                page=self._current_page,
+                anchor=self._current_anchor,
+                title=title,
+            )
+        )
+        self._current_page = None
+        self._current_anchor = ""
+        self._current_title_chunks = []
+        self._capturing_title = False
+        self._have_title = False
+
+
+def lecture_slide_deck_path(source: LectureSource, repo_root: Path, output_root: Path) -> Path:
+    day_dir = f"day-{source.day:02d}"
+    filename = f"{day_dir}-session-{source.day}.html"
+    if output_root == repo_root:
+        return (
+            output_root
+            / source.module_label
+            / "lessons"
+            / "slides"
+            / day_dir
+            / filename
+        )
+    return output_root / "slides" / source.module_id / day_dir / filename
+
+
+def load_slide_deck_index(
+    deck_path: Path,
+    cache: dict[Path, list[SlideDeckSlide]],
+) -> list[SlideDeckSlide]:
+    cached = cache.get(deck_path)
+    if cached is not None:
+        return cached
+    if not deck_path.is_file():
+        raise ValueError(f"matching session deck is missing: {deck_path}")
+    parser = SlideDeckIndexParser()
+    parser.feed(deck_path.read_text(encoding="utf-8"))
+    parser.close()
+    if not parser.slides:
+        raise ValueError(f"matching session deck has no indexed slides: {deck_path}")
+    cache[deck_path] = parser.slides
+    return parser.slides
+
+
+def resolve_slide_cues(
+    html: str,
+    *,
+    source: LectureSource,
+    repo_root: Path,
+    output_file: Path,
+    output_root: Path,
+    deck_cache: dict[Path, list[SlideDeckSlide]],
+) -> str:
+    deck_source_path = lecture_slide_deck_path(source, repo_root, repo_root)
+    deck_output_path = lecture_slide_deck_path(source, repo_root, output_root)
+    slides = load_slide_deck_index(deck_source_path, deck_cache)
+    slides_by_page = {slide.page: slide for slide in slides}
+    deck_href = relative_href(output_file, deck_output_path)
+
+    def replace(match: re.Match[str]) -> str:
+        kind = match.group("kind")
+        page = int(match.group("page"))
+        expected_title = unescape(match.group("title"))
+        slide = slides_by_page.get(page)
+        if slide is None:
+            raise ValueError(
+                f"slide cue targets page {page}, but {deck_source_path.name} only has pages "
+                f"1-{len(slides)}"
+            )
+        actual_title = slide.title.strip()
+        expected_key = normalize_slide_title(expected_title)
+        actual_key = normalize_slide_title(actual_title)
+        if expected_key != actual_key:
+            raise ValueError(
+                f"slide cue for page {page} expects title '{expected_title}', "
+                f"but {deck_source_path.name} page {page} is '{actual_title}'"
+            )
+        href = f"{deck_href}#{slide.anchor}" if slide.anchor else f"{deck_href}#{page}"
+        return (
+            f'<aside class="lecture-slide-cue lecture-slide-cue--{kind}" '
+            f'data-slide-cue="{kind}" data-slide-page="{page}" '
+            f'data-slide-title="{escape(expected_title, quote=True)}" '
+            f'data-slide-anchor="{escape(slide.anchor, quote=True)}">'
+            f'<p class="lecture-slide-cue-eyebrow">Instructor slide change</p>'
+            f'<div class="lecture-slide-cue-body">'
+            f'<strong class="lecture-slide-cue-action">Change to slide {page}</strong>'
+            f'<a class="lecture-slide-cue-link" href="{escape(href, quote=True)}" '
+            f'data-slide-deck-link>Slide {page}: {escape(actual_title)}</a>'
+            f"</div></aside>"
+        )
+
+    return CUE_PLACEHOLDER_RE.sub(replace, html)
+
+
 def render_page(
     source: LectureSource,
     rendered: RenderedLecture,
@@ -247,6 +452,7 @@ def render_page(
     output_root: Path,
     prev_source: LectureSource | None,
     next_source: LectureSource | None,
+    deck_cache: dict[Path, list[SlideDeckSlide]],
 ) -> str:
     asset_root = output_root / "slides" / "shared" / "lecture"
     stylesheet_href = relative_href(output_file, asset_root / "lecture.css")
@@ -301,6 +507,14 @@ def render_page(
     course_root_href = relative_href(output_file, course_root_target)
     module_portal_href = relative_href(output_file, module_portal_target)
     day_overview_href = relative_href(output_file, day_overview_target)
+    lecture_html = resolve_slide_cues(
+        rendered.html,
+        source=source,
+        repo_root=repo_root,
+        output_file=output_file,
+        output_root=output_root,
+        deck_cache=deck_cache,
+    )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -356,6 +570,11 @@ def render_page(
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -367,8 +586,13 @@ def render_page(
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
-                    {rendered.html}
+                    {lecture_html}
                 </div>
                 <nav class="lecture-nav" aria-label="Lecture navigation">
                     {prev_nav}
@@ -434,25 +658,34 @@ def ensure_assets(repo_root: Path, output_root: Path, *, check_only: bool) -> li
 def generate(repo_root: Path, output_root: Path, module_filter: str, *, check_only: bool) -> int:
     sources = load_hourly_sources(repo_root, module_filter)
     grouped: dict[str, list[LectureSource]] = {module_id: [] for module_id in MODULES}
+    deck_cache: dict[Path, list[SlideDeckSlide]] = {}
     for source in sources:
         grouped[source.module_id].append(source)
 
     stale_paths: list[str] = []
     for module_sources in grouped.values():
         for index, source in enumerate(module_sources):
-            rendered = render_markdown(source.markdown_path.read_text(encoding="utf-8"))
-            output_file = output_root / source.html_relative_path
-            prev_source = module_sources[index - 1] if index > 0 else None
-            next_source = module_sources[index + 1] if index + 1 < len(module_sources) else None
-            html = render_page(
-                source,
-                rendered,
-                repo_root=repo_root,
-                output_file=output_file,
-                output_root=output_root,
-                prev_source=prev_source,
-                next_source=next_source,
-            )
+            try:
+                rendered = render_markdown(source.markdown_path.read_text(encoding="utf-8"))
+                output_file = output_root / source.html_relative_path
+                prev_source = module_sources[index - 1] if index > 0 else None
+                next_source = module_sources[index + 1] if index + 1 < len(module_sources) else None
+                html = render_page(
+                    source,
+                    rendered,
+                    repo_root=repo_root,
+                    output_file=output_file,
+                    output_root=output_root,
+                    prev_source=prev_source,
+                    next_source=next_source,
+                    deck_cache=deck_cache,
+                )
+            except ValueError as exc:
+                print(
+                    f"ERROR: {source.markdown_relative_path.as_posix()}: {exc}",
+                    file=sys.stderr,
+                )
+                return 1
             if check_only:
                 if not output_file.exists() or output_file.read_text(encoding="utf-8") != html:
                     stale_paths.append(source.html_relative_path.as_posix())

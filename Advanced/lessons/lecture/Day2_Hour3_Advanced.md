@@ -1,5 +1,7 @@
 # Day 2, Hour 3: Pythonic Class Ergonomics (`repr`/`str`/equality) + Light Type Hints
 
+[Instructor slide change: page=29; title=Hour 7: Pythonic Class Ergonomics]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -26,6 +28,8 @@
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten the concept examples rather than removing hands-on practice. The required outcome is practical: objects should print cleanly, type hints should be correct and should not change runtime behavior, and learners should leave ready for the Day 2 Hour 4 domain and service layer checkpoint.
 
 ---
+
+[Instructor slide change: page=30; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -285,6 +289,8 @@ def __eq__(self, other: object) -> bool:
 "Let's now code the required pieces. Watch how the object becomes easier to inspect after only a few small methods."
 
 ---
+
+[Instructor slide change: page=33; title=Demo: Adding `__repr__` and `__str__`]
 
 ## Live Demo: Upgrade a Model for Debugging and Display (10 minutes)
 
@@ -695,6 +701,8 @@ Do not introduce dataclasses, pydantic, mypy configuration, abstract base classe
 
 ---
 
+[Instructor slide change: page=37; title=Common Pitfalls (Hour 7)]
+
 ## Troubleshooting and Common Pitfalls
 
 Use these notes during the lab and the final wrap-up.
@@ -858,6 +866,8 @@ Instructor language:
 ---
 
 ## Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)
+
+[Instructor slide change: page=38; title=Quick Check (Hour 7)]
 
 ### Quick check 1: `repr` versus `str`
 

@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=17; title=Hour 18: Sets — Uniqueness + Membership]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 18. The entire hour focuses on sets: what they are, why uniqueness is built in, how to use them for fast membership checks, and how a few key operations (union, intersection, difference) solve real problems. Stay firmly within Basics scope — do not introduce frozensets, set comprehensions, or the `collections` module here. The key outcomes are (1) using `set()` to strip duplicates from a list, (2) checking membership with `in`, (3) building intuition for when a set beats a list, and (4) understanding why sets are unordered and how to work with that. The lab ties everything together in a practical "Unique Visitors" program that learners build step by step. Every "Say:" block is written to be read nearly verbatim; adapt phrasing to your natural voice as needed, but do not skip or abbreviate the conceptual explanations.
 
 ---
+
+[Instructor slide change: page=18; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -926,6 +930,8 @@ You will not always get this perfect — that is fine. Learning to notice these 
 "Next hour — Hour 19 — we are going to meet the last and arguably most powerful built-in data structure: the dictionary. Dictionaries let you associate a *key* with a *value*, like a real-world dictionary that associates a word with its definition. We will see how dictionaries extend what we can do with data well beyond lists, tuples, and sets.
 
 Before we get there, take 30 seconds to answer the exit ticket."
+
+[Instructor slide change: page=29; title=Quick Check]
 
 ### 13.4 Exit ticket
 

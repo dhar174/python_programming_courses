@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=31; title=Hour 11: Working with Text — split() and join()]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Transition from Hour 10: 3 minutes
@@ -15,6 +17,8 @@
 - Debrief & Exit Ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=32; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -185,6 +189,8 @@ print(text.split())      # ['one', 'two', 'three']
 ```
 
 **[Key point]:** When you call `.split()` without arguments, Python splits on **any whitespace** and ignores empty strings in the result.
+
+[Instructor slide change: page=42; title=Quick Check (Hour 11)]
 
 ### Quick Check #1
 

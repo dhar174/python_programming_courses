@@ -386,1349 +386,773 @@
 <body>
     <div id="slides-container">
         
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="basics-day-10-session-10-hours-3740-1-22594bce" data-slide-number="1">
             <h1>Basics Day 10 — Session 10 (Hours 37–40)</h1>
-            <div class="subtitle">Python Programming (Basic) • Intro to Object-Oriented Programming</div>
+            <div class="subtitle">OOP Fundamentals — Classes · Object Collections · Encapsulation · Checkpoint 5</div>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="session-10-overview-2-f31ecbb8" data-slide-number="2">
             <h1>Session 10 Overview</h1>
-            <ul>
-  <li>Hour 37: Intro to classes — objects, attributes, methods</li>
-  <li>Hour 38: Collections of objects + searching</li>
-  <li>Hour 39: Basic encapsulation + data validation</li>
-  <li>Hour 40: Checkpoint 5 — Functions, modules &amp; intro OOP</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 37: Intro to Classes — Objects, Attributes, Methods</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="topics-covered-today-3-1a5973ba" data-slide-number="3">
+            <h1>Topics Covered Today</h1>
+            <ul>
+  <li>Hour 37: Intro to OOP — classes, objects, <code>self</code>, and methods</li>
+  <li>Hour 38: Collections of objects + searching by attribute</li>
+  <li>Hour 39: Basic encapsulation + data validation</li>
+  <li>Hour 40: Checkpoint 5 — functions, modules, and intro OOP</li>
+</ul>
+        </section>
+
+        <section class="slide" id="hour-37-intro-to-oop-classes-objects-and-self-4-0f41c92a" data-slide-number="4">
+            <h1>Hour 37: Intro to OOP — Classes, Objects, and `self`</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-5-4ca22b3c" data-slide-number="5">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Create a basic class with <code>__init__</code></li>
-  <li>Define instance attributes using <code>self</code></li>
-  <li>Write and call methods on objects</li>
-  <li>Instantiate multiple objects from one class</li>
+  <li>Create a basic class using the <code>class</code> keyword and <code>__init__</code></li>
+  <li>Instantiate objects from a class and call their methods</li>
+  <li>Distinguish a <strong>class</strong> (blueprint) from an <strong>object</strong> (instance)</li>
+  <li>Use <code>self</code> to store and access instance attributes</li>
+  <li>Understand why <code>self</code> is required in every instance method</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>Why Object-Oriented Programming?</h1>
-            <h3>The Problem With Plain Dictionaries</h3>
-<pre data-lang="python"><code># Contact as a plain dictionary — hard to enforce structure
-contact1 = {&quot;name&quot;: &quot;Alice&quot;, &quot;phone&quot;: &quot;555-1234&quot;}
-contact2 = {&quot;name&quot;: &quot;Bob&quot;,   &quot;phone&quot;: &quot;555-5678&quot;}
-contact3 = {&quot;name&quot;: &quot;Carol&quot;}   # oops — forgot phone entirely
-
-# Every caller must know the exact key names
-print(contact1[&quot;name&quot;])    # works
-print(contact3[&quot;phone&quot;])   # KeyError — no phone key!</code></pre>
-<h3>The Object-Oriented Solution</h3>
+        <section class="slide" id="class-vs-object-the-blueprint-analogy-6-d7855c98" data-slide-number="6">
+            <h1>Class vs. Object — The Blueprint Analogy</h1>
+            <h3>A Class Is a Blueprint</h3>
+<pre><code>Cookie Cutter (class)  →  Cookie 1, Cookie 2, Cookie 3 (objects/instances)</code></pre>
+<h3>Key Points</h3>
+<ul>
+  <li>A class <strong>defines</strong> structure and behavior — no object exists yet</li>
+  <li>An <strong>object</strong> (instance) is a concrete value built from the class</li>
+  <li>Multiple independent objects can be created from one class</li>
+  <li>Each object has its own copy of the class&#x27;s attributes</li>
+</ul>
 <pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
+    pass
 
-# Now every Contact is guaranteed to have both fields
-c1 = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c2 = Contact(&quot;Bob&quot;,   &quot;555-5678&quot;)
-print(c1.name)    # Alice
-print(c2.phone)   # 555-5678</code></pre>
-<blockquote>💡 **A class is a blueprint.** Every object (instance) built from it has the same structure — but its own data.</blockquote>
+alice   = Contact()   # object 1
+bob     = Contact()   # object 2
+charlie = Contact()   # object 3 — all independent</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>The Blueprint Analogy</h1>
-            <h3>Class = Blueprint, Object = Built Thing</h3>
+        <section class="slide" id="defining-a-class-init-7-6da9793d" data-slide-number="7">
+            <h1>Defining a Class — `__init__`</h1>
+            <h3>The Constructor Pattern</h3>
+<pre data-lang="python"><code>class Contact:
+    def __init__(self, name, phone):
+        self.name  = name    # instance attribute
+        self.phone = phone   # instance attribute</code></pre>
+<h3>Creating Objects</h3>
+<pre data-lang="python"><code>alice = Contact(&quot;Alice Johnson&quot;, &quot;555-0001&quot;)
+bob   = Contact(&quot;Bob Smith&quot;,    &quot;555-0002&quot;)
+
+print(alice.name)   # Alice Johnson
+print(bob.name)     # Bob Smith  (independent copy)</code></pre>
+<h3>Why `__init__`?</h3>
+<ul>
+  <li>Runs <strong>automatically</strong> when an object is created</li>
+  <li>Sets up the object&#x27;s initial state consistently</li>
+  <li>Without it you&#x27;d set attributes manually after creation (error-prone)</li>
+</ul>
+        </section>
+
+        <section class="slide" id="instance-attributes-and-self-8-5ec2b607" data-slide-number="8">
+            <h1>Instance Attributes and `self`</h1>
+            <h3>What `self` Means</h3>
+<ul>
+  <li><code>self</code> is a reference to the <strong>current object</strong> the method is running on</li>
+  <li>When you call <code>alice.display()</code>, Python passes <code>alice</code> as <code>self</code></li>
+  <li><code>self.name</code> means &quot;this object&#x27;s own <code>name</code> attribute&quot;</li>
+</ul>
+<pre data-lang="python"><code>class Contact:
+    def __init__(self, name, phone):
+        self.name  = name       # belongs to THIS object
+        self.phone = phone      # belongs to THIS object
+
+alice = Contact(&quot;Alice&quot;, &quot;555-0001&quot;)
+bob   = Contact(&quot;Bob&quot;,   &quot;555-0002&quot;)
+
+# Python internally does:
+# Contact.__init__(alice, &quot;Alice&quot;, &quot;555-0001&quot;)
+# Contact.__init__(bob,   &quot;Bob&quot;,   &quot;555-0002&quot;)
+
+print(alice.name)   # &quot;Alice&quot;
+print(bob.name)     # &quot;Bob&quot;  — completely separate object</code></pre>
+        </section>
+
+        <section class="slide" id="methods-defining-behavior-9-16e3b7cb" data-slide-number="9">
+            <h1>Methods — Defining Behavior</h1>
+            <h3>A `BankAccount` Class with Multiple Method Types</h3>
+<pre data-lang="python"><code>class BankAccount:
+    def __init__(self, account_holder, initial_balance):
+        self.account_holder = account_holder
+        self.balance = initial_balance
+
+    # Action method — modifies state
+    def deposit(self, amount):
+        self.balance = self.balance + amount
+        print(f&quot;Deposited ${amount}. New balance: ${self.balance}&quot;)
+
+    # Action method with a safety check
+    def withdraw(self, amount):
+        if amount &lt;= self.balance:
+            self.balance = self.balance - amount
+            print(f&quot;Withdrew ${amount}. New balance: ${self.balance}&quot;)
+        else:
+            print(f&quot;Insufficient funds. Balance is ${self.balance}&quot;)
+
+    # Query method — returns state without changing it
+    def get_balance(self):
+        return self.balance</code></pre>
+        </section>
+
+        <section class="slide" id="live-demo-contact-class-10-e2f2fc31" data-slide-number="10">
+            <h1>Live Demo — Contact Class</h1>
+            <h3>Full Demo Class</h3>
+<pre data-lang="python"><code>class Contact:
+    &quot;&quot;&quot;A simple contact record.&quot;&quot;&quot;
+
+    def __init__(self, name, phone):
+        self.name  = name
+        self.phone = phone
+
+    def display(self):
+        print(f&quot;Name:  {self.name}&quot;)
+        print(f&quot;Phone: {self.phone}&quot;)
+
+    def call_info(self):
+        return f&quot;Calling {self.name} at {self.phone}&quot;
+
+# Create two objects and use them
+alice = Contact(&quot;Alice Johnson&quot;, &quot;555-0001&quot;)
+bob   = Contact(&quot;Bob Smith&quot;,    &quot;555-0002&quot;)
+
+alice.display()
+print(bob.call_info())
+
+# Verify independence — changing alice does not affect bob
+alice.phone = &quot;555-9999&quot;
+print(alice.phone)   # 555-9999
+print(bob.phone)     # 555-0002  (unchanged)</code></pre>
+        </section>
+
+        <section class="slide" id="lab-bankaccount-class-11-001f4405" data-slide-number="11">
+            <h1>Lab — BankAccount Class</h1>
+            <p><strong>Time: 25–35 minutes</strong></p>
+<h3>Build Progressively Through 7 Checkpoints</h3>
 <table>
 <thead>
 <tr>
-<th>Concept</th>
-<th>Real World Analogy</th>
-<th>Python</th>
+<th>Checkpoint</th>
+<th>What to Add</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Class</strong></td>
-<td>Architectural blueprint</td>
-<td><code>class Contact:</code></td>
+<td>1</td>
+<td><code>__init__(account_holder, initial_balance)</code></td>
 </tr>
 <tr>
-<td><strong>Object / Instance</strong></td>
-<td>An actual built house</td>
-<td><code>c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)</code></td>
+<td>2</td>
+<td><code>display_account()</code> — print holder and balance</td>
 </tr>
 <tr>
-<td><strong>Attribute</strong></td>
-<td>Room dimensions, color</td>
-<td><code>c.name</code>, <code>c.phone</code></td>
+<td>3</td>
+<td><code>deposit(amount)</code> — add to balance</td>
 </tr>
 <tr>
-<td><strong>Method</strong></td>
-<td>What you can do in/with the house</td>
-<td><code>c.display()</code></td>
+<td>4</td>
+<td><code>withdraw(amount)</code> — subtract with insufficient-funds guard</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>get_balance()</code> — return current balance</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>transfer_to(recipient, amount)</code> — move money between two accounts</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Verify both accounts stay independent after every operation</td>
 </tr>
 </tbody>
 </table>
-<h3>Key Insight</h3>
+<h3>Completion Criteria</h3>
 <ul>
-  <li>The <strong>class</strong> is defined once.</li>
-  <li>You can create <strong>many objects</strong> from the same class — each with its own data.</li>
-  <li>Changing one object&#x27;s attribute does <strong>not</strong> affect any other object.</li>
-</ul>
-<blockquote>🗒️ **Speaker note:** Ask students: &quot;If I have a Contact class and I change Alice&#x27;s phone, does Bob&#x27;s phone change?&quot; — Get verbal answers before showing the code.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Anatomy of a Class</h1>
-            <h3>The class Statement</h3>
-<pre data-lang="python"><code>class Contact:                              # 1. class keyword + name
-    def __init__(self, name: str,           # 2. constructor — auto-called
-                 phone: str) -&gt; None:
-        self.name = name                    # 3. instance attribute
-        self.phone = phone                  # 3. instance attribute
-
-    def display(self) -&gt; str:              # 4. method — first param is self
-        return f&quot;{self.name}: {self.phone}&quot;</code></pre>
-<h3>Breaking It Down</h3>
-<table>
-<thead>
-<tr>
-<th>Part</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>class Contact:</code></td>
-<td>Defines the blueprint — use <code>PascalCase</code> for class names</td>
-</tr>
-<tr>
-<td><code>def __init__(self, ...)</code></td>
-<td>Constructor — runs automatically when you create an object</td>
-</tr>
-<tr>
-<td><code>self</code></td>
-<td>A reference to the specific instance being worked with</td>
-</tr>
-<tr>
-<td><code>self.name = name</code></td>
-<td>Creates an instance attribute — each object has its own copy</td>
-</tr>
-<tr>
-<td><code>def display(self)</code></td>
-<td>A method — a function attached to the class</td>
-</tr>
-</tbody>
-</table>
-<blockquote>💡 **`__init__`** is pronounced &quot;dunder init&quot; (double-underscore init). It is called automatically every time you create a new object.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Understanding `self`</h1>
-            <h3>What Is `self`?</h3>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name    # &quot;this object&#x27;s name = the name passed in&quot;
-        self.phone = phone  # &quot;this object&#x27;s phone = the phone passed in&quot;
-
-    def display(self) -&gt; str:
-        # self.name refers to THIS object&#x27;s name attribute
-        return f&quot;{self.name}: {self.phone}&quot;</code></pre>
-<h3>How Python Uses `self` Behind the Scenes</h3>
-<pre data-lang="python"><code>c1 = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c2 = Contact(&quot;Bob&quot;,   &quot;555-5678&quot;)
-
-# When you write:
-print(c1.display())
-# Python actually calls:
-# Contact.display(c1)  — c1 is passed as &#x27;self&#x27;
-
-# When you write:
-print(c2.display())
-# Python actually calls:
-# Contact.display(c2)  — c2 is passed as &#x27;self&#x27;</code></pre>
-<blockquote>💡 **`self` is not a magic keyword — it is just the conventional name for the first parameter of every method.** Python automatically passes the object itself as that first argument.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Creating and Using Objects</h1>
-            <h3>Instantiation — Building an Object From the Blueprint</h3>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-# Create objects — each is independent
-c1 = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c2 = Contact(&quot;Bob&quot;,   &quot;555-5678&quot;)
-c3 = Contact(&quot;Carol&quot;, &quot;555-9999&quot;)
-
-# Access attributes directly
-print(c1.name)    # Alice
-print(c2.phone)   # 555-5678
-
-# Call methods
-print(c1.display())  # Alice: 555-1234
-print(c2.display())  # Bob: 555-5678
-print(c3.display())  # Carol: 555-9999</code></pre>
-<h3>Changing c1 Does Not Affect c2</h3>
-<pre data-lang="python"><code>c1.name = &quot;Alicia&quot;
-print(c1.display())  # Alicia: 555-1234
-print(c2.display())  # Bob: 555-5678  ← unchanged</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Contact Class — Watch the Live Build</h1>
-            <h3>Watch For:</h3>
-<ul>
-  <li><code>class</code> and <code>def __init__</code> are typed first — no objects yet</li>
-  <li><code>self</code> as the first argument of every method</li>
-  <li>Creating objects with <code>Contact(&quot;name&quot;, &quot;phone&quot;)</code> syntax</li>
-  <li>Each object holds its own data independently</li>
-</ul>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-# Build two contacts from the same blueprint
-c1 = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c2 = Contact(&quot;Bob&quot;,   &quot;555-5678&quot;)
-
-print(c1.display())    # Alice: 555-1234
-print(c2.display())    # Bob: 555-5678
-
-# Prove independence
-c1.phone = &quot;555-0001&quot;
-print(c1.display())    # Alice: 555-0001
-print(c2.display())    # Bob: 555-5678  ← not affected</code></pre>
-<blockquote>🗒️ **Speaker note:** Type the class slowly. After `__init__`, pause and ask: &quot;What happens next when I type `c1 = Contact(&#x27;Alice&#x27;, &#x27;555-1234&#x27;)`?&quot; Before running, ask students to predict the output of each `print`.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Contact Class</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Create a <code>Contact</code> class, make multiple objects, and store them in a list.</p>
-<p><strong>Step 1 — Define the class:</strong></p>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        &quot;&quot;&quot;Create a contact with a name and phone number.&quot;&quot;&quot;
-        ...  # your code here
-
-    def display(self) -&gt; str:
-        &quot;&quot;&quot;Return a formatted string: &#x27;Name: Phone&#x27;.&quot;&quot;&quot;
-        ...  # your code here</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Contact Class (continued)</h1>
-            <p><strong>Step 2 — Create objects and store in a list:</strong></p>
-<pre data-lang="python"><code># Create at least 3 contacts
-c1 = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c2 = Contact(&quot;Bob&quot;,   &quot;555-5678&quot;)
-c3 = Contact(&quot;Carol&quot;, &quot;555-9999&quot;)
-
-# Store them in a list
-contacts = [c1, c2, c3]
-
-# Loop and call display() on each
-print(&quot;=== Contact List ===&quot;)
-for contact in contacts:
-    print(contact.display())</code></pre>
-<p><strong>Expected Output:</strong></p>
-<pre><code>=== Contact List ===
-Alice: 555-1234
-Bob: 555-5678
-Carol: 555-9999</code></pre>
-<p><strong>Completion Criteria:</strong></p>
-<ul>
-  <li>✅ <code>Contact</code> class defined with <code>__init__</code> and <code>display</code> methods</li>
-  <li>✅ At least 3 <code>Contact</code> objects created and stored in a list</li>
-  <li>✅ Loop calls <code>display()</code> on every contact and prints the result</li>
-  <li>✅ Each object holds independent data</li>
+  <li><span class="check">✓</span> Two independent accounts with separate balances</li>
+  <li><span class="check">✓</span> <code>withdraw</code> refuses if amount exceeds balance</li>
+  <li><span class="check">✓</span> <code>transfer_to</code> updates both accounts correctly</li>
+  <li><span class="check">✓</span> Modifying one account never changes the other</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-37-12-7d13dc6f" data-slide-number="12">
             <h1>Common Pitfalls — Hour 37</h1>
-            <h3>Pitfall 1: Forgetting `self` in a Method Signature</h3>
-<pre data-lang="python"><code># Bug: missing self — Python will raise TypeError
+            <h3>Pitfall 1: Forgetting `self` in the Method Signature</h3>
+<pre data-lang="python"><code># Wrong — TypeError when called
 class Contact:
-    def display() -&gt; str:          # ← missing self!
-        return f&quot;{self.name}: {self.phone}&quot;
+    def __init__(name, phone):   # self missing!
+        self.name = name         # NameError: self is not defined</code></pre>
+<pre data-lang="python"><code># Right
+class Contact:
+    def __init__(self, name, phone):
+        self.name  = name
+        self.phone = phone</code></pre>
+<h3>Pitfall 2: Class Attribute vs. Instance Attribute</h3>
+<pre data-lang="python"><code># Wrong — ALL instances share the same list!
+class Container:
+    items = []              # class-level — shared by every object
 
-c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c.display()
-# TypeError: display() takes 0 positional arguments but 1 was given</code></pre>
-<pre data-lang="python"><code># Fix: self is ALWAYS the first parameter of every instance method
-class Contact:
-    def display(self) -&gt; str:      # ← correct
-        return f&quot;{self.name}: {self.phone}&quot;</code></pre>
-<blockquote>⚠️ **Common pitfall:** Every method definition must have `self` as its first parameter — no exceptions for instance methods.</blockquote>
+# Right — each instance gets its own list
+class Container:
+    def __init__(self):
+        self.items = []     # instance-level — unique per object</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 37 (continued)</h1>
-            <h3>Pitfall 2: Class Attribute vs Instance Attribute Confusion</h3>
-<pre data-lang="python"><code># Bug: defining attribute at class level instead of inside __init__
-class Contact:
-    name = &quot;Unknown&quot;    # class attribute — SHARED by all instances!
-    phone = &quot;&quot;          # class attribute — SHARED by all instances!
-
-c1 = Contact()
-c2 = Contact()
-Contact.name = &quot;Alice&quot;   # changes it for EVERY Contact object!
-print(c1.name)           # Alice
-print(c2.name)           # Alice — probably not what you wanted!</code></pre>
-<pre data-lang="python"><code># Fix: put instance data inside __init__, assigned to self
-class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name    # instance attribute — unique per object
-        self.phone = phone  # instance attribute — unique per object</code></pre>
-<blockquote>⚠️ **Common pitfall:** Instance data (data that belongs to one object) always lives inside `__init__`, assigned to `self`.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 37 (continued)</h1>
-            <h3>Pitfall 3: Calling a Method Without an Instance</h3>
-<pre data-lang="python"><code># Bug: calling the method on the class instead of an object
-class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-print(Contact.display())
-# TypeError: display() missing 1 required positional argument: &#x27;self&#x27;</code></pre>
-<pre data-lang="python"><code># Fix: always call a method on an instance (object)
-c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-print(c.display())   # Alice: 555-1234</code></pre>
-<blockquote>🚫 **Scope guardrail (Basics):** No class methods, static methods, inheritance, or dunder methods beyond `__init__` this session.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 37</h1>
-            <h3>Extension 1: Add an `update_phone` Method</h3>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-    def update_phone(self, new_phone: str) -&gt; None:
-        &quot;&quot;&quot;Replace phone with new_phone if non-empty.&quot;&quot;&quot;
-        if new_phone.strip():
-            self.phone = new_phone.strip()
-
-c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c.update_phone(&quot;555-9999&quot;)
-print(c.display())   # Alice: 555-9999
-
-c.update_phone(&quot;&quot;)   # empty — ignored
-print(c.display())   # Alice: 555-9999  ← unchanged</code></pre>
-<p><strong>Stay in Basics Scope:</strong> Simple <code>if</code> check only — no <code>@property</code>, no <code>raise ValueError</code>, no class decorators.</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-37-13-e53ad237" data-slide-number="13">
             <h1>Quick Check — Hour 37</h1>
-            <p><strong>Exit Ticket Question:</strong> What does <code>self</code> represent inside a method?</p>
-<p><strong>Model Answer:</strong> &quot;<code>self</code> is a reference to the specific <strong>instance</strong> (object) that the method was called on. When you write <code>c1.display()</code>, Python automatically passes <code>c1</code> as the first argument — which is received as <code>self</code> inside the method. This is how the method knows which object&#x27;s <code>name</code> and <code>phone</code> to use. Every instance method must have <code>self</code> as its first parameter so that it can access and modify the data belonging to that particular object.&quot;</p>
+            <p><strong>Question:</strong> What is the difference between a <strong>class</strong> and an <strong>object</strong>?</p>
+<p>Expected answer: A class is a blueprint or template. An object (instance) is a concrete value built from that blueprint. You can create many independent objects from one class — each with its own attribute values.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-38-collections-of-objects-searching-14-2c0feca2" data-slide-number="14">
             <h1>Hour 38: Collections of Objects + Searching</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-15-e12be28e" data-slide-number="15">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Store a collection of objects in a list</li>
-  <li>Search a list of objects by attribute value</li>
-  <li>Update an object&#x27;s attribute after retrieval</li>
-  <li>Handle the &quot;not found&quot; case explicitly</li>
+  <li>Search a list of objects by comparing their attributes</li>
+  <li>Update an object&#x27;s attribute in place — no &quot;save back&quot; needed</li>
+  <li>Use <code>.lower()</code> to make searches case-insensitive</li>
+  <li>Wrap search logic in a reusable function returning the object or <code>None</code></li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>A List of Objects Is Just a List</h1>
-            <h3>Same Rules as Any Python List</h3>
-<pre data-lang="python"><code>contacts = []
-
-# Add objects with append
-contacts.append(Contact(&quot;Alice&quot;, &quot;555-1234&quot;))
-contacts.append(Contact(&quot;Bob&quot;,   &quot;555-5678&quot;))
-contacts.append(Contact(&quot;Carol&quot;, &quot;555-9999&quot;))
-
-# len, indexing, looping — all work exactly the same
-print(len(contacts))        # 3
-print(contacts[0].name)     # Alice
-print(contacts[-1].phone)   # 555-9999
-
-for c in contacts:
-    print(c.display())</code></pre>
-<blockquote>💡 **There is nothing special about a list of objects.** You already know how to work with lists — now the items just have attributes and methods.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Searching a List of Objects</h1>
-            <h3>The Pattern: Loop and Compare an Attribute</h3>
-<pre data-lang="python"><code>def search_contact(contacts: list, name: str):
-    &quot;&quot;&quot;Return the Contact whose name matches, or None if not found.&quot;&quot;&quot;
-    target = name.strip().lower()
-    for c in contacts:
-        if c.name.strip().lower() == target:
-            return c
-    return None</code></pre>
-<h3>Calling the Search Function</h3>
-<pre data-lang="python"><code>result = search_contact(contacts, &quot;alice&quot;)
-
-if result:
-    print(f&quot;Found: {result.display()}&quot;)
-else:
-    print(&quot;Contact not found.&quot;)</code></pre>
-<h3>Why Normalize Both Sides?</h3>
-<pre data-lang="python"><code># Without normalization:
-# &quot;Alice&quot; != &quot;alice&quot; != &quot;ALICE&quot; != &quot;  Alice  &quot;
-# With normalization (.strip().lower()):
-# All of the above become &quot;alice&quot; — they all match</code></pre>
-<blockquote>⚠️ **Common pitfall:** Forgetting to normalize both sides means `&quot;Alice&quot;` won&#x27;t match `&quot;alice&quot;`. Always apply the same transformation to both the stored value and the search term.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Updating an Object After Search</h1>
-            <h3>Modify the Attribute Directly on the Returned Object</h3>
-<pre data-lang="python"><code>def update_phone(contacts: list, name: str, new_phone: str) -&gt; bool:
-    &quot;&quot;&quot;Find a contact by name and update their phone.
-    Returns True if found and updated, False otherwise.&quot;&quot;&quot;
-    contact = search_contact(contacts, name)
-    if contact is None:
-        return False
-    contact.phone = new_phone
-    return True</code></pre>
-<h3>Usage</h3>
-<pre data-lang="python"><code>success = update_phone(contacts, &quot;Alice&quot;, &quot;555-0001&quot;)
-if success:
-    print(&quot;Phone updated.&quot;)
-else:
-    print(&quot;Contact not found — no changes made.&quot;)</code></pre>
-<blockquote>💡 **Objects are mutable.** When `search_contact` returns an object from the list, you are getting the actual object — not a copy. Changing `contact.phone` changes the phone for that object everywhere it is referenced.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Search and Update Contact</h1>
-            <h3>Watch For:</h3>
-<ul>
-  <li>Normalizing both sides when comparing names</li>
-  <li>Checking <code>if result is None</code> before accessing attributes</li>
-  <li>Update goes through the returned object directly</li>
-</ul>
+        <section class="slide" id="the-core-search-pattern-16-43c25baf" data-slide-number="16">
+            <h1>The Core Search Pattern</h1>
+            <h3>Loop and Compare Attributes</h3>
 <pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
+    def __init__(self, name, phone):
+        self.name  = name
         self.phone = phone
 
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-def search_contact(contacts: list, name: str):
-    target = name.strip().lower()
-    for c in contacts:
-        if c.name.strip().lower() == target:
-            return c
-    return None
-
-# Build a small contacts list
-contacts = [
-    Contact(&quot;Alice&quot;, &quot;555-1234&quot;),
-    Contact(&quot;Bob&quot;,   &quot;555-5678&quot;),
-    Contact(&quot;Carol&quot;, &quot;555-9999&quot;),
+directory = [
+    Contact(&quot;Alice&quot;,   &quot;555-0101&quot;),
+    Contact(&quot;Bob&quot;,     &quot;555-0202&quot;),
+    Contact(&quot;Charlie&quot;, &quot;555-0303&quot;),
 ]
 
-result = search_contact(contacts, &quot;alice&quot;)
-if result:
-    result.phone = &quot;555-9999&quot;
-    print(f&quot;Updated: {result.display()}&quot;)   # Updated: Alice: 555-9999
-else:
-    print(&quot;Contact not found.&quot;)
+query = &quot;bob&quot;
+found_contact = None
 
-# Confirm the change persisted in the list
-for c in contacts:
-    print(c.display())</code></pre>
-<blockquote>🗒️ **Speaker note:** Run once with a name that exists, once with a name that does not. Ask students what they expect before each run.</blockquote>
+for person in directory:
+    # compare the attribute (string), not the whole object
+    if person.name.lower() == query.lower():
+        found_contact = person
+        break
+
+if found_contact:
+    print(f&quot;Found them! Phone: {found_contact.phone}&quot;)
+else:
+    print(&quot;Contact not found.&quot;)</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>The &quot;Not Found&quot; Case — Always Handle It</h1>
-            <h3>What Happens If You Skip the None Check?</h3>
-<pre data-lang="python"><code># Bug: accessing attributes on None crashes the program
-result = search_contact(contacts, &quot;Zara&quot;)
-print(result.display())
-# AttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;display&#x27;</code></pre>
-<h3>Three Safe Patterns for Handling None</h3>
-<pre data-lang="python"><code># Pattern 1: if result guard (most readable)
-result = search_contact(contacts, &quot;Zara&quot;)
+        <section class="slide" id="string-normalization-and-updating-in-place-17-7ef2f88b" data-slide-number="17">
+            <h1>String Normalization and Updating In Place</h1>
+            <h3>Always Normalize Both Sides</h3>
+<pre data-lang="python"><code># Without normalization — misses &quot;BOB&quot;, &quot;bob&quot;, &quot;BoB&quot;
+if person.name == &quot;Bob&quot;:
+
+# With normalization — catches all variations
+if person.name.lower() == query.lower():</code></pre>
+<h3>Updating the Found Object</h3>
+<p>Once you hold the reference, assign directly — the list sees the change automatically:</p>
+<pre data-lang="python"><code>if found_contact:
+    print(f&quot;Old phone: {found_contact.phone}&quot;)
+    found_contact.phone = &quot;555-9999&quot;   # updates the SAME object in the list
+    print(f&quot;New phone: {found_contact.phone}&quot;)
+
+# Verify the list sees the change — no &quot;save back&quot; needed
+for p in directory:
+    print(f&quot;{p.name}: {p.phone}&quot;)</code></pre>
+        </section>
+
+        <section class="slide" id="search-contact-a-reusable-function-18-f8a4fb6a" data-slide-number="18">
+            <h1>search_contact() — A Reusable Function</h1>
+            <h3>Wrap the Loop</h3>
+<pre data-lang="python"><code>def search_contact(contact_list, target_name):
+    &quot;&quot;&quot;
+    Search for a contact by name (case-insensitive).
+    Returns the Contact object if found, or None if not found.
+    &quot;&quot;&quot;
+    for c in contact_list:
+        if c.name.lower() == target_name.lower():
+            return c      # returns the actual object immediately
+
+    return None           # no match found</code></pre>
+<h3>Using the Function</h3>
+<pre data-lang="python"><code>result = search_contact(directory, &quot;Alice&quot;)
+
 if result:
-    print(result.display())
+    print(f&quot;Found {result.name}. Updating phone...&quot;)
+    result.phone = &quot;555-8888&quot;
 else:
     print(&quot;Not found.&quot;)
 
-# Pattern 2: explicit is None check (extra clarity)
-result = search_contact(contacts, &quot;Zara&quot;)
-if result is None:
-    print(&quot;Not found.&quot;)
+# Test a missing contact
+result2 = search_contact(directory, &quot;Eve&quot;)
+if result2:
+    print(f&quot;Found {result2.name}.&quot;)
 else:
-    print(result.display())
-
-# Pattern 3: return a message string from the search (avoid None in caller)
-def safe_display(contacts: list, name: str) -&gt; str:
-    result = search_contact(contacts, name)
-    return result.display() if result else f&quot;{name} not found.&quot;</code></pre>
-<blockquote>⚠️ **Common pitfall:** Every function that can return `None` requires a check at the call site before using the result.</blockquote>
+    print(&quot;Eve not found in directory.&quot;)</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Lab: Refactor Contact Manager to Objects</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Start from your Day 9 contact manager (dict-based) or use the template below. Replace dictionaries with <code>Contact</code> objects and add search and update functions.</p>
-<p><strong>Starter Template:</strong></p>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-def search_contact(contacts: list, name: str):
-    &quot;&quot;&quot;Return matching Contact or None.&quot;&quot;&quot;
-    ...  # your code here
-
-def update_phone(contacts: list, name: str, new_phone: str) -&gt; bool:
-    &quot;&quot;&quot;Find and update a contact&#x27;s phone. Return True if found.&quot;&quot;&quot;
-    ...  # your code here</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Refactor Contact Manager (continued)</h1>
-            <p><strong>Menu Loop to Connect Everything:</strong></p>
-<pre data-lang="python"><code>def main() -&gt; None:
-    contacts = []
-    print(&quot;Contact Manager (Object Version)&quot;)
-
-    while True:
-        print(&quot;\n1. Add  2. List  3. Search  4. Update  5. Quit&quot;)
-        choice = input(&quot;Choice: &quot;).strip()
-
-        if choice == &quot;1&quot;:
-            name  = input(&quot;Name: &quot;).strip().title()
-            phone = input(&quot;Phone: &quot;).strip()
-            contacts.append(Contact(name, phone))
-            print(f&quot;Added {name}.&quot;)
-
-        elif choice == &quot;2&quot;:
-            if not contacts:
-                print(&quot;No contacts yet.&quot;)
-            for c in contacts:
-                print(f&quot;  {c.display()}&quot;)
-
-        elif choice == &quot;3&quot;:
-            name = input(&quot;Search name: &quot;).strip()
-            result = search_contact(contacts, name)
-            if result:
-                print(f&quot;Found: {result.display()}&quot;)
-            else:
-                print(&quot;Not found.&quot;)
-
-        elif choice == &quot;4&quot;:
-            name  = input(&quot;Name to update: &quot;).strip()
-            phone = input(&quot;New phone: &quot;).strip()
-            if update_phone(contacts, name, phone):
-                print(&quot;Updated.&quot;)
-            else:
-                print(&quot;Contact not found.&quot;)
-
-        elif choice == &quot;5&quot;:
-            print(&quot;Goodbye!&quot;)
-            break
-
-main()</code></pre>
-<p><strong>Completion Criteria:</strong></p>
+        <section class="slide" id="lab-refactor-contact-manager-to-objects-19-8406a0c3" data-slide-number="19">
+            <h1>Lab — Refactor Contact Manager to Objects</h1>
+            <p><strong>Time: 30 minutes</strong></p>
+<h3>Replace Dictionaries With Objects</h3>
+<pre><code>[1] Add       [2] List       [3] Search/Update       [4] Quit</code></pre>
+<h3>Lab Requirements</h3>
+<ol>
+  <li>Define <code>Contact</code> with <code>__init__(name, phone)</code> and a <code>display()</code> method returning <code>&quot;Alice -- 555-0101&quot;</code></li>
+  <li>Create <code>my_directory = []</code> as the in-memory store</li>
+  <li>Add contacts via user input — create a <code>Contact</code> object and <code>append</code> it</li>
+  <li>List contacts by calling <code>.display()</code> on each</li>
+  <li>Search by name (case-insensitive) — show current phone — optionally update in place</li>
+  <li>Handle invalid menu choices gracefully</li>
+</ol>
+<h3>Completion Checkpoints</h3>
 <ul>
-  <li>✅ <code>Contact</code> objects stored in a list (not a dict)</li>
-  <li>✅ <code>search_contact</code> normalizes comparison with <code>.lower()</code></li>
-  <li>✅ <code>update_phone</code> uses <code>search_contact</code> internally</li>
-  <li>✅ None is always checked before accessing a returned contact</li>
-  <li>✅ Menu loop works end-to-end without crashes</li>
+  <li><span class="check">✓</span> Menu loops; Quit exits cleanly</li>
+  <li><span class="check">✓</span> Added contact appears in the list immediately</li>
+  <li><span class="check">✓</span> Search is case-insensitive</li>
+  <li><span class="check">✓</span> Updated phone persists in a subsequent list</li>
 </ul>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="common-pitfalls-hour-38-20-53d32764" data-slide-number="20">
             <h1>Common Pitfalls — Hour 38</h1>
-            <h3>Pitfall 1: Comparing the Wrong Attribute</h3>
-<pre data-lang="python"><code># Bug: searching by .phone instead of .name
-def search_contact(contacts: list, name: str):
-    target = name.strip().lower()
-    for c in contacts:
-        if c.phone.strip().lower() == target:   # ← wrong attribute!
-            return c
-    return None</code></pre>
-<pre data-lang="python"><code># Fix: compare the attribute that makes semantic sense for the search
-def search_contact(contacts: list, name: str):
-    target = name.strip().lower()
-    for c in contacts:
-        if c.name.strip().lower() == target:    # ← correct
-            return c
-    return None</code></pre>
-<h3>Pitfall 2: Not Handling Duplicate Names</h3>
-<pre data-lang="python"><code># Question to raise with students: what happens if two contacts
-# have the same name?
-# Simple rule for Basics: first match wins — document it!
+            <h3>Pitfall 1: Comparing the Whole Object Instead of an Attribute</h3>
+<pre data-lang="python"><code># Wrong — compares a string to a Contact object
+if query == contact:
+    ...
 
-def search_contact(contacts: list, name: str):
-    &quot;&quot;&quot;Return the FIRST contact whose name matches (case-insensitive),
-    or None if no match found. If duplicates exist, first match is returned.&quot;&quot;&quot;
-    target = name.strip().lower()
-    for c in contacts:
-        if c.name.strip().lower() == target:
-            return c
-    return None</code></pre>
-<blockquote>⚠️ **Common pitfall:** Decide a clear rule for duplicate names up front — first match is the simplest. Documenting this in the docstring prevents confusion later.</blockquote>
+# Right — compare the string to the name attribute
+if query.lower() == contact.name.lower():
+    ...</code></pre>
+<h3>Pitfall 2: Forgetting `break` After a Match</h3>
+<pre data-lang="python"><code># Wrong — loop continues; may overwrite found_contact
+for c in directory:
+    if c.name.lower() == target.lower():
+        found_contact = c          # found it, but loop keeps going!
+
+# Right — stop immediately on match
+for c in directory:
+    if c.name.lower() == target.lower():
+        found_contact = c
+        break</code></pre>
+<h3>Pitfall 3: Thinking You Must &quot;Save Back&quot; After Updating</h3>
+<p><code>found_contact</code> and the object inside the list are the same object in memory. Assign to the attribute directly — no extra step needed.</p>
         </section>
 
-        <section class="slide">
-            <h1>Optional Extensions — Hour 38</h1>
-            <h3>Extension: Unique Integer ID Field</h3>
-<pre data-lang="python"><code>class Contact:
-    _next_id: int = 1    # class-level counter — shared across all instances
-
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.id = Contact._next_id      # assign a unique id
-        Contact._next_id += 1           # increment for next contact
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;[{self.id}] {self.name}: {self.phone}&quot;
-
-# Demo
-c1 = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c2 = Contact(&quot;Bob&quot;,   &quot;555-5678&quot;)
-c3 = Contact(&quot;Alice&quot;, &quot;555-0000&quot;)   # duplicate name — different id!
-
-print(c1.display())   # [1] Alice: 555-1234
-print(c2.display())   # [2] Bob: 555-5678
-print(c3.display())   # [3] Alice: 555-0000</code></pre>
-<blockquote>🗒️ **Speaker note:** This is a sneak preview of class attributes. Keep it brief — just show the pattern, don&#x27;t go deep. Students who want to explore more can try the extension.</blockquote>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-38-21-c5eb5523" data-slide-number="21">
             <h1>Quick Check — Hour 38</h1>
-            <p><strong>Exit Ticket Question:</strong> Why might storing objects make code easier to maintain than using nested dictionaries?</p>
-<p><strong>Model Answer:</strong> &quot;With nested dictionaries, every piece of code that reads or writes a contact must know the exact key names (<code>&#x27;name&#x27;</code>, <code>&#x27;phone&#x27;</code>) and trust they exist. There is nothing stopping you from creating <code>{&#x27;name&#x27;: &#x27;Alice&#x27;}</code> without a phone, or using <code>&#x27;phonenumber&#x27;</code> by accident in one place. With a <code>Contact</code> class, <strong>the structure is enforced by the <code>__init__</code> method</strong> — every contact is guaranteed to have both <code>name</code> and <code>phone</code>. Methods like <code>display()</code> are defined once and work the same way everywhere. Adding a new field means updating the class in one place, not hunting through every dictionary in the codebase.&quot;</p>
+            <p><strong>Question:</strong> If you set <code>found_contact.phone = &quot;555-new&quot;</code>, does the original object in the list change?</p>
+<p>Expected answer: Yes. <code>found_contact</code> points to the same object that is inside the list. You are modifying the actual object, not a copy. No &quot;save back&quot; step is needed.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="hour-39-basic-encapsulation-data-validation-22-933354e0" data-slide-number="22">
             <h1>Hour 39: Basic Encapsulation + Data Validation</h1>
             
         </section>
 
-        <section class="slide">
+        <section class="slide" id="learning-outcomes-23-39c18370" data-slide-number="23">
             <h1>Learning Outcomes</h1>
             <ul>
-  <li>Add validation logic inside class methods</li>
-  <li>Use methods to enforce business rules in one place</li>
-  <li>Return meaningful feedback for invalid input</li>
-  <li>Keep UI code separate from validation logic</li>
+  <li>Write a simple validation method inside a class</li>
+  <li>Distinguish core business logic (class) from UI logic (menu loop)</li>
+  <li>Protect data by updating <code>self.phone</code> only when validation passes</li>
+  <li>Return <code>True</code>/<code>False</code> from a method to signal success or failure</li>
+  <li>Preview <code>ValueError</code> as an alternative signal for invalid data</li>
 </ul>
         </section>
 
-        <section class="slide">
-            <h1>What Is Encapsulation?</h1>
-            <h3>The Core Idea</h3>
-<p><strong>Encapsulation</strong> means bundling related <strong>data</strong> and <strong>behavior</strong> together in one place — the class.</p>
-<pre data-lang="python"><code># Without encapsulation — validation scattered everywhere
-name  = input(&quot;Name: &quot;).strip()
-phone = input(&quot;Phone: &quot;).strip()
+        <section class="slide" id="encapsulation-the-core-idea-24-b081fa13" data-slide-number="24">
+            <h1>Encapsulation — The Core Idea</h1>
+            <h3>Analogy — A Bank Account</h3>
+<p>The bank doesn&#x27;t let you set your balance directly. You go through <code>deposit()</code> and <code>withdraw()</code>, which enforce rules.</p>
+<h3>The Same Pattern for Our Class</h3>
+<pre data-lang="python"><code># No guardrails — garbage accepted silently
+c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+c.phone = user_input     # anything goes in, no checks
 
-# UI code validates phone — logic is in the wrong place!
-digits = phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-if not digits.isdigit() or len(digits) &lt; 7:
-    print(&quot;Invalid phone.&quot;)
+# Method-guarded update
+success = c.update_phone(user_input)   # class decides if it is valid
+if success:
+    print(&quot;Update successful!&quot;)
 else:
-    contacts.append({&quot;name&quot;: name, &quot;phone&quot;: phone})</code></pre>
-<pre data-lang="python"><code># With encapsulation — validation lives in the class
-class Contact:
-    def update_phone(self, new_phone: str) -&gt; bool:
-        &quot;&quot;&quot;Validate and update. Returns True if successful.&quot;&quot;&quot;
-        digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-        if not digits.isdigit() or len(digits) &lt; 7:
-            return False
-        self.phone = new_phone
-        return True
-# UI just calls update_phone — no validation logic needed here</code></pre>
-<blockquote>💡 **Encapsulation:** the class handles the rules. The UI handles the messages. Neither knows too much about the other.</blockquote>
+    print(&quot;Invalid phone number.&quot;)</code></pre>
+<p>The class <strong>owns</strong> its data. The class <strong>decides</strong> what data is acceptable.</p>
         </section>
 
-        <section class="slide">
-            <h1>Validation Inside a Method</h1>
-            <h3>A Flexible Phone Validator</h3>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-    def update_phone(self, new_phone: str) -&gt; bool:
-        &quot;&quot;&quot;Update phone if valid (7–15 digits after stripping separators).
-        Returns True if updated, False if invalid.&quot;&quot;&quot;
-        digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-        digits = digits.replace(&quot;(&quot;, &quot;&quot;).replace(&quot;)&quot;, &quot;&quot;)
-        if not digits.isdigit() or not (7 &lt;= len(digits) &lt;= 15):
-            return False
-        self.phone = new_phone
-        return True</code></pre>
-<h3>UI Code Stays Separate</h3>
-<pre data-lang="python"><code>contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-
-new_phone = input(&quot;New phone: &quot;).strip()
-if contact.update_phone(new_phone):
-    print(f&quot;Updated: {contact.display()}&quot;)
-else:
-    print(&quot;Invalid phone number. Please enter digits only (7–15 digits).&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Demo: Validation in `update_phone`</h1>
-            <h3>Watch For:</h3>
-<ul>
-  <li>The class handles the validation rule — the <code>update_phone</code> method</li>
-  <li><code>return False</code> signals invalid input to the caller</li>
-  <li><code>return True</code> signals success — and the attribute is updated</li>
-  <li>UI code shows the appropriate message based on the return value</li>
-</ul>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-    def update_phone(self, new_phone: str) -&gt; bool:
-        digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-        if not digits.isdigit() or len(digits) &lt; 7:
-            return False
-        self.phone = new_phone
-        return True
-
-# Test the validation
-contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-
-test_phones = [&quot;abc&quot;, &quot;123&quot;, &quot;555-0000&quot;, &quot;  &quot;, &quot;+1-555-1234&quot;, &quot;5551234567&quot;]
-for phone in test_phones:
-    result = contact.update_phone(phone)
-    status = &quot;✅ Updated&quot; if result else &quot;❌ Rejected&quot;
-    print(f&quot;{status}: {repr(phone)}&quot;)
-
-print(f&quot;Final phone: {contact.phone}&quot;)</code></pre>
-<blockquote>🗒️ **Speaker note:** Ask students to predict which phones are accepted before running. Discuss edge cases: `+1-555-1234` — should international prefixes be allowed? There is no single right answer — the goal is to *think about requirements* before coding.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Separation of Concerns</h1>
-            <h3>UI Code and Validation Code Are Different Responsibilities</h3>
-<pre data-lang="python"><code># Contact class — owns the data and the rules
-class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-    def update_phone(self, new_phone: str) -&gt; bool:
-        &quot;&quot;&quot;Class owns the rule: what makes a valid phone?&quot;&quot;&quot;
-        digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-        return digits.isdigit() and len(digits) &gt;= 7
-
-    def update_name(self, new_name: str) -&gt; bool:
-        &quot;&quot;&quot;Class owns the rule: what makes a valid name?&quot;&quot;&quot;
-        if not new_name.strip():
-            return False
-        self.name = new_name.strip().title()
-        return True</code></pre>
-<pre data-lang="python"><code># main.py — owns the user interaction
-def prompt_update(contact: Contact) -&gt; None:
-    &quot;&quot;&quot;UI code — handles messages, not rules.&quot;&quot;&quot;
-    phone = input(&quot;New phone: &quot;).strip()
-    if contact.update_phone(phone):
-        print(f&quot;Phone updated: {contact.display()}&quot;)
-    else:
-        print(&quot;Invalid phone. Please enter at least 7 digits.&quot;)</code></pre>
-<blockquote>💡 **Separation of concerns** means each part of your code has one clear job. The class enforces rules. The UI displays messages. If the rule changes, you update only the class — not every place in the UI.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Add Validation</h1>
-            <h3>Instructions (30 minutes)</h3>
-<p><strong>Task:</strong> Add at least one validation rule to your <code>Contact</code> class, then use it in your menu loop.</p>
-<p><strong>Step 1 — Add <code>update_phone</code> with validation:</strong></p>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-    def update_phone(self, new_phone: str) -&gt; bool:
-        &quot;&quot;&quot;Validate then update. Return True if valid, False otherwise.&quot;&quot;&quot;
-        ...  # strip separators, check isdigit(), check length
-        ...  # if valid: update self.phone and return True
-        ...  # if invalid: return False (do not update self.phone)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Add Validation (continued)</h1>
-            <p><strong>Step 2 — Add name validation (optional second rule):</strong></p>
-<pre data-lang="python"><code>    def update_name(self, new_name: str) -&gt; bool:
-        &quot;&quot;&quot;Validate then update name. Returns True if updated.&quot;&quot;&quot;
-        if not new_name.strip():
-            return False
-        self.name = new_name.strip().title()
-        return True</code></pre>
-<p><strong>Step 3 — Connect to your menu loop:</strong></p>
-<pre data-lang="python"><code>elif choice == &quot;4&quot;:   # update phone
-    name = input(&quot;Contact to update: &quot;).strip()
-    result = search_contact(contacts, name)
-    if result is None:
-        print(&quot;Contact not found.&quot;)
-    else:
-        new_phone = input(&quot;New phone: &quot;).strip()
-        if result.update_phone(new_phone):
-            print(f&quot;Updated: {result.display()}&quot;)
-        else:
-            print(&quot;Invalid phone number — please enter at least 7 digits.&quot;)</code></pre>
-<p><strong>Completion Criteria:</strong></p>
-<ul>
-  <li>✅ <code>update_phone</code> (and optionally <code>update_name</code>) validates input</li>
-  <li>✅ Invalid input is rejected without crashing the program</li>
-  <li>✅ Validation logic lives inside the class — not scattered in the menu</li>
-  <li>✅ UI code checks the return value and displays a helpful message</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 39</h1>
-            <h3>Pitfall 1: Overly Strict Validation Rejects Valid Numbers</h3>
-<pre data-lang="python"><code># Bug: only accepts digit-only strings — rejects common formats
-def update_phone(self, new_phone: str) -&gt; bool:
-    if not new_phone.isdigit():    # &quot;555-1234&quot; fails — has a dash!
-        return False
-    self.phone = new_phone
-    return True</code></pre>
-<pre data-lang="python"><code># Fix: strip common separators before checking
-def update_phone(self, new_phone: str) -&gt; bool:
-    digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-    digits = digits.replace(&quot;(&quot;, &quot;&quot;).replace(&quot;)&quot;, &quot;&quot;).replace(&quot;+&quot;, &quot;&quot;)
-    if not digits.isdigit() or len(digits) &lt; 7:
-        return False
-    self.phone = new_phone   # store in the original format the user typed
-    return True</code></pre>
-<blockquote>⚠️ **Common pitfall:** Real phone numbers come in many formats: `555-1234`, `(555) 123-4567`, `+1 555 0000`. Strip separators before checking — don&#x27;t force one rigid format.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 39 (continued)</h1>
-            <h3>Pitfall 2: Forgetting to Check the Return Value</h3>
-<pre data-lang="python"><code># Bug: calling update_phone but ignoring whether it succeeded
-contact.update_phone(new_phone)   # validation runs... result ignored!
-print(f&quot;Updated: {contact.display()}&quot;)  # always prints — even if invalid!</code></pre>
-<pre data-lang="python"><code># Fix: always check the boolean returned by a validation method
-if contact.update_phone(new_phone):
-    print(f&quot;Updated: {contact.display()}&quot;)
-else:
-    print(&quot;Invalid phone number — no changes made.&quot;)</code></pre>
-<h3>Pitfall 3: Putting UI Logic Inside the Class Method</h3>
-<pre data-lang="python"><code># Bug: class method prints its own message — mixes concerns
-def update_phone(self, new_phone: str) -&gt; bool:
-    digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-    if not digits.isdigit():
-        print(&quot;Invalid phone number.&quot;)   # ← class printing to screen!
-        return False
-    ...</code></pre>
-<pre data-lang="python"><code># Fix: class returns True/False — UI decides what message to show
-def update_phone(self, new_phone: str) -&gt; bool:
-    digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-    if not digits.isdigit():
-        return False    # just signal failure — no printing here
-    self.phone = new_phone
-    return True</code></pre>
-<blockquote>⚠️ **Common pitfall:** Avoid `print` inside class methods that are not explicitly display methods. Return a status value and let the caller decide how to communicate with the user.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 39</h1>
-            <h3>Extension: Normalize Phone Storage to Digits-Only</h3>
-<pre data-lang="python"><code>def normalize_phone(phone: str) -&gt; str:
-    &quot;&quot;&quot;Strip all non-digit characters for consistent storage.
-    Example: &#x27;(555) 123-4567&#x27; → &#x27;5551234567&#x27;
-    &quot;&quot;&quot;
-    digits_only = &quot;&quot;
-    for ch in phone:
-        if ch.isdigit():
-            digits_only += ch
-    return digits_only
-
-
-class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        # Normalize on the way in so storage is consistent
-        self.phone = normalize_phone(phone)
-
-    def display(self) -&gt; str:
-        # Display in a consistent formatted style
-        digits = self.phone
-        if len(digits) == 10:
-            return f&quot;{self.name}: ({digits[:3]}) {digits[3:6]}-{digits[6:]}&quot;
-        return f&quot;{self.name}: {self.phone}&quot;</code></pre>
-<blockquote>🗒️ **Speaker note:** This example uses a plain helper function and a simple loop to &quot;clean&quot; the phone number before storing it. Emphasize the idea of normalizing data on the way in; students do **not** need to worry about more concise one-line versions yet.</blockquote>
-<blockquote>🚫 **Scope guardrail (Basics):** In more advanced designs, helpers like `normalize_phone` might be turned into `@staticmethod`s or use more compact expressions. Those patterns are left for the Advanced module — keep the focus here on the *idea* of validation/normalization inside the class.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Quick Check — Hour 39</h1>
-            <p><strong>Exit Ticket Question:</strong> Where is the best place to enforce validation — inside the class or in the UI code?</p>
-<p><strong>Model Answer:</strong> &quot;Validation belongs <strong>inside the class</strong>. The class owns the data, so it should own the rules about what data is valid. If you put validation in the UI code, you must duplicate it everywhere the data is created or updated — every menu option, every input prompt. When the rule changes, you must hunt down every copy. Centralizing validation in the class means there is <strong>one place to update</strong>, and all callers automatically benefit. The UI code only needs to check the return value and display the appropriate message — it does not need to know <em>why</em> something is invalid.&quot;</p>
-        </section>
-
-        <section class="slide">
-            <h1>Hour 40: Checkpoint 5 — Functions, Modules &amp; Intro OOP</h1>
-            
-        </section>
-
-        <section class="slide">
-            <h1>Learning Outcomes</h1>
-            <ul>
-  <li>Demonstrate modular code organization across multiple files</li>
-  <li>Use at least one custom class to store records</li>
-  <li>Build a CLI application that adds, lists, and searches records</li>
-</ul>
-        </section>
-
-        <section class="slide">
-            <h1>Checkpoint 5: What You Are Building</h1>
-            <h3>A Memory-Only CLI Organizer</h3>
-<p>You will build a <strong>menu-driven command-line application</strong> that:</p>
-<ul>
-  <li>Stores records using a <strong>custom class</strong> (Contact or Task)</li>
-  <li>Uses <strong>at least 3 named functions</strong></li>
-  <li>Imports from at least <strong>1 custom module</strong> (<code>utils.py</code>)</li>
-  <li>Has <strong>Add / List / Search</strong> features</li>
-  <li>Runs without crashing on typical user input</li>
-  <li><strong>Does not write to or read from files</strong> — all data lives in memory</li>
-</ul>
-<blockquote>🗒️ **Speaker note:** Spend 10–15 minutes reviewing the deliverables checklist before students start. Make sure everyone knows what their target structure looks like *before* they write a single line.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Checkpoint 5 Deliverables Checklist</h1>
-            <table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Requirement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Menu loop</td>
-<td>Runs until user chooses Quit</td>
-</tr>
-<tr>
-<td>Functions</td>
-<td>At least 3 named functions (beyond <code>__init__</code>)</td>
-</tr>
-<tr>
-<td>Custom module</td>
-<td>At least 1 imported helper module (e.g., <code>utils.py</code>)</td>
-</tr>
-<tr>
-<td>Class</td>
-<td>At least 1 class used to store a record (Task or Contact)</td>
-</tr>
-<tr>
-<td>Add</td>
-<td>User can add a new record</td>
-</tr>
-<tr>
-<td>List</td>
-<td>User can list all records</td>
-</tr>
-<tr>
-<td>Search</td>
-<td>User can search records by name / title</td>
-</tr>
-<tr>
-<td>No file I/O</td>
-<td>All data lives in memory — resets on each run</td>
-</tr>
-</tbody>
-</table>
-        </section>
-
-        <section class="slide">
-            <h1>Suggested File Structure</h1>
-            <h3>Two-File Layout (Minimum)</h3>
-<pre><code>project/
-├── main.py          # Menu loop, user interaction
-├── utils.py         # Shared helpers: safe_int, menu_choice, etc.
-└── contact.py       # Contact class definition (or task.py, item.py)</code></pre>
-<h3>Responsibilities</h3>
+        <section class="slide" id="ui-vs-core-logic-separation-of-concerns-25-6cf36da8" data-slide-number="25">
+            <h1>UI vs. Core Logic — Separation of Concerns</h1>
+            <h3>Two Separate Jobs</h3>
 <table>
 <thead>
 <tr>
-<th>File</th>
+<th>Layer</th>
 <th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>main.py</code></td>
-<td>Entry point — menu loop, calls functions</td>
+<td><strong>Class (core logic)</strong></td>
+<td>Knows what makes a Contact valid; enforces rules; protects data</td>
 </tr>
 <tr>
-<td><code>utils.py</code></td>
-<td>Reusable helpers not specific to any class</td>
-</tr>
-<tr>
-<td><code>contact.py</code></td>
-<td><code>Contact</code> class definition only</td>
+<td><strong>Menu loop (UI)</strong></td>
+<td>Talks to user; collects input; calls class methods; reacts to True/False</td>
 </tr>
 </tbody>
 </table>
-<blockquote>⚠️ **Never name your files `random.py`, `string.py`, `os.py`, or any other standard library name.** Python will find YOUR file instead of the built-in, breaking all imports of that module.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Example: contact.py</h1>
-            <h3>The Class File — One Responsibility</h3>
-<pre data-lang="python"><code># contact.py
-
-class Contact:
-    &quot;&quot;&quot;Stores a single contact&#x27;s name and phone number.&quot;&quot;&quot;
-
-    def __init__(self, name: str, phone: str) -&gt; None:
-        &quot;&quot;&quot;Create a Contact with name and phone.&quot;&quot;&quot;
-        self.name = name.strip().title()
-        self.phone = phone.strip()
-
-    def display(self) -&gt; str:
-        &quot;&quot;&quot;Return a formatted display string.&quot;&quot;&quot;
-        return f&quot;{self.name}: {self.phone}&quot;
-
-    def update_phone(self, new_phone: str) -&gt; bool:
-        &quot;&quot;&quot;Validate and update phone. Returns True if successful.&quot;&quot;&quot;
-        digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-        if not digits.isdigit() or len(digits) &lt; 7:
-            return False
-        self.phone = new_phone.strip()
-        return True</code></pre>
-<blockquote>💡 **One file — one clear responsibility.** `contact.py` knows everything about a Contact and nothing about menus or user input.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Example: utils.py</h1>
-            <h3>Reusable Helpers</h3>
-<pre data-lang="python"><code># utils.py
-
-def menu_choice(options: list) -&gt; str:
-    &quot;&quot;&quot;Display a numbered menu and return the user&#x27;s chosen option.
-
-    Loops until the user enters a valid number.
-    &quot;&quot;&quot;
-    for i, option in enumerate(options, start=1):
-        print(f&quot;  {i}. {option}&quot;)
-    while True:
-        raw = input(&quot;Choice: &quot;).strip()
-        if raw.isdigit():
-            index = int(raw) - 1
-            if 0 &lt;= index &lt; len(options):
-                return options[index]
-        print(f&quot;Please enter a number between 1 and {len(options)}.&quot;)
-
-
-def confirm(prompt: str) -&gt; bool:
-    &quot;&quot;&quot;Prompt for yes/no confirmation. Returns True for &#x27;y&#x27; or &#x27;yes&#x27;.&quot;&quot;&quot;
-    answer = input(f&quot;{prompt} (y/n): &quot;).strip().lower()
-    return answer in (&quot;y&quot;, &quot;yes&quot;)</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Example: main.py</h1>
-            <h3>The Entry Point</h3>
-<pre data-lang="python"><code># main.py
-from contact import Contact
-from utils import menu_choice
-
-def add_contact(contacts: list) -&gt; None:
-    &quot;&quot;&quot;Prompt user and add a new Contact to the list.&quot;&quot;&quot;
-    name  = input(&quot;Name: &quot;).strip()
-    phone = input(&quot;Phone: &quot;).strip()
-    contacts.append(Contact(name, phone))
-    print(f&quot;Added {name.strip().title()}.&quot;)
-
-def list_contacts(contacts: list) -&gt; None:
-    &quot;&quot;&quot;Print all contacts, or a message if none exist.&quot;&quot;&quot;
-    if not contacts:
-        print(&quot;No contacts yet.&quot;)
-        return
-    print(&quot;=== Contacts ===&quot;)
-    for c in contacts:
-        print(f&quot;  {c.display()}&quot;)
-
-def search_contacts(contacts: list) -&gt; None:
-    &quot;&quot;&quot;Prompt for a name and display the matching contact.&quot;&quot;&quot;
-    name = input(&quot;Search name: &quot;).strip().lower()
-    for c in contacts:
-        if c.name.lower() == name:
-            print(f&quot;Found: {c.display()}&quot;)
-            return
-    print(f&quot;No contact named &#x27;{name.title()}&#x27; found.&quot;)
-
-def main() -&gt; None:
-    contacts = []
-    print(&quot;=== CLI Organizer — Checkpoint 5 ===&quot;)
-    options = [&quot;Add Contact&quot;, &quot;List Contacts&quot;, &quot;Search&quot;, &quot;Quit&quot;]
-
-    while True:
-        print()
-        choice = menu_choice(options)
-        if choice == &quot;Add Contact&quot;:
-            add_contact(contacts)
-        elif choice == &quot;List Contacts&quot;:
-            list_contacts(contacts)
-        elif choice == &quot;Search&quot;:
-            search_contacts(contacts)
-        elif choice == &quot;Quit&quot;:
-            print(&quot;Goodbye!&quot;)
-            break
-
-main()</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Run It — Expected Interaction</h1>
-            <pre><code>=== CLI Organizer — Checkpoint 5 ===
-
-  1. Add Contact
-  2. List Contacts
-  3. Search
-  4. Quit
-Choice: 1
-Name: alice smith
-Phone: 555-1234
-Added Alice Smith.
-
-  1. Add Contact
-  2. List Contacts
-  3. Search
-  4. Quit
-Choice: 1
-Name: bob jones
-Phone: 555-5678
-Added Bob Jones.
-
-  1. Add Contact
-  2. List Contacts
-  3. Search
-  4. Quit
-Choice: 2
-=== Contacts ===
-  Alice Smith: 555-1234
-  Bob Jones: 555-5678
-
-  1. Add Contact
-  2. List Contacts
-  3. Search
-  4. Quit
-Choice: 3
-Search name: alice
-Found: Alice Smith: 555-1234
-
-  1. Add Contact
-  2. List Contacts
-  3. Search
-  4. Quit
-Choice: 4
-Goodbye!</code></pre>
-<blockquote>🗒️ **Speaker note:** Show this interaction live before students start. Use it as the target they are building toward. Every student&#x27;s program must produce output in this general style.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Lab: Checkpoint 5 — CLI Organizer in Memory</h1>
-            <h3>Instructions (50 minutes)</h3>
-<p><strong>Build a menu-driven CLI Organizer that meets all checklist items.</strong></p>
-<p><strong>Minimum Requirements:</strong></p>
+<h3>Why This Separation Matters</h3>
 <ul>
-  <li><code>main.py</code> — entry point with menu loop</li>
-  <li><code>utils.py</code> — at least 2 reusable helper functions</li>
-  <li><code>contact.py</code> (or <code>task.py</code>) — your custom class</li>
-  <li>Menu options: Add / List / Search / Quit</li>
-  <li>At least 3 named functions beyond <code>__init__</code></li>
-  <li>No crashes on empty input, missing contacts, or invalid phone numbers</li>
+  <li><strong>Reusable</strong> — any code that creates contacts uses the same validation</li>
+  <li><strong>Maintainable</strong> — change validation rules in one place only</li>
+  <li><strong>Testable</strong> — test the class without running a menu loop</li>
+  <li><strong>Readable</strong> — menu code stays clean; class code stays focused</li>
 </ul>
-<p><strong>Time Targets:</strong></p>
+        </section>
+
+        <section class="slide" id="boolean-validation-method-26-17e0d0f5" data-slide-number="26">
+            <h1>Boolean Validation Method</h1>
+            <h3>Validate First, Then Update</h3>
+<pre data-lang="python"><code>class Contact:
+    def __init__(self, name, phone):
+        self.name  = name
+        self.phone = phone
+
+    def update_phone(self, new_phone):
+        &quot;&quot;&quot;
+        Update phone if it passes validation.
+        Returns True if valid and updated, False otherwise.
+        &quot;&quot;&quot;
+        # Clean up separators before counting digits
+        clean = new_phone.replace(&quot; &quot;, &quot;&quot;).replace(&quot;-&quot;, &quot;&quot;)
+
+        # Rule 1: must contain only digits after cleanup
+        if not clean.isdigit():
+            return False
+
+        # Rule 2: must be at least 7 digits
+        if len(clean) &lt; 7:
+            return False
+
+        # All rules passed — safe to update
+        self.phone = new_phone
+        return True</code></pre>
+        </section>
+
+        <section class="slide" id="wiring-validation-to-the-menu-27-298f08d6" data-slide-number="27">
+            <h1>Wiring Validation to the Menu</h1>
+            <h3>Clean Menu Loop</h3>
+<pre data-lang="python"><code>my_contact = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
+
+while True:
+    print(f&quot;\nCurrent phone: {my_contact.phone}&quot;)
+    user_input = input(&quot;Enter new phone (or &#x27;q&#x27; to quit): &quot;)
+
+    if user_input.lower() == &#x27;q&#x27;:
+        break
+
+    success = my_contact.update_phone(user_input)
+
+    if success:
+        print(&quot;Phone updated successfully!&quot;)
+    else:
+        print(&quot;Invalid phone number. Must be at least 7 digits.&quot;)</code></pre>
+<h3>ValueError Preview (Advanced Teaser)</h3>
+<pre data-lang="python"><code>def update_phone(self, new_phone):
+    clean = new_phone.replace(&quot; &quot;, &quot;&quot;).replace(&quot;-&quot;, &quot;&quot;)
+    if not clean.isdigit():
+        raise ValueError(&quot;Phone must contain only digits, spaces, and dashes.&quot;)
+    if len(clean) &lt; 7:
+        raise ValueError(&quot;Phone must be at least 7 digits.&quot;)
+    self.phone = new_phone
+    return True</code></pre>
+<p>Full <code>try</code>/<code>except</code> handling is covered in a later module. For this lab, use the boolean approach.</p>
+        </section>
+
+        <section class="slide" id="lab-add-validation-to-your-contact-manager-28-74353268" data-slide-number="28">
+            <h1>Lab — Add Validation to Your Contact Manager</h1>
+            <p><strong>Time: 28 minutes</strong></p>
+<h3>Task Steps</h3>
+<ol>
+  <li>Add <code>update_phone(new_phone)</code> to your <code>Contact</code> class</li>
+  <li>Implement at least one validation rule (length of at least 7 digits)</li>
+  <li>Return <code>True</code> if valid and updated; <code>False</code> if invalid — do NOT update <code>self.phone</code> on failure</li>
+  <li>Update your menu to call <code>update_phone()</code> — not direct attribute assignment</li>
+  <li>Test with valid <strong>and</strong> invalid inputs</li>
+</ol>
+<h3>Lab Checkpoints</h3>
+<ul>
+  <li><span class="check">✓</span> <code>update_phone</code> exists and takes <code>new_phone</code> as a parameter</li>
+  <li><span class="check">✓</span> Method contains at least one validation <code>if</code> check</li>
+  <li><span class="check">✓</span> Method returns <code>True</code> if valid, <code>False</code> if invalid</li>
+  <li><span class="check">✓</span> <code>self.phone</code> is updated only when validation passes</li>
+  <li><span class="check">✓</span> Menu loop captures the return value and shows a helpful message</li>
+  <li><span class="check">✓</span> Invalid input is rejected without crashing the program</li>
+</ul>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-39-29-4636986b" data-slide-number="29">
+            <h1>Common Pitfalls — Hour 39</h1>
+            <h3>Pitfall 1: Validation Logic in the Menu, Not the Class</h3>
+<pre data-lang="python"><code># Wrong — validation scattered in UI; must be duplicated everywhere
+phone = input(&quot;Enter phone: &quot;)
+if len(phone) &gt;= 7:
+    contact.phone = phone   # direct assignment bypasses class rules</code></pre>
+<pre data-lang="python"><code># Right — validation inside the class method
+phone = input(&quot;Enter phone: &quot;)
+if contact.update_phone(phone):
+    print(&quot;Updated!&quot;)
+else:
+    print(&quot;Invalid — try again.&quot;)</code></pre>
+<h3>Pitfall 2: Forgetting to Return a Boolean</h3>
+<pre data-lang="python"><code># Wrong — method returns None on success (None is falsy)
+def update_phone(self, new_phone):
+    if len(new_phone) &gt;= 7:
+        self.phone = new_phone
+        # missing return True!
+
+# Right — always return True or False explicitly
+def update_phone(self, new_phone):
+    if len(new_phone) &gt;= 7:
+        self.phone = new_phone
+        return True
+    return False</code></pre>
+        </section>
+
+        <section class="slide" id="quick-check-hour-39-30-59f4e942" data-slide-number="30">
+            <h1>Quick Check — Hour 39</h1>
+            <p><strong>Question:</strong> Where should validation logic live — inside the class or in the menu loop?</p>
+<p>Expected answer: Inside the class. The class owns the data, so it owns the rules about what data is valid. Putting validation in the menu loop means duplicating those rules everywhere the data is created or updated. Centralizing validation in the class means one place to maintain — all callers benefit automatically.</p>
+        </section>
+
+        <section class="slide" id="hour-40-checkpoint-5-functions-modules-and-intro-oop-31-84e0b534" data-slide-number="31">
+            <h1>Hour 40: Checkpoint 5 — Functions, Modules, and Intro OOP</h1>
+            
+        </section>
+
+        <section class="slide" id="learning-outcomes-32-75565188" data-slide-number="32">
+            <h1>Learning Outcomes</h1>
+            <ul>
+  <li>Design and build a menu-driven CLI app that loops until quit</li>
+  <li>Organize code across multiple files (<code>main.py</code>, <code>utils.py</code>)</li>
+  <li>Use a custom class to represent a domain record with state and behavior</li>
+  <li>Implement add, list, and search features with graceful error handling</li>
+  <li>Troubleshoot common import errors</li>
+</ul>
+        </section>
+
+        <section class="slide" id="why-multi-file-architecture-33-d419da0a" data-slide-number="33">
+            <h1>Why Multi-File Architecture?</h1>
+            <h3>Restaurant Analogy</h3>
 <table>
 <thead>
 <tr>
-<th>Time</th>
-<th>Milestone</th>
+<th>File</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>0–10 min</td>
-<td>Files created, class defined, <code>__init__</code> and <code>display</code> working</td>
+<td><code>main.py</code></td>
+<td>Server — talks to user, orchestrates actions</td>
 </tr>
 <tr>
-<td>10–25 min</td>
-<td>Add and List features complete</td>
+<td><code>utils.py</code></td>
+<td>Kitchen — reusable helpers any part of the app can call</td>
 </tr>
 <tr>
-<td>25–40 min</td>
-<td>Search feature complete; utils imported</td>
-</tr>
-<tr>
-<td>40–50 min</td>
-<td>Validation added; edge cases tested</td>
-</tr>
-<tr>
-<td>50+ min</td>
-<td>Optional: Delete or Update feature</td>
+<td><code>record.py</code></td>
+<td>Recipe definition — what a record looks like and can do</td>
 </tr>
 </tbody>
 </table>
-<blockquote>🗒️ **Speaker note:** Circulate every 10 minutes. Check that students have the correct file structure first. `ImportError` is the most common blocker — fix it immediately so students can focus on the logic.</blockquote>
+<h3>Import Flow is One-Directional</h3>
+<pre><code>main.py  →  utils.py
+main.py  →  record.py</code></pre>
+<p><code>utils.py</code> and <code>record.py</code> do <strong>not</strong> import from <code>main.py</code> — this keeps each file self-contained and reusable.</p>
         </section>
 
-        <section class="slide">
+        <section class="slide" id="the-record-class-pattern-34-60b00862" data-slide-number="34">
+            <h1>The Record Class Pattern</h1>
+            <h3>Checkpoint 5 Reference Implementation</h3>
+<pre data-lang="python"><code># record.py
+
+class Record:
+    def __init__(self, name, note):
+        self.name = name.strip()
+        self.note = note.strip()
+
+    def matches(self, term):
+        &quot;&quot;&quot;Return True if term appears in name or note (case-insensitive).&quot;&quot;&quot;
+        normalized = term.strip().lower()
+        return normalized in self.name.lower() or normalized in self.note.lower()
+
+    def display(self):
+        return f&quot;{self.name} — {self.note}&quot;</code></pre>
+<h3>Why a Class Instead of a Dictionary?</h3>
+<ul>
+  <li>Structure is <strong>enforced</strong> — every record always has <code>name</code> and <code>note</code></li>
+  <li>Behavior travels <strong>with</strong> the data — <code>matches()</code> and <code>display()</code> are on the object</li>
+  <li>Dot-notation is cleaner and less error-prone than <code>dict[&#x27;name&#x27;]</code> key lookups</li>
+</ul>
+        </section>
+
+        <section class="slide" id="menu-loop-skeleton-35-47f81ec3" data-slide-number="35">
+            <h1>Menu Loop Skeleton</h1>
+            <h3>Start Here, Then Fill In Each Feature</h3>
+<pre data-lang="python"><code># main.py
+
+def main():
+    records = []
+
+    while True:
+        print(&quot;\n=== Menu ===&quot;)
+        print(&quot;1) Add&quot;)
+        print(&quot;2) List&quot;)
+        print(&quot;3) Search&quot;)
+        print(&quot;4) Quit&quot;)
+
+        choice = input(&quot;Choose: &quot;).strip()
+
+        if choice == &quot;1&quot;:
+            print(&quot;Add selected&quot;)      # replace with real add logic
+        elif choice == &quot;2&quot;:
+            print(&quot;List selected&quot;)     # replace with real list logic
+        elif choice == &quot;3&quot;:
+            print(&quot;Search selected&quot;)   # replace with real search logic
+        elif choice == &quot;4&quot;:
+            print(&quot;Goodbye.&quot;)
+            break
+        else:
+            print(&quot;Invalid choice.&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+        </section>
+
+        <section class="slide" id="checkpoint-5-lab-requirements-36-84ebc597" data-slide-number="36">
+            <h1>Checkpoint 5 Lab Requirements</h1>
+            <p><strong>Time: 40 minutes</strong></p>
+<h3>Must-Have Deliverables</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main.py</code></td>
+<td>Entry point — menu loop until quit</td>
+</tr>
+<tr>
+<td><code>utils.py</code></td>
+<td>At least 2 helper functions imported into <code>main.py</code></td>
+</tr>
+<tr>
+<td>Class</td>
+<td>At least 1 class with <code>__init__</code> plus 1 other method</td>
+</tr>
+<tr>
+<td>Functions</td>
+<td>At least 3 named functions outside class methods</td>
+</tr>
+<tr>
+<td>Features</td>
+<td>Add / List / Search all work correctly</td>
+</tr>
+<tr>
+<td>Graceful errors</td>
+<td>Invalid menu choice handled; blank name rejected</td>
+</tr>
+<tr>
+<td>No file I/O</td>
+<td>All records in memory only</td>
+</tr>
+</tbody>
+</table>
+<h3>Graded on</h3>
+<ul>
+  <li><strong>Organization</strong> — files split by responsibility</li>
+  <li><strong>Reliability</strong> — no crashes on typical inputs</li>
+  <li><strong>Correctness</strong> — all required features work</li>
+</ul>
+<p>Not graded on visual polish, speed, or extra features.</p>
+        </section>
+
+        <section class="slide" id="common-pitfalls-hour-40-37-9237bdb1" data-slide-number="37">
             <h1>Common Pitfalls — Hour 40</h1>
-            <h3>Pitfall 1: ImportError Because Files Are in Different Folders</h3>
+            <h3>Pitfall 1: ImportError from Wrong Working Directory</h3>
+<pre><code>ModuleNotFoundError: No module named &#x27;utils&#x27;</code></pre>
+<p>All files must be in the <strong>same folder</strong>. Run Python from that folder:</p>
 <pre><code>project/
 ├── main.py
-└── helpers/
-    └── utils.py    # ← wrong!  utils.py is not in the same folder</code></pre>
-<pre data-lang="python"><code># Bug in main.py:
-from utils import menu_choice
-# ModuleNotFoundError: No module named &#x27;utils&#x27;</code></pre>
-<pre><code>project/
-├── main.py
-├── utils.py        # ← correct: same folder as main.py
-└── contact.py</code></pre>
-<blockquote>⚠️ **Common pitfall:** All files must be in the **same directory**. Run `python main.py` from that directory. Python looks for imported modules in the same folder by default.</blockquote>
+├── utils.py     # same folder as main.py
+└── record.py</code></pre>
+<h3>Pitfall 2: File Name Collides with Standard Library</h3>
+<pre data-lang="python"><code># You created math.py — Python imports YOURS, not the built-in
+import math
+math.sqrt(9)   # AttributeError: module &#x27;math&#x27; has no attribute &#x27;sqrt&#x27;</code></pre>
+<p>Avoid: <code>math.py</code>, <code>json.py</code>, <code>os.py</code>, <code>random.py</code>, <code>string.py</code></p>
+<h3>Pitfall 3: Class Defined But Never Instantiated</h3>
+<pre data-lang="python"><code># Wrong — stores a plain string, not a Record object
+records.append(name)   # calling record.display() will crash later
+
+# Right — create an object from the class blueprint
+records.append(Record(name, note))</code></pre>
         </section>
 
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 40 (continued)</h1>
-            <h3>Pitfall 2: Naming a File After a Standard Library Module</h3>
-<pre data-lang="python"><code># Bug: you created &#x27;string.py&#x27; or &#x27;os.py&#x27; in your project folder
-import os       # Python finds YOUR os.py instead!
-os.getcwd()     # AttributeError: module &#x27;os&#x27; has no attribute &#x27;getcwd&#x27;</code></pre>
-<pre data-lang="python"><code># Fix: use project-specific names
-# ✅ contact.py, task.py, utils.py, helpers.py, organizer.py
-# ❌ string.py, os.py, math.py, json.py, random.py, pathlib.py</code></pre>
-<h3>Pitfall 3: Forgetting `self` in Class Method Definitions</h3>
-<pre data-lang="python"><code># Bug: self missing — TypeError on any method call
-class Contact:
-    def display() -&gt; str:     # ← no self!
-        return f&quot;{self.name}: {self.phone}&quot;
-
-c = Contact(&quot;Alice&quot;, &quot;555-1234&quot;)
-c.display()
-# TypeError: display() takes 0 positional arguments but 1 was given</code></pre>
-<pre data-lang="python"><code># Fix: always include self as the first parameter of every instance method
-class Contact:
-    def display(self) -&gt; str:  # ← correct
-        return f&quot;{self.name}: {self.phone}&quot;</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Common Pitfalls — Hour 40 (continued)</h1>
-            <h3>Pitfall 4: Running contact.py Instead of main.py</h3>
-<pre data-lang="bash"><code># Bug: running the class file directly
-$ python contact.py
-# No output — there is no code to run at the module level!
-
-# Fix: always run your entry point
-$ python main.py</code></pre>
-<h3>Pitfall 5: Circular Imports</h3>
-<pre data-lang="python"><code># Bug: contact.py imports from main.py, and main.py imports from contact.py
-# Each file tries to import the other — Python can&#x27;t finish either!</code></pre>
-<pre data-lang="python"><code># Fix: keep the import flow one-directional
-# main.py imports from contact.py and utils.py
-# contact.py and utils.py import from neither main.py nor each other</code></pre>
-<blockquote>⚠️ **Common pitfall:** The simplest rule — `main.py` imports everything; `contact.py` and `utils.py` are self-contained and import nothing from your project files.</blockquote>
-        </section>
-
-        <section class="slide">
-            <h1>Optional Extensions — Hour 40</h1>
-            <h3>Extension 1: Delete a Contact</h3>
-<pre data-lang="python"><code>def delete_contact(contacts: list, name: str) -&gt; bool:
-    &quot;&quot;&quot;Remove the first contact whose name matches.
-    Returns True if deleted, False if not found.&quot;&quot;&quot;
-    target = name.strip().lower()
-    for i, c in enumerate(contacts):
-        if c.name.lower() == target:
-            removed = contacts.pop(i)
-            print(f&quot;Deleted: {removed.display()}&quot;)
-            return True
-    return False</code></pre>
-<h3>Extension 2: Update Phone From the Menu</h3>
-<pre data-lang="python"><code>def update_contact_phone(contacts: list) -&gt; None:
-    &quot;&quot;&quot;Prompt for a name, find the contact, and update the phone.&quot;&quot;&quot;
-    name = input(&quot;Contact name to update: &quot;).strip()
-    target = name.lower()
-    for c in contacts:
-        if c.name.lower() == target:
-            new_phone = input(&quot;New phone: &quot;).strip()
-            if c.update_phone(new_phone):
-                print(f&quot;Updated: {c.display()}&quot;)
-            else:
-                print(&quot;Invalid phone number — no changes made.&quot;)
-            return
-    print(f&quot;No contact named &#x27;{name.title()}&#x27; found.&quot;)</code></pre>
-<p><strong>Stay in Basics Scope:</strong> No file I/O, no exceptions, no list comprehensions, no decorators, no inheritance.</p>
-        </section>
-
-        <section class="slide">
+        <section class="slide" id="quick-check-hour-40-38-38486c11" data-slide-number="38">
             <h1>Quick Check — Hour 40</h1>
-            <p><strong>Exit Ticket Question:</strong> Point to one place in your code where using a function reduced duplication.</p>
-<p><strong>Model Answer (example):</strong> &quot;I used <code>search_contacts()</code> in both my Update and Delete features. Without this function, I would have copied the same loop and <code>.lower()</code> comparison into two different <code>elif</code> blocks. By extracting it once into a named function, both features call the same logic — if I ever change how searching works (e.g., add partial matching), I only need to update it in one place. This is the <strong>Don&#x27;t Repeat Yourself (DRY)</strong> principle in action.&quot;</p>
+            <p><strong>Question:</strong> Point to one place in your code where using a function reduced duplication.</p>
+<p>Example answer: &quot;I used <code>search_records()</code> from <code>utils.py</code> in both my Update and Delete menu options. Without it, I would have copied the same loop and <code>.lower()</code> comparison into two separate <code>elif</code> blocks. By extracting it once into a named function, both features share the same logic. If I change how searching works, I only update it in one place — this is the DRY principle: Don&#x27;t Repeat Yourself.&quot;</p>
         </section>
 
-        <section class="slide">
-            <h1>Session 10 Recap</h1>
+        <section class="slide" id="scope-guardrails-39-30ebc0f2" data-slide-number="39">
+            <h1>Scope Guardrails</h1>
+            <h3>Stay in Basics Scope</h3>
+<p><span class="check">✓</span> Classes with <code>__init__</code> and instance methods</p>
+<p><span class="check">✓</span> Instance attributes via <code>self</code></p>
+<p><span class="check">✓</span> Multi-file projects with straightforward imports</p>
+<p><span class="check">✓</span> Validation methods returning <code>True</code>/<code>False</code></p>
+<p><span class="check">✓</span> In-memory data storage (lists of objects)</p>
+<h3>Not Yet — Advanced Topics</h3>
+<p><span class="cross">✗</span> Inheritance and subclassing</p>
+<p><span class="cross">✗</span> Dunder methods beyond <code>__init__</code> (<code>__str__</code>, <code>__repr__</code>, <code>__eq__</code>)</p>
+<p><span class="cross">✗</span> <code>@property</code>, <code>@classmethod</code>, <code>@staticmethod</code> decorators</p>
+<p><span class="cross">✗</span> Abstract base classes (<code>ABC</code>)</p>
+<p><span class="cross">✗</span> <code>@dataclass</code> shortcut</p>
+<p><span class="cross">✗</span> File I/O (coming Day 11)</p>
+<p><span class="cross">✗</span> Full <code>try</code>/<code>except</code> exception handling (coming later)</p>
+        </section>
+
+        <section class="slide" id="session-10-wrap-up-40-c170c04f" data-slide-number="40">
+            <h1>Session 10 Wrap-Up</h1>
             <h3>What We Covered Today</h3>
 <table>
 <thead>
@@ -1747,189 +1171,43 @@ $ python main.py</code></pre>
 <tr>
 <td>38</td>
 <td>Collections of objects + searching</td>
-<td>Loop and compare attributes; normalize strings; always check for <code>None</code></td>
+<td>Loop, compare attributes, normalize strings, update in place</td>
 </tr>
 <tr>
 <td>39</td>
-<td>Basic encapsulation + data validation</td>
-<td>Validation logic belongs inside the class; UI only checks the return value</td>
+<td>Basic encapsulation + validation</td>
+<td>Validation belongs in the class; UI only checks the return value</td>
 </tr>
 <tr>
 <td>40</td>
-<td>Checkpoint 5 — Functions, modules &amp; OOP</td>
-<td>One file = one responsibility; import flow is one-directional</td>
+<td>Checkpoint 5 — modules and OOP</td>
+<td>One file, one responsibility; import flow is one-directional</td>
 </tr>
 </tbody>
 </table>
         </section>
 
-        <section class="slide">
-            <h1>Session 10 Key Concepts</h1>
-            <h3>The Four Big Ideas</h3>
-<p><strong>1. Classes enforce structure</strong></p>
-<p>A <code>Contact</code> class guarantees every contact has <code>name</code> and <code>phone</code>. You can&#x27;t accidentally create an incomplete record.</p>
-<p><strong>2. Objects are independent</strong></p>
-<p>Creating <code>c1 = Contact(&quot;Alice&quot;, ...)</code> and <code>c2 = Contact(&quot;Bob&quot;, ...)</code> gives you two separate objects. Changing <code>c1.name</code> never touches <code>c2</code>.</p>
-<p><strong>3. Encapsulation keeps rules in one place</strong></p>
-<p>Validation in the class means every caller benefits automatically. Change the rule once — it takes effect everywhere.</p>
-<p><strong>4. Modules separate responsibilities</strong></p>
-<p><code>contact.py</code> knows about contacts. <code>utils.py</code> knows about helpers. <code>main.py</code> knows about the user interface. None of them needs to know what the others do internally.</p>
+        <section class="slide" id="what-s-next-day-11-41-10c14511" data-slide-number="41">
+            <h1>What&#x27;s Next — Day 11</h1>
+            <h3>Session 11 (Hours 41–44)</h3>
+<ul>
+  <li><strong>Hour 41</strong> — File I/O — reading files with <code>open()</code> and <code>with</code></li>
+  <li><strong>Hour 42</strong> — File I/O — writing and appending files</li>
+  <li><strong>Hour 43</strong> — Working with CSV files using <code>csv.reader</code> and <code>csv.writer</code></li>
+  <li><strong>Hour 44</strong> — Persistent CLI App — combine file I/O with your Day 10 class</li>
+</ul>
+<h3>Homework / Practice</h3>
+<ol>
+  <li>Add <code>update_phone</code> validation to today&#x27;s <code>Contact</code> class if not already done</li>
+  <li>Extend <code>search_contact()</code> to return all contacts whose name <strong>contains</strong> a term (use <code>in</code>)</li>
+  <li>Add a <code>delete_contact(contacts, name)</code> function to <code>utils.py</code></li>
+  <li>Prepare an <code>export_text(contacts)</code> function that formats all contacts as one string — you will use it in Day 11 when writing contacts to a file</li>
+</ol>
         </section>
 
-        <section class="slide">
-            <h1>Session 10 Key Terms Reference</h1>
-            <table>
-<thead>
-<tr>
-<th>Term</th>
-<th>Definition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>class</strong></td>
-<td>A blueprint that defines the structure and behavior of objects</td>
-</tr>
-<tr>
-<td><strong>object / instance</strong></td>
-<td>A concrete value built from a class blueprint</td>
-</tr>
-<tr>
-<td><strong>attribute</strong></td>
-<td>A piece of data stored on an instance (<code>self.name</code>)</td>
-</tr>
-<tr>
-<td><strong>method</strong></td>
-<td>A function defined inside a class; always receives <code>self</code></td>
-</tr>
-<tr>
-<td><strong><code>self</code></strong></td>
-<td>A reference to the specific instance a method was called on</td>
-</tr>
-<tr>
-<td><strong><code>__init__</code></strong></td>
-<td>The constructor — called automatically when an object is created</td>
-</tr>
-<tr>
-<td><strong>encapsulation</strong></td>
-<td>Bundling data and the methods that operate on it in one class</td>
-</tr>
-<tr>
-<td><strong>validation</strong></td>
-<td>Checking that input meets requirements before storing it</td>
-</tr>
-<tr>
-<td><strong>module</strong></td>
-<td>A <code>.py</code> file containing functions, classes, or variables for reuse</td>
-</tr>
-</tbody>
-</table>
-        </section>
-
-        <section class="slide">
-            <h1>No-Go Topics for Basics Scope</h1>
-            <blockquote>🚫 **Scope guardrail (Basics):** The following are **Advanced course** topics. Do not introduce them during this session.</blockquote>
-<table>
-<thead>
-<tr>
-<th>Topic</th>
-<th>Why It Is Advanced</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Inheritance and subclassing</td>
-<td>Requires understanding of the method resolution order (MRO)</td>
-</tr>
-<tr>
-<td>Dunder methods beyond <code>__init__</code></td>
-<td><code>__str__</code>, <code>__repr__</code>, <code>__eq__</code>, <code>__len__</code> — Advanced OOP</td>
-</tr>
-<tr>
-<td><code>@property</code> decorators</td>
-<td>Computed attributes — syntactic sugar requiring decorator knowledge</td>
-</tr>
-<tr>
-<td><code>@classmethod</code> / <code>@staticmethod</code></td>
-<td>Alternative constructors and utilities — Advanced design patterns</td>
-</tr>
-<tr>
-<td>Multiple inheritance</td>
-<td>Complex MRO — confusing and rarely needed at Basics level</td>
-</tr>
-<tr>
-<td>Abstract base classes (<code>ABC</code>)</td>
-<td>Formal interface contracts — Advanced Python typing patterns</td>
-</tr>
-<tr>
-<td><code>__slots__</code></td>
-<td>Memory optimization — not relevant at Basics level</td>
-</tr>
-<tr>
-<td>Dataclasses (<code>@dataclass</code>)</td>
-<td>Useful shortcut but hides the mechanics students must understand first</td>
-</tr>
-</tbody>
-</table>
-        </section>
-
-        <section class="slide">
-            <h1>Session 10 Common Patterns Reference</h1>
-            <h3>Define a Class and Create Objects</h3>
-<pre data-lang="python"><code>class Contact:
-    def __init__(self, name: str, phone: str) -&gt; None:
-        self.name = name
-        self.phone = phone
-
-    def display(self) -&gt; str:
-        return f&quot;{self.name}: {self.phone}&quot;
-
-contacts = [
-    Contact(&quot;Alice&quot;, &quot;555-1234&quot;),
-    Contact(&quot;Bob&quot;,   &quot;555-5678&quot;),
-]
-for c in contacts:
-    print(c.display())</code></pre>
-<h3>Search a List of Objects</h3>
-<pre data-lang="python"><code>def search_contact(contacts: list, name: str):
-    target = name.strip().lower()
-    for c in contacts:
-        if c.name.strip().lower() == target:
-            return c
-    return None</code></pre>
-<h3>Validation Method Returning a Bool</h3>
-<pre data-lang="python"><code>def update_phone(self, new_phone: str) -&gt; bool:
-    digits = new_phone.replace(&quot;-&quot;, &quot;&quot;).replace(&quot; &quot;, &quot;&quot;)
-    if not digits.isdigit() or len(digits) &lt; 7:
-        return False
-    self.phone = new_phone
-    return True</code></pre>
-        </section>
-
-        <section class="slide">
-            <h1>Looking Ahead — Day 11</h1>
-            <h3>Next Session Builds On Today</h3>
-<p><strong>Hour 41: File I/O — Reading Files</strong></p>
-<ul>
-  <li><code>open()</code>, the <code>with</code> statement, reading lines one at a time</li>
-  <li>Process file data using the functions and classes you built today</li>
-</ul>
-<p><strong>Hour 42: File I/O — Writing and Appending</strong></p>
-<ul>
-  <li>Writing new files, appending to existing files</li>
-  <li>Save your Contact list to disk; reload it on start</li>
-</ul>
-<p><strong>Hour 43: Working With CSV Files</strong></p>
-<ul>
-  <li><code>csv.reader</code>, <code>csv.writer</code> — structured text data</li>
-  <li>Load contacts from a <code>.csv</code> file into <code>Contact</code> objects</li>
-</ul>
-<p><strong>Hour 44: Putting It Together — Persistent CLI App</strong></p>
-<ul>
-  <li>Combine file I/O with your Day 10 <code>Contact</code> class</li>
-  <li>A program that remembers its data between runs</li>
-</ul>
-<blockquote>💡 **Homework suggestion:** Add an `export_text(contacts: list) -&gt; str` function to `utils.py` that formats all contacts as a multi-line string — one contact per line. You will use it in Day 11 when you write contacts to a file.</blockquote>
+        <section class="slide" id="thank-you-42-8570694f" data-slide-number="42">
+            <h1>Thank You!</h1>
+            <p>See you in Session 11 — File I/O and Persistent Apps!</p>
         </section>
     </div>
     
@@ -1974,7 +1252,11 @@ for c in contacts:
             
             // Update URL hash (for bookmarking)
             if (updateHash) {
-                window.location.hash = currentSlide + 1;
+                const activeSlide = slides[currentSlide];
+                const targetHash = activeSlide && activeSlide.id
+                    ? activeSlide.id
+                    : String(currentSlide + 1);
+                window.location.hash = targetHash;
             }
         }
         
@@ -2047,17 +1329,24 @@ for c in contacts:
             }
         }
         
-        // Load slide from URL hash
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                const slideNum = parseInt(hash) - 1;
+        // Load slide from URL hash immediately and clamp invalid values.
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            const decodedHash = decodeURIComponent(hash);
+            const slideById = document.getElementById(decodedHash);
+            if (slideById) {
+                const byIdIndex = Array.from(slides).indexOf(slideById);
+                if (byIdIndex >= 0) {
+                    currentSlide = byIdIndex;
+                }
+            } else {
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {
-                    currentSlide = slideNum;
+                    currentSlide = Math.max(0, Math.min(slideNum, totalSlides - 1));
                 }
             }
-            updateSlideDisplay(false);
-        });
+        }
+        updateSlideDisplay(false);
     </script>
 </body>
 </html>

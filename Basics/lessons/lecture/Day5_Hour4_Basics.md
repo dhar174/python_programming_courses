@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=43; title=Hour 20: Dictionary Iteration + Counting Pattern]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is a detailed read-aloud teaching guide for Course Hour 20 — the final hour of Session 5 and the capstone of our four-hour journey through Python's core data structures. Everything this hour builds directly on Hour 19 (dictionaries fundamentals). Learners already know how to create dictionaries, access values with bracket notation and `get()`, add and update entries, and remove keys. This hour adds the missing piece: *traversal*. We will walk through all three dictionary iteration methods — `keys()`, `values()`, and `items()` — and then develop the **counting pattern**, the single most practically useful dictionary idiom beginners will encounter. The word-frequency counter is the canonical demonstration of the counting pattern, and it is tangible enough that learners immediately see where it applies in real programs (log analysis, survey results, inventory tracking, analytics). Stay firmly within Basics scope: no `collections.Counter`, no `defaultdict`, no dictionary comprehensions. The goal is that every learner leaves this hour able to write a frequency counter from scratch and explain every line. The live demo is typed in front of the class — do not paste pre-written code. Every "Say:" block is written to be read nearly verbatim; adapt to your natural voice but do not skip the conceptual scaffolding — it is load-bearing.
 
 ---
+
+[Instructor slide change: page=44; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 

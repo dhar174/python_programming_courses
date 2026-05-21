@@ -10,11 +10,15 @@
 
 ---
 
+[Instructor slide change: page=14; title=Hour 34: Scope + Common Function Mistakes]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a read-aloud teaching guide. Scope is famously tricky for beginners. Clarify the boundary between the "inside" of a function and the "outside" global environment. Emphasize passing data explicitly rather than implicitly relying on global state. Introduce default parameters as a convenient feature. This hour combines deep concept delivery with practical lab work that demonstrates real-world pitfalls. Use the live demos to show crashes and failures—students learn powerfully from seeing "NameError" and "UnboundLocalError" appear, then seeing them fixed.
 
 ---
+
+[Instructor slide change: page=15; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -450,6 +454,8 @@ These functions are safe, reusable, and testable. This is professional code."
 
 ---
 
+[Instructor slide change: page=23; title=Common Pitfalls (Hour 34)]
+
 ## Troubleshooting Pitfalls: Common Mistakes and How to Fix Them
 
 ### Pitfall 1: Trying to Use a Local Variable Outside Its Function
@@ -761,4 +767,3 @@ Students should be able to:
 - ✅ Balanced code fences (all closed properly)
 - ✅ Instructor-ready verbatim delivery script
 - ✅ Assessment rubric with differentiation
-

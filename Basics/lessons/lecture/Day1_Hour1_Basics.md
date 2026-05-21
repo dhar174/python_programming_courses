@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 1: Orientation + Environment Readiness]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Welcome & Course Overview: 5 minutes
@@ -292,6 +294,8 @@ python_basics/          ← Your main course folder
 ---
 
 ## Section 5: Live Demo (5-10 minutes)
+
+[Instructor slide change: page=9; title=Demo: Environment Setup]
 
 ### Demo Script: Your First Python Experience
 
@@ -648,6 +652,8 @@ Based on years of teaching this course, here are the most common issues beginner
 ---
 
 ## Section 8: Exit Ticket & Looking Ahead (5 minutes)
+
+[Instructor slide change: page=13; title=Quick Check]
 
 ### Quick Check Question
 

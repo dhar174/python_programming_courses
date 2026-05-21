@@ -6,6 +6,10 @@
 
 ---
 
+[Instructor slide change: page=24; title=Hour 15: If / Elif / Else Flow and Nested Conditions]
+
+[Instructor slide change: page=25; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 After this instructional hour, learners will be able to:
@@ -283,6 +287,8 @@ if age >= 18 and has_license:
 
 Let's code this live and test boundary values."
 
+[Instructor slide change: page=30; title=Demo: Shipping Cost Calculator with Boundaries]
+
 ### Demo Part 1: The Basic Structure
 
 ```python
@@ -493,6 +499,8 @@ print(f"80: {assign_grade(80)}")  # B (boundary)
 
 **Lab Duration**: 18 minutes  
 **Objective**: Implement tiered pricing logic with clear boundaries and proper ordering.
+
+[Instructor slide change: page=31; title=Guided Practice: Grade Assignment]
 
 ### Lab Prompt
 

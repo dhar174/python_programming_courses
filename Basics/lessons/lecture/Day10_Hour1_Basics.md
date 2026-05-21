@@ -1,5 +1,9 @@
 # Day 10, Hour 1: Introduction to Object-Oriented Programming – Classes, Objects, and the `self` Parameter
 
+[Instructor slide change: page=4; title=Hour 37: Intro to OOP — Classes, Objects, and `self`]
+
+[Instructor slide change: page=5; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 By the end of this hour, students will be able to:
@@ -873,6 +877,8 @@ For now, practice building small classes. The more you build, the more natural t
 - **Encourage questions as learning opportunities:** OOP is conceptually new for many students. Frame questions as opportunities to deepen understanding, not as interruptions.
 - **Peer explanation:** Have students explain the Contact or Book class to each other in their own words. Teaching others reinforces learning.
 - **Use physical analogies:** Draw diagrams of the object, its attributes, and methods on a whiteboard. Visual representation helps abstract concepts become concrete.
+
+[Instructor slide change: page=10; title=Live Demo — Contact Class]
 
 ### Demo Troubleshooting
 - **If code fails:** Show the error message, read it aloud, explain what it means. This models debugging behavior that students should emulate.

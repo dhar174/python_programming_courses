@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=26; title=Hour 27: for Loops + range()]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on for loops: iterating over sequences, using range() for counted loops, understanding inclusive/exclusive endpoints, and choosing between for and while. Stay within Basics scope — do not introduce enumerate(), zip(), list comprehensions, or generator expressions. The key outcomes are writing for loops to iterate over lists, using range() with one/two/three arguments, and building a multiplication table. The lab reinforces all of this in a practical table-generation program.
 
 ---
+
+[Instructor slide change: page=27; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -451,6 +455,8 @@ This prints every product on a separate line instead of in a table. The fix is t
 - "How many times does the inner loop run for each iteration of the outer loop?"
 - "If n is 5, what values should i and j take? Does range(5) give you that?"
 - "How do you print multiple values on the same line?"
+
+[Instructor slide change: page=34; title=Common Pitfalls — Hour 27]
 
 ### 8.3 Debugging support
 

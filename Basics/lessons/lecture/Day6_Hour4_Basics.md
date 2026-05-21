@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=35; title=Hour 24: Checkpoint 3 — Data Structures Assessment]
+
+[Instructor slide change: page=36; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 **By the end of this hour, learners will be able to:**
@@ -318,6 +322,8 @@ You can adjust the format. You can use different labels. But the idea is: a pers
 
 ## 7. Lab with Checkpoints (45–60 minutes total work time)
 
+[Instructor slide change: page=39; title=Checkpoint Build Order]
+
 ### 7.1 Checkpoint 1: Dictionary Created (Target: 5 minutes into work time)
 
 **What learners should have:**
@@ -500,6 +506,8 @@ Ask these questions **aloud** after work time. Learners can answer verbally or t
 4. **"What data-structure topic do you want to practice again before the next checkpoint?"**
    - Expected answer: Varies by learner. Possible answers: "Dictionaries," "loops," "safe access."
    - Teaching moment: Learners are identifying their own learning needs. That is the metacognition skill you want.
+
+[Instructor slide change: page=44; title=Quick Check — Hour 24]
 
 ### 9.2 Exit Ticket (Written or Spoken)
 
@@ -692,4 +700,3 @@ Both are correct. Learners using either pattern have demonstrated the core habit
 **Total word count: 3,247 words**
 
 **All 12 sections present and fully developed.**
-

@@ -1,5 +1,7 @@
 # Day 1, Hour 1: Advanced Kickoff, Baseline Diagnostic, and Git Workflow
 
+[Instructor slide change: page=8; title=Hour 1: Advanced Kickoff + Baseline Diagnostic]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -26,6 +28,8 @@
 Adjust the timing based on the room, but keep this as a one-hour delivery plan. If login or browser pop-up issues take longer than expected, protect the 25-minute guided lab by trimming the opening discussion, not by skipping the Save and Suspend explanation.
 
 ---
+
+[Instructor slide change: page=9; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -262,6 +266,8 @@ If students answer "add saves it," gently correct:
 "That is a very common first guess. `git add` prepares the snapshot. `git commit` records it."
 
 ---
+
+[Instructor slide change: page=14; title=Demo: Diagnostic Script]
 
 ## Live Demo: Project Folder, Diagnostic Script, and First Commit (12 minutes)
 
@@ -614,6 +620,8 @@ Praise process, not just correct output:
 - "You used a specific exception type. That is an advanced habit."
 
 ---
+
+[Instructor slide change: page=17; title=Common Pitfalls — Hour 1]
 
 ## Common Pitfalls and How to Respond
 

@@ -1,5 +1,7 @@
 # Day 6 Hour 3 Advanced — GUI Mini-Project Sprint: Persistence and Polish
 
+[Instructor slide change: page=35; title=Hour 23 — Persistence and Polish Sprint]
+
 ## Session context
 
 This hour is the third block of **Session 6** in the Advanced Python full-stack tracker capstone. Learners now have a functional Tkinter GUI and, ideally, a cleaner `App` structure from Hour 2. The next milestone is to make the GUI feel like a real tool instead of a temporary demo.
@@ -510,6 +512,8 @@ Use this hour to make a larger point about software design.
 
 ---
 
+[Instructor slide change: page=46; title=Common Pitfalls — Hour 23]
+
 ## Common pitfalls to watch for
 
 ### Pitfall 1: saving after add, but not after update/delete
@@ -552,6 +556,8 @@ If time is short, prioritize in this order:
 4. one polish feature
 
 ---
+
+[Instructor slide change: page=47; title=Quick Check]
 
 ## Quick check / exit ticket
 

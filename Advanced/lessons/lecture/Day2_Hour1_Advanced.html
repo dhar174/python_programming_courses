@@ -55,6 +55,11 @@
                 </div>
                 <p class="lecture-status">Use ← and → to move between lectures. Press ? for the shortcut help.</p>
                 <p class="lecture-status" data-lecture-current-section>Current section: lecture overview</p>
+                <div class="lecture-current-slide-card" data-lecture-current-slide-card hidden>
+                   <p class="lecture-status-label">Current presentation slide</p>
+                   <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                   <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <ul class="lecture-shortcuts-list">
                    <li><code>ArrowLeft</code> Previous lecture</li>
                    <li><code>ArrowRight</code> Next lecture</li>
@@ -66,8 +71,15 @@
         </header>
         <main id="lecture-content" class="lecture-layout" role="main" data-lecture-content>
             <article class="lecture-content" data-lecture-article>
+                <div class="lecture-current-slide-banner" data-lecture-current-slide-banner hidden>
+                    <p class="lecture-status-label">Current presentation slide</p>
+                    <a class="lecture-current-slide-link" data-lecture-current-slide-link href="#">Waiting for first slide cue</a>
+                    <p class="lecture-status" data-lecture-current-slide-meta>Slide cues update as you move through the lecture.</p>
+                </div>
                 <div class="lecture-prose">
-                    <h2 id="instructor-notes">Instructor Notes</h2>
+                    <aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="9" data-slide-title="Hour 5: Pattern — Factory" data-slide-anchor="hour-5-pattern-factory-9-968442c4"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 9</strong><a class="lecture-slide-cue-link" href="../slides/day-02/day-02-session-2.html#hour-5-pattern-factory-9-968442c4" data-slide-deck-link>Slide 9: Hour 5: Pattern — Factory</a></div></aside>
+
+<h2 id="instructor-notes">Instructor Notes</h2>
 <ul>
 <li><strong>Course</strong>: Python Programming (Advanced)</li>
 <li><strong>Session</strong>: Day 2, Hour 1 of 48, also Hour 5 in the Advanced runbook sequence</li>
@@ -122,6 +134,8 @@
 </table>
 <p>This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the room needs more support, shorten the vocabulary section or the amount of instructor narration during the concept briefing, but do not make the required factory behavior optional. The runbook objective is that the factory creates valid objects or raises <code>ValidationError</code>.</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="10" data-slide-title="Learning Outcomes" data-slide-anchor="learning-outcomes-10-16181bf9"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 10</strong><a class="lecture-slide-cue-link" href="../slides/day-02/day-02-session-2.html#learning-outcomes-10-16181bf9" data-slide-deck-link>Slide 10: Learning Outcomes</a></div></aside>
+
 <h2 id="learning-outcomes">Learning Outcomes</h2>
 <p>By the end of this hour, learners will be able to:</p>
 <ol>
@@ -240,6 +254,8 @@ Factory:
 <p><strong>Transition</strong></p>
 <p>"Let's build this now. We will create a simple model, then a <code>RecordFactory.from_dict()</code> method that takes a dictionary, validates it, normalizes it, applies optional defaults, and returns a valid object."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="13" data-slide-title="Demo: Simple Model + Factory Skeleton" data-slide-anchor="demo-simple-model-factory-skeleton-13-78309751"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 13</strong><a class="lecture-slide-cue-link" href="../slides/day-02/day-02-session-2.html#demo-simple-model-factory-skeleton-13-78309751" data-slide-deck-link>Slide 13: Demo: Simple Model + Factory Skeleton</a></div></aside>
+
 <h2 id="live-demo-recordfactoryfromdict-10-minutes">Live Demo: <code>RecordFactory.from_dict()</code> (10 minutes)</h2>
 <p>The live demo should be typed or revealed in small chunks. Keep the pace brisk. The goal is a credible 10-minute demo, not a full architecture lecture. Use one file and avoid external dependencies.</p>
 <h3 id="demo-step-1-define-a-local-exception-and-simple-model">Demo Step 1: Define a local exception and simple model</h3>
@@ -722,6 +738,8 @@ def from_user_input(
 <p>Emphasize:</p>
 <p>"The optional <code>from_user_input()</code> method should reuse <code>from_dict()</code> rather than duplicate all the validation rules. If it copies and pastes the same checks, we have recreated the duplication problem the factory was meant to solve."</p>
 <hr>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="17" data-slide-title="Common Pitfalls (Hour 5)" data-slide-anchor="common-pitfalls-hour-5-17-c5a233fe"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 17</strong><a class="lecture-slide-cue-link" href="../slides/day-02/day-02-session-2.html#common-pitfalls-hour-5-17-c5a233fe" data-slide-deck-link>Slide 17: Common Pitfalls (Hour 5)</a></div></aside>
+
 <h2 id="troubleshooting-guide">Troubleshooting Guide</h2>
 <p>Use this section while circulating or during a short pause if many learners hit the same issue.</p>
 <h3 id="problem-keyerror-appears-instead-of-validationerror">Problem: <code>KeyError</code> appears instead of <code>ValidationError</code></h3>
@@ -852,6 +870,8 @@ if status not in allowed_statuses:
 <hr>
 <h2 id="quick-checks-completion-criteria-and-wrap-up-5-minutes">Quick Checks, Completion Criteria, and Wrap-Up (5 minutes)</h2>
 <p>Use this final segment to verify the required concept before moving on.</p>
+<aside class="lecture-slide-cue lecture-slide-cue--change" data-slide-cue="change" data-slide-page="18" data-slide-title="Quick Check (Hour 5)" data-slide-anchor="quick-check-hour-5-18-99c9d24b"><p class="lecture-slide-cue-eyebrow">Instructor slide change</p><div class="lecture-slide-cue-body"><strong class="lecture-slide-cue-action">Change to slide 18</strong><a class="lecture-slide-cue-link" href="../slides/day-02/day-02-session-2.html#quick-check-hour-5-18-99c9d24b" data-slide-deck-link>Slide 18: Quick Check (Hour 5)</a></div></aside>
+
 <h3 id="quick-check-questions">Quick Check Questions</h3>
 <p>Ask:</p>
 <p>"What is the main benefit of centralizing creation logic in a factory?"</p>

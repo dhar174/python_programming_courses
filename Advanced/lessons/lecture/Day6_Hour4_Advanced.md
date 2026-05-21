@@ -1,5 +1,7 @@
 # Day 6 Hour 4 Advanced — Checkpoint 3: GUI Milestone Demo Facilitation Script
 
+[Instructor slide change: page=48; title=Hour 24 — Checkpoint 3: GUI Milestone Demo]
+
 ## Hour identity and facilitation purpose
 
 This document is the instructor facilitation script for Hour 24 in the Advanced Python runbook, defined as Checkpoint 3: GUI milestone demo. It is intentionally written as a checkpoint operations guide, not as a normal concept lecture. Your primary role in this hour is to collect evidence of milestone readiness, score consistently, coach quickly, and route learners to the right remediation path without derailing the whole cohort.
@@ -238,6 +240,8 @@ Purpose:
 - Set shared expectation for acceptable evidence.
 - Reduce ambiguity.
 - Lower anxiety through concrete demonstration.
+
+[Instructor slide change: page=49; title=Checkpoint Overview]
 
 ### Hands on lab coverage, 25 to 35 minutes
 
@@ -1087,5 +1091,3 @@ Phase 5, close:
 This hour is successful when learners leave with clear truth about their current software quality and a concrete path forward. Your consistency is more important than speed, and your evidence discipline is more important than presentation polish. Keep the milestone language canonical, keep the demo sequence canonical, enforce the gates, and coach with precision.
 
 End of Hour 24 checkpoint facilitation script.
-
-(agent_id: issue299-hour4-rewrite — use write_agent to send follow-up messages)

@@ -1,5 +1,7 @@
 # Day 3, Hour 3: Context Managers and Safer File Operations
 
+[Instructor slide change: page=28; title=Hour 11: Context Managers and Safer File Operations]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -36,6 +38,8 @@ Important instructor positioning:
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 8 + 10 + 8 + 25 + 4. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If discussion runs long, shorten the concept examples rather than shrinking the student practice. The required outcome is practical: saves use `with` plus a temp-replace pattern, and the original file is not left half-written after the simulated failure.
 
 ---
+
+[Instructor slide change: page=29; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -730,6 +734,8 @@ Expected answers:
 2. "No. `with` closes the file, but it does not change the fact that direct write mode may have truncated the target."
 3. "JSON needs plain serializable data such as dictionaries, lists, strings, numbers, booleans, and `None`."
 4. "The destination file may be open or locked by another process, such as an editor previewing the JSON file."
+
+[Instructor slide change: page=36; title=Common Pitfalls (Hour 11)]
 
 ### Common pitfalls to restate
 

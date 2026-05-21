@@ -1,5 +1,7 @@
 # Day 1, Hour 2: Designing Classes from Requirements
 
+[Instructor slide change: page=18; title=Hour 2: Designing Classes from Requirements]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -27,6 +29,8 @@
 This is a one-hour plan. If the room needs more support, protect the 25-minute guided lab. Shorten the concept briefing before shortening learner practice. Do not allow the live demo to grow into a full application build; the target is design thinking, not feature completion.
 
 ---
+
+[Instructor slide change: page=19; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -270,6 +274,8 @@ Does not:
 "Now let's turn that sketch into a small deterministic Python demo. Deterministic means the output is predictable every time. There will be no `input()` in this demo. We want code that can be run in class, copied by learners, and later tested."
 
 ---
+
+[Instructor slide change: page=23; title=Demo: Task + Project Classes]
 
 ## Live Demo: Tracker Domain Model and Service Function (10 minutes)
 

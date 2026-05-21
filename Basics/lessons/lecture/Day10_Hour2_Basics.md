@@ -9,6 +9,10 @@
 
 ---
 
+[Instructor slide change: page=14; title=Hour 38: Collections of Objects + Searching]
+
+[Instructor slide change: page=15; title=Learning Outcomes]
+
 ## Learning Outcomes
 
 **Read aloud at the start of the hour (approximately 2–3 minutes):**
@@ -387,6 +391,8 @@ while True:
 "By swapping dictionaries for objects, we established a clear, rigid structure for what a 'Contact' looks like. We don't have to worry about accidentally misspelling a dictionary key like `'Name'` vs `'name'` throughout our code, because the attributes belong to the class definition. The code is easier to read, maintain, and extend."
 
 ---
+
+[Instructor slide change: page=20; title=Common Pitfalls — Hour 38]
 
 ## Troubleshooting & Common Pitfalls
 

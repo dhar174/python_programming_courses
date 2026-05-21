@@ -1,5 +1,7 @@
 # Day 5 Hour 4 Advanced: Record List UI with Treeview or Listbox, Selection Callbacks, and Safe Refresh
 
+[Instructor slide change: page=33; title=Hour 20: Record List UI with Treeview, Selection, and Safe Refresh]
+
 ## Instructor delivery context
 
 - Audience: Advanced learners who already completed Day 5 Hour 3 forms and validation work.
@@ -8,6 +10,8 @@
   - In scope: record list/table display, selection callback behavior, details pane updates, refresh safety, empty-state handling, and a tightly scoped optional search/filter extension.
   - Out of scope: Day 6 architecture topics, broader testing frameworks, deployment, packaging, and backend persistence changes.
 - Teaching posture: near-verbatim facilitation script with clear transitions, exact timing, mini-checkpoints, and observable pass/fail completion checks.
+
+[Instructor slide change: page=34; title=Learning Outcomes]
 
 ## Learning outcomes for Hour 20
 
@@ -257,6 +261,8 @@ Instructor says:
 This check catches fragile refresh code quickly. We will use it in the lab pass/fail rubric.
 
 ## Segment 4 script: live demo (8 minutes)
+
+[Instructor slide change: page=38; title=Demo: Treeview Record Browser — Setup and Wiring]
 
 ### Demo objective
 
@@ -795,6 +801,8 @@ Core check 5:
 - empty-data behavior is safe
 - pass evidence: with empty source, list shows zero rows and details pane shows safe fallback
 
+[Instructor slide change: page=41; title=Common Pitfalls (Hour 20)]
+
 ### Common pitfalls and correction prompts
 
 Pitfall:
@@ -1188,5 +1196,3 @@ Ask one or two based on time.
 ## Final instructor summary paragraph
 
 This hour establishes a practical desktop pattern that learners will reuse often: list records clearly, react to selection safely, and refresh without duplicating or staling the visible state. The key discipline is the refresh sequence and defensive callback handling. If learners can demonstrate stable behavior for no selection, empty data, and three consecutive refreshes with accurate row count, they have met Hour 20 outcomes in a way that is production-minded, user-friendly, and immediately transferable to larger GUI workflows.
-
-(agent_id: issue298-hour4-rewrite — use write_agent to send follow-up messages)

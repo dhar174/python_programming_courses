@@ -5,6 +5,10 @@
 **Duration:** 60 minutes  
 **Target:** 25+ students, beginner level
 
+[Instructor slide change: page=36; title=Hour 28: Loop Patterns — Counters, Accumulators, Min/Max]
+
+[Instructor slide change: page=37; title=Learning Outcomes]
+
 ## Learning Outcomes
 
 By the end of this hour, students will be able to:
@@ -261,6 +265,8 @@ print(f'Average: {average:.2f}')  # Output: 16.00 (two decimal places)
 
 "I'm going to write a program that processes a list of numbers and computes statistics using all four patterns. Watch how I build it step by step, then you'll do the same in the lab."
 
+[Instructor slide change: page=42; title=Demo — Number Statistics Program]
+
 ### Demo Code: Number Statistics Program
 
 **Say:**
@@ -412,6 +418,8 @@ numbers = [12, 8, 25, 9, 18, 14, 22]
 - Run each student's program and verify output matches expected result.
 - Say: "Compare your output to the expected result. Do they match?"
 - Celebrate completion: "Excellent! You've built a complete statistics program using all four loop patterns."
+
+[Instructor slide change: page=44; title=Common Pitfalls — Hour 28]
 
 ### Troubleshooting Hints
 

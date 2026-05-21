@@ -1,5 +1,7 @@
 # Day 6 Hour 1 Advanced — CRUD Wiring in the GUI: Update and Delete Workflows
 
+[Instructor slide change: page=8; title=Hour 21 — Update and Delete Workflows]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -643,6 +645,8 @@ Build the remaining CRUD workflows in your tracker interface.
 
 ---
 
+[Instructor slide change: page=19; title=Common Pitfalls — Hour 21]
+
 ## Common pitfalls to watch for
 
 ### Pitfall 1: using visible row order as identity
@@ -704,6 +708,8 @@ If a learner has only partial completion, the priority order is:
 4. polished feedback and selection behavior
 
 ---
+
+[Instructor slide change: page=20; title=Quick Check]
 
 ## Quick check / exit ticket
 

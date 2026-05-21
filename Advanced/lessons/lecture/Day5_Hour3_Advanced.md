@@ -1,5 +1,7 @@
 # Day 5, Hour 3: Forms + Validation Feedback Patterns (Advanced)
 
+[Instructor slide change: page=25; title=Hour 19: Forms and Validation Feedback Patterns]
+
 ## Instructor script purpose and scope
 
 This hour is the practical bridge between “a form exists” and “a form is trustworthy.”
@@ -72,6 +74,8 @@ Runbook talk-point window alignment (10-20 minutes):
 Arithmetic shown explicitly:
 
 **4 + 9 + 8 + 8 + 26 + 5 = 60**
+
+[Instructor slide change: page=26; title=Learning Outcomes]
 
 ## Learning outcomes (student-facing)
 
@@ -316,6 +320,8 @@ Transition line:
 Demo objective:
 
 Build a form flow that validates before save, surfaces errors clearly, highlights first invalid field through focus + inline message, normalizes input before validation, and requires Save button disable/enable behavior.
+
+[Instructor slide change: page=30; title=Demo: validate_and_save and Inline Error Application]
 
 ### 4.1 Demo code (runnable)
 
@@ -1092,5 +1098,3 @@ Bridge sentence to next hour:
   - Good validation message vs bad validation message
 
 This completes Hour 19 delivery with strict runbook alignment and explicit, testable validation behavior.
-
-(agent_id: issue297-hour3-rewrite — use write_agent to send follow-up messages)

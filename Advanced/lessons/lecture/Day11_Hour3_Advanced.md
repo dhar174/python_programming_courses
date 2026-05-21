@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 11, Hour 43
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=19; title=Hour 42 — Visualization with Matplotlib]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |

@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=24; title=Hour 31: Loop Patterns — Searching, Filtering, Aggregating]
+
+[Instructor slide change: page=25; title=Learning Outcomes]
+
 ## 1) Learning Outcomes
 
 **By the end of this hour, students will be able to:**

@@ -9,6 +9,8 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 5: String Indexing, Slicing, and `len()`]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is intentionally written as a delivery script. You can read it almost word-for-word while teaching, pausing where learners need extra think time.
@@ -152,6 +154,8 @@ print("python" in text)
 ---
 
 ## 4) Live Demo Script (~8 minutes)
+
+[Instructor slide change: page=10; title=Demo: Initials + Email Domain]
 
 ## Demo A: Extract initials from a full name
 

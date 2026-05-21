@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=32; title=Hour 31 — Search, Filter, and Pagination Patterns]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Problem framing and user need: 5 minutes  
@@ -12,6 +14,8 @@
 - Debrief and exit ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=33; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -614,6 +618,8 @@ Learners meet the target for this hour when they can demonstrate:
 - The service or repository owns search behavior; the UI does not contain SQL.
 - Page state such as current offset is reset when the user starts a new search.
 - The app handles zero matching rows without showing stale results.
+
+[Instructor slide change: page=41; title=Common Pitfalls — Hour 31]
 
 ## Common pitfalls
 

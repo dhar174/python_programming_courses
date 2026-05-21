@@ -10,6 +10,10 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 29: Menu-Driven Loops and State Management]
+
+[Instructor slide change: page=5; title=Learning Outcomes]
+
 ## Section 1: Learning Outcomes
 
 By the end of this hour, you will be able to:
@@ -143,6 +147,8 @@ This principle applies to all persistent state: lists, dictionaries, counters, f
 
 **Say:**
 "Let's build a complete, working menu application together. I'll demonstrate the full pattern: infinite loop, menu display, input routing, and persistent state. Please type along in your editor—this builds muscle memory."
+
+[Instructor slide change: page=9; title=Demo: Inventory Tracker]
 
 ### Demo: Inventory Tracker
 

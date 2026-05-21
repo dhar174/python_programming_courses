@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=14; title=Hour 2: First Scripts — print(), Comments, and Reading Errors]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Recap & Transition from Hour 1: 3 minutes
@@ -686,6 +688,8 @@ Let me give you a **process** for reading error messages. Use this every time yo
 
 ---
 
+[Instructor slide change: page=21; title=Demo: 5 Common Mistakes]
+
 ### Demo Recap
 
 **[Instructor speaks:]**
@@ -1024,6 +1028,8 @@ Let me recap what we covered this hour:
 **[Key mindset shift]:** You are now comfortable making mistakes, reading errors, and fixing them. That's huge!
 
 ---
+
+[Instructor slide change: page=25; title=Quick Check]
 
 ### Exit Ticket: Quick Check
 

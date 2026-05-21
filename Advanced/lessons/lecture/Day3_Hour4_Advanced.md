@@ -1,5 +1,7 @@
 # Day 3, Hour 4: Decorators for Timing, Toy Authorization, and Lightweight Validation
 
+[Instructor slide change: page=37; title=Hour 12: Decorators for Timing, Toy Authorization, and Lightweight Validation]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -49,6 +51,8 @@ Explicitly out of scope today:
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 8 + 8 + 5 + 26 + 3 = 60. The guided lab is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect that lab time. If discussion runs long, shorten the second demo and validation discussion rather than shrinking student practice. The required outcome is practical: the timing decorator works, does not change behavior, and writes timing output through the logging system.
 
 ---
+
+[Instructor slide change: page=38; title=Learning Outcomes]
 
 ## Learning Outcomes
 

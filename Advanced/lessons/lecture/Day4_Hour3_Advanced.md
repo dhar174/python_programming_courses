@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=28; title=Hour 15: Capstone Planning Workshop]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -35,6 +37,8 @@ Important instructor positioning:
 This one-hour workshop totals exactly 60 minutes: 4 + 11 + 7 + 7 + 26 + 5 = 60. The hands-on workshop is 26 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect that workshop time. If discussion runs long, compress the delivery-path comparison rather than removing time from the one-page plan, because the written plan and README skeleton are the required artifacts.
 
 ---
+
+[Instructor slide change: page=29; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -440,6 +444,8 @@ When a plan feels too large, do not just say “too big.” Show where to split 
 - postpone advanced charts until the basic summary works
 
 When a plan feels too vague, ask for verbs and nouns. “Analytics dashboard” is vague. “Display average completion time per project” is concrete.
+
+[Instructor slide change: page=36; title=Common Pitfalls (Hour 15)]
 
 ### Common Pitfalls to Watch For
 

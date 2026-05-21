@@ -1,5 +1,7 @@
 # Day 7, Hour 3: Row Mapping — Converting Database Rows Back into Objects (Course Hour 27)
 
+[Instructor slide change: page=22; title=Hour 27: Row Mapping Back into Objects]
+
 ## Instructor Notes
 
 - **Course:** Python Programming (Advanced)
@@ -15,6 +17,8 @@
 ---
 
 ## Instructor Deliverable Script (Use Largely Verbatim)
+
+[Instructor slide change: page=23; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 

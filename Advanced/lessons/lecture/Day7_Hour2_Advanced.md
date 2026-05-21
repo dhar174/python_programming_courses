@@ -1,5 +1,7 @@
 # Day 7, Hour 2: SQLite CRUD with Parameterized Queries (Course Hour 26)
 
+[Instructor slide change: page=14; title=Hour 26: `sqlite3` CRUD with Parameterized Queries]
+
 ## Instructor Notes
 
 - **Course:** Python Programming (Advanced)
@@ -13,6 +15,8 @@
 > **Instructor note:** This hour is the learners' first concrete SQLite implementation in the advanced sequence. Keep the conversation practical and specific. The targets are: open a database file with `sqlite3`, create a table safely with `CREATE TABLE IF NOT EXISTS`, and run safe CRUD operations using `?` parameter placeholders. Reinforce the runbook quality gate repeatedly: no SQL string concatenation, every write is committed, and update/delete must be ID-based. Keep ORMs out of scope. The point is confidence with the standard library and visibility into what the application is actually doing.
 
 ---
+
+[Instructor slide change: page=15; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 

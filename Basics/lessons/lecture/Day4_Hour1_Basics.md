@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 13: Lists Fundamentals]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on lists as an ordered, changeable collection. Stay within Basics scope. Do not drift into dictionaries, file handling, or function design. The key outcomes for this hour are list creation, indexing, slicing, mutation, `append()`, `remove()`, `pop()`, and membership checks with `in`.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -483,6 +487,8 @@ shopping_list = ["milk", "bread", "eggs"]
 “Now let’s put the core list operations together in one realistic mini-example. I am going to build a shopping list, update it, remove items in two different ways, check for membership, and print the result after each step.
 
 As I type, I want you to keep asking yourself: what changed in the list?”
+
+[Instructor slide change: page=13; title=Demo: Build a Shopping List Step by Step]
 
 ### 8.2 Demo code, part 1: start empty and grow the list
 

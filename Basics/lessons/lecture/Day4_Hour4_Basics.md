@@ -6,6 +6,10 @@
 
 ---
 
+[Instructor slide change: page=33; title=Hour 16: Checkpoint 1 — Receipt Generator]
+
+[Instructor slide change: page=34; title=Learning Outcomes]
+
 ## 1. Learning Outcomes
 
 After this instructional hour, learners will be able to:
@@ -256,6 +260,8 @@ Let a learner provide the code, then confirm it's correct.
 
 **Lab Duration**: 45–60 minutes total *(30 min active lab time)*  
 **Objective**: Build a complete receipt generator that integrates input, calculations, and formatted output.
+
+[Instructor slide change: page=40; title=Checkpoint 1 Pitfalls]
 
 ### Lab Prompt: Receipt Generator
 

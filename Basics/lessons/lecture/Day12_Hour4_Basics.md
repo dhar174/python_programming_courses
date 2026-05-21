@@ -1,5 +1,7 @@
 # Session 12, Hour 4: Final Assessment and Certification-Style Review Facilitation Script
 
+[Instructor slide change: page=30; title=Hour 48: Final Assessment + Review]
+
 ## Purpose of this hour in program operations
 
 This script is the final assessment facilitation guide for Hour 48 of the Basics course. This is not a standard coding lesson. This is the closing checkpoint of the program where learners demonstrate end-to-end competency, complete a certification-style conceptual and code-reading review, receive individualized feedback, and leave with explicit next-step study targets.
@@ -1072,5 +1074,3 @@ This model also mirrors real-world expectations. In practical software contexts,
 ## End-of-script reminder
 
 Keep this as a final-assessment facilitation script. Do not drift into a regular instruction hour. Protect the timeline, capture evidence, and ensure each learner leaves with one clear strength and one clear next-practice target.
-
-(agent_id: issue339-hour4-rewrite — use write_agent to send follow-up messages)

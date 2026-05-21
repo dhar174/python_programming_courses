@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=20; title=Hour 30 — Integrate the Database into the App]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Reframe the architecture goal: 5 minutes  
@@ -12,6 +14,8 @@
 - Debrief and exit ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=21; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -155,6 +159,8 @@ Your folders do not need to match this exactly, but your responsibilities should
 ---
 
 ## Section 3: Live Demo of the Storage Swap (10 minutes)
+
+[Instructor slide change: page=29; title=Demo — Storage Swap With Minimal Drama]
 
 ### Demo Setup
 
@@ -602,6 +608,8 @@ Learners meet the target for this hour when they can demonstrate all of the foll
 - JSON, CSV, or in-memory lists are not being used as a second live source of truth.
 - SQL statements use parameterized values rather than string-concatenating user input.
 - The instructor or learner can explain which interface stayed stable during the swap.
+
+[Instructor slide change: page=31; title=Common Pitfalls — Hour 30]
 
 ## Common pitfalls
 

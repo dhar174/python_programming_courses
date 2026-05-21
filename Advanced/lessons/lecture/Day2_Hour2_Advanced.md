@@ -1,5 +1,7 @@
 # Day 2, Hour 2: Pattern: Strategy (Swap Behaviors Cleanly)
 
+[Instructor slide change: page=19; title=Hour 6: Pattern — Strategy]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -26,6 +28,8 @@
 This is a one-hour plan. The timed teaching headings total exactly 60 minutes: 5 + 5 + 10 + 10 + 25 + 5. The guided lab is 25 minutes, which stays inside the runbook's required 25-35 minute lab window. Protect the lab time. If the concept discussion runs long, shorten instructor narration before the live demo rather than shrinking the lab. The required outcome is practical: strategy changes behavior without rewriting the core code, and results are clearly different and correct.
 
 ---
+
+[Instructor slide change: page=20; title=Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -204,6 +208,8 @@ Stable part:
 ## Live Demos: Sort Keys, Validation Strategies, and Callable Class (10 minutes)
 
 The live demo should be typed or revealed in small chunks. Keep it deterministic. Do not use `input()` during the main demo unless your group is comfortable with interactive runs. The snippets simulate choices with variables so the output is repeatable.
+
+[Instructor slide change: page=23; title=Demo: Sort Key Strategies]
 
 ### Demo Step 1: Sort-key selection strategy based on user selection
 
@@ -573,6 +579,8 @@ Keep the extension small. Do not turn this into a plugin system, decorator exerc
 
 ---
 
+[Instructor slide change: page=27; title=Common Pitfalls (Hour 6)]
+
 ## Troubleshooting and Common Pitfalls
 
 Use this section during lab support and the final debrief.
@@ -691,6 +699,8 @@ One strategy expects a record, another expects a list, and the core workflow can
 ---
 
 ## Quick Checks, Completion Criteria, and Wrap-up (5 minutes)
+
+[Instructor slide change: page=28; title=Quick Check (Hour 6)]
 
 ### Quick check questions
 

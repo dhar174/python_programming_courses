@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=37; title=Hour 16: Checkpoint 2 — Persistence-Ready Core + JSON Save/Load]
+
 ## Instructor Notes
 
 - **Course**: Python Programming (Advanced)
@@ -35,6 +37,8 @@ Important instructor positioning:
 This one-hour plan totals exactly 60 minutes: 5 + 10 + 10 + 6 + 26 + 3 = 60. The in-class checkpoint build is 26 minutes, which stays inside the runbook's 25-35 minute hands-on lab window while acknowledging that the broader Checkpoint 2 deliverable may take additional completion or review time. Protect the build block. If a concept explanation runs long, shorten the demo narration rather than cutting the evidence-building time.
 
 ---
+
+[Instructor slide change: page=38; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -346,6 +350,8 @@ That is exactly why this checkpoint is called persistence-ready, not persistence
 
 ## Section 4: Live Demo – Save -> Restart -> Load (6 minutes)
 
+[Instructor slide change: page=45; title=Demo: Save → Restart → Load]
+
 ### Demo Goal
 
 **[Instructor speaks:]**
@@ -476,6 +482,8 @@ Required elements:
 - demo script showing save -> restart -> load
 - handling of invalid JSON with `JSONDecodeError`
 
+[Instructor slide change: page=46; title=Checkpoint Evidence Checklist]
+
 ### Checkpoint Build Mini-Budget
 
 Use this mini-budget to keep the 26-minute build concrete:
@@ -534,6 +542,8 @@ If a student is stuck, help them narrow the steps:
 - sixth, add error handling
 
 That sequence keeps the checkpoint from feeling overwhelming.
+
+[Instructor slide change: page=48; title=Common Pitfalls (Hour 16)]
 
 ### Common Pitfalls to Watch For
 

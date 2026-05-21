@@ -4,9 +4,13 @@ Markdown to HTML Slide Deck Generator
 Converts Markdown lessons to standalone HTML presentations
 """
 
+import hashlib
 import re
+import unicodedata
 from pathlib import Path
 from html import escape
+
+TAG_RE = re.compile(r"<[^>]+>")
 
 # HTML Template with Swiss Modern styling
 HTML_TEMPLATE = """<!DOCTYPE html>
@@ -409,7 +413,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             currentCounter.textContent = currentSlide + 1;
             
             // Update URL hash (for bookmarking)
-            window.location.hash = currentSlide + 1;
+            const activeSlide = slides[currentSlide];
+            const targetHash = activeSlide && activeSlide.id
+                ? activeSlide.id
+                : String(currentSlide + 1);
+            window.location.hash = targetHash;
         }}
         
         function nextSlide() {{
@@ -485,7 +493,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         window.addEventListener('load', () => {{
             const hash = window.location.hash.slice(1);
             if (hash) {{
-                const slideNum = parseInt(hash) - 1;
+                const decodedHash = decodeURIComponent(hash);
+                const slideById = document.getElementById(decodedHash);
+                if (slideById) {{
+                    const byIdIndex = Array.from(slides).indexOf(slideById);
+                    if (byIdIndex >= 0) {{
+                        goToSlide(byIdIndex);
+                        return;
+                    }}
+                }}
+                const slideNum = parseInt(decodedHash, 10) - 1;
                 if (!isNaN(slideNum)) {{
                     goToSlide(slideNum);
                     return;
@@ -701,12 +718,27 @@ class MarkdownSlideParser:
         text = text.replace('⚠️', '<strong>⚠️</strong>')
         
         return text
+
+    def _slide_id(self, slide, index):
+        """Create a stable slide id derived from the slide content."""
+        title = (slide.get('title') or '').strip()
+        subtitle = (slide.get('subtitle') or '').strip()
+        content_bits = [TAG_RE.sub(' ', item) for item in slide.get('content', [])]
+        content_text = ' '.join(part.strip() for part in content_bits if part.strip())
+        label_source = title or subtitle or content_text or f"slide-{index}"
+        normalized = unicodedata.normalize('NFKD', label_source)
+        ascii_text = normalized.encode('ascii', 'ignore').decode('ascii').lower()
+        slug = re.sub(r'[^a-z0-9]+', '-', ascii_text).strip('-') or f"slide-{index}"
+        fingerprint = ' | '.join(part for part in (title, subtitle, content_text) if part).strip() or f"slide-{index}"
+        digest = hashlib.sha1(fingerprint.encode('utf-8')).hexdigest()[:8]
+        return f"{slug}-{index}-{digest}"
     
     def render_html(self):
         """Render complete HTML document"""
         slides_html = []
         
         for i, slide in enumerate(self.slides):
+            slide_id = self._slide_id(slide, i + 1)
             if slide['type'] == 'title':
                 # Title slide
                 title = escape(slide['title'])
@@ -715,7 +747,7 @@ class MarkdownSlideParser:
                     subtitle = f'<div class="subtitle">{escape(slide["subtitle"])}</div>'
                 
                 slide_html = f'''
-        <section class="slide title-slide">
+        <section class="slide title-slide" id="{escape(slide_id)}" data-slide-number="{i + 1}">
             <h1>{title}</h1>
             {subtitle}
         </section>'''
@@ -726,7 +758,7 @@ class MarkdownSlideParser:
                 content_html = '\n'.join(slide['content'])
                 
                 slide_html = f'''
-        <section class="slide">
+        <section class="slide" id="{escape(slide_id)}" data-slide-number="{i + 1}">
             {title_html}
             {content_html}
         </section>'''

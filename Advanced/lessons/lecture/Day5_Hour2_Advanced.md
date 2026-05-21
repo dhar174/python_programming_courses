@@ -1,5 +1,7 @@
 # Day 5 Hour 2 Advanced — Tkinter Layout, Usability, and Resizing (Instructor Script)
 
+[Instructor slide change: page=17; title=Hour 18: Layout, Usability, and Resizing]
+
 ## Instructor intent and anti-drift guardrails
 
 This hour is a layout and usability hour. Keep the center of gravity on how interface structure affects readability, alignment, and resizing behavior under realistic user interaction. Your teaching posture should be practical and design minded, not purely syntax minded. Learners should leave with the ability to look at a cluttered Tkinter screen and apply a repeatable refactor plan that improves legibility, spacing, and window adaptability.
@@ -11,6 +13,8 @@ Anti-drift note for you to say out loud near the beginning and repeat once befor
 - This hour stays focused on layout, usability, and resizing behavior.
 
 You can frame this as a contract with the room: if a question starts to move into Hour 1 basics or Hour 3 validation details, capture it in a parking lot note and bring the class back to layout and resizing.
+
+[Instructor slide change: page=18; title=Learning Outcomes]
 
 ## Runbook alignment: outcomes, talk points, demo, lab, completion criteria
 
@@ -967,5 +971,3 @@ If all are true, this hour is complete and aligned.
 ## Final spoken close
 
 “Strong work. You now have a repeatable method for Tkinter layout quality: frame structure, alignment rhythm, and resize behavior contracts. Keep this process close. It will save you time every time a UI grows. Next session can build on this foundation, but for now your win condition is clear and met when your interface is readable, aligned, and stable under resize tests.”
-
-(agent_id: issue296-hour2-finaldraft — use write_agent to send follow-up messages)

@@ -11,6 +11,8 @@ By the end of this hour, you will be able to:
 
 ---
 
+[Instructor slide change: page=4; title=Hour 9: Comparisons + Boolean Logic]
+
 ## Section 1: Instructor Prep & Setup Checklist
 
 ### Pre-Class Checklist
@@ -170,6 +172,8 @@ if age == 18:
 ```
 
 **[Memory device]:** Think of `==` as asking a question: "Are these equal?" Two equal signs = one question.
+
+[Instructor slide change: page=17; title=Quick Check (Hour 9)]
 
 ### Quick Check #1
 

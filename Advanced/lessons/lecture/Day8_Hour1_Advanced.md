@@ -3,6 +3,8 @@
 
 ---
 
+[Instructor slide change: page=9; title=Hour 29 — Optional ORM Slice or Deeper SQL Practice]
+
 ## Timing Overview
 **Total Time:** 60 minutes  
 - Reconnect to the data-driven app milestone: 5 minutes  
@@ -12,6 +14,8 @@
 - Debrief, tradeoffs, and exit ticket: 5 minutes
 
 ---
+
+[Instructor slide change: page=10; title=Learning Outcomes]
 
 ## Learning Outcomes for This Hour
 
@@ -138,6 +142,8 @@ Notice what stays the same across both options: the service layer still matters,
 ---
 
 ## Section 3: Live Demo (10 minutes)
+
+[Instructor slide change: page=15; title=Demo Track A — Tiny SQLAlchemy Slice]
 
 ### Demo Track A: Tiny SQLAlchemy Slice
 
@@ -345,6 +351,8 @@ Invite two or three learners to share:
 - What question did your query or model help answer?
 - What felt easier than expected?
 - What felt more complex than you hoped?
+
+[Instructor slide change: page=19; title=Common Pitfalls — Hour 29]
 
 ### Common Pitfalls to Name Explicitly
 

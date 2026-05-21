@@ -1,5 +1,7 @@
 # Day 11 Hour 3 (Hour 43): Directories + Paths with `pathlib` (Instructor Script)
 
+[Instructor slide change: page=24; title=Hour 43: Directories and Paths with pathlib]
+
 ## Instructor intent and alignment
 
 This hour is the bridge between “I can read/write one file” and “I can build programs that keep working when moved to another machine, another folder, or another teammate’s environment.” In Hour 42, learners saved JSON. In Hour 43, we make that persistence reliable by teaching directory creation and file discovery with `pathlib`.
@@ -12,6 +14,8 @@ This script is aligned to the runbook for Hour 43 and intentionally emphasizes p
 - Use directory discovery (`iterdir`, `glob`) instead of hardcoding file names.
 
 If learners leave this hour with one key habit, it should be: “My code computes paths from the project, not from my personal machine layout.”
+
+[Instructor slide change: page=25; title=Learning Outcomes]
 
 ## Outcomes (state these at the start)
 
@@ -203,6 +207,8 @@ Pause for a quick comprehension check:
 Desired answer: CWD helps debug context, but reliable code should use a stable project-relative anchor.
 
 ---
+
+[Instructor slide change: page=31; title=Demo — Create Folder, Save JSON, Discover Files]
 
 ## Live demo (5–10 min): create folder, write JSON, discover files
 
@@ -549,6 +555,8 @@ Stretch quality indicators:
 - Uses `encoding="utf-8"` and consistent output formatting.
 
 ---
+
+[Instructor slide change: page=33; title=Common Pitfalls + Quick Check (Hour 43)]
 
 ## Common pitfalls and instructor interventions
 

@@ -9,11 +9,15 @@
 
 ---
 
+[Instructor slide change: page=4; title=Hour 25: Conditionals — if/elif/else and Boundaries]
+
 ## Instructor Deliverable Script (Use Largely Verbatim)
 
 > **Instructor note:** This document is written as a detailed read-aloud teaching guide. Keep the hour tightly focused on conditional logic: writing clear if/elif/else statements, handling boundary values correctly, ordering conditions properly, and choosing between nested and flat branching. Stay within Basics scope — do not introduce match/case statements (Python 3.10+), ternary operators, or advanced pattern matching. The key outcomes are writing readable boolean expressions, handling edge cases at boundaries, and debugging common condition-ordering mistakes. The lab reinforces all of this in a shipping calculator with tiered pricing rules.
 
 ---
+
+[Instructor slide change: page=5; title=Learning Outcomes]
 
 ## 0) Learning Outcomes (read aloud, ~2 minutes)
 
@@ -433,6 +437,8 @@ This treats exactly 5 pounds as medium, and exactly 10 as heavy. Is that what th
 - "Walk me through what happens when weight is exactly 5. Which block runs?"
 - "If the first condition is True, do the other conditions get checked?"
 - "How could you test whether your boundaries are correct?"
+
+[Instructor slide change: page=13; title=Common Pitfalls — Hour 25]
 
 ### 8.3 Debugging support
 

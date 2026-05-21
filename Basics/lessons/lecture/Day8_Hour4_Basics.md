@@ -9,6 +9,10 @@
 
 ---
 
+[Instructor slide change: page=36; title=Hour 32: Synthesis and Checkpoint 2]
+
+[Instructor slide change: page=37; title=Learning Outcomes]
+
 ## 1) LEARNING OUTCOMES (Required: All 5, Explicitly Listed)
 
 By the end of this hour, learners will be able to:

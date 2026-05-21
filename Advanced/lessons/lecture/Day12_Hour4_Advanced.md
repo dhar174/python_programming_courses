@@ -4,6 +4,8 @@
 **Runbook alignment:** Session 12, Hour 48
 **Capstone theme:** Full-stack Tracker with models, services, repositories, SQLite, Flask API, optional GUI/API integration, reports, pytest, and packaging.
 
+[Instructor slide change: page=41; title=Hour 48 — Final Demo, Review, and Retrospective]
+
 ## 60-minute Timing Overview
 
 | Minutes | Activity | Instructor intent |
@@ -13,6 +15,8 @@
 | 35-48 | Certification-style code-reading review | Practice PCAP/PCPP-style reasoning with short code prompts. |
 | 48-57 | Retrospective and next-step planning | Convert course outcomes into an individual practice plan. |
 | 57-60 | Closing exit ticket | Name one demonstrated strength and one concrete next step. |
+
+[Instructor slide change: page=43; title=Hour 48 Learning Outcomes]
 
 ## Learning Outcomes
 
@@ -172,6 +176,8 @@ Ask learners to write a short post-course plan:
 
 **[Instructor speaks:]**
 "Let us collect what we learned. I want one example of a happy path, one example of a sad path, and one example of a design boundary that became clearer. If your code is not fully working yet, you can still contribute by naming the exact symptom and the next diagnostic step."
+
+[Instructor slide change: page=51; title=Common Pitfalls (Hour 48)]
 
 ### Common pitfalls to watch for
 

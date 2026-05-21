@@ -1,5 +1,7 @@
 # Day 12 Hour 3 Basics: Capstone Polish and Demo Readiness Instructor Script
 
+[Instructor slide change: page=23; title=Hour 47: Polish + Demo Readiness]
+
 ## Instructor intent and scope boundary
 
 This instructional hour is the capstone polish and demo readiness hour. The goal is to help learners finish strong by stabilizing what they already built, improving usability, and preparing a short and reliable demonstration flow. This is not a new-feature sprint and it is not a final scoring hour. The final assessment and certification-style review happens in the next hour. In this hour, we protect working code, make behavior clear, and rehearse a concise story that proves the app works from a clean start.
@@ -185,6 +187,8 @@ Instructor mini-check question:
 Instructor transitions:
 
 “Now I’ll model a good demo flow in real time, with one small mistake and a clean recovery, so you can copy the pattern.”
+
+[Instructor slide change: page=26; title=Demo Script]
 
 ## Live demo read-aloud script (8 minutes)
 
@@ -817,5 +821,3 @@ For instructor and student clarity, keep this simple pass card visible:
 - Allowed after freeze: wording and formatting only unless critical bug.
 
 This card closes the loop between instruction, lab behavior, and auditable completion.
-
-(agent_id: issue337-hour3-rewrite — use write_agent to send follow-up messages)
