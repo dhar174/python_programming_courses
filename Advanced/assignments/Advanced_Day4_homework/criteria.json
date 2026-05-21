@@ -36,15 +36,16 @@
       "name": "Hour 15 - Capstone planning workshop - scope, milestones, and delivery path",
       "command": [
         "python",
+        "-c",
+        "import importlib.util, json, shutil, subprocess, sys, tempfile\nfrom pathlib import Path\nsource = Path(sys.argv[1]).resolve()\ntmp = tempfile.TemporaryDirectory()\nworkspace = Path(tmp.name) / 'workspace'\nshutil.copytree(source.parent, workspace, dirs_exist_ok=True)\nscript = workspace / source.name\nrun_ok = False\ntry:\n    result = subprocess.run([sys.executable, script.name], cwd=workspace, capture_output=True, text=True, timeout=25)\n    run_ok = result.returncode == 0\nexcept subprocess.TimeoutExpired:\n    run_ok = False\nplan_path = workspace / 'planning_artifacts' / 'hour15_capstone_plan.json'\nrubric_path = workspace / 'planning_artifacts' / 'hour15_rubric.md'\nplan_data = {}\nplan_artifact_ok = False\nif plan_path.exists():\n    try:\n        plan_data = json.loads(plan_path.read_text(encoding='utf-8'))\n        plan_artifact_ok = isinstance(plan_data, dict) and isinstance(plan_data.get('milestones'), list) and len(plan_data.get('milestones', [])) >= 2 and isinstance(plan_data.get('definition_of_done'), list) and len(plan_data.get('definition_of_done', [])) >= 3 and all(plan_data.get(key) for key in ('domain', 'interface', 'scope_guardrail'))\n    except json.JSONDecodeError:\n        plan_artifact_ok = False\nrubric_ok = rubric_path.exists() and 'Definition of Done' in rubric_path.read_text(encoding='utf-8')\nbehavior_ok = False\ntry:\n    spec = importlib.util.spec_from_file_location('advanced_day4_module', script)\n    module = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(module)\n    func = getattr(module, 'plan_ready_for_build', None)\n    if callable(func) and plan_artifact_ok:\n        invalid = dict(plan_data)\n        invalid['milestones'] = []\n        behavior_ok = (func(plan_data) is True) and (func(invalid) is False)\nexcept Exception:\n    behavior_ok = False\nprint(f'guardrail_hour15_run_ok={run_ok}')\nprint(f'guardrail_hour15_plan_artifact_ok={plan_artifact_ok}')\nprint(f'guardrail_hour15_rubric_artifact_ok={rubric_ok}')\nprint(f'guardrail_hour15_behavior_ok={behavior_ok}')\ntmp.cleanup()",
         "advanced_day4.py"
       ],
       "stdin": "",
       "expected_stdout": [
-        "Hour 15 | chosen domain: tracker",
-        "Hour 15 | primary interface: gui",
-        "Hour 15 | milestone 1: domain + service layer",
-        "Hour 15 | milestone 2: persistence + reporting",
-        "Hour 15 | scope guardrail: one core record type"
+        "guardrail_hour15_run_ok=True",
+        "guardrail_hour15_plan_artifact_ok=True",
+        "guardrail_hour15_rubric_artifact_ok=True",
+        "guardrail_hour15_behavior_ok=True"
       ],
       "points": 20
     },
