@@ -21,5 +21,5 @@ Each page is organized by Module → Day → Hour and uses placeholder rows unti
 Use the linked pages above to add or browse resource slots for Days 1–12.
 When a concrete asset is ready, replace the matching placeholder row and keep the hour order stable.
 
-[basics-portal]: ../slides/index.html
-[course-portal]: ../../../slides/index.html
+[basics-portal]: ../index.html
+[course-portal]: ../../../index.html

@@ -26,6 +26,7 @@ MODULES = [
         "label": "Python Programming: Basic",
         "resource_dir": Path("Basics/lessons/resources"),
         "day_count": 12,
+        "hours_per_day": 4,
         "module_portal": "../slides/index.html",
     },
     {
@@ -33,13 +34,14 @@ MODULES = [
         "label": "Python Programming: Advanced",
         "resource_dir": Path("Advanced/lessons/resources"),
         "day_count": 12,
+        "hours_per_day": 4,
         "module_portal": "../slides/index.html",
     },
 ]
 
 DAY_HEADING_RE = re.compile(r"^### Day (\d+)\b")
 ROW_RE = re.compile(r"^\|\s*(\d+)\s*\|")
-MD_LINK_RE = re.compile(r'href="([^"#?]+)\.md([#?][^"]*)?"')
+MD_LINK_RE = re.compile(r'href="(?![a-z]+:)([^"#?]+)\.md([#?][^"]*)?"')
 
 
 def parse_args() -> argparse.Namespace:
@@ -65,7 +67,7 @@ def write_if_changed(path: Path, content: str, check: bool, changed: list[Path])
     changed.append(path)
 
 
-def ensure_day_hour_links(md_content: str) -> str:
+def ensure_day_hour_links(md_content: str, hours_per_day: int) -> str:
     lines = md_content.splitlines()
     current_day: int | None = None
     output: list[str] = []
@@ -90,8 +92,8 @@ def ensure_day_hour_links(md_content: str) -> str:
             row_match = ROW_RE.match(line)
             if row_match and "<a id=" not in line:
                 absolute_hour = int(row_match.group(1))
-                hour_in_day = absolute_hour - ((current_day - 1) * 4)
-                if 1 <= hour_in_day <= 4:
+                hour_in_day = absolute_hour - ((current_day - 1) * hours_per_day)
+                if 1 <= hour_in_day <= hours_per_day:
                     anchor = f"day-{current_day:02d}-hour-{hour_in_day:02d}"
                     line = re.sub(
                         r"^\|\s*\d+\s*\|",
@@ -102,13 +104,10 @@ def ensure_day_hour_links(md_content: str) -> str:
 
         output.append(line)
 
-    normalized = "\n".join(output) + "\n"
-    normalized = normalized.replace("(../slides/index.html)", "(../index.html)")
-    normalized = normalized.replace("(../../../slides/index.html)", "(../../../index.html)")
-    return normalized
+    return "\n".join(output) + "\n"
 
 
-def build_day_hour_index(module_name: str, module_label: str, day_count: int) -> str:
+def build_day_hour_index(module_name: str, module_label: str, day_count: int, hours_per_day: int) -> str:
     lines: list[str] = []
     lines.append(f"# {module_name} day/hour resource index")
     lines.append("")
@@ -127,8 +126,8 @@ def build_day_hour_index(module_name: str, module_label: str, day_count: int) ->
     lines.append("")
 
     for day in range(1, day_count + 1):
-        start_hour = ((day - 1) * 4) + 1
-        end_hour = start_hour + 3
+        start_hour = ((day - 1) * hours_per_day) + 1
+        end_hour = start_hour + (hours_per_day - 1)
         lines.append(f"<a id=\"day-{day:02d}\"></a>")
         lines.append(f"### Day {day} — Session {day} (Hours {start_hour}–{end_hour})")
         lines.append("")
@@ -136,8 +135,8 @@ def build_day_hour_index(module_name: str, module_label: str, day_count: int) ->
             "| Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |"
         )
         lines.append("|---|---|---|---|---|---|---|---|")
-        for hour in range(1, 5):
-            absolute = ((day - 1) * 4) + hour
+        for hour in range(1, hours_per_day + 1):
+            absolute = ((day - 1) * hours_per_day) + hour
             slot = f"day-{day:02d}-hour-{hour:02d}"
             lines.append(
                 f"| <a id=\"{slot}\"></a>{absolute} | "
@@ -158,13 +157,13 @@ def build_day_hour_index(module_name: str, module_label: str, day_count: int) ->
     lines.append("<!-- Maintainer note: these refs are intentionally centralized for easier updates. -->")
     lines.append("")
     lines.append("[hub]: README.md")
-    lines.append("[module-portal]: ../index.html")
-    lines.append("[course-portal]: ../../../index.html")
+    lines.append("[module-portal]: ../slides/index.html")
+    lines.append("[course-portal]: ../../../slides/index.html")
     lines.append("")
 
     for key, filename, _ in RESOURCE_TYPES:
         for day in range(1, day_count + 1):
-            for hour in range(1, 5):
+            for hour in range(1, hours_per_day + 1):
                 slot = f"day-{day:02d}-hour-{hour:02d}"
                 lines.append(f"[{key}-{slot}]: {filename}#{slot}")
     lines.append("")
@@ -177,6 +176,8 @@ def markdown_to_html(md_content: str, title: str) -> str:
         extensions=["tables", "fenced_code", "sane_lists", "toc"],
     )
     html_body = MD_LINK_RE.sub(lambda m: f'href="{m.group(1)}.html{m.group(2) or ""}"', html_body)
+    html_body = html_body.replace('href="../slides/index.html"', 'href="../index.html"')
+    html_body = html_body.replace('href="../../../slides/index.html"', 'href="../../../index.html"')
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -225,21 +226,6 @@ def markdown_to_html(md_content: str, title: str) -> str:
       border-radius: 4px;
     }}
   </style>
-  <script>
-    (function () {{
-      var path = window.location.pathname;
-      if (path.includes('/Basics/lessons/resources/') || path.includes('/Advanced/lessons/resources/')) {{
-        document.addEventListener('DOMContentLoaded', function () {{
-          document.querySelectorAll('a[href=\"../index.html\"]').forEach(function (node) {{
-            node.setAttribute('href', '../slides/index.html');
-          }});
-          document.querySelectorAll('a[href=\"../../../index.html\"]').forEach(function (node) {{
-            node.setAttribute('href', '../../../slides/index.html');
-          }});
-        }});
-      }}
-    }})();
-  </script>
 </head>
 <body>
   <main>
@@ -266,13 +252,18 @@ def main() -> int:
         resource_dir = repo_root / module["resource_dir"]
         resource_dir.mkdir(parents=True, exist_ok=True)
 
-        day_hour_content = build_day_hour_index(module["name"], module["label"], int(module["day_count"]))
+        day_hour_content = build_day_hour_index(
+            module["name"],
+            module["label"],
+            int(module["day_count"]),
+            int(module["hours_per_day"]),
+        )
         day_hour_path = resource_dir / "day-hour-index.md"
         write_if_changed(day_hour_path, day_hour_content, args.check, changed)
 
         for md_path in sorted(resource_dir.glob("*.md")):
             if md_path.name != "day-hour-index.md":
-                enriched = ensure_day_hour_links(md_path.read_text(encoding="utf-8"))
+                enriched = ensure_day_hour_links(md_path.read_text(encoding="utf-8"), int(module["hours_per_day"]))
                 write_if_changed(md_path, enriched, args.check, changed)
                 md_content = enriched
             else:

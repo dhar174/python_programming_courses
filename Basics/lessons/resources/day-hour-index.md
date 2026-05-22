@@ -136,8 +136,8 @@ All links are placeholders until concrete assets are added.
 <!-- Maintainer note: these refs are intentionally centralized for easier updates. -->
 
 [hub]: README.md
-[module-portal]: ../index.html
-[course-portal]: ../../../index.html
+[module-portal]: ../slides/index.html
+[course-portal]: ../../../slides/index.html
 
 [videos-day-01-hour-01]: videos.md#day-01-hour-01
 [videos-day-01-hour-02]: videos.md#day-01-hour-02
