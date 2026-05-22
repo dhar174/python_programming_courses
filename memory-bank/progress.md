@@ -56,6 +56,7 @@
 - Lecture validation (source-owned HTML): `python scripts/validate_lecture_html.py Basics/lessons/lecture Advanced/lessons/lecture`
 
 ## Last meaningful update
+[2026-05-22] Resource-index validation closeout completed: portal resource hub links now carry `data-repo-path` for published Pages mode, mirrored lecture HTML was regenerated into `_site`, and the staged portal publish contract now passes.
 [2026-05-17] Copilot setup-steps workflow hardened from placeholder stub into a real bootstrap for Copilot agent sessions
 [2026-05-18] Added explicit guardrails across README, AGENTS, and course-material instruction files that `submissions/*_test_filled.ipynb` must stay fully filled-in notebook copies and must not be collapsed into print-only stubs.
 [2026-05-19] PR #456 notebook remediation repaired the reviewed `*_test_filled.ipynb` fixtures so they again preserve the base notebook structure, use real exercise implementations instead of placeholder output stubs, restore the Advanced Day 8 authenticity guardrail, and still satisfy the touched assignments' existing grading criteria.

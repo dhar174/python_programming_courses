@@ -48,6 +48,12 @@ Module 1 materials (Python Programming - Basic, 48 hours):
   - Markdown files here are source files for Basic module slides.
   - Output directory for locally generated slides (contains placeholder files). This is where completed html, pptx, and pdf slide files will be saved.
 
+- **[`Basics/lessons/resources/`](./Basics/lessons/resources/)** - Markdown resource indexes for videos, interactive apps/simulations/games, infographic images, flashcards, practice quizzes, mind maps, and NotebookLM.
+  - Pages are organized by Module → Day → Hour and use placeholder rows until concrete resources are added.
+
+- **[`Advanced/lessons/resources/`](./Advanced/lessons/resources/)** - Markdown resource indexes for videos, interactive apps/simulations/games, infographic images, flashcards, practice quizzes, mind maps, and NotebookLM.
+  - Pages are organized by Module → Day → Hour and use placeholder rows until concrete resources are added.
+
   
 - **[`Basics/themes/`](./Basics/themes/)** - CSS theme files for Basic module slides:
   - [`python-dark.css`](./Basics/themes/python-dark.css) - Dark theme for slides.

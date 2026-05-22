@@ -197,6 +197,12 @@ Upon successful completion, students will be able to:
 
 ## Course Materials — Assignment Downloads & Quiz Links
 
+### Basics Resource Hub
+
+The module-local resource index hub collects supporting materials by type:
+
+- [Basics resource hub README](lessons/resources/README.md)
+
 ### Basics Assignments (.ipynb)
 
 | Day | Download |

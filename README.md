@@ -384,6 +384,7 @@ This index is intentionally **comprehensive but grouped**. It covers both module
 | Area | Current Inventory | Path / Pattern | Notes |
 |---|---:|---|---|
 | Instructor runbook | 1 file | [`Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`](Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md) | Primary curriculum source of truth for the module |
+| Resource hub | 1 file | [`Basics/lessons/resources/README.md`](Basics/lessons/resources/README.md) | Module-local resource index hub for videos, apps, infographics, flashcards, quizzes, mind maps, and NotebookLM packs |
 | Lecture scripts | 48 files | `Basics/lessons/lecture/DayX_HourY_Basics.md` | Per-hour instructor scripts for Days 1-12 and Hours 1-4 |
 | Slide day folders | 12 folders | [`Basics/lessons/slides/`](Basics/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
 | Slide Markdown sources | 13 files | `Basics/lessons/slides/**/*.md` | Includes day-based deck sources plus module-level slide docs such as the local README |
@@ -416,6 +417,7 @@ This index is intentionally **comprehensive but grouped**. It covers both module
 | Area | Current Inventory | Path / Pattern | Notes |
 |---|---:|---|---|
 | Instructor runbook | 1 Markdown + 1 PDF | [`Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`](Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md) | Primary curriculum source of truth, with an additional PDF export at module root |
+| Resource hub | 1 file | [`Advanced/lessons/resources/README.md`](Advanced/lessons/resources/README.md) | Module-local resource index hub for videos, apps, infographics, flashcards, quizzes, mind maps, and NotebookLM packs |
 | Lecture scripts | 48 day/hour files + 1 legacy intro file | `Advanced/lessons/lecture/DayX_HourY_Advanced.md` plus `Advanced/lessons/lecture/01-intro-to-python.md` | The day/hour lecture inventory is complete, but one extra legacy intro file remains in the lecture tree |
 | Slide day folders | 12 folders | [`Advanced/lessons/slides/`](Advanced/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
 | Slide Markdown sources | 12 files | `Advanced/lessons/slides/**/*.md` | Day-based standalone deck sources |

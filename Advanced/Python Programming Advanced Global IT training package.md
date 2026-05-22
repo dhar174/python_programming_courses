@@ -186,6 +186,12 @@ Students will:
 
 ## Course Materials — Assignment Downloads & Quiz Links
 
+### Advanced Resource Hub
+
+The module-local resource index hub collects supporting materials by type:
+
+- [Advanced resource hub README](lessons/resources/README.md)
+
 ### Advanced Assignments (.ipynb)
 
 | Day | Download |
