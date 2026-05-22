@@ -80,6 +80,10 @@
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
+  function repoRawUrl(repoPath) {
+    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
+  }
+
   function repoTreeUrl(repoPath) {
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
@@ -129,7 +133,9 @@
     }
 
     if (artifact.delivery === "repo" && !isSourcePreview() && window.location.protocol !== "file:") {
-      return repoBlobUrl(artifact.repoPath);
+      return artifact.repoPath.endsWith(".ipynb")
+        ? repoRawUrl(artifact.repoPath)
+        : repoBlobUrl(artifact.repoPath);
     }
 
     if (artifact.href) {
@@ -146,15 +152,27 @@
         return;
       }
 
+      const prefersDownload = node.hasAttribute("download") || repoPath.endsWith(".ipynb");
       node.href = isSourcePreview() || window.location.protocol === "file:"
         ? artifactUrl(repoPath)
-        : repoBlobUrl(repoPath);
+        : (prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath));
       const fileName = repoPath.split("/").pop();
       if (repoPath.endsWith(".ipynb")) {
         node.setAttribute("download", fileName);
       } else {
         node.removeAttribute("download");
       }
+    });
+  }
+
+  function decorateColabLinks() {
+    document.querySelectorAll("a[data-colab-path]").forEach(function (node) {
+      const repoPath = node.getAttribute("data-colab-path");
+      if (!repoPath) {
+        return;
+      }
+
+      node.href = colabUrl(repoPath);
     });
   }
 
@@ -456,6 +474,9 @@
       defaultBranch: manifest.repository.defaultBranch || repositoryMeta.defaultBranch,
     };
 
+    decorateRepositoryArtifactLinks();
+    decorateColabLinks();
+
     setText("[data-course-modules]", manifest.stats.modules);
     setText("[data-course-days]", manifest.stats.days);
     setText("[data-course-slides]", manifest.stats.slides);
@@ -480,6 +501,7 @@
   function init() {
     bindThemeControl();
     decorateRepositoryArtifactLinks();
+    decorateColabLinks();
     fetchManifest().then(enhanceFromManifest).catch(function () {
       const note = document.querySelector("[data-manifest-status]");
       if (note) {

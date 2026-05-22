@@ -44,6 +44,7 @@ HOURLY_FILENAME_RE = re.compile(
 )
 SEQUENCED_FILENAME_RE = re.compile(r"^(?P<order>\d+)-[a-z0-9-]+\.md$")
 HEADING_TAG_RE = re.compile(r"h([1-6])$")
+FRONT_MATTER_RE = re.compile(r"\A---\r?\n.*?\r?\n---(?:\r?\n|$)", re.DOTALL)
 CUE_LINE_RE = re.compile(
     r"^\[Instructor slide (?P<kind>change):\s*page=(?P<page>\d+);\s*title=(?P<title>[^\]]+?)\s*\]$"
 )
@@ -195,6 +196,7 @@ class SlideCueExtension(Extension):
 def render_markdown(markdown_text: str) -> RenderedLecture:
     if markdown_text.startswith("\ufeff"):
         markdown_text = markdown_text[1:]
+    markdown_text = FRONT_MATTER_RE.sub("", markdown_text, count=1)
     heading_extension = HeadingIdExtension()
     cue_extension = SlideCueExtension()
     renderer = Markdown(
