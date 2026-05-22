@@ -143,6 +143,8 @@ def main() -> int:
     require_file(site_root / "slides" / "shared" / "portal" / "portal.js", "published portal JS", errors)
     validate_mirrored_publish_tree(repo_root, site_root, "Basics/lessons/lecture", "*.html", "Basics lecture HTML", errors)
     validate_mirrored_publish_tree(repo_root, site_root, "Advanced/lessons/lecture", "*.html", "Advanced lecture HTML", errors)
+    validate_mirrored_publish_tree(repo_root, site_root, "Basics/lessons/resources", "*.html", "Basics resource index HTML", errors)
+    validate_mirrored_publish_tree(repo_root, site_root, "Advanced/lessons/resources", "*.html", "Advanced resource index HTML", errors)
     validate_mirrored_publish_tree(repo_root, site_root, "slides/shared/lecture", "*", "shared lecture asset", errors)
     validate_manifest(repo_root, site_root, errors)
     validate_root_decoupling(repo_root, site_root, errors)

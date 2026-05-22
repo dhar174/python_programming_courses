@@ -16,10 +16,13 @@ on:
       - "Advanced/quizzes/**"
       - "slides/**"
       - "scripts/generate_day_overviews.py"
+      - "scripts/generate_resource_pages.py"
       - "scripts/generate_lecture_pages.py"
       - "scripts/generate_portal_manifest.py"
       - "scripts/check_portal_publish.py"
       - "scripts/validate_lecture_html.py"
+      - "Basics/lessons/resources/**"
+      - "Advanced/lessons/resources/**"
       - ".marprc.yml"
       - ".github/workflows/marp-action.yml"
       - "_site/slides/**"
@@ -63,6 +66,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install Markdown==3.7
+
+      - name: Generate resource index pages
+        run: python scripts/generate_resource_pages.py --repo-root .
 
       - name: Check generated day overview pages
         run: python scripts/generate_day_overviews.py --check
@@ -237,6 +243,17 @@ jobs:
                 TARGET_QUIZ="_site/${MODULE}/quizzes/${RELATIVE_QUIZ}"
                 mkdir -p "$(dirname "${TARGET_QUIZ}")"
                 cp "${SOURCE_QUIZ}" "${TARGET_QUIZ}"
+              done
+            fi
+
+            if [ -d "${MODULE}/lessons/resources" ]; then
+              rm -rf "_site/${MODULE}/lessons/resources"
+              mkdir -p "_site/${MODULE}/lessons/resources"
+              find "${MODULE}/lessons/resources" -maxdepth 1 -type f -name '*.html' | while IFS= read -r SOURCE_RESOURCE_HTML; do
+                RELATIVE_RESOURCE="${SOURCE_RESOURCE_HTML#${MODULE}/lessons/resources/}"
+                TARGET_RESOURCE="_site/${MODULE}/lessons/resources/${RELATIVE_RESOURCE}"
+                mkdir -p "$(dirname "${TARGET_RESOURCE}")"
+                cp "${SOURCE_RESOURCE_HTML}" "${TARGET_RESOURCE}"
               done
             fi
           done

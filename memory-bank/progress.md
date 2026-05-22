@@ -49,6 +49,8 @@
 - Portal manifest: `python scripts/generate_portal_manifest.py --repo-root . --site-root _site --output _site/slides/shared/portal/course-manifest.json`
 - Portal publish contract: `python scripts/check_portal_publish.py --repo-root . --site-root _site`
 - Day overview freshness: `python scripts/generate_day_overviews.py --check`
+- Resource page generation: `python scripts/generate_resource_pages.py --repo-root .`
+- Resource page freshness: `python scripts/generate_resource_pages.py --repo-root . --check`
 - Cue sync: `python scripts/sync_lecture_slide_cues.py`
 - Lecture generator: `python scripts/generate_lecture_pages.py --repo-root . --output-root _site`
 - Lecture generator (source-owned HTML): `python scripts/generate_lecture_pages.py --repo-root .`
@@ -56,6 +58,7 @@
 - Lecture validation (source-owned HTML): `python scripts/validate_lecture_html.py Basics/lessons/lecture Advanced/lessons/lecture`
 
 ## Last meaningful update
+[2026-05-22] Issue #489 HTML resource-index rollout advanced: both modules now have generated HTML resource hubs and day/hour map pages (`day-hour-index.html`), day/hour anchors were added to resource-slot rows, root/module/day portal pages now link directly to these HTML pages, and the Pages workflow plus publish validator now include mirrored `lessons/resources/*.html` artifacts.
 [2026-05-22] Resource-index validation closeout completed: portal resource hub links now carry `data-repo-path` for published Pages mode, mirrored lecture HTML was regenerated into `_site`, and the staged portal publish contract now passes.
 [2026-05-17] Copilot setup-steps workflow hardened from placeholder stub into a real bootstrap for Copilot agent sessions
 [2026-05-18] Added explicit guardrails across README, AGENTS, and course-material instruction files that `submissions/*_test_filled.ipynb` must stay fully filled-in notebook copies and must not be collapsed into print-only stubs.
