@@ -151,11 +151,18 @@
       if (!repoPath) {
         return;
       }
+      const sourceHref = node.getAttribute("data-source-href");
+      const pagesPath = node.getAttribute("data-pages-path");
+      const isHtmlArtifact = repoPath.endsWith(".html");
 
       const prefersDownload = node.hasAttribute("download") || repoPath.endsWith(".ipynb");
-      node.href = isSourcePreview() || window.location.protocol === "file:"
-        ? artifactUrl(repoPath)
-        : (prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath));
+      if (isSourcePreview() || window.location.protocol === "file:") {
+        node.href = sourceHref ? withBasePath(sourceHref) : artifactUrl(repoPath);
+      } else if (isHtmlArtifact) {
+        node.href = pagesPath ? withBasePath(pagesPath) : artifactUrl(repoPath);
+      } else {
+        node.href = prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath);
+      }
       const fileName = repoPath.split("/").pop();
       if (repoPath.endsWith(".ipynb")) {
         node.setAttribute("download", fileName);
