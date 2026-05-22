@@ -80,6 +80,10 @@
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
+  function repoRawUrl(repoPath) {
+    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
+  }
+
   function repoTreeUrl(repoPath) {
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
@@ -102,6 +106,14 @@
     return normalizedPath;
   }
 
+  function colabUrl(repoPath) {
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    if (!normalizedPath) {
+      return "#";
+    }
+    return `https://colab.research.google.com/github/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${normalizedPath}`;
+  }
+
   function artifactUrl(repoPath) {
     const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
     if (!normalizedPath) {
@@ -115,6 +127,24 @@
     return withBasePath(normalizedPath);
   }
 
+  function repositoryArtifactHref(artifact) {
+    if (!artifact || !artifact.repoPath) {
+      return "#";
+    }
+
+    if (artifact.delivery === "repo" && !isSourcePreview() && window.location.protocol !== "file:") {
+      return artifact.repoPath.endsWith(".ipynb")
+        ? repoRawUrl(artifact.repoPath)
+        : repoBlobUrl(artifact.repoPath);
+    }
+
+    if (artifact.href) {
+      return artifact.href.startsWith("http") ? artifact.href : withBasePath(artifact.href);
+    }
+
+    return artifactUrl(artifact.repoPath);
+  }
+
   function decorateRepositoryArtifactLinks() {
     document.querySelectorAll("a[data-repo-path]").forEach(function (node) {
       const repoPath = node.getAttribute("data-repo-path");
@@ -122,13 +152,27 @@
         return;
       }
 
-      node.href = artifactUrl(repoPath);
+      const prefersDownload = node.hasAttribute("download") || repoPath.endsWith(".ipynb");
+      node.href = isSourcePreview() || window.location.protocol === "file:"
+        ? artifactUrl(repoPath)
+        : (prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath));
       const fileName = repoPath.split("/").pop();
       if (repoPath.endsWith(".ipynb")) {
         node.setAttribute("download", fileName);
       } else {
         node.removeAttribute("download");
       }
+    });
+  }
+
+  function decorateColabLinks() {
+    document.querySelectorAll("a[data-colab-path]").forEach(function (node) {
+      const repoPath = node.getAttribute("data-colab-path");
+      if (!repoPath) {
+        return;
+      }
+
+      node.href = colabUrl(repoPath);
     });
   }
 
@@ -311,11 +355,11 @@
 
     if (artifacts.assignment && artifacts.assignment.repoPath) {
       const assignmentPath = artifacts.assignment.repoPath;
-      appendChip(container, "Assignment ↓", artifactUrl(assignmentPath), "available", assignmentPath.split("/").pop());
+      appendChip(container, "Assignment ↓", repositoryArtifactHref(artifacts.assignment), "available", assignmentPath.split("/").pop());
+      appendChip(container, "Open in Colab ↗", colabUrl(assignmentPath), "available");
     }
     if (artifacts.quiz && artifacts.quiz.repoPath) {
-      const quizPath = artifacts.quiz.repoPath;
-      appendChip(container, "Quiz ↗", artifactUrl(quizPath), "available");
+      appendChip(container, "Quiz ↗", repositoryArtifactHref(artifacts.quiz), "available");
     }
 
     const downloads = artifacts.slides && artifacts.slides.downloads ? artifacts.slides.downloads : {};
@@ -409,11 +453,11 @@
 
         if (artifacts.assignment && artifacts.assignment.repoPath) {
           const assignmentPath = artifacts.assignment.repoPath;
-          appendChip(linkContainer, "Assignment ↓", artifactUrl(assignmentPath), "available", assignmentPath.split("/").pop());
+          appendChip(linkContainer, "Assignment ↓", repositoryArtifactHref(artifacts.assignment), "available", assignmentPath.split("/").pop());
+          appendChip(linkContainer, "Open in Colab ↗", colabUrl(assignmentPath), "available");
         }
         if (artifacts.quiz && artifacts.quiz.repoPath) {
-          const quizPath = artifacts.quiz.repoPath;
-          appendChip(linkContainer, "Quiz ↗", artifactUrl(quizPath), "available");
+          appendChip(linkContainer, "Quiz ↗", repositoryArtifactHref(artifacts.quiz), "available");
         }
       }
     });
@@ -429,6 +473,9 @@
       name: manifest.repository.name || repositoryMeta.name,
       defaultBranch: manifest.repository.defaultBranch || repositoryMeta.defaultBranch,
     };
+
+    decorateRepositoryArtifactLinks();
+    decorateColabLinks();
 
     setText("[data-course-modules]", manifest.stats.modules);
     setText("[data-course-days]", manifest.stats.days);
@@ -454,6 +501,7 @@
   function init() {
     bindThemeControl();
     decorateRepositoryArtifactLinks();
+    decorateColabLinks();
     fetchManifest().then(enhanceFromManifest).catch(function () {
       const note = document.querySelector("[data-manifest-status]");
       if (note) {

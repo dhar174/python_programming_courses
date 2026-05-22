@@ -94,7 +94,7 @@ All lesson content must align to the runbooks. Do not modify lesson files withou
 
 ### Quick Start: Building Slides Locally
 
-No `package.json` — use `npx` directly.
+`package.json` is present (Marp metadata only); run Marp CLI commands via `npx`.
 
 ```bash
 # Build Basics the same way the workflow does
@@ -134,18 +134,18 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 
 **Basics Assignments (.ipynb)**
 
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day1_homework.ipynb" download="Basics_Day1_homework.ipynb">Day 1</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day2_homework.ipynb" download="Basics_Day2_homework.ipynb">Day 2</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day3_homework.ipynb" download="Basics_Day3_homework.ipynb">Day 3</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day4_homework.ipynb" download="Basics_Day4_homework.ipynb">Day 4</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day5_homework.ipynb" download="Basics_Day5_homework.ipynb">Day 5</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day6_homework.ipynb" download="Basics_Day6_homework.ipynb">Day 6</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day7_homework.ipynb" download="Basics_Day7_homework.ipynb">Day 7</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day8_homework.ipynb" download="Basics_Day8_homework.ipynb">Day 8</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day9_homework.ipynb" download="Basics_Day9_homework.ipynb">Day 9</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day10_homework.ipynb" download="Basics_Day10_homework.ipynb">Day 10</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day11_homework.ipynb" download="Basics_Day11_homework.ipynb">Day 11</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day12_homework.ipynb" download="Basics_Day12_homework.ipynb">Day 12</a>
+- Day 1: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day1_homework.ipynb" download="Basics_Day1_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day1_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 2: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day2_homework.ipynb" download="Basics_Day2_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day2_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 3: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day3_homework.ipynb" download="Basics_Day3_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day3_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 4: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day4_homework.ipynb" download="Basics_Day4_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day4_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 5: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day5_homework.ipynb" download="Basics_Day5_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day5_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 6: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day6_homework.ipynb" download="Basics_Day6_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day6_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 7: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day7_homework.ipynb" download="Basics_Day7_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day7_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 8: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day8_homework.ipynb" download="Basics_Day8_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day8_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 9: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day9_homework.ipynb" download="Basics_Day9_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day9_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 10: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day10_homework.ipynb" download="Basics_Day10_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day10_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 11: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day11_homework.ipynb" download="Basics_Day11_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day11_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 12: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Basics/assignments/Basics_Day12_homework.ipynb" download="Basics_Day12_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Basics/assignments/Basics_Day12_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
 
 **Basics Quizzes (.html — opens in browser)**
 
@@ -164,18 +164,18 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 
 **Advanced Assignments (.ipynb)**
 
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day1_homework.ipynb" download="Advanced_Day1_homework.ipynb">Day 1</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day2_homework.ipynb" download="Advanced_Day2_homework.ipynb">Day 2</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day3_homework.ipynb" download="Advanced_Day3_homework.ipynb">Day 3</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day4_homework.ipynb" download="Advanced_Day4_homework.ipynb">Day 4</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day5_homework.ipynb" download="Advanced_Day5_homework.ipynb">Day 5</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day6_homework.ipynb" download="Advanced_Day6_homework.ipynb">Day 6</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day7_homework.ipynb" download="Advanced_Day7_homework.ipynb">Day 7</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day8_homework.ipynb" download="Advanced_Day8_homework.ipynb">Day 8</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day9_homework.ipynb" download="Advanced_Day9_homework.ipynb">Day 9</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day10_homework.ipynb" download="Advanced_Day10_homework.ipynb">Day 10</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day11_homework.ipynb" download="Advanced_Day11_homework.ipynb">Day 11</a>
-- <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day12_homework.ipynb" download="Advanced_Day12_homework.ipynb">Day 12</a>
+- Day 1: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day1_homework.ipynb" download="Advanced_Day1_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day1_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 2: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day2_homework.ipynb" download="Advanced_Day2_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day2_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 3: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day3_homework.ipynb" download="Advanced_Day3_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day3_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 4: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day4_homework.ipynb" download="Advanced_Day4_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day4_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 5: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day5_homework.ipynb" download="Advanced_Day5_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day5_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 6: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day6_homework.ipynb" download="Advanced_Day6_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day6_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 7: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day7_homework.ipynb" download="Advanced_Day7_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day7_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 8: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day8_homework.ipynb" download="Advanced_Day8_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day8_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 9: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day9_homework.ipynb" download="Advanced_Day9_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day9_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 10: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day10_homework.ipynb" download="Advanced_Day10_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day10_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 11: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day11_homework.ipynb" download="Advanced_Day11_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day11_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
+- Day 12: <a href="https://github.com/dhar174/python_programming_courses/raw/refs/heads/main/Advanced/assignments/Advanced_Day12_homework.ipynb" download="Advanced_Day12_homework.ipynb">Download notebook</a> · <a href="https://colab.research.google.com/github/dhar174/python_programming_courses/blob/main/Advanced/assignments/Advanced_Day12_homework.ipynb" target="_blank" rel="noopener noreferrer">Open in Colab</a>
 
 **Advanced Quizzes (.html — opens in browser)**
 
@@ -192,7 +192,7 @@ Each hour of instruction has a dedicated Markdown lecture script for verbatim de
 - <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day11_Quiz.html">Day 11</a>
 - <a href="https://dhar174.github.io/python_programming_courses/Advanced/quizzes/Advanced_Day12_Quiz.html">Day 12</a>
 
-Advanced sample submissions are present for all 12 days. Basics sample submissions are still missing for Days 2, 3, 4, 5, 6, and 8; see [#270](https://github.com/dhar174/python_programming_courses/issues/270). Slide and lesson-source remediation remains open under [#271](https://github.com/dhar174/python_programming_courses/issues/271).
+Sample submission fixtures are present for all 12 days in both Basics and Advanced assignment directories. Tracker issues [#270](https://github.com/dhar174/python_programming_courses/issues/270) and [#271](https://github.com/dhar174/python_programming_courses/issues/271) are closed.
 
 ---
 
@@ -384,6 +384,7 @@ This index is intentionally **comprehensive but grouped**. It covers both module
 | Area | Current Inventory | Path / Pattern | Notes |
 |---|---:|---|---|
 | Instructor runbook | 1 file | [`Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md`](Basics/Instructor/Python_Basics_Instructor_Runbook_4hr_Days.md) | Primary curriculum source of truth for the module |
+| Resource hub | 1 file | [`Basics/lessons/resources/README.md`](Basics/lessons/resources/README.md) | Module-local resource index hub for videos, apps, infographics, flashcards, quizzes, mind maps, and NotebookLM packs |
 | Lecture scripts | 48 files | `Basics/lessons/lecture/DayX_HourY_Basics.md` | Per-hour instructor scripts for Days 1-12 and Hours 1-4 |
 | Slide day folders | 12 folders | [`Basics/lessons/slides/`](Basics/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
 | Slide Markdown sources | 13 files | `Basics/lessons/slides/**/*.md` | Includes day-based deck sources plus module-level slide docs such as the local README |
@@ -416,6 +417,7 @@ This index is intentionally **comprehensive but grouped**. It covers both module
 | Area | Current Inventory | Path / Pattern | Notes |
 |---|---:|---|---|
 | Instructor runbook | 1 Markdown + 1 PDF | [`Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md`](Advanced/Instructor/Python_Advanced_Instructor_Runbook_4hr_Days.md) | Primary curriculum source of truth, with an additional PDF export at module root |
+| Resource hub | 1 file | [`Advanced/lessons/resources/README.md`](Advanced/lessons/resources/README.md) | Module-local resource index hub for videos, apps, infographics, flashcards, quizzes, mind maps, and NotebookLM packs |
 | Lecture scripts | 48 day/hour files + 1 legacy intro file | `Advanced/lessons/lecture/DayX_HourY_Advanced.md` plus `Advanced/lessons/lecture/01-intro-to-python.md` | The day/hour lecture inventory is complete, but one extra legacy intro file remains in the lecture tree |
 | Slide day folders | 12 folders | [`Advanced/lessons/slides/`](Advanced/lessons/slides/) + `day-01/` ... `day-12/` | Checked-in standalone slide tree grouped by day |
 | Slide Markdown sources | 12 files | `Advanced/lessons/slides/**/*.md` | Day-based standalone deck sources |

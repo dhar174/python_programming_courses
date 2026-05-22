@@ -68,15 +68,15 @@ _Track milestones and validations in order, updating status as work progresses._
 
 ---
 
-### Phase 4 — Sample Submissions & Full CI Validation In Progress
+### Phase 4 — Sample Submissions & Full CI Validation Complete
 
 - [x] **Milestone 4.1 — Advanced Sample Submissions**
   - Sample `.ipynb` submissions added for all 12 Advanced assignment directories
   - **Validation:** Each `Advanced/assignments/Advanced_DayX_homework/submissions/` contains at least one `*Advanced_DayX*.ipynb`
 
-- [ ] **Milestone 4.2 — Basics Sample Submissions**
-  - Basics Days 2, 3, 4, 5, 6, and 8 still need sample submissions for end-to-end autograder coverage
-  - **Validation:** close #270 and its child issues only after each listed day has a matching `*Basics_DayX*.ipynb`
+- [x] **Milestone 4.2 — Basics Sample Submissions**
+  - Sample `.ipynb` submissions are present for all 12 Basics assignment directories
+  - **Validation:** Each `Basics/assignments/Basics_DayX_homework/submissions/` contains at least one `*Basics_DayX*.ipynb`
 
 - [x] **Milestone 4.3 — Autograder Config Standardization**
   - All `setup.json` files use the standardized bash resolution script pattern
@@ -102,11 +102,8 @@ _Track milestones and validations in order, updating status as work progresses._
 
 ## Next Steps (Post-Completion)
 
-- [ ] **Active 6.0 — Remediation Trackers**
-  - Lecture depth: #269
-  - Basics sample submissions: #270
-  - Slide and lesson-source remediation: #271
-  - Documentation sync and tracker hygiene: #272
+- [x] **Active 6.0 — Remediation Trackers**
+  - #269, #270, #271, and #272 are closed
 
 - [ ] **Future 6.1 — Live Student Validation**
   - Run the autograder against real student submissions from first cohort

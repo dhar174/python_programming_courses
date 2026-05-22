@@ -10,7 +10,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 
-LECTURE_HTML_RE = re.compile(r"^Day\d+_Hour\d+_(?:Basics|Advanced)\.html$")
+LECTURE_HTML_RE = re.compile(
+    r"^(?:Day\d+_Hour\d+_(?:Basics|Advanced)|\d+-[a-z0-9-]+)\.html$"
+)
 UNSAFE_RUNTIME_PATTERNS = {
     "fetch": re.compile(r"\bfetch\s*\(", re.IGNORECASE),
     "XMLHttpRequest": re.compile(r"\bXMLHttpRequest\b"),

@@ -52,17 +52,17 @@
       "name": "Hour 48 - Final: capstone demo + certification-style review + retrospective",
       "command": [
         "python",
+        "-c",
+        "import importlib.util, json, shutil, subprocess, sys, tempfile\nfrom pathlib import Path\nsource = Path(sys.argv[1]).resolve()\ntmp = tempfile.TemporaryDirectory()\nworkspace = Path(tmp.name) / 'workspace'\nshutil.copytree(source.parent, workspace, dirs_exist_ok=True)\nscript = workspace / source.name\nrun_ok = False\ntry:\n    result = subprocess.run([sys.executable, script.name], cwd=workspace, capture_output=True, text=True, timeout=25)\n    run_ok = result.returncode == 0\nexcept subprocess.TimeoutExpired:\n    run_ok = False\nevidence_path = workspace / 'capstone_evidence' / 'hour48_demo_evidence.json'\nevidence = {}\nevidence_ok = False\nif evidence_path.exists():\n    try:\n        evidence = json.loads(evidence_path.read_text(encoding='utf-8'))\n        gates = evidence.get('quality_gates', {}) if isinstance(evidence, dict) else {}\n        evidence_ok = isinstance(evidence, dict) and isinstance(evidence.get('layers'), list) and {'ui', 'service', 'data'}.issubset(set(evidence.get('layers', []))) and isinstance(evidence.get('review_topics'), list) and len(evidence.get('review_topics', [])) >= 5 and all(key in gates for key in ('tests', 'integration', 'packaging', 'docs'))\n    except json.JSONDecodeError:\n        evidence_ok = False\nbehavior_ok = False\ntry:\n    spec = importlib.util.spec_from_file_location('advanced_day12_module', script)\n    module = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(module)\n    func = getattr(module, 'capstone_ready', None)\n    if callable(func) and evidence_ok:\n        failing = dict(evidence)\n        failing['quality_gates'] = dict(evidence.get('quality_gates', {}))\n        failing['quality_gates']['docs'] = False\n        behavior_ok = (func(evidence) is True) and (func(failing) is False)\nexcept Exception:\n    behavior_ok = False\nprint(f'guardrail_hour48_run_ok={run_ok}')\nprint(f'guardrail_hour48_evidence_artifact_ok={evidence_ok}')\nprint(f'guardrail_hour48_behavior_ok={behavior_ok}')\ntmp.cleanup()",
         "advanced_day12.py"
       ],
       "stdin": "",
-      "expected_stdout": [
-        "Hour 48 | final demo domain: tracker",
-        "Hour 48 | final demo layers: ui, service, data",
-        "Hour 48 | review topics: oop, gui, db, api, analytics, testing",
-        "Hour 48 | retrospective note: keep separation of concerns",
-        "Hour 48 | final result: advanced capstone ready"
-      ],
-      "points": 20
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_hour48_run_ok": true,
+        "guardrail_hour48_evidence_artifact_ok": true,
+        "guardrail_hour48_behavior_ok": true
+      }
     },
     {
       "name": "Hour 45/47 - Authenticity guardrail: service behavior + packaging artifacts",
@@ -73,14 +73,14 @@
         "advanced_day12.py"
       ],
       "stdin": "",
-      "expected_stdout": [
-        "guardrail_service_ok=True",
-        "guardrail_edge_ok=True",
-        "guardrail_payload_ok=True",
-        "guardrail_packaging_ok=True",
-        "guardrail_docs_entry_ok=True"
-      ],
-      "points": 20
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_service_ok": true,
+        "guardrail_edge_ok": true,
+        "guardrail_payload_ok": true,
+        "guardrail_packaging_ok": true,
+        "guardrail_docs_entry_ok": true
+      }
     }
   ]
 }

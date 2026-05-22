@@ -63,6 +63,23 @@
         "Hour 36 | structure rule: keep startup wiring separate from route logic"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 33/36 - Authenticity guardrail: REST app factory, routes, and validation shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; class_names = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; route_tokens_ok = all(token in s for token in ('/health', '/tasks')); status_constants = {n.value for n in ast.walk(t) if isinstance(n, ast.Constant) and isinstance(n.value, int)}; status_ok = {200, 201, 204, 400}.issubset(status_constants); factory_ok = 'create_app' in func_names and 'DevConfig' in class_names; contract_ok = {'validate_task_payload', 'serialize_task', 'create_task', 'list_tasks', 'delete_task'}.issubset(func_names) and 'TaskService' in class_names; print('guardrail_app_factory_ok=' + str(factory_ok)); print('guardrail_routes_ok=' + str(route_tokens_ok)); print('guardrail_status_codes_ok=' + str(status_ok)); print('guardrail_contract_shape_ok=' + str(contract_ok))",
+        "advanced_day9.py"
+      ],
+      "stdin": "",
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_app_factory_ok": true,
+        "guardrail_routes_ok": true,
+        "guardrail_status_codes_ok": true,
+        "guardrail_contract_shape_ok": true
+      }
     }
   ]
 }

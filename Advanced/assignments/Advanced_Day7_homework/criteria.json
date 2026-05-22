@@ -63,6 +63,23 @@
         "Hour 28 | integrity rule: keep related writes together"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 26/28 - Authenticity guardrail: SQL repository and transaction safety shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); imports = set(); [imports.update(a.name for a in n.names) for n in ast.walk(t) if isinstance(n, ast.Import)]; class_names = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; execute_calls = [n for n in ast.walk(t) if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) and n.func.attr == 'execute']; parameterized_ok = any(len(n.args) >= 2 for n in execute_calls) and '?' in s; print('guardrail_sql_import_ok=' + str('sqlite3' in imports)); print('guardrail_repository_shape_ok=' + str({'TaskRepository', 'map_row', 'initialize'}.issubset(class_names | func_names))); print('guardrail_parameterized_queries_ok=' + str(parameterized_ok)); print('guardrail_transaction_flow_ok=' + str('rollback' in s.lower() and 'commit' in s.lower()))",
+        "advanced_day7.py"
+      ],
+      "stdin": "",
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_sql_import_ok": true,
+        "guardrail_repository_shape_ok": true,
+        "guardrail_parameterized_queries_ok": true,
+        "guardrail_transaction_flow_ok": true
+      }
     }
   ]
 }

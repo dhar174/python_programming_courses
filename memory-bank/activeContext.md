@@ -4,7 +4,7 @@
 # Active Context
 
 ## Current objective
-Issue #458 lecture HTML rollout closeout is complete for high-confidence candidates: tranche/platform sub-issues plus #419 were closed with merged-on-main evidence (PR #476 / PR #426). Remaining open issues (#433, #436, #437, #439, #452, #459) are intentionally kept open due insufficient confidence.
+Issue #489 resource-index validation closeout is complete. The portal resource hub links now resolve in source preview and published mode, and the staged publish contract passes after regenerating mirrored lecture HTML in `_site`.
 
 ## Why it matters now
 Lecture Markdown is now a first-class published surface alongside slide decks. The new pipeline needs to preserve content fidelity while making lecture pages reachable from the existing portal/day-overview flow and safe for GitHub Pages hosting.
@@ -39,6 +39,10 @@ Lecture Markdown is now a first-class published surface alongside slide decks. T
     - `scripts/sync_lecture_slide_cues.py` can refresh the source Markdown cue markers from the session deck structure
     - `Basics/generate_slides.py` and `Advanced/generate_slides.py` now emit stable per-slide ids so lecture cues can deep-link to named deck anchors instead of brittle numeric hashes alone
     - `scripts/validate_lecture_html.py` now requires instructor slide cues and verifies each cue rendered a deck deep link
+  - Resource-index closeout:
+    - `slides/index.html`, `Basics/lessons/slides/index.html`, and `Advanced/lessons/slides/index.html` now mark the resource hub links with `data-repo-path` so published Pages mode resolves them to repository URLs instead of 404ing on relative paths
+    - `python scripts/generate_lecture_pages.py --repo-root . --output-root _site` regenerated the mirrored lecture HTML, including the missing `Advanced/lessons/lecture/01-intro-to-python.html` artifact in `_site`
+    - `python scripts/check_portal_publish.py --repo-root . --site-root _site` now passes
 - In progress:
   - none
 - Blocked:

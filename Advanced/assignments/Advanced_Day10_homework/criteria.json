@@ -36,17 +36,17 @@
       "name": "Hour 39 - Integration choice: GUI talks to API OR parallel UI/API",
       "command": [
         "python",
+        "-c",
+        "import json, shutil, subprocess, sys, tempfile\nfrom pathlib import Path\nsource = Path(sys.argv[1]).resolve()\ntmp = tempfile.TemporaryDirectory()\nworkspace = Path(tmp.name) / 'workspace'\nshutil.copytree(source.parent, workspace, dirs_exist_ok=True)\nscript = workspace / source.name\nrun_ok = False\ntry:\n    result = subprocess.run([sys.executable, script.name], cwd=workspace, capture_output=True, text=True, timeout=25)\n    run_ok = result.returncode == 0\nexcept subprocess.TimeoutExpired:\n    run_ok = False\ntrace_path = workspace / 'integration_artifacts' / 'hour39_integration_trace.json'\ntrace = []\ntrace_ok = False\nif trace_path.exists():\n    try:\n        trace = json.loads(trace_path.read_text(encoding='utf-8'))\n        statuses = {item.get('status') for item in trace if isinstance(item, dict)}\n        steps = {item.get('step') for item in trace if isinstance(item, dict)}\n        trace_ok = isinstance(trace, list) and {201, 503}.issubset(statuses) and {'success_create', 'failure_create'}.issubset(steps)\n    except json.JSONDecodeError:\n        trace_ok = False\nbehavior_ok = False\nbehavior_script = \"import importlib.util, json, sys\\nfrom pathlib import Path\\nscript = Path(sys.argv[1]).resolve()\\nspec = importlib.util.spec_from_file_location('advanced_day10_module', script)\\nmodule = importlib.util.module_from_spec(spec)\\nspec.loader.exec_module(module)\\nfunc = getattr(module, 'submit_task_via_api', None)\\nclass SuccessClient:\\n    def create_task(self, title):\\n        return {'status': 201, 'title': title}\\nclass FailingClient:\\n    def create_task(self, title):\\n        raise ConnectionError('api unavailable')\\nbehavior_ok = False\\nif callable(func):\\n    success = func(SuccessClient(), 'Ship release')\\n    failure = func(FailingClient(), 'Ship release')\\n    behavior_ok = isinstance(success, dict) and success.get('status') == 201 and success.get('source') == 'api' and isinstance(failure, dict) and failure.get('status') == 503 and 'api unavailable' in str(failure.get('message', '')).lower() and failure.get('fallback') in (None, 'none')\\nprint(json.dumps({'behavior_ok': behavior_ok}))\"\ntry:\n    behavior_result = subprocess.run([sys.executable, '-c', behavior_script, str(script)], cwd=workspace, capture_output=True, text=True, timeout=10)\n    if behavior_result.returncode == 0:\n        payload = json.loads((behavior_result.stdout or '{}').strip() or '{}')\n        behavior_ok = payload.get('behavior_ok') is True\nexcept (subprocess.TimeoutExpired, json.JSONDecodeError):\n    behavior_ok = False\nprint(f'guardrail_hour39_run_ok={run_ok}')\nprint(f'guardrail_hour39_trace_artifact_ok={trace_ok}')\nprint(f'guardrail_hour39_behavior_ok={behavior_ok}')\ntmp.cleanup()",
         "advanced_day10.py"
       ],
       "stdin": "",
-      "expected_stdout": [
-        "Hour 39 | chosen path: gui talks to api",
-        "Hour 39 | client function reused: create_task",
-        "Hour 39 | failure message surfaced: api unavailable",
-        "Hour 39 | fallback decision: none",
-        "Hour 39 | integration rule: keep one clear source of truth"
-      ],
-      "points": 20
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_hour39_run_ok": true,
+        "guardrail_hour39_trace_artifact_ok": true,
+        "guardrail_hour39_behavior_ok": true
+      }
     },
     {
       "name": "Hour 40 - Checkpoint 5: API milestone demo",
@@ -73,13 +73,13 @@
         "advanced_day10.py"
       ],
       "stdin": "",
-      "expected_stdout": [
-        "guardrail_functions=True",
-        "guardrail_conditionals=True",
-        "guardrail_env_lookup=True",
-        "guardrail_status_literals=True"
-      ],
-      "points": 20
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_functions": true,
+        "guardrail_conditionals": true,
+        "guardrail_env_lookup": true,
+        "guardrail_status_literals": true
+      }
     }
   ]
 }

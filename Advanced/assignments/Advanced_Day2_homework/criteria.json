@@ -63,6 +63,23 @@
         "Hour 8 | checkpoint status: domain and service layer ready"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 5/7 - Authenticity guardrail: strategy + representation + typing shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); class_names = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; annotations = sum(1 for n in ast.walk(t) if isinstance(n, ast.arg) and n.annotation is not None) + sum(1 for n in ast.walk(t) if isinstance(n, ast.AnnAssign)); strategy_ok = {'Notifier', 'EmailNotifier', 'SlackNotifier'}.issubset(class_names) and {'set_notifier', 'notify'}.issubset(func_names); factory_names = {'from_payload', 'TaskRecord'}; fallback_factory_names = {'create_task_record', 'TrackerTask'}; print('guardrail_strategy_shape_ok=' + str(strategy_ok)); print('guardrail_repr_str_ok=' + str({'__repr__', '__str__'}.issubset(func_names))); print('guardrail_type_hints_ok=' + str(annotations >= 3)); print('guardrail_factory_flow_ok=' + str(factory_names.issubset(func_names | class_names) or fallback_factory_names.issubset(func_names | class_names)))",
+        "advanced_day2.py"
+      ],
+      "stdin": "",
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_strategy_shape_ok": true,
+        "guardrail_repr_str_ok": true,
+        "guardrail_type_hints_ok": true,
+        "guardrail_factory_flow_ok": true
+      }
     }
   ]
 }

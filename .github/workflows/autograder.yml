@@ -98,6 +98,57 @@ jobs:
                   return shlex.split(command)
               return []
 
+          def parse_behavior_scalar(value):
+              if isinstance(value, (bool, int, float)):
+                  return value
+              if not isinstance(value, str):
+                  return value
+              stripped = value.strip()
+              lowered = stripped.lower()
+              if lowered == "true":
+                  return True
+              if lowered == "false":
+                  return False
+              if re.fullmatch(r"-?\d+", stripped):
+                  return int(stripped)
+              if re.fullmatch(r"-?\d+\.\d+", stripped):
+                  return float(stripped)
+              return stripped
+
+          def evaluate_behavior_flags(test, stdout_lines):
+              expected_flags = test.get("behavior_flags")
+              if not isinstance(expected_flags, dict) or not expected_flags:
+                  return True, None
+
+              observed_flags = {}
+              for line in stdout_lines:
+                  if not isinstance(line, str) or "=" not in line:
+                      continue
+                  key, raw_value = line.split("=", 1)
+                  key = key.strip()
+                  if not key:
+                      continue
+                  observed_flags[key] = parse_behavior_scalar(raw_value)
+
+              mismatches = []
+              for key, expected_value in expected_flags.items():
+                  key_name = str(key).strip()
+                  parsed_expected = parse_behavior_scalar(expected_value)
+                  if key_name not in observed_flags:
+                      mismatches.append(f"{key_name}: missing (expected {parsed_expected!r})")
+                      continue
+                  observed_value = observed_flags[key_name]
+                  if observed_value != parsed_expected:
+                      mismatches.append(
+                          f"{key_name}: observed {observed_value!r}, expected {parsed_expected!r}"
+                      )
+
+              details = {
+                  "observed_flags": observed_flags,
+                  "mismatches": mismatches,
+              }
+              return len(mismatches) == 0, details
+
           # Defense-in-depth validation before writing shell commands into setup.json.
           # Allow any filename that contains 'Basics_DayN' or 'Advanced_DayN' anywhere
           # (e.g. "alex-Basics_Day1_homework.ipynb").
@@ -217,6 +268,61 @@ jobs:
               if isinstance(command, str):
                   return shlex.split(command)
               return []
+
+          def parse_behavior_scalar(value):
+              if isinstance(value, bool):
+                  return value
+              if isinstance(value, (int, float)):
+                  return value
+              if value is None:
+                  return None
+              normalized = str(value).strip().lower()
+              if normalized == "true":
+                  return True
+              if normalized == "false":
+                  return False
+              if normalized in {"none", "null"}:
+                  return None
+              try:
+                  if "." in normalized:
+                      return float(normalized)
+                  return int(normalized)
+              except ValueError:
+                  return str(value).strip()
+
+          def evaluate_behavior_flags(test, stdout_lines):
+              expected_flags = test.get("behavior_flags")
+              if not isinstance(expected_flags, dict) or not expected_flags:
+                  return True, None
+
+              observed_flags = {}
+              for line in stdout_lines:
+                  if not isinstance(line, str) or "=" not in line:
+                      continue
+                  key, raw_value = line.split("=", 1)
+                  key = key.strip()
+                  if not key:
+                      continue
+                  observed_flags[key] = parse_behavior_scalar(raw_value)
+
+              mismatches = []
+              for key, expected_value in expected_flags.items():
+                  key_name = str(key).strip()
+                  parsed_expected = parse_behavior_scalar(expected_value)
+                  if key_name not in observed_flags:
+                      mismatches.append(f"{key_name}: missing (expected {parsed_expected!r})")
+                      continue
+                  observed_value = observed_flags[key_name]
+                  if observed_value != parsed_expected:
+                      mismatches.append(
+                          f"{key_name}: observed {observed_value!r}, expected {parsed_expected!r}"
+                      )
+
+              details = {
+                  "observed_flags": observed_flags,
+                  "mismatches": mismatches,
+              }
+              return len(mismatches) == 0, details
 
           notebook_jobs = []
           for assignment_dir in assignment_dirs:
@@ -338,7 +444,11 @@ jobs:
                               else:
                                   match = any(line == exp_line for line in stdout_lines)
                               matches.append(match)
-                          pass_flag = all(matches) if expected else True
+                          stdout_pass = all(matches) if expected else True
+                          behavior_pass, behavior_details = evaluate_behavior_flags(test, stdout_lines)
+                          if behavior_details is not None:
+                              test["student_behavior"] = behavior_details
+                          pass_flag = stdout_pass and behavior_pass
                       test["pass"] = pass_flag
                   except Exception as exc:
                       test["student_stdout"] = [str(exc)]

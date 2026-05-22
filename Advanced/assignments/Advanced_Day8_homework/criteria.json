@@ -63,6 +63,23 @@
         "Hour 32 | checkpoint result: data-driven app milestone"
       ],
       "points": 20
+    },
+    {
+      "name": "Hour 30/31 - Authenticity guardrail: DB-backed service and query/pagination shape",
+      "command": [
+        "python",
+        "-c",
+        "import ast, pathlib, sys; s = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); t = ast.parse(s); imports = set(); [imports.update(a.name for a in n.names) for n in ast.walk(t) if isinstance(n, ast.Import)]; class_names = {n.name for n in ast.walk(t) if isinstance(n, ast.ClassDef)}; func_names = {n.name for n in ast.walk(t) if isinstance(n, ast.FunctionDef)}; integration_ok = {'TaskRepository', 'TaskService'}.issubset(class_names) and {'add_task', 'list_tasks'}.issubset(func_names) and 'sqlite3' in imports; search_shape_ok = any(token in s.lower() for token in ('like', 'search term', '.lower()')); pagination_shape_ok = ('LIMIT' in s.upper() and 'OFFSET' in s.upper()) or ('page size' in s.lower()); checkpoint_ok = ('reset_day8_db' in func_names) and ('tracker.db' in s) and ('data' in s); print('guardrail_db_integration_ok=' + str(integration_ok)); print('guardrail_search_shape_ok=' + str(search_shape_ok)); print('guardrail_pagination_shape_ok=' + str(pagination_shape_ok)); print('guardrail_checkpoint_path_ok=' + str(checkpoint_ok))",
+        "advanced_day8.py"
+      ],
+      "stdin": "",
+      "points": 20,
+      "behavior_flags": {
+        "guardrail_db_integration_ok": true,
+        "guardrail_search_shape_ok": true,
+        "guardrail_pagination_shape_ok": true,
+        "guardrail_checkpoint_path_ok": true
+      }
     }
   ]
 }
