@@ -154,8 +154,8 @@ def render_page(
     overview_title = f"{module['label']} {title} Overview"
     site_relative_path = f"{module['published_site_path']}/{day_id}/index.html"
     deck_href = deck_file.name
-    resource_source_href = f"../../resources/day-hour-index.html#day-{day_number:02d}"
-    resource_published_href = f"../../../{module['resource_day_index']}#day-{day_number:02d}"
+    resource_source_href = f"{module['resource_day_index']}#day-{day_number:02d}"
+    resource_published_href = f"../resources/day-hour-index.html#day-{day_number:02d}"
     prev_day = day_number - 1 if day_number > 1 else None
     next_day = day_number + 1 if day_number < num_days else None
 

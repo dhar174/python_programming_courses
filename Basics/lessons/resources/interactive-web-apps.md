@@ -1,6 +1,6 @@
 # Basics resource index: interactive web apps, simulations, and games
 
-[Back to resource hub](README.md) · [Back to Basics portal](../slides/index.html) · [Day/hour resource map](day-hour-index.md) · [Back to course portal](../../../slides/index.html)
+[Back to resource hub](README.md) · [Back to Basics portal](../index.html) · [Day/hour resource map](day-hour-index.md) · [Back to course portal](../../../index.html)
 
 ## Module 1 — Python Programming: Basic
 
@@ -105,5 +105,5 @@ Replace a placeholder row with an app, simulation, or game link when it exists.
 
 ---
 
-Back to [resource hub](README.md) · [Basics portal](../slides/index.html) · [course portal](../../../slides/index.html)
+Back to [resource hub](README.md) · [Basics portal](../index.html) · [course portal](../../../index.html)
 

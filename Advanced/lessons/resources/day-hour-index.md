@@ -9,6 +9,7 @@ All links are placeholders until concrete assets are added.
 
 <!-- Maintainer note: keep Day/Hour rows in order and update link refs in the definitions block. -->
 
+<a id="day-01"></a>
 ### Day 1 — Session 1 (Hours 1–4)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -18,6 +19,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-01-hour-03"></a>3 | [Video][videos-day-01-hour-03] | [Interactive][interactive-day-01-hour-03] | [Infographic][infographics-day-01-hour-03] | [Flashcards][flashcards-day-01-hour-03] | [Quiz][quizzes-day-01-hour-03] | [Mind map][mind_maps-day-01-hour-03] | [NotebookLM][notebooklm-day-01-hour-03] |
 | <a id="day-01-hour-04"></a>4 | [Video][videos-day-01-hour-04] | [Interactive][interactive-day-01-hour-04] | [Infographic][infographics-day-01-hour-04] | [Flashcards][flashcards-day-01-hour-04] | [Quiz][quizzes-day-01-hour-04] | [Mind map][mind_maps-day-01-hour-04] | [NotebookLM][notebooklm-day-01-hour-04] |
 
+<a id="day-02"></a>
 ### Day 2 — Session 2 (Hours 5–8)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -27,6 +29,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-02-hour-03"></a>7 | [Video][videos-day-02-hour-03] | [Interactive][interactive-day-02-hour-03] | [Infographic][infographics-day-02-hour-03] | [Flashcards][flashcards-day-02-hour-03] | [Quiz][quizzes-day-02-hour-03] | [Mind map][mind_maps-day-02-hour-03] | [NotebookLM][notebooklm-day-02-hour-03] |
 | <a id="day-02-hour-04"></a>8 | [Video][videos-day-02-hour-04] | [Interactive][interactive-day-02-hour-04] | [Infographic][infographics-day-02-hour-04] | [Flashcards][flashcards-day-02-hour-04] | [Quiz][quizzes-day-02-hour-04] | [Mind map][mind_maps-day-02-hour-04] | [NotebookLM][notebooklm-day-02-hour-04] |
 
+<a id="day-03"></a>
 ### Day 3 — Session 3 (Hours 9–12)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -36,6 +39,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-03-hour-03"></a>11 | [Video][videos-day-03-hour-03] | [Interactive][interactive-day-03-hour-03] | [Infographic][infographics-day-03-hour-03] | [Flashcards][flashcards-day-03-hour-03] | [Quiz][quizzes-day-03-hour-03] | [Mind map][mind_maps-day-03-hour-03] | [NotebookLM][notebooklm-day-03-hour-03] |
 | <a id="day-03-hour-04"></a>12 | [Video][videos-day-03-hour-04] | [Interactive][interactive-day-03-hour-04] | [Infographic][infographics-day-03-hour-04] | [Flashcards][flashcards-day-03-hour-04] | [Quiz][quizzes-day-03-hour-04] | [Mind map][mind_maps-day-03-hour-04] | [NotebookLM][notebooklm-day-03-hour-04] |
 
+<a id="day-04"></a>
 ### Day 4 — Session 4 (Hours 13–16)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -45,6 +49,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-04-hour-03"></a>15 | [Video][videos-day-04-hour-03] | [Interactive][interactive-day-04-hour-03] | [Infographic][infographics-day-04-hour-03] | [Flashcards][flashcards-day-04-hour-03] | [Quiz][quizzes-day-04-hour-03] | [Mind map][mind_maps-day-04-hour-03] | [NotebookLM][notebooklm-day-04-hour-03] |
 | <a id="day-04-hour-04"></a>16 | [Video][videos-day-04-hour-04] | [Interactive][interactive-day-04-hour-04] | [Infographic][infographics-day-04-hour-04] | [Flashcards][flashcards-day-04-hour-04] | [Quiz][quizzes-day-04-hour-04] | [Mind map][mind_maps-day-04-hour-04] | [NotebookLM][notebooklm-day-04-hour-04] |
 
+<a id="day-05"></a>
 ### Day 5 — Session 5 (Hours 17–20)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -54,6 +59,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-05-hour-03"></a>19 | [Video][videos-day-05-hour-03] | [Interactive][interactive-day-05-hour-03] | [Infographic][infographics-day-05-hour-03] | [Flashcards][flashcards-day-05-hour-03] | [Quiz][quizzes-day-05-hour-03] | [Mind map][mind_maps-day-05-hour-03] | [NotebookLM][notebooklm-day-05-hour-03] |
 | <a id="day-05-hour-04"></a>20 | [Video][videos-day-05-hour-04] | [Interactive][interactive-day-05-hour-04] | [Infographic][infographics-day-05-hour-04] | [Flashcards][flashcards-day-05-hour-04] | [Quiz][quizzes-day-05-hour-04] | [Mind map][mind_maps-day-05-hour-04] | [NotebookLM][notebooklm-day-05-hour-04] |
 
+<a id="day-06"></a>
 ### Day 6 — Session 6 (Hours 21–24)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -63,6 +69,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-06-hour-03"></a>23 | [Video][videos-day-06-hour-03] | [Interactive][interactive-day-06-hour-03] | [Infographic][infographics-day-06-hour-03] | [Flashcards][flashcards-day-06-hour-03] | [Quiz][quizzes-day-06-hour-03] | [Mind map][mind_maps-day-06-hour-03] | [NotebookLM][notebooklm-day-06-hour-03] |
 | <a id="day-06-hour-04"></a>24 | [Video][videos-day-06-hour-04] | [Interactive][interactive-day-06-hour-04] | [Infographic][infographics-day-06-hour-04] | [Flashcards][flashcards-day-06-hour-04] | [Quiz][quizzes-day-06-hour-04] | [Mind map][mind_maps-day-06-hour-04] | [NotebookLM][notebooklm-day-06-hour-04] |
 
+<a id="day-07"></a>
 ### Day 7 — Session 7 (Hours 25–28)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -72,6 +79,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-07-hour-03"></a>27 | [Video][videos-day-07-hour-03] | [Interactive][interactive-day-07-hour-03] | [Infographic][infographics-day-07-hour-03] | [Flashcards][flashcards-day-07-hour-03] | [Quiz][quizzes-day-07-hour-03] | [Mind map][mind_maps-day-07-hour-03] | [NotebookLM][notebooklm-day-07-hour-03] |
 | <a id="day-07-hour-04"></a>28 | [Video][videos-day-07-hour-04] | [Interactive][interactive-day-07-hour-04] | [Infographic][infographics-day-07-hour-04] | [Flashcards][flashcards-day-07-hour-04] | [Quiz][quizzes-day-07-hour-04] | [Mind map][mind_maps-day-07-hour-04] | [NotebookLM][notebooklm-day-07-hour-04] |
 
+<a id="day-08"></a>
 ### Day 8 — Session 8 (Hours 29–32)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -81,6 +89,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-08-hour-03"></a>31 | [Video][videos-day-08-hour-03] | [Interactive][interactive-day-08-hour-03] | [Infographic][infographics-day-08-hour-03] | [Flashcards][flashcards-day-08-hour-03] | [Quiz][quizzes-day-08-hour-03] | [Mind map][mind_maps-day-08-hour-03] | [NotebookLM][notebooklm-day-08-hour-03] |
 | <a id="day-08-hour-04"></a>32 | [Video][videos-day-08-hour-04] | [Interactive][interactive-day-08-hour-04] | [Infographic][infographics-day-08-hour-04] | [Flashcards][flashcards-day-08-hour-04] | [Quiz][quizzes-day-08-hour-04] | [Mind map][mind_maps-day-08-hour-04] | [NotebookLM][notebooklm-day-08-hour-04] |
 
+<a id="day-09"></a>
 ### Day 9 — Session 9 (Hours 33–36)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -90,6 +99,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-09-hour-03"></a>35 | [Video][videos-day-09-hour-03] | [Interactive][interactive-day-09-hour-03] | [Infographic][infographics-day-09-hour-03] | [Flashcards][flashcards-day-09-hour-03] | [Quiz][quizzes-day-09-hour-03] | [Mind map][mind_maps-day-09-hour-03] | [NotebookLM][notebooklm-day-09-hour-03] |
 | <a id="day-09-hour-04"></a>36 | [Video][videos-day-09-hour-04] | [Interactive][interactive-day-09-hour-04] | [Infographic][infographics-day-09-hour-04] | [Flashcards][flashcards-day-09-hour-04] | [Quiz][quizzes-day-09-hour-04] | [Mind map][mind_maps-day-09-hour-04] | [NotebookLM][notebooklm-day-09-hour-04] |
 
+<a id="day-10"></a>
 ### Day 10 — Session 10 (Hours 37–40)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -99,6 +109,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-10-hour-03"></a>39 | [Video][videos-day-10-hour-03] | [Interactive][interactive-day-10-hour-03] | [Infographic][infographics-day-10-hour-03] | [Flashcards][flashcards-day-10-hour-03] | [Quiz][quizzes-day-10-hour-03] | [Mind map][mind_maps-day-10-hour-03] | [NotebookLM][notebooklm-day-10-hour-03] |
 | <a id="day-10-hour-04"></a>40 | [Video][videos-day-10-hour-04] | [Interactive][interactive-day-10-hour-04] | [Infographic][infographics-day-10-hour-04] | [Flashcards][flashcards-day-10-hour-04] | [Quiz][quizzes-day-10-hour-04] | [Mind map][mind_maps-day-10-hour-04] | [NotebookLM][notebooklm-day-10-hour-04] |
 
+<a id="day-11"></a>
 ### Day 11 — Session 11 (Hours 41–44)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -108,6 +119,7 @@ All links are placeholders until concrete assets are added.
 | <a id="day-11-hour-03"></a>43 | [Video][videos-day-11-hour-03] | [Interactive][interactive-day-11-hour-03] | [Infographic][infographics-day-11-hour-03] | [Flashcards][flashcards-day-11-hour-03] | [Quiz][quizzes-day-11-hour-03] | [Mind map][mind_maps-day-11-hour-03] | [NotebookLM][notebooklm-day-11-hour-03] |
 | <a id="day-11-hour-04"></a>44 | [Video][videos-day-11-hour-04] | [Interactive][interactive-day-11-hour-04] | [Infographic][infographics-day-11-hour-04] | [Flashcards][flashcards-day-11-hour-04] | [Quiz][quizzes-day-11-hour-04] | [Mind map][mind_maps-day-11-hour-04] | [NotebookLM][notebooklm-day-11-hour-04] |
 
+<a id="day-12"></a>
 ### Day 12 — Session 12 (Hours 45–48)
 
 | Hour | Videos | Interactive apps | Infographics | Flashcards | Practice quizzes | Mind maps | NotebookLM |
@@ -124,8 +136,8 @@ All links are placeholders until concrete assets are added.
 <!-- Maintainer note: these refs are intentionally centralized for easier updates. -->
 
 [hub]: README.md
-[module-portal]: ../slides/index.html
-[course-portal]: ../../../slides/index.html
+[module-portal]: ../index.html
+[course-portal]: ../../../index.html
 
 [videos-day-01-hour-01]: videos.md#day-01-hour-01
 [videos-day-01-hour-02]: videos.md#day-01-hour-02

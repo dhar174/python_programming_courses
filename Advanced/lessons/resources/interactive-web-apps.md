@@ -1,6 +1,6 @@
 # Advanced resource index: interactive web apps / simulations / games
 
-[Back to resource hub](README.md) · [Back to Advanced portal](../slides/index.html) · [Day/hour resource map](day-hour-index.md) · [Back to course portal](../../../slides/index.html)
+[Back to resource hub](README.md) · [Back to Advanced portal](../index.html) · [Day/hour resource map](day-hour-index.md) · [Back to course portal](../../../index.html)
 
 ## Module 2 — Python Programming: Advanced
 
@@ -105,5 +105,5 @@ Replace a placeholder row with the published link when it exists.
 
 ---
 
-Back to [resource hub](README.md) · [Advanced portal](../slides/index.html) · [course portal](../../../slides/index.html)
+Back to [resource hub](README.md) · [Advanced portal](../index.html) · [course portal](../../../index.html)
 

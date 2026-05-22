@@ -247,11 +247,12 @@ jobs:
             fi
 
             if [ -d "${MODULE}/lessons/resources" ]; then
-              rm -rf "_site/${MODULE}/lessons/resources"
-              mkdir -p "_site/${MODULE}/lessons/resources"
+              MODULE_SLUG="$(echo "${MODULE}" | tr '[:upper:]' '[:lower:]')"
+              rm -rf "_site/slides/${MODULE_SLUG}/resources"
+              mkdir -p "_site/slides/${MODULE_SLUG}/resources"
               find "${MODULE}/lessons/resources" -maxdepth 1 -type f -name '*.html' | while IFS= read -r SOURCE_RESOURCE_HTML; do
                 RELATIVE_RESOURCE="${SOURCE_RESOURCE_HTML#${MODULE}/lessons/resources/}"
-                TARGET_RESOURCE="_site/${MODULE}/lessons/resources/${RELATIVE_RESOURCE}"
+                TARGET_RESOURCE="_site/slides/${MODULE_SLUG}/resources/${RELATIVE_RESOURCE}"
                 mkdir -p "$(dirname "${TARGET_RESOURCE}")"
                 cp "${SOURCE_RESOURCE_HTML}" "${TARGET_RESOURCE}"
               done
