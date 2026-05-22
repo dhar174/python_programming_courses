@@ -16,6 +16,7 @@ MODULES = {
         "source_root": Path("Basics/lessons/slides"),
         "published_site_path": "slides/basics",
         "source_index": "Basics/lessons/slides/index.html",
+        "resource_day_index": "Basics/lessons/resources/day-hour-index.html",
         "kicker": "Module 1 - PCEP aligned",
     },
     "advanced": {
@@ -24,6 +25,7 @@ MODULES = {
         "source_root": Path("Advanced/lessons/slides"),
         "published_site_path": "slides/advanced",
         "source_index": "Advanced/lessons/slides/index.html",
+        "resource_day_index": "Advanced/lessons/resources/day-hour-index.html",
         "kicker": "Module 2 - Applied project track",
     },
 }
@@ -152,6 +154,8 @@ def render_page(
     overview_title = f"{module['label']} {title} Overview"
     site_relative_path = f"{module['published_site_path']}/{day_id}/index.html"
     deck_href = deck_file.name
+    resource_source_href = f"{module['resource_day_index']}#day-{day_number:02d}"
+    resource_published_href = f"../resources/day-hour-index.html#day-{day_number:02d}"
     prev_day = day_number - 1 if day_number > 1 else None
     next_day = day_number + 1 if day_number < num_days else None
 
@@ -243,6 +247,7 @@ def render_page(
                 <div class="portal-actions">
                     <a class="portal-button" data-variant="primary" data-day-deck-link href="{escape(deck_href)}">Open slide deck</a>
                     <a class="portal-button" data-variant="secondary" href="../index.html" data-source-href="{module['source_index']}">Back to {escape(module['label'])} portal</a>
+                    <a class="portal-button" data-variant="secondary" href="{escape(resource_published_href)}" data-source-href="{escape(resource_source_href)}">Day resource indexes</a>
                 </div>
                 <div class="portal-badge-row" data-day-overview-badges>
                     <span class="portal-badge">Slides</span>

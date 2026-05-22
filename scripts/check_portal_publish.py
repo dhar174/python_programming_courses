@@ -74,6 +74,21 @@ def validate_mirrored_publish_tree(repo_root: Path, site_root: Path, source_root
             add_error(errors, f"Missing mirrored published {label}: {mirrored_path}")
 
 
+def validate_staged_resource_indexes(repo_root: Path, site_root: Path, errors: list[str]) -> None:
+    modules = (
+        ("Basics", "basics"),
+        ("Advanced", "advanced"),
+    )
+    for module_name, module_slug in modules:
+        source_dir = repo_root / module_name / "lessons" / "resources"
+        if not source_dir.is_dir():
+            continue
+        for source_path in source_dir.glob("*.html"):
+            staged_path = site_root / "slides" / module_slug / "resources" / source_path.name
+            if not staged_path.is_file():
+                add_error(errors, f"Missing staged published {module_name} resource index HTML: {staged_path}")
+
+
 def validate_manifest(repo_root: Path, site_root: Path, errors: list[str]) -> None:
     manifest_path = site_root / "slides" / "shared" / "portal" / "course-manifest.json"
     require_file(manifest_path, "published portal manifest", errors)
@@ -143,6 +158,7 @@ def main() -> int:
     require_file(site_root / "slides" / "shared" / "portal" / "portal.js", "published portal JS", errors)
     validate_mirrored_publish_tree(repo_root, site_root, "Basics/lessons/lecture", "*.html", "Basics lecture HTML", errors)
     validate_mirrored_publish_tree(repo_root, site_root, "Advanced/lessons/lecture", "*.html", "Advanced lecture HTML", errors)
+    validate_staged_resource_indexes(repo_root, site_root, errors)
     validate_mirrored_publish_tree(repo_root, site_root, "slides/shared/lecture", "*", "shared lecture asset", errors)
     validate_manifest(repo_root, site_root, errors)
     validate_root_decoupling(repo_root, site_root, errors)
