@@ -88,21 +88,33 @@
 
   function repoBlobUrl(repoPath) {
     const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoRawUrl(repoPath) {
     const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
     return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoDownloadUrl(repoPath) {
     const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${normalizedPath}?download=1`;
   }
 
   function repoTreeUrl(repoPath) {
     const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
