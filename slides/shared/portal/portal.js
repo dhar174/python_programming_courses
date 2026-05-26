@@ -84,6 +84,11 @@
     return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
 
+  function repoDownloadUrl(repoPath) {
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${normalizedPath}?download=1`;
+  }
+
   function repoTreeUrl(repoPath) {
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
   }
@@ -134,7 +139,7 @@
 
     if (artifact.delivery === "repo" && !isSourcePreview() && window.location.protocol !== "file:") {
       return artifact.repoPath.endsWith(".ipynb")
-        ? repoRawUrl(artifact.repoPath)
+        ? repoDownloadUrl(artifact.repoPath)
         : repoBlobUrl(artifact.repoPath);
     }
 
@@ -161,7 +166,9 @@
       } else if (isHtmlArtifact) {
         node.href = pagesPath ? withBasePath(pagesPath) : artifactUrl(repoPath);
       } else {
-        node.href = prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath);
+        node.href = repoPath.endsWith(".ipynb")
+          ? repoDownloadUrl(repoPath)
+          : prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath);
       }
       const fileName = repoPath.split("/").pop();
       if (repoPath.endsWith(".ipynb")) {
