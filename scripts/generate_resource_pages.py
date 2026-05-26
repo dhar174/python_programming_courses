@@ -226,6 +226,21 @@ def markdown_to_html(md_content: str, title: str) -> str:
       border-radius: 4px;
     }}
   </style>
+  <script>
+    (function () {{
+      var path = window.location.pathname;
+      if (path.includes('/Basics/lessons/resources/') || path.includes('/Advanced/lessons/resources/')) {{
+        document.addEventListener('DOMContentLoaded', function () {{
+          document.querySelectorAll('a[href="../index.html"]').forEach(function (node) {{
+            node.setAttribute('href', '../slides/index.html');
+          }});
+          document.querySelectorAll('a[href="../../../index.html"]').forEach(function (node) {{
+            node.setAttribute('href', '../../../slides/index.html');
+          }});
+        }});
+      }}
+    }})();
+  </script>
 </head>
 <body>
   <main>
