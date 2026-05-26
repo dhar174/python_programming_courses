@@ -76,23 +76,31 @@
     });
   }
 
+  function normalizeRepoPath(repoPath) {
+    return String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+  }
+
+  function isSafeRepoPath(repoPath) {
+    return /^[A-Za-z0-9._/-]+$/.test(repoPath);
+  }
+
   function repoBlobUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoRawUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoDownloadUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${normalizedPath}?download=1`;
   }
 
   function repoTreeUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
@@ -115,7 +123,7 @@
   }
 
   function colabUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     if (!normalizedPath) {
       return "#";
     }
@@ -123,7 +131,7 @@
   }
 
   function artifactUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     if (!normalizedPath) {
       return "#";
     }
@@ -155,8 +163,13 @@
 
   function decorateRepositoryArtifactLinks() {
     document.querySelectorAll("a[data-repo-path]").forEach(function (node) {
-      const repoPath = node.getAttribute("data-repo-path");
+      const repoPath = normalizeRepoPath(node.getAttribute("data-repo-path"));
       if (!repoPath) {
+        return;
+      }
+      if (!isSafeRepoPath(repoPath)) {
+        node.href = "#";
+        node.removeAttribute("download");
         return;
       }
       const sourceHref = node.getAttribute("data-source-href");
