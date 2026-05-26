@@ -77,11 +77,13 @@
   }
 
   function normalizeRepoPath(repoPath) {
-    return String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    return String(repoPath || "")
+      .replace(/^\/+/, "")
+      .replace(/[\0\r\n]/g, "");
   }
 
   function isSafeRepoPath(repoPath) {
-    return /^[A-Za-z0-9._/-]+$/.test(repoPath);
+    return /^[A-Za-z0-9._/-]+$/.test(repoPath) && !repoPath.includes("..") && !repoPath.includes("%");
   }
 
   function repoBlobUrl(repoPath) {
