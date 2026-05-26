@@ -228,7 +228,7 @@ def markdown_to_html(md_content: str, title: str) -> str:
   </style>
   <script>
     (function () {{
-      var path = window.location.pathname;
+      const path = window.location.pathname;
       if (path.includes('/Basics/lessons/resources/') || path.includes('/Advanced/lessons/resources/')) {{
         document.addEventListener('DOMContentLoaded', function () {{
           document.querySelectorAll('a[href="../index.html"]').forEach(function (node) {{
