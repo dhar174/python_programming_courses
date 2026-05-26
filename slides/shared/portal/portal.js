@@ -77,20 +77,23 @@
   }
 
   function repoBlobUrl(repoPath) {
-    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoRawUrl(repoPath) {
-    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoDownloadUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
     return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${normalizedPath}?download=1`;
   }
 
   function repoTreeUrl(repoPath) {
-    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function sourceArtifactUrl(repoPath) {
@@ -112,7 +115,7 @@
   }
 
   function colabUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    const normalizedPath = String(repoPath || "").replace(/^\/+/, "").replace(/[\r\n]/g, "");
     if (!normalizedPath) {
       return "#";
     }
