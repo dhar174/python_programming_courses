@@ -141,6 +141,9 @@
     if (!normalizedPath) {
       return "#";
     }
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
 
     if (isSourcePreview() || window.location.protocol === "file:") {
       return sourceArtifactUrl(normalizedPath);
