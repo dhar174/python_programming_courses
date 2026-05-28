@@ -163,9 +163,13 @@
     }
 
     if (artifact.delivery === "repo" && !isSourcePreview() && window.location.protocol !== "file:") {
-      return artifact.repoPath.endsWith(".ipynb")
-        ? repoDownloadUrl(artifact.repoPath)
-        : repoBlobUrl(artifact.repoPath);
+      if (artifact.repoPath.endsWith(".ipynb")) {
+        return repoDownloadUrl(artifact.repoPath);
+      }
+      if (artifact.repoPath.endsWith(".html")) {
+        return artifactUrl(artifact.repoPath);
+      }
+      return repoBlobUrl(artifact.repoPath);
     }
 
     if (artifact.href) {
