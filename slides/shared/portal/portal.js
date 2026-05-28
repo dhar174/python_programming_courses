@@ -76,16 +76,46 @@
     });
   }
 
+  function normalizeRepoPath(repoPath) {
+    return String(repoPath || "")
+      .replace(/^\/+/, "")
+      .replace(/[\0\r\n]/g, "");
+  }
+
+  function isSafeRepoPath(repoPath) {
+    return /^[A-Za-z0-9._/-]+$/.test(repoPath) && !repoPath.includes("..") && !repoPath.includes("%");
+  }
+
   function repoBlobUrl(repoPath) {
-    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${repoPath}`;
+    const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/blob/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function repoRawUrl(repoPath) {
-    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${repoPath}`;
+    const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
+    return `https://raw.githubusercontent.com/${repositoryMeta.owner}/${repositoryMeta.name}/${repositoryMeta.defaultBranch}/${normalizedPath}`;
+  }
+
+  function repoDownloadUrl(repoPath) {
+    const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/raw/${repositoryMeta.defaultBranch}/${normalizedPath}?download=1`;
   }
 
   function repoTreeUrl(repoPath) {
-    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${repoPath}`;
+    const normalizedPath = normalizeRepoPath(repoPath);
+    if (!isSafeRepoPath(normalizedPath)) {
+      return "#";
+    }
+    return `https://github.com/${repositoryMeta.owner}/${repositoryMeta.name}/tree/${repositoryMeta.defaultBranch}/${normalizedPath}`;
   }
 
   function sourceArtifactUrl(repoPath) {
@@ -107,7 +137,7 @@
   }
 
   function colabUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     if (!normalizedPath) {
       return "#";
     }
@@ -115,7 +145,7 @@
   }
 
   function artifactUrl(repoPath) {
-    const normalizedPath = String(repoPath || "").replace(/^\/+/, "");
+    const normalizedPath = normalizeRepoPath(repoPath);
     if (!normalizedPath) {
       return "#";
     }
@@ -133,9 +163,13 @@
     }
 
     if (artifact.delivery === "repo" && !isSourcePreview() && window.location.protocol !== "file:") {
-      return artifact.repoPath.endsWith(".ipynb")
-        ? repoRawUrl(artifact.repoPath)
-        : repoBlobUrl(artifact.repoPath);
+      if (artifact.repoPath.endsWith(".ipynb")) {
+        return repoDownloadUrl(artifact.repoPath);
+      }
+      if (artifact.repoPath.endsWith(".html")) {
+        return artifactUrl(artifact.repoPath);
+      }
+      return repoBlobUrl(artifact.repoPath);
     }
 
     if (artifact.href) {
@@ -147,8 +181,13 @@
 
   function decorateRepositoryArtifactLinks() {
     document.querySelectorAll("a[data-repo-path]").forEach(function (node) {
-      const repoPath = node.getAttribute("data-repo-path");
+      const repoPath = normalizeRepoPath(node.getAttribute("data-repo-path"));
       if (!repoPath) {
+        return;
+      }
+      if (!isSafeRepoPath(repoPath)) {
+        node.href = "#";
+        node.removeAttribute("download");
         return;
       }
       const sourceHref = node.getAttribute("data-source-href");
@@ -161,7 +200,9 @@
       } else if (isHtmlArtifact) {
         node.href = pagesPath ? withBasePath(pagesPath) : artifactUrl(repoPath);
       } else {
-        node.href = prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath);
+        node.href = repoPath.endsWith(".ipynb")
+          ? repoDownloadUrl(repoPath)
+          : prefersDownload ? repoRawUrl(repoPath) : repoBlobUrl(repoPath);
       }
       const fileName = repoPath.split("/").pop();
       if (repoPath.endsWith(".ipynb")) {
