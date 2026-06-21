@@ -95,6 +95,11 @@ jobs:
           find _site/slides/basics -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
           find _site/slides/advanced -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
           find _site/slides -maxdepth 1 -type f -name 'README*' -exec rm -f {} + 2>/dev/null || true
+          # Remove any stale or orphan HTML files at the root of each module tree.
+          # Day-level decks live under day-XX/ subdirectories; root-level HTML files
+          # are not linked from any portal page and should not be accessible to learners.
+          find _site/slides/basics -maxdepth 1 -type f -name '*.html' ! -name 'index.html' -exec rm -f {} + 2>/dev/null || true
+          find _site/slides/advanced -maxdepth 1 -type f -name '*.html' ! -name 'index.html' -exec rm -f {} + 2>/dev/null || true
 
       - name: Ensure Pages root resolves to slide content
         run: |
