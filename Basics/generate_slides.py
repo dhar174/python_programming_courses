@@ -539,144 +539,59 @@ class MarkdownSlideParser:
         self.markdown_text = markdown_text
         self.filename = filename
         self.slides = []
+        self._first_h1 = True
+        self._current_slide = {'type': 'content', 'title': '', 'content': []}
         
     def parse(self):
         """Main parsing method"""
+        # Reset state for re-entrancy
+        self.slides = []
+        self._first_h1 = True
+        self._current_slide = {'type': 'content', 'title': '', 'content': []}
+
         lines = self.markdown_text.split('\n')
         
         # Skip YAML frontmatter if present (between --- markers at start)
-        start_index = 0
-        if lines and lines[0].strip() == '---':
-            # Find the closing ---
-            for j in range(1, len(lines)):
-                if lines[j].strip() == '---':
-                    start_index = j + 1
-                    break
+        i = self._skip_frontmatter(lines)
         
-        current_slide = {'type': 'content', 'title': '', 'content': []}
-        in_code_block = False
-        code_block_content = []
-        code_language = ''
-        first_h1 = True
-        
-        i = start_index
         while i < len(lines):
             line = lines[i]
             
             # Handle code blocks
             if line.strip().startswith('```'):
-                if not in_code_block:
-                    # Start of code block
-                    in_code_block = True
-                    code_language = line.strip()[3:].strip()
-                    code_block_content = []
-                else:
-                    # End of code block
-                    in_code_block = False
-                    code_html = self._render_code_block(code_block_content, code_language)
-                    current_slide['content'].append(code_html)
-                    code_block_content = []
-                    code_language = ''
-                i += 1
+                i = self._handle_code_block(lines, i)
                 continue
             
-            if in_code_block:
-                code_block_content.append(line)
-                i += 1
-                continue
-            
-            # Skip horizontal rules (but not frontmatter, handled above)
+            # Skip horizontal rules
             if line.strip() in ['---', '***', '___']:
                 i += 1
                 continue
             
-            # H1 - Title slide or section
-            if line.startswith('# '):
-                if current_slide['title'] or current_slide['content']:
-                    self.slides.append(current_slide)
-                
-                title = line[2:].strip()
-                current_slide = {
-                    'type': 'title' if first_h1 else 'content',
-                    'title': title,
-                    'content': []
-                }
-                first_h1 = False
-                
-                # Look ahead for subtitle on next line
-                if i + 1 < len(lines) and lines[i + 1].strip() and not lines[i + 1].startswith('#'):
-                    i += 1
-                    subtitle = lines[i].strip()
-                    if subtitle and not subtitle.startswith('```'):
-                        current_slide['subtitle'] = subtitle
-            
-            # H2 - New slide
-            elif line.startswith('## '):
-                if current_slide['title'] or current_slide['content']:
-                    self.slides.append(current_slide)
-                
-                title = line[3:].strip()
-                current_slide = {'type': 'content', 'title': title, 'content': []}
-            
-            # H3 - Subheading within slide
-            elif line.startswith('### '):
-                heading = f"<h3>{escape(line[4:].strip())}</h3>"
-                current_slide['content'].append(heading)
-            
-            # H4 and below
-            elif line.startswith('#### '):
-                heading = f"<h4>{escape(line[5:].strip())}</h4>"
-                current_slide['content'].append(heading)
+            # Headers (H1-H4)
+            if line.startswith('#'):
+                new_index = self._handle_headers(lines, i)
+                if new_index != i:
+                    i = new_index
+                    continue
             
             # Lists
-            elif line.strip().startswith('- ') or line.strip().startswith('* '):
-                list_items = [line]
-                i += 1
-                while i < len(lines) and (lines[i].strip().startswith('- ') or 
-                                         lines[i].strip().startswith('* ') or
-                                         lines[i].strip().startswith('  ')):
-                    list_items.append(lines[i])
-                    i += 1
-                current_slide['content'].append(self._render_list(list_items))
-                continue
-            
-            # Numbered lists
-            elif re.match(r'^\d+\.\s', line.strip()):
-                list_items = [line]
-                i += 1
-                while i < len(lines) and re.match(r'^\d+\.\s', lines[i].strip()):
-                    list_items.append(lines[i])
-                    i += 1
-                current_slide['content'].append(self._render_numbered_list(list_items))
+            if line.strip().startswith(('- ', '* ')) or re.match(r'^\d+\.\s', line.strip()):
+                i = self._handle_lists(lines, i)
                 continue
 
             # Markdown pipe tables
-            elif self._is_table_row(line) and i + 1 < len(lines) and self._is_table_separator(lines[i + 1]):
-                header_line = line
-                i += 2
-                table_rows = []
-                while i < len(lines) and self._is_table_row(lines[i]) and not self._is_table_separator(lines[i]):
-                    table_rows.append(lines[i])
-                    i += 1
-                current_slide['content'].append(self._render_table(header_line, table_rows))
+            if self._is_table_row(line) and i + 1 < len(lines) and self._is_table_separator(lines[i + 1]):
+                i = self._handle_table(lines, i)
                 continue
             
-            # Blockquotes
-            elif line.strip().startswith('>'):
-                quote_text = line.strip()[1:].strip()
-                current_slide['content'].append(f"<blockquote>{escape(quote_text)}</blockquote>")
-            
-            # Regular paragraphs
-            elif line.strip():
-                # Process inline formatting
-                formatted_line = self._process_inline_formatting(line.strip())
-                current_slide['content'].append(f"<p>{formatted_line}</p>")
+            # Text elements (paragraphs and blockquotes)
+            if line.strip():
+                self._handle_text_elements(line)
             
             i += 1
         
         # Add last slide
-        if current_slide['title'] or current_slide['content']:
-            self.slides.append(current_slide)
+        self._add_current_slide()
         
         # If no slides were created, make one from the filename
         if not self.slides:
@@ -687,7 +602,133 @@ class MarkdownSlideParser:
             })
         
         return self.slides
-    
+
+    def _skip_frontmatter(self, lines):
+        """Skip YAML frontmatter if present and return the new start index"""
+        if lines and lines[0].strip() == '---':
+            for j in range(1, len(lines)):
+                if lines[j].strip() == '---':
+                    return j + 1
+        return 0
+
+    def _add_current_slide(self):
+        """Add the current slide to the list if it has content or a title"""
+        if self._current_slide['title'] or self._current_slide['content']:
+            self.slides.append(self._current_slide)
+
+    def _handle_code_block(self, lines, i):
+        """Handle code blocks and return the new index"""
+        line = lines[i]
+        code_language = line.strip()[3:].strip()
+        code_block_content = []
+        i += 1
+
+        found_closing = False
+        while i < len(lines):
+            if lines[i].strip().startswith('```'):
+                found_closing = True
+                break
+            code_block_content.append(lines[i])
+            i += 1
+
+        if found_closing:
+            code_html = self._render_code_block(code_block_content, code_language)
+            self._current_slide['content'].append(code_html)
+            return i + 1
+        else:
+            # Revert to the original behavior: unclosed code block content is treated as regular lines
+            # Reset i to where it was after the opening backticks
+            # Actually, the original behavior would have skipped the '```' line and then processed the following lines
+            # Let's match that.
+            return i - len(code_block_content)
+
+    def _handle_headers(self, lines, i):
+        """Handle Markdown headers (H1-H4) and return the new index"""
+        line = lines[i]
+
+        # H1 - Title slide or section
+        if line.startswith('# '):
+            self._add_current_slide()
+            title = line[2:].strip()
+            self._current_slide = {
+                'type': 'title' if self._first_h1 else 'content',
+                'title': title,
+                'content': []
+            }
+            self._first_h1 = False
+
+            # Look ahead for subtitle on next line
+            if i + 1 < len(lines) and lines[i + 1].strip() and not lines[i + 1].startswith('#'):
+                potential_subtitle = lines[i + 1].strip()
+                if not potential_subtitle.startswith('```'):
+                    self._current_slide['subtitle'] = potential_subtitle
+                    return i + 2
+            return i + 1
+
+        # H2 - New slide
+        elif line.startswith('## '):
+            self._add_current_slide()
+            title = line[3:].strip()
+            self._current_slide = {'type': 'content', 'title': title, 'content': []}
+            return i + 1
+
+        # H3 - Subheading within slide
+        elif line.startswith('### '):
+            heading = f"<h3>{escape(line[4:].strip())}</h3>"
+            self._current_slide['content'].append(heading)
+            return i + 1
+
+        # H4 and below
+        elif line.startswith('#### '):
+            heading = f"<h4>{escape(line[5:].strip())}</h4>"
+            self._current_slide['content'].append(heading)
+            return i + 1
+
+        return i # Let it fall through to text processing
+
+    def _handle_lists(self, lines, i):
+        """Handle unordered and ordered lists and return the new index"""
+        line = lines[i]
+        list_items = [line]
+        is_ordered = bool(re.match(r'^\d+\.\s', line.strip()))
+        i += 1
+
+        if is_ordered:
+            while i < len(lines) and re.match(r'^\d+\.\s', lines[i].strip()):
+                list_items.append(lines[i])
+                i += 1
+            self._current_slide['content'].append(self._render_numbered_list(list_items))
+        else:
+            while i < len(lines) and (lines[i].strip().startswith(('- ', '* ')) or
+                                     lines[i].strip().startswith('  ')):
+                list_items.append(lines[i])
+                i += 1
+            self._current_slide['content'].append(self._render_list(list_items))
+
+        return i
+
+    def _handle_table(self, lines, i):
+        """Handle Markdown tables and return the new index"""
+        header_line = lines[i]
+        i += 2  # Skip header and separator
+        table_rows = []
+        while i < len(lines) and self._is_table_row(lines[i]) and not self._is_table_separator(lines[i]):
+            table_rows.append(lines[i])
+            i += 1
+        self._current_slide['content'].append(self._render_table(header_line, table_rows))
+        return i
+
+    def _handle_text_elements(self, line):
+        """Handle text elements like blockquotes and paragraphs"""
+        # Blockquotes
+        if line.strip().startswith('>'):
+            quote_text = line.strip()[1:].strip()
+            self._current_slide['content'].append(f"<blockquote>{escape(quote_text)}</blockquote>")
+        # Regular paragraphs
+        else:
+            formatted_line = self._process_inline_formatting(line.strip())
+            self._current_slide['content'].append(f"<p>{formatted_line}</p>")
+
     def _render_code_block(self, lines, language):
         """Render a code block"""
         code_content = escape('\n'.join(lines))
