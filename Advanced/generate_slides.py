@@ -8,6 +8,13 @@ import re
 from pathlib import Path
 from html import escape
 
+# Pre-compiled regex patterns for performance
+RE_NUMBERED_LIST = re.compile(r'^\d+\.\s')
+RE_BOLD = re.compile(r'\*\*(.+?)\*\*')
+RE_ITALIC = re.compile(r'\*(.+?)\*')
+RE_CODE = re.compile(r'`(.+?)`')
+RE_LINK = re.compile(r'\[(.+?)\]\((.+?)\)')
+
 # HTML Template with Swiss Modern styling
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -610,10 +617,10 @@ class MarkdownSlideParser:
                 continue
             
             # Numbered lists
-            elif re.match(r'^\d+\.\s', line.strip()):
+            elif RE_NUMBERED_LIST.match(line.strip()):
                 list_items = [line]
                 i += 1
-                while i < len(lines) and re.match(r'^\d+\.\s', lines[i].strip()):
+                while i < len(lines) and RE_NUMBERED_LIST.match(lines[i].strip()):
                     list_items.append(lines[i])
                     i += 1
                 current_slide['content'].append(self._render_numbered_list(list_items))
@@ -671,7 +678,7 @@ class MarkdownSlideParser:
         """Render an ordered list"""
         html = '<ol>\n'
         for item in items:
-            content = re.sub(r'^\d+\.\s', '', item.strip())
+            content = RE_NUMBERED_LIST.sub('', item.strip())
             html += f'  <li>{self._process_inline_formatting(content)}</li>\n'
         html += '</ol>'
         return html
@@ -682,16 +689,16 @@ class MarkdownSlideParser:
         text = escape(text)
         
         # Bold with **
-        text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+        text = RE_BOLD.sub(r'<strong>\1</strong>', text)
         
         # Italic with *
-        text = re.sub(r'\*(.+?)\*', r'<em>\1</em>', text)
+        text = RE_ITALIC.sub(r'<em>\1</em>', text)
         
         # Inline code with `
-        text = re.sub(r'`(.+?)`', r'<code>\1</code>', text)
+        text = RE_CODE.sub(r'<code>\1</code>', text)
         
         # Links [text](url)
-        text = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', text)
+        text = RE_LINK.sub(r'<a href="\2">\1</a>', text)
         
         # Checkmarks ✓
         text = text.replace('✓', '<span class="check">✓</span>')
