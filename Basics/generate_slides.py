@@ -691,7 +691,9 @@ class MarkdownSlideParser:
     def _render_code_block(self, lines, language):
         """Render a code block"""
         code_content = escape('\n'.join(lines))
-        lang_label = f' data-lang="{language}"' if language else ''
+        # Escape the language name to prevent XSS in data-lang attribute
+        escaped_lang = escape(language) if language else ''
+        lang_label = f' data-lang="{escaped_lang}"' if escaped_lang else ''
         return f'<pre{lang_label}><code>{code_content}</code></pre>'
     
     def _render_list(self, items):
@@ -775,8 +777,19 @@ class MarkdownSlideParser:
         # Inline code with `
         text = re.sub(r'`(.+?)`', r'<code>\1</code>', text)
         
-        # Links [text](url)
-        text = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', text)
+        # Links [text](url) - Sanitized to prevent javascript: and other dangerous protocols
+        def _sanitize_link(match):
+            label = match.group(1)
+            url = match.group(2)
+            # Block dangerous protocols: javascript:, data:, vbscript:
+            # We check for these strings (case-insensitive) followed by a colon
+            dangerous_protocols = ['javascript:', 'data:', 'vbscript:']
+            lower_url = url.lower().strip()
+            if any(lower_url.startswith(proto) for proto in dangerous_protocols):
+                return f'{label} ({url})'
+            return f'<a href="{url}">{label}</a>'
+
+        text = re.sub(r'\[(.+?)\]\((.+?)\)', _sanitize_link, text)
         
         # Checkmarks ✓
         text = text.replace('✓', '<span class="check">✓</span>')
