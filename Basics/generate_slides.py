@@ -760,6 +760,18 @@ class MarkdownSlideParser:
 
         html.append('</table>')
         return '\n'.join(html)
+
+    def _sanitize_link(self, match):
+        """Sanitize a Markdown link to prevent XSS"""
+        text = match.group(1)
+        url = match.group(2)
+
+        # Check for dangerous schemes
+        lower_url = url.lower().strip()
+        if any(lower_url.startswith(scheme) for scheme in ['javascript:', 'data:', 'vbscript:']):
+            return f'<a>{text}</a>'
+
+        return f'<a href="{url}">{text}</a>'
     
     def _process_inline_formatting(self, text):
         """Process inline Markdown formatting"""
@@ -776,7 +788,7 @@ class MarkdownSlideParser:
         text = re.sub(r'`(.+?)`', r'<code>\1</code>', text)
         
         # Links [text](url)
-        text = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', text)
+        text = re.sub(r'\[(.+?)\]\((.+?)\)', self._sanitize_link, text)
         
         # Checkmarks ✓
         text = text.replace('✓', '<span class="check">✓</span>')
