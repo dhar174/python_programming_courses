@@ -649,7 +649,7 @@ class MarkdownSlideParser:
     def _render_code_block(self, lines, language):
         """Render a code block"""
         code_content = escape('\n'.join(lines))
-        lang_label = f' data-lang="{language}"' if language else ''
+        lang_label = f' data-lang="{escape(language)}"' if language else ''
         return f'<pre{lang_label}><code>{code_content}</code></pre>'
     
     def _render_list(self, items):
