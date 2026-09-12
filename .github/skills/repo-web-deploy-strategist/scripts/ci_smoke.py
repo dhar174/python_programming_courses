@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import shutil
 import subprocess
 from pathlib import Path
@@ -40,12 +41,11 @@ def run_cmd(command: list[str], cwd: Path, timeout: int = 60) -> dict[str, Any]:
 
 
 def run_shell(command: str, cwd: Path, timeout: int = 90) -> dict[str, Any]:
-    """Run a shell command for optional custom checks."""
+    """Run a command for optional custom checks."""
     try:
-        completed = subprocess.run(  # noqa: S602
-            command,
+        completed = subprocess.run(  # noqa: S603
+            shlex.split(command),
             cwd=str(cwd),
-            shell=True,
             capture_output=True,
             text=True,
             timeout=timeout,
