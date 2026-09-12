@@ -705,7 +705,7 @@ class MarkdownSlideParser:
     def _render_code_block(self, lines, language):
         """Render a code block"""
         code_content = escape('\n'.join(lines))
-        lang_label = f' data-lang="{language}"' if language else ''
+        lang_label = f' data-lang="{escape(language)}"' if language else ''
         return f'<pre{lang_label}><code>{code_content}</code></pre>'
     
     def _render_list(self, items):
@@ -777,7 +777,9 @@ class MarkdownSlideParser:
     
     def _process_inline_formatting(self, text):
         """Process inline Markdown formatting"""
-        # Escape HTML first
+        from html import unescape
+
+        # Escape the whole text first to handle literal <, >, &, etc.
         text = escape(text)
         
         # Bold with **
@@ -790,7 +792,21 @@ class MarkdownSlideParser:
         text = re.sub(r'`(.+?)`', r'<code>\1</code>', text)
         
         # Links [text](url)
-        text = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', text)
+        def replace_link(match):
+            link_text = match.group(1)
+            url = match.group(2)
+
+            # Basic XSS protection for URLs
+            # check_url should be unescaped to catch obfuscated protocols
+            check_url = unescape(url).lower().strip()
+            if check_url.startswith(('javascript:', 'data:', 'vbscript:')):
+                return f'[{link_text}]({url})'
+
+            # url and link_text are already escaped because 'text' was escaped at the start.
+            # We can safely put them in the template.
+            return f'<a href="{url}">{link_text}</a>'
+
+        text = re.sub(r'\[(.+?)\]\((.+?)\)', replace_link, text)
         
         # Checkmarks ✓
         text = text.replace('✓', '<span class="check">✓</span>')
